@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Timapp</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">Broadcast</string>
+    <string name="title_activity_broadcast">broadcast</string>
+    <string name="title_activity_current_spot">My Broadcast</string>
+
+    <string name="message_broadcast">broadcast</string>
+    <string name="button_broadcast">broadcast</string>
+    <string name="action_map">Map</string>
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="error_cannot_get_location">Sorry be we cannot get your location! You disepeared from the digital world. Are you a Ninja !?</string>
+    <string name="error_credential_invalid">Invalid credential</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_search">Search</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

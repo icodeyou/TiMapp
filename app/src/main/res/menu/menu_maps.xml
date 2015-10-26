@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.timappweb.timapp.activities.MapsFragment">
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_broadcast" android:title="@string/title_activity_main"
+        android:orderInCategory="100" app:showAsAction="always" />
+    <item android:id="@+id/action_map" android:title="@string/title_search"
+        android:orderInCategory="100" app:showAsAction="always" />
+</menu>
