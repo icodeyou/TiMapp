@@ -1,24 +1,49 @@
 package com.timappweb.timapp.activities;
 
-import java.util.Locale;
-
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.fragments.AddSpotFragment;
 import com.timappweb.timapp.fragments.MapsFragment;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Locale;
+//import android.support.design.widget.FloatingActionButton;
+
+
+public class MainActivity extends BaseActivity  {
+    private static final String TAG = "LOG MAIN ACTIVITY";
+    /* ============================================================================================*/
+    /* PROPERTIES */
+    /* ============================================================================================*/
+    // Drawer
+    private String[] mDrawerNavigationContent;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    ActionBarDrawerToggle mDrawerToggle;
+    /* ============================================================================================*/
+    // Add spot button
+    FloatingActionButton addSpotFloatingButton = null;
+    /* ============================================================================================*/
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,16 +63,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+       // mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+      //  mViewPager = (ViewPager) findViewById(R.id.pager);
+      //  mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        // !important Init drawer
+        this.initDrawer();
+
+        // !important Init drawer
+        this.initAddSpotButton();
+
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
+    }
+
+    /**
+     * Create the button to add a spot. Do not show it.
+     * To display the button call @method:showAddSpotButton();
+     */
+    protected void initAddSpotButton() {
+        if (addSpotFloatingButton == null){
+            addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.add_spot_button);
+            Log.d(TAG, "Init add_spot_button button");
+            addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText( getApplicationContext(),
+                                    "Open NewPost activity",
+                                    Toast.LENGTH_LONG).show();
+                }
+            });
+        }
 
     }
 
@@ -146,6 +199,107 @@ public class MainActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
+    }
+
+
+    /* ============================================================================================*/
+    /* DRAWER */
+    /* ============================================================================================*/
+    protected void initDrawer(){
+        Log.d(TAG, "Drawer initialisation");
+
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerNavigationContent = getResources().getStringArray(R.array.navigation_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // set a custom shadow that overlays the main content when the drawer opens
+        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // --------------------------------
+        // To close and open the drawer
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        // ----------------------
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        //getActionBar().setHomeButtonEnabled(true);
+
+        // ----------------------
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mDrawerNavigationContent));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+    }
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    /**
+     * Swaps fragments in the main content view
+     * @param position
+     */
+    private void selectItem(int position) {
+        // Create a new fragment according to the clicked item
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = null;
+
+        Log.i(TAG, "You clicked on button " + position);
+        // TODO use constants
+        switch (position){
+            case 0:             // DO THAT
+                fragment = new MapsFragment();
+                break;
+            case 1:             // DO THIS
+                // TODO hide the add spot button
+                fragment = new AddSpotFragment();
+                break;
+            default:            // By default go to the map
+                fragment = new AddSpotFragment();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+
+        // Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(mDrawerNavigationContent[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+//        getActionBar().setTitle(mTitle);
     }
 
 }

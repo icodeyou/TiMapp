@@ -34,7 +34,10 @@ import com.timappweb.timapp.utils.Util;
 
 import retrofit.client.Response;
 
-
+/**
+ * @warnings DO NOT USE THIS CLASS. TO BE REMOVED
+ * TODO remove this class
+ */
 public class BroadcastActivity extends AppCompatActivity{
 
 

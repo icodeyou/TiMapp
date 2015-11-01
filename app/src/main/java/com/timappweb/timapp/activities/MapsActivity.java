@@ -23,6 +23,11 @@ import com.timappweb.timapp.fragments.SpotsTagFragment;
 
 import java.util.Map;
 
+
+/**
+ * @warnings DO NOT USE THIS CLASS. TO BE REMOVED
+ * TODO remove this class
+ */
 public class MapsActivity extends AppCompatActivity implements SpotItemFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "MapActivity";

@@ -23,6 +23,10 @@ import java.util.concurrent.TimeUnit;
 import retrofit.client.Response;
 
 
+/**
+ * @warnings DO NOT USE THIS CLASS. TO BE REMOVED
+ * TODO remove this class
+ */
 public class CurrentSpotActivity extends AppCompatActivity {
 
     private static final String TAG = "CurrentSpotActivity";

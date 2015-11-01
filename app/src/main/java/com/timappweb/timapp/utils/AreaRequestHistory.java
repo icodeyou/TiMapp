@@ -19,12 +19,15 @@ import java.util.Vector;
  */
 public class AreaRequestHistory{
 
-    private static final String TAG = "AreaRequestHistory";
-    public static final int MAXIMUM_ORIGIN_DISTANCE = 10; // Means a 10*10 square from the origin point
-    public static final int MAXIMUM_GRID_SIZE_ON_VIEW = 2;
-    public static final int DELAY_BEFORE_UPDATE_REQUEST = 60; // seconds before checking for new tag again
-    public int AREA_WIDTH = 1000; // En degré (1 degré ~= 100 km)
-    public int AREA_HEIGHT = 1000; // En degré
+    private static final String TAG                     = "AreaRequestHistory";
+
+    public static final int MAXIMUM_ORIGIN_DISTANCE     = 10;   // Means a 10*10 square from the origin point
+    public static final int MAXIMUM_GRID_SIZE_ON_VIEW   = 2;
+    public static final int DELAY_BEFORE_UPDATE_REQUEST = 60;   // seconds before checking for new tag again
+    public int              AREA_WIDTH                  = 1000; // En degré (1 degré ~= 100 km)
+    public int              AREA_HEIGHT                 = 1000; // En degré
+
+
     public HashMap<IntPoint, AreaRequestItem> areas;
     private IntLatLng center;
 

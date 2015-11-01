@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Timapp.iml" filepath="$PROJECT_DIR$/Timapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tiemapp.iml" filepath="$PROJECT_DIR$/tiemapp.iml" />
     </modules>
   </component>
 </project>
