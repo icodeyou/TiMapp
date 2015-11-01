@@ -27,4 +27,5 @@
     <string name="title_drawer">Menu</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer claose</string>
+    <string name="button_submit_spot">Post</string>
 </resources>

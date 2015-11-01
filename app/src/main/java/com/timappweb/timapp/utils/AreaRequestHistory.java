@@ -1,18 +1,10 @@
 package com.timappweb.timapp.utils;
 
-import android.graphics.Point;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.activities.MapsActivity;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.fragments.MapsFragment;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
 
 /**
  * Created by stephane on 9/12/2015.

@@ -287,7 +287,6 @@ public class MapsFragment extends SupportMapFragment {
                     public void success(Spot spot, Response response) {
                         Log.i(TAG, "Found spot: " + spot.toString());
                         Toast.makeText(getActivity(), "Found spot: " + spot.toString(), Toast.LENGTH_LONG);
-                        //                MapsActivity.spotItemFragment.setSpot(spot);
                         showSpotInfo(spot);
                     }
                 });

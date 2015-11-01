@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.AddSpotFragment;
 import com.timappweb.timapp.fragments.MapsFragment;
@@ -40,6 +41,19 @@ public class MainActivity extends BaseActivity  {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
+
+    enum FragmentId{
+        Map(0),
+        AddSpot(1);
+        private final int value;
+        private FragmentId(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    };
     /* ============================================================================================*/
     // Add spot button
     FloatingActionButton addSpotFloatingButton = null;
@@ -80,13 +94,12 @@ public class MainActivity extends BaseActivity  {
         this.initAddSpotButton();
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            changeCurrentFragment(FragmentId.Map);
         }
     }
 
     /**
-     * Create the button to add a spot. Do not show it.
-     * To display the button call @method:showAddSpotButton();
+     * Create the button to add a spot
      */
     protected void initAddSpotButton() {
         if (addSpotFloatingButton == null){
@@ -95,15 +108,21 @@ public class MainActivity extends BaseActivity  {
             addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText( getApplicationContext(),
-                                    "Open NewPost activity",
-                                    Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),
+                            "Open NewPost activity",
+                            Toast.LENGTH_LONG).show();
+
+                    changeCurrentFragment(FragmentId.AddSpot);
                 }
             });
         }
-
     }
-
+    protected void hideAddSpotButton(){
+        addSpotFloatingButton.setVisibility(View.GONE);
+    }
+    protected void showAddSpotButton(){
+        addSpotFloatingButton.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -249,31 +268,41 @@ public class MainActivity extends BaseActivity  {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
+            changeCurrentFragment(position);
         }
     }
 
+    private void changeCurrentFragment(FragmentId id) {
+        changeCurrentFragment(id.getValue());
+    }
     /**
      * Swaps fragments in the main content view
      * @param position
      */
-    private void selectItem(int position) {
+    private void changeCurrentFragment(int position) {
         // Create a new fragment according to the clicked item
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = null;
 
         Log.i(TAG, "You clicked on button " + position);
+        // TODO check user access with RestClient.instance().checkToken();
         // TODO use constants
-        switch (position){
-            case 0:             // DO THAT
+
+        switch (FragmentId.values()[position]){
+            case Map:             // DO THAT
+                showAddSpotButton();
                 fragment = new MapsFragment();
                 break;
-            case 1:             // DO THIS
-                // TODO hide the add spot button
+            case AddSpot:             // DO THIS
+                if (!MyApplication.requireLoggedIn(this)){
+                    return;
+                }
+                hideAddSpotButton();
                 fragment = new AddSpotFragment();
+
                 break;
             default:            // By default go to the map
-                fragment = new AddSpotFragment();
+                fragment = new MapsFragment();
         }
 
         // Insert the fragment by replacing any existing fragment

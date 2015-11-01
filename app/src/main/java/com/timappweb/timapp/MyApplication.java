@@ -1,7 +1,10 @@
 package com.timappweb.timapp;
 
 import android.app.Application;
+import android.content.Intent;
 
+import com.timappweb.timapp.activities.LoginActivity;
+import com.timappweb.timapp.activities.MainActivity;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -21,9 +24,25 @@ public class MyApplication extends Application{
 
     }
 
+    /**
+     * @return true if user is logged in
+     */
     public static boolean isLoggedIn(){
         return LocalPersistenceManager.instance.pref.getBoolean(RestClient.IS_LOGIN, false);
     }
 
 
+    /**
+     * If user is logged in do nothing
+     * If not redirect to login page
+     * @param mainActivity
+     */
+    public static boolean requireLoggedIn(MainActivity mainActivity) {
+        if (!isLoggedIn()){
+            Intent intent = new Intent(mainActivity, LoginActivity.class);
+            mainActivity.startActivity(intent);
+            return false;
+        }
+        return true;
+    }
 }

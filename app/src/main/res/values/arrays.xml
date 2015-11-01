@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string-array name="navigation_array" >
-        <item>Map</item>
-        <item>Add Spot</item>
+        <item android:id="@+id/button_activity_map">Map</item>
+        <item android:id="@+id/button_activity_add_spot">Add Spot</item>
     </string-array>
 </resources>

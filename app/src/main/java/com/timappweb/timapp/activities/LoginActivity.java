@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,6 +34,8 @@ import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.utils.Feedback;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,8 +50,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
+            "stef@tiemapp.com:stef", "jack@tiemapp.com:jack"
     };
+    private static final int MINMUM_PASSWORD_LENGTH = 3;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -144,9 +148,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(this, email, password);
-            mAuthTask.execute((Void) null);
+            String loginStr = email+":"+password;
+            if (Arrays.asList(DUMMY_CREDENTIALS).contains(loginStr)){
+                // Check dummy credential
+                Log.i(TAG, "Login with dummy credential");
+                RestClient.instance().createLoginSession("A", new User(email, ""));
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
+            else{
+                showProgress(true);
+                mAuthTask = new UserLoginTask(this, email, password);
+                mAuthTask.execute((Void) null);
+            }
         }
     }
 
@@ -157,7 +171,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > MINMUM_PASSWORD_LENGTH;
     }
 
     /**
