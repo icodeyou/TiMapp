@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.timappweb.timapp.R;
 
@@ -11,17 +12,19 @@ import com.timappweb.timapp.R;
  * All class must inherit from BaseActivity
  */
 public class BaseActivity extends AppCompatActivity {
+/*
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-    /*
-    public DrawerLayout drawerLayout;
-    public ListView drawerList;
-    public String[] layers;
-    private ActionBarDrawerToggle drawerToggle;
-    private Map map;
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.toolbar);
 
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        // R.id.drawer_layout should be in every activity with exactly the same id.
+        //Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+*/
+    /*    // R.id.drawer_layout should be in every activity with exactly the same id.
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         drawerToggle = new ActionBarDrawerToggle((Activity) this, drawerLayout, R.drawable.ic_drawer, 0, 0)
