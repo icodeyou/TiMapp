@@ -20,8 +20,6 @@ public class MyApplication extends Application{
 
         String endpoint = getResources().getString(R.string.ws_endpoint);
         RestClient.init(this, endpoint);
-
-
     }
 
     /**
