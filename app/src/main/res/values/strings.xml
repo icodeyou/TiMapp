@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Timapp</string>
 
@@ -13,6 +14,10 @@
     <string name="title_activity_broadcast">broadcast</string>
     <string name="title_activity_current_spot">My Broadcast</string>
 
+    <string name="username">Jack Overfield</string>
+    <string name="city">Paris</string>
+    <string name="country">France</string>
+
     <string name="message_broadcast">broadcast</string>
     <string name="button_broadcast">broadcast</string>
     <string name="action_map">Map</string>
@@ -26,6 +31,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_drawer">Menu</string>
     <string name="drawer_open">Drawer Open</string>
-    <string name="drawer_close">Drawer claose</string>
+    <string name="drawer_close">Drawer close</string>
     <string name="button_submit_spot">Post</string>
+    <string name="action_filter">Filter</string>
 </resources>

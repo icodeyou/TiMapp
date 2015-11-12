@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.activities.MainActivity;
+import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -35,12 +35,12 @@ public class MyApplication extends Application{
     /**
      * If user is logged in do nothing
      * If not redirect to login page
-     * @param mainActivity
+     * @param drawerActivity
      */
-    public static boolean requireLoggedIn(MainActivity mainActivity) {
+    public static boolean requireLoggedIn(DrawerActivity drawerActivity) {
         if (!isLoggedIn()){
-            Intent intent = new Intent(mainActivity, LoginActivity.class);
-            mainActivity.startActivity(intent);
+            Intent intent = new Intent(drawerActivity, LoginActivity.class);
+            drawerActivity.startActivity(intent);
             return false;
         }
         return true;

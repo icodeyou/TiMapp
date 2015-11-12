@@ -35,7 +35,6 @@ import com.timappweb.timapp.utils.Feedback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -153,7 +152,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 // Check dummy credential
                 Log.i(TAG, "Login with dummy credential");
                 RestClient.instance().createLoginSession("A", new User(email, ""));
-                Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, DrawerActivity.class);
                 startActivity(intent);
             }
             else{

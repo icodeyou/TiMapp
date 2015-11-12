@@ -1,8 +1,12 @@
 package com.timappweb.timapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.GridBasedAlgorithm;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.entities.SpotsTag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
@@ -53,6 +58,7 @@ public class MapsFragment extends SupportMapFragment {
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
 
+
     /**
      * When we click on a market we need to now the corresponding spot
      */
@@ -77,6 +83,7 @@ public class MapsFragment extends SupportMapFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.i(TAG, "OnViewCreated");
+        setHasOptionsMenu(true);
 
         mapView = (MapView) getActivity().findViewById(R.id.google_map_fragment);
 
@@ -88,6 +95,28 @@ public class MapsFragment extends SupportMapFragment {
         }
         this.loadMapIfNeeded();
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //Clear the menu, to avoid inflating several times the same menu
+        menu.clear();
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here.
+        int id = item.getItemId();
+
+        Log.d(TAG, "FILTER CALLED");
+        if (id == R.id.action_filter) {
+            Log.d(TAG, "FILTER CALLED");
+            Intent intent = new Intent(getActivity(),FilterActivity.class);
+            startActivity(intent);
+        }
+        return true;
     }
 
     @Override

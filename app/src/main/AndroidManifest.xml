@@ -30,7 +30,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.DrawerActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,6 +59,10 @@
             android:name=".services.FetchAddressIntentService"
             android:exported="false" >
         </service>
+
+        <activity
+            android:name=".activities.FilterActivity">
+        </activity>
     </application>
 
 </manifest>
