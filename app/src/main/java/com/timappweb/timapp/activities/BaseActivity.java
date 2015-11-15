@@ -48,7 +48,7 @@ public class BaseActivity extends AppCompatActivity {
         drawerList = (ListView) findViewById(R.id.left_drawer);
         View header = getLayoutInflater().inflate(R.layout.drawer_list_header, null);
         drawerList.addHeaderView(header, null, false);
-        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, android.R.id.text1,
+        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.useless_drawer_list_item, android.R.id.text1,
                 layers));
         View footerView = ((LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(
                 R.layout.drawer_list_footer, null, false);

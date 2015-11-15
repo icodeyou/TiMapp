@@ -53,7 +53,7 @@
         </activity>
 
         <service
-            android:name=".FetchAddressIntentService"
+            <!--android:name=".FetchAddressIntentService"-->
             android:exported="false" />
         <service
             android:name=".services.FetchAddressIntentService"
@@ -62,6 +62,10 @@
 
         <activity
             android:name=".activities.FilterActivity">
+        </activity>
+
+        <activity
+            android:name=".activities.AddSpotActivity">
         </activity>
     </application>
 
