@@ -34,4 +34,5 @@
     <string name="drawer_close">Drawer close</string>
     <string name="button_submit_spot">Post</string>
     <string name="action_filter">Filter</string>
+    <string name="search_hint">Type a tag</string>
 </resources>

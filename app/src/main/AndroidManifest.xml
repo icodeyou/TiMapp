@@ -58,11 +58,32 @@
         </service>
 
         <activity
-            android:name=".activities.FilterActivity">
+            android:name=".activities.FilterActivity"
+            android:parentActivityName="com.timappweb.timapp.activities.DrawerActivity" >
+            <!-- Make activity searchable -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
 
         <activity
-            android:name=".activities.AddSpotActivity">
+            android:name=".activities.AddSpotActivity"
+            android:parentActivityName="com.timappweb.timapp.activities.DrawerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
     </application>
 
