@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent"
+    tools:context=".FilterActivity">
+
+    <!-- TOOLBAR -->
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/linearLayout">
+
+        <!-- la barre de recherche est dans l'action bar -->
+
+
+        <!-- ******************************************************************* -->
+        <!-- First part: ListView : Suggestion of tags -->
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/suggested_tags"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0"
+            android:id="@+id/post_bottom">
+
+            <!-- ******************************************************************* -->
+            <!-- Second part: RecyclerView : Saved tags -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:id="@+id/horizontalScrollView"
+                android:background="@drawable/border_top_bottom">
+                <!-- Here should be inserted a RecyclerView -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9 #tag10 #tag11 #tag12"/>
+            </HorizontalScrollView>
+
+            <!-- ******************************************************************* -->
+            <!-- Third part: ListView : Mood -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=":)"
+                    android:background="@color/green"
+                    android:id="@+id/smiley_1"
+                    android:layout_gravity="center_vertical" />
+
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=":D"
+                    android:background="@color/green"
+                    android:id="@+id/smiley_2"
+                    android:layout_gravity="center_vertical" />
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="ker"
+                    android:background="@color/green"
+                    android:id="@+id/smiley_3"
+                    android:layout_gravity="center_vertical" />
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=":@"
+                    android:background="@color/red"
+                    android:id="@+id/smiley_4"
+                    android:layout_gravity="center_vertical" />
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=":'("
+                    android:background="@color/red"
+                    android:id="@+id/smiley_5"
+                    android:layout_gravity="center_vertical" />
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=":("
+                    android:background="@color/red"
+                    android:id="@+id/smiley_6"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+
+            <!-- ******************************************************************* -->
+            <!-- Fourth part: Place -->
+            <!-- There should be a "pager" here to insert different fragments according to the state of the place search"-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ProgressBar
+                    android:id="@+id/progressBar1"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Loading location ..."
+                    android:gravity="center"
+                    android:textSize="25dp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <!-- ******************************************************************* -->
+            <!-- Fifth part: Anonymous button-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_incognito"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="25dp"
+                    android:text="Anonymous"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"/>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/checkBox" />
+            </LinearLayout>
+
+            <!-- ******************************************************************* -->
+            <!-- Sixth place : Post buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="POST"
+                    android:textColor="@color/white"
+                    android:textSize="22dp"
+                    android:background="@drawable/validate_button"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

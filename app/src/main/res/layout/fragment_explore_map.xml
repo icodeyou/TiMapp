@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    tools:context="com.timappweb.timapp.activities.ActivityMaps"
+    android:id="@+id/action_map"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/container_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <fragment
+            android:name="com.timappweb.timapp.fragments.ExploreMapFragment"
+            android:id="@+id/google_map_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_explore_map" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/container_spots_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+    </FrameLayout>
+
+</FrameLayout>

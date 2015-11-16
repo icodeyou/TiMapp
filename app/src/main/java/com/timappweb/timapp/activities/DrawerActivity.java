@@ -1,0 +1,386 @@
+package com.timappweb.timapp.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.fragments.AroundFragment;
+import com.timappweb.timapp.fragments.ExploreFragment;
+import com.timappweb.timapp.fragments.MoodFragment;
+import com.timappweb.timapp.fragments.SettingsFragment;
+//import android.support.design.widget.FloatingActionButton;
+
+
+public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "LOG DRAWER ACTIVITY";
+    /* ============================================================================================*/
+    /* PROPERTIES */
+    /* ============================================================================================*/
+    // Drawer
+    private DrawerLayout mDrawerLayout;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    ActionBarDrawerToggle mDrawerToggle;
+
+    enum FragmentId{
+        Explore(0), Around(1), Mood(2), Settings(3);
+        private final int value;
+        private FragmentId(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    };
+    /* ============================================================================================*/
+    // Add spot button
+    FloatingActionButton addSpotFloatingButton = null;
+    /* ============================================================================================*/
+
+    /**
+     * The {@link android.support.v4.view.PagerAdapter} that will provide
+     * fragments for each of the sections. We use a
+     * {@link FragmentPagerAdapter} derivative, which will keep every
+     * loaded fragment in memory. If this becomes too memory intensive, it
+     * may be best to switch to a
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+    //SectionsPagerAdapter mSectionsPagerAdapter;
+
+    /**
+     * The {@link ViewPager} that will host the section contents.
+     */
+    ViewPager mViewPager;
+
+     /* ============================================================================================*/
+    /* ON CREATE */
+    /* ============================================================================================*/
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drawer);
+
+        //Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+       // mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        // Set up the ViewPager with the sections adapter.
+      //  mViewPager = (ViewPager) findViewById(R.id.pager);
+      //  mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        // !important Init drawer
+        this.initDrawer();
+
+        // !important Init drawer
+        this.initAddSpotButton();
+
+        if (savedInstanceState == null) {
+            changeCurrentFragment(FragmentId.Explore);
+        }
+    }
+
+     /* ============================================================================================*/
+    /* Methods */
+    /* ============================================================================================*/
+
+    /**
+     * Create the button to add a spot
+     */
+    protected void initAddSpotButton() {
+        if (addSpotFloatingButton == null){
+            addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
+            Log.d(TAG, "Init add_spot_button button");
+            addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getApplicationContext(),
+                            "Open NewPost activity",
+                            Toast.LENGTH_LONG).show();
+
+                    Intent goToAddSpot = new Intent(getBaseContext(),AddSpotActivity.class);
+                    startActivity(goToAddSpot);
+                }
+            });
+        }
+    }
+    protected void hideAddSpotButton(){
+        addSpotFloatingButton.setVisibility(View.GONE);
+    }
+    protected void showAddSpotButton(){
+        addSpotFloatingButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { // Handle action bar item clicks here.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_filter) {
+            Intent intent = new Intent(this, FilterActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*  A QUOI CA SERT CA ???????????????????????????????????????????????????????????
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     *
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            Locale l = Locale.getDefault();
+            switch (position) {
+                case 0:
+                    return getString(R.string.title_section1).toUpperCase(l);
+                case 1:
+                    return getString(R.string.title_section2).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_section3).toUpperCase(l);
+            }
+            return null;
+        }
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     *
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         *
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         *
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.useless_fragment_main, container, false);
+            return rootView;
+        }
+    }
+*/
+
+    /* ============================================================================================*/
+    /* DRAWER */
+    /* ============================================================================================*/
+    protected void initDrawer(){
+        Log.d(TAG, "Drawer initialisation");
+
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // set a custom shadow that overlays the main content when the drawer opens
+        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // --------------------------------
+        // To close and open the drawer
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    // ----------------------
+    // Drawer menu
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.item_explore) {
+            changeCurrentFragment(FragmentId.Explore);
+        }
+        else if(id == R.id.item_around) {
+            changeCurrentFragment(FragmentId.Around);
+        }
+        else if(id == R.id.item_mood) {
+            changeCurrentFragment(FragmentId.Mood);
+        }
+        else if (id == R.id.item_settings) {
+            changeCurrentFragment(FragmentId.Settings);
+        }
+
+        else if (id == R.id.item_log_out) {
+            Intent logout = new Intent(this,LoginActivity.class);
+            startActivity(logout);
+
+            // To do :
+            // Disconnect user
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    // ----------
+    //Manage fragments in drawer
+    private void changeCurrentFragment(FragmentId id) {
+        changeCurrentFragment(id.getValue());
+    }
+    /**
+     * Swaps fragments in the main content view
+     * @param position
+     */
+    private void changeCurrentFragment(int position) {
+        // Create a new fragment according to the clicked item
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment newFragment = null;
+        String newFragmentTAG = "Explore";
+
+        Log.i(TAG, "You clicked on button " + position);
+        // TODO check user access with RestClient.instance().checkToken();
+        // TODO use constants
+
+        switch (FragmentId.values()[position]){
+            case Explore:             // DO THIS
+                showAddSpotButton();
+                newFragmentTAG = "Explore";
+                newFragment = new ExploreFragment();
+                break;
+
+            case Around:             // DO THAT
+                //Require the login here (not the case here, but code to use for other fragments)
+                if (!MyApplication.requireLoggedIn(this)){
+                    return;
+                }
+                showAddSpotButton();
+                newFragmentTAG = "Around";
+                newFragment = new AroundFragment();
+                break;
+
+            case Mood:
+                showAddSpotButton();
+                newFragmentTAG = "Mood";
+                newFragment = new MoodFragment();
+                break;
+
+            case Settings:
+                hideAddSpotButton();
+                newFragmentTAG = "Settings";
+                newFragment = new SettingsFragment();
+                break;
+
+            default:            // By default go to Explore
+                showAddSpotButton();
+                newFragmentTAG = "Explore";
+                newFragment = new ExploreFragment();
+        }
+
+        //Set The action bar Title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(newFragmentTAG);
+        }
+
+        // Get TAG of current fragment
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+        String currentFragmentTAG = null;
+        if (currentFragment != null) {
+            currentFragmentTAG = currentFragment.getTag();
+        }
+
+        // Insert the fragment by replacing any existing fragment,
+        // only if the asked fragment isn't the same as the current fragment
+        if (currentFragmentTAG != newFragmentTAG) {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, newFragment, newFragmentTAG).commit();
+        }
+
+    }
+
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
+        //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+//        getActionBar().setTitle(mTitle);
+    }
+
+}

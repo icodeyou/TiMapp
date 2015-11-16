@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text=
+            "Personnal information :
+            Name
+            Email
+            Mobile number
+            Password
+
+            App settings :
+            Receive posts from public / only followers
+            Notifications
+
+            About :
+            Terms of use
+            Privacy policy
+            Licenses
+            "/>
+</LinearLayout>

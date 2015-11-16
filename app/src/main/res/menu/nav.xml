@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Activity">
+        <menu>
+            <item android:id="@+id/item_explore" android:icon="@android:drawable/ic_menu_camera"
+                android:title="Explore" />
+            <item android:id="@+id/item_around" android:icon="@android:drawable/ic_menu_send"
+                android:title="Around me" />
+            <item android:id="@+id/item_mood" android:icon="@android:drawable/ic_menu_send"
+                android:title="Mood" />
+        </menu>
+    </item>
+
+    <item android:title="Account">
+        <menu>
+            <item android:id="@+id/item_settings" android:icon="@android:drawable/ic_menu_send"
+                android:title="Settings" />
+            <item android:id="@+id/item_log_out" android:icon="@android:drawable/ic_menu_send"
+                android:title="Log out" />
+        </menu>
+    </item>
+</menu>
