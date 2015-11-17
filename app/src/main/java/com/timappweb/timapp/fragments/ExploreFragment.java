@@ -16,9 +16,9 @@ public class ExploreFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_explore_viewpager, container, false);
+        View root = inflater.inflate(R.layout.fragment_explore, container, false);
         Log.d("ExploreFragment", "View is created");
-        ViewPager viewPager = (ViewPager) root.findViewById(R.id.viewPager);
+        ViewPager viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
         /** Important: Must use the child FragmentManager or you will see side effects. */
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 

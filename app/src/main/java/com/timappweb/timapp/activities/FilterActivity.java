@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -9,11 +10,20 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.timappweb.timapp.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FilterActivity extends BaseActivity {
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //// onCreate
+    ////////////////////////////////////////////////////////////////////////////////
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +35,28 @@ public class FilterActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Filter");
+
+        //Import results into the vertical ListView
+        //////////////////////////////////////////////////////////////////////////////
+        //Find listview in XML
+        ListView lv = (ListView) findViewById(R.id.suggested_tags);
+
+        //Example of tags :
+        String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
+        "whynot","ridiculous","good","awful","sexdrugsandrocknroll"};
+
+        // Array adapter( *activity*, *type of list view*, *my_array*)
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                tags_ex);
+
+        //Set adapter
+        lv.setAdapter(arrayAdapter);
 }
+////////////////////////////////////////////////////////////////////////////////
+    //// Action bar + onBackPressed
+    ////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,5 +95,11 @@ public class FilterActivity extends BaseActivity {
     public void onBackPressed() {
         NavUtils.navigateUpFromSameTask(this);
     }
+
+    public void onUpdateClick(View view) {
+        Intent updateMap = new Intent(this,DrawerActivity.class);
+        startActivity(updateMap);
+    }
+
 
 }

@@ -35,4 +35,5 @@
     <string name="button_submit_spot">Post</string>
     <string name="action_filter">Filter</string>
     <string name="search_hint">Type a tag</string>
+    <string name="mood_location">WORLD</string>
 </resources>
