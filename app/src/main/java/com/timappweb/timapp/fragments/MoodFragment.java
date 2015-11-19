@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,7 +23,6 @@ public class MoodFragment extends Fragment {
         ViewPager viewPager = (ViewPager) root.findViewById(R.id.mood_viewpager);
         /** Important: Must use the child FragmentManager or you will see side effects. */
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
-
 
         return root;
     }

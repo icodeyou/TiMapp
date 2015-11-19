@@ -367,7 +367,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     }
 
-
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -377,10 +376,14 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         return super.onPrepareOptionsMenu(menu);
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-//        getActionBar().setTitle(mTitle);
+    /////////////////////////////////////////////////////////
+    //////////////// FRAGMENTS /////////////////////////////
+
+    // MoodFragment /////////////////////////
+    public void onMoodLocationClick(View view) {
+        Intent chooseLocation = new Intent(this, MoodLocationActivity.class);
+        startActivity(chooseLocation);
     }
+
 
 }

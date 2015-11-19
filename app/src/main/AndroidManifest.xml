@@ -85,6 +85,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
+        <activity
+            android:name=".activities.MoodLocationActivity"
+            android:parentActivityName="com.timappweb.timapp.activities.DrawerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+        </activity>
     </application>
 
 </manifest>
