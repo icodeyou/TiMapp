@@ -90,14 +90,6 @@
                 android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
         <activity
-            android:name=".activities.MoodLocationActivity"
-            android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
-        </activity>
-        <activity
             android:name=".activities.SpotActivity"
             android:label="@string/title_activity_spot"
             android:parentActivityName=".activities.DrawerActivity" >
@@ -119,7 +111,7 @@
         </activity>
         <activity
             android:name=".activities.PeopleActivity"
-            android:label="@string/title_activity_place"
+            android:label="@string/title_activity_people"
             android:parentActivityName=".activities.PlaceActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -128,7 +120,16 @@
         </activity>
         <activity
             android:name=".activities.CommentActivity"
-            android:label="@string/title_activity_place"
+            android:label="@string/title_activity_comment"
+            android:parentActivityName=".activities.PlaceActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timappweb.timapp.activities.PlaceActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile"
             android:parentActivityName=".activities.PlaceActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

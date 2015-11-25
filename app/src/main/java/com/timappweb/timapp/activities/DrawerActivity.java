@@ -20,9 +20,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.fragments.AroundFragment;
 import com.timappweb.timapp.fragments.ExploreFragment;
-import com.timappweb.timapp.fragments.MoodFragment;
 import com.timappweb.timapp.fragments.SettingsFragment;
 //import android.support.design.widget.FloatingActionButton;
 
@@ -39,7 +37,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     ActionBarDrawerToggle mDrawerToggle;
 
     enum FragmentId{
-        Explore(0), Around(1), Mood(2), Settings(3);
+        Explore(0), Settings(1);
         private final int value;
         private FragmentId(int value) {
             this.value = value;
@@ -267,10 +265,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (id == R.id.item_explore) {
             changeCurrentFragment(FragmentId.Explore);
         }
-        else if(id == R.id.item_around) {
-            changeCurrentFragment(FragmentId.Around);
+        else if(id == R.id.item_spot) {
+            Intent intent = new Intent(this,SpotActivity.class);
+            startActivity(intent);
         }
-        else if(id == R.id.item_mood) {
+        else if(id == R.id.item_place) {
             Intent intent = new Intent(this,PlaceActivity.class);
             startActivity(intent);
         }
@@ -317,23 +316,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 newFragment = new ExploreFragment();
                 break;
 
-            case Around:             // DO THAT
+            case Settings:
                 //Require the login here (not the case here, but code to use for other fragments)
                 if (!MyApplication.requireLoggedIn(this)){
                     return;
                 }
-                showAddSpotButton();
-                newFragmentTAG = "Around";
-                newFragment = new AroundFragment();
-                break;
 
-            case Mood:
-                showAddSpotButton();
-                newFragmentTAG = "Mood";
-                newFragment = new MoodFragment();
-                break;
-
-            case Settings:
                 hideAddSpotButton();
                 newFragmentTAG = "Settings";
                 newFragment = new SettingsFragment();

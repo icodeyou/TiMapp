@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
@@ -28,7 +27,7 @@ public class PlaceActivity extends BaseActivity{
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Import results into the vertical ListView
+        //Create ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
         ListView lv = (ListView) findViewById(R.id.tags);
@@ -40,6 +39,8 @@ public class PlaceActivity extends BaseActivity{
         lv.setAdapter(placeAdapter);
     }
 
+    //Menu Action Bar
+    //////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -62,6 +63,9 @@ public class PlaceActivity extends BaseActivity{
         }
     }
 
+
+    //Generate Data for ListView
+    //////////////////////////////////////////////////////////////////////////////
     private ArrayList<Tag> generateData(){
         ArrayList<Tag> tags = new ArrayList<>();
         tags.add(new Tag("#friteschezjojo",1587));

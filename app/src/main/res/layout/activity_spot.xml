@@ -78,7 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal"
-        android:background="@color/LightYellow">
+        android:background="@color/LightYellow"
+        android:onClick="onProfileCLick">
         <ImageView
             android:layout_weight="1"
             android:layout_width="0dp"

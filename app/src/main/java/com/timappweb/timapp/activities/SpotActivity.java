@@ -68,4 +68,9 @@ public class SpotActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void onProfileCLick(View view) {
+        Intent intent = new Intent(this,ProfileActivity.class);
+        startActivity(intent);
+    }
 }
