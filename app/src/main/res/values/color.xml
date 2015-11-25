@@ -3,9 +3,8 @@
     <color name="colorPrimary">#40dff5</color>
     <color name="colorPrimaryDark">#25a6bf</color>
     <color name="colorAccent">#241f80</color>
-    <color name="background">#FFFFFF</color>
+    <color name="background">#fff3f3f3</color>
     <color name="border">#bababa</color>
-
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->

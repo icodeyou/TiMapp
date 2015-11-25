@@ -2,9 +2,6 @@ package com.timappweb.timapp.entities;
 
 import java.util.ArrayList;
 
-/**
- * Created by stephane on 8/26/2015.
- */
 public class Tag {
 
     public Integer id;
@@ -17,7 +14,6 @@ public class Tag {
         this.name = name;
     }
 
-
     public String getName() {
         return name;
     }
@@ -25,7 +21,6 @@ public class Tag {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public int getCount_ref() {
         return count_ref;

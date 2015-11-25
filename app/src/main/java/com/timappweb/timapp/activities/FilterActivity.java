@@ -5,13 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
@@ -34,7 +38,6 @@ public class FilterActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Filter");
 
         //Import results into the vertical ListView
         //////////////////////////////////////////////////////////////////////////////
@@ -43,7 +46,7 @@ public class FilterActivity extends BaseActivity {
 
         //Example of tags :
         String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
-        "whynot","ridiculous","good","awful","sexdrugsandrocknroll"};
+        "whynot","ridiculous","good","awful","sexdrugsandrocknroll", "endofworld", "godsavethequeen"};
 
         // Array adapter( *activity*, *type of list view*, *my_array*)
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -55,7 +58,7 @@ public class FilterActivity extends BaseActivity {
         lv.setAdapter(arrayAdapter);
 }
 ////////////////////////////////////////////////////////////////////////////////
-    //// Action bar + onBackPressed
+    //// Action bar (Searchview) + onBackPressed
     ////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -82,13 +85,15 @@ public class FilterActivity extends BaseActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                Intent updateMap = new Intent(this,DrawerActivity.class);
+                startActivity(updateMap);
                 return true;
             case R.id.action_search:
-                //Handle search actions here
+                /////Handle search actions here
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,6 +105,5 @@ public class FilterActivity extends BaseActivity {
         Intent updateMap = new Intent(this,DrawerActivity.class);
         startActivity(updateMap);
     }
-
 
 }

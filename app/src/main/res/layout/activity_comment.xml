@@ -4,12 +4,12 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- TOOLBAR -->
     <include layout="@layout/toolbar"/>
 
-    <FrameLayout
-        android:id="@+id/mood_location_frame"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:text="Hello World.\n\n
+        All comments on that post are going to be displayed here, in the recent order."/>
 </LinearLayout>

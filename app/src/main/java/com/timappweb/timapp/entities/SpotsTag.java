@@ -20,7 +20,6 @@ public class SpotsTag implements ClusterItem {
         this.count_ref = count_ref;
     }
 
-
     public LatLng getLatLng() {
         return new LatLng(this.latitude, this.longitude);
     }

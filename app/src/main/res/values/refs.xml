@@ -16,6 +16,6 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
-    <item name="fragment_spot" type="layout">@layout/fragment_spot_list</item>
+    <item name="fragment_spot" type="layout">@layout/useless_fragment_spot_list</item>
 
 </resources>

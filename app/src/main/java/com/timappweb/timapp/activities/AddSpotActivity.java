@@ -2,6 +2,8 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,14 +13,18 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,8 +61,7 @@ public class AddSpotActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Broadcast");
-
+/*
         mResultReceiver = new AddressResultReceiver(new Handler());
         this.dialog = new ProgressDialog(this);
         this.dialog.setMessage("Please wait...");
@@ -74,10 +79,54 @@ public class AddSpotActivity extends BaseActivity {
                 broadcastPosition();
             }
         });
+*/
 
+
+        //Import results into the vertical ListView
+        //////////////////////////////////////////////////////////////////////////////
+        //Find listview in XML
+        ListView lv = (ListView) findViewById(R.id.suggested_tags);
+
+        //Example of tags :
+        String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
+                "whynot","ridiculous","good","awful","sexdrugsandrocknroll"};
+
+        // Array adapter( *activity*, *type of list view*, *my_array*)
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                tags_ex);
+
+        //Set adapter
+        lv.setAdapter(arrayAdapter);
     }
 
-    // UP NAVIGATION - Action Bar
+    ////////////////////////////////////////////////////////////////////////////////
+    //// Search View
+    ////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_spot, menu);
+
+        //Set search item
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = null;
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    //// UP NAVIGATION - Action Bar
+    ////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -134,7 +183,7 @@ public class AddSpotActivity extends BaseActivity {
 
     ProgressDialog dialog;
 
-
+/*
     public void broadcastPosition(){
         // 1) Get the user position
         // if (! this.lp.hasKnownPosition()){
@@ -154,6 +203,7 @@ public class AddSpotActivity extends BaseActivity {
         Log.i(TAG, "User position is: " + ll + " with an accuracy of " + location.getAccuracy());
 
         // 2) Get input tags
+
         String inputTags = ((EditText) findViewById(R.id.input_tags)).getText().toString();
         Log.d(TAG, "User tags: " + inputTags);
 
@@ -238,4 +288,5 @@ public class AddSpotActivity extends BaseActivity {
         }
 
     }
+*/
 }

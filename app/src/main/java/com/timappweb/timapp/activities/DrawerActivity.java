@@ -48,7 +48,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         public int getValue() {
             return value;
         }
-    };
+    }
+
     /* ============================================================================================*/
     // Add spot button
     FloatingActionButton addSpotFloatingButton = null;
@@ -91,7 +92,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         // !important Init drawer
         this.initDrawer();
 
-        // !important Init drawer
+        // !important Init AddButton
         this.initAddSpotButton();
 
         if (savedInstanceState == null) {
@@ -113,11 +114,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getApplicationContext(),
-                            "Open NewPost activity",
-                            Toast.LENGTH_LONG).show();
-
-                    Intent goToAddSpot = new Intent(getBaseContext(),AddSpotActivity.class);
+                     Intent goToAddSpot = new Intent(getBaseContext(),AddSpotActivity.class);
                     startActivity(goToAddSpot);
                 }
             });
@@ -274,7 +271,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             changeCurrentFragment(FragmentId.Around);
         }
         else if(id == R.id.item_mood) {
-            changeCurrentFragment(FragmentId.Mood);
+            Intent intent = new Intent(this,PlaceActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.item_settings) {
             changeCurrentFragment(FragmentId.Settings);
@@ -380,10 +378,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     //////////////// FRAGMENTS /////////////////////////////
 
     // MoodFragment /////////////////////////
+ /*
     public void onMoodLocationClick(View view) {
         Intent chooseLocation = new Intent(this, MoodLocationActivity.class);
         startActivity(chooseLocation);
     }
-
+*/
 
 }

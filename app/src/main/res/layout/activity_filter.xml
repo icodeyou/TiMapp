@@ -26,15 +26,6 @@
         <!-- la barre de recherche est dans l'action bar -->
 
 
-        <!-- ******************************************************************* -->
-        <!-- First part: ListView : Suggestion of tags -->
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/suggested_tags"/>
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,12 +34,12 @@
             android:id="@+id/post_bottom">
 
             <!-- ******************************************************************* -->
-            <!-- Second part: RecyclerView : Saved tags -->
+            <!-- First part: RecyclerView : Saved tags -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:id="@+id/horizontalScrollView"
-                android:background="@drawable/border_top_bottom">
+                android:background="@drawable/border_bottom">
                 <!-- Here should be inserted a RecyclerView -->
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,74 +48,25 @@
                     android:text="#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9 #tag10 #tag11 #tag12"/>
             </HorizontalScrollView>
 
+
             <!-- ******************************************************************* -->
-            <!-- Third part: ListView : Mood -->
-            <LinearLayout
+            <!-- First part: ListView : Suggestion of tags -->
+            <ListView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text=":)"
-                    android:background="@color/green"
-                    android:id="@+id/smiley_1"
-                    android:layout_gravity="center_vertical" />
-
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text=":D"
-                    android:background="@color/green"
-                    android:id="@+id/smiley_2"
-                    android:layout_gravity="center_vertical" />
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text="ker"
-                    android:background="@color/green"
-                    android:id="@+id/smiley_3"
-                    android:layout_gravity="center_vertical" />
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text=":@"
-                    android:background="@color/red"
-                    android:id="@+id/smiley_4"
-                    android:layout_gravity="center_vertical" />
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text=":'("
-                    android:background="@color/red"
-                    android:id="@+id/smiley_5"
-                    android:layout_gravity="center_vertical" />
-                <Button
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text=":("
-                    android:background="@color/red"
-                    android:id="@+id/smiley_6"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/suggested_tags"/>
 
 
             <!-- ******************************************************************* -->
-            <!-- Forth place : Update button -->
+            <!-- Second place : Update button -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="bottom">
                 <Button
+                    android:id="@+id/update_map"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:layout_weight="1"
