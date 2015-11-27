@@ -3,9 +3,6 @@ package com.timappweb.timapp.entities;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-/**
- * Created by stephane on 8/27/2015.
- */
 public class SpotsTag implements ClusterItem {
 
     public static final SpotsTag[] ITEMS = {
