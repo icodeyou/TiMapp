@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.timappweb.timapp.MyApplication;
@@ -321,10 +321,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 if (!MyApplication.requireLoggedIn(this)){
                     return;
                 }
-
+                newFragment = new SettingsFragment();
                 hideAddSpotButton();
                 newFragmentTAG = "Settings";
-                newFragment = new SettingsFragment();
+                Log.i("testjack","on est arrivés jusque là");
                 break;
 
             default:            // By default go to Explore
@@ -352,6 +352,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
 
     }
+
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override

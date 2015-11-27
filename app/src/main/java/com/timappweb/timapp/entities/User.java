@@ -2,9 +2,6 @@ package com.timappweb.timapp.entities;
 
 import com.timappweb.timapp.data.LocalPersistenceManager;
 
-/**
- * Created by stephane on 8/24/2015.
- */
 public class User {
 
     public User(){
