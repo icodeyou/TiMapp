@@ -2,8 +2,6 @@ package com.timappweb.timapp.map;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.maps.android.clustering.*;
-import com.timappweb.timapp.entities.Spot;
 
 /**
  * Created by stephane on 9/12/2015.

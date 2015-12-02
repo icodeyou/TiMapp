@@ -11,7 +11,7 @@ public class RestError extends RestResponse{
     @SerializedName("code")
     public int code;
 
-    @SerializedName("message")
+    @SerializedName("comment")
     public String message;
 
     public RestError(String message, int code)
@@ -28,7 +28,7 @@ public class RestError extends RestResponse{
     public String toString() {
         return "RestError{" +
                 "code=" + code +
-                ", message='" + message + '\'' +
+                ", comment='" + message + '\'' +
                 '}';
     }
 }

@@ -4,46 +4,19 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.RestFeedback;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.exceptions.NoLastLocationException;
-import com.timappweb.timapp.fragments.AlertDialog;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.services.FetchAddressIntentService;
-import com.timappweb.timapp.utils.Constants;
-import com.timappweb.timapp.utils.Feedback;
-import com.timappweb.timapp.utils.MyLocationListener;
-import com.timappweb.timapp.utils.MyLocationProvider;
-import com.timappweb.timapp.utils.Util;
-
-import retrofit.client.Response;
 
 public class AddSpotActivity extends BaseActivity {
 
@@ -209,7 +182,7 @@ public class AddSpotActivity extends BaseActivity {
 
         // 3) Call the service to add the spot
         // - Build the spot
-        final Spot spot = new Spot(ll);
+        final Post spot = new Post(ll);
         spot.tag_string = inputTags;
         Log.d(TAG, "Building spot: " + spot);
         RestClient.instance().getService().addSpot(spot, new RestCallback<RestFeedback>() {
@@ -276,11 +249,11 @@ public class AddSpotActivity extends BaseActivity {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
             Log.i(TAG, "Receive result from service: " + resultCode);
             // Display the address string
-            // or an error message sent from the intent service.
+            // or an error comment sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
             displayAddressOutput();
 
-            // Show a toast message if an address was found.
+            // Show a toast comment if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
                 Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG);
             }

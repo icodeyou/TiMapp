@@ -14,7 +14,7 @@ public class RestFeedback extends RestResponse {
     @SerializedName("returnCode")
     public int code;
 
-    @SerializedName("message")
+    @SerializedName("comment")
     public String message;
 
     @SerializedName("steps")
@@ -22,7 +22,7 @@ public class RestFeedback extends RestResponse {
 
 
     public String toString(){
-        return "ServerObject[Success: " + success + "; message=" + message + ";]";
+        return "ServerObject[Success: " + success + "; comment=" + message + ";]";
     }
 
 

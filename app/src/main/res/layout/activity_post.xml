@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             android:gravity="center|left"
             android:text="LetsDanceTonight"
+            android:id="@+id/post_name"
             android:textColor="@color/white"
             android:textSize="17dp"/>
         <ImageView
@@ -37,6 +38,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="17h53"
+            android:id="@+id/post_created"
             android:textColor="@color/white"
             android:textSize="17dp"/>
     </LinearLayout>
@@ -69,6 +71,7 @@
             android:layout_height="80dp"
             android:textSize="17dp"
             android:gravity="center"
+            android:id="@+id/post_comment"
             android:text="@string/exemple_comment"
             android:background="@drawable/border_comment"/>
 
@@ -90,7 +93,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center|left"
-            android:text="Mister Chung"
+            android:text="Username"
+            android:id="@+id/post_username"
             android:textSize="25dp"/>
     </LinearLayout>
 </LinearLayout>

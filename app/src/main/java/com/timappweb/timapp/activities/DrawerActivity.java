@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -266,7 +265,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             changeCurrentFragment(FragmentId.Explore);
         }
         else if(id == R.id.item_spot) {
-            Intent intent = new Intent(this,SpotActivity.class);
+            Intent intent = new Intent(this,PostActivity.class);
             startActivity(intent);
         }
         else if(id == R.id.item_place) {

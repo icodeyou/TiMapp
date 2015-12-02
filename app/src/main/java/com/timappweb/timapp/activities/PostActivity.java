@@ -2,49 +2,60 @@ package com.timappweb.timapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Post;
 
-public class SpotActivity extends BaseActivity {
+public class PostActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spot);
+        setContentView(R.layout.activity_post);
 
+        //------------------------------------------------------------------------------------------
+        Post post = (Post) getIntent().getSerializableExtra("post");
+        if (post == null){
+            // TODO
+            return;
+        }
+
+        //------------------------------------------------------------------------------------------
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Import results into the vertical ListView
-        //////////////////////////////////////////////////////////////////////////////
-        //Find listview in XML
-        ListView lv = (ListView) findViewById(R.id.tags);
+        //------------------------------------------------------------------------------------------
+        ListView listViewTags = (ListView) findViewById(R.id.tags);
+        TextView textViewCreated = (TextView) findViewById(R.id.post_created);
+        TextView textViewComment = (TextView) findViewById(R.id.post_comment);
+        TextView textViewUsername = (TextView) findViewById(R.id.post_username);
+        TextView textViewPostName = (TextView) findViewById(R.id.post_name);
+
+        textViewComment.setText(post.comment);
+        textViewCreated.setText(post.getCreatedDate());
+        textViewUsername.setText(post.user.username);
+        textViewPostName.setText("SpotName");
 
         //Example of tags :
-        String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
-                "whynot", "ridiculous", "good", "awful", "sexdrugsandrocknroll", "againandagain", "imnevergonnastop"};
+        String[] tags_ex = post.getTagsToStringArray();
 
-        // Array adapter( *activity*, *type of list view*, *my_array*)
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
                 tags_ex);
 
-        //Set adapter
-        lv.setAdapter(arrayAdapter);
+        listViewTags.setAdapter(arrayAdapter);
     }
 
     @Override

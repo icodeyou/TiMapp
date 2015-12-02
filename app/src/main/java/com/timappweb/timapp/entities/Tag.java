@@ -1,8 +1,9 @@
 package com.timappweb.timapp.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tag {
+public class Tag implements Serializable{
 
     public Integer id;
     public String name;

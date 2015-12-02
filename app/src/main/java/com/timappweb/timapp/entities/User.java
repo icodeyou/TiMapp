@@ -2,7 +2,16 @@ package com.timappweb.timapp.entities;
 
 import com.timappweb.timapp.data.LocalPersistenceManager;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    public String username;
+    public String password;
+    public String email;
+    public int user_id;
+
+    public static final String KEY_NAME = "name";
+    public static final String KEY_EMAIL = "email";
 
     public User(){
 
@@ -18,12 +27,12 @@ public class User {
         this.username = username;
     }
 
-    public String username;
-    public String password;
-    public String email;
-
-    public static final String KEY_NAME = "name";
-    public static final String KEY_EMAIL = "email";
+    private static int dummyIndice = 0;
+    public static User createDummy(){
+        User user = new User("user"+dummyIndice+"@dummy.com", "dummy", "Dummy User " + dummyIndice);
+        dummyIndice++;
+        return user;
+    }
 
     public void loadFromPref(){
         this.email = LocalPersistenceManager.instance.pref.getString(KEY_EMAIL, null);

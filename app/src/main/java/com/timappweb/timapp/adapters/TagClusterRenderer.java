@@ -31,14 +31,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.timappweb.timapp.entities.SpotsTag;
+import com.timappweb.timapp.entities.MapTag;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,30 +56,30 @@ import java.util.concurrent.locks.ReentrantLock;
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 //
-public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
+public class TagClusterRenderer implements ClusterRenderer<MapTag> {
     private static final boolean SHOULD_ANIMATE;
     private final GoogleMap mMap;
     private final IconGenerator mIconGenerator;
-    private final ClusterManager<SpotsTag> mClusterManager;
+    private final ClusterManager<MapTag> mClusterManager;
     private final float mDensity;
     private static final int[] BUCKETS;
     private ShapeDrawable mColoredCircleBackground;
     private Set<MarkerWithPosition> mMarkers = Collections.newSetFromMap(new ConcurrentHashMap());
     private SparseArray<BitmapDescriptor> mIcons = new SparseArray();
-    private TagClusterRenderer.MarkerCache<SpotsTag> mMarkerCache = new TagClusterRenderer.MarkerCache();
+    private TagClusterRenderer.MarkerCache<MapTag> mMarkerCache = new TagClusterRenderer.MarkerCache();
     private static final int MIN_CLUSTER_SIZE = 4;
-    private Set<? extends Cluster<SpotsTag>> mClusters;
-    private Map<Marker, Cluster<SpotsTag>> mMarkerToCluster = new HashMap();
-    private Map<Cluster<SpotsTag>, Marker> mClusterToMarker = new HashMap();
+    private Set<? extends Cluster<MapTag>> mClusters;
+    private Map<Marker, Cluster<MapTag>> mMarkerToCluster = new HashMap();
+    private Map<Cluster<MapTag>, Marker> mClusterToMarker = new HashMap();
     private float mZoom;
     private final TagClusterRenderer.ViewModifier mViewModifier = new TagClusterRenderer.ViewModifier();
-    private ClusterManager.OnClusterClickListener<SpotsTag> mClickListener;
-    private ClusterManager.OnClusterInfoWindowClickListener<SpotsTag> mInfoWindowClickListener;
-    private ClusterManager.OnClusterItemClickListener<SpotsTag> mItemClickListener;
-    private ClusterManager.OnClusterItemInfoWindowClickListener<SpotsTag> mItemInfoWindowClickListener;
+    private ClusterManager.OnClusterClickListener<MapTag> mClickListener;
+    private ClusterManager.OnClusterInfoWindowClickListener<MapTag> mInfoWindowClickListener;
+    private ClusterManager.OnClusterItemClickListener<MapTag> mItemClickListener;
+    private ClusterManager.OnClusterItemInfoWindowClickListener<MapTag> mItemInfoWindowClickListener;
     private static final TimeInterpolator ANIMATION_INTERP;
 
-    public TagClusterRenderer(Context context, GoogleMap map, ClusterManager<SpotsTag> clusterManager) {
+    public TagClusterRenderer(Context context, GoogleMap map, ClusterManager<MapTag> clusterManager) {
         this.mMap = map;
         this.mDensity = context.getResources().getDisplayMetrics().density;
         this.mIconGenerator = new IconGenerator(context);
@@ -155,11 +154,11 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
 
     protected String getClusterText(Cluster cluster) {
         int bucket = this.getBucket(cluster);
-        SpotsTag spotsTag = (SpotsTag) cluster.getItems().iterator().next();
-        return spotsTag.name + " ("+spotsTag.count_ref+")\n" + bucket;
+        MapTag mapTag = (MapTag) cluster.getItems().iterator().next();
+        return mapTag.name + " ("+ mapTag.count_ref+")\n" + bucket;
     }
 
-    protected int getBucket(Cluster<SpotsTag> cluster) {
+    protected int getBucket(Cluster<MapTag> cluster) {
         int size = cluster.getSize();
         if(size <= BUCKETS[0]) {
             return size;
@@ -174,27 +173,27 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
         }
     }
 
-    protected boolean shouldRenderAsCluster(Cluster<SpotsTag> cluster) {
+    protected boolean shouldRenderAsCluster(Cluster<MapTag> cluster) {
         return cluster.getSize() > 4;
     }
 
-    public void onClustersChanged(Set<? extends Cluster<SpotsTag>> clusters) {
+    public void onClustersChanged(Set<? extends Cluster<MapTag>> clusters) {
         this.mViewModifier.queue(clusters);
     }
 
-    public void setOnClusterClickListener(ClusterManager.OnClusterClickListener<SpotsTag> listener) {
+    public void setOnClusterClickListener(ClusterManager.OnClusterClickListener<MapTag> listener) {
         this.mClickListener = listener;
     }
 
-    public void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<SpotsTag> listener) {
+    public void setOnClusterInfoWindowClickListener(ClusterManager.OnClusterInfoWindowClickListener<MapTag> listener) {
         this.mInfoWindowClickListener = listener;
     }
 
-    public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<SpotsTag> listener) {
+    public void setOnClusterItemClickListener(ClusterManager.OnClusterItemClickListener<MapTag> listener) {
         this.mItemClickListener = listener;
     }
 
-    public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<SpotsTag> listener) {
+    public void setOnClusterItemInfoWindowClickListener(ClusterManager.OnClusterItemInfoWindowClickListener<MapTag> listener) {
         this.mItemInfoWindowClickListener = listener;
     }
 
@@ -223,10 +222,10 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
         }
     }
 
-    protected void onBeforeClusterItemRendered(SpotsTag item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(MapTag item, MarkerOptions markerOptions) {
     }
 
-    protected void onBeforeClusterRendered(Cluster<SpotsTag> cluster, MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(Cluster<MapTag> cluster, MarkerOptions markerOptions) {
         int bucket = this.getBucket(cluster);
         BitmapDescriptor descriptor = (BitmapDescriptor)this.mIcons.get(bucket);
         if(descriptor == null) {
@@ -238,25 +237,25 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
         markerOptions.icon(descriptor);
     }
 
-    protected void onClusterRendered(Cluster<SpotsTag> cluster, Marker marker) {
+    protected void onClusterRendered(Cluster<MapTag> cluster, Marker marker) {
     }
 
-    protected void onClusterItemRendered(SpotsTag clusterItem, Marker marker) {
+    protected void onClusterItemRendered(MapTag clusterItem, Marker marker) {
     }
 
-    public Marker getMarker(SpotsTag clusterItem) {
+    public Marker getMarker(MapTag clusterItem) {
         return this.mMarkerCache.get(clusterItem);
     }
 
-    public SpotsTag getClusterItem(Marker marker) {
+    public MapTag getClusterItem(Marker marker) {
         return this.mMarkerCache.get(marker);
     }
 
-    public Marker getMarker(Cluster<SpotsTag> cluster) {
+    public Marker getMarker(Cluster<MapTag> cluster) {
         return (Marker)this.mClusterToMarker.get(cluster);
     }
 
-    public Cluster<SpotsTag> getCluster(Marker marker) {
+    public Cluster<MapTag> getCluster(Marker marker) {
         return (Cluster)this.mMarkerToCluster.get(marker);
     }
 
@@ -340,12 +339,12 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
     }
 
     private class CreateMarkerTask {
-        private final Cluster<SpotsTag> cluster;
+        private final Cluster<MapTag> cluster;
         private final Set<MarkerWithPosition> newMarkers;
         private LatLng animateFrom = null;
 
-        public CreateMarkerTask(Cluster<SpotsTag> var1, Set<TagClusterRenderer.MarkerWithPosition> c, LatLng markersAdded) {
-            this.cluster = (Cluster<SpotsTag>) var1;
+        public CreateMarkerTask(Cluster<MapTag> var1, Set<TagClusterRenderer.MarkerWithPosition> c, LatLng markersAdded) {
+            this.cluster = (Cluster<MapTag>) var1;
             this.newMarkers = c;
             this.animateFrom = markersAdded;
         }
@@ -355,7 +354,7 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
                 Iterator markerOptions2 = this.cluster.getItems().iterator();
 
                 while(markerOptions2.hasNext()) {
-                    SpotsTag marker1 = (SpotsTag) markerOptions2.next();
+                    MapTag marker1 = (MapTag) markerOptions2.next();
                     Marker markerWithPosition2 = TagClusterRenderer.this.mMarkerCache.get(marker1);
                     TagClusterRenderer.MarkerWithPosition markerWithPosition1;
                     if(markerWithPosition2 == null) {
@@ -581,13 +580,13 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
     }
 
     private class RenderTask implements Runnable {
-        final Set<? extends Cluster<SpotsTag>> clusters;
+        final Set<? extends Cluster<MapTag>> clusters;
         private Runnable mCallback;
         private Projection mProjection;
         private SphericalMercatorProjection mSphericalMercatorProjection;
         private float mMapZoom;
 
-        private RenderTask(Set<? extends Cluster<SpotsTag>> clusters) {
+        private RenderTask(Set<? extends Cluster<MapTag>> clusters) {
             this.clusters = clusters;
         }
 
@@ -743,7 +742,7 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
             }
         }
 
-        public void queue(Set<? extends Cluster<SpotsTag>> clusters) {
+        public void queue(Set<? extends Cluster<MapTag>> clusters) {
             synchronized(this) {
                 this.mNextClusters = TagClusterRenderer.this.new RenderTask(clusters);
             }
@@ -758,7 +757,7 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
 /**
  * Created by stephane on 8/30/2015.
  */
-//public class TagClusterRenderer extends TagClusterRenderer<SpotsTag> {
+//public class TagClusterRenderer extends TagClusterRenderer<MapTag> {
 //
 //
 //    private static final int[] BUCKETS;
@@ -771,7 +770,7 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
 //    private final Context context;
 //    private final IconGenerator mClusterIconGenerator;
 //
-//    public TagClusterRenderer(Context context, GoogleMap map, ClusterManager<SpotsTag> clusterManager) {
+//    public TagClusterRenderer(Context context, GoogleMap map, ClusterManager<MapTag> clusterManager) {
 //        super(context, map, clusterManager);
 //
 //        this.context = context;
@@ -779,7 +778,7 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
 //    }
 //
 //    @Override
-//    protected void onBeforeClusterItemRendered(SpotsTag spotsTag, MarkerOptions markerOptions) {
+//    protected void onBeforeClusterItemRendered(MapTag spotsTag, MarkerOptions markerOptions) {
 //        Log.d(TAG, "Rendering cluster item");
 //
 //        IconGenerator item = new IconGenerator(context);
@@ -796,7 +795,7 @@ public class TagClusterRenderer implements ClusterRenderer<SpotsTag> {
 //
 //    protected String getClusterText(Cluster cluster) {
 //        int bucket = this.getBucket(cluster);
-//        SpotsTag spotsTag = (SpotsTag) cluster.getItems().iterator().next();
+//        MapTag spotsTag = (MapTag) cluster.getItems().iterator().next();
 //        String number = bucket < BUCKETS[0] ? String.valueOf(bucket) : bucket + "+";
 //        return spotsTag.name + "  " + number;
 //    }

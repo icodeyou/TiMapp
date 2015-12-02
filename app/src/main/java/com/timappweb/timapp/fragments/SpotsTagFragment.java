@@ -13,7 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.SpotsTag;
+import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.fragments.dummy.DummyContent;
 
 
@@ -77,8 +77,8 @@ public class SpotsTagFragment extends Fragment implements AbsListView.OnItemClic
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<SpotsTag>(getActivity(),
-                android.R.layout.simple_list_item_2, android.R.id.text1, SpotsTag.ITEMS);
+        mAdapter = new ArrayAdapter<MapTag>(getActivity(),
+                android.R.layout.simple_list_item_2, android.R.id.text1, MapTag.ITEMS);
     }
 
     @Override

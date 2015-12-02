@@ -13,7 +13,7 @@ public class RestFeedback {
     public boolean success = false;
 
     public String toString(){
-        return "ServerObject[Success: " + success + "; message=" + message + "; Data="+this.data+"]";
+        return "ServerObject[Success: " + success + "; comment=" + message + "; Data="+this.data+"]";
     }
 
 

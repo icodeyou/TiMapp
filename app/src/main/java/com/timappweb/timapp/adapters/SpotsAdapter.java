@@ -8,23 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.entities.SpotsTag;
+import com.timappweb.timapp.entities.Post;
 
 import java.util.ArrayList;
 
 /**
  * Created by stephane on 9/5/2015.
  */
-public class SpotsAdapter extends ArrayAdapter<Spot> {
-    public SpotsAdapter(Context context, ArrayList<Spot> spots) {
+public class SpotsAdapter extends ArrayAdapter<Post> {
+    public SpotsAdapter(Context context, ArrayList<Post> spots) {
         super(context, 0, spots);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        Spot spot = getItem(position);
+        Post spot = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_spot, parent, false);

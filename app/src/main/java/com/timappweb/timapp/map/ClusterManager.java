@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.MarkerManager;
-import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.entities.Post;
 
 /**
  * Created by stephane on 9/12/2015.
  */
-public class ClusterManager extends  com.google.maps.android.clustering.ClusterManager<Spot>{
+public class ClusterManager extends  com.google.maps.android.clustering.ClusterManager<Post>{
 
     public ClusterManager(Context context, GoogleMap map) {
         super(context, map);

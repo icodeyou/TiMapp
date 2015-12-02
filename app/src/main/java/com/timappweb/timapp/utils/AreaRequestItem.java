@@ -1,14 +1,9 @@
 package com.timappweb.timapp.utils;
 
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.entities.Post;
 
-import java.security.Timestamp;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 /**
  * Created by stephane on 9/13/2015.
@@ -17,10 +12,10 @@ import java.util.Queue;
 public class AreaRequestItem {
     public int timestamp;       // Request timestamp
     public int localTimestamp;
-    public List<Spot> data;    // LIFO: Last spot in => First spot out
+    public List<Post> data;    // LIFO: Last spot in => First spot out
     public boolean isDisplayed = false;    // True if it's display on the map
 
-    public AreaRequestItem(int timestamp, List<Spot> spots) {
+    public AreaRequestItem(int timestamp, List<Post> spots) {
         this.setTimesamp(timestamp);
         this.data = spots;
     }

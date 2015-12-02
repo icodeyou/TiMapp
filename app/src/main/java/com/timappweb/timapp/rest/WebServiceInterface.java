@@ -1,8 +1,8 @@
 package com.timappweb.timapp.rest;
 
+import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.RestFeedback;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.entities.SpotsTag;
+import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.User;
 
 import java.util.List;
@@ -21,22 +21,22 @@ import retrofit.http.QueryMap;
 public interface WebServiceInterface {
 
     @GET("/spots/index.json")
-    void listSpots(@QueryMap Map<String, String> conditions, RestCallback<List<Spot>> restCallback);
+    void listSpots(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
 
     @GET("/spots/index.json")
-    List<Spot> listSpots();
+    List<Post> listSpots();
 
     @GET("/spots/view/{id}.json")
-    void viewSpot(@Path("id") int id, RestCallback<Spot> restCallback);
+    void viewSpot(@Path("id") int id, RestCallback<Post> restCallback);
 
     @GET("/spots/view/{id}.json")
-    Spot viewSpot(@Path("id") int id);
+    Post viewSpot(@Path("id") int id);
 
     @GET("/users/check_token.json")
     void checkToken(Callback<RestFeedback> cb);
 
     @POST("/spots/add.json")
-    void addSpot(@Body Spot spot, Callback<RestFeedback> cb);
+    void addSpot(@Body Post spot, Callback<RestFeedback> cb);
 
     @GET("/spots/stop_broadcast.json")
     void stopBroadcast(Callback<RestFeedback> cb);
@@ -45,8 +45,8 @@ public interface WebServiceInterface {
     RestFeedback login(@Body User user);
 
     @POST("/SpotsTags/latest.json")
-    List<SpotsTag> listSpotsTags();
+    List<MapTag> listSpotsTags();
 
     @POST("/SpotsTags/latest.json")
-    void listSpotsTags(RestCallback<List<SpotsTag>> restCallback);
+    void listSpotsTags(RestCallback<List<MapTag>> restCallback);
 }

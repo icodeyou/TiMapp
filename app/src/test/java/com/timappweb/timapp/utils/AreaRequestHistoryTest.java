@@ -1,11 +1,6 @@
 package com.timappweb.timapp.utils;
 
-import android.graphics.Point;
-import android.util.Log;
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.entities.Post;
 
 import org.junit.Test;
 
@@ -101,7 +96,7 @@ public class AreaRequestHistoryTest {
         IntLatLng center = new IntLatLng(-100, 3000);
         AreaRequestHistory history = new AreaRequestHistory(2000,4000, center);
 
-        LinkedList<Spot> data = new LinkedList<>();
+        LinkedList<Post> data = new LinkedList<>();
         IntPoint p1 = new IntPoint(2, 4);
         history.areas.put(p1, new AreaRequestItem(10, data));
         assertEquals(true, history.areas.containsKey(p1));

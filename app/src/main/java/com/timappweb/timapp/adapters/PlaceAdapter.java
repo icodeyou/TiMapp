@@ -5,12 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.entities.SpotsTag;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;

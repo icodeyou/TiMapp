@@ -90,7 +90,7 @@
                 android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
         <activity
-            android:name=".activities.SpotActivity"
+            android:name=".activities.PostActivity"
             android:label="@string/title_activity_spot"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
