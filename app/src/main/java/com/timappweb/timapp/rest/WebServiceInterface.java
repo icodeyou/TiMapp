@@ -38,9 +38,6 @@ public interface WebServiceInterface {
     @POST("/spots/add.json")
     void addSpot(@Body Post spot, Callback<RestFeedback> cb);
 
-    @GET("/spots/stop_broadcast.json")
-    void stopBroadcast(Callback<RestFeedback> cb);
-
     @POST("/users/login.json")
     RestFeedback login(@Body User user);
 
