@@ -44,8 +44,8 @@ public class FilterActivity extends BaseActivity {
         RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
 
         //Create and set adapter
-        //SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
-        //rv_savedTagsList.setAdapter(savedTagsAdapter);
+        //SavedTagsAdapter SavedTagsAdapter = new SavedTagsAdapter(this, generateData());
+        //rv_savedTagsList.setAdapter(SavedTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
