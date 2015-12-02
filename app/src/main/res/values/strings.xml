@@ -42,4 +42,5 @@
     <string name="mood_location">WORLD</string>
     <string name="exemple_comment">Cet endroit est sympa, surtout
         grâce à Lucia qui s’est mise toute nue sur le bar.</string>
+    <string name="hashtag">#</string>
 </resources>

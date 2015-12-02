@@ -5,20 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.SavedTagsAdapter;
+import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,21 @@ public class FilterActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Import results into the vertical ListView
-        //////////////////////////////////////////////////////////////////////////////
+        /////////////////Saved tags Recycler view//////////////////////////////////////
+        // Get recycler view
+        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
+
+        //Create and set adapter
+        SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
+        rv_savedTagsList.setAdapter(savedTagsAdapter);
+
+        //Set LayoutManager
+        GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
+        rv_savedTagsList.setLayoutManager(manager);
+
+        //////////////////Import results into the vertical ListView////////////////////
         //Find listview in XML
-        ListView lv = (ListView) findViewById(R.id.suggested_tags);
+        ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags);
 
         //Example of tags :
         String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
@@ -55,7 +67,7 @@ public class FilterActivity extends BaseActivity {
                 tags_ex);
 
         //Set adapter
-        lv.setAdapter(arrayAdapter);
+        lv_suggestedTags.setAdapter(arrayAdapter);
 }
 ////////////////////////////////////////////////////////////////////////////////
     //// Action bar (Searchview) + onBackPressed
@@ -104,6 +116,26 @@ public class FilterActivity extends BaseActivity {
     public void onUpdateClick(View view) {
         Intent updateMap = new Intent(this,DrawerActivity.class);
         startActivity(updateMap);
+    }
+
+    public List<Tag> generateData() {
+        List<Tag> tags = new ArrayList<>();
+        tags.add(new Tag("friteschezjojo",0));
+        tags.add(new Tag("#boeing",747));
+        tags.add(new Tag("#airbus",380));
+        tags.add(new Tag("#lolilol",185));
+        tags.add(new Tag("#whatever",184));
+        tags.add(new Tag("#salt",154));
+        tags.add(new Tag("#beer",146));
+        tags.add(new Tag("#idontknowwhattosay",130));
+        tags.add(new Tag("#nowords",114));
+        tags.add(new Tag("#amazing",104));
+        tags.add(new Tag("#wtf",85));
+        tags.add(new Tag("#youhavetoseeittobelieveit",55));
+        tags.add(new Tag("#ohmygod",30));
+        tags.add(new Tag("#thisissofunny",21));
+        tags.add(new Tag("#beach",14));
+        return tags;
     }
 
 }

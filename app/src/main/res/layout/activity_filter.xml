@@ -35,18 +35,18 @@
 
             <!-- ******************************************************************* -->
             <!-- First part: RecyclerView : Saved tags -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/lv_saved_tags"
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+            <!--
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:id="@+id/horizontalScrollView"
                 android:background="@drawable/border_bottom">
-                <!-- Here should be inserted a RecyclerView -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9 #tag10 #tag11 #tag12"/>
             </HorizontalScrollView>
+            -->
 
 
             <!-- ******************************************************************* -->
