@@ -2,7 +2,6 @@ package com.timappweb.timapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,14 +9,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
@@ -26,10 +27,9 @@ import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.entities.MapTag;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
-import com.timappweb.timapp.map.OnCameraChangeListener;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
@@ -41,6 +41,7 @@ import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +54,12 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     // Declare a variable for the cluster manager.
     private ClusterManager<Post> mClusterManagerPost;
-    private ClusterManager<Spot> mClusterManagerSpot;
-    private ClusterManager<MapTag> mClusterManagerTags;
     private GoogleMap mMap = null;
     private MapView mapView = null;
     private float previousZoomLevel = -1;
     private float currentZoomLevel = -1;
+
+    private static HashMap<Marker, Place> mapMarkerPlaces;
 
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
@@ -77,7 +78,7 @@ public class ExploreMapFragment extends SupportMapFragment {
      * Clear spots markers according the the spots given
      * @param data
      */
-    public void clearSpots(List<Post> data) {
+    public void clearPosts(List<Post> data) {
         for (Post spot: data){
             mClusterManagerPost.removeItem(spot);
         }
@@ -163,6 +164,7 @@ public class ExploreMapFragment extends SupportMapFragment {
 
         try{
             setUpClusterer();
+            setUpMapEvents();
             centerMap();
             loadDummyData();
         } catch (Exception ex){
@@ -176,7 +178,7 @@ public class ExploreMapFragment extends SupportMapFragment {
         getActivity().startActivity(intent);
     }
 
-    private void showSpotInfo(Spot spot){
+    private void showPlaceInfo(Place place){
         Intent intent = new Intent(getActivity(), PlaceActivity.class);
         getActivity().startActivity(intent);
     }
@@ -196,6 +198,14 @@ public class ExploreMapFragment extends SupportMapFragment {
         return mMap.getProjection().getVisibleRegion().latLngBounds;
     }
 
+
+    private void addMarker(Place place){
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .title(place.name)
+                .position(place.getPosition())
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mapMarkerPlaces.put(marker, place);
+    }
     /**
      * Create dummy data on the map
      */
@@ -203,8 +213,10 @@ public class ExploreMapFragment extends SupportMapFragment {
         mClusterManagerPost.addItem(Post.createDummy());
         mClusterManagerPost.cluster();
 
-       // mClusterManagerSpot.addItem(Spot.createDummy());
-        //mClusterManagerSpot.addItem(Spot.createDummy());
+        Place place = Place.createDummy();
+        addMarker(place);
+       // mClusterManagerSpot.addItem(Place.createDummy());
+        //mClusterManagerSpot.addItem(Place.createDummy());
         //mClusterManagerSpot.cluster();
     }
 
@@ -299,40 +311,35 @@ public class ExploreMapFragment extends SupportMapFragment {
             //mMap.addMarker(new MarkerOptions().position(ll).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f));
             mClusterManagerTags.addItem(spotTag);
         }
-        */
         mClusterManagerTags.addItems(mapTags);
         mClusterManagerTags.cluster();
+        */
     }
 
 
+    private void setUpMapEvents(){
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Place place = mapMarkerPlaces.get(marker);
+                Log.i(TAG, "You clicked on a marker with place: " + place);
+                showPlaceInfo(place);
+                return true;
+            }
+        });
+    }
 
     private void setUpClusterer(){
         Log.i(TAG, "Setting up cluster!");
 
-        mClusterManagerSpot = new ClusterManager<Spot>(getActivity(), mMap);
-        mClusterManagerSpot.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Spot>() {
-            @Override
-            public boolean onClusterItemClick(Spot spot) {
-                Log.d(TAG, "You clicked on a spot cluster");
-                //Spot spot = (Spot) cluster.getItems().toArray()[0];
-                return true;
-            }
-        });
-
         // Initialize the manager with the context and the map.
         mClusterManagerPost = new ClusterManager<Post>(getActivity(), mMap);
-        mClusterManagerPost.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<Post>() {
-            @Override
-            public void onClusterItemInfoWindowClick(Post spot) {
-                Log.d(TAG, "You clicked on a cluster item info windo");
-            }
-        });
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Post>() {
             @Override
             public boolean onClusterClick(Cluster<Post> cluster) {
                 Log.d(TAG, "You clicked on a post cluster");
-                Post spot = (Post) cluster.getItems().toArray()[0];
-                showPostInfo(spot);
+                Post post = (Post) cluster.getItems().toArray()[0];
+                showPostInfo(post);
                 return true;
             }
         });
@@ -356,14 +363,12 @@ public class ExploreMapFragment extends SupportMapFragment {
 
         });
         mMap.setOnMarkerClickListener(mClusterManagerPost);
-        // mMap.setOnCameraChangeListener(mClusterManagerTags);
         mMap.setOnCameraChangeListener(new OnCameraChangeListener());
 
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Post>());
 
         loadDummyData();
     }
-
 
     private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{
         @Override
@@ -406,7 +411,7 @@ public class ExploreMapFragment extends SupportMapFragment {
                         Map.Entry<IntPoint, AreaRequestItem> entry = (Map.Entry) it.next();
                         if (entry.getKey().distance(southeastPoint) > history.MAXIMUM_ORIGIN_DISTANCE) {
                             Log.i(TAG, "Post caching too far from origin. Clearing spot history and markers");
-                            clearSpots(entry.getValue().data);
+                            clearPosts(entry.getValue().data);
                             it.remove();
                             removeNb++;
                         }
