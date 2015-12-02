@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.SavedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
@@ -44,8 +45,8 @@ public class FilterActivity extends BaseActivity {
         RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
 
         //Create and set adapter
-        //SavedTagsAdapter SavedTagsAdapter = new SavedTagsAdapter(this, generateData());
-        //rv_savedTagsList.setAdapter(SavedTagsAdapter);
+        SavedTagsAdapter SavedTagsAdapter = new SavedTagsAdapter(this, generateData());
+        rv_savedTagsList.setAdapter(SavedTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
