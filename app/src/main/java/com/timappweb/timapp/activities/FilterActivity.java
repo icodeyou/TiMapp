@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,7 +47,7 @@ public class FilterActivity extends BaseActivity {
 
         /////////////////Saved tags Recycler view//////////////////////////////////////
         // Get recycler view
-        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
+        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_filter);
 
         //Create and set adapter
         if (rv_savedTagsList.getAdapter()==null) {
@@ -61,7 +60,7 @@ public class FilterActivity extends BaseActivity {
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
         rv_savedTagsList.setLayoutManager(manager);
 
-        //////////////////Import results into the vertical ListView////////////////////
+        //////////////////Import examples into the vertical ListView////////////////////
         //Find listview in XML
         ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags);
 
@@ -101,16 +100,14 @@ public class FilterActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Get recycler view
-                RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
+                RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_filter);
                 //Get adapter
                 RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
                 SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
                 //Set new values
                 addDataToAdapter(query, savedTagsAdapter);
-                // Get recycler view
-                RecyclerView rv = (RecyclerView) findViewById(R.id.lv_saved_tags);
-                //set new adapter
-                rv.setAdapter(savedTagsAdapter);
+                //set new adapter to RecyclerView
+                rv_savedTagsList.setAdapter(savedTagsAdapter);
 
                 finalSearchView.setIconified(true);
 

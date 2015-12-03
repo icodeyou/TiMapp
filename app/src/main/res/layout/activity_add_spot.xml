@@ -23,14 +23,12 @@
 
         <!-- la barre de recherche est dans l'action bar -->
 
-
         <!-- ******************************************************************* -->
-        <!-- First part: ListView : Suggestion of tags -->
-        <ListView
+        <!-- First part: RecyclerView : Saved tags -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_savedTags_addSpot"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/suggested_tags"/>
+            android:layout_height="30dp" />
 
 
         <LinearLayout
@@ -41,19 +39,12 @@
             android:id="@+id/post_bottom">
 
             <!-- ******************************************************************* -->
-            <!-- Second part: RecyclerView : Saved tags -->
-            <HorizontalScrollView
+            <!-- Second part: ListView : Suggestion of tags -->
+            <ListView
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/horizontalScrollView"
-                android:background="@drawable/border_top_bottom">
-                <!-- Here should be inserted a RecyclerView -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="#tag1 #tag2 #tag3 #tag4 #tag5 #tag6 #tag7 #tag8 #tag9 #tag10 #tag11 #tag12"/>
-            </HorizontalScrollView>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/suggested_tags"/>
 
             <!-- ******************************************************************* -->
             <!-- Third part: Place -->

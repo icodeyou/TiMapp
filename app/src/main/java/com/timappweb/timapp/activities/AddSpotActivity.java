@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,6 +20,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.SavedTagsAdapter;
+import com.timappweb.timapp.entities.Tag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddSpotActivity extends BaseActivity {
 
@@ -53,6 +61,20 @@ public class AddSpotActivity extends BaseActivity {
             }
         });
 */
+        /////////////////Saved tags Recycler view//////////////////////////////////////
+        // Get recycler view
+        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
+
+        //Create and set adapter
+        if (rv_savedTagsList.getAdapter()==null) {
+            Log.i(TAG,"generate data");
+            SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
+            rv_savedTagsList.setAdapter(savedTagsAdapter);
+        }
+
+        //Set LayoutManager
+        GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
+        rv_savedTagsList.setLayoutManager(manager);
 
 
         //Import results into the vertical ListView
@@ -94,6 +116,37 @@ public class AddSpotActivity extends BaseActivity {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
 
+        final SearchView finalSearchView = searchView;
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Get recycler view
+                RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
+                //Get adapter
+                RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
+                SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
+                //Set new values
+                addDataToAdapter(query, savedTagsAdapter);
+                //set new adapter to RecyclerView
+                rv_savedTagsList.setAdapter(savedTagsAdapter);
+
+                finalSearchView.setIconified(true);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Get the text each time the value is change in the searchbox
+                return false;
+            }
+        };
+
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(queryTextListener);
+        }
         return true;
     }
 
@@ -149,7 +202,18 @@ public class AddSpotActivity extends BaseActivity {
         public void onFragmentInteraction(Uri uri);
     }
 
-
+    /////////GENERATE DATA/////////////////////
+    public List<Tag> generateData() {
+        List<Tag> data = new ArrayList<>();
+        data.add(new Tag("bar", 0));
+        return data;
+    }
+    public List<Tag> addDataToAdapter(String newData, SavedTagsAdapter adapter) {
+        List<Tag> data = adapter.getData();
+        data.add(new Tag(newData, 0));
+        adapter.notifyDataSetChanged();
+        return data;
+    }
 
 
 

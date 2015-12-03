@@ -36,17 +36,9 @@
             <!-- ******************************************************************* -->
             <!-- First part: RecyclerView : Saved tags -->
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/lv_saved_tags"
+                android:id="@+id/rv_savedTags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
-            <!--
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:id="@+id/horizontalScrollView"
-                android:background="@drawable/border_bottom">
-            </HorizontalScrollView>
-            -->
 
 
             <!-- ******************************************************************* -->
