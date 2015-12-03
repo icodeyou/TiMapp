@@ -61,12 +61,9 @@
             android:name=".activities.FilterActivity"
             android:label="@string/title_activity_filter"
             android:parentActivityName=".activities.DrawerActivity"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="stateVisible">
 
             <!-- Make activity searchable -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -79,16 +76,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
+
         <activity
             android:name=".activities.AddSpotActivity"
             android:label="@string/title_activity_add_spot"
             android:windowSoftInputMode="adjustNothing"
             android:parentActivityName=".activities.DrawerActivity" >
+            <!-- Make activity searchable -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
+
         <activity
             android:name=".activities.PostActivity"
             android:label="@string/title_activity_spot"

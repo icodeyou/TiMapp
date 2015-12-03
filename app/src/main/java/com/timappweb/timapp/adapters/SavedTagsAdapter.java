@@ -13,13 +13,17 @@ import com.timappweb.timapp.entities.Tag;
 import java.util.Collections;
 import java.util.List;
 
-public class SavedTagsAdapter extends RecyclerView.Adapter<SavedTagsAdapter.MyViewHolder>{
+public class SavedTagsAdapter extends RecyclerView.Adapter<SavedTagsAdapter.MyViewHolder> {
     private LayoutInflater inflater;
     private List<Tag> data = Collections.emptyList();
 
     public SavedTagsAdapter(Context context, List<Tag> data) {
         inflater = LayoutInflater.from(context);
         this.data = data;
+    }
+
+    public List<Tag> getData() {
+        return this.data;
     }
 
     @Override

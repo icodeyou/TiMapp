@@ -11,10 +11,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends BaseActivity {
+    String TAG = "FilterActivity_TAG";
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -34,6 +39,7 @@ public class FilterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
+        Log.i(TAG,"ACtivity created");
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -45,8 +51,11 @@ public class FilterActivity extends BaseActivity {
         RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
 
         //Create and set adapter
-        SavedTagsAdapter SavedTagsAdapter = new SavedTagsAdapter(this, generateData());
-        rv_savedTagsList.setAdapter(SavedTagsAdapter);
+        if (rv_savedTagsList.getAdapter()==null) {
+            Log.i(TAG,"generate data");
+            SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
+            rv_savedTagsList.setAdapter(savedTagsAdapter);
+        }
 
         //Set LayoutManager
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
@@ -70,7 +79,7 @@ public class FilterActivity extends BaseActivity {
         lv_suggestedTags.setAdapter(arrayAdapter);
 }
 ////////////////////////////////////////////////////////////////////////////////
-    //// Action bar (Searchview) + onBackPressed
+    //// onCreateOptionsMenu
     ////////////////////////////////////////////////////////////////////////////////
 
     @Override
@@ -85,13 +94,51 @@ public class FilterActivity extends BaseActivity {
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
         }
+
+        final SearchView finalSearchView = searchView;
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Get recycler view
+                RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.lv_saved_tags);
+                //Get adapter
+                RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
+                SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
+                //Set new values
+                addDataToAdapter(query, savedTagsAdapter);
+                // Get recycler view
+                RecyclerView rv = (RecyclerView) findViewById(R.id.lv_saved_tags);
+                //set new adapter
+                rv.setAdapter(savedTagsAdapter);
+
+                finalSearchView.setIconified(true);
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Get the text each time the value is change in the searchbox
+                return false;
+            }
+        };
+
         if (searchView != null) {
+            searchView.setIconifiedByDefault(false);
+            searchView.requestFocus();
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(queryTextListener);
+            ImageView magImage = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+            magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
         }
 
         return true;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////
+    //// onOptionsItemSelected
+    ////////////////////////////////////////////////////////////////////////////////
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -118,24 +165,17 @@ public class FilterActivity extends BaseActivity {
         startActivity(updateMap);
     }
 
+    /////////GENERATE DATA/////////////////////
     public List<Tag> generateData() {
-        List<Tag> tags = new ArrayList<>();
-        tags.add(new Tag("friteschezjojo",0));
-        tags.add(new Tag("#boeing",747));
-        tags.add(new Tag("#airbus",380));
-        tags.add(new Tag("#lolilol",185));
-        tags.add(new Tag("#whatever",184));
-        tags.add(new Tag("#salt",154));
-        tags.add(new Tag("#beer",146));
-        tags.add(new Tag("#idontknowwhattosay",130));
-        tags.add(new Tag("#nowords",114));
-        tags.add(new Tag("#amazing",104));
-        tags.add(new Tag("#wtf",85));
-        tags.add(new Tag("#youhavetoseeittobelieveit",55));
-        tags.add(new Tag("#ohmygod",30));
-        tags.add(new Tag("#thisissofunny",21));
-        tags.add(new Tag("#beach",14));
-        return tags;
+        List<Tag> data = new ArrayList<>();
+        data.add(new Tag("bar", 0));
+        return data;
+    }
+    public List<Tag> addDataToAdapter(String newData, SavedTagsAdapter adapter) {
+        List<Tag> data = adapter.getData();
+        data.add(new Tag(newData, 0));
+        adapter.notifyDataSetChanged();
+        return data;
     }
 
 }

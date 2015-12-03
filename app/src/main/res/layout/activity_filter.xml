@@ -57,26 +57,6 @@
                 android:layout_weight="1"
                 android:id="@+id/suggested_tags"/>
 
-
-            <!-- ******************************************************************* -->
-            <!-- Second place : Update button -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="bottom">
-                <Button
-                    android:id="@+id/update_map"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="Update Map"
-                    android:textAllCaps="false"
-                    android:textColor="@color/LightSkyBlue"
-                    android:textSize="26dp"
-                    android:background="@color/background"
-                    android:onClick="onUpdateClick"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
