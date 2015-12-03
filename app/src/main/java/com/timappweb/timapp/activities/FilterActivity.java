@@ -15,10 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SavedTagsAdapter;
@@ -49,12 +51,9 @@ public class FilterActivity extends BaseActivity {
         // Get recycler view
         RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_filter);
 
-        //Create and set adapter
-        if (rv_savedTagsList.getAdapter()==null) {
-            Log.i(TAG,"generate data");
-            SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
-            rv_savedTagsList.setAdapter(savedTagsAdapter);
-        }
+        Log.i(TAG,"generate data");
+        final SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
+        rv_savedTagsList.setAdapter(savedTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
@@ -62,20 +61,29 @@ public class FilterActivity extends BaseActivity {
 
         //////////////////Import examples into the vertical ListView////////////////////
         //Find listview in XML
-        ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags);
+        ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags_filter);
 
         //Example of tags :
         String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
         "whynot","ridiculous","good","awful","sexdrugsandrocknroll", "endofworld", "godsavethequeen"};
 
         // Array adapter( *activity*, *type of list view*, *my_array*)
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
                 tags_ex);
 
         //Set adapter
         lv_suggestedTags.setAdapter(arrayAdapter);
+
+        //set onClickListener
+        lv_suggestedTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedTag = String.valueOf(parent.getItemAtPosition(position));
+                addDataToAdapter(selectedTag, savedTagsAdapter);
+            }
+        });
 }
 ////////////////////////////////////////////////////////////////////////////////
     //// onCreateOptionsMenu
@@ -106,8 +114,6 @@ public class FilterActivity extends BaseActivity {
                 SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
                 //Set new values
                 addDataToAdapter(query, savedTagsAdapter);
-                //set new adapter to RecyclerView
-                rv_savedTagsList.setAdapter(savedTagsAdapter);
 
                 finalSearchView.setIconified(true);
 
@@ -122,12 +128,17 @@ public class FilterActivity extends BaseActivity {
         };
 
         if (searchView != null) {
+            //Always display the searchview expanded in the action bar
             searchView.setIconifiedByDefault(false);
+
+            //focus on searchBar and open keyboard
             searchView.requestFocus();
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setOnQueryTextListener(queryTextListener);
             ImageView magImage = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
             magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
+
+            //setSearchableInfo & Listener
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setOnQueryTextListener(queryTextListener);
         }
 
         return true;

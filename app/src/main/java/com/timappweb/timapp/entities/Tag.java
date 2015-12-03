@@ -8,7 +8,6 @@ public class Tag implements Serializable{
     public Integer id;
     public String name;
     public int count_ref;
-    public ArrayList<Tag> tags = null;
 
     public Tag(String name, int count_ref) {
         this.count_ref = count_ref;

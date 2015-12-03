@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -65,12 +67,9 @@ public class AddSpotActivity extends BaseActivity {
         // Get recycler view
         RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
 
-        //Create and set adapter
-        if (rv_savedTagsList.getAdapter()==null) {
-            Log.i(TAG,"generate data");
-            SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
-            rv_savedTagsList.setAdapter(savedTagsAdapter);
-        }
+        Log.i(TAG,"generate data");
+        final SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
+        rv_savedTagsList.setAdapter(savedTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
@@ -80,20 +79,29 @@ public class AddSpotActivity extends BaseActivity {
         //Import results into the vertical ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
-        ListView lv = (ListView) findViewById(R.id.suggested_tags);
+        ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags);
 
         //Example of tags :
         String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
                 "whynot","ridiculous","good","awful","sexdrugsandrocknroll"};
 
         // Array adapter( *activity*, *type of list view*, *my_array*)
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
                 tags_ex);
 
         //Set adapter
-        lv.setAdapter(arrayAdapter);
+        lv_suggestedTags.setAdapter(arrayAdapter);
+
+        //set onClickListener
+        lv_suggestedTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedTag = String.valueOf(parent.getItemAtPosition(position));
+                addDataToAdapter(selectedTag, savedTagsAdapter);
+            }
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -128,8 +136,6 @@ public class AddSpotActivity extends BaseActivity {
                 SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
                 //Set new values
                 addDataToAdapter(query, savedTagsAdapter);
-                //set new adapter to RecyclerView
-                rv_savedTagsList.setAdapter(savedTagsAdapter);
 
                 finalSearchView.setIconified(true);
 
