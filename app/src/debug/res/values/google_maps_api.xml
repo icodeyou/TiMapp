@@ -6,6 +6,9 @@
 
 https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=93:51:F6:9A:13:2F:F2:FD:04:10:D6:E5:20:E6:6D:8C:DC:14:3A:B8%3Bcom.timappweb.timapp
 
+    HERE IS THE LINK TO THE PROJECT :
+    https://console.developers.google.com/apis/credentials?project=charged-atlas-114814
+
     You can also add your credentials to an existing key, using this line:
     93:51:F6:9A:13:2F:F2:FD:04:10:D6:E5:20:E6:6D:8C:DC:14:3A:B8;com.timappweb.timapp (steph)
     E0:66:63:DF:49:46:62:D1:F8:E9:01:38:C2:3A:8E:59:0B:82:45:5C;com.timappweb.timapp (jack)
@@ -14,6 +17,6 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     string in this file.
     -->
     <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
-    AIzaSyAS_2JEulj5mk0j9Wh_lnzSvRoqsxOY_EQ
+    AIzaSyCwFhU4y2X1YzLRq6uAA3WdveXX4P_Dquk
     </string>
 </resources>
