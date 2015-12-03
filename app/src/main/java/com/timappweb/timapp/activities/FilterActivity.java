@@ -64,8 +64,8 @@ public class FilterActivity extends BaseActivity {
         ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags_filter);
 
         //Example of tags :
-        String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
-        "whynot","ridiculous","good","awful","sexdrugsandrocknroll", "endofworld", "godsavethequeen"};
+        String[] tags_ex = {"blablacar", "blablacar2", "OKLM", "yeah",
+        "whynot","blablacar","good","blablacar","blablacar", "blablacar", "godsavethequeen"};
 
         // Array adapter( *activity*, *type of list view*, *my_array*)
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
