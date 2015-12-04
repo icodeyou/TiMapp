@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by stephane on 12/2/2015.
  */
-public class Place implements ClusterItem, Serializable {
+public class Place implements Serializable, MarkerValueInterface {
 
     public int id;
     public String name;
@@ -52,5 +52,10 @@ public class Place implements ClusterItem, Serializable {
     @Override
     public LatLng getPosition() {
         return new LatLng(this.latitude, this.longitude);
+    }
+
+    @Override
+    public int getId() {
+        return this.id;
     }
 }

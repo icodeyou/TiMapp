@@ -27,6 +27,7 @@ import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.entities.MapTag;
+import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
@@ -53,13 +54,13 @@ public class ExploreMapFragment extends SupportMapFragment {
     private static final long TIME_WAIT_MAP_VIEW = 500;
 
     // Declare a variable for the cluster manager.
-    private ClusterManager<Post> mClusterManagerPost;
+    private ClusterManager<MarkerValueInterface> mClusterManagerPost;
     private GoogleMap mMap = null;
     private MapView mapView = null;
     private float previousZoomLevel = -1;
     private float currentZoomLevel = -1;
 
-    private static HashMap<Marker, Place> mapMarkerPlaces;
+    private static HashMap<Marker, MarkerValueInterface> mapMarkers;
 
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
@@ -129,13 +130,13 @@ public class ExploreMapFragment extends SupportMapFragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "Resuming map fragment");
-        super.onResume();
         this.loadMapIfNeeded();
     }
 
     private void loadMapIfNeeded() {
         if (mMap == null){
             this.loadMap();
+            mapMarkers = new HashMap<>();
         }
     }
 
@@ -164,21 +165,35 @@ public class ExploreMapFragment extends SupportMapFragment {
 
         try{
             setUpClusterer();
-            setUpMapEvents();
+            //setUpMapEvents();
             centerMap();
-            loadDummyData();
+            //loadDummyData();
         } catch (Exception ex){
             Log.e(TAG, ex.toString());
         }
     }
 
-    private void showPostInfo(Post post){
-        Intent intent = new Intent(getActivity(), PostActivity.class);
-        intent.putExtra("post", post);
-        getActivity().startActivity(intent);
+    private void showMarkerDetail(final Post postIncomplete){
+        Toast.makeText(getActivity(), "Loading post: " + postIncomplete.getId(), Toast.LENGTH_LONG);
+        RestClient.service().viewSpot(postIncomplete.getId(), new RestCallback<Post>() {
+            @Override
+            public void success(Post post, Response response) {
+                if (post != null){
+                    Log.i(TAG, "Loaded details for spot: " + post.toString());
+
+                    Intent intent = new Intent(getActivity(), PostActivity.class);
+                    intent.putExtra("post", post);
+                    getActivity().startActivity(intent);
+                }
+                else{
+                    Log.e(TAG, "Invalid spot id: " + postIncomplete.getId());
+                }
+            }
+        });
+
     }
 
-    private void showPlaceInfo(Place place){
+    private void showMarkerDetail(Place place){
         Intent intent = new Intent(getActivity(), PlaceActivity.class);
         getActivity().startActivity(intent);
     }
@@ -204,7 +219,7 @@ public class ExploreMapFragment extends SupportMapFragment {
                 .title(place.name)
                 .position(place.getPosition())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mapMarkerPlaces.put(marker, place);
+        mapMarkers.put(marker, place);
     }
     /**
      * Create dummy data on the map
@@ -270,35 +285,30 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     private void loadSpotFromAPI(final IntPoint p, final AreaRequestItem request, QueryCondition conditions) {
         Log.i(TAG, "Request loading of area: " + conditions.toString());
+        conditions.setVisualisation("post"); // For to return posts instead of cluster
+        conditions.setTimeRange(3600);
         RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>() {
             @Override
-            public void success(List<Post> spots, Response response) {
+            public void success(List<Post> posts, Response response) {
 
-                Log.i(TAG, "WS loaded tags done. Loaded " + spots.size() + " result(s). " + " for point " + p);
-                Toast.makeText(getActivity(), spots.size()  + " tags loaded", Toast.LENGTH_LONG).show();
-                request.data.addAll(spots);
+                Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + p);
+                Toast.makeText(getActivity(), posts.size() + " tags loaded", Toast.LENGTH_LONG).show();
+                request.data.addAll(posts);
 
                 // TODO the server has to send back the timestamp
-                if (spots.size() > 1)
-                    request.setTimesamp(spots.get(spots.size() - 1).getCreated());
+                if (posts.size() > 1)
+                    request.setTimesamp(posts.get(posts.size() - 1).getCreated());
                 else {
                     request.setTimesamp(0);
                 }
-
                 // TODO request.timestamp;
                 //mClusterManagerPost.clearItems();
-                addSpotMarkers(spots);
+                for (MarkerValueInterface d: posts){
+                    mClusterManagerPost.addItem(d);
+                }
+                mClusterManagerPost.cluster();
             }
         });
-    }
-
-    private void addSpotMarkers(List<Post> spots){
-        Log.i(TAG, "Loading " + spots.size() + " spot(s) on the map");
-        //MarkerOptions markerOptions = new MarkerOptions()
-                //.title("Marker")
-        //        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-        mClusterManagerPost.addItems(spots);
-        mClusterManagerPost.cluster();
     }
 
     private void addTagMarkers(List<MapTag> mapTags){
@@ -317,13 +327,28 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
 
+    private void showMarkerDetail(MarkerValueInterface markerValue){
+        if (markerValue instanceof Place){
+            showMarkerDetail((Place) markerValue);
+        }
+        else if (markerValue instanceof Post){
+            showMarkerDetail((Post) markerValue);
+        }
+    }
+
     private void setUpMapEvents(){
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                Place place = mapMarkerPlaces.get(marker);
-                Log.i(TAG, "You clicked on a marker with place: " + place);
-                showPlaceInfo(place);
+                MarkerValueInterface markerValue = mapMarkers.get(marker);
+                if (markerValue != null){
+                    Log.i(TAG, "You clicked on a marker with place: " + markerValue.getId());
+                    showMarkerDetail(markerValue);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Cannot load this marker", Toast.LENGTH_SHORT);
+                }
+
                 return true;
             }
         });
@@ -333,31 +358,19 @@ public class ExploreMapFragment extends SupportMapFragment {
         Log.i(TAG, "Setting up cluster!");
 
         // Initialize the manager with the context and the map.
-        mClusterManagerPost = new ClusterManager<Post>(getActivity(), mMap);
-        mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Post>() {
+        mClusterManagerPost = new ClusterManager<MarkerValueInterface>(getActivity(), mMap);
+        mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MarkerValueInterface>() {
             @Override
-            public boolean onClusterClick(Cluster<Post> cluster) {
+            public boolean onClusterClick(Cluster<MarkerValueInterface> cluster) {
                 Log.d(TAG, "You clicked on a post cluster");
-                Post post = (Post) cluster.getItems().toArray()[0];
-                showPostInfo(post);
                 return true;
             }
         });
-        mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Post>() {
+        mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerValueInterface>() {
             @Override
-            public boolean onClusterItemClick(Post post) {
-                Log.d(TAG, "You clicked on a post cluster item");
-                showPostInfo(post);
-                /*
-                RestClient.instance().getService().viewSpot(spot.id, new RestCallback<Post>() {
-                    @Override
-                    public void success(Post spot, Response response) {
-                        Log.i(TAG, "Found spot: " + spot.toString());
-                        Toast.makeText(getActivity(), "Found spot: " + spot.toString(), Toast.LENGTH_LONG);
-                        showPostInfo(spot);
-                    }
-                });
-                */
+            public boolean onClusterItemClick(MarkerValueInterface item) {
+                Log.d(TAG, "You clicked on a post cluster item: " + item);
+                showMarkerDetail(item);
                 return true;
             }
 
@@ -365,9 +378,8 @@ public class ExploreMapFragment extends SupportMapFragment {
         mMap.setOnMarkerClickListener(mClusterManagerPost);
         mMap.setOnCameraChangeListener(new OnCameraChangeListener());
 
-        mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Post>());
+        mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<MarkerValueInterface>());
 
-        loadDummyData();
     }
 
     private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{
