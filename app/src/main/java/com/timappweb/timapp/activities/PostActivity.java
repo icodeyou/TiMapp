@@ -44,8 +44,8 @@ public class PostActivity extends BaseActivity {
 
         textViewComment.setText(post.comment);
         textViewCreated.setText(post.getCreatedDate());
-        textViewUsername.setText(post.user.username);
-        textViewPostName.setText("SpotName");
+        textViewUsername.setText(post.user != null ? post.user.username : "User unactivated");
+        textViewPostName.setText("Spot name to do ");
 
         //Example of tags :
         String[] tags_ex = post.getTagsToStringArray();

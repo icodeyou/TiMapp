@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * Created by stephane on 8/20/2015.
  */
-public class Post implements ClusterItem, Serializable {
+public class Post implements Serializable, MarkerValueInterface {
 
 
     private static final String TAG = "EntitySpot";
@@ -142,4 +142,10 @@ public class Post implements ClusterItem, Serializable {
         }
         return res;
     }
+
+    @Override
+    public int getId() {
+        return this.id;
+    }
+
 }
