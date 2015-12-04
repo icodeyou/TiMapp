@@ -35,19 +35,19 @@
 
             <!-- ******************************************************************* -->
             <!-- First part: RecyclerView : Saved tags -->
+
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_savedTags_filter"
+                android:id="@+id/rv_suggestedTags_filter"
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/border_bottom"/>
             <!-- ******************************************************************* -->
             <!-- First part: ListView : Suggestion of tags -->
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/suggested_tags_filter"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_height="200dp" />
 
         </LinearLayout>
     </LinearLayout>

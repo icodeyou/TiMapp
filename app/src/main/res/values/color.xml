@@ -5,6 +5,8 @@
     <color name="colorAccent">#241f80</color>
     <color name="background">#fff3f3f3</color>
     <color name="border">#bababa</color>
+    <color name="selected_tag_text_color">#ffffff</color>
+    <color name="suggested_tag_text_color">#7e7e7e</color>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->

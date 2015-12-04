@@ -12,7 +12,6 @@ import android.os.ResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.android.gms.common.api.AbstractPendingResult;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.MyResultReceiver;

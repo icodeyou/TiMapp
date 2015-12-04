@@ -22,7 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.SavedTagsAdapter;
+import com.timappweb.timapp.adapters.SelectedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
@@ -65,16 +65,18 @@ public class AddSpotActivity extends BaseActivity {
 */
         /////////////////Saved tags Recycler view//////////////////////////////////////
         // Get recycler view
-        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
+        final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
 
         Log.i(TAG,"generate data");
-        final SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
-        rv_savedTagsList.setAdapter(savedTagsAdapter);
+        final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, generateData());
+        rv_savedTagsList.setAdapter(selectedTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
         rv_savedTagsList.setLayoutManager(manager);
 
+        //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+        rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
 
         //Import results into the vertical ListView
         //////////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,9 @@ public class AddSpotActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedTag = String.valueOf(parent.getItemAtPosition(position));
-                addDataToAdapter(selectedTag, savedTagsAdapter);
+                addDataToAdapter(selectedTag, selectedTagsAdapter);
+                //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+                rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
             }
         });
     }
@@ -133,9 +137,11 @@ public class AddSpotActivity extends BaseActivity {
                 RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
                 //Get adapter
                 RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
-                SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
+                SelectedTagsAdapter selectedTagsAdapter = (SelectedTagsAdapter) adapter;
                 //Set new values
-                addDataToAdapter(query, savedTagsAdapter);
+                addDataToAdapter(query, selectedTagsAdapter);
+                //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+                rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
 
                 finalSearchView.setIconified(true);
 
@@ -214,7 +220,7 @@ public class AddSpotActivity extends BaseActivity {
         data.add(new Tag("bar", 0));
         return data;
     }
-    public List<Tag> addDataToAdapter(String newData, SavedTagsAdapter adapter) {
+    public List<Tag> addDataToAdapter(String newData, SelectedTagsAdapter adapter) {
         List<Tag> data = adapter.getData();
         data.add(new Tag(newData, 0));
         adapter.notifyDataSetChanged();

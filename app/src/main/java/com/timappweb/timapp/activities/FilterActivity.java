@@ -10,20 +10,18 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.SavedTagsAdapter;
+import com.timappweb.timapp.adapters.SelectedTagsAdapter;
+import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
@@ -48,42 +46,43 @@ public class FilterActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         /////////////////Saved tags Recycler view//////////////////////////////////////
-        // Get recycler view
-        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_filter);
+        // Get recycler view from XML
+        final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_suggestedTags_filter);
 
+        //set Adapter
         Log.i(TAG,"generate data");
-        final SavedTagsAdapter savedTagsAdapter = new SavedTagsAdapter(this, generateData());
-        rv_savedTagsList.setAdapter(savedTagsAdapter);
+        final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, generateData());
+        rv_savedTagsList.setAdapter(selectedTagsAdapter);
 
         //Set LayoutManager
-        GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
-        rv_savedTagsList.setLayoutManager(manager);
+        GridLayoutManager manager_savedTags = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
+        rv_savedTagsList.setLayoutManager(manager_savedTags);
+
+        //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+        rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
 
         //////////////////Import examples into the vertical ListView////////////////////
-        //Find listview in XML
-        ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags_filter);
+        //get RecyclerView from XML
+        RecyclerView rv_suggestedTags = (RecyclerView) findViewById(R.id.suggested_tags_filter);
 
-        //Example of tags :
-        String[] tags_ex = {"blablacar", "blablacar2", "OKLM", "yeah",
-        "whynot","blablacar","good","blablacar","blablacar", "blablacar", "godsavethequeen"};
+        // set Adapter
+        SuggestedTagsAdapter suggestedTagsAdapter = new SuggestedTagsAdapter(this, generateData());
+        rv_suggestedTags.setAdapter(suggestedTagsAdapter);
 
-        // Array adapter( *activity*, *type of list view*, *my_array*)
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                tags_ex);
-
-        //Set adapter
-        lv_suggestedTags.setAdapter(arrayAdapter);
+        //Set LayoutManager
+        StaggeredGridLayoutManager manager_suggestedTags = new StaggeredGridLayoutManager(4, LinearLayoutManager.HORIZONTAL);
+        rv_suggestedTags.setLayoutManager(manager_suggestedTags);
 
         //set onClickListener
-        lv_suggestedTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedTag = String.valueOf(parent.getItemAtPosition(position));
-                addDataToAdapter(selectedTag, savedTagsAdapter);
-            }
-        });
+        //rv_suggestedTags.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+        //    @Override
+        //    public void onItemClick(AdapterView<?> parent, View view, int position) {
+        //        String selectedTag = String.valueOf(parent.getItemAtPosition(position));
+        //        addDataToAdapter(selectedTag, selectedTagsAdapter);
+        //        //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+        //        rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
+        //    }
+        //}));
 }
 ////////////////////////////////////////////////////////////////////////////////
     //// onCreateOptionsMenu
@@ -108,12 +107,14 @@ public class FilterActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Get recycler view
-                RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_filter);
+                final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_suggestedTags_filter);
                 //Get adapter
                 RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
-                SavedTagsAdapter savedTagsAdapter = (SavedTagsAdapter) adapter;
+                final SelectedTagsAdapter selectedTagsAdapter = (SelectedTagsAdapter) adapter;
                 //Set new values
-                addDataToAdapter(query, savedTagsAdapter);
+                addDataToAdapter(query, selectedTagsAdapter);
+                //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+                rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
 
                 finalSearchView.setIconified(true);
 
@@ -176,10 +177,77 @@ public class FilterActivity extends BaseActivity {
     /////////GENERATE DATA/////////////////////
     public List<Tag> generateData() {
         List<Tag> data = new ArrayList<>();
+        data.add(new Tag("youpi", 0));
+        data.add(new Tag("crotte", 0));
         data.add(new Tag("bar", 0));
+        data.add(new Tag("casino", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("barakobama", 0));
+        data.add(new Tag("tree", 0));
+        data.add(new Tag("nature", 0));
+        data.add(new Tag("snowboard", 0));
+        data.add(new Tag("ski", 0));
+        data.add(new Tag("rat", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("montagne", 0));
+        data.add(new Tag("brebis", 0));
+        data.add(new Tag("dinosaure", 0));
+        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
+        data.add(new Tag("swag", 0));
+        data.add(new Tag("barack", 0));
+        data.add(new Tag("youpi", 0));
+        data.add(new Tag("crotte", 0));
+        data.add(new Tag("bar", 0));
+        data.add(new Tag("casino", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("barakobama", 0));
+        data.add(new Tag("tree", 0));
+        data.add(new Tag("nature", 0));
+        data.add(new Tag("snowboard", 0));
+        data.add(new Tag("ski", 0));
+        data.add(new Tag("rat", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("montagne", 0));
+        data.add(new Tag("brebis", 0));
+        data.add(new Tag("dinosaure", 0));
+        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
+        data.add(new Tag("swag", 0));data.add(new Tag("youpi", 0));
+        data.add(new Tag("crotte", 0));
+        data.add(new Tag("bar", 0));
+        data.add(new Tag("casino", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("barakobama", 0));
+        data.add(new Tag("tree", 0));
+        data.add(new Tag("nature", 0));
+        data.add(new Tag("snowboard", 0));
+        data.add(new Tag("ski", 0));
+        data.add(new Tag("rat", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("montagne", 0));
+        data.add(new Tag("brebis", 0));
+        data.add(new Tag("dinosaure", 0));
+        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
+        data.add(new Tag("swag", 0));data.add(new Tag("youpi", 0));
+        data.add(new Tag("crotte", 0));
+        data.add(new Tag("bar", 0));
+        data.add(new Tag("casino", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("barakobama", 0));
+        data.add(new Tag("tree", 0));
+        data.add(new Tag("nature", 0));
+        data.add(new Tag("snowboard", 0));
+        data.add(new Tag("ski", 0));
+        data.add(new Tag("rat", 0));
+        data.add(new Tag("chouette", 0));
+        data.add(new Tag("montagne", 0));
+        data.add(new Tag("brebis", 0));
+        data.add(new Tag("dinosaure", 0));
+        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
+        data.add(new Tag("swag", 0));
         return data;
     }
-    public List<Tag> addDataToAdapter(String newData, SavedTagsAdapter adapter) {
+
+    public List<Tag> addDataToAdapter(String newData, SelectedTagsAdapter adapter) {
         List<Tag> data = adapter.getData();
         data.add(new Tag(newData, 0));
         adapter.notifyDataSetChanged();

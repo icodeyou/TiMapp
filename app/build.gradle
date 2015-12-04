@@ -19,15 +19,11 @@ android {
     }
 }
 
+
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:preference-v7:23.0.1'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.google.android.gms:play-services:7.3.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4'
-    compile 'com.squareup.retrofit:retrofit:1.6.1'
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.android.support:design:23.0.0'
     //
     // compile 'org.parceler:parceler:0.2.13'
     // Unit testing dependencies
@@ -36,4 +32,14 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
     // Set this dependency if you want to use Hamcrest matching
     androidTestCompile 'org.hamcrest:hamcrest-library:1.1'
+    compile 'com.android.support:preference-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4'
+    compile 'com.squareup.retrofit:retrofit:1.6.1'
+    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.google.android.gms:play-services-ads:8.3.0'
+    compile 'com.google.android.gms:play-services-identity:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
 }
