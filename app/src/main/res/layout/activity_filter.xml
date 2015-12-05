@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="0"
+            android:gravity="center"
             android:id="@+id/post_bottom">
 
             <!-- ******************************************************************* -->
@@ -40,14 +41,19 @@
                 android:id="@+id/rv_suggestedTags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:background="@drawable/border_bottom"/>
+                android:layout_gravity="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@drawable/separator_tags" />
+
             <!-- ******************************************************************* -->
-            <!-- First part: ListView : Suggestion of tags -->
+            <!-- Second part: ListView : Suggestion of tags -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/suggested_tags_filter"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </LinearLayout>

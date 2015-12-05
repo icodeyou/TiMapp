@@ -3,12 +3,13 @@
     android:orientation="horizontal" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/selected_tag_background"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="5dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/selected_tag_text_color"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:text="@string/hashtag"/>
     <TextView
         android:id="@+id/item_selected_tag"

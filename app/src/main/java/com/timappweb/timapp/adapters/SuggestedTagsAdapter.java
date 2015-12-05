@@ -36,7 +36,7 @@ public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdap
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Tag current = data.get(position);
-        holder.tv_selected_tag.setText(current.name);
+        holder.tv_suggested_tag.setText(current.name);
     }
 
     @Override
@@ -46,11 +46,11 @@ public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdap
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_selected_tag;
+        TextView tv_suggested_tag;
 
         public MyViewHolder(View saved_tags_view) {
             super(saved_tags_view);
-            tv_selected_tag = (TextView) saved_tags_view.findViewById(R.id.item_selected_tag);
+            tv_suggested_tag = (TextView) saved_tags_view.findViewById(R.id.item_suggested_tag);
         }
     }
 }

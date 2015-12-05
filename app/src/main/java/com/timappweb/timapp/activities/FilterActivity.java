@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -23,6 +24,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectedTagsAdapter;
 import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.MyLinearLayoutManager;
+import com.timappweb.timapp.listeners.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,19 +73,23 @@ public class FilterActivity extends BaseActivity {
         rv_suggestedTags.setAdapter(suggestedTagsAdapter);
 
         //Set LayoutManager
-        StaggeredGridLayoutManager manager_suggestedTags = new StaggeredGridLayoutManager(4, LinearLayoutManager.HORIZONTAL);
+        MyLinearLayoutManager manager_suggestedTags = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         rv_suggestedTags.setLayoutManager(manager_suggestedTags);
 
         //set onClickListener
-        //rv_suggestedTags.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-        //    @Override
-        //    public void onItemClick(AdapterView<?> parent, View view, int position) {
-        //        String selectedTag = String.valueOf(parent.getItemAtPosition(position));
-        //        addDataToAdapter(selectedTag, selectedTagsAdapter);
-        //        //Scroll untill the end of the RecyclerView, so that we can see the last tag.
-        //        rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
-        //    }
-        //}));
+        rv_suggestedTags.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(RecyclerView recyclerView, View view, int position) {
+                Log.i(TAG,"Item is touched !");
+                RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                SuggestedTagsAdapter STadapter = (SuggestedTagsAdapter) adapter;
+                String selectedTag = STadapter.getData().get(position).getName();
+                addDataToAdapter(selectedTag, selectedTagsAdapter);
+                //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+                rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
+            }
+        }));
 }
 ////////////////////////////////////////////////////////////////////////////////
     //// onCreateOptionsMenu

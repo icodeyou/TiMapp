@@ -4,26 +4,34 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectedTagsAdapter;
+import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.MyLinearLayoutManager;
+import com.timappweb.timapp.listeners.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +75,7 @@ public class AddSpotActivity extends BaseActivity {
         // Get recycler view
         final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
 
-        Log.i(TAG,"generate data");
+        Log.i(TAG, "generate data");
         final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, generateData());
         rv_savedTagsList.setAdapter(selectedTagsAdapter);
 
@@ -78,34 +86,32 @@ public class AddSpotActivity extends BaseActivity {
         //Scroll untill the end of the RecyclerView, so that we can see the last tag.
         rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
 
-        //Import results into the vertical ListView
-        //////////////////////////////////////////////////////////////////////////////
-        //Find listview in XML
-        ListView lv_suggestedTags = (ListView) findViewById(R.id.suggested_tags);
+        //////////////////Import examples into the vertical ListView////////////////////
+        //get RecyclerView from XML
+        RecyclerView rv_suggestedTags = (RecyclerView) findViewById(R.id.suggested_tags_filter);
 
-        //Example of tags :
-        String[] tags_ex = {"hilarious", "despicable", "OKLM", "yeah",
-                "whynot","ridiculous","good","awful","sexdrugsandrocknroll"};
+        // set Adapter
+        SuggestedTagsAdapter suggestedTagsAdapter = new SuggestedTagsAdapter(this, generateData());
+        rv_suggestedTags.setAdapter(suggestedTagsAdapter);
 
-        // Array adapter( *activity*, *type of list view*, *my_array*)
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                tags_ex);
-
-        //Set adapter
-        lv_suggestedTags.setAdapter(arrayAdapter);
+        //Set LayoutManager
+        MyLinearLayoutManager manager_suggestedTags = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+        rv_suggestedTags.setLayoutManager(manager_suggestedTags);
 
         //set onClickListener
-        lv_suggestedTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        rv_suggestedTags.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedTag = String.valueOf(parent.getItemAtPosition(position));
+            public void onItemClick(RecyclerView recyclerView, View view, int position) {
+                Log.i(TAG, "Item is touched !");
+                RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                SuggestedTagsAdapter STadapter = (SuggestedTagsAdapter) adapter;
+                String selectedTag = STadapter.getData().get(position).getName();
                 addDataToAdapter(selectedTag, selectedTagsAdapter);
                 //Scroll untill the end of the RecyclerView, so that we can see the last tag.
                 rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
             }
-        });
+        }));
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -176,6 +182,8 @@ public class AddSpotActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //////////////////////////////////////////////////////////////à supprimer??
+    /*
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -199,6 +207,42 @@ public class AddSpotActivity extends BaseActivity {
         mListener = null;
     }
 
+    */
+
+    public void onAddCommentClick(View view) {
+        LayoutInflater inflater = getLayoutInflater();
+        // Create
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflater.inflate(R.layout.comment_dialog, null));
+        final EditText comment_dialog_text = (EditText) findViewById(R.id.comment_dialog_text);
+
+        //Set title and buttons
+        builder.setTitle(R.string.add_comment_title)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(comment_dialog_text.getWindowToken(), 0);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(comment_dialog_text.getWindowToken(), 0);
+                    }
+                });
+
+        //Create Alertdialog
+        AlertDialog comment_dialog = builder.create();
+
+        //show Alertdialog
+        comment_dialog.show();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -218,6 +262,17 @@ public class AddSpotActivity extends BaseActivity {
     public List<Tag> generateData() {
         List<Tag> data = new ArrayList<>();
         data.add(new Tag("bar", 0));
+        data.add(new Tag("carrote", 0));
+        data.add(new Tag("paindepice", 0));
+        data.add(new Tag("ohjoie", 0));
+        data.add(new Tag("jaimelavie", 0));
+        data.add(new Tag("etsionfaisaitdespates", 0));
+        data.add(new Tag("nonmaisgrave", 0));
+        data.add(new Tag("aplusmarcel", 0));
+        data.add(new Tag("persojaipastresfaim", 0));
+        data.add(new Tag("barbecueparty", 0));
+        data.add(new Tag("BBQ", 0));
+        data.add(new Tag("ILoveYou", 0));
         return data;
     }
     public List<Tag> addDataToAdapter(String newData, SelectedTagsAdapter adapter) {

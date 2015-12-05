@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"  android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/background">
 
     <!-- TOOLBAR -->
     <include layout="@layout/toolbar"/>
@@ -28,23 +29,21 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_savedTags_addSpot"
             android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            android:layout_height="40dp" />
 
-
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="0"
-            android:id="@+id/post_bottom">
+            android:layout_height="20dp"
+            android:background="@drawable/separator_tags" />
+
 
             <!-- ******************************************************************* -->
-            <!-- Second part: ListView : Suggestion of tags -->
-            <ListView
+            <!-- Second part: RecyclerView : Suggestion of tags -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/suggested_tags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/suggested_tags"/>
+                android:layout_weight="1"/>
 
             <!-- ******************************************************************* -->
             <!-- Third part: Place -->
@@ -70,32 +69,38 @@
 
             <!-- ******************************************************************* -->
             <!-- Fourth part: Anonymous button-->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
                 android:orientation="horizontal"
                 android:gravity="center">
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_incognito"/>
-                <Space
-                    android:layout_weight="1"
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent" />
                 <TextView
+                    android:layout_toLeftOf="@+id/anonymous_button"
+                    android:layout_toStartOf="@+id/anonymous_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:text="@string/add_comment_title"
+                    android:clickable="true"
+                    android:onClick="onAddCommentClick"/>
+                <LinearLayout
+                    android:id="@+id/anonymous_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textSize="25dp"
-                    android:text="Anonymous"
-                    android:gravity="right|center_vertical"/>
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/checkBox" />
-            </LinearLayout>
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true">
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_incognito"/>
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/checkBox" />
+                </LinearLayout>
+
+            </RelativeLayout>
 
             <!-- ******************************************************************* -->
             <!-- Fifth place : Post buttons -->
@@ -110,11 +115,11 @@
                     android:layout_height="60dp"
                     android:layout_weight="1"
                     android:text="POST"
-                    android:textColor="@color/white"
+                    android:textColor="@color/RoyalBlue"
                     android:textSize="22dp"
                     android:background="@drawable/validate_button"/>
             </LinearLayout>
-        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
