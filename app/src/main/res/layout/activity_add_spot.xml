@@ -68,22 +68,25 @@
             </LinearLayout>
 
             <!-- ******************************************************************* -->
-            <!-- Fourth part: Anonymous button-->
+            <!-- Fourth part: Comment + Anonymous button-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:gravity="center">
                 <TextView
+                    android:id="@+id/comment_textview"
                     android:layout_toLeftOf="@+id/anonymous_button"
                     android:layout_toStartOf="@+id/anonymous_button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:padding="5dp"
                     android:gravity="center"
-                    android:textSize="20dp"
+                    android:textSize="15dp"
                     android:text="@string/add_comment_title"
                     android:clickable="true"
-                    android:onClick="onAddCommentClick"/>
+                    android:onClick="onAddCommentClick"
+                    android:background="@drawable/border_comment"/>
                 <LinearLayout
                     android:id="@+id/anonymous_button"
                     android:layout_width="wrap_content"
@@ -108,11 +111,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="bottom">
                 <Button
                     android:id="@+id/button_submit_spot"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="50dp"
                     android:layout_weight="1"
                     android:text="POST"
                     android:textColor="@color/RoyalBlue"

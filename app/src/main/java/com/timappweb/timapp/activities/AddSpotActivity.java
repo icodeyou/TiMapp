@@ -24,7 +24,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectedTagsAdapter;
@@ -40,6 +42,7 @@ public class AddSpotActivity extends BaseActivity {
 
     private static final String TAG = "AddSpot";
     private OnFragmentInteractionListener mListener;
+    private String comment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,16 +211,18 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     */
-
     public void onAddCommentClick(View view) {
         LayoutInflater inflater = getLayoutInflater();
         // Create
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.comment_dialog, null));
-        final EditText comment_dialog_text = (EditText) findViewById(R.id.comment_dialog_text);
+        //Create EditText and place it in AlertDialog
+        final EditText comment_dialog_text = new EditText(this);
+        if (comment!=null) { comment_dialog_text.setText(comment); };
+        builder.setView(comment_dialog_text);
+
+        //Place cursor at the end of the EditText box
+        comment_dialog_text.setSelection(comment_dialog_text.getText().length());
 
         //Set title and buttons
         builder.setTitle(R.string.add_comment_title)
@@ -225,6 +230,11 @@ public class AddSpotActivity extends BaseActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(comment_dialog_text.getWindowToken(), 0);
+                        comment = comment_dialog_text.getText().toString();
+                        //Set comment in the textview
+                        TextView comment_textview = (TextView) findViewById(R.id.comment_textview);
+                        Log.i(TAG, "new comment : " + comment);
+                        comment_textview.setText(comment);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -241,6 +251,8 @@ public class AddSpotActivity extends BaseActivity {
         comment_dialog.show();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+
     }
 
     /**
