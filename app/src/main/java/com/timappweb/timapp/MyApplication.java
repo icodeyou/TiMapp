@@ -68,6 +68,7 @@ public class MyApplication extends Application{
 
         if (MyApplication.requireLoggedIn(currentContext)){
             Intent intent = new Intent(currentContext, newActivity);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             currentContext.startActivity(intent);
         }
 
