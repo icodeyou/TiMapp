@@ -92,6 +92,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        final Activity that = this;
+        Button skipLogin = (Button) findViewById(R.id.skip_loggin_button);
+        skipLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(that, DrawerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

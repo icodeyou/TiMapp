@@ -19,9 +19,9 @@
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
 
-    <string name="username">Jack Overfield</string>
-    <string name="city">Paris</string>
-    <string name="country">France</string>
+    <string name="username">Not logged in</string>
+    <!--<string name="city">Paris</string>
+    <string name="country">France</string>-->
 
     <!-- Add Post Activity -->
     <string name="add_comment_title">Add a comment</string>
@@ -49,4 +49,5 @@
     <string name="hashtag">#</string>
     <string name="please_wait">Please wait...</string>
     <string name="waiting_for_location">Trying to get your location</string>
+    <string name="action_skip_loggin">Skip</string>
 </resources>

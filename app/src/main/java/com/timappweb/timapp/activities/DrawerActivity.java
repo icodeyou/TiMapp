@@ -5,18 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -225,27 +226,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // --------------------------------
         // To close and open the drawer
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                //getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
+        mDrawerToggle = new MyActionBarDrawerToggle(this,mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     // ----------------------
@@ -256,9 +243,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.item_explore) {
+        if (id == R.id.menu_item_explore) {
             changeCurrentFragment(FragmentId.Explore);
         }
+        /*
         else if(id == R.id.item_spot) {
             Intent intent = new Intent(this,PostActivity.class);
             startActivity(intent);
@@ -266,17 +254,21 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         else if(id == R.id.item_place) {
             Intent intent = new Intent(this,PlaceActivity.class);
             startActivity(intent);
-        }
-        else if (id == R.id.item_settings) {
+        }*/
+        else if (id == R.id.menu_item_settings) {
             changeCurrentFragment(FragmentId.Settings);
         }
-
-        else if (id == R.id.item_log_out) {
+        else if (id == R.id.menu_item_add_post){
+            MyApplication.startRequireLoggedInActivity(this, AddSpotActivity.class);
+        }
+        else if (id == R.id.menu_item_login){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.menu_item_logout) {
+            MyApplication.logout();
             Intent logout = new Intent(this,LoginActivity.class);
             startActivity(logout);
-
-            // To do :
-            // Disconnect user
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -318,7 +310,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 newFragment = new SettingsFragment();
                 hideAddSpotButton();
                 newFragmentTAG = "Settings";
-                Log.i("testjack","on est arrivés jusque là");
                 break;
 
             default:            // By default go to Explore
@@ -351,10 +342,23 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean res = super.onPrepareOptionsMenu(menu);
         // If the nav drawer is open, hide action items related to the content view
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
         //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        boolean isLoggedIn = MyApplication.isLoggedIn();
+        if (isLoggedIn){
+            TextView tvUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username);
+            tvUsername.setText(MyApplication.getCurrentUser().username);
+        }
+        navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_item_settings).setVisible(isLoggedIn);
+
+        return res;
     }
 
     private class AddSpotClickListener implements View.OnClickListener {
@@ -366,11 +370,27 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         @Override
         public void onClick(View view) {
-            if (!MyApplication.requireLoggedIn(this.activity)){
-                return;
-            }
-            Intent goToAddSpot = new Intent(getBaseContext(),AddSpotActivity.class);
-            startActivity(goToAddSpot);
+            MyApplication.startRequireLoggedInActivity(getBaseContext(), AddSpotActivity.class);
+        }
+    }
+
+    private class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
+        public MyActionBarDrawerToggle(DrawerActivity drawerActivity, DrawerLayout mDrawerLayout, Toolbar toolbar, int drawer_open, int drawer_close) {
+            super(drawerActivity, mDrawerLayout, toolbar, drawer_open, drawer_close);
+        }
+
+        /** Called when a drawer has settled in a completely closed state. */
+        public void onDrawerClosed(View view) {
+            super.onDrawerClosed(view);
+            //getActionBar().setTitle(mTitle);
+            invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+        }
+
+            /** Called when a drawer has settled in a completely open state. */
+        public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+            //getActionBar().setTitle(mDrawerTitle); TODO: application crash when used
+            invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
         }
     }
 

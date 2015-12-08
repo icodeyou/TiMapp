@@ -40,6 +40,12 @@
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button android:id="@+id/skip_loggin_button" style="?android:textAppearanceSmall"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/action_skip_loggin"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </ScrollView>
 

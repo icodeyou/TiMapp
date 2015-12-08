@@ -3,21 +3,27 @@
 
     <item android:title="Activity">
         <menu>
-            <item android:id="@+id/item_explore" android:icon="@android:drawable/ic_menu_camera"
+            <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_menu_camera"
                 android:title="Explore" />
+            <item android:id="@+id/menu_item_add_post" android:icon="@android:drawable/ic_menu_camera"
+                android:title="Add post" />
+            <!--
             <item android:id="@+id/item_spot" android:icon="@android:drawable/ic_menu_send"
                 android:title="Spot" />
             <item android:id="@+id/item_place" android:icon="@android:drawable/ic_menu_send"
                 android:title="Place" />
+                -->
         </menu>
     </item>
 
     <item android:title="Account">
         <menu>
-            <item android:id="@+id/item_settings" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/menu_item_settings" android:icon="@android:drawable/ic_menu_send"
                 android:title="Settings" />
-            <item android:id="@+id/item_log_out" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/menu_item_logout" android:icon="@android:drawable/ic_menu_send"
                 android:title="Log out" />
+            <item android:id="@+id/menu_item_login" android:icon="@android:drawable/ic_menu_send"
+                android:title="Log in" />
         </menu>
     </item>
 </menu>

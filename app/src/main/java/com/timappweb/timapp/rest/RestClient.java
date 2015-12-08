@@ -48,6 +48,9 @@ public class RestClient {
     // User name (make variable public to access from outside)
     public static final String KEY_TOKEN = "token";
 
+    // Current user
+    private static final String CURRENT_USER = "current_user";
+
 
     // KEY ID
     //public static final String KEY_SESSION_ID = "id";
@@ -135,7 +138,7 @@ public class RestClient {
     /**
      * Get stored session data
      * */
-    public User getUserDetails(){
+    public User getCurrentUser(){
         User user = new User();
         user.loadFromPref();
         return user;
@@ -149,7 +152,7 @@ public class RestClient {
         LocalPersistenceManager.instance.editor.clear();
         LocalPersistenceManager.instance.editor.commit();
 
-        // After logout redirect user to Loing Activity
+        // After logout redirect user to Login Activity
         Intent i = new Intent(app, LoginActivity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -173,8 +176,7 @@ public class RestClient {
             public void success(RestFeedback restFeedback, Response response) {
                 if (!restFeedback.success) {
                     Log.i(TAG, "Token is not valid anymore. Login out");
-                    // login out
-                    that.logoutUser();
+                    MyApplication.logout();
                 }
 
             }
@@ -182,7 +184,7 @@ public class RestClient {
             @Override
             public void failure(RetrofitError retrofitError) {
                 Log.i(TAG, "Token is not valid anymore. Login out");
-                that.logoutUser();
+                MyApplication.logout();
             }
         });
     }
