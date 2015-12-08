@@ -1,4 +1,4 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.AreaDataCaching;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,10 +6,10 @@ import android.util.Log;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.IntPoint;
 
 import java.util.List;
 

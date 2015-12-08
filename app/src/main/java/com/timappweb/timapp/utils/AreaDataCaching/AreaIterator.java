@@ -1,4 +1,6 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.AreaDataCaching;
+
+import com.timappweb.timapp.utils.IntPoint;
 
 import java.util.Iterator;
 

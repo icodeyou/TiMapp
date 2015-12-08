@@ -1,10 +1,13 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.AreaDataCaching;
 
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.utils.IntLatLng;
+import com.timappweb.timapp.utils.IntLatLngBounds;
+import com.timappweb.timapp.utils.IntPoint;
 
 import java.util.HashMap;
 

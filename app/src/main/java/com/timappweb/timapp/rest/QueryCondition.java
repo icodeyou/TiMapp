@@ -1,10 +1,8 @@
 package com.timappweb.timapp.rest;
 
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.utils.AreaRequestItem;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
