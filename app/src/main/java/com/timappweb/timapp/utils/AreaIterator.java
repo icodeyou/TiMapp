@@ -35,7 +35,7 @@ public class AreaIterator implements Iterator<IntPoint> {
     @Override
     public IntPoint next() {
         if (currentItem == null){
-            currentItem = southwest;
+            currentItem = new IntPoint(southwest);
         }
         else if (currentItem.x < northeast.x){
             currentItem.x++;

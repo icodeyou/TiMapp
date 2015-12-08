@@ -90,7 +90,7 @@ public class RestClient {
         // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
         mExecutorService = Executors.newCachedThreadPool();
         builder = new RestAdapter.Builder()
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.BASIC)
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(new SessionRequestInterceptor())
                 .setConverter(new GsonConverter(gson))

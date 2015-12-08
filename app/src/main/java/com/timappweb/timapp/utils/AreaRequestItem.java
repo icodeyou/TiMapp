@@ -7,13 +7,14 @@ import java.util.List;
 
 /**
  * Created by stephane on 9/13/2015.
+ * Represents a request for a data area
+ *
  */
-
 public class AreaRequestItem {
     public int timestamp;       // Request timestamp
     public int localTimestamp;
     public List<Post> data;    // LIFO: Last spot in => First spot out
-    public boolean isDisplayed = false;    // True if it's display on the map
+    //public boolean isDisplayed = false;    // True if it's display on the map
 
     public AreaRequestItem(int timestamp, List<Post> spots) {
         this.setTimesamp(timestamp);

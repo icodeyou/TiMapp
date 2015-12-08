@@ -26,8 +26,8 @@ public class AreaRequestHistoryTest {
         IntLatLng center = new IntLatLng(12,13);
         AreaRequestHistory history = new AreaRequestHistory(1,2, center);
 
-        int width10 = history.AREA_WIDTH / 10;
-        int height10 = history.AREA_HEIGHT / 10;
+        int width10 = history.areaWidth / 10;
+        int height10 = history.areaHeight / 10;
 
         // The center has 0,0 coordinate
         IntPoint p = history.getIntPoint(center);
@@ -37,22 +37,22 @@ public class AreaRequestHistoryTest {
         p = history.getIntPoint(new IntLatLng(center.latitude + height10, center.longitude + width10));
         assertEquals(p, new IntPoint(0,0));
 
-        p = history.getIntPoint(new IntLatLng(center.latitude + history.AREA_HEIGHT, center.longitude + history.AREA_WIDTH));
+        p = history.getIntPoint(new IntLatLng(center.latitude + history.areaHeight, center.longitude + history.areaWidth));
         assertEquals(p, new IntPoint(1,1));
-        p = history.getIntPoint(new IntLatLng(center.latitude, center.longitude + history.AREA_WIDTH));
+        p = history.getIntPoint(new IntLatLng(center.latitude, center.longitude + history.areaWidth));
         assertEquals(p, new IntPoint(0,1));
-        p = history.getIntPoint(new IntLatLng(center.latitude + history.AREA_HEIGHT, center.longitude));
+        p = history.getIntPoint(new IntLatLng(center.latitude + history.areaHeight, center.longitude));
         assertEquals(p, new IntPoint(1,0));
 
-        p = history.getIntPoint(new IntLatLng(center.latitude, center.longitude + history.AREA_WIDTH + width10));
+        p = history.getIntPoint(new IntLatLng(center.latitude, center.longitude + history.areaWidth + width10));
         assertEquals(p, new IntPoint(0,1));
-        p = history.getIntPoint(new IntLatLng(center.latitude + history.AREA_HEIGHT + height10, center.longitude));
+        p = history.getIntPoint(new IntLatLng(center.latitude + history.areaHeight + height10, center.longitude));
         assertEquals(p, new IntPoint(1,0));
 
         // Negatives offset
-        p = history.getIntPoint(new IntLatLng(center.latitude, center.longitude - history.AREA_WIDTH - width10));
+        p = history.getIntPoint(new IntLatLng(center.latitude, center.longitude - history.areaWidth - width10));
         assertEquals(new IntPoint(0,-1), p);
-        p = history.getIntPoint(new IntLatLng(center.latitude - history.AREA_HEIGHT - height10, center.longitude));
+        p = history.getIntPoint(new IntLatLng(center.latitude - history.areaHeight - height10, center.longitude));
         assertEquals(new IntPoint(-1, 0), p);
 
     }
@@ -67,7 +67,7 @@ public class AreaRequestHistoryTest {
         IntLatLngBounds bounds = history.getBoundFromPoint(pCenter);
         assertEquals(center, bounds.southwest);
 
-        assertEquals(new IntLatLng(center.latitude + history.AREA_HEIGHT, center.longitude + history.AREA_WIDTH), bounds.northeast);
+        assertEquals(new IntLatLng(center.latitude + history.areaHeight, center.longitude + history.areaWidth), bounds.northeast);
     }
 
     @Test
@@ -157,6 +157,47 @@ public class AreaRequestHistoryTest {
         assertEquals(nbLine+1, areaIterator.sizeHeight());
         assertEquals(nbCol+1, areaIterator.sizeWidth());
 
+        // Test each element
+        southwest = new IntPoint(0,0);
+        northeast = new IntPoint(1,1);
+        areaIterator = new AreaIterator(southwest, northeast);
+        assertEquals(4, areaIterator.size());
+        IntPoint p = areaIterator.next();
+        assertEquals(new IntPoint(0,0), p);
+        p = areaIterator.next();
+        assertEquals(new IntPoint(0,1), p);
+        p = areaIterator.next();
+        assertEquals(new IntPoint(1,0), p);
+        p = areaIterator.next();
+        assertEquals(new IntPoint(1,1), p);
+        assertEquals(null, areaIterator.next());
+
+        // Test each element
+        southwest = new IntPoint(0,0);
+        northeast = new IntPoint(0,1);
+        areaIterator = new AreaIterator(southwest, northeast);
+        assertEquals(2, areaIterator.size());
+        p = areaIterator.next();
+        assertEquals(new IntPoint(0,0), p);
+        p = areaIterator.next();
+        assertEquals(new IntPoint(0,1), p);
+
+        // Test each element
+        southwest = new IntPoint(0,0);
+        northeast = new IntPoint(1,0);
+        areaIterator = new AreaIterator(southwest, northeast);
+        assertEquals(2, areaIterator.size());
+        p = areaIterator.next();
+        assertEquals(new IntPoint(0,0), p);
+        p = areaIterator.next();
+        assertEquals(new IntPoint(1,0), p);
+
+        // Test each element
+        southwest = new IntPoint(0,0);
+        northeast = new IntPoint(0,0);
+        areaIterator = new AreaIterator(southwest, northeast);
+        assertEquals(1, areaIterator.size());
+        assertEquals(new IntPoint(0,0), areaIterator.next());
     }
 
 

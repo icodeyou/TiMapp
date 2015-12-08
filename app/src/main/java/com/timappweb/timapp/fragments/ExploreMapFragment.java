@@ -35,6 +35,8 @@ import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.AreaDataLoaderFromAPI;
+import com.timappweb.timapp.utils.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaIterator;
 import com.timappweb.timapp.utils.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaRequestItem;
@@ -61,6 +63,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     private float currentZoomLevel = -1;
 
     private static HashMap<Marker, MarkerValueInterface> mapMarkers;
+    private AreaDataLoaderInterface dataLoader;
 
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
@@ -95,7 +98,7 @@ public class ExploreMapFragment extends SupportMapFragment {
         mapView = (MapView) getActivity().findViewById(R.id.google_map_fragment);
 
         if (savedInstanceState == null){
-
+            // TODO what happens with instance
         }
         else{
             Log.d(TAG, "Instance saved for map fragment");
@@ -242,80 +245,15 @@ public class ExploreMapFragment extends SupportMapFragment {
             // Remove previous cache and all spots
             mClusterManagerPost.clearItems();
             IntLatLngBounds intBounds = new IntLatLngBounds(bounds);
-            Log.i(TAG, "New zoom level: " + intBounds.getMeterWidth() + " x " + intBounds.getMeterHeight());
-            this.history = new AreaRequestHistory(intBounds.getWidth(), intBounds.getHeight(), intBounds.southwest);
+            Log.i(TAG, "New zoom level: " + intBounds.getMeterWidth() + "m x " + intBounds.getMeterHeight()+"m");
+            this.history = new AreaRequestHistory(intBounds.getWidth(), intBounds.getHeight(),
+                    intBounds.southwest, this.dataLoader);
         }
 
-        IntPoint northeast = history.getIntPoint(bounds.northeast);
-        IntPoint southwest = history.getIntPoint(bounds.southwest);
-        Log.i(TAG, "Southwest is " + southwest.toString() + "Northeast point is " + northeast.toString() + " (in cache: " + history.areas.size() + ")");
-
-        AreaIterator areaIterator = new AreaIterator(southwest, northeast);
-        IntPoint p = null;
-        while (areaIterator.hasNext()){
-            p = areaIterator.next();
-            if (p == null){
-                // TODO solve this issue
-                Log.e(TAG, "Point is null in iterator...");
-                break;
-            }
-            IntPoint pCpy = new IntPoint(p);
-            Log.i(TAG, "For point: " + p.toString());
-            AreaRequestItem request = history.areas.get(p);
-            if (request != null){
-                Log.i(TAG, "----- " + p + " Some data are in cache ");
-
-                if (request.getLastUpdateDelay() > history.DELAY_BEFORE_UPDATE_REQUEST){
-                    QueryCondition conditions = new QueryCondition();
-                    Log.i(TAG,"----- " + p + " Data are too old; updating with new data from timestamp: " + request.timestamp);
-                    conditions.setBounds(history.getBoundFromPoint(p).toDouble());
-                    conditions.setTimestampMin(request.timestamp);
-                    loadSpotFromAPI(pCpy, request, conditions);
-                }
-            }
-            else{
-                request = new AreaRequestItem();
-                // We need to create a new point: todo iterator create pôint
-                history.update(pCpy, request);
-                // We need to build a new condition object because multi threading
-                QueryCondition conditions = new QueryCondition();
-                conditions.setBounds(history.getBoundFromPoint(p).toDouble());
-                Log.i(TAG, "----- " + p + "  No data in cache we need a server request");
-                loadSpotFromAPI(pCpy, request, conditions);
-            }
-        }
-
+        history.updateData(bounds);
     }
 
-    private void loadSpotFromAPI(final IntPoint p, final AreaRequestItem request, QueryCondition conditions) {
-        Log.i(TAG, "Request loading of area: " + conditions.toString());
-        conditions.setVisualisation("post"); // For to return posts instead of cluster
-        conditions.setTimeRange(3600);
-        RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>(this.getContext()) {
-            @Override
-            public void success(List<Post> posts, Response response) {
-                if (getActivity() == null){
-                    return;
-                }
-                Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + p);
-                //Toast.makeText(getActivity(), posts.size() + " tags loaded", Toast.LENGTH_LONG).show();
-                request.data.addAll(posts);
 
-                // TODO the server has to send back the timestamp
-                if (posts.size() > 1)
-                    request.setTimesamp(posts.get(posts.size() - 1).getCreated());
-                else {
-                    request.setTimesamp(0);
-                }
-                // TODO request.timestamp;
-                //mClusterManagerPost.clearItems();
-                for (MarkerValueInterface d: posts){
-                    mClusterManagerPost.addItem(d);
-                }
-                mClusterManagerPost.cluster();
-            }
-        });
-    }
 
     private void addTagMarkers(List<MapTag> mapTags){
         IconGenerator item = new IconGenerator(getActivity());
@@ -386,6 +324,7 @@ public class ExploreMapFragment extends SupportMapFragment {
 
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<MarkerValueInterface>());
 
+        this.dataLoader = new AreaDataLoaderFromAPI(this.getContext(), mClusterManagerPost);
     }
 
     @Override
