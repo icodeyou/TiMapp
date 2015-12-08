@@ -1,9 +1,9 @@
 package com.timappweb.timapp.rest;
 
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.RestFeedback;
 import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ public interface WebServiceInterface {
     void checkToken(Callback<RestFeedback> cb);
 
     @POST("/spots/add.json")
-    void addSpot(@Body Post spot, Callback<RestFeedback> cb);
+    void addSpot(@Body Post spot, RestCallback<RestFeedback> cb);
 
     @POST("/users/login.json")
     RestFeedback login(@Body User user);

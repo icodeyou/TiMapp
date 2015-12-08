@@ -1,5 +1,6 @@
 package com.timappweb.timapp;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 
@@ -26,19 +27,26 @@ public class MyApplication extends Application{
      * @return true if user is logged in
      */
     public static boolean isLoggedIn(){
-        return LocalPersistenceManager.instance.pref.getBoolean(RestClient.IS_LOGIN, false);
+        boolean isLoggedIn = LocalPersistenceManager.instance.pref.getBoolean(RestClient.IS_LOGIN, false);
+        return isLoggedIn;
+        // TODO
+        //if (isLoggedIn){
+        //    int lastLoggedIn = LocalPersistenceManager.instance.pref.getInt(RestClient.LAST_LOGGED_IN, 0);
+        //    return lastLoggedIn < RestClient.LOGIN
+        //}
+        //return false;
     }
 
 
     /**
      * If user is logged in do nothing
      * If not redirect to login page
-     * @param drawerActivity
+     * @param activity
      */
-    public static boolean requireLoggedIn(DrawerActivity drawerActivity) {
+    public static boolean requireLoggedIn(Activity activity) {
         if (!isLoggedIn()){
-            Intent intent = new Intent(drawerActivity, LoginActivity.class);
-            drawerActivity.startActivity(intent);
+            Intent intent = new Intent(activity, LoginActivity.class);
+            activity.startActivity(intent);
             return false;
         }
         return true;

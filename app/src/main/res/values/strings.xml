@@ -47,4 +47,6 @@
     <string name="exemple_comment">Cet endroit est sympa, surtout
         grâce à Lucia qui s’est mise toute nue sur le bar.</string>
     <string name="hashtag">#</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="waiting_for_location">Trying to get your location</string>
 </resources>

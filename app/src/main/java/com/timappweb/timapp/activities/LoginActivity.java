@@ -27,10 +27,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.entities.RestFeedback;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Feedback;
 
 import java.util.ArrayList;
@@ -67,10 +68,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -91,10 +90,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 attemptLogin();
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
+
 
     private void populateAutoComplete() {
         getLoaderManager().initLoader(0, null, this);
@@ -148,7 +147,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             String loginStr = email+":"+password;
-            if (Arrays.asList(DUMMY_CREDENTIALS).contains(loginStr)){
+            if (BuildConfig.DEBUG &&
+                    Arrays.asList(DUMMY_CREDENTIALS).contains(loginStr)){
                 // Check dummy credential
                 Log.i(TAG, "Login with dummy credential");
                 RestClient.instance().createLoginSession("A", new User(email, ""));

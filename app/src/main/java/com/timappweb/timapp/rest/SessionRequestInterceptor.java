@@ -14,8 +14,10 @@ public class SessionRequestInterceptor implements RequestInterceptor
     public void intercept(RequestInterceptor.RequestFacade request)
     {
         if (MyApplication.isLoggedIn()) {
-            request.addHeader("Authorization", "Bearer " + LocalPersistenceManager.instance.pref.getString(RestClient.KEY_TOKEN, null));
+            String token =  LocalPersistenceManager.instance.pref.getString(RestClient.KEY_TOKEN, null);
+            request.addHeader("Authorization", "Bearer " + token);
             request.addHeader("Accept", "application/json");
+            request.addQueryParam("_token", token);
         }
     }
 }

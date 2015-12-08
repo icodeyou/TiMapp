@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -108,13 +109,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (addSpotFloatingButton == null){
             addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
             Log.d(TAG, "Init add_spot_button button");
-            addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                     Intent goToAddSpot = new Intent(getBaseContext(),AddSpotActivity.class);
-                    startActivity(goToAddSpot);
-                }
-            });
+            addSpotFloatingButton.setOnClickListener(new AddSpotClickListener(this));
         }
     }
     protected void hideAddSpotButton(){
@@ -360,6 +355,23 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
         //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private class AddSpotClickListener implements View.OnClickListener {
+        private final Activity activity;
+
+        public AddSpotClickListener(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (!MyApplication.requireLoggedIn(this.activity)){
+                return;
+            }
+            Intent goToAddSpot = new Intent(getBaseContext(),AddSpotActivity.class);
+            startActivity(goToAddSpot);
+        }
     }
 
     /////////////////////////////////////////////////////////

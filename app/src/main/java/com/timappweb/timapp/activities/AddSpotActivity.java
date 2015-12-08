@@ -1,12 +1,16 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -15,34 +19,54 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.BoringLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectedTagsAdapter;
 import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
+import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.MyLinearLayoutManager;
 import com.timappweb.timapp.listeners.RecyclerItemClickListener;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.services.FetchAddressIntentService;
+import com.timappweb.timapp.utils.Constants;
+import com.timappweb.timapp.utils.Feedback;
+import com.timappweb.timapp.utils.MyLocationListener;
+import com.timappweb.timapp.utils.MyLocationProvider;
+import com.timappweb.timapp.utils.Util;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class AddSpotActivity extends BaseActivity {
 
     private static final String TAG = "AddSpot";
     private OnFragmentInteractionListener mListener;
     private String comment = null;
+    ProgressDialog progressDialog = null;
+    AlertDialog alertDialog = null;
+    private Boolean dummyLocation = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,30 +79,27 @@ public class AddSpotActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-/*
+
         mResultReceiver = new AddressResultReceiver(new Handler());
-        this.dialog = new ProgressDialog(this);
-        this.dialog.setMessage("Please wait...");
+        this.progressDialog = new ProgressDialog(this);
+        this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
 
-        this.lp = new MyLocationProvider(this);
-        this.lp.getUserLocation(mLocationListener);
 
-        Log.d(TAG, "Location provider has been setBounds up: " + lp);
+        this.alertDialog = (new AlertDialog.Builder(this)).create();
 
+        this.locationProvider = new MyLocationProvider(this);
+        this.locationProvider.setLocationListener(mLocationListener);
+        this.locationProvider.getUserLocation();
+
+        Log.d(TAG, "Location provider has been set");
+
+        /////////////////Submit button clicked //////////////////////////////////////
         Button b = (Button) findViewById(R.id.button_submit_spot);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-                broadcastPosition();
-            }
-        });
-*/
+        b.setOnClickListener(new SubmitClickListener());
+
         /////////////////Saved tags Recycler view//////////////////////////////////////
         // Get recycler view
         final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
-
-        Log.i(TAG, "generate data");
         final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, generateData());
         rv_savedTagsList.setAdapter(selectedTagsAdapter);
 
@@ -106,7 +127,7 @@ public class AddSpotActivity extends BaseActivity {
 
             @Override
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
-                Log.i(TAG, "Item is touched !");
+                Log.d(TAG, "Item is touched !");
                 RecyclerView.Adapter adapter = recyclerView.getAdapter();
                 SuggestedTagsAdapter STadapter = (SuggestedTagsAdapter) adapter;
                 String selectedTag = STadapter.getData().get(position).getName();
@@ -185,32 +206,6 @@ public class AddSpotActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //////////////////////////////////////////////////////////////à supprimer??
-    /*
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
-    public void onAttach(Activity activity) {
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            Log.d(TAG, activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-            //throw new ClassCastException(activity.toString()
-            //        + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    public void onDetach() {
-        mListener = null;
-    }
-
-    */
     public void onAddCommentClick(View view) {
         LayoutInflater inflater = getLayoutInflater();
         // Create
@@ -294,82 +289,88 @@ public class AddSpotActivity extends BaseActivity {
         return data;
     }
 
+    private class SubmitClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            //progressDialog.show();
+            Log.d(TAG, "Clicked on submit spot");
+            submitNewPost();
+        }
+    }
 
+    private String getTagsToString(){
+        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
+        SelectedTagsAdapter adapter = (SelectedTagsAdapter) rv_savedTagsList.getAdapter();
+        String inputTags = "";
+        List<Tag> selectedTags = adapter.getData();
 
+        for (Tag tag: selectedTags){
+            inputTags += tag.name + ",";
+        }
+        return inputTags;
+    }
 
-    ProgressDialog dialog;
-
-/*
-    public void broadcastPosition(){
+    public void submitNewPost(){
         // 1) Get the user position
-        // if (! this.lp.hasKnownPosition()){
-        Location location;
+        this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
+        this.progressDialog.show();
+        Location location = null;
+
         try{
-            location = this.lp.getLastLocation();
+            location = this.locationProvider.getLastLocation();
         }
-        catch (NoLastLocationException ex){
-            Log.i(TAG, "Cannot get position.");
-            AlertDialog.show(this, R.string.error_cannot_get_location);
-            return;
+        catch (NoLastLocationException ex) {
+
+            if (!BuildConfig.DEBUG) {
+                Log.i(TAG, "Cannot get position.");
+                //this.alertDialog.setMessage(getResources().getString(R.string.error_cannot_get_location));
+                //this.alertDialog.show();
+                this.progressDialog.setMessage(getResources().getString(R.string.waiting_for_location));
+                this.progressDialog.show();
+                return;
+            }
+            else if (dummyLocation){
+                Log.i(TAG, "Debug mode. Using mock position.");
+                String providerName = "";
+                location = new Location(providerName);
+                location.setLatitude(10);
+                location.setLongitude(10);
+                location.setAltitude(0);
+                location.setTime(System.currentTimeMillis());
+            }
         }
 
-        //Location location = lp.getLastLocation();
+
+        //Location location = locationProvider.getLastLocation();
         // if precision sucks..
-        LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-        Log.i(TAG, "User position is: " + ll + " with an accuracy of " + location.getAccuracy());
-
-        // 2) Get input tags
-
-        String inputTags = ((EditText) findViewById(R.id.input_tags)).getText().toString();
-        Log.d(TAG, "User tags: " + inputTags);
-
+        LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        Log.i(TAG, "User position is: " + userLatLng + " with an accuracy of " + location.getAccuracy());
         // 3) Call the service to add the spot
         // - Build the spot
-        final Post spot = new Post(ll);
-        spot.tag_string = inputTags;
-        Log.d(TAG, "Building spot: " + spot);
-        RestClient.instance().getService().addSpot(spot, new RestCallback<RestFeedback>() {
-            @Override
-            public void success(RestFeedback restFeedback, Response response) {
-                dialog.hide();
+        final Post post = new Post(userLatLng);
+        post.tag_string = getTagsToString();
+        post.comment = (String) ((TextView) findViewById(R.id.comment_textview)).getText();
+        post.latitude = location.getLatitude();
+        post.longitude = location.getLongitude();
 
-                if (restFeedback.success){
-                    Log.i(TAG, "Request post success: " + response);
-                    Object o = restFeedback.data.get("expired");
-                    Log.i(TAG, "-->" + o);
-                    spot.tag_string = restFeedback.data.get("tag_string");
-                    //spot.setExpired(Long.valueOf(restFeedback.data.get("expired")));
-                    spot.setCreated(Integer.valueOf(restFeedback.data.get("created"))); // TODO check exception ClassCastException + NullPointerException
-                    spot.writeToPref();
-                    Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot);
-                    dialog.hide();
-
-                    // TODO change view
-                    //Intent intent = new Intent(getActivity().getApplicationContext(), CurrentSpotActivity.class);
-                    //startActivity(intent);
-                }
-                else{
-                    Log.i(TAG, "Cannot add spot: " + response);
-                    Feedback.show(getApplicationContext(), R.string.error_webservice_connection);
-                }
-            }
-
-        });
+        Log.d(TAG, "Building spot: " + post);
+        RestClient.service().addSpot(post, new AddPostCallback());
     }
 
     private final LocationListener mLocationListener = new MyLocationListener() {
         @Override
         public void onLocationChanged(final Location location) {
             Log.i(TAG, "User location has changed: " + Util.print(location));
+            progressDialog.hide();
             startIntentService(location);
         }
     };
-    private MyLocationProvider lp;
+    private MyLocationProvider locationProvider;
 
     private AddressResultReceiver mResultReceiver;
 
     protected void startIntentService(Location location) {
-        Log.d(TAG, "Starting IntentService to get use adress from location");
+        Log.d(TAG, "Starting IntentService to get use address from location");
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
@@ -404,5 +405,63 @@ public class AddSpotActivity extends BaseActivity {
         }
 
     }
-*/
+
+    //////////////////////////////////////////////////////////////à supprimer??
+    /*
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+
+    public void onAttach(Activity activity) {
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            Log.d(TAG, activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+            //throw new ClassCastException(activity.toString()
+            //        + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    public void onDetach() {
+        mListener = null;
+    }
+
+    */
+
+
+    private class AddPostCallback extends RestCallback<RestFeedback> {
+
+        @Override
+        public void success(RestFeedback restFeedback, Response response) {
+            progressDialog.hide();
+
+            if (restFeedback.success){
+                Log.i(TAG, "Post has been saved!");
+                Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot);
+                // TODO change view
+                Intent intent = new Intent(getApplicationContext(), DrawerActivity.class);
+                startActivity(intent);
+            }
+            else{
+                Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
+                alertDialog.setMessage(getResources().getString(R.string.error_webservice_connection));
+                alertDialog.show();
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            super.failure(error);
+            progressDialog.hide();
+            alertDialog.setMessage(getResources().getString(R.string.error_webservice_connection));
+            alertDialog.show();
+        }
+
+    }
+
 }

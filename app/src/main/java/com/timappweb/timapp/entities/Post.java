@@ -15,7 +15,6 @@ import java.util.Date;
  */
 public class Post implements Serializable, MarkerValueInterface {
 
-
     private static final String TAG = "EntitySpot";
 
     public int id;

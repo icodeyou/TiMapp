@@ -9,13 +9,14 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.data.LocalPersistenceManager;
-import com.timappweb.timapp.entities.RestFeedback;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.fragments.AlertDialog;
+import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.Date;
 
@@ -78,7 +79,7 @@ public class RestClient {
                 .create();
 
         builder = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(new SessionRequestInterceptor())
                 .setConverter(new GsonConverter(gson));
