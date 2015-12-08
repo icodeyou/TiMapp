@@ -48,7 +48,7 @@
         grâce à Lucia qui s’est mise toute nue sur le bar.</string>
     <string name="hashtag">#</string>
     <string name="please_wait">Please wait...</string>
-    <string name="waiting_for_location">Trying to get your location</string>
+    <string name="waiting_for_location">Getting your location</string>
     <string name="action_skip_loggin">Skip</string>
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>
