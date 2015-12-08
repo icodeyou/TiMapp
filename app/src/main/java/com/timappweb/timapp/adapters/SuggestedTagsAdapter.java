@@ -11,6 +11,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdapter.MyViewHolder> {
@@ -19,9 +20,16 @@ public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdap
 
     public SuggestedTagsAdapter(Context context, List<Tag> data) {
         inflater = LayoutInflater.from(context);
-        this.data = data;
+        if (data == null)
+            this.data = new LinkedList<Tag>();
+        else
+            this.data = data;
     }
 
+    public void setData(List<Tag> data) {
+        this.data = data;
+        this.notifyDataSetChanged();
+    }
     public List<Tag> getData() {
         return this.data;
     }
@@ -41,7 +49,6 @@ public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdap
 
     @Override
     public int getItemCount() {
-
         return data.size();
     }
 

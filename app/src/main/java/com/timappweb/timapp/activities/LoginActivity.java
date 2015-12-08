@@ -28,11 +28,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.Feedback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,6 +82,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
         });
+
+        // Prefix for testing purpose
+        if (BuildConfig.DEBUG){
+            mEmailView.setText("t@m.com");
+            mPasswordView.setText("test");
+        }
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
@@ -175,7 +181,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return true; //email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
@@ -292,6 +298,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             User user = new User(mEmail, mPassword);
+            Log.d(TAG, "Try login for user: " + user.toString());
 
             try{
                 RestFeedback response = RestClient.service().login(user);
@@ -311,11 +318,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 }
 
             } catch (retrofit.RetrofitError ex){
-                Feedback.error(getApplicationContext(), "Error while communicating with the server");
+                MyApplication.showAlert(getApplicationContext(), R.string.error_server_unavailable);
+                Log.e(TAG, "Server unavailable");
             } catch (Exception ex){
+                MyApplication.showAlert(getApplicationContext(), "An unexpected error occured. Consider updating your app");
                 Log.e(TAG, "Exception: " + ex);
             }
-
             return false;
         }
 

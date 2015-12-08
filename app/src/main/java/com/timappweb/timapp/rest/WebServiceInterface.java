@@ -2,6 +2,7 @@ package com.timappweb.timapp.rest;
 
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.MapTag;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
@@ -46,4 +47,10 @@ public interface WebServiceInterface {
 
     @POST("/SpotsTags/latest.json")
     void listSpotsTags(RestCallback<List<MapTag>> restCallback);
+
+    @GET("/Tags/suggest/{term}.json")
+    void suggest(@Path("term") String term, RestCallback<List<Tag>> restCallback);
+
+    @GET("/Tags/suggest/{term}.json")
+    List<Tag>  suggest(@Path("term") String term);
 }

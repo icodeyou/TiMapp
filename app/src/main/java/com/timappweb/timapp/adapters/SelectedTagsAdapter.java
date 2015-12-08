@@ -41,7 +41,6 @@ public class SelectedTagsAdapter extends RecyclerView.Adapter<SelectedTagsAdapte
 
     @Override
     public int getItemCount() {
-
         return data.size();
     }
 

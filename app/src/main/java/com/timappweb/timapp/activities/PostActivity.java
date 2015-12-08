@@ -24,7 +24,7 @@ public class PostActivity extends BaseActivity {
         //------------------------------------------------------------------------------------------
         Post post = (Post) getIntent().getSerializableExtra("post");
         if (post == null){
-            // TODO
+            // TODO redirst to home ?
             return;
         }
 

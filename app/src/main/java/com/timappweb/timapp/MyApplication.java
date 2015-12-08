@@ -2,8 +2,11 @@ package com.timappweb.timapp;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.activities.LoginActivity;
@@ -16,9 +19,13 @@ import com.timappweb.timapp.rest.RestClient;
  */
 public class MyApplication extends Application{
 
+    private static final String TAG = "MyApplication";
+    private static AlertDialog alertDialog = null;
+
     public static User getCurrentUser(){
         return RestClient.instance().getCurrentUser();
     }
+
 
     @Override
     public void onCreate(){
@@ -27,6 +34,7 @@ public class MyApplication extends Application{
 
         String endpoint = getResources().getString(R.string.ws_endpoint);
         RestClient.init(this, endpoint);
+
     }
 
     /**
@@ -52,6 +60,7 @@ public class MyApplication extends Application{
     public static boolean requireLoggedIn(Context currentContext) {
         if (!isLoggedIn()){
             Intent intent = new Intent(currentContext, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             currentContext.startActivity(intent);
             return false;
         }
@@ -72,5 +81,20 @@ public class MyApplication extends Application{
             currentContext.startActivity(intent);
         }
 
+    }
+
+    static AlertDialog dialog = null;
+    public static void showAlert(Context context, String message) {
+        if (dialog == null){
+            Log.d(TAG, "Creating new dialog");
+            dialog = (new AlertDialog.Builder(context)).create();
+        }
+        if (!dialog.isShowing()){
+            dialog.setMessage(message);
+            dialog.show();
+        }
+    }
+    public static void showAlert(Context context, int id){
+        showAlert(context, context.getResources().getString(id));
     }
 }

@@ -1,6 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
@@ -147,4 +148,11 @@ public class Post implements Serializable, MarkerValueInterface {
         return this.id;
     }
 
+    public boolean validateForSubmit(TextView mTvComment) {
+        if (this.tag_string.length() == 0){
+            mTvComment.setError("You must select at least one tag");
+            return false;
+        }
+        return true;
+    }
 }

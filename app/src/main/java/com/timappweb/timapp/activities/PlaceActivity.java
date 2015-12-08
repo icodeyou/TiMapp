@@ -30,13 +30,13 @@ public class PlaceActivity extends BaseActivity{
         //Create ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
-        ListView lv = (ListView) findViewById(R.id.tags);
+        ListView lvTags = (ListView) findViewById(R.id.tags);
 
         // pass context and data to the custom adapter
         PlaceAdapter placeAdapter = new PlaceAdapter(this,generateData());
 
         //Set adapter
-        lv.setAdapter(placeAdapter);
+        lvTags.setAdapter(placeAdapter);
     }
 
     //Menu Action Bar

@@ -175,7 +175,7 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     private void showMarkerDetail(final Post postIncomplete){
         Toast.makeText(getActivity(), "Loading post: " + postIncomplete.getId(), Toast.LENGTH_LONG);
-        RestClient.service().viewSpot(postIncomplete.getId(), new RestCallback<Post>() {
+        RestClient.service().viewSpot(postIncomplete.getId(), new RestCallback<Post>(this.getContext()) {
             @Override
             public void success(Post post, Response response) {
                 if (post != null){
@@ -287,7 +287,7 @@ public class ExploreMapFragment extends SupportMapFragment {
         Log.i(TAG, "Request loading of area: " + conditions.toString());
         conditions.setVisualisation("post"); // For to return posts instead of cluster
         conditions.setTimeRange(3600);
-        RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>() {
+        RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>(this.getContext()) {
             @Override
             public void success(List<Post> posts, Response response) {
 

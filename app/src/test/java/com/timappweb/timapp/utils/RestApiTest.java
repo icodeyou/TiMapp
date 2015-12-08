@@ -1,10 +1,10 @@
 package com.timappweb.timapp.utils;
 
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.RestFeedback;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.WebServiceInterface;
+import com.timappweb.timapp.rest.model.RestFeedback;
 
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ public class RestApiTest {
         user.password = "dummy";
         RestFeedback feedback = RestClient.service().login(user);
         assertNotEquals(feedback, null);
-        assert(feedback.returnCode == 0);
+        assert(feedback.code == 0);
     }
 
 

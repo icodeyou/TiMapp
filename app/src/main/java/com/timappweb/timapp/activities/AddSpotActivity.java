@@ -19,7 +19,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,11 +27,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectedTagsAdapter;
 import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
@@ -52,8 +53,8 @@ import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
 
 
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit.RetrofitError;
@@ -64,9 +65,11 @@ public class AddSpotActivity extends BaseActivity {
     private static final String TAG = "AddSpot";
     private OnFragmentInteractionListener mListener;
     private String comment = null;
-    ProgressDialog progressDialog = null;
-    AlertDialog alertDialog = null;
     private Boolean dummyLocation = true;
+    private String mAddressOutput;
+    private static ProgressDialog progressDialog = null;
+    private RecyclerView rv_suggestedTags = null;
+    TextView mTvComment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +87,6 @@ public class AddSpotActivity extends BaseActivity {
         this.progressDialog = new ProgressDialog(this);
         this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
 
-
-        this.alertDialog = (new AlertDialog.Builder(this)).create();
-
         this.locationProvider = new MyLocationProvider(this);
         this.locationProvider.setLocationListener(mLocationListener);
         this.locationProvider.getUserLocation();
@@ -100,7 +100,7 @@ public class AddSpotActivity extends BaseActivity {
         /////////////////Saved tags Recycler view//////////////////////////////////////
         // Get recycler view
         final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
-        final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, generateData());
+        final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, new LinkedList<Tag>());
         rv_savedTagsList.setAdapter(selectedTagsAdapter);
 
         //Set LayoutManager
@@ -112,11 +112,12 @@ public class AddSpotActivity extends BaseActivity {
 
         //////////////////Import examples into the vertical ListView////////////////////
         //get RecyclerView from XML
-        RecyclerView rv_suggestedTags = (RecyclerView) findViewById(R.id.suggested_tags_filter);
+        rv_suggestedTags = (RecyclerView) findViewById(R.id.suggested_tags_filter);
 
         // set Adapter
-        SuggestedTagsAdapter suggestedTagsAdapter = new SuggestedTagsAdapter(this, generateData());
+        SuggestedTagsAdapter suggestedTagsAdapter = new SuggestedTagsAdapter(this, null);
         rv_suggestedTags.setAdapter(suggestedTagsAdapter);
+        this.suggestTag("");
 
         //Set LayoutManager
         MyLinearLayoutManager manager_suggestedTags = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
@@ -136,6 +137,10 @@ public class AddSpotActivity extends BaseActivity {
                 rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
             }
         }));
+
+
+        mTvComment = (TextView) findViewById(R.id.comment_textview);
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -266,7 +271,17 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     /////////GENERATE DATA/////////////////////
-    public List<Tag> generateData() {
+    public void suggestTag(final String term){
+        RestClient.service().suggest(term, new RestCallback<List<Tag>>(this) {
+            @Override
+            public void success(List<Tag> tags, Response response) {
+                Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
+                ((SuggestedTagsAdapter)rv_suggestedTags.getAdapter()).setData(tags);
+            }
+
+        });
+    }
+    public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
         data.add(new Tag("bar", 0));
         data.add(new Tag("carrote", 0));
@@ -311,9 +326,7 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     public void submitNewPost(){
-        // 1) Get the user position
-        this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
-        this.progressDialog.show();
+
         Location location = null;
 
         try{
@@ -349,12 +362,20 @@ public class AddSpotActivity extends BaseActivity {
         // - Build the spot
         final Post post = new Post(userLatLng);
         post.tag_string = getTagsToString();
-        post.comment = (String) ((TextView) findViewById(R.id.comment_textview)).getText();
+        post.comment = (String) mTvComment.getText();
         post.latitude = location.getLatitude();
         post.longitude = location.getLongitude();
 
+        // Validating user input
+        if (!post.validateForSubmit(mTvComment)){
+            return;
+        }
         Log.d(TAG, "Building spot: " + post);
-        RestClient.service().addSpot(post, new AddPostCallback());
+
+        // Starting service
+        this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
+        this.progressDialog.show();
+        RestClient.service().addSpot(post, new AddPostCallback(this));
     }
 
     private final LocationListener mLocationListener = new MyLocationListener() {
@@ -380,9 +401,9 @@ public class AddSpotActivity extends BaseActivity {
     private void displayAddressOutput() {
         TextView tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
         tvUserLocation.setText(this.mAddressOutput);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar_location);
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
     }
-
-    private String mAddressOutput;
 
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
@@ -436,6 +457,10 @@ public class AddSpotActivity extends BaseActivity {
 
     private class AddPostCallback extends RestCallback<RestFeedback> {
 
+        AddPostCallback(Context context){
+            super(context);
+        }
+
         @Override
         public void success(RestFeedback restFeedback, Response response) {
             progressDialog.hide();
@@ -449,8 +474,7 @@ public class AddSpotActivity extends BaseActivity {
             }
             else{
                 Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
-                alertDialog.setMessage(getResources().getString(R.string.error_webservice_connection));
-                alertDialog.show();
+                MyApplication.showAlert(this.context, restFeedback.message);
             }
         }
 
@@ -458,8 +482,7 @@ public class AddSpotActivity extends BaseActivity {
         public void failure(RetrofitError error) {
             super.failure(error);
             progressDialog.hide();
-            alertDialog.setMessage(getResources().getString(R.string.error_webservice_connection));
-            alertDialog.show();
+            MyApplication.showAlert(this.context, R.string.error_webservice_connection);
         }
 
     }
