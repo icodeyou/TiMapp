@@ -178,14 +178,13 @@ public class ExploreMapFragment extends SupportMapFragment {
         RestClient.service().viewSpot(postIncomplete.getId(), new RestCallback<Post>(this.getContext()) {
             @Override
             public void success(Post post, Response response) {
-                if (post != null){
+                if (post != null) {
                     Log.i(TAG, "Loaded details for spot: " + post.toString());
 
                     Intent intent = new Intent(getActivity(), PostActivity.class);
                     intent.putExtra("post", post);
                     getActivity().startActivity(intent);
-                }
-                else{
+                } else {
                     Log.e(TAG, "Invalid spot id: " + postIncomplete.getId());
                 }
             }
@@ -240,11 +239,11 @@ public class ExploreMapFragment extends SupportMapFragment {
         Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 
         if (currentZoomMode == ZoomType.OUT || history == null){
-            // We setBounds a nez caching squer size
+            // Remove previous cache and all spots
+            mClusterManagerPost.clearItems();
             IntLatLngBounds intBounds = new IntLatLngBounds(bounds);
             Log.i(TAG, "New zoom level: " + intBounds.getMeterWidth() + " x " + intBounds.getMeterHeight());
             this.history = new AreaRequestHistory(intBounds.getWidth(), intBounds.getHeight(), intBounds.southwest);
-
         }
 
         IntPoint northeast = history.getIntPoint(bounds.northeast);
@@ -255,6 +254,11 @@ public class ExploreMapFragment extends SupportMapFragment {
         IntPoint p = null;
         while (areaIterator.hasNext()){
             p = areaIterator.next();
+            if (p == null){
+                // TODO solve this issue
+                Log.e(TAG, "Point is null in iterator...");
+                break;
+            }
             IntPoint pCpy = new IntPoint(p);
             Log.i(TAG, "For point: " + p.toString());
             AreaRequestItem request = history.areas.get(p);
@@ -290,9 +294,11 @@ public class ExploreMapFragment extends SupportMapFragment {
         RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>(this.getContext()) {
             @Override
             public void success(List<Post> posts, Response response) {
-
+                if (getActivity() == null){
+                    return;
+                }
                 Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + p);
-                Toast.makeText(getActivity(), posts.size() + " tags loaded", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), posts.size() + " tags loaded", Toast.LENGTH_LONG).show();
                 request.data.addAll(posts);
 
                 // TODO the server has to send back the timestamp
@@ -380,6 +386,12 @@ public class ExploreMapFragment extends SupportMapFragment {
 
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<MarkerValueInterface>());
 
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        //RestClient.stopPendingRequest();
     }
 
     private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{

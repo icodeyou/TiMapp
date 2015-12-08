@@ -246,6 +246,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (id == R.id.menu_item_explore) {
             changeCurrentFragment(FragmentId.Explore);
         }
+        else if (id == R.id.menu_item_profile) {
+            Intent intent = new Intent(this,ProfileActivity.class);
+            startActivity(intent);
+        }
         /*
         else if(id == R.id.item_spot) {
             Intent intent = new Intent(this,PostActivity.class);
@@ -354,6 +358,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             TextView tvUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username);
             tvUsername.setText(MyApplication.getCurrentUser().username);
         }
+        navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_settings).setVisible(isLoggedIn);

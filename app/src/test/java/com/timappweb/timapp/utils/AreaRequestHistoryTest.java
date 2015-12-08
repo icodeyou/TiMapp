@@ -148,7 +148,7 @@ public class AreaRequestHistoryTest {
             IntPoint p = areaIterator.next();
             assertEquals(new IntPoint(southwest.y, southwest.x + col++), p);
         }
-        // Test element colomns
+        // Test element columns
         nbCol = 4;
         nbLine = 3;
         southwest = new IntPoint(15, 15);

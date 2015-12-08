@@ -19,10 +19,14 @@ import com.timappweb.timapp.fragments.AlertDialog;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.android.MainThreadExecutor;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
@@ -50,6 +54,7 @@ public class RestClient {
 
     // Current user
     private static final String CURRENT_USER = "current_user";
+    private static ExecutorService mExecutorService = null;
 
 
     // KEY ID
@@ -81,11 +86,16 @@ public class RestClient {
                 .registerTypeAdapter(Date.class, new DateTypeAdapter())
                 .create();
 
+        // Executor use to cancel pending request to the server
+        // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
+        mExecutorService = Executors.newCachedThreadPool();
         builder = new RestAdapter.Builder()
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(new SessionRequestInterceptor())
-                .setConverter(new GsonConverter(gson));
+                .setConverter(new GsonConverter(gson))
+                .setExecutors(mExecutorService, new MainThreadExecutor());
+
 
         this.createService();
         Log.i(TAG, "Create connection with web service done!");
@@ -190,5 +200,9 @@ public class RestClient {
     }
 
 
+    public static void stopPendingRequest() {
+        List<Runnable> pendingAndOngoing = mExecutorService.shutdownNow();
+        Log.d(TAG, "Stopping " + pendingAndOngoing.size() + " request(s) to the server");
+    }
 }
 
