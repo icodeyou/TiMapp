@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +19,15 @@ public class PostActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String TAG = "PostActivity";
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
         //------------------------------------------------------------------------------------------
         Post post = (Post) getIntent().getSerializableExtra("post");
         if (post == null){
+            Log.i(TAG, "The post is null");
             // TODO redirst to home ?
             return;
         }

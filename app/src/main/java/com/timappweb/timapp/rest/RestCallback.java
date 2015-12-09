@@ -10,9 +10,6 @@ import com.timappweb.timapp.rest.model.RestError;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 
-/**
- * Created by stephane on 8/29/2015.
- */
 public abstract class RestCallback<T> implements Callback<T> {
 
     private static final String TAG = "RestError";

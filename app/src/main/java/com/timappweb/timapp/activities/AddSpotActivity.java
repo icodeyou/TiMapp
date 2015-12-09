@@ -374,7 +374,7 @@ public class AddSpotActivity extends BaseActivity {
         // Starting service
         this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
         this.progressDialog.show();
-        RestClient.service().addSpot(post, new AddPostCallback(this));
+        RestClient.service().addSpot(post, new AddPostCallback(this,post));
     }
 
     private final LocationListener mLocationListener = new MyLocationListener() {
@@ -428,8 +428,12 @@ public class AddSpotActivity extends BaseActivity {
 
     private class AddPostCallback extends RestCallback<RestFeedback> {
 
-        AddPostCallback(Context context){
+        private final Post post;
+        // TODO get post from server instead. (in case tags are in a black list)
+
+        AddPostCallback(Context context,Post post){
             super(context);
+            this.post = post;
         }
 
         @Override
@@ -441,8 +445,8 @@ public class AddSpotActivity extends BaseActivity {
                 Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot);
                 // TODO change view
                 Intent intent = new Intent(getApplicationContext(), PostActivity.class);
+                intent.putExtra("post",post);
                 startActivity(intent);
-                //supprimer ce commentaire inutile. Pourquoi je l'ai mis? Pour te faire chier.
             }
             else{
                 Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
