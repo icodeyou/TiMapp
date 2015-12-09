@@ -463,7 +463,7 @@ public class AddSpotActivity extends BaseActivity {
                 Log.i(TAG, "Post has been saved!");
                 Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot);
                 // TODO change view
-                Intent intent = new Intent(getApplicationContext(), DrawerActivity.class);
+                Intent intent = new Intent(getApplicationContext(), PostActivity.class);
                 startActivity(intent);
             }
             else{
