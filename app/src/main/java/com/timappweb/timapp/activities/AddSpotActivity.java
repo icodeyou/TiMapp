@@ -93,10 +93,6 @@ public class AddSpotActivity extends BaseActivity {
 
         Log.d(TAG, "Location provider has been set");
 
-        /////////////////Submit button clicked //////////////////////////////////////
-        Button b = (Button) findViewById(R.id.button_submit_spot);
-        b.setOnClickListener(new SubmitClickListener());
-
         /////////////////Saved tags Recycler view//////////////////////////////////////
         // Get recycler view
         final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
@@ -304,13 +300,11 @@ public class AddSpotActivity extends BaseActivity {
         return data;
     }
 
-    private class SubmitClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            //progressDialog.show();
-            Log.d(TAG, "Clicked on submit spot");
-            submitNewPost();
-        }
+    //Set onClickListener
+    public void SubmitClickListener(View v) {
+        //progressDialog.show();
+        Log.d(TAG, "Clicked on submit spot");
+        submitNewPost();
     }
 
     private String getTagsToString(){

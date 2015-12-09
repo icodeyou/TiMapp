@@ -124,7 +124,8 @@
                     android:text="POST"
                     android:textColor="@color/RoyalBlue"
                     android:textSize="22dp"
-                    android:background="@drawable/validate_button"/>
+                    android:background="@drawable/validate_button"
+                    android:onClick="SubmitClickListener"/>
             </LinearLayout>
 
     </LinearLayout>
