@@ -298,13 +298,14 @@ public class ExploreMapFragment extends SupportMapFragment {
             @Override
             public boolean onClusterClick(Cluster<MarkerValueInterface> cluster) {
                 Log.d(TAG, "You clicked on a post cluster");
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
                 return true;
             }
         });
         mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerValueInterface>() {
             @Override
             public boolean onClusterItemClick(MarkerValueInterface item) {
-                Log.d(TAG, "You clicked on a post cluster item: " + item);
+                Log.d(TAG, "You clicked on a cluster item: " + item);
                 showMarkerDetail(item);
                 return true;
             }
@@ -344,7 +345,6 @@ public class ExploreMapFragment extends SupportMapFragment {
             mClusterManagerPost.onCameraChange(cameraPosition);
             loadData();
         }
-
     }
 }
 
