@@ -47,11 +47,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
                 //Toast.makeText(getActivity(), posts.size() + " tags loaded", Toast.LENGTH_LONG).show();
                 request.data.addAll(posts);
 
-                // TODO the server has to send back the timestamp
+                // TODO the server has to send back the dataTimestamp
                 if (posts.size() > 1)
-                    request.setTimesamp(posts.get(posts.size() - 1).getCreated());
+                    request.setDataTimestamp(posts.get(posts.size() - 1).getCreated());
                 else {
-                    request.setTimesamp(0);
+                    request.setDataTimestamp(0);
                 }
                 //mClusterManagerPost.clearItems();
                 for (MarkerValueInterface d: posts){
@@ -60,5 +60,17 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
                 mClusterManagerPost.cluster();
             }
         });
+    }
+
+    @Override
+    public void clear(List<Post> data) {
+        for (Post spot: data){
+            mClusterManagerPost.removeItem(spot);
+        }
+    }
+
+    @Override
+    public void clearAll() {
+        mClusterManagerPost.clearItems();
     }
 }

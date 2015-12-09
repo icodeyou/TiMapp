@@ -37,15 +37,11 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
-import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
-import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import retrofit.client.Response;
 
@@ -242,13 +238,10 @@ public class ExploreMapFragment extends SupportMapFragment {
         if (currentZoomMode == ZoomType.OUT || history == null){
             // Remove previous cache and all spots
             mClusterManagerPost.clearItems();
-            IntLatLngBounds intBounds = new IntLatLngBounds(bounds);
-            Log.i(TAG, "New zoom level: " + intBounds.getMeterWidth() + "m x " + intBounds.getMeterHeight()+"m");
-            this.history = new AreaRequestHistory(intBounds.getWidth(), intBounds.getHeight(),
-                    intBounds.southwest, this.dataLoader);
+            this.history = new AreaRequestHistory(bounds, this.dataLoader);
         }
 
-        history.updateData(bounds);
+        history.update(bounds);
     }
 
 
@@ -347,40 +340,6 @@ public class ExploreMapFragment extends SupportMapFragment {
                 currentZoomMode = ZoomType.IN;
             }
 
-            if (history != null) {
-                // Check if the zoom changed too much
-                // To do so we check that the number of case displayed in the history grid is not too big
-                // TODO can be optimized by only calculation with latitude and longitude
-                IntPoint southeastPoint = history.getIntPoint(getMapBounds().southwest);
-                IntPoint northeastPoint = history.getIntPoint(getMapBounds().northeast);
-                if (southeastPoint.distance(northeastPoint) > history.MAXIMUM_GRID_SIZE_ON_VIEW) {
-                    Log.i(TAG, "Maximum grid size reach. Removing the history...");
-                    mClusterManagerPost.clearItems();
-                    history = null;
-                }
-                // TODO also need to check if we are loading too much data (if we zoom in) ???
-                else if (false) {
-
-                }
-                // Remove history case that are too far from the current view position
-                // TODO optimize to only clear if the last loaded is too far from where we are ?
-                // TODO or create function to clean history by removing too far spots
-                else {
-                    Iterator it = history.areas.entrySet().iterator();
-                    int removeNb = 0;
-                    while (it.hasNext()) {
-                        Map.Entry<IntPoint, AreaRequestItem> entry = (Map.Entry) it.next();
-                        if (entry.getKey().distance(southeastPoint) > history.MAXIMUM_ORIGIN_DISTANCE) {
-                            Log.i(TAG, "Post caching too far from origin. Clearing spot history and markers");
-                            clearPosts(entry.getValue().data);
-                            it.remove();
-                            removeNb++;
-                        }
-                    }
-                    if (removeNb > 0)
-                        mClusterManagerPost.cluster();
-                }
-            }
             previousZoomLevel = cameraPosition.zoom;
             mClusterManagerPost.onCameraChange(cameraPosition);
             loadData();

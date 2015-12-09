@@ -13,6 +13,7 @@ import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by stephane on 9/17/2015.
+ * TODO complete tests
  */
 public class RestApiTest {
 

@@ -1,5 +1,7 @@
 package com.timappweb.timapp.utils;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaIterator;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
@@ -22,12 +24,16 @@ public class AreaRequestHistoryTest {
         assertEquals(new IntPoint(0,0), new IntPoint(0,0));
         assertEquals(new IntPoint(3,-27), new IntPoint(3,-27));
         assertNotEquals(new IntPoint(3, 2), new IntPoint(0, 0));
+        assertNotEquals(new IntPoint(1, 0), new IntPoint(0, 0));
+        assertNotEquals(new IntPoint(0, 1), new IntPoint(0, 0));
     }
 
     @Test
     public void testGetID() throws Exception {
-        IntLatLng center = new IntLatLng(12,13);
-        AreaRequestHistory history = new AreaRequestHistory(1,2, center, null);
+        LatLngBounds bounds = new LatLngBounds(new LatLng(12, 13), new LatLng(16, 20));
+        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
+        IntLatLng center = history.getCenter();
+
 
         int width10 = history.areaWidth / 10;
         int height10 = history.areaHeight / 10;
@@ -61,34 +67,21 @@ public class AreaRequestHistoryTest {
     }
 
     @Test
-    public void testGetBoundFromPoint() throws Exception {
-        IntLatLng center = new IntLatLng(12,-13);
-        AreaRequestHistory history = new AreaRequestHistory(1,2, center, null);
-
-        IntPoint pCenter = new IntPoint(0,0);
-
-        IntLatLngBounds bounds = history.getBoundFromPoint(pCenter);
-        assertEquals(center, bounds.southwest);
-
-        assertEquals(new IntLatLng(center.latitude + history.areaHeight, center.longitude + history.areaWidth), bounds.northeast);
-    }
-
-    @Test
     public void testBountToPointToBound() throws Exception {
-        IntLatLng center = new IntLatLng(-1213, 233247);
-        AreaRequestHistory history = new AreaRequestHistory(2,1, center, null);
+        LatLngBounds bounds = new LatLngBounds(new LatLng(-1.213, 2.33247), new LatLng(-1.210, 2.53247));
+        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
 
         for (int y = -10; y <= 10; y++){
             IntPoint p = new IntPoint(y,0);
-            IntLatLngBounds bounds = history.getBoundFromPoint(p);
-            assertEquals(p, history.getIntPoint(bounds.southwest));
+            IntLatLngBounds intBounds = history.getBoundFromPoint(p);
+            assertEquals(p, history.getIntPoint(intBounds.southwest));
         }
 
         for (int y = -10; y < 10; y += 1){
             for (int x = -10; x < 10; x += 1){
                 IntPoint p = new IntPoint(y,x);
-                IntLatLngBounds bounds = history.getBoundFromPoint(p);
-                assertEquals(p, history.getIntPoint(bounds.southwest));
+                IntLatLngBounds intBounds = history.getBoundFromPoint(p);
+                assertEquals(p, history.getIntPoint(intBounds.southwest));
             }
         }
 
@@ -96,8 +89,8 @@ public class AreaRequestHistoryTest {
 
     @Test
     public void hasInCache() throws Exception {
-        IntLatLng center = new IntLatLng(-100, 3000);
-        AreaRequestHistory history = new AreaRequestHistory(2000,4000, center, null);
+        LatLngBounds bounds = new LatLngBounds(new LatLng(-1, 3), new LatLng(2, 7));
+        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
 
         LinkedList<Post> data = new LinkedList<>();
         IntPoint p1 = new IntPoint(2, 4);
@@ -111,7 +104,8 @@ public class AreaRequestHistoryTest {
     @Test
     public void testAreaIterator(){
         IntLatLng center = new IntLatLng(0, 0);
-        AreaRequestHistory history = new AreaRequestHistory(30,40, center, null);
+        LatLngBounds bounds = new LatLngBounds(new LatLng(0, 0), new LatLng(30, 40));
+        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
 
         IntPoint northeast = history.getIntPoint(new IntLatLng(center.latitude+1, center.longitude+1));
         IntPoint southwest = history.getIntPoint(center);

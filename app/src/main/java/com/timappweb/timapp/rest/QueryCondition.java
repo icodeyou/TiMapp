@@ -31,7 +31,7 @@ public class QueryCondition {
     public void setTimestampMin(int min) {
         if (min > 0)
             queryMap.put("ts_min", String.valueOf(min));
-        // queryMap.put("cache[]", timestamp + "," + bounds.northeast.latitude + "," + bounds.southwest.longitude + "," +
+        // queryMap.put("cache[]", dataTimestamp + "," + bounds.northeast.latitude + "," + bounds.southwest.longitude + "," +
         //       "" + bounds.southwest.latitude + "," + bounds.southwest.longitude);
     }
     public void setTimestampMax(int max) {

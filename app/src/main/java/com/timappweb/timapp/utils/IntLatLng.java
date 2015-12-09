@@ -1,12 +1,12 @@
 package com.timappweb.timapp.utils;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.utils.AreaDataCaching.CoordinateConverter;
 
 /**
  * Created by stephane on 9/17/2015.
  */
 public class IntLatLng {
-    public static final int precision = 10000; // Precision = 5 number
 
     public int latitude;
     public int longitude;
@@ -25,8 +25,8 @@ public class IntLatLng {
     }
 
     public IntLatLng(LatLng ll) {
-        this.latitude = (int) (ll.latitude * precision);
-        this.longitude = (int) (ll.longitude * precision);
+        this.latitude = CoordinateConverter.convert(ll.latitude);
+        this.longitude = CoordinateConverter.convert(ll.longitude);
     }
 
     @Override
@@ -49,6 +49,6 @@ public class IntLatLng {
     }
 
     public LatLng toDouble() {
-        return new LatLng((double)this.latitude / precision, (double)this.longitude / precision);
+        return new LatLng(CoordinateConverter.convert(this.latitude), CoordinateConverter.convert(this.longitude));
     }
 }

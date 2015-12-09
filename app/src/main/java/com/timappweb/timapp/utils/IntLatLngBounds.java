@@ -1,6 +1,7 @@
 package com.timappweb.timapp.utils;
 
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.timappweb.timapp.utils.AreaDataCaching.CoordinateConverter;
 
 /**
  * Created by stephane on 9/17/2015.
@@ -23,11 +24,11 @@ public class IntLatLngBounds {
     }
 
     public double  getMeterHeight(){
-        return ((double)this.getHeight()  * 111.0 / IntLatLng.precision);
+        return ((double)this.getHeight()  * 111.0 / CoordinateConverter.precision);
     }
 
     public double  getMeterWidth(){
-        return ((double)this.getHeight() * 100.0 / IntLatLng.precision);
+        return ((double)this.getHeight() * 100.0 / CoordinateConverter.precision);
     }
 
 

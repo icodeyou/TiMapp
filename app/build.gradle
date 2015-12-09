@@ -17,6 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // http://tools.android.com/tech-docs/unit-testing-support#TOC-Method-...-not-mocked.-
+    // For using Log methods in unit tests. Check for new solutions in future releases
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 
