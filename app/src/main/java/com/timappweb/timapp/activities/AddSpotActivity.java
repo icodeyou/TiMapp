@@ -465,6 +465,7 @@ public class AddSpotActivity extends BaseActivity {
                 // TODO change view
                 Intent intent = new Intent(getApplicationContext(), PostActivity.class);
                 startActivity(intent);
+                //supprimer ce commentaire inutile. Pourquoi je l'ai mis? Pour te faire chier.
             }
             else{
                 Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
