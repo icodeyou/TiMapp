@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -50,6 +49,7 @@ import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.Feedback;
 import com.timappweb.timapp.utils.MyLocationListener;
 import com.timappweb.timapp.utils.MyLocationProvider;
+import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.utils.Util;
 
 
@@ -62,6 +62,7 @@ import retrofit.client.Response;
 
 public class AddSpotActivity extends BaseActivity {
 
+
     private static final String TAG = "AddSpot";
     private OnFragmentInteractionListener mListener;
     private String comment = null;
@@ -70,12 +71,16 @@ public class AddSpotActivity extends BaseActivity {
     private static ProgressDialog progressDialog = null;
     private RecyclerView rv_suggestedTags = null;
     TextView mTvComment = null;
+    SearchHistory<Tag> searchHistory;
+    private SearchView searchView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "Creating add spot activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_spot);
+
+        this.searchHistory = new SearchHistory<>();
 
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -151,7 +156,7 @@ public class AddSpotActivity extends BaseActivity {
         //Set search item
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = null;
+
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
         }
@@ -159,33 +164,7 @@ public class AddSpotActivity extends BaseActivity {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         }
 
-        final SearchView finalSearchView = searchView;
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Get recycler view
-                RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
-                //Get adapter
-                RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
-                SelectedTagsAdapter selectedTagsAdapter = (SelectedTagsAdapter) adapter;
-                //Set new values
-                addDataToAdapter(query, selectedTagsAdapter);
-                //Scroll untill the end of the RecyclerView, so that we can see the last tag.
-                rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
-
-                finalSearchView.setIconified(true);
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Get the text each time the value is change in the searchbox
-                return false;
-            }
-        };
-
+        SearchView.OnQueryTextListener queryTextListener = new OnQueryTextListener();
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setOnQueryTextListener(queryTextListener);
@@ -267,15 +246,41 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     /////////GENERATE DATA/////////////////////
-    public void suggestTag(final String term){
-        RestClient.service().suggest(term, new RestCallback<List<Tag>>(this) {
-            @Override
-            public void success(List<Tag> tags, Response response) {
-                Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
-                ((SuggestedTagsAdapter)rv_suggestedTags.getAdapter()).setData(tags);
-            }
 
-        });
+    /**
+     * Suggest tag according to user input
+     * Cache results according to the term given
+     * @param term
+     */
+    public void suggestTag(final String term){
+        searchHistory.setLastSearch(term);
+        final SuggestedTagsAdapter adapter = (SuggestedTagsAdapter) rv_suggestedTags.getAdapter();
+        if (searchHistory.hasTerm(term)){
+            adapter.setData(searchHistory.get(term).getData());
+        }
+        else {
+            SearchHistory.Item subHistory = searchHistory.get(term);
+            if (subHistory != null){
+                adapter.setData(subHistory.getData());
+                if (subHistory.isComplete()){
+                    return ;
+                }
+            }
+            searchHistory.create(term);
+
+            RestClient.service().suggest(term, new RestCallback<List<Tag>>(this) {
+                @Override
+                public void success(List<Tag> tags, Response response) {
+                    Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
+                    searchHistory.set(term, tags);
+                    if (searchHistory.isLastSearch(term)){
+                        Log.d(TAG, "It is the last search, setting data");
+                        adapter.setData(tags);
+                    }
+                }
+
+            });
+        }
     }
     public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
@@ -421,34 +426,6 @@ public class AddSpotActivity extends BaseActivity {
 
     }
 
-    //////////////////////////////////////////////////////////////à supprimer??
-    /*
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-
-    public void onAttach(Activity activity) {
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            Log.d(TAG, activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-            //throw new ClassCastException(activity.toString()
-            //        + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    public void onDetach() {
-        mListener = null;
-    }
-
-    */
-
-
     private class AddPostCallback extends RestCallback<RestFeedback> {
 
         AddPostCallback(Context context){
@@ -482,4 +459,32 @@ public class AddSpotActivity extends BaseActivity {
 
     }
 
+
+    private class OnQueryTextListener implements SearchView.OnQueryTextListener {
+
+            @Override
+        public boolean onQueryTextSubmit(String query) {
+            // Get recycler view
+            RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
+            //Get adapter
+            RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
+            SelectedTagsAdapter selectedTagsAdapter = (SelectedTagsAdapter) adapter;
+            //Set new values
+            addDataToAdapter(query, selectedTagsAdapter);
+            //Scroll untill the end of the RecyclerView, so that we can see the last tag.
+            rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
+
+            searchView.setIconified(true);
+
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            if (newText.length() >= 2){
+                suggestTag(newText);
+            }
+            return false;
+        }
+    }
 }

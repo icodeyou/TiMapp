@@ -72,17 +72,6 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     private AreaRequestHistory history;
 
-    /**
-     * Clear spots markers according the the spots given
-     * @param data
-     */
-    public void clearPosts(List<Post> data) {
-        for (Post spot: data){
-            mClusterManagerPost.removeItem(spot);
-        }
-    }
-
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
