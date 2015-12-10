@@ -1,22 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!-- Persistence is off when we set up information about the user.-->
+<!-- Persistence is on when we set up information about the app, because we have to store data.-->
+
+<!-- TODO : Make a Settings menu when the user isn't connected -->
+<!-- TODO : Request Focus on EditTexts -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
-        android:title="category test"
-        android:key="catkeytest">
-        <CheckBoxPreference
-            android:key="test1"
-            android:summary="test1summary"
-            android:title="test1tittle"
-            android:defaultValue="false"/>
-
-
-
-        <!-- CODE FAUUUUX !!!!
+        android:title="Personal informations">
+        <!-- Warning : Can't have key="name" with persistent="true" -->
+        <EditTextPreference
+            android:key="username"
+            android:title="Name"
+            android:summary="Jean-Mi"
+            android:persistent="false"
+            android:defaultValue="Jean-Mi"/>
+        <EditTextPreference
+            android:key="email"
+            android:title="Email"
+            android:summary="jeanmidu77@gmail.com"
+            android:persistent="false"
+            android:defaultValue="jeanmidu77@gmail.com"/>
+        <!-- TODO : Set keyboard type to NUMBERS ONLY (doesn't work with inputType="phone") -->
+        <EditTextPreference
+            android:key="mobile"
+            android:title="Mobile Number"
+            android:inputType="phone"
+            android:summary="0669115706"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="App">
+        <!-- TODO : ask password before change password -->
+        <EditTextPreference
+            android:key="password"
+            android:title="Password"
+            android:inputType="textPassword"
+            android:persistent="false"/>
+        <EditTextPreference
+            android:key="notifications"
+            android:title="Notifications"
+            android:persistent="true"
+            android:defaultValue=""/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="About">
         <Preference
-            android:key="test2"
-            android:dependency="test2dependancy"
-            android:summary="test2summary"
-            android:title="test2tittle" />
-            -->
+            android:key="terms"
+            android:title="Terms of Use"/>
+        <Preference
+            android:key="privacy"
+            android:title="Privacy policy"/>
+        <Preference
+            android:key="licenses"
+            android:title="Licenses"/>
     </PreferenceCategory>
 </PreferenceScreen>
