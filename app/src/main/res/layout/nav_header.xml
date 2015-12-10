@@ -12,10 +12,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+        <ImageView android:layout_width="80dp" android:layout_height="80dp"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:src="@android:drawable/sym_def_app_icon"
+            android:src="@drawable/ic_profile"
             android:id="@+id/drawer_user_picture" />
 
         <LinearLayout
@@ -23,7 +25,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center">
-
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/nav_header_vertical_spacing"

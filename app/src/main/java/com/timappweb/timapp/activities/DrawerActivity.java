@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -36,6 +37,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
+
+    public void onDrawerTopClick(View view) {
+        Intent intent = new Intent(this,ProfileActivity.class);
+        startActivity(intent);
+    }
 
     enum FragmentId{
         Explore(0), Settings(1);
@@ -97,6 +103,19 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             changeCurrentFragment(FragmentId.Explore);
         }
+
+        //////////////////////////////////////////////////
+        NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
+        TextView tvUserName = (TextView) headerView.findViewById(R.id.drawer_username);
+        tvUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"header is clicked");
+                Toast.makeText(getBaseContext(), "clicking textview", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
      /* ============================================================================================*/
@@ -356,7 +375,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         boolean isLoggedIn = MyApplication.isLoggedIn();
         if (isLoggedIn){
             TextView tvUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username);
-            tvUsername.setText(MyApplication.getCurrentUser().username);
+            //tvUsername.setText(MyApplication.getCurrentUser().username);
         }
         navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
