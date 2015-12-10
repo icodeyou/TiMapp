@@ -8,6 +8,9 @@
             android:summary="test1summary"
             android:title="test1tittle"
             android:defaultValue="false"/>
+
+
+
         <!-- CODE FAUUUUX !!!!
         <Preference
             android:key="test2"
