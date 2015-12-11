@@ -70,7 +70,6 @@
                 android:text="up"
                 android:textSize="20dp"/>
         </LinearLayout>
-
     </LinearLayout>
 
     <View
