@@ -40,7 +40,7 @@ public class PostActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //------------------------------------------------------------------------------------------
-        ListView listViewTags = (ListView) findViewById(R.id.tags);
+        ListView listViewTags = (ListView) findViewById(R.id.list_tags_place);
         TextView textViewCreated = (TextView) findViewById(R.id.post_created);
         TextView textViewComment = (TextView) findViewById(R.id.post_comment);
         TextView textViewUsername = (TextView) findViewById(R.id.post_username);

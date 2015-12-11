@@ -15,11 +15,11 @@ import java.util.ArrayList;
 //Source :
 // http://hmkcode.com/android-custom-listview-titles-icons-counter/
 
-public class PlaceAdapter extends ArrayAdapter<Tag> {
+public class ListTagAdapter extends ArrayAdapter<Tag> {
     private final Context context;
     private final ArrayList<Tag> tagsArrayList;
 
-    public PlaceAdapter(Context context, ArrayList<Tag> tagsArrayList) {
+    public ListTagAdapter(Context context, ArrayList<Tag> tagsArrayList) {
         super(context, R.layout.list_item_tag, tagsArrayList);
         this.context = context;
         this.tagsArrayList = tagsArrayList;
