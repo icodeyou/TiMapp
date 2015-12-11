@@ -23,107 +23,118 @@
         android:text="TieMapp"
         android:textSize="60dp"
         android:gravity="center"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </View>
-    <LinearLayout
-        android:id="@+id/login_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_below="@+id/title_login">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign"
-            android:textSize="45dp"/>
-        <View
-            android:layout_width="10dp"
-            android:layout_height="match_parent"/>
-        <View
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/LightGrey" />
-        <View
-            android:layout_width="5dp"
-            android:layout_height="match_parent"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="in"
-                android:textSize="20dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="up"
-                android:textSize="20dp"/>
-        </LinearLayout>
-    </LinearLayout>
 
     <View
-        android:layout_margin="10dp"
-        android:id="@+id/login_separator"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@+id/login_header"
-        android:background="@color/LightGrey"/>
-    <LinearLayout android:id="@+id/login_form"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@+id/login_separator">
+        android:layout_below="@+id/title_login"
+        android:background="@color/Gray"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/double_activity_vertical_margin"
+        android:gravity="center">
         <LinearLayout
+            android:id="@+id/login_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_googleplus"/>
-            <ImageView
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_facebook"/>
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign"
+                android:textSize="45dp"/>
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent"/>
+            <View
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/LightGrey" />
+            <View
+                android:layout_width="5dp"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="in"
+                    android:textSize="20dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="up"
+                    android:textSize="20dp"/>
+            </LinearLayout>
         </LinearLayout>
-        
-        <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="vertical">
 
-            <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="@string/prompt_email"
-                android:inputType="textEmailAddress" android:maxLines="1"
-                android:singleLine="true" />
+        <View
+            android:layout_margin="10dp"
+            android:id="@+id/login_separator"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/login_header"
+            android:background="@color/LightGrey"/>
+        <LinearLayout android:id="@+id/login_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/login_separator">
 
-            <EditText android:id="@+id/password" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:hint="@string/prompt_password"
-                android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified" android:inputType="textPassword"
-                android:maxLines="1" android:singleLine="true"
-                android:text="jnlj" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_googleplus"/>
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_facebook"/>
+            </LinearLayout>
 
-            <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+            <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical">
 
+                <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:hint="@string/prompt_email"
+                    android:inputType="textEmailAddress" android:maxLines="1"
+                    android:singleLine="true" />
+
+                <EditText android:id="@+id/password" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:hint="@string/prompt_password"
+                    android:imeActionId="@+id/login"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified" android:inputType="textPassword"
+                    android:maxLines="1" android:singleLine="true"
+                    android:text="jnlj" />
+
+                <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp" android:text="@string/action_sign_in"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
     <Button android:id="@+id/skip_loggin_button" style="?android:textAppearanceSmall"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
