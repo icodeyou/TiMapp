@@ -1,6 +1,7 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class AreaRequestItem {
         this.dataTimestamp = timesamp;
     }
     public void updateLocalTimestamp() {
-        this.localTimestamp = (int)(System.currentTimeMillis() / 1000); // OK with only 32 bits
+        this.localTimestamp = Util.getCurrentTimeSec(); // OK with only 32 bits
     }
     @Override
     public String toString() {
@@ -54,6 +55,6 @@ public class AreaRequestItem {
      * @return
      */
     public int getLastUpdateDelay() {
-        return (int)(System.currentTimeMillis() / 1000) - this.localTimestamp;
+        return Util.getCurrentTimeSec() - this.localTimestamp;
     }
 }

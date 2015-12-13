@@ -10,6 +10,7 @@ import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntPoint;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
@@ -21,8 +22,11 @@ import retrofit.client.Response;
 public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
+    private static final int DEFAULT_TIME_RANGE = 3600;
     private Context mContext;
     private ClusterManager<MarkerValueInterface> mClusterManagerPost;
+    private int requestCounter = 0;
+    private int lastClear = 0;
 
     public AreaDataLoaderFromAPI(Context context, ClusterManager<MarkerValueInterface> clusterManagerPost) {
         this.mContext = context;
@@ -33,27 +37,33 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
         Log.i(TAG, "Request loading of area: " + conditions.toString());
         conditions.setVisualisation("post"); // For to return posts instead of cluster
-        conditions.setTimeRange(3600);
+        conditions.setTimeRange(DEFAULT_TIME_RANGE);
+        final int requestId = this.requestCounter++;
         RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>(mContext) {
             @Override
             public void success(List<Post> posts, Response response) {
+                Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + pCpy);
+                // Test if request is out dated
+                // TODO cancel requests instead
+                if (requestId <= lastClear){
+                    Log.d(TAG, "This request is out dated");
+                    return ;
+                }
                 // If activity has been destroyed in the mean time
                 // TODO cancel requests instead
                 // if (mClusterManagerPost == null){
                 //    return;
                 //}
 
-                Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + pCpy);
-                //Toast.makeText(getActivity(), posts.size() + " tags loaded", Toast.LENGTH_LONG).show();
+                // Setting the last timestamp retrieved from the server
+                // TODO what happens if two row have the same timestamp for the same area ?
+                request.setDataTimestamp(
+                                posts.size() > 1
+                                ? posts.get(posts.size() - 1).getCreated()
+                                : 0);
+
                 request.data.addAll(posts);
 
-                // TODO the server has to send back the dataTimestamp
-                if (posts.size() > 1)
-                    request.setDataTimestamp(posts.get(posts.size() - 1).getCreated());
-                else {
-                    request.setDataTimestamp(0);
-                }
-                //mClusterManagerPost.clearItems();
                 for (MarkerValueInterface d: posts){
                     mClusterManagerPost.addItem(d);
                 }
@@ -71,6 +81,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
 
     @Override
     public void clearAll() {
+        lastClear = this.requestCounter;        // Every request id that is less or equal is out dated
         mClusterManagerPost.clearItems();
     }
 }

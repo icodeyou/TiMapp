@@ -25,7 +25,7 @@ public class RestFeedback extends RestResponse {
 
 
     public String toString(){
-        return "ServerObject[Success: " + success + "; message=" + message + ";]";
+        return "ServerObject[Success: " + success + " ("+code+"); message=" + message + ";]";
     }
 
 
