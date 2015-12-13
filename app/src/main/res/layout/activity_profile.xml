@@ -27,12 +27,14 @@
                     android:layout_height="wrap_content"
                     android:text="Mister Chung"
                     android:textSize="30dp"
+                    android:textColor="@color/Black"
                     android:gravity="center"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Toulouse - France"
                     android:textSize="20dp"
+                    android:textColor="@color/Halfblack"
                     android:gravity="center"/>
             </LinearLayout>
         </LinearLayout>
@@ -46,10 +48,9 @@
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:gravity="center">
             <LinearLayout
-                android:layout_weight="2"
+                android:layout_weight="4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:weightSum="1"
                 android:gravity="right">
                 <TextView
                     android:layout_width="wrap_content"
@@ -74,10 +75,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
             <LinearLayout
-                android:layout_weight="2"
+                android:layout_weight="4"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:weightSum="1"
                 android:gravity="left">
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,19 +121,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#wakeboard"
-                        android:textSize="40dp"
+                        android:textSize="30dp"
                         android:textColor="@color/Goldenrod"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#party"
-                        android:textSize="40dp"
+                        android:textSize="30dp"
                         android:textColor="@color/Goldenrod"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#drums"
-                        android:textSize="40dp"
+                        android:textSize="30dp"
                         android:textColor="@color/Goldenrod"/>
                 </LinearLayout>
                 <LinearLayout
@@ -151,11 +151,6 @@
         </LinearLayout>
 
     </LinearLayout>
-    <ImageView
-        android:layout_width="@dimen/profile_picture_side"
-        android:layout_height="@dimen/profile_picture_side"
-        android:layout_marginTop="140dp"
-        android:src="@drawable/ic_profile"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_profile_box_post"
@@ -164,7 +159,9 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:onClick="onLastPostClick">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -202,19 +199,26 @@
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Bar Les Paquerettes"
+                android:textColor="@color/black"
+                android:textSize="20dp"/>
+           <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_lastPostTags"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:gravity="center">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="#omg #thatbar #gottago"
-                    android:textSize="25dp"/>
-            </LinearLayout>
+                android:layout_gravity="center"
+               android:layout_margin="@dimen/last_post_box"/>
         </LinearLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/profile_picture_side"
+        android:layout_height="@dimen/profile_picture_side"
+        android:layout_marginTop="140dp"
+        android:src="@drawable/ic_profile"/>
 </RelativeLayout>

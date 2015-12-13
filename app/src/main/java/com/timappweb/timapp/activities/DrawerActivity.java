@@ -263,7 +263,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         int id = item.getItemId();
 
         if (id == R.id.menu_item_explore) {
-            changeCurrentFragment(FragmentId.Explore);
+            //changeCurrentFragment(FragmentId.Explore);
+            Intent intent = new Intent(this,ProfileActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.menu_item_profile) {
             Intent intent = new Intent(this,ProfileActivity.class);
