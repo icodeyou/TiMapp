@@ -13,28 +13,58 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntentsUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import retrofit.client.Response;
 
 public class PostActivity extends BaseActivity {
 
     private static final String TAG = "PostActivity" ;
-    Post currentPost = null;
+    private Post currentPost = null;
+    private ArrayAdapter<String> tagsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String TAG = "PostActivity";
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
         //------------------------------------------------------------------------------------------
+        ListView listViewTags = (ListView) findViewById(R.id.list_tags_place);
+        tagsAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                new ArrayList<String>());
+        listViewTags.setAdapter(tagsAdapter);
+        //------------------------------------------------------------------------------------------
+        // 2 cases:
+        //  - we gave the full post => we just display data
+        //  - we gave the post id => we need to request the server to have extra informations
         currentPost = (Post) getIntent().getSerializableExtra("post");
-        if (currentPost == null){
+        int postId = (int) getIntent().getExtras().getInt("post.id", -1);
+
+        if (currentPost == null && postId <= 0){
             Log.e(TAG, "The post is null");
             IntentsUtils.home(this);
             return;
         }
-
+        else if (postId > 0){
+            Log.d(TAG, "Loading post from post id " + postId);
+            this.loadPost(postId);
+        }
+        else {
+            Log.d(TAG, "Using post given in extras " + currentPost);
+            this.fetchDataToView();
+            if (!currentPost.hasTagsLoaded()){
+                this.loadTagsForPost();
+            }
+        }
         //------------------------------------------------------------------------------------------
         //Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -42,8 +72,33 @@ public class PostActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //------------------------------------------------------------------------------------------
-        ListView listViewTags = (ListView) findViewById(R.id.list_tags_place);
+    }
+
+    private void loadTagsForPost() {
+        RestClient.service().loadTagsFromPost(currentPost.getId(), new RestCallback<ArrayList<Tag>>(this) {
+            @Override
+            public void success(ArrayList<Tag> tags, Response response) {
+                currentPost.tags = tags;
+                fetchDataToView();
+            }
+        });
+    }
+
+    private void loadPost(int postId) {
+        RestClient.service().viewPost(postId, new RestCallback<Post>(this) {
+            @Override
+            public void success(Post post, Response response) {
+                if(post == null){
+                    // TODO
+                    return;
+                }
+                currentPost = post;
+                fetchDataToView();
+            }
+        });
+    }
+
+    private void fetchDataToView(){
         TextView textViewCreated = (TextView) findViewById(R.id.post_created);
         TextView textViewComment = (TextView) findViewById(R.id.post_comment);
         TextView textViewUsername = (TextView) findViewById(R.id.post_username);
@@ -58,18 +113,14 @@ public class PostActivity extends BaseActivity {
         }
 
         textViewCreated.setText(currentPost.getPrettyTimeCreated());
-        textViewUsername.setText(currentPost.user != null ? currentPost.user.username : "User unactivated");
+        textViewUsername.setText(currentPost.getUsername());
         textViewPostName.setText(currentPost.getName());
 
-        //Example of tags :
-        String[] tags_ex = currentPost.getTagsToStringArray();
+        if (currentPost.hasTagsLoaded()){
+            tagsAdapter.addAll(currentPost.getTagsToStringArray());
+            tagsAdapter.notifyDataSetChanged();
+        }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                tags_ex);
-
-        listViewTags.setAdapter(arrayAdapter);
     }
 
     @Override

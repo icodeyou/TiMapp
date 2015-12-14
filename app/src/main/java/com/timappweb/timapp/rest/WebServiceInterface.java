@@ -6,6 +6,7 @@ import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,22 +23,22 @@ import retrofit.http.QueryMap;
 public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
-    // Spots
+    // Posts
 
     @GET("/spots/posts.json")
-    void listSpots(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
+    void listPosts(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
 
     @GET("/spots/posts.json")
-    List<Post> listSpots(@QueryMap Map<String, String> conditions);
+    List<Post> listPosts(@QueryMap Map<String, String> conditions);
 
     @GET("/spots/view/{id}.json")
-    void viewSpot(@Path("id") int id, RestCallback<Post> restCallback);
+    void viewPost(@Path("id") int id, RestCallback<Post> restCallback);
 
     @GET("/spots/view/{id}.json")
-    Post viewSpot(@Path("id") int id);
+    Post viewPost(@Path("id") int id);
 
     @POST("/spots/add.json")
-    void addSpot(@Body Post spot, RestCallback<RestFeedback> cb);
+    void addPost(@Body Post spot, RestCallback<RestFeedback> cb);
 
     // ---------------------------------------------------------------------------------------------
     // USER
@@ -72,4 +73,9 @@ public interface WebServiceInterface {
 
     @GET("/Tags/suggest/{term}.json")
     List<Tag>  suggest(@Path("term") String term);
+
+    @GET("/SpotsTags/post/{id}.json")
+    void loadTagsFromPost(@Path("id") int id, RestCallback<ArrayList<Tag>> restCallback);
+
+
 }

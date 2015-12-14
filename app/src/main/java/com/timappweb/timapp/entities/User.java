@@ -51,4 +51,5 @@ public class User implements Serializable {
         LocalPersistenceManager.instance.editor.putString(KEY_NAME, this.username);
         LocalPersistenceManager.instance.editor.putString(KEY_EMAIL, this.email);
     }
+
 }

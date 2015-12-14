@@ -116,7 +116,9 @@ public class ProfileActivity extends BaseActivity{
 
     public void onLastPostClick(View view) {
         if (mUser != null && mUser.posts.size() > 0){
-            IntentsUtils.post(this, mUser.posts.getFirst());
+            Post post = mUser.posts.getFirst();
+            post.user = mUser;
+            IntentsUtils.post(this, post);
         }
     }
 }

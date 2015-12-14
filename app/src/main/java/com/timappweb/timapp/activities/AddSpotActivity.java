@@ -364,7 +364,7 @@ public class AddSpotActivity extends BaseActivity {
         // Starting service
         this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
         this.progressDialog.show();
-        RestClient.service().addSpot(post, new AddPostCallback(this,post));
+        RestClient.service().addPost(post, new AddPostCallback(this, post));
     }
 
     private final LocationListener mLocationListener = new MyLocationListener() {

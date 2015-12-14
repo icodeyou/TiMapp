@@ -20,7 +20,7 @@ public class RestApiTest {
     @Test
     public void testViewPost(){
         WebServiceInterface service = RestClient.service();
-        Post post = service.viewSpot(1);
+        Post post = service.viewPost(1);
         assertNotEquals(post, null);
 
     }

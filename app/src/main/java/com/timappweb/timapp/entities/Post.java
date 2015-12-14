@@ -38,7 +38,7 @@ public class Post implements Serializable, MarkerValueInterface {
     public String state;
     public String city;
     public String route;
-    public int street_number;
+    public String street_number;
 
     public ArrayList<Tag> tags;
 
@@ -165,11 +165,10 @@ public class Post implements Serializable, MarkerValueInterface {
                 '}';
     }
 
-    public String[] getTagsToStringArray() {
-        String[] res = new String[this.tags.size()];
-        int i = 0;
+    public ArrayList getTagsToStringArray() {
+        ArrayList<String> res = new ArrayList<String>();
         for (Tag tag: this.tags){
-            res[i++] = tag.getName();
+            res.add(tag.getName());
         }
         return res;
     }
@@ -199,5 +198,15 @@ public class Post implements Serializable, MarkerValueInterface {
             res += " (" + country + ")";
         }
         return res;
+    }
+
+    public String getUsername() {
+        return user != null
+                ? (anonymous ? "Anonymous" : user.username)
+                : "Former user";
+    }
+
+    public boolean hasTagsLoaded() {
+        return tags != null && tags.size() > 0;
     }
 }

@@ -23,22 +23,18 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
-import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
-import com.timappweb.timapp.utils.IntPoint;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
@@ -163,24 +159,11 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
     private void showMarkerDetail(final Post postIncomplete){
-        Toast.makeText(getActivity(), "Loading post: " + postIncomplete.getId(), Toast.LENGTH_LONG);
-        RestClient.service().viewSpot(postIncomplete.getId(), new RestCallback<Post>(this.getContext()) {
-            @Override
-            public void success(Post post, Response response) {
-                if (post != null) {
-                    Log.i(TAG, "Loaded details for spot: " + post.toString());
-                    IntentsUtils.post(getActivity(), post);
-                } else {
-                    Log.e(TAG, "Invalid spot id: " + postIncomplete.getId());
-                }
-            }
-        });
-
+        IntentsUtils.post(getActivity(), postIncomplete);
     }
 
     private void showMarkerDetail(Place place){
-        Intent intent = new Intent(getActivity(), PlaceActivity.class);
-        getActivity().startActivity(intent);
+        IntentsUtils.place(getActivity());
     }
 
     private void centerMap(){

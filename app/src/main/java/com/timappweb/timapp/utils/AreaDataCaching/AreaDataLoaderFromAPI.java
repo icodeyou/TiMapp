@@ -11,7 +11,6 @@ import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntPoint;
-import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
@@ -39,15 +38,15 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
         conditions.setVisualisation("post"); // For to return posts instead of cluster
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         final int requestId = this.requestCounter++;
-        RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>(mContext) {
+        RestClient.service().listPosts(conditions.toMap(), new RestCallback<List<Post>>(mContext) {
             @Override
             public void success(List<Post> posts, Response response) {
                 Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + pCpy);
                 // Test if request is out dated
                 // TODO cancel requests instead
-                if (requestId <= lastClear){
+                if (requestId <= lastClear) {
                     Log.d(TAG, "This request is out dated");
-                    return ;
+                    return;
                 }
                 // If activity has been destroyed in the mean time
                 // TODO cancel requests instead
@@ -58,13 +57,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
                 // Setting the last timestamp retrieved from the server
                 // TODO what happens if two row have the same timestamp for the same area ?
                 request.setDataTimestamp(
-                                posts.size() > 1
+                        posts.size() > 1
                                 ? posts.get(posts.size() - 1).getCreated()
                                 : 0);
 
                 request.data.addAll(posts);
 
-                for (MarkerValueInterface d: posts){
+                for (MarkerValueInterface d : posts) {
                     mClusterManagerPost.addItem(d);
                 }
                 mClusterManagerPost.cluster();
