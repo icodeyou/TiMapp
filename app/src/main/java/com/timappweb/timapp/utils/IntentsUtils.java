@@ -58,7 +58,7 @@ public class IntentsUtils {
         intent.putExtra("post", post);          // TODO use constant
         activity.startActivity(intent);
     }
-    public static void post(Activity activity, int postId) {
+    public static void post(Context activity, int postId) {
         Intent intent = new Intent(activity, PostActivity.class);
         intent.putExtra("post.id", postId);          // TODO use constant
         activity.startActivity(intent);

@@ -47,6 +47,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.Feedback;
+import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationListener;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.SearchHistory;
@@ -430,13 +431,11 @@ public class AddSpotActivity extends BaseActivity {
         public void success(RestFeedback restFeedback, Response response) {
             progressDialog.hide();
 
-            if (restFeedback.success){
-                Log.i(TAG, "Post has been saved!");
-                Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot);
-                // TODO change view
-                Intent intent = new Intent(getApplicationContext(), PostActivity.class);
-                intent.putExtra("post",post);
-                startActivity(intent);
+            if (restFeedback.success && restFeedback.data.containsKey("id")){
+                int id = Integer.valueOf(restFeedback.data.get("id"));
+                Log.i(TAG, "Post has been saved. Id is : " + id);
+                //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
+                IntentsUtils.post(this.context, id);
             }
             else{
                 Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());

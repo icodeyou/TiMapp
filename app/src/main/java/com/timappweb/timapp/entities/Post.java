@@ -142,7 +142,9 @@ public class Post implements Serializable, MarkerValueInterface {
         Log.d(TAG, "GMT offset is " + (mGMTOffset/1000) + " seconds for time zone " + mTimeZone.getDisplayName() );
 
         PrettyTime p = new PrettyTime();
-        return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
+        //return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
+        // TODO [TEST] diffent time zone on phone
+        return p.format(new Date(((long)this.created)* 1000));
     }
 
 

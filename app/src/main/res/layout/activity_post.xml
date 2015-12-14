@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:gravity="center|left"
-            android:text="LetsDanceTonight"
+            android:text=""
             android:id="@+id/post_name"
             android:textColor="@color/white"
             android:textSize="17dp"/>
@@ -72,7 +72,7 @@
             android:textSize="17dp"
             android:gravity="center"
             android:id="@+id/post_comment"
-            android:text="@string/exemple_comment"
+            android:text=""
             android:background="@drawable/border_comment"/>
 
     </LinearLayout>
