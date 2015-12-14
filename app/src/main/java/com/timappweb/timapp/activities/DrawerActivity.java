@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -38,6 +36,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
+    private TextView tvUsername = null;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -104,15 +103,18 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             changeCurrentFragment(FragmentId.Explore);
         }
 
-        //////////////////////////////////////////////////
+        // -----------------------------------------------------------------------------------------
+
         NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
         View headerView = getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
-        TextView tvUserName = (TextView) headerView.findViewById(R.id.drawer_username);
-        tvUserName.setOnClickListener(new View.OnClickListener() {
+        tvUsername = (TextView) headerView.findViewById(R.id.drawer_username);
+
+        // -----------------------------------------------------------------------------------------
+        final Activity that = this;
+        tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"header is clicked");
-                Toast.makeText(getBaseContext(), "clicking textview", Toast.LENGTH_LONG).show();
+                IntentsUtils.profile(that);
             }
         });
 
@@ -360,10 +362,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         boolean isLoggedIn = MyApplication.isLoggedIn();
-        if (isLoggedIn){
-            TextView tvUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username);
-            //tvUsername.setText(MyApplication.getCurrentUser().username);
-        }
         navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
@@ -393,13 +391,16 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         /** Called when a drawer has settled in a completely closed state. */
         public void onDrawerClosed(View view) {
             super.onDrawerClosed(view);
-            //getActionBar().setTitle(mTitle);
             invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
         }
 
             /** Called when a drawer has settled in a completely open state. */
         public void onDrawerOpened(View drawerView) {
             super.onDrawerOpened(drawerView);
+
+            if (MyApplication.isLoggedIn()){
+                tvUsername.setText(MyApplication.getCurrentUser().username);
+            }
             //getActionBar().setTitle(mDrawerTitle); TODO: application crash when used
             invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
         }

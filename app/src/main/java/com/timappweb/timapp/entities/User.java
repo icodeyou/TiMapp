@@ -1,5 +1,7 @@
 package com.timappweb.timapp.entities;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 
@@ -7,11 +9,12 @@ import java.io.Serializable;
 import java.util.LinkedList;
 
 public class User implements Serializable {
+    private static final String TAG = "UserEntity" ;
     public String username;
     public String password;
     public String email;
     public int count_posts = 0;
-    public int user_id;
+    public int id;
 
 
     @SerializedName("spots")
@@ -45,11 +48,21 @@ public class User implements Serializable {
         this.email = LocalPersistenceManager.instance.pref.getString(KEY_EMAIL, null);
         this.password = "";
         this.username = LocalPersistenceManager.instance.pref.getString(KEY_NAME, null);
+        Log.d(TAG, "Loading user form pref: " + this);
     }
 
     public void writeToPref() {
+        Log.d(TAG, "Writing user form pref: " + this);
         LocalPersistenceManager.instance.editor.putString(KEY_NAME, this.username);
         LocalPersistenceManager.instance.editor.putString(KEY_EMAIL, this.email);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", user_id=" + id +
+                '}';
+    }
 }

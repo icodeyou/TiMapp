@@ -19,7 +19,7 @@
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
 
-    <string name="username">Not logged in</string>
+    <string name="default_username">Not logged in</string>
     <!--<string name="city">Paris</string>
     <string name="country">France</string>-->
 

@@ -303,8 +303,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 RestFeedback response = RestClient.service().login(user);
                 Log.i(TAG, "Server response: " + response);
 
-                if (response.success && response.data.containsKey("token")){
+                if (response.success
+                        && response.data.containsKey("token")
+                        && response.data.containsKey("username")){
                     String token = (String) response.data.get("token");
+                    user.username = response.data.get("username");
                     RestClient.instance().createLoginSession(token, user);
                     Log.i(TAG, "Session created with session token: " + token);
                     return true;
