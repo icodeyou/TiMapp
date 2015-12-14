@@ -32,12 +32,14 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
+import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.IntPoint;
+import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.HashMap;
@@ -48,6 +50,7 @@ import retrofit.client.Response;
 public class ExploreMapFragment extends SupportMapFragment {
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
+    private static LatLngBounds mapBounds;
 
     // Declare a variable for the cluster manager.
     private ClusterManager<MarkerValueInterface> mClusterManagerPost;
@@ -62,6 +65,9 @@ public class ExploreMapFragment extends SupportMapFragment {
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
 
+    public static int getDataTimeRange(){
+        return 7200;        // TODO dynamic value
+    }
 
     /**
      * When we click on a market we need to now the corresponding spot
@@ -103,11 +109,8 @@ public class ExploreMapFragment extends SupportMapFragment {
         // Handle action bar item clicks here.
         int id = item.getItemId();
 
-        Log.d(TAG, "FILTER CALLED");
         if (id == R.id.action_filter) {
-            Log.d(TAG, "FILTER CALLED");
-            Intent intent = new Intent(getActivity(),FilterActivity.class);
-            startActivity(intent);
+            IntentsUtils.filter(getActivity());
         }
         return true;
     }
@@ -115,7 +118,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "Resuming map fragment");
+        Log.d(TAG, "ExploreMapFragment.onResume()");
         this.loadMapIfNeeded();
     }
 
@@ -166,10 +169,7 @@ public class ExploreMapFragment extends SupportMapFragment {
             public void success(Post post, Response response) {
                 if (post != null) {
                     Log.i(TAG, "Loaded details for spot: " + post.toString());
-
-                    Intent intent = new Intent(getActivity(), PostActivity.class);
-                    intent.putExtra("post", post);
-                    getActivity().startActivity(intent);
+                    IntentsUtils.post(getActivity(), post);
                 } else {
                     Log.e(TAG, "Invalid spot id: " + postIncomplete.getId());
                 }
@@ -194,8 +194,8 @@ public class ExploreMapFragment extends SupportMapFragment {
         }
     }
 
-    private LatLngBounds getMapBounds(){
-        return mMap.getProjection().getVisibleRegion().latLngBounds;
+    public static LatLngBounds getMapBounds(){
+        return mapBounds;
     }
 
 
@@ -315,6 +315,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
     private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{
+
         @Override
         public void onCameraChange(CameraPosition cameraPosition) {
             Log.d(TAG, "Zoom level is now: " + cameraPosition.zoom);
@@ -332,6 +333,10 @@ public class ExploreMapFragment extends SupportMapFragment {
 
             previousZoomLevel = cameraPosition.zoom;
             mClusterManagerPost.onCameraChange(cameraPosition);
+            // Update bounds
+            mapBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+
+            // Updating datas
             loadData();
         }
     }

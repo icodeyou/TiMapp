@@ -36,7 +36,7 @@ public class SpotsAdapter extends ArrayAdapter<Post> {
         tvTags.setText(spot.tag_string);
 
         TextView tvCreated = (TextView) convertView.findViewById(R.id.tv_created);
-        tvCreated.setText(spot.getCreatedDate());
+        tvCreated.setText(spot.getPrettyTimeCreated());
 
         // Return the completed view to render on screen
         return convertView;

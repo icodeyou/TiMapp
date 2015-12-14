@@ -38,20 +38,22 @@
             <!-- First part: RecyclerView : Saved tags -->
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_suggestedTags_filter"
+                android:id="@+id/rv_selectedTags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"/>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/separator_tags" />
 
             <!-- ******************************************************************* -->
             <!-- Second part: ListView : Suggestion of tags -->
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/suggested_tags_filter"
+                android:id="@+id/rv_suggestedTags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

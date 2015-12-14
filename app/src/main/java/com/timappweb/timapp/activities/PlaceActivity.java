@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.PlaceAdapter;
+import com.timappweb.timapp.adapters.ListTagAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
@@ -30,13 +30,13 @@ public class PlaceActivity extends BaseActivity{
         //Create ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
-        ListView lvTags = (ListView) findViewById(R.id.tags);
+        ListView lvTags = (ListView) findViewById(R.id.list_tags_place);
 
         // pass context and data to the custom adapter
-        PlaceAdapter placeAdapter = new PlaceAdapter(this,generateData());
+        ListTagAdapter listTagAdapter = new ListTagAdapter(this,generateData());
 
         //Set adapter
-        lvTags.setAdapter(placeAdapter);
+        lvTags.setAdapter(listTagAdapter);
     }
 
     //Menu Action Bar

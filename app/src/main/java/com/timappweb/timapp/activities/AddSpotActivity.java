@@ -284,18 +284,8 @@ public class AddSpotActivity extends BaseActivity {
     }
     public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
-        data.add(new Tag("bar", 0));
-        data.add(new Tag("carrote", 0));
-        data.add(new Tag("paindepice", 0));
-        data.add(new Tag("ohjoie", 0));
-        data.add(new Tag("jaimelavie", 0));
-        data.add(new Tag("etsionfaisaitdespates", 0));
-        data.add(new Tag("nonmaisgrave", 0));
-        data.add(new Tag("aplusmarcel", 0));
-        data.add(new Tag("persojaipastresfaim", 0));
-        data.add(new Tag("barbecueparty", 0));
-        data.add(new Tag("BBQ", 0));
-        data.add(new Tag("ILoveYou", 0));
+        data.add(new Tag("test", 0));
+        data.add(new Tag("test2", 0));
         return data;
     }
     public List<Tag> addDataToAdapter(String newData, SelectedTagsAdapter adapter) {

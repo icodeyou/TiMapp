@@ -6,7 +6,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="double_activity_vertical_margin">32dp</dimen>
     <dimen name="add_spot_button_margin">1dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="profile_picture_side">70dp</dimen>
+    <dimen name="height_profile_box_post">150dp</dimen>
+    <dimen name="last_post_box">5dp</dimen>
 </resources>

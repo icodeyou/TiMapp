@@ -1,144 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@color/background">
-
-    <include layout="@layout/toolbar"/>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:orientation="horizontal"
-        android:background="@color/LightYellow"
-        android:gravity="bottom">
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:src="@drawable/ic_profile"/>
+        android:orientation="vertical"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <include layout="@layout/toolbar"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mister Chung"
-                android:textSize="30dp"
-                android:gravity="center"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Toulouse - France"
-                android:textSize="20dp"
-                android:gravity="center"/>
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
-        <Space
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
-        <TextView
-            android:layout_weight="4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/border"
-            android:text="Posts"
-            android:textSize="15dp"/>
-        <TextView
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/border"
-            android:text="134"
-            android:textSize="15dp"/>
-        <Space
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
-        <TextView
-            android:layout_weight="4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/border"
-            android:text="Followers"
-            android:textSize="15dp"/>
-        <TextView
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@drawable/border"
-            android:text="35"
-            android:textSize="15dp"/>
-        <Space
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/double_activity_vertical_margin"
-        android:gravity="center">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="120dp"
+            android:orientation="horizontal"
+            android:background="@color/LightYellow"
+            android:gravity="bottom">
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="#wakeboard"
-                    android:textSize="40dp"
-                    android:textColor="@color/DarkGreen"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="#party"
-                    android:textSize="40dp"
-                    android:textColor="@color/DarkGreen"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="#drums"
-                    android:textSize="40dp"
-                    android:textColor="@color/DarkGreen"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/border_green_left"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_info" />
+                    android:text=""
+                    android:textSize="30dp"
+                    android:textColor="@color/Black"
+                    android:gravity="center"
+                    android:id="@+id/tv_profile_username"/>
             </LinearLayout>
         </LinearLayout>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/profile_picture_side"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_weight="4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="right">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/border"
+                    android:text="Posts"
+                    android:textSize="15dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/border"
+                    android:text="0"
+                    android:id="@+id/tv_profile_count_posts"
+                    android:textSize="15dp"/>
+            </LinearLayout>
 
-</LinearLayout>
+            <Space
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+            <LinearLayout
+                android:layout_weight="4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:visibility="invisible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/border"
+                    android:text="Followers"
+                    android:textSize="15dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:gravity="center"
+                    android:background="@drawable/border"
+                    android:text="35"
+                    android:textSize="15dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/height_profile_box_post"
+            android:gravity="center">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="#wakeboard"
+                        android:textSize="30dp"
+                        android:textColor="@color/Goldenrod"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="#party"
+                        android:textSize="30dp"
+                        android:textColor="@color/Goldenrod"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="#drums"
+                        android:textSize="30dp"
+                        android:textColor="@color/Goldenrod"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_green_left"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_info" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        -->
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_profile_box_post"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:onClick="onLastPostClick"
+        android:id="@+id/box_profile_last_post"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Last post"
+            android:textStyle="italic" />
+
+        <!-- Visible only if there is a last post for this user -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/border">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:background="@color/LightPink"
+                    android:layout_gravity="center_vertical"/>
+                <TextView
+                    android:id="@+id/tv_last_post_created"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="@color/DarkGray"/>
+                <View
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:background="@color/LightPink"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Spot name"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:id="@+id/tv_last_post_name"/>
+           <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_last_post_tags"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+               android:layout_margin="@dimen/last_post_box"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/profile_picture_side"
+        android:layout_height="@dimen/profile_picture_side"
+        android:layout_marginTop="140dp"
+        android:src="@drawable/ic_profile"/>
+</RelativeLayout>

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -22,11 +23,10 @@ import retrofit.client.Response;
 public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
-    private static final int DEFAULT_TIME_RANGE = 3600;
     private Context mContext;
     private ClusterManager<MarkerValueInterface> mClusterManagerPost;
     private int requestCounter = 0;
-    private int lastClear = 0;
+    private int lastClear = -1;
 
     public AreaDataLoaderFromAPI(Context context, ClusterManager<MarkerValueInterface> clusterManagerPost) {
         this.mContext = context;
@@ -37,7 +37,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
         Log.i(TAG, "Request loading of area: " + conditions.toString());
         conditions.setVisualisation("post"); // For to return posts instead of cluster
-        conditions.setTimeRange(DEFAULT_TIME_RANGE);
+        conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         final int requestId = this.requestCounter++;
         RestClient.service().listSpots(conditions.toMap(), new RestCallback<List<Post>>(mContext) {
             @Override

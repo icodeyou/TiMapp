@@ -33,6 +33,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.utils.IntentsUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,8 +105,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         skipLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(that, DrawerActivity.class);
-                startActivity(intent);
+                IntentsUtils.home(that);
             }
         });
     }
@@ -168,8 +168,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 // Check dummy credential
                 Log.i(TAG, "Login with dummy credential");
                 RestClient.instance().createLoginSession("A", new User(email, ""));
-                Intent intent = new Intent(this, DrawerActivity.class);
-                startActivity(intent);
+                IntentsUtils.home(this);
             }
             else{
                 showProgress(true);

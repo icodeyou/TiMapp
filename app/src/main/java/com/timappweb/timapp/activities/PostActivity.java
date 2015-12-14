@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +13,12 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.utils.IntentsUtils;
 
 public class PostActivity extends BaseActivity {
+
+    private static final String TAG = "PostActivity" ;
+    Post currentPost = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +28,10 @@ public class PostActivity extends BaseActivity {
         setContentView(R.layout.activity_post);
 
         //------------------------------------------------------------------------------------------
-        Post post = (Post) getIntent().getSerializableExtra("post");
-        if (post == null){
-            Log.i(TAG, "The post is null");
-            // TODO redirst to home ?
+        currentPost = (Post) getIntent().getSerializableExtra("post");
+        if (currentPost == null){
+            Log.e(TAG, "The post is null");
+            IntentsUtils.home(this);
             return;
         }
 
@@ -40,19 +43,26 @@ public class PostActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //------------------------------------------------------------------------------------------
-        ListView listViewTags = (ListView) findViewById(R.id.tags);
+        ListView listViewTags = (ListView) findViewById(R.id.list_tags_place);
         TextView textViewCreated = (TextView) findViewById(R.id.post_created);
         TextView textViewComment = (TextView) findViewById(R.id.post_comment);
         TextView textViewUsername = (TextView) findViewById(R.id.post_username);
         TextView textViewPostName = (TextView) findViewById(R.id.post_name);
 
-        textViewComment.setText(post.comment);
-        textViewCreated.setText(post.getCreatedDate());
-        textViewUsername.setText(post.user != null ? post.user.username : "User unactivated");
-        textViewPostName.setText("Spot name to do ");
+        // Hide the comment container if there isn't one
+        if (currentPost.comment != null && currentPost.comment.length() > 0){
+            textViewComment.setText(currentPost.comment);
+        }
+        else{
+            textViewComment.setVisibility(View.INVISIBLE);
+        }
+
+        textViewCreated.setText(currentPost.getPrettyTimeCreated());
+        textViewUsername.setText(currentPost.user != null ? currentPost.user.username : "User unactivated");
+        textViewPostName.setText(currentPost.getName());
 
         //Example of tags :
-        String[] tags_ex = post.getTagsToStringArray();
+        String[] tags_ex = currentPost.getTagsToStringArray();
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
@@ -85,7 +95,9 @@ public class PostActivity extends BaseActivity {
     }
 
     public void onProfileCLick(View view) {
-        Intent intent = new Intent(this,ProfileActivity.class);
-        startActivity(intent);
+        Log.d(TAG, "PostActivity.onProfileCLick()");
+        if (currentPost.user != null){
+            IntentsUtils.profile(this, currentPost.user.username);
+        }
     }
 }

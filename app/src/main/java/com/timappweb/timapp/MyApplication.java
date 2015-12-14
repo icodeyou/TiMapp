@@ -59,12 +59,16 @@ public class MyApplication extends Application{
      */
     public static boolean requireLoggedIn(Context currentContext) {
         if (!isLoggedIn()){
-            Intent intent = new Intent(currentContext, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            currentContext.startActivity(intent);
+            redirectLogin(currentContext);
             return false;
         }
         return true;
+    }
+
+    public static void redirectLogin(Context currentContext){
+        Intent intent = new Intent(currentContext, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        currentContext.startActivity(intent);
     }
 
     public static void logout() {

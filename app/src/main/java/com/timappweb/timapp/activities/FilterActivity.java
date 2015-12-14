@@ -26,6 +26,7 @@ import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.MyLinearLayoutManager;
 import com.timappweb.timapp.listeners.RecyclerItemClickListener;
+import com.timappweb.timapp.utils.IntentsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class FilterActivity extends BaseActivity {
 
         /////////////////Saved tags Recycler view//////////////////////////////////////
         // Get recycler view from XML
-        final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_suggestedTags_filter);
+        final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_selectedTags_filter);
 
         //set Adapter
         Log.i(TAG,"generate data");
@@ -66,7 +67,7 @@ public class FilterActivity extends BaseActivity {
 
         //////////////////Import examples into the vertical ListView////////////////////
         //get RecyclerView from XML
-        RecyclerView rv_suggestedTags = (RecyclerView) findViewById(R.id.suggested_tags_filter);
+        RecyclerView rv_suggestedTags = (RecyclerView) findViewById(R.id.rv_suggestedTags_filter);
 
         // set Adapter
         SuggestedTagsAdapter suggestedTagsAdapter = new SuggestedTagsAdapter(this, generateData());
@@ -114,7 +115,7 @@ public class FilterActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Get recycler view
-                final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_suggestedTags_filter);
+                final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_selectedTags_filter);
                 //Get adapter
                 RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
                 final SelectedTagsAdapter selectedTagsAdapter = (SelectedTagsAdapter) adapter;
@@ -160,8 +161,7 @@ public class FilterActivity extends BaseActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent updateMap = new Intent(this,DrawerActivity.class);
-                startActivity(updateMap);
+                IntentsUtils.home(this);
                 return true;
             case R.id.action_search:
                 /////Handle search actions here
@@ -177,80 +177,13 @@ public class FilterActivity extends BaseActivity {
     }
 
     public void onUpdateClick(View view) {
-        Intent updateMap = new Intent(this,DrawerActivity.class);
-        startActivity(updateMap);
+        IntentsUtils.home(this);
     }
 
     /////////GENERATE DATA/////////////////////
     public List<Tag> generateData() {
         List<Tag> data = new ArrayList<>();
-        data.add(new Tag("youpi", 0));
-        data.add(new Tag("crotte", 0));
-        data.add(new Tag("bar", 0));
-        data.add(new Tag("casino", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("barakobama", 0));
-        data.add(new Tag("tree", 0));
-        data.add(new Tag("nature", 0));
-        data.add(new Tag("snowboard", 0));
-        data.add(new Tag("ski", 0));
-        data.add(new Tag("rat", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("montagne", 0));
-        data.add(new Tag("brebis", 0));
-        data.add(new Tag("dinosaure", 0));
-        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
-        data.add(new Tag("swag", 0));
-        data.add(new Tag("barack", 0));
-        data.add(new Tag("youpi", 0));
-        data.add(new Tag("crotte", 0));
-        data.add(new Tag("bar", 0));
-        data.add(new Tag("casino", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("barakobama", 0));
-        data.add(new Tag("tree", 0));
-        data.add(new Tag("nature", 0));
-        data.add(new Tag("snowboard", 0));
-        data.add(new Tag("ski", 0));
-        data.add(new Tag("rat", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("montagne", 0));
-        data.add(new Tag("brebis", 0));
-        data.add(new Tag("dinosaure", 0));
-        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
-        data.add(new Tag("swag", 0));data.add(new Tag("youpi", 0));
-        data.add(new Tag("crotte", 0));
-        data.add(new Tag("bar", 0));
-        data.add(new Tag("casino", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("barakobama", 0));
-        data.add(new Tag("tree", 0));
-        data.add(new Tag("nature", 0));
-        data.add(new Tag("snowboard", 0));
-        data.add(new Tag("ski", 0));
-        data.add(new Tag("rat", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("montagne", 0));
-        data.add(new Tag("brebis", 0));
-        data.add(new Tag("dinosaure", 0));
-        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
-        data.add(new Tag("swag", 0));data.add(new Tag("youpi", 0));
-        data.add(new Tag("crotte", 0));
-        data.add(new Tag("bar", 0));
-        data.add(new Tag("casino", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("barakobama", 0));
-        data.add(new Tag("tree", 0));
-        data.add(new Tag("nature", 0));
-        data.add(new Tag("snowboard", 0));
-        data.add(new Tag("ski", 0));
-        data.add(new Tag("rat", 0));
-        data.add(new Tag("chouette", 0));
-        data.add(new Tag("montagne", 0));
-        data.add(new Tag("brebis", 0));
-        data.add(new Tag("dinosaure", 0));
-        data.add(new Tag("fun", 0));data.add(new Tag("bar", 0));
-        data.add(new Tag("swag", 0));
+        data.add(new Tag("test", 0));
         return data;
     }
 

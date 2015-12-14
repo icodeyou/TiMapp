@@ -21,11 +21,14 @@ import retrofit.http.QueryMap;
  */
 public interface WebServiceInterface {
 
-    @GET("/spots/index.json")
+    // ---------------------------------------------------------------------------------------------
+    // Spots
+
+    @GET("/spots/posts.json")
     void listSpots(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
 
-    @GET("/spots/index.json")
-    List<Post> listSpots();
+    @GET("/spots/posts.json")
+    List<Post> listSpots(@QueryMap Map<String, String> conditions);
 
     @GET("/spots/view/{id}.json")
     void viewSpot(@Path("id") int id, RestCallback<Post> restCallback);
@@ -33,20 +36,36 @@ public interface WebServiceInterface {
     @GET("/spots/view/{id}.json")
     Post viewSpot(@Path("id") int id);
 
-    @GET("/users/check_token.json")
-    void checkToken(Callback<RestFeedback> cb);
-
     @POST("/spots/add.json")
     void addSpot(@Body Post spot, RestCallback<RestFeedback> cb);
 
+    // ---------------------------------------------------------------------------------------------
+    // USER
+
     @POST("/users/login.json")
     RestFeedback login(@Body User user);
+
+    @GET("/users/check_token.json")
+    void checkToken(Callback<RestFeedback> cb);
+
+    @GET("/users/profile/{username}.json")
+    void profile(@Path("username") String username, RestCallback<User> restCallback);
+
+    // ---------------------------------------------------------------------------------------------
+    // TAGS
 
     @POST("/SpotsTags/latest.json")
     List<MapTag> listSpotsTags();
 
     @POST("/SpotsTags/latest.json")
     void listSpotsTags(RestCallback<List<MapTag>> restCallback);
+
+    @GET("/Spots/trending_tags.json")
+    List<Tag> trendingTags();
+
+    @GET("/Spots/trending_tags.json")
+    void trendingTags(@QueryMap Map<String, String> conditions, RestCallback<List<Tag>> restCallback);
+
 
     @GET("/Tags/suggest/{term}.json")
     void suggest(@Path("term") String term, RestCallback<List<Tag>> restCallback);

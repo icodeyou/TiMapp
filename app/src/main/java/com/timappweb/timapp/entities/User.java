@@ -1,14 +1,21 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 
 public class User implements Serializable {
     public String username;
     public String password;
     public String email;
+    public int count_posts = 0;
     public int user_id;
+
+
+    @SerializedName("spots")
+    public LinkedList<Post> posts;
 
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";

@@ -7,9 +7,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by stephane on 8/20/2015.
@@ -25,6 +32,13 @@ public class Post implements Serializable, MarkerValueInterface {
     protected int created;
     public String tag_string;
     public String comment;
+    public boolean anonymous;
+
+    public String country;
+    public String state;
+    public String city;
+    public String route;
+    public int street_number;
 
     public ArrayList<Tag> tags;
 
@@ -108,13 +122,30 @@ public class Post implements Serializable, MarkerValueInterface {
     public void setCreated(int created) {
         this.created = created;
     }
+
+    /**
+     * Get created date as a timestamp
+     * @return
+     */
     public int getCreated() {
         return created;
     }
 
-    public String getCreatedDate() {
-        return new Date(this.created).toString();
+    /**
+     * Get the created as a pretty time format
+     * @return
+     */
+    public String getPrettyTimeCreated() {
+        Calendar mCalendar = new GregorianCalendar();
+        TimeZone mTimeZone = mCalendar.getTimeZone();
+        int mGMTOffset = mTimeZone.getRawOffset();
+        Log.d(TAG, "GMT offset is " + (mGMTOffset/1000) + " seconds for time zone " + mTimeZone.getDisplayName() );
+
+        PrettyTime p = new PrettyTime();
+        return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
     }
+
+
 
     @Override
     public LatLng getPosition() {
@@ -154,5 +185,19 @@ public class Post implements Serializable, MarkerValueInterface {
             return false;
         }
         return true;
+    }
+
+    public String getName() {
+        String res = "";
+        if (country != null){
+            if (city != null){
+                if (route != null){
+                    res += route + ", " ;
+                }
+                res += city;
+            }
+            res += " (" + country + ")";
+        }
+        return res;
     }
 }

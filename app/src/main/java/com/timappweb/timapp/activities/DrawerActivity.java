@@ -18,16 +18,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.SettingsFragment;
+import com.timappweb.timapp.utils.IntentsUtils;
 //import android.support.design.widget.FloatingActionButton;
 
 
 public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "LOG DRAWER ACTIVITY";
+    private static final String TAG = "DrawerActivity";
     /* ============================================================================================*/
     /* PROPERTIES */
     /* ============================================================================================*/
@@ -36,6 +38,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
+
+    public void onDrawerTopClick(View view) {
+        IntentsUtils.profile(this);
+    }
 
     enum FragmentId{
         Explore(0), Settings(1);
@@ -97,6 +103,19 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             changeCurrentFragment(FragmentId.Explore);
         }
+
+        //////////////////////////////////////////////////
+        NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
+        TextView tvUserName = (TextView) headerView.findViewById(R.id.drawer_username);
+        tvUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"header is clicked");
+                Toast.makeText(getBaseContext(), "clicking textview", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
      /* ============================================================================================*/
@@ -133,8 +152,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_filter) {
-            Intent intent = new Intent(this, FilterActivity.class);
-            startActivity(intent);
+            IntentsUtils.filter(this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -244,21 +262,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         int id = item.getItemId();
 
         if (id == R.id.menu_item_explore) {
-            changeCurrentFragment(FragmentId.Explore);
+            IntentsUtils.home(this);
+            //changeCurrentFragment(FragmentId.Explore);
         }
         else if (id == R.id.menu_item_profile) {
-            Intent intent = new Intent(this,ProfileActivity.class);
-            startActivity(intent);
+            IntentsUtils.profile(this);
         }
-        /*
-        else if(id == R.id.item_spot) {
-            Intent intent = new Intent(this,PostActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.item_place) {
-            Intent intent = new Intent(this,PlaceActivity.class);
-            startActivity(intent);
-        }*/
         else if (id == R.id.menu_item_settings) {
             changeCurrentFragment(FragmentId.Settings);
         }
@@ -266,13 +275,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             MyApplication.startRequireLoggedInActivity(this, AddSpotActivity.class);
         }
         else if (id == R.id.menu_item_login){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            IntentsUtils.login(this);
         }
         else if (id == R.id.menu_item_logout) {
-            MyApplication.logout();
-            Intent logout = new Intent(this,LoginActivity.class);
-            startActivity(logout);
+            IntentsUtils.logout(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -356,7 +362,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         boolean isLoggedIn = MyApplication.isLoggedIn();
         if (isLoggedIn){
             TextView tvUsername = (TextView) navigationView.getHeaderView(0).findViewById(R.id.drawer_username);
-            tvUsername.setText(MyApplication.getCurrentUser().username);
+            //tvUsername.setText(MyApplication.getCurrentUser().username);
         }
         navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);

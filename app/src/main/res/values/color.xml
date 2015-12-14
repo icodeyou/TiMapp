@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#40dff5</color>
-    <color name="colorPrimaryDark">#25a6bf</color>
+    <color name="colorPrimary">@color/Gold</color>
+    <color name="colorPrimaryDark">@color/Goldenrod</color>
     <color name="colorAccent">#241f80</color>
     <color name="background">#fff3f3f3</color>
     <color name="darker_background">#e7e7e7</color>
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>
-    <color name="suggested_tag_text_color">#7e7e7e</color>
+    <color name="suggested_tag_text_color">@color/Halfblack</color>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->
@@ -170,4 +170,5 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
+    <color name="Halfblack">#c1000000</color>
 </resources>
