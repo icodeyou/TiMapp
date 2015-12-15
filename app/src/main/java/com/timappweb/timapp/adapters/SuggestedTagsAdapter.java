@@ -20,9 +20,7 @@ public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdap
 
     public SuggestedTagsAdapter(Context context, List<Tag> data) {
         inflater = LayoutInflater.from(context);
-        if (data == null)
-            this.data = new LinkedList<Tag>();
-        else
+        if (data != null)
             this.data = data;
     }
 

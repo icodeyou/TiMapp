@@ -6,19 +6,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
@@ -46,9 +44,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
-import com.timappweb.timapp.utils.Feedback;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.utils.MyLocationListener;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.utils.Util;
@@ -63,44 +59,78 @@ import retrofit.client.Response;
 
 public class AddSpotActivity extends BaseActivity {
 
+    private static final String     TAG = "AddSpot";
 
-    private static final String TAG = "AddSpot";
+    // ---------------------------------------------------------------------------------------------
+
     private OnFragmentInteractionListener mListener;
-    private String comment = null;
-    private Boolean dummyLocation = true;
-    private String mAddressOutput;
-    private static ProgressDialog progressDialog = null;
-    private RecyclerView rv_suggestedTags = null;
-    TextView mTvComment = null;
-    SearchHistory<Tag> searchHistory;
-    private SearchView searchView = null;
+    private String                      comment = null;
+    private Boolean                     dummyLocation = true;
+    private String                      mAddressOutput;
+    SearchHistory<Tag>                  searchHistory;
+
+    // Views
+    private TextView                    tvUserLocation;
+    private ProgressBar                 progressBarLocation;
+    private static ProgressDialog       progressDialog = null;
+    private SearchView                  searchView = null;
+    private RecyclerView                rv_suggestedTags = null;
+    private TextView                    mTvComment = null;
+
+    // Location
+    private MyLocationProvider          locationProvider;
+    private LocationListener            mLocationListener;
+    private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
+
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "Creating add spot activity");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_spot);
+        this.initToolbar(true);
 
-        this.searchHistory = new SearchHistory<>();
-
-        //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
+        // -----------------------------------------------------------------------------------------
+        // Init variables
+        searchHistory = new SearchHistory<>();
         mResultReceiver = new AddressResultReceiver(new Handler());
-        this.progressDialog = new ProgressDialog(this);
-        this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getResources().getString(R.string.please_wait));
 
-        this.locationProvider = new MyLocationProvider(this);
-        this.locationProvider.setLocationListener(mLocationListener);
-        this.locationProvider.getUserLocation();
+        tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
+        progressBarLocation = (ProgressBar) findViewById(R.id.progress_bar_location);
+        mTvComment = (TextView) findViewById(R.id.comment_textview);
 
-        Log.d(TAG, "Location provider has been set");
+        // -----------------------------------------------------------------------------------------
+        // Init tags recycler view
+        iniTagRecyclerView();
 
-        /////////////////Saved tags Recycler view//////////////////////////////////////
-        // Get recycler view
+        initLocationListener();
+        initLocationProvider();
+    }
+
+    private void initLocationListener() {
+        mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.i(TAG, "User location has changed: " + Util.print(location));
+                progressDialog.hide();
+                startIntentServiceReverseGeocoding(location);
+            }
+        };
+    }
+
+    private void initLocationProvider() {
+        locationProvider = new MyLocationProvider(this, mLocationListener);
+
+        if (!locationProvider.isGPSEnabled()){
+            locationProvider.askUserToEnableGPS();
+        }
+    }
+
+    private void iniTagRecyclerView() {
         final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
         final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, new LinkedList<Tag>());
         rv_savedTagsList.setAdapter(selectedTagsAdapter);
@@ -139,10 +169,18 @@ public class AddSpotActivity extends BaseActivity {
                 rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
             }
         }));
+    }
 
 
-        mTvComment = (TextView) findViewById(R.id.comment_textview);
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        locationProvider.connect();
+    }
+    @Override
+    protected void onStop() {
+        locationProvider.disconnect();
+        super.onStop();
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -256,10 +294,12 @@ public class AddSpotActivity extends BaseActivity {
     public void suggestTag(final String term){
         searchHistory.setLastSearch(term);
         final SuggestedTagsAdapter adapter = (SuggestedTagsAdapter) rv_suggestedTags.getAdapter();
+        // Data are in cache
         if (searchHistory.hasTerm(term)){
             adapter.setData(searchHistory.get(term).getData());
         }
         else {
+            // Data are not in cache, try searching for a sub term
             SearchHistory.Item subHistory = searchHistory.get(term);
             if (subHistory != null){
                 adapter.setData(subHistory.getData());
@@ -275,7 +315,7 @@ public class AddSpotActivity extends BaseActivity {
                     Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
                     searchHistory.set(term, tags);
                     if (searchHistory.isLastSearch(term)){
-                        Log.d(TAG, "It is the last search, setting data");
+                        Log.d(TAG, "'" + term + "' is the last search, setting data");
                         adapter.setData(tags);
                     }
                 }
@@ -323,14 +363,12 @@ public class AddSpotActivity extends BaseActivity {
             location = this.locationProvider.getLastLocation();
         }
         catch (NoLastLocationException ex) {
-
+            Log.i(TAG, "Cannot get user location.");
+            this.progressDialog.setMessage(getResources().getString(R.string.waiting_for_location));
+            this.progressDialog.show();
+            return;
+            /*
             if (!BuildConfig.DEBUG) {
-                Log.i(TAG, "Cannot get position.");
-                //this.alertDialog.setMessage(getResources().getString(R.string.error_cannot_get_location));
-                //this.alertDialog.show();
-                this.progressDialog.setMessage(getResources().getString(R.string.waiting_for_location));
-                this.progressDialog.show();
-                return;
             }
             else if (dummyLocation){
                 Log.i(TAG, "Debug mode. Using mock position.");
@@ -340,7 +378,7 @@ public class AddSpotActivity extends BaseActivity {
                 location.setLongitude(10);
                 location.setAltitude(0);
                 location.setTime(System.currentTimeMillis());
-            }
+            }*/
         }
 
 
@@ -368,19 +406,7 @@ public class AddSpotActivity extends BaseActivity {
         RestClient.service().addPost(post, new AddPostCallback(this, post));
     }
 
-    private final LocationListener mLocationListener = new MyLocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            Log.i(TAG, "User location has changed: " + Util.print(location));
-            progressDialog.hide();
-            startIntentService(location);
-        }
-    };
-    private MyLocationProvider locationProvider;
-
-    private AddressResultReceiver mResultReceiver;
-
-    protected void startIntentService(Location location) {
+    protected void startIntentServiceReverseGeocoding(Location location) {
         Log.d(TAG, "Starting IntentService to get use address from location");
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
@@ -389,11 +415,15 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     private void displayAddressOutput() {
-        TextView tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
+        progressBarLocation.setVisibility(View.INVISIBLE);
         tvUserLocation.setText(this.mAddressOutput);
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar_location);
-        progressBar.setVisibility(ProgressBar.INVISIBLE);
+        // TODO update size of tvUserLoaction to match parent size
+
+        //tvUserLocation.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // INNER CLASSES
 
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {

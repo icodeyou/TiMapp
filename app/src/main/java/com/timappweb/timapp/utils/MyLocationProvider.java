@@ -2,70 +2,167 @@ package com.timappweb.timapp.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.timappweb.timapp.exceptions.NoLastLocationException;
 
+import com.timappweb.timapp.exceptions.NoLastLocationException;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 /**
  * Created by stephane on 8/22/2015.
  */
 public class MyLocationProvider implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback {
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private static final String TAG = "LocationService";
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
-    private Location mLastLocation = null;
-    private GoogleApiClient mGoogleApiClient = null;// Might be null if Google Play services APK is not available.
-    private Activity activity = null;
-    private LocationListener mLocationListener = null;
+    // ---------------------------------------------------------------------------------------------
 
-    LocationManager mLocationManager = null;
+    public static final String  TAG = "LocationService";
+    private static final int    MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
+    public static int           MIN_UPDATE_TIME = 30000; // (in milliseconds)
+    public static int           MAX_UPDATE_TIME = 15000; // (in milliseconds)
+    public static int           MIN_UPDATE_DISTANCE = 10;
 
-    public static int MIN_UPDATE_TIME = 10000;
-    public static int MIN_UPDATE_DISTANCE = 10;
+    // ---------------------------------------------------------------------------------------------
+
+    private Activity            activity = null;
+
+    private GoogleApiClient     mGoogleApiClient = null;    // Might be null if Google Play services APK is not available.
+
+    private LocationListener    mLocationListener = null;   // Location listener for Location update callbacks
+    private LocationRequest     mLocationRequest;           // Location request object
+    LocationManager             mLocationManager = null;    // LocationManager
+
+    private Location            mLastLocation = null;       // The last location from any provider
+    private boolean             mRequestingLocationUpdates = true;  // Enable or disable location requests
+
+    // ---------------------------------------------------------------------------------------------
+    // static
+
+    public static LatLng convert(Location l){
+        return new LatLng(l.getLatitude(), l.getLongitude());
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Initialization
+
+    public MyLocationProvider(Activity activity, LocationListener mLocationListener){
+        this.activity = activity;
+        this.initGoogleApiClient();
+        this.initLocationManager();
+        this.setLocationListener(mLocationListener);
+        Log.d(TAG, "Localisation API has been set up!");
+    }
+
+    protected synchronized void initGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this.activity)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        this.initLocationRequest();
+    }
+
+    private void initLocationManager() {
+        mLocationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
+    }
+
+    protected void initLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(MIN_UPDATE_TIME);
+        mLocationRequest.setFastestInterval(MAX_UPDATE_TIME);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
 
-    public boolean getUserLocation() {
-        if (checkSelfPermission(this.activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions();
-            return false;
+    // ---------------------------------------------------------------------------------------------
+    // Getters
+
+    public boolean isGPSEnabled(){
+        return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    public Location getLastGPSLocation() throws NoLastLocationException {
+        Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location == null){
+            throw new NoLastLocationException(LocationManager.GPS_PROVIDER);
         }
-        Log.d(TAG, "User has requested his location");
+        return location;
+    }
 
-        Criteria c = this.getCriteria();
-        String locationProvider = mLocationManager.getBestProvider(c, true);
-        mLastLocation = mLocationManager.getLastKnownLocation(locationProvider);
-
-        if (mLastLocation != null){
-            long locationTime = mLastLocation.getTime();
-            Log.i(TAG, "Last known location is " + mLastLocation.getLongitude() + "-" + mLastLocation.getLongitude());
-            if (locationTime > (System.currentTimeMillis() + MIN_UPDATE_TIME) ){
-                Log.d(TAG, "This is too old, requesting update...");
-            }
-            else{
-                Log.d(TAG, "Using last location");
-                mLocationListener.onLocationChanged(mLastLocation);
-                return true;
-            }
+    public Location getLastLocation() throws NoLastLocationException {
+        if (this.mLastLocation != null){
+            return mLastLocation;
         }
-        mLocationManager.requestSingleUpdate(c, mLocationListener, null);
-        //mLocationManager.requestLocationUpdates(locationProvider, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, mLocationListener);
-        return true;
+        else if  (mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
+            mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            return mLastLocation;
+        }
+        else if  (mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null){
+            mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            return mLastLocation;
+        }
+        throw new NoLastLocationException("No location");
+    }
+
+
+
+    public boolean hasKnownPosition() {
+        return mLastLocation != null;
+    }
+
+
+    // ---------------------------------------------------------------------------------------------
+    // Setters
+
+    public void setLocationListener(LocationListener locationListener) {
+        this.mLocationListener = locationListener;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Permission related methodes
+
+    public void askUserToEnableGPS() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                activity);
+        alertDialogBuilder
+                // TODO: use ressouce
+                .setMessage("GPS is disabled in your device. Enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Enable GPS",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                activity.startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 
 
@@ -89,6 +186,12 @@ public class MyLocationProvider implements
 
     }
 
+    /**
+     * TODO not implemented
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -99,7 +202,7 @@ public class MyLocationProvider implements
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     Log.d(TAG, "User granted location request");
-                    this.getUserLocation();
+                    // this.updateLastLocation();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -110,38 +213,30 @@ public class MyLocationProvider implements
             }
         }
     }
+    // ---------------------------------------------------------------------------------------------
+    // Location update methodes
 
 
-    public MyLocationProvider(Activity activity){
-        this.activity = activity;
-        this.buildGoogleApiClient();
-        mLocationManager = (LocationManager) activity.getSystemService(activity.LOCATION_SERVICE);
-        Log.d(TAG, "Localisation API has been setBounds up!");
+    protected void startLocationUpdates() {
+        Log.d(TAG, "Starting location updates");
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
     }
-/*
+    /**
+     * Removes location updates from the FusedLocationApi.
+     */
+    public void stopLocationUpdates() {
+        Log.d(TAG, "Stopping location updates");
+        // It is a good practice to remove location requests when the activity is in a paused or
+        // stopped state. Doing so helps battery performance and is especially
+        // recommended in applications that request frequent location updates.
 
-    public Location getLastLocation(){
-        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-
-        Criteria criteria = this.getCriteria();
-        String providerName = locationManager.getBestProvider(criteria, false);
-        Location l = locationManager.getLastKnownLocation(providerName);
-        if (l != null){
-            Log.i(TAG, "Get last location: " + l.getLongitude() + " - " + l.getLatitude());
-            return l;
-        }
-        else{
-            return null; // TODO throw exception
-        }
-    }
-    */
-
-    public LatLng getLastPosition() throws NoLastLocationException {
-        Location l = this.getLastLocation();
-        return new LatLng(l.getLatitude(), l.getLongitude());
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
     }
 
-    private Criteria getCriteria(){
+
+    private Criteria getBestCriteria(){
         Criteria criteria = new Criteria();
 
         // Pour indiquer la précision voulue
@@ -164,32 +259,23 @@ public class MyLocationProvider implements
         criteria.setSpeedRequired(false);
         return criteria;
     }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this.activity)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
     /**
-     * MyLocationProvider callback
-     * @param connectionHint
+     * TODO not implemented
      */
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.e(TAG, "User connected!");
-        mLastLocation =  LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (this.hasKnownPosition()) {
-            Log.i(TAG, "User position is: " + mLastLocation.getLatitude() + " - " + mLastLocation.getLongitude());
-        }
-        else{
-            Log.e(TAG, "Cannot get user position");
-        }
+    public void requestMultipleUpdates(){
+        Criteria c = this.getBestCriteria();
+        String locationProvider = mLocationManager.getBestProvider(c, true);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.d(TAG, "Best location provider is: " + locationProvider);
+
+        //mLocationManager.requestSingleUpdate(c, mLocationListener, null);
+        //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+        //        MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, null);
     }
 
+
+    // ---------------------------------------------------------------------------------------------
+    // MyLocationProvider callback
     /**
      * MyLocationProvider callback
      * @param i
@@ -204,26 +290,73 @@ public class MyLocationProvider implements
         Log.e(TAG, "Connection failed");
     }
 
-    public boolean hasKnownPosition() {
-        return mLastLocation != null;
-    }
-    
-    public Location getLastLocation() throws NoLastLocationException {
-        if (this.mLastLocation != null){
-            return mLastLocation;
+
+    /**
+     * MyLocationProvider callback
+     * @param connectionHint
+     */
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Log.e(TAG, "Google location api onConnected()");
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (mRequestingLocationUpdates) {
+            startLocationUpdates();
         }
-        else if  (mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null){
-            mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            return mLastLocation;
-        }
-        else if  (mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null){
-            mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            return mLastLocation;
-        }
-        throw new NoLastLocationException("No location");
     }
 
-    public void setLocationListener(LocationListener locationListener) {
-        this.mLocationListener = locationListener;
+    // ---------------------------------------------------------------------------------------------
+
+    public void connect(){
+        mGoogleApiClient.connect();
     }
+
+    public void disconnect() {
+        stopLocationUpdates();
+        mGoogleApiClient.disconnect();
+    }
+
 }
+
+/*
+    public boolean updateLastLocation() {
+        if (checkSelfPermission(this.activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions();
+            Log.e(TAG, "Cannot get user location. No permission");
+            return false;
+        }
+
+        if (!this.isGPSEnabled()){
+            this.askUserToEnableGPS();
+        }
+
+        Log.d(TAG, "User has requested his location");
+
+        Criteria c = this.getBestCriteria();
+        String locationProvider = mLocationManager.getBestProvider(c, true);
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+
+        if (mLastLocation != null){
+            long locationTime = mLastLocation.getTime();
+            Log.i(TAG, "Last known location is " + mLastLocation.getLongitude() + "-" + mLastLocation.getLongitude() +
+                    "  " + ((System.currentTimeMillis()-locationTime)/1000) + " seconds ago" );
+            if (locationTime > (System.currentTimeMillis() + MIN_UPDATE_TIME) ){
+                Log.d(TAG, "This is too old, requesting update...");
+            }
+            else{
+                Log.d(TAG, "Using last location");
+                mLocationListener.onLocationChanged(mLastLocation);
+                return true;
+            }
+        }
+
+        Log.d(TAG, "Best location provider is: " + locationProvider);
+
+        //mLocationManager.requestSingleUpdate(c, mLocationListener, null);
+        //mLocationManager.requestLocationUpdates(locationProvider, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, mLocationListener);
+        return true;
+    }
+
+ */

@@ -1,6 +1,6 @@
 package com.timappweb.timapp.fragments;
 
-import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -23,25 +24,21 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.utils.MyLocationListener;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit.client.Response;
 
 public class ExploreMapFragment extends SupportMapFragment {
     private static final String TAG = "GoogleMapFragment";
@@ -168,9 +165,15 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     private void centerMap(){
         // Comme les unités sont en microdegrés, il faut multiplier par 1E6
-        MyLocationProvider locationProvider = new MyLocationProvider(getActivity());
+        MyLocationProvider locationProvider = new MyLocationProvider(getActivity(), new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.d(TAG, "LOCATION CHANGED ! location");
+            }
+        });
+
         try{
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locationProvider.getLastPosition(), 12.0f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(locationProvider.getLastGPSLocation()), 12.0f));
         }
         catch (NoLastLocationException ex){
             Log.d(TAG, "Cannot center: no last location");

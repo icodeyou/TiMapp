@@ -7,4 +7,6 @@ public class NoLastLocationException extends Exception {
     public NoLastLocationException(String s) {
 
     }
+
+
 }
