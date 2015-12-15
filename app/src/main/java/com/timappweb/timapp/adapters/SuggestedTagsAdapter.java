@@ -47,7 +47,7 @@ public class SuggestedTagsAdapter extends RecyclerView.Adapter<SuggestedTagsAdap
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data != null ? data.size() : 0;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
