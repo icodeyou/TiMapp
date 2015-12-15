@@ -37,8 +37,8 @@
             <!-- ******************************************************************* -->
             <!-- First part: RecyclerView : Saved tags -->
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_selectedTags_filter"
+            <com.timappweb.timapp.views.SelectedTagRecyclerView
+                android:id="@+id/rv_selected_tags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center"/>
@@ -52,8 +52,8 @@
 
             <!-- ******************************************************************* -->
             <!-- Second part: ListView : Suggestion of tags -->
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_suggestedTags_filter"
+            <com.timappweb.timapp.views.SuggestedTagRecyclerView
+                android:id="@+id/rv_suggested_tags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

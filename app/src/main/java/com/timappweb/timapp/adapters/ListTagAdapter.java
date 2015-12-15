@@ -40,7 +40,7 @@ public class ListTagAdapter extends ArrayAdapter<Tag> {
 
         // 4. Set the text for textView
         String tagString = String.valueOf(tagsArrayList.get(position).getName());
-        String tagCounterString = String.valueOf(tagsArrayList.get(position).getCount_ref());
+        String tagCounterString = String.valueOf(tagsArrayList.get(position).getCountRef());
         tagView.setText(tagString);
         counterView.setText(tagCounterString);
 

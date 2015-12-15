@@ -21,11 +21,7 @@ public class PlaceActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
 
-        //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        this.initToolbar(true);
 
         //Create ListView
         //////////////////////////////////////////////////////////////////////////////

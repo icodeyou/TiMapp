@@ -21,6 +21,7 @@ import com.timappweb.timapp.fragments.ExploreMapFragment;
  */
 public class IntentsUtils {
 
+
     public static void login(Activity activity){
         Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivity(intent);
@@ -67,5 +68,14 @@ public class IntentsUtils {
     public static void place(Activity activity) {
         Intent intent = new Intent(activity, PlaceActivity.class);
         activity.startActivity(intent);
+    }
+
+    /**
+     * Redirect to the last activity we attempt to go
+     * before being redirected to the login activity
+     * TODO implement
+     */
+    public static void lastActivityBeforeLogin(Activity activity) {
+        home(activity);
     }
 }

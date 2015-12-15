@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 
-public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+public class RecyclerItemTouchListener implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -24,7 +24,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
     GestureDetector mGestureDetector;
 
-    public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
+    public RecyclerItemTouchListener(Context context, OnItemClickListener listener) {
         mListener = listener;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override public boolean onSingleTapUp(MotionEvent e) {
@@ -33,7 +33,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
         });
     }
 
-    @Override public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e) {
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent e) {
         View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
         if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
             int position = recyclerView.getChildLayoutPosition(childView);
@@ -43,7 +44,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
         return false;
     }
 
-    @Override public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {    }
+    @Override
+    public void onTouchEvent(RecyclerView view, MotionEvent motionEvent) {    }
 
     @Override
     public void onRequestDisallowInterceptTouchEvent (boolean disallowIntercept){}

@@ -43,10 +43,7 @@ public class ProfileActivity extends BaseActivity{
         setContentView(R.layout.activity_profile);
 
         //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        this.initToolbar(true);
 
         /////////////////Fetch tags for Recycler view in LastPost box ! //////////////////////////////////////
         final RecyclerView rv_lastPostTags = (RecyclerView) findViewById(R.id.rv_last_post_tags);

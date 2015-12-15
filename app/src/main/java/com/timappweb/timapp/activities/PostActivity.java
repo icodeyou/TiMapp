@@ -66,12 +66,8 @@ public class PostActivity extends BaseActivity {
             }
         }
         //------------------------------------------------------------------------------------------
-        //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
+        this.initToolbar(true);
     }
 
     private void loadTagsForPost() {

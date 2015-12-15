@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
-import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectedTagsAdapter;
@@ -38,7 +38,8 @@ import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.MyLinearLayoutManager;
-import com.timappweb.timapp.listeners.RecyclerItemClickListener;
+import com.timappweb.timapp.listeners.OnQueryTagListener;
+import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -46,8 +47,9 @@ import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
-import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.views.SelectedTagRecyclerView;
+import com.timappweb.timapp.views.SuggestedTagRecyclerView;
 
 
 import java.util.ArrayList;
@@ -67,20 +69,20 @@ public class AddSpotActivity extends BaseActivity {
     private String                      comment = null;
     private Boolean                     dummyLocation = true;
     private String                      mAddressOutput;
-    SearchHistory<Tag>                  searchHistory;
 
     // Views
     private TextView                    tvUserLocation;
     private ProgressBar                 progressBarLocation;
     private static ProgressDialog       progressDialog = null;
     private SearchView                  searchView = null;
-    private RecyclerView                rv_suggestedTags = null;
+
     private TextView                    mTvComment = null;
 
     // Location
     private MyLocationProvider          locationProvider;
     private LocationListener            mLocationListener;
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
+    private SearchAndSelectTagManager   searchAndSelectTagManager;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -94,7 +96,6 @@ public class AddSpotActivity extends BaseActivity {
 
         // -----------------------------------------------------------------------------------------
         // Init variables
-        searchHistory = new SearchHistory<>();
         mResultReceiver = new AddressResultReceiver(new Handler());
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getResources().getString(R.string.please_wait));
@@ -104,9 +105,6 @@ public class AddSpotActivity extends BaseActivity {
         mTvComment = (TextView) findViewById(R.id.comment_textview);
 
         // -----------------------------------------------------------------------------------------
-        // Init tags recycler view
-        iniTagRecyclerView();
-
         initLocationListener();
         initLocationProvider();
     }
@@ -130,46 +128,6 @@ public class AddSpotActivity extends BaseActivity {
         }
     }
 
-    private void iniTagRecyclerView() {
-        final RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
-        final SelectedTagsAdapter selectedTagsAdapter = new SelectedTagsAdapter(this, new LinkedList<Tag>());
-        rv_savedTagsList.setAdapter(selectedTagsAdapter);
-
-        //Set LayoutManager
-        GridLayoutManager manager = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
-        rv_savedTagsList.setLayoutManager(manager);
-
-        //Scroll untill the end of the RecyclerView, so that we can see the last tag.
-        rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
-
-        //////////////////Import examples into the vertical ListView////////////////////
-        //get RecyclerView from XML
-        rv_suggestedTags = (RecyclerView) findViewById(R.id.suggested_tags_filter);
-
-        // set Adapter
-        SuggestedTagsAdapter suggestedTagsAdapter = new SuggestedTagsAdapter(this, null);
-        rv_suggestedTags.setAdapter(suggestedTagsAdapter);
-        this.suggestTag("");
-
-        //Set LayoutManager
-        MyLinearLayoutManager manager_suggestedTags = new MyLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
-        rv_suggestedTags.setLayoutManager(manager_suggestedTags);
-
-        //set onClickListener
-        rv_suggestedTags.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(RecyclerView recyclerView, View view, int position) {
-                Log.d(TAG, "Item is touched !");
-                RecyclerView.Adapter adapter = recyclerView.getAdapter();
-                SuggestedTagsAdapter STadapter = (SuggestedTagsAdapter) adapter;
-                String selectedTag = STadapter.getData().get(position).getName();
-                addDataToAdapter(selectedTag, selectedTagsAdapter);
-                //Scroll untill the end of the RecyclerView, so that we can see the last tag.
-                rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
-            }
-        }));
-    }
 
 
     @Override
@@ -194,20 +152,19 @@ public class AddSpotActivity extends BaseActivity {
 
         //Set search item
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            if (searchView != null){
+
+                SuggestedTagRecyclerView suggestedTagRecyclerView = (SuggestedTagRecyclerView) findViewById(R.id.rv_suggested_tags_add_spot);
+                SelectedTagRecyclerView selectedTagsRecyclerView = (SelectedTagRecyclerView) findViewById(R.id.rv_selected_tags_add_spot);
+                searchAndSelectTagManager = new SearchAndSelectTagManager(this,
+                        searchView, suggestedTagRecyclerView, selectedTagsRecyclerView);
+            }
         }
 
-        SearchView.OnQueryTextListener queryTextListener = new OnQueryTextListener();
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setOnQueryTextListener(queryTextListener);
-        }
+
         return true;
     }
 
@@ -286,56 +243,12 @@ public class AddSpotActivity extends BaseActivity {
 
     /////////GENERATE DATA/////////////////////
 
-    /**
-     * Suggest tag according to user input
-     * Cache results according to the term given
-     * @param term
-     */
-    public void suggestTag(final String term){
-        searchHistory.setLastSearch(term);
-        final SuggestedTagsAdapter adapter = (SuggestedTagsAdapter) rv_suggestedTags.getAdapter();
-        // Data are in cache
-        if (searchHistory.hasTerm(term)){
-            adapter.setData(searchHistory.get(term).getData());
-        }
-        else {
-            // Data are not in cache, try searching for a sub term
-            SearchHistory.Item subHistory = searchHistory.get(term);
-            if (subHistory != null){
-                adapter.setData(subHistory.getData());
-                if (subHistory.isComplete()){
-                    return ;
-                }
-            }
-            searchHistory.create(term);
-
-            RestClient.service().suggest(term, new RestCallback<List<Tag>>(this) {
-                @Override
-                public void success(List<Tag> tags, Response response) {
-                    Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
-                    searchHistory.set(term, tags);
-                    if (searchHistory.isLastSearch(term)){
-                        Log.d(TAG, "'" + term + "' is the last search, setting data");
-                        adapter.setData(tags);
-                    }
-                }
-
-            });
-        }
-    }
     public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
         data.add(new Tag("test", 0));
         data.add(new Tag("test2", 0));
         return data;
     }
-    public List<Tag> addDataToAdapter(String newData, SelectedTagsAdapter adapter) {
-        List<Tag> data = adapter.getData();
-        data.add(new Tag(newData, 0));
-        adapter.notifyDataSetChanged();
-        return data;
-    }
-
     //Set onClickListener
     public void SubmitClickListener(View v) {
         //progressDialog.show();
@@ -344,8 +257,8 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     private String getTagsToString(){
-        RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
-        SelectedTagsAdapter adapter = (SelectedTagsAdapter) rv_savedTagsList.getAdapter();
+        SelectedTagsAdapter adapter = (SelectedTagsAdapter)
+                searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
         String inputTags = "";
         List<Tag> selectedTags = adapter.getData();
 
@@ -480,34 +393,5 @@ public class AddSpotActivity extends BaseActivity {
             MyApplication.showAlert(this.context, R.string.error_webservice_connection);
         }
 
-    }
-
-
-    private class OnQueryTextListener implements SearchView.OnQueryTextListener {
-
-            @Override
-        public boolean onQueryTextSubmit(String query) {
-            // Get recycler view
-            RecyclerView rv_savedTagsList = (RecyclerView) findViewById(R.id.rv_savedTags_addSpot);
-            //Get adapter
-            RecyclerView.Adapter adapter = rv_savedTagsList.getAdapter();
-            SelectedTagsAdapter selectedTagsAdapter = (SelectedTagsAdapter) adapter;
-            //Set new values
-            addDataToAdapter(query, selectedTagsAdapter);
-            //Scroll untill the end of the RecyclerView, so that we can see the last tag.
-            rv_savedTagsList.scrollToPosition(selectedTagsAdapter.getItemCount() - 1);
-
-            searchView.setIconified(true);
-
-            return true;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            if (newText.length() >= 2){
-                suggestTag(newText);
-            }
-            return false;
-        }
     }
 }

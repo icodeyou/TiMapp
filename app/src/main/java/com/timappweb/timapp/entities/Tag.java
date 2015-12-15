@@ -22,12 +22,27 @@ public class Tag implements Serializable{
         this.name = name;
     }
 
-    public int getCount_ref() {
+    public int getCountRef() {
         return count_ref;
     }
 
-    public void setCount_ref(int count_ref) {
+    public void setCountRef(int count_ref) {
         this.count_ref = count_ref;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tag tag = (Tag) o;
+
+        return name.equals(tag.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

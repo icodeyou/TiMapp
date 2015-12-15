@@ -37,6 +37,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
     private TextView tvUsername = null;
+    private Toolbar toolbar;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -83,7 +84,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_drawer);
 
         //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
@@ -241,7 +242,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // set a custom shadow that overlays the main content when the drawer opens
         //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // --------------------------------

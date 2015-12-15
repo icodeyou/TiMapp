@@ -12,10 +12,6 @@ public class CommentActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
-        //Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        this.initToolbar(true);
     }
 }

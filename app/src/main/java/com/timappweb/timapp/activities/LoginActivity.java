@@ -310,6 +310,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     user.username = response.data.get("username");
                     RestClient.instance().createLoginSession(token, user);
                     Log.i(TAG, "Session created with session token: " + token);
+                    IntentsUtils.lastActivityBeforeLogin(this.activity);
                     return true;
                 }
                 else if (!response.data.containsKey("session_id")){
