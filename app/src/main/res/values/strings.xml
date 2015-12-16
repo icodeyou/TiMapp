@@ -11,8 +11,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_add_spot">Broadcast</string>
-    <string name="title_activity_current_spot">My Broadcast</string>
-    <string name="title_activity_spot">Spot</string>
+    <string name="title_activity_current_Post">My Broadcast</string>
+    <string name="title_activity_post">Post</string>
     <string name="title_activity_place">Place</string>
     <string name="title_activity_people">Place - People</string>
     <string name="title_activity_comment">Place - Comments</string>

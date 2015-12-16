@@ -99,7 +99,7 @@
 
         <activity
             android:name=".activities.PostActivity"
-            android:label="@string/title_activity_spot"
+            android:label="@string/title_activity_post"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -138,11 +138,11 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".activities.PlaceActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.PlaceActivity" />
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
 
         <activity
@@ -152,7 +152,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.PlaceActivity" />
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
     </application>
 </manifest>
