@@ -277,8 +277,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         else if (id == R.id.menu_item_add_post){
             MyApplication.startRequireLoggedInActivity(this, AddSpotActivity.class);
         }
+        else if (id == R.id.menu_item_place) {
+            MyApplication.startRequireLoggedInActivity(this, PlaceActivity.class);
+        }
         else if (id == R.id.menu_item_login){
-            IntentsUtils.login(this);
+        IntentsUtils.login(this);
         }
         else if (id == R.id.menu_item_logout) {
             IntentsUtils.logout(this);

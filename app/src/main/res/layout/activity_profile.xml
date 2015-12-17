@@ -210,8 +210,9 @@
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:id="@+id/tv_last_post_name"/>
-           <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_last_post_tags"
+
+            <com.timappweb.timapp.views.SelectedTagRecyclerView
+                android:id="@+id/rv_displayed_tags"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

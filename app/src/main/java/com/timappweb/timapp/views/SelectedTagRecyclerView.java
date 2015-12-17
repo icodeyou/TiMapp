@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 
 
-import com.timappweb.timapp.adapters.SelectedTagsAdapter;
+import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.LinkedList;
@@ -33,7 +33,7 @@ public class SelectedTagRecyclerView extends TagRecyclerView {
     }
 
     protected void init(){
-        this.setAdapter(new SelectedTagsAdapter(getContext(), new LinkedList<Tag>()));
+        this.setAdapter(new DisplayedTagsAdapter(getContext(), new LinkedList<Tag>()));
 
         GridLayoutManager manager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         this.setLayoutManager(manager);

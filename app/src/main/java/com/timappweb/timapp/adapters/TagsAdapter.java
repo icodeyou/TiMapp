@@ -1,5 +1,5 @@
 package com.timappweb.timapp.adapters;
-//yo
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +26,6 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
         if (data != null)
             this.data = data;
     }
-
 
     public List<Tag> getData() {
         return this.data;

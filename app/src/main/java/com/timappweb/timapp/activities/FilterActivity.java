@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.SelectedTagsAdapter;
+import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.SelectedTagRecyclerView;
@@ -55,6 +55,7 @@ public class FilterActivity extends BaseActivity {
                 SelectedTagRecyclerView selectedTagsRecyclerView = (SelectedTagRecyclerView) findViewById(R.id.rv_selected_tags_filter);
                 searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                         searchView, suggestedTagRecyclerView, selectedTagsRecyclerView);
+
             }
         }
 /*
@@ -106,7 +107,7 @@ public class FilterActivity extends BaseActivity {
         return data;
     }
 
-    public List<Tag> addDataToAdapter(String newData, SelectedTagsAdapter adapter) {
+    public List<Tag> addDataToAdapter(String newData, DisplayedTagsAdapter adapter) {
         List<Tag> data = adapter.getData();
         data.add(new Tag(newData, 0));
         adapter.notifyDataSetChanged();

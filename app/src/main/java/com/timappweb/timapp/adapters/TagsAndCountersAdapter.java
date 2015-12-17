@@ -15,11 +15,11 @@ import java.util.ArrayList;
 //Source :
 // http://hmkcode.com/android-custom-listview-titles-icons-counter/
 
-public class ListTagAdapter extends ArrayAdapter<Tag> {
+public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
     private final Context context;
     private final ArrayList<Tag> tagsArrayList;
 
-    public ListTagAdapter(Context context, ArrayList<Tag> tagsArrayList) {
+    public TagsAndCountersAdapter(Context context, ArrayList<Tag> tagsArrayList) {
         super(context, R.layout.list_item_tag, tagsArrayList);
         this.context = context;
         this.tagsArrayList = tagsArrayList;
@@ -27,24 +27,26 @@ public class ListTagAdapter extends ArrayAdapter<Tag> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // 1. Create inflater
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // 2. Get rowView from inflater
-        View rowView = (View) inflater.inflate(R.layout.list_item_tag, parent, false);
+        // Get the view from inflater
+        View rowView = convertView;
+        if(convertView==null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            rowView = inflater.inflate(R.layout.list_item_tag, parent, false);
+        }
 
-        // 3. Get icon,title & counter views from the rowView
+        // Get icon,title & counter views from the rowView
         TextView tagView = (TextView) rowView.findViewById(R.id.tv_tag);
         TextView counterView = (TextView) rowView.findViewById(R.id.tv_tag_counter);
 
-        // 4. Set the text for textView
+        // Set the text for textView
         String tagString = String.valueOf(tagsArrayList.get(position).getName());
         String tagCounterString = String.valueOf(tagsArrayList.get(position).getCountRef());
         tagView.setText(tagString);
         counterView.setText(tagCounterString);
 
-        // 5. return rowView
+        // return rowView
         return rowView;
     }
 }

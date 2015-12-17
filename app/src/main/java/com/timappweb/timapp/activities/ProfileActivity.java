@@ -1,18 +1,16 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.LastPostTagsAdapter;
+import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
@@ -30,7 +28,7 @@ public class ProfileActivity extends BaseActivity{
 
     String TAG = "ProfileActivity";
 
-    private LastPostTagsAdapter lastPostTagsAdapter = null;
+    private DisplayedTagsAdapter displayedTagsAdapter = null;
     private User mUser = null;
     private TextView tvUsername = null;
     private TextView tvDateCreated = null;
@@ -46,15 +44,15 @@ public class ProfileActivity extends BaseActivity{
         this.initToolbar(true);
 
         /////////////////Fetch tags for Recycler view in LastPost box ! //////////////////////////////////////
-        final RecyclerView rv_lastPostTags = (RecyclerView) findViewById(R.id.rv_last_post_tags);
+        final RecyclerView rv_lastPostTags = (RecyclerView) findViewById(R.id.rv_displayed_tags);
         tvUsername = (TextView) findViewById(R.id.tv_profile_username);
         tvCountPosts = (TextView) findViewById(R.id.tv_profile_count_posts);
         tvDateCreated = (TextView) findViewById(R.id.tv_last_post_created);
         tvPostName = (TextView) findViewById(R.id.tv_last_post_name);
 
         //set Adapter
-        lastPostTagsAdapter = new LastPostTagsAdapter(this, new LinkedList<Tag>());
-        rv_lastPostTags.setAdapter(lastPostTagsAdapter);
+        displayedTagsAdapter = new DisplayedTagsAdapter(this, new LinkedList<Tag>());
+        rv_lastPostTags.setAdapter(displayedTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager_savedTags = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
@@ -90,9 +88,9 @@ public class ProfileActivity extends BaseActivity{
                 // Setting the last post
                 if (mUser.posts != null && mUser.posts.size() > 0){
                     Post post = mUser.posts.getFirst();
-                    lastPostTagsAdapter.setData(post.tags);
+                    displayedTagsAdapter.setData(post.tags);
                     tvDateCreated.setText(post.getPrettyTimeCreated());
-                    tvPostName.setText(post.getName());
+                    tvPostName.setText(post.getAdress());
                     View layout = findViewById(R.id.box_profile_last_post);
                     layout.setVisibility(View.VISIBLE);
                 }
