@@ -32,7 +32,7 @@ public class SelectedTagRecyclerView extends TagRecyclerView {
         this.init();
     }
 
-    protected void init(){
+    protected void init(){  
         this.setAdapter(new SelectedTagsAdapter(getContext(), new LinkedList<Tag>()));
 
         GridLayoutManager manager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
