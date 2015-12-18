@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/height_item_friend_invited"
     android:id="@+id/item_user">
 
     <TextView
+        android:id="@+id/tv_status"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textAllCaps="true"
+        android:text="invited"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/LightGrey"/>
+
+    <TextView
         android:id="@+id/tv_username"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_item_friend_invited"
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="30dp"
-        android:text="Michel LeBlanc"
-        android:background="@color/LightSkyBlue"/>
+        android:text="test M. Michel"/>
 
 </LinearLayout>

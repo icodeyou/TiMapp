@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
@@ -24,30 +23,24 @@ public class PlaceFriendsActivity extends BaseActivity {
 
         //Listview - Friends
         lvFriendsHere = (ListView) findViewById(R.id.list_friends);
-        friendsAdapter = new PlaceFriendsAdapter(this,generateData());
+        friendsAdapter = new PlaceFriendsAdapter(this);
+        friendsAdapter.initializeData();
         lvFriendsHere.setAdapter(friendsAdapter);
     }
 
     public void onInviteClick(View view) {
-        int lastPosition = friendsAdapter.addData(User.createDummy());
-        lvFriendsHere.smoothScrollToPosition(lastPosition);
+        User u = User.createDummy();
+        u.setStatus(true);
+        friendsAdapter.add(u);
+        friendsAdapter.getCount();
+        lvFriendsHere.smoothScrollToPosition(friendsAdapter.getCount());
 
         //TODO : envoyer une notification à l'utilisateur
-        //penser à sauver "l'état" (bundle) avant de revenir en arrière, et récupérer cet état
-            //quand on revient sur l'activité, de façon à ce qu'on voit les posts affichés.
     }
 
     //Generate Data for ListView
     private ArrayList<User> generateData(){
         ArrayList<User> friends = new ArrayList<>();
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
-        friends.add(User.createDummy());
         return friends;
     }
 }

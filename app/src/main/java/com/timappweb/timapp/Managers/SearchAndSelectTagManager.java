@@ -53,6 +53,8 @@ public class SearchAndSelectTagManager {
 
     private void init(){
 
+        // Source de listener à double implémentation que tu trouves bizarre que tu veux enlever :
+        // http://stackoverflow.com/questions/24471109/recyclerview-onclick
         suggestedTagRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(activity, new RecyclerItemTouchListener.OnItemClickListener() {
 
             @Override
