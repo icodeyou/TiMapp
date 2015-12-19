@@ -82,7 +82,7 @@
         </activity>
 
         <activity
-            android:name=".activities.AddSpotActivity"
+            android:name=".activities.AddPostActivity"
             android:label="@string/title_activity_add_spot"
             android:windowSoftInputMode="adjustNothing"
             android:parentActivityName=".activities.DrawerActivity">

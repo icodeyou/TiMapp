@@ -6,19 +6,17 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
+import com.timappweb.timapp.adapters.FilledTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnQueryTagListener;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.SearchHistory;
-import com.timappweb.timapp.views.SelectedTagRecyclerView;
-import com.timappweb.timapp.views.SuggestedTagRecyclerView;
+import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.FilledRecyclerView;
 
 import java.util.List;
 
@@ -35,18 +33,18 @@ public class SearchAndSelectTagManager {
 
     private Activity activity;
     private SearchView searchView;
-    private SelectedTagRecyclerView selectedTagsRecyclerView;
-    private SuggestedTagRecyclerView suggestedTagRecyclerView;
+    private HorizontalRecyclerView selectedTagsRecyclerView;
+    private FilledRecyclerView suggestedRecyclerView;
     private SearchHistory<Tag> searchHistory;
 
     public SearchAndSelectTagManager(Activity activity,
                                      SearchView searchView,
-                                     SuggestedTagRecyclerView suggestedTagRecyclerView,
-                                     SelectedTagRecyclerView selectedTagRecyclerView) {
+                                     FilledRecyclerView suggestedRecyclerView,
+                                     HorizontalRecyclerView selectedRecyclerView) {
         this.activity = activity;
         this.searchView = searchView;
-        this.suggestedTagRecyclerView = suggestedTagRecyclerView;
-        this.selectedTagsRecyclerView = selectedTagRecyclerView;
+        this.suggestedRecyclerView = suggestedRecyclerView;
+        this.selectedTagsRecyclerView = selectedRecyclerView;
         this.init();
         this.loadTags("");
     }
@@ -55,12 +53,12 @@ public class SearchAndSelectTagManager {
 
         // Source de listener à double implémentation que tu trouves bizarre que tu veux enlever :
         // http://stackoverflow.com/questions/24471109/recyclerview-onclick
-        suggestedTagRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(activity, new RecyclerItemTouchListener.OnItemClickListener() {
+        suggestedRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(activity, new RecyclerItemTouchListener.OnItemClickListener() {
 
             @Override
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
                 Log.d(TAG, "Clicked on suggested item");
-                SuggestedTagsAdapter adapter = (SuggestedTagsAdapter) recyclerView.getAdapter();
+                FilledTagsAdapter adapter = (FilledTagsAdapter) recyclerView.getAdapter();
                 String selectedTag = adapter.getData(position).getName();
                 selectedTagsRecyclerView.getAdapter().addData(selectedTag);
                 selectedTagsRecyclerView.scrollToEnd();
@@ -86,7 +84,6 @@ public class SearchAndSelectTagManager {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
 
-
         this.searchHistory = new SearchHistory<>();
     }
 
@@ -106,17 +103,17 @@ public class SearchAndSelectTagManager {
     private void loadTags(final String term){
 
         searchHistory.setLastSearch(term);
-        final SuggestedTagsAdapter suggestedTagsAdapter =
-                (SuggestedTagsAdapter) suggestedTagRecyclerView.getAdapter();
+        final FilledTagsAdapter filledTagsAdapter =
+                (FilledTagsAdapter) suggestedRecyclerView.getAdapter();
         // Data are in cache
         if (searchHistory.hasTerm(term)){
-            suggestedTagsAdapter.setData(searchHistory.get(term).getData());
+            filledTagsAdapter.setData(searchHistory.get(term).getData());
         }
         else {
             // Data are not in cache, try searching for a sub term
             SearchHistory.Item subHistory = searchHistory.get(term);
             if (subHistory != null){
-                suggestedTagsAdapter.setData(subHistory.getData());
+                filledTagsAdapter.setData(subHistory.getData());
                 if (subHistory.isComplete()){
                     return ;
                 }
@@ -130,7 +127,7 @@ public class SearchAndSelectTagManager {
                     searchHistory.set(term, tags);
                     if (searchHistory.isLastSearch(term)) {
                         Log.d(TAG, "'" + term + "' is the last search, setting data");
-                        suggestedTagsAdapter.setData(tags);
+                        filledTagsAdapter.setData(tags);
                     }
                 }
 
@@ -148,12 +145,12 @@ public class SearchAndSelectTagManager {
         return searchView;
     }
 
-    public SelectedTagRecyclerView getSelectedTagsRecyclerView() {
+    public HorizontalRecyclerView getSelectedTagsRecyclerView() {
         return selectedTagsRecyclerView;
     }
 
-    public SuggestedTagRecyclerView getSuggestedTagRecyclerView() {
-        return suggestedTagRecyclerView;
+    public FilledRecyclerView getFillRecyclerView() {
+        return suggestedRecyclerView;
     }
 
 }

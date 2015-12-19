@@ -10,11 +10,11 @@ import android.view.View;
 
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.views.SelectedTagRecyclerView;
-import com.timappweb.timapp.views.SuggestedTagRecyclerView;
+import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.FilledRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +51,10 @@ public class FilterActivity extends BaseActivity {
             SearchView searchView = (SearchView) searchItem.getActionView();
             if (searchView != null){
 
-                SuggestedTagRecyclerView suggestedTagRecyclerView = (SuggestedTagRecyclerView) findViewById(R.id.rv_suggested_tags_filter);
-                SelectedTagRecyclerView selectedTagsRecyclerView = (SelectedTagRecyclerView) findViewById(R.id.rv_selected_tags_filter);
+                FilledRecyclerView filledRecyclerView = (FilledRecyclerView) findViewById(R.id.rv_suggested_tags_filter);
+                HorizontalRecyclerView selectedTagsRecyclerView = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
                 searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                        searchView, suggestedTagRecyclerView, selectedTagsRecyclerView);
+                        searchView, filledRecyclerView, selectedTagsRecyclerView);
 
             }
         }
@@ -107,7 +107,7 @@ public class FilterActivity extends BaseActivity {
         return data;
     }
 
-    public List<Tag> addDataToAdapter(String newData, DisplayedTagsAdapter adapter) {
+    public List<Tag> addDataToAdapter(String newData, HorizontalTagsAdapter adapter) {
         List<Tag> data = adapter.getData();
         data.add(new Tag(newData, 0));
         adapter.notifyDataSetChanged();

@@ -20,7 +20,7 @@
                 android:textSize="30dp"
                 android:text="@string/hashtag"/>
             <TextView
-                android:id="@+id/item_suggested_tag"
+                android:id="@+id/item_filled_tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="test"

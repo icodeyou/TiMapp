@@ -275,7 +275,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             startActivity(intent);
         }
         else if (id == R.id.menu_item_add_post){
-            MyApplication.startRequireLoggedInActivity(this, AddSpotActivity.class);
+            MyApplication.startRequireLoggedInActivity(this, AddPostActivity.class);
         }
         else if (id == R.id.menu_item_place) {
             MyApplication.startRequireLoggedInActivity(this, PlaceActivity.class);
@@ -372,7 +372,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         @Override
         public void onClick(View view) {
-            MyApplication.startRequireLoggedInActivity(getBaseContext(), AddSpotActivity.class);
+            MyApplication.startRequireLoggedInActivity(getBaseContext(), AddPostActivity.class);
         }
     }
 

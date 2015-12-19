@@ -1,5 +1,8 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,10 +31,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
+import com.timappweb.timapp.adapters.FilledTagsAdapter;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
+import com.timappweb.timapp.fragments.AddPostMainFragment;
+import com.timappweb.timapp.fragments.AddPostSearchFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -40,8 +46,8 @@ import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
-import com.timappweb.timapp.views.SelectedTagRecyclerView;
-import com.timappweb.timapp.views.SuggestedTagRecyclerView;
+import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.FilledRecyclerView;
 
 
 import java.util.ArrayList;
@@ -50,7 +56,7 @@ import java.util.List;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class AddSpotActivity extends BaseActivity {
+public class AddPostActivity extends BaseActivity {
 
     private static final String     TAG = "AddSpot";
 
@@ -74,6 +80,8 @@ public class AddSpotActivity extends BaseActivity {
     private LocationListener            mLocationListener;
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
     private SearchAndSelectTagManager   searchAndSelectTagManager;
+    private AddPostMainFragment         fragment;
+    private AddPostSearchFragment       fragmentSearch;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -82,7 +90,7 @@ public class AddSpotActivity extends BaseActivity {
         Log.d(TAG, "Creating add spot activity");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_spot);
+        setContentView(R.layout.activity_add_post);
         this.initToolbar(true);
 
         // -----------------------------------------------------------------------------------------
@@ -98,6 +106,19 @@ public class AddSpotActivity extends BaseActivity {
         // -----------------------------------------------------------------------------------------
         initLocationListener();
         initLocationProvider();
+
+        // -----------------------------------------------------------------------------------------
+        initSearchFragment();
+    }
+
+
+
+    private void initSearchFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragment = new AddPostMainFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.layout_add_post, fragment);
+        fragmentTransaction.commit();
     }
 
     private void initLocationListener() {
@@ -144,14 +165,23 @@ public class AddSpotActivity extends BaseActivity {
         //Set search item
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentSearch = new AddPostSearchFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.layout_add_post,fragmentSearch);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
             if (searchView != null){
 
-                SuggestedTagRecyclerView suggestedTagRecyclerView = (SuggestedTagRecyclerView) findViewById(R.id.rv_suggested_tags_add_spot);
-                SelectedTagRecyclerView selectedTagsRecyclerView = (SelectedTagRecyclerView) findViewById(R.id.rv_selected_tags_add_spot);
+                HorizontalRecyclerView selectedTagsRV = fragmentSearch.getSelectedTagsRV();
+                FilledRecyclerView suggestedTagsRV = fragmentSearch.getSuggestedTagsRV();
+
                 searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                        searchView, suggestedTagRecyclerView, selectedTagsRecyclerView);
+                        searchView, suggestedTagsRV, selectedTagsRV);
+
             }
         }
 
@@ -248,7 +278,7 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     private String getTagsToString(){
-        DisplayedTagsAdapter adapter = (DisplayedTagsAdapter)
+        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter)
                 searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
         String inputTags = "";
         List<Tag> selectedTags = adapter.getData();
