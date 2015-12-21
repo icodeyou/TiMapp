@@ -12,7 +12,7 @@
     <!-- ALONE + GROUP : Group or Alone -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_post_top_bar"
+        android:layout_height="@dimen/height_rv_displayed_tags"
         android:orientation="horizontal">
         <Button
             android:id="@+id/button"
@@ -20,7 +20,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/LightGrey"
-            android:text="Alone" />
+            android:text="Alone"
+            android:onClick="onAloneCLick"/>
 
         <Button
             android:id="@+id/button2"
@@ -30,12 +31,14 @@
             android:background="@color/Navy"
             android:text="Group"
             android:textColor="@color/white"
-            android:layout_gravity="right" />
+            android:layout_gravity="right"
+            android:onClick="onGroupClick"/>
     </LinearLayout>
 
     <!-- ******************************************************************* -->
     <!-- GROUP : Getting your location IF LOCATION NOT LOADED -->
     <LinearLayout
+        android:id="@+id/top_layout_if_not_loaded"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_post_field_group"
         android:orientation="horizontal"
@@ -62,6 +65,7 @@
     <!-- ******************************************************************* -->
     <!-- GROUP : Getting your location IF LOCATION LOADED AND NO GROUP -->
     <LinearLayout
+        android:id="@+id/top_layout_without_group"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_post_field_group"
         android:orientation="horizontal"
@@ -87,6 +91,7 @@
     <!-- ******************************************************************* -->
     <!-- GROUP : Getting your location IF LOCATION LOADED AND GROUPS EXIST -->
     <LinearLayout
+        android:id="@+id/top_layout_with_group"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_post_field_group"
         android:orientation="horizontal"
@@ -107,6 +112,7 @@
     <!-- ******************************************************************* -->
     <!-- ALONE + GROUP : Add tags -->
     <LinearLayout
+        android:id="@+id/add_tags_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
@@ -135,7 +141,8 @@
     <com.timappweb.timapp.views.FilledRecyclerView
         android:id="@+id/rv_main_selected_tags"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:layout_height="0dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"

@@ -16,9 +16,6 @@ import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 
-/**
- * Created by stephane on 12/14/2015.
- */
 public class IntentsUtils {
 
 

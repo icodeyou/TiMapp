@@ -161,6 +161,24 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         return super.onOptionsItemSelected(item);
     }
 
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean res = super.onPrepareOptionsMenu(menu);
+        // If the nav drawer is open, hide action items related to the content view
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
+        //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
+        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        boolean isLoggedIn = MyApplication.isLoggedIn();
+        navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
+
+        return res;
+    }
+
     /*  A QUOI CA SERT CA ???????????????????????????????????????????????????????????
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -342,25 +360,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             fragmentManager.beginTransaction().replace(R.id.content_frame, newFragment, newFragmentTAG).commit();
         }
 
-    }
-
-
-    /* Called whenever we call invalidateOptionsMenu() */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean res = super.onPrepareOptionsMenu(menu);
-        // If the nav drawer is open, hide action items related to the content view
-        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
-        //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
-        //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        boolean isLoggedIn = MyApplication.isLoggedIn();
-        navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
-        navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
-        navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
-
-        return res;
     }
 
     private class AddSpotClickListener implements View.OnClickListener {

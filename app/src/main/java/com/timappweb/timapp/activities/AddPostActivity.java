@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.FilledTagsAdapter;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -46,12 +44,11 @@ import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
-import com.timappweb.timapp.views.HorizontalRecyclerView;
-import com.timappweb.timapp.views.FilledRecyclerView;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -71,17 +68,16 @@ public class AddPostActivity extends BaseActivity {
     private TextView                    tvUserLocation;
     private ProgressBar                 progressBarLocation;
     private static ProgressDialog       progressDialog = null;
-    private SearchView                  searchView = null;
-
     private TextView                    mTvComment = null;
+    private AddPostMainFragment         fragmentMain;
+    private FragmentManager             fragmentManager =   getFragmentManager();
 
     // Location
     private MyLocationProvider          locationProvider;
     private LocationListener            mLocationListener;
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
     private SearchAndSelectTagManager   searchAndSelectTagManager;
-    private AddPostMainFragment         fragment;
-    private AddPostSearchFragment       fragmentSearch;
+
 
     // ---------------------------------------------------------------------------------------------
 
@@ -108,16 +104,22 @@ public class AddPostActivity extends BaseActivity {
         initLocationProvider();
 
         // -----------------------------------------------------------------------------------------
-        initSearchFragment();
+        initMainFragment();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
-
-    private void initSearchFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragment = new AddPostMainFragment();
+    private void initMainFragment() {
+        fragmentMain = new AddPostMainFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.layout_add_post, fragment);
+        fragmentTransaction.add(R.id.fragment_add_spot, fragmentMain, "MainFragment");
         fragmentTransaction.commit();
     }
 
@@ -153,55 +155,6 @@ public class AddPostActivity extends BaseActivity {
         super.onStop();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
-    //// Search View
-    ////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_spot, menu);
-
-        //Set search item
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentSearch = new AddPostSearchFragment();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.layout_add_post,fragmentSearch);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            if (searchView != null){
-
-                HorizontalRecyclerView selectedTagsRV = fragmentSearch.getSelectedTagsRV();
-                FilledRecyclerView suggestedTagsRV = fragmentSearch.getSuggestedTagsRV();
-
-                searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                        searchView, suggestedTagsRV, selectedTagsRV);
-
-            }
-        }
-
-
-        return true;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //// UP NAVIGATION - Action Bar
-    ////////////////////////////////////////////////////////////////////////////////
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public void onAddCommentClick(View view) {
         LayoutInflater inflater = getLayoutInflater();
@@ -247,6 +200,14 @@ public class AddPostActivity extends BaseActivity {
 
     }
 
+    public void onAloneCLick(View view) {
+        fragmentMain.setAloneVisibilities();
+    }
+
+    public void onGroupClick(View view) {
+        fragmentMain.setGroupVisibilities();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -262,8 +223,6 @@ public class AddPostActivity extends BaseActivity {
         public void onFragmentInteraction(Uri uri);
     }
 
-    /////////GENERATE DATA/////////////////////
-
     public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
         data.add(new Tag("test", 0));
@@ -277,7 +236,7 @@ public class AddPostActivity extends BaseActivity {
         submitNewPost();
     }
 
-    private String getTagsToString(){
+    public String getTagsToString(){
         HorizontalTagsAdapter adapter = (HorizontalTagsAdapter)
                 searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
         String inputTags = "";
@@ -323,7 +282,7 @@ public class AddPostActivity extends BaseActivity {
         // 3) Call the service to add the spot
         // - Build the spot
         final Post post = new Post(userLatLng);
-        post.tag_string = getTagsToString();
+        //post.tag_string = getTagsToString();
         post.comment = (String) mTvComment.getText();
         post.latitude = location.getLatitude();
         post.longitude = location.getLongitude();
@@ -370,7 +329,7 @@ public class AddPostActivity extends BaseActivity {
             // Display the address string
             // or an error comment sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            displayAddressOutput();
+            //displayAddressOutput();
 
             // Show a toast comment if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {

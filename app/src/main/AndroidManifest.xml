@@ -53,7 +53,7 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustPan" >
         </activity>
 
         <service
@@ -84,7 +84,7 @@
         <activity
             android:name=".activities.AddPostActivity"
             android:label="@string/title_activity_add_spot"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".activities.DrawerActivity">
             <!-- Make activity searchable -->
             <intent-filter>

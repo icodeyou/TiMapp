@@ -1,12 +1,18 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
@@ -22,6 +28,9 @@ import java.util.List;
 public class FilterActivity extends BaseActivity {
     String TAG = "FilterActivity";
     private SearchAndSelectTagManager searchAndSelectTagManager;
+    private SearchView  searchView;
+    private Menu menu;
+    private Activity activity=this;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -42,35 +51,41 @@ public class FilterActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_filter, menu);
+        this.menu = menu;
 
+        setSearchview();
 
-        //Set search item
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-
-        if (searchItem != null) {
-            SearchView searchView = (SearchView) searchItem.getActionView();
-            if (searchView != null){
-
-                FilledRecyclerView filledRecyclerView = (FilledRecyclerView) findViewById(R.id.rv_suggested_tags_filter);
-                HorizontalRecyclerView selectedTagsRecyclerView = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
-                searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                        searchView, filledRecyclerView, selectedTagsRecyclerView);
-
-            }
-        }
-/*
-        if (searchView != null) {
-            //Always display the searchview expanded in the action bar
-            searchView.setIconifiedByDefault(false);
-            //focus on searchBar and open keyboard
-            searchView.requestFocus();
-            ImageView magImage = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
-            magImage.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
-            //setSearchableInfo & Listener
-        }
-        */
+        FilledRecyclerView filledRecyclerView = (FilledRecyclerView) findViewById(R.id.rv_suggested_tags_filter);
+        HorizontalRecyclerView selectedTagsRecyclerView = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
+        searchAndSelectTagManager = new SearchAndSelectTagManager(this,
+                searchView, filledRecyclerView, selectedTagsRecyclerView);
 
         return true;
+    }
+
+    private void setSearchview() {
+        //Set search item
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem.expandActionView();
+
+        //Always display the searchview expanded in the action bar
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                NavUtils.navigateUpFromSameTask(activity);
+                return false;
+            }
+        });
+
+        //set searchView
+        searchView = (SearchView) searchItem.getActionView();
+        //set hint for searchview
+        searchView.setQueryHint(activity.getString(R.string.hint_searchview_add_post));
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -98,13 +113,6 @@ public class FilterActivity extends BaseActivity {
 
     public void onUpdateClick(View view) {
         IntentsUtils.home(this);
-    }
-
-    /////////GENERATE DATA/////////////////////
-    public List<Tag> generateData() {
-        List<Tag> data = new ArrayList<>();
-        data.add(new Tag("test", 0));
-        return data;
     }
 
     public List<Tag> addDataToAdapter(String newData, HorizontalTagsAdapter adapter) {
