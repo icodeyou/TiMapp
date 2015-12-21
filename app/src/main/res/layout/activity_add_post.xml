@@ -10,8 +10,13 @@
     <!-- TOOLBAR -->
     <include layout="@layout/toolbar"/>
 
-    <RelativeLayout
-        android:id="@+id/fragment_add_spot"
+    <FrameLayout
+        android:id="@+id/fragment_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/fragment_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

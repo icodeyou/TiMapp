@@ -13,11 +13,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPostActivity;
+import com.timappweb.timapp.adapters.TagsAdapter;
 import com.timappweb.timapp.views.FilledRecyclerView;
 import com.timappweb.timapp.views.HorizontalRecyclerView;
 
@@ -38,13 +38,9 @@ public class AddPostSearchFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        //Initialize variables
+        fragmentManager = getFragmentManager();
         addPostActivity = (AddPostActivity) getActivity();
-        //Force Keyboard to show
-        ((InputMethodManager)addPostActivity.getSystemService(addPostActivity.INPUT_METHOD_SERVICE)).
-                toggleSoftInput(InputMethodManager.SHOW_FORCED,
-                        InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-        //Get views
         selectedTagsRV = (HorizontalRecyclerView) view.findViewById(R.id.rv_search_selected_tags);
         suggestedTagsRV = (FilledRecyclerView) view.findViewById(R.id.rv_search_suggested_tags);
 
@@ -103,12 +99,12 @@ public class AddPostSearchFragment extends Fragment {
     }
 
     private void validateAndChangeFragment() {
-        Bundle b = new Bundle();
-        Fragment fragmentMain = fragmentManager.getFragment(b,"MainFragment");
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_add_spot, fragmentMain, "MainFragment");
-        //Log("*********",b.getString("selectedTags"));
+        fragmentTransaction.replace(R.id.fragment_add_spot, addPostActivity.getFragmentMain());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        //add new tags to the adapter
+        TagsAdapter tagsAdapterSearch = selectedTagsRV.getAdapter();
     }
 }

@@ -11,13 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -30,12 +26,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.FilledTagsAdapter;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.TagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.fragments.AddPostMainFragment;
-import com.timappweb.timapp.fragments.AddPostSearchFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -48,7 +45,6 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -78,7 +74,6 @@ public class AddPostActivity extends BaseActivity {
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
     private SearchAndSelectTagManager   searchAndSelectTagManager;
 
-
     // ---------------------------------------------------------------------------------------------
 
     @Override
@@ -90,6 +85,11 @@ public class AddPostActivity extends BaseActivity {
         this.initToolbar(true);
 
         // -----------------------------------------------------------------------------------------
+        initLocationListener();
+        initLocationProvider();
+        initMainFragment();
+
+        // -----------------------------------------------------------------------------------------
         // Init variables
         mResultReceiver = new AddressResultReceiver(new Handler());
         progressDialog = new ProgressDialog(this);
@@ -98,13 +98,6 @@ public class AddPostActivity extends BaseActivity {
         tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
         progressBarLocation = (ProgressBar) findViewById(R.id.progress_bar_location);
         mTvComment = (TextView) findViewById(R.id.comment_textview);
-
-        // -----------------------------------------------------------------------------------------
-        initLocationListener();
-        initLocationProvider();
-
-        // -----------------------------------------------------------------------------------------
-        initMainFragment();
     }
 
     @Override
@@ -155,7 +148,6 @@ public class AddPostActivity extends BaseActivity {
         super.onStop();
     }
 
-
     public void onAddCommentClick(View view) {
         LayoutInflater inflater = getLayoutInflater();
         // Create
@@ -200,12 +192,12 @@ public class AddPostActivity extends BaseActivity {
 
     }
 
-    public void onAloneCLick(View view) {
-        fragmentMain.setAloneVisibilities();
+    public AddPostMainFragment getFragmentMain() {
+        return fragmentMain;
     }
 
-    public void onGroupClick(View view) {
-        fragmentMain.setGroupVisibilities();
+    public FilledTagsAdapter getFilledTagsAdapter() {
+        return (FilledTagsAdapter) fragmentMain.getSelectedTagsRV().getAdapter();
     }
 
     /**

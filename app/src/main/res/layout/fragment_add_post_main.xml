@@ -15,24 +15,22 @@
         android:layout_height="@dimen/height_rv_displayed_tags"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/button"
+            android:id="@+id/alone_button"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/LightGrey"
-            android:text="Alone"
-            android:onClick="onAloneCLick"/>
+            android:text="Alone"/>
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/group_button"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/Navy"
             android:text="Group"
             android:textColor="@color/white"
-            android:layout_gravity="right"
-            android:onClick="onGroupClick"/>
+            android:layout_gravity="right"/>
     </LinearLayout>
 
     <!-- ******************************************************************* -->
@@ -184,17 +182,17 @@
             android:textSize="15dp"
             android:hint="@string/add_comment_title"
             android:clickable="true"
-            android:onClick="onAddCommentClick"
             android:background="@drawable/border_comment"/>
         <Button
-            android:id="@+id/button_submit_spot"
+            android:id="@+id/button_submit_post"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:text="POST"
+            android:textAllCaps="true"
+            android:text="post"
             android:textColor="@color/Black"
             android:textSize="22dp"
-            android:background="@drawable/validate_button"
+            android:background="@drawable/post_button"
             android:onClick="SubmitClickListener"/>
     </LinearLayout>
 
