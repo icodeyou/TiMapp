@@ -31,4 +31,5 @@ public abstract class TagRecyclerView extends RecyclerView {
     public TagsAdapter getAdapter() {
         return (TagsAdapter) super.getAdapter();
     }
+
 }

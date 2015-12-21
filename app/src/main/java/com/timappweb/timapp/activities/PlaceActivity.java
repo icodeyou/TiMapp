@@ -2,15 +2,13 @@ package com.timappweb.timapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.ListTagAdapter;
+import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
@@ -26,13 +24,13 @@ public class PlaceActivity extends BaseActivity{
         //Create ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
-        ListView lvTags = (ListView) findViewById(R.id.list_tags_place);
+        ListView lvTags = (ListView) findViewById(R.id.list_tags);
 
         // pass context and data to the custom adapter
-        ListTagAdapter listTagAdapter = new ListTagAdapter(this,generateData());
+        TagsAndCountersAdapter tagsAndCountersAdapter = new TagsAndCountersAdapter(this,generateData());
 
         //Set adapter
-        lvTags.setAdapter(listTagAdapter);
+        lvTags.setAdapter(tagsAndCountersAdapter);
     }
 
     //Menu Action Bar
@@ -83,12 +81,12 @@ public class PlaceActivity extends BaseActivity{
     }
 
     public void onPeopleClick(View view) {
-        Intent intent = new Intent(this,PeopleActivity.class);
+        Intent intent = new Intent(this,PlaceFriendsActivity.class);
         startActivity(intent);
     }
 
     public void onCommentClick(View view) {
-        Intent intent = new Intent(this,CommentActivity.class);
+        Intent intent = new Intent(this,PlacePostsActivity.class);
         startActivity(intent);
     }
 }

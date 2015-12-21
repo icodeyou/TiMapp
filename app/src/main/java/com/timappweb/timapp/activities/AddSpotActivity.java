@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +11,6 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,14 +28,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.SelectedTagsAdapter;
-import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
+import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
-import com.timappweb.timapp.listeners.MyLinearLayoutManager;
-import com.timappweb.timapp.listeners.OnQueryTagListener;
-import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -53,7 +45,6 @@ import com.timappweb.timapp.views.SuggestedTagRecyclerView;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit.RetrofitError;
@@ -257,7 +248,7 @@ public class AddSpotActivity extends BaseActivity {
     }
 
     private String getTagsToString(){
-        SelectedTagsAdapter adapter = (SelectedTagsAdapter)
+        DisplayedTagsAdapter adapter = (DisplayedTagsAdapter)
                 searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
         String inputTags = "";
         List<Tag> selectedTags = adapter.getData();

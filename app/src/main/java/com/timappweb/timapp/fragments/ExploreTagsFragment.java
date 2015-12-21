@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.ListTagAdapter;
+import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
@@ -26,7 +26,7 @@ import retrofit.client.Response;
 public class ExploreTagsFragment extends Fragment {
 
     private static final String TAG = "ExploreTagsFragment";
-    ListTagAdapter mListTagAdapter;
+    TagsAndCountersAdapter mTagsAndCountersAdapter;
 
     @Nullable
     @Override
@@ -41,8 +41,8 @@ public class ExploreTagsFragment extends Fragment {
         ListView lvTags = (ListView) root.findViewById(R.id.list_tags_explore);
 
         // pass context and data to the custom adapter
-        mListTagAdapter = new ListTagAdapter(context, new ArrayList<Tag>());
-        lvTags.setAdapter(mListTagAdapter);
+        mTagsAndCountersAdapter = new TagsAndCountersAdapter(context, new ArrayList<Tag>());
+        lvTags.setAdapter(mTagsAndCountersAdapter);
 
         return root;
     }
@@ -70,8 +70,8 @@ public class ExploreTagsFragment extends Fragment {
             @Override
             public void success(List<Tag> tags, Response response) {
                 Log.i(TAG, "Updating list with " + tags.size() + " items");
-                mListTagAdapter.clear();
-                mListTagAdapter.addAll(tags);
+                mTagsAndCountersAdapter.clear();
+                mTagsAndCountersAdapter.addAll(tags);
             }
         });
     }

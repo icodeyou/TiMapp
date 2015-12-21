@@ -99,7 +99,7 @@
 
         <activity
             android:name=".activities.PostActivity"
-            android:label="@string/title_activity_spot"
+            android:label="@string/title_activity_post"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -118,7 +118,7 @@
                 android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
         <activity
-            android:name=".activities.PeopleActivity"
+            android:name=".activities.PlaceFriendsActivity"
             android:label="@string/title_activity_people"
             android:parentActivityName=".activities.PlaceActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -127,7 +127,7 @@
                 android:value="com.timappweb.timapp.activities.PlaceActivity" />
         </activity>
         <activity
-            android:name=".activities.CommentActivity"
+            android:name=".activities.PlacePostsActivity"
             android:label="@string/title_activity_comment"
             android:parentActivityName=".activities.PlaceActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -138,11 +138,21 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".activities.PlaceActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.PlaceActivity" />
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.DrawerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.timappweb.timapp.activities.DrawerActivity" />
         </activity>
     </application>
 </manifest>

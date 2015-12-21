@@ -1,8 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +17,6 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntentsUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import retrofit.client.Response;
 
@@ -36,7 +32,7 @@ public class PostActivity extends BaseActivity {
         setContentView(R.layout.activity_post);
 
         //------------------------------------------------------------------------------------------
-        ListView listViewTags = (ListView) findViewById(R.id.list_tags_place);
+        ListView listViewTags = (ListView) findViewById(R.id.list_tags);
         tagsAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
@@ -110,7 +106,7 @@ public class PostActivity extends BaseActivity {
 
         textViewCreated.setText(currentPost.getPrettyTimeCreated());
         textViewUsername.setText(currentPost.getUsername());
-        textViewPostName.setText(currentPost.getName());
+        textViewPostName.setText(currentPost.getAdress());
 
         if (currentPost.hasTagsLoaded()){
             tagsAdapter.addAll(currentPost.getTagsToStringArray());

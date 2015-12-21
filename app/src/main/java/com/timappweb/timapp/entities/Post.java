@@ -18,9 +18,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by stephane on 8/20/2015.
- */
 public class Post implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "EntitySpot";
@@ -40,10 +37,12 @@ public class Post implements Serializable, MarkerValueInterface {
     public String route;
     public String street_number;
 
+    public String address = "";
+
     public ArrayList<Tag> tags;
 
 
-    public Post(){
+    public Post() {
         this.tags = new ArrayList<>();
     }
 
@@ -63,15 +62,21 @@ public class Post implements Serializable, MarkerValueInterface {
     }
 
     private static int dummyIndice = 1;
-    public static Post createDummy(){
+
+    public static Post createDummy() {
         Post p = new Post(dummyIndice++, dummyIndice, dummyIndice, 0, "");
         p.comment = "C'est le post numero: " + dummyIndice;
         p.tags.add(new Tag("Carrot", 0));
         p.tags.add(new Tag("Snow", 0));
         p.tags.add(new Tag("Choux", 0));
         p.tags.add(new Tag("Fleur", 0));
+        p.tags.add(new Tag("Sous", 0));
+        p.tags.add(new Tag("marin", 0));
+        p.tags.add(new Tag("CrOTTe", 0));
 
         p.user = User.createDummy();
+
+        p.address = "31 rue de la brouettitude 47584 Charrue les bois";
         return p;
     }
 
@@ -97,7 +102,7 @@ public class Post implements Serializable, MarkerValueInterface {
         LocalPersistenceManager.instance.editor.commit();
     }
 
-    public static Post loadFromPref(){
+    public static Post loadFromPref() {
         Post spot = new Post();
         Log.i(TAG, "Loading the spot from pref");
         spot.longitude = LocalPersistenceManager.instance.pref.getFloat(KEY_LONGITUDE, 0);
@@ -109,7 +114,7 @@ public class Post implements Serializable, MarkerValueInterface {
     }
 
 
-    public static boolean isBroadcasting(){
+    public static boolean isBroadcasting() {
         return LocalPersistenceManager.instance.pref.getBoolean(KEY_IS_BROADCASTING, false);
     }
 
@@ -125,6 +130,7 @@ public class Post implements Serializable, MarkerValueInterface {
 
     /**
      * Get created date as a timestamp
+     *
      * @return
      */
     public int getCreated() {
@@ -133,20 +139,20 @@ public class Post implements Serializable, MarkerValueInterface {
 
     /**
      * Get the created as a pretty time format
+     *
      * @return
      */
     public String getPrettyTimeCreated() {
         Calendar mCalendar = new GregorianCalendar();
         TimeZone mTimeZone = mCalendar.getTimeZone();
         int mGMTOffset = mTimeZone.getRawOffset();
-        Log.d(TAG, "GMT offset is " + (mGMTOffset/1000) + " seconds for time zone " + mTimeZone.getDisplayName() );
+        Log.d(TAG, "GMT offset is " + (mGMTOffset / 1000) + " seconds for time zone " + mTimeZone.getDisplayName());
 
         PrettyTime p = new PrettyTime();
         //return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
         // TODO [TEST] diffent time zone on phone
-        return p.format(new Date(((long)this.created)* 1000));
+        return p.format(new Date(((long) this.created) * 1000));
     }
-
 
 
     @Override
@@ -169,10 +175,14 @@ public class Post implements Serializable, MarkerValueInterface {
 
     public ArrayList getTagsToStringArray() {
         ArrayList<String> res = new ArrayList<String>();
-        for (Tag tag: this.tags){
+        for (Tag tag : this.tags) {
             res.add(tag.getName());
         }
         return res;
+    }
+
+    public ArrayList<Tag> getTags() {
+        return tags;
     }
 
     @Override
@@ -181,25 +191,24 @@ public class Post implements Serializable, MarkerValueInterface {
     }
 
     public boolean validateForSubmit(TextView mTvComment) {
-        if (this.tag_string.length() == 0){
+        if (this.tag_string.length() == 0) {
             mTvComment.setError("You must select at least one tag");
             return false;
         }
         return true;
     }
 
-    public String getName() {
-        String res = "";
-        if (country != null){
-            if (city != null){
-                if (route != null){
-                    res += route + ", " ;
+    public String getAdress() {
+        if (country != null) {
+            if (city != null) {
+                if (route != null) {
+                    address += route + ", ";
                 }
-                res += city;
+                address += city;
             }
-            res += " (" + country + ")";
+            address += " (" + country + ")";
         }
-        return res;
+        return address;
     }
 
     public String getUsername() {
@@ -210,5 +219,9 @@ public class Post implements Serializable, MarkerValueInterface {
 
     public boolean hasTagsLoaded() {
         return tags != null && tags.size() > 0;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }

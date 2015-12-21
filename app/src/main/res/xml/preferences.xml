@@ -6,8 +6,11 @@
 <!-- TODO : Make a Settings menu when the user isn't connected -->
 <!-- TODO : Request Focus on EditTexts -->
 
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
     <PreferenceCategory
         android:title="Personal informations">
         <!-- Warning : Can't have key="name" with persistent="true" -->

@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.ExploreFragment;
-import com.timappweb.timapp.fragments.SettingsFragment;
 import com.timappweb.timapp.utils.IntentsUtils;
 //import android.support.design.widget.FloatingActionButton;
 
@@ -271,13 +271,17 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             IntentsUtils.profile(this);
         }
         else if (id == R.id.menu_item_settings) {
-            changeCurrentFragment(FragmentId.Settings);
+            Intent intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
         }
         else if (id == R.id.menu_item_add_post){
             MyApplication.startRequireLoggedInActivity(this, AddSpotActivity.class);
         }
+        else if (id == R.id.menu_item_place) {
+            MyApplication.startRequireLoggedInActivity(this, PlaceActivity.class);
+        }
         else if (id == R.id.menu_item_login){
-            IntentsUtils.login(this);
+        IntentsUtils.login(this);
         }
         else if (id == R.id.menu_item_logout) {
             IntentsUtils.logout(this);
@@ -312,16 +316,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 showAddSpotButton();
                 newFragmentTAG = "Explore";
                 newFragment = new ExploreFragment();
-                break;
-
-            case Settings:
-                //Require the login here (not the case here, but code to use for other fragments)
-                if (!MyApplication.requireLoggedIn(this)){
-                    return;
-                }
-                newFragment = new SettingsFragment();
-                hideAddSpotButton();
-                newFragmentTAG = "Settings";
                 break;
 
             default:            // By default go to Explore
@@ -365,7 +359,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
-        navigationView.getMenu().findItem(R.id.menu_item_settings).setVisible(isLoggedIn);
 
         return res;
     }
