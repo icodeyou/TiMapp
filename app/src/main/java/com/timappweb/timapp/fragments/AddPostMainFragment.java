@@ -2,7 +2,6 @@ package com.timappweb.timapp.fragments;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
@@ -29,10 +28,12 @@ public class AddPostMainFragment extends Fragment {
     private LinearLayout top_layout_if_not_loaded;
     private LinearLayout top_layout_if_no_group;
     private LinearLayout top_layout_with_group;
+    private LinearLayout addTagsLayout;
     private AddPostActivity addPostActivity;
     private Menu mainMenu;
     private Button aloneButton;
     private Button groupButton;
+    private Button postButton;
     private RecyclerView selectedTagsRV;
 
     private FragmentManager fragmentManager;
@@ -51,19 +52,19 @@ public class AddPostMainFragment extends Fragment {
         top_layout_if_not_loaded = (LinearLayout) view.findViewById(R.id.top_layout_if_not_loaded);
         top_layout_if_no_group = (LinearLayout) view.findViewById(R.id.top_layout_without_group);
         top_layout_with_group = (LinearLayout) view.findViewById(R.id.top_layout_with_group);
+        addTagsLayout = (LinearLayout) view.findViewById(R.id.add_tags_layout);
         aloneButton = (Button) view.findViewById(R.id.alone_button);
         groupButton = (Button) view.findViewById(R.id.group_button);
         selectedTagsRV = (RecyclerView) view.findViewById(R.id.rv_main_selected_tags);
+        postButton = (Button) view.findViewById(R.id.button_submit_post);
 
-        initAdapters();
         onAloneClick();
 
         //set listeners
-        LinearLayout addTagsLayout = (LinearLayout) view.findViewById(R.id.add_tags_layout);
         addTagsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setSearchFragment();
+                addPostActivity.displaySearchFragment();
             }
         });
         groupButton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +77,14 @@ public class AddPostMainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 onAloneClick();
+            }
+        });
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //progressDialog.show();
+                addPostActivity.submitNewPost();
             }
         });
 
@@ -97,7 +106,7 @@ public class AddPostMainFragment extends Fragment {
                 NavUtils.navigateUpFromSameTask(addPostActivity);
                 return true;
             case R.id.action_add_tags:
-                setSearchFragment();
+        addPostActivity.displaySearchFragment();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -121,28 +130,6 @@ public class AddPostMainFragment extends Fragment {
         aloneButton.setTextColor(ContextCompat.getColor(addPostActivity, R.color.White));
         groupButton.setBackgroundColor(ContextCompat.getColor(addPostActivity, R.color.LightGrey));
         groupButton.setTextColor(ContextCompat.getColor(addPostActivity, R.color.Black));
-    }
-
-    private void initAdapters() {
-        // Selected tags
-        FilledTagsAdapter tagsAdapter= new FilledTagsAdapter(addPostActivity, new ArrayList<Tag>());
-        selectedTagsRV.setAdapter(tagsAdapter);
-
-    }
-
-    public void setSearchFragment() {
-/*
-        // Save state
-        Bundle b = new Bundle();
-        b.putString("MainSelectedTags",addPostActivity.getTagsToString());
-        fragmentManager.putFragment(b, "MainFragment", this);
-*/
-        //Change fragment
-        Fragment fragmentSearch = new AddPostSearchFragment();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_add_spot, fragmentSearch, "SearchFragment");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
     }
 
     public RecyclerView getSelectedTagsRV() {

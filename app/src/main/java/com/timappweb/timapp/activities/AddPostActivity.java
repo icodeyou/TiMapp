@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -14,9 +15,11 @@ import android.os.ResultReceiver;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +36,7 @@ import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.fragments.AddPostMainFragment;
+import com.timappweb.timapp.fragments.AddPostSearchFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -58,14 +62,20 @@ public class AddPostActivity extends BaseActivity {
     private OnFragmentInteractionListener mListener;
     private String                      comment = null;
     private Boolean                     dummyLocation = true;
+    private Boolean                     isActivityCreated = false;
     private String                      mAddressOutput;
+    private AddPostMainFragment         fragmentMain;
+    private AddPostSearchFragment       fragmentSearch;
+
 
     // Views
     private TextView                    tvUserLocation;
     private ProgressBar                 progressBarLocation;
     private static ProgressDialog       progressDialog = null;
     private TextView                    mTvComment = null;
-    private AddPostMainFragment         fragmentMain;
+    private View                        fragmentMainView;
+    private View                        fragmentSearchView;
+    private LinearLayout                addTagsLayout;
     private FragmentManager             fragmentManager =   getFragmentManager();
 
     // Location
@@ -84,10 +94,19 @@ public class AddPostActivity extends BaseActivity {
         setContentView(R.layout.activity_add_post);
         this.initToolbar(true);
 
+        //Initialize variables
+        fragmentMainView = findViewById(R.id.fragment_main);
+        fragmentSearchView = findViewById(R.id.fragment_search);
+        addTagsLayout = (LinearLayout) findViewById(R.id.add_tags_layout);
+        fragmentMain = (AddPostMainFragment) fragmentManager.findFragmentById(R.id.fragment_main);
+        fragmentSearch = (AddPostSearchFragment) fragmentManager.findFragmentById(R.id.fragment_search);
+
         // -----------------------------------------------------------------------------------------
         initLocationListener();
         initLocationProvider();
-        initMainFragment();
+        initSelectedTagsAdapter();
+        hideSelectedTagsRV();
+        displayMainFragment();
 
         // -----------------------------------------------------------------------------------------
         // Init variables
@@ -98,22 +117,56 @@ public class AddPostActivity extends BaseActivity {
         tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
         progressBarLocation = (ProgressBar) findViewById(R.id.progress_bar_location);
         mTvComment = (TextView) findViewById(R.id.comment_textview);
+
+        isActivityCreated = true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (isSearchFragmentDisplayed()){
+            menu.findItem(R.id.action_add_tags).setVisible(false);
+            menu.findItem(R.id.action_search).setVisible(true);
+            menu.findItem(R.id.action_validate).setVisible(true);
+        }
+        else {
+            menu.findItem(R.id.action_add_tags).setVisible(true);
+            menu.findItem(R.id.action_search).setVisible(false);
+            menu.findItem(R.id.action_validate).setVisible(false);
+        }
+
+        return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0 ){
-            getFragmentManager().popBackStack();
+        if (isSearchFragmentDisplayed()){
+            //TODO : vider la horizontale list view
+            displayMainFragment();
         } else {
             super.onBackPressed();
         }
     }
 
-    private void initMainFragment() {
-        fragmentMain = new AddPostMainFragment();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_add_spot, fragmentMain, "MainFragment");
-        fragmentTransaction.commit();
+    public void displaySearchFragment() {
+        fragmentMainView.setVisibility(View.GONE);
+        fragmentSearchView.setVisibility(View.VISIBLE);
+        invalidateOptionsMenu();
+        //display the searchview expanded in the action bar
+        fragmentSearch.getSearchItem().expandActionView();
+    }
+
+    public void displayMainFragment() {
+        fragmentMainView.setVisibility(View.VISIBLE);
+        fragmentSearchView.setVisibility(View.GONE);
+        invalidateOptionsMenu();
+    }
+
+    public boolean isSearchFragmentDisplayed() {
+        if (fragmentSearchView.getVisibility()==View.VISIBLE){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void initLocationListener() {
@@ -125,6 +178,20 @@ public class AddPostActivity extends BaseActivity {
                 startIntentServiceReverseGeocoding(location);
             }
         };
+    }
+
+    private void initSelectedTagsAdapter() {
+        // Selected tags
+        FilledTagsAdapter tagsAdapter= new FilledTagsAdapter(this, new ArrayList<Tag>());
+        fragmentMain.getSelectedTagsRV().setAdapter(tagsAdapter);
+    }
+
+    private void hideSelectedTagsRV() {
+        fragmentMain.getSelectedTagsRV().setVisibility(View.GONE);
+    }
+
+    public void displaySelectedTagsRV() {
+        fragmentMain.getSelectedTagsRV().setVisibility(View.VISIBLE);
     }
 
     private void initLocationProvider() {
@@ -189,7 +256,6 @@ public class AddPostActivity extends BaseActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
-
     }
 
     public AddPostMainFragment getFragmentMain() {
@@ -221,16 +287,10 @@ public class AddPostActivity extends BaseActivity {
         data.add(new Tag("test2", 0));
         return data;
     }
-    //Set onClickListener
-    public void SubmitClickListener(View v) {
-        //progressDialog.show();
-        Log.d(TAG, "Clicked on submit spot");
-        submitNewPost();
-    }
 
     public String getTagsToString(){
         HorizontalTagsAdapter adapter = (HorizontalTagsAdapter)
-                searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
+                fragmentSearch.getSearchAndSelectTagManager().getSelectedTagsRecyclerView().getAdapter();
         String inputTags = "";
         List<Tag> selectedTags = adapter.getData();
 
@@ -238,6 +298,10 @@ public class AddPostActivity extends BaseActivity {
             inputTags += tag.name + ",";
         }
         return inputTags;
+    }
+
+    public void hideAddTagsLayout() {
+        addTagsLayout.setVisibility(View.GONE);
     }
 
     public void submitNewPost(){
@@ -274,7 +338,7 @@ public class AddPostActivity extends BaseActivity {
         // 3) Call the service to add the spot
         // - Build the spot
         final Post post = new Post(userLatLng);
-        //post.tag_string = getTagsToString();
+        post.tag_string = getTagsToString();
         post.comment = (String) mTvComment.getText();
         post.latitude = location.getLatitude();
         post.longitude = location.getLongitude();

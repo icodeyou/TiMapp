@@ -10,13 +10,15 @@
     <!-- TOOLBAR -->
     <include layout="@layout/toolbar"/>
 
-    <FrameLayout
+    <fragment
         android:id="@+id/fragment_main"
+        android:name="com.timappweb.timapp.fragments.AddPostMainFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <FrameLayout
+    <fragment
         android:id="@+id/fragment_search"
+        android:name="com.timappweb.timapp.fragments.AddPostSearchFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

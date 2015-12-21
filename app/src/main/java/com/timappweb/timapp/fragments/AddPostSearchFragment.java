@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +19,11 @@ import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPostActivity;
 import com.timappweb.timapp.adapters.TagsAdapter;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.views.FilledRecyclerView;
 import com.timappweb.timapp.views.HorizontalRecyclerView;
+
+import java.util.List;
 
 public class AddPostSearchFragment extends Fragment {
 
@@ -28,6 +32,7 @@ public class AddPostSearchFragment extends Fragment {
     private HorizontalRecyclerView selectedTagsRV;
     private FilledRecyclerView suggestedTagsRV;
     private Menu searchMenu;
+    private MenuItem searchItem;
     private FragmentManager fragmentManager;
     private SearchAndSelectTagManager searchAndSelectTagManager;
 
@@ -43,6 +48,13 @@ public class AddPostSearchFragment extends Fragment {
         addPostActivity = (AddPostActivity) getActivity();
         selectedTagsRV = (HorizontalRecyclerView) view.findViewById(R.id.rv_search_selected_tags);
         suggestedTagsRV = (FilledRecyclerView) view.findViewById(R.id.rv_search_suggested_tags);
+
+        selectedTagsRV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addPostActivity.displaySearchFragment();
+            }
+        });
 
         return view;
     }
@@ -75,10 +87,15 @@ public class AddPostSearchFragment extends Fragment {
 
     private void setSearchview() {
         //Set search item
-        MenuItem searchItem = searchMenu.findItem(R.id.action_search);
-        searchItem.expandActionView();
+        searchItem = searchMenu.findItem(R.id.action_search);
 
-        //Always display the searchview expanded in the action bar
+        if(addPostActivity.isSearchFragmentDisplayed()) {
+            //Always display the searchview expanded in the action bar
+            searchItem.expandActionView();
+
+        }
+
+        //Manage events when there are expand/collapse actions on SearchView
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -87,24 +104,44 @@ public class AddPostSearchFragment extends Fragment {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                getFragmentManager().popBackStack();
+                addPostActivity.displayMainFragment();
                 return false;
             }
         });
 
         //set searchView
         searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addPostActivity.displaySearchFragment();
+            }
+        });
+
         //set hint for searchview
         searchView.setQueryHint(addPostActivity.getString(R.string.hint_searchview_add_post));
     }
 
     private void validateAndChangeFragment() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_add_spot, addPostActivity.getFragmentMain());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+
+        addPostActivity.displayMainFragment();
 
         //add new tags to the adapter
         TagsAdapter tagsAdapterSearch = selectedTagsRV.getAdapter();
+        List<Tag> newData = tagsAdapterSearch.getData();
+        addPostActivity.getFilledTagsAdapter().setData(newData);
+
+        if(newData!=null) {
+            addPostActivity.hideAddTagsLayout();
+            addPostActivity.displaySelectedTagsRV();
+        }
+    }
+
+    public MenuItem getSearchItem() {
+        return searchItem;
+    }
+
+    public SearchAndSelectTagManager getSearchAndSelectTagManager() {
+        return searchAndSelectTagManager;
     }
 }
