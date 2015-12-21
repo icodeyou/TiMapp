@@ -14,8 +14,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -46,7 +44,7 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         TextView tvUsername = (TextView) postBox.findViewById(R.id.tv_username);
         TextView tvTime = (TextView) postBox.findViewById(R.id.tv_time);
         TextView tvComment = (TextView) postBox.findViewById(R.id.tv_comment);
-        RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_displayed_tags);
+        RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
 
 
         // Get the address, name, time, and comment from Post.
@@ -63,9 +61,9 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         tvComment.setText(comment);
 
         //Set the adapter for the Recycler View (which displays tags)
-        DisplayedTagsAdapter displayedTagsAdapter = new DisplayedTagsAdapter(getContext(), new LinkedList<Tag>());
-        displayedTagsAdapter.setData(tags);
-        rv_lastPostTags.setAdapter(displayedTagsAdapter);
+        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>());
+        horizontalTagsAdapter.setData(tags);
+        rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);

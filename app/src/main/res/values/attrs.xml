@@ -2,6 +2,6 @@
 <resources>
     <declare-styleable name="views.SuggestedTagRecyclerView">
     </declare-styleable>
-    <declare-styleable name="SelectedTagRecyclerView">
+    <declare-styleable name="HorizontalRecyclerView">
     </declare-styleable>
 </resources>

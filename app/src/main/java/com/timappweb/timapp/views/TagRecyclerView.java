@@ -6,9 +6,6 @@ import android.util.AttributeSet;
 
 import com.timappweb.timapp.adapters.TagsAdapter;
 
-/**
- * Created by stephane on 12/15/2015.
- */
 public abstract class TagRecyclerView extends RecyclerView {
 
     public TagRecyclerView(Context context) {

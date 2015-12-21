@@ -12,7 +12,7 @@
         android:textSize="20dp"
         android:text="@string/hashtag"/>
     <TextView
-        android:id="@+id/item_selected_tag"
+        android:id="@+id/item_horizontal_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"

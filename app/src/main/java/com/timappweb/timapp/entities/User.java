@@ -15,7 +15,7 @@ public class User implements Serializable {
     public String email;
     public int count_posts = 0;
     public int id;
-    public boolean status = false;
+    private boolean status = false;
 
 
     @SerializedName("spots")
@@ -71,8 +71,12 @@ public class User implements Serializable {
         return username;
     }
 
-    public void setHere(boolean status) {
+    public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
 }

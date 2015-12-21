@@ -1,5 +1,8 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,16 +12,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,10 +29,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
+import com.timappweb.timapp.adapters.FilledTagsAdapter;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.TagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
+import com.timappweb.timapp.fragments.AddPostMainFragment;
+import com.timappweb.timapp.fragments.AddPostSearchFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -40,8 +45,6 @@ import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
-import com.timappweb.timapp.views.SelectedTagRecyclerView;
-import com.timappweb.timapp.views.SuggestedTagRecyclerView;
 
 
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ import java.util.List;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class AddSpotActivity extends BaseActivity {
+public class AddPostActivity extends BaseActivity {
 
     private static final String     TAG = "AddSpot";
 
@@ -59,15 +62,21 @@ public class AddSpotActivity extends BaseActivity {
     private OnFragmentInteractionListener mListener;
     private String                      comment = null;
     private Boolean                     dummyLocation = true;
+    private Boolean                     isActivityCreated = false;
     private String                      mAddressOutput;
+    private AddPostMainFragment         fragmentMain;
+    private AddPostSearchFragment       fragmentSearch;
+
 
     // Views
     private TextView                    tvUserLocation;
     private ProgressBar                 progressBarLocation;
     private static ProgressDialog       progressDialog = null;
-    private SearchView                  searchView = null;
-
     private TextView                    mTvComment = null;
+    private View                        fragmentMainView;
+    private View                        fragmentSearchView;
+    private LinearLayout                addTagsLayout;
+    private FragmentManager             fragmentManager =   getFragmentManager();
 
     // Location
     private MyLocationProvider          locationProvider;
@@ -82,8 +91,22 @@ public class AddSpotActivity extends BaseActivity {
         Log.d(TAG, "Creating add spot activity");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_spot);
+        setContentView(R.layout.activity_add_post);
         this.initToolbar(true);
+
+        //Initialize variables
+        fragmentMainView = findViewById(R.id.fragment_main);
+        fragmentSearchView = findViewById(R.id.fragment_search);
+        addTagsLayout = (LinearLayout) findViewById(R.id.add_tags_layout);
+        fragmentMain = (AddPostMainFragment) fragmentManager.findFragmentById(R.id.fragment_main);
+        fragmentSearch = (AddPostSearchFragment) fragmentManager.findFragmentById(R.id.fragment_search);
+
+        // -----------------------------------------------------------------------------------------
+        initLocationListener();
+        initLocationProvider();
+        initSelectedTagsAdapter();
+        hideSelectedTagsRV();
+        displayMainFragment();
 
         // -----------------------------------------------------------------------------------------
         // Init variables
@@ -95,9 +118,55 @@ public class AddSpotActivity extends BaseActivity {
         progressBarLocation = (ProgressBar) findViewById(R.id.progress_bar_location);
         mTvComment = (TextView) findViewById(R.id.comment_textview);
 
-        // -----------------------------------------------------------------------------------------
-        initLocationListener();
-        initLocationProvider();
+        isActivityCreated = true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (isSearchFragmentDisplayed()){
+            menu.findItem(R.id.action_add_tags).setVisible(false);
+            menu.findItem(R.id.action_search).setVisible(true);
+            menu.findItem(R.id.action_validate).setVisible(true);
+        }
+        else {
+            menu.findItem(R.id.action_add_tags).setVisible(true);
+            menu.findItem(R.id.action_search).setVisible(false);
+            menu.findItem(R.id.action_validate).setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isSearchFragmentDisplayed()){
+            //TODO : vider la horizontale list view
+            displayMainFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void displaySearchFragment() {
+        fragmentMainView.setVisibility(View.GONE);
+        fragmentSearchView.setVisibility(View.VISIBLE);
+        invalidateOptionsMenu();
+        //display the searchview expanded in the action bar
+        fragmentSearch.getSearchItem().expandActionView();
+    }
+
+    public void displayMainFragment() {
+        fragmentMainView.setVisibility(View.VISIBLE);
+        fragmentSearchView.setVisibility(View.GONE);
+        invalidateOptionsMenu();
+    }
+
+    public boolean isSearchFragmentDisplayed() {
+        if (fragmentSearchView.getVisibility()==View.VISIBLE){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void initLocationListener() {
@@ -109,6 +178,20 @@ public class AddSpotActivity extends BaseActivity {
                 startIntentServiceReverseGeocoding(location);
             }
         };
+    }
+
+    private void initSelectedTagsAdapter() {
+        // Selected tags
+        FilledTagsAdapter tagsAdapter= new FilledTagsAdapter(this, new ArrayList<Tag>());
+        fragmentMain.getSelectedTagsRV().setAdapter(tagsAdapter);
+    }
+
+    private void hideSelectedTagsRV() {
+        fragmentMain.getSelectedTagsRV().setVisibility(View.GONE);
+    }
+
+    public void displaySelectedTagsRV() {
+        fragmentMain.getSelectedTagsRV().setVisibility(View.VISIBLE);
     }
 
     private void initLocationProvider() {
@@ -130,47 +213,6 @@ public class AddSpotActivity extends BaseActivity {
     protected void onStop() {
         locationProvider.disconnect();
         super.onStop();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //// Search View
-    ////////////////////////////////////////////////////////////////////////////////
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_spot, menu);
-
-        //Set search item
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            if (searchView != null){
-
-                SuggestedTagRecyclerView suggestedTagRecyclerView = (SuggestedTagRecyclerView) findViewById(R.id.rv_suggested_tags_add_spot);
-                SelectedTagRecyclerView selectedTagsRecyclerView = (SelectedTagRecyclerView) findViewById(R.id.rv_selected_tags_add_spot);
-                searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                        searchView, suggestedTagRecyclerView, selectedTagsRecyclerView);
-            }
-        }
-
-
-        return true;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //// UP NAVIGATION - Action Bar
-    ////////////////////////////////////////////////////////////////////////////////
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void onAddCommentClick(View view) {
@@ -214,7 +256,14 @@ public class AddSpotActivity extends BaseActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
+    }
 
+    public AddPostMainFragment getFragmentMain() {
+        return fragmentMain;
+    }
+
+    public FilledTagsAdapter getFilledTagsAdapter() {
+        return (FilledTagsAdapter) fragmentMain.getSelectedTagsRV().getAdapter();
     }
 
     /**
@@ -232,24 +281,16 @@ public class AddSpotActivity extends BaseActivity {
         public void onFragmentInteraction(Uri uri);
     }
 
-    /////////GENERATE DATA/////////////////////
-
     public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
         data.add(new Tag("test", 0));
         data.add(new Tag("test2", 0));
         return data;
     }
-    //Set onClickListener
-    public void SubmitClickListener(View v) {
-        //progressDialog.show();
-        Log.d(TAG, "Clicked on submit spot");
-        submitNewPost();
-    }
 
-    private String getTagsToString(){
-        DisplayedTagsAdapter adapter = (DisplayedTagsAdapter)
-                searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
+    public String getTagsToString(){
+        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter)
+                fragmentSearch.getSearchAndSelectTagManager().getSelectedTagsRecyclerView().getAdapter();
         String inputTags = "";
         List<Tag> selectedTags = adapter.getData();
 
@@ -257,6 +298,10 @@ public class AddSpotActivity extends BaseActivity {
             inputTags += tag.name + ",";
         }
         return inputTags;
+    }
+
+    public void hideAddTagsLayout() {
+        addTagsLayout.setVisibility(View.GONE);
     }
 
     public void submitNewPost(){
@@ -340,7 +385,7 @@ public class AddSpotActivity extends BaseActivity {
             // Display the address string
             // or an error comment sent from the intent service.
             mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            displayAddressOutput();
+            //displayAddressOutput();
 
             // Show a toast comment if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {

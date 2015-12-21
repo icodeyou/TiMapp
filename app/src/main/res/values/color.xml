@@ -11,6 +11,8 @@
     <color name="suggested_tag_text_color">@color/Halfblack</color>
     <color name="list_tags_color">@color/Halfblack</color>
     <color name="list_post_color">@color/Halfblack</color>
+    <color name="item_friend_here">@color/LightGreen</color>
+    <color name="item_friend_invited">@color/LightCyan</color>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->

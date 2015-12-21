@@ -35,8 +35,8 @@
             android:textColor="@color/list_post_color"/>
     </LinearLayout>
 
-    <com.timappweb.timapp.views.SelectedTagRecyclerView
-        android:id="@+id/rv_displayed_tags"
+    <com.timappweb.timapp.views.HorizontalRecyclerView
+        android:id="@+id/rv_horizontal_tags"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_rv_displayed_tags"/>
 

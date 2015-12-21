@@ -3,7 +3,7 @@ package com.timappweb.timapp.listeners;
 import android.support.v7.widget.SearchView;
 
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
-import com.timappweb.timapp.adapters.DisplayedTagsAdapter;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 
 /**
  * Created by stephane on 12/15/2015.
@@ -19,7 +19,7 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        DisplayedTagsAdapter adapter = (DisplayedTagsAdapter) manager.getSelectedTagsRecyclerView().getAdapter();
+        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter) manager.getSelectedTagsRecyclerView().getAdapter();
         adapter.addData(query);
         manager.getSelectedTagsRecyclerView().scrollToEnd();
         manager.getSearchView().setIconified(true);
@@ -31,5 +31,4 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
         manager.suggestTag(newText);
         return false;
     }
-
 }

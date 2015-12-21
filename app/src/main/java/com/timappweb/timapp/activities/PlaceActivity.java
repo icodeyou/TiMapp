@@ -80,6 +80,7 @@ public class PlaceActivity extends BaseActivity{
         return tags;
     }
 
+    //essayer de le faire programmatiquement
     public void onPeopleClick(View view) {
         Intent intent = new Intent(this,PlaceFriendsActivity.class);
         startActivity(intent);
