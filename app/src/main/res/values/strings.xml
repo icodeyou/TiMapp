@@ -24,7 +24,7 @@
     <string name="country">France</string>-->
 
     <!-- Add Post Activity -->
-    <string name="add_comment_title">Add a comment</string>
+    <string name="add_comment_title">Add a comment ...</string>
     <string name="add_comment_message">Type here</string>
 
     <string name="message_broadcast">broadcast</string>

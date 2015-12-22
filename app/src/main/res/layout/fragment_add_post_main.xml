@@ -9,8 +9,42 @@
     android:id="@+id/linearLayout">
 
     <!-- ******************************************************************* -->
+    <!-- Edit Comment Layout -->
+    <LinearLayout
+        android:id="@+id/comment_edittext_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:text="Type a comment"
+            android:textSize="20dp"/>
+
+        <com.timappweb.timapp.views.CommentEditText
+            android:id="@+id/comment_edit_text"
+            android:layout_width="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/comment_validate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="add comment"
+            android:capitalize="characters"
+            android:layout_gravity="center"
+            android:textSize="30dp"
+            android:background="@drawable/post_button"/>
+    </LinearLayout>
+
+    <!-- ******************************************************************* -->
     <!-- ALONE + GROUP : Group or Alone -->
     <LinearLayout
+        android:id="@+id/alone_and_group_buttons"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_rv_displayed_tags"
         android:orientation="horizontal">
@@ -62,29 +96,16 @@
 
     <!-- ******************************************************************* -->
     <!-- GROUP : Getting your location IF LOCATION LOADED AND NO GROUP -->
-    <LinearLayout
+
+    <EditText
         android:id="@+id/top_layout_without_group"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_post_field_group"
-        android:orientation="horizontal"
+        android:singleLine="true"
         android:gravity="center"
-        android:background="@drawable/border">
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="25dp"
-            android:text="Title :"/>
-        <EditText
-            android:id="@+id/post_tittle"
-            android:layout_weight="3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:text="test M. Michel"/>
-    </LinearLayout>
+        android:textSize="30dp"
+        android:hint="Title"
+        android:background="@drawable/border"/>
 
     <!-- ******************************************************************* -->
     <!-- GROUP : Getting your location IF LOCATION LOADED AND GROUPS EXIST -->
@@ -112,11 +133,14 @@
     <LinearLayout
         android:id="@+id/add_tags_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/LightSkyBlue">
         <TextView
+            android:id="@+id/add_tags_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/addpost_if_no_tag"
@@ -127,8 +151,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@drawable/button_add_tags">
+            android:gravity="center">
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -148,7 +171,6 @@
 
     <!-- ******************************************************************* -->
     <!-- GROUP: Selected tags -->
-    <!-- TODO: donner des noms plus généraux pour la RecyclerView (HorizontalRecyclerView et FillRecyclerView) -->
     <!-- TODO: cas ici présent : FillRecyclerView avec un paramètre type="black" (=text black et contour black) ou type="grey" (=text grey et sans contour)-->
     <com.timappweb.timapp.views.FilledRecyclerView
         android:id="@+id/rv_main_selected_tags"
@@ -167,46 +189,43 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="bottom">
-        <LinearLayout
-            android:id="@+id/anonymous_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Make it anonymous" />
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-        </LinearLayout>
         <TextView
             android:id="@+id/comment_textview"
-            android:layout_toLeftOf="@+id/anonymous_button"
-            android:layout_toStartOf="@+id/anonymous_button"
+            android:layout_toLeftOf="@+id/anonymous_layout"
+            android:layout_toStartOf="@+id/anonymous_layout"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="150dp"
+            android:minHeight="80dp"
+            android:maxHeight="300dp"
             android:padding="5dp"
             android:gravity="center"
             android:textSize="15dp"
             android:hint="@string/add_comment_title"
             android:clickable="true"
             android:background="@drawable/border_comment"/>
-        <Button
-            android:id="@+id/button_submit_post"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:textAllCaps="true"
-            android:text="post"
-            android:textColor="@color/Black"
-            android:textSize="22dp"
-            android:background="@drawable/post_button"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/anonymous_layout"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Anonymous"/>
+
+            <Button
+                android:id="@+id/button_submit_post"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:textAllCaps="true"
+                android:text="post"
+                android:textColor="@color/Black"
+                android:textSize="22dp"
+                android:background="@drawable/post_button"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

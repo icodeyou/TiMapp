@@ -84,7 +84,7 @@
         <activity
             android:name=".activities.AddPostActivity"
             android:label="@string/title_activity_add_spot"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
             android:parentActivityName=".activities.DrawerActivity">
             <!-- Make activity searchable -->
             <intent-filter>

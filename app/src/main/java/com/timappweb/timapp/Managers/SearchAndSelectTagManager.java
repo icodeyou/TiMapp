@@ -22,9 +22,6 @@ import java.util.List;
 
 import retrofit.client.Response;
 
-/**
- * Created by stephane on 12/15/2015.
- */
 public class SearchAndSelectTagManager {
 
     private static final String TAG = "SearchAndSelectTag";

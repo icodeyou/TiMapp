@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,13 +50,6 @@ public class AddPostSearchFragment extends Fragment {
         selectedTagsRV = (HorizontalRecyclerView) view.findViewById(R.id.rv_search_selected_tags);
         suggestedTagsRV = (FilledRecyclerView) view.findViewById(R.id.rv_search_suggested_tags);
 
-        selectedTagsRV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addPostActivity.displaySearchFragment();
-            }
-        });
-
         return view;
     }
 
@@ -92,7 +86,6 @@ public class AddPostSearchFragment extends Fragment {
         if(addPostActivity.isSearchFragmentDisplayed()) {
             //Always display the searchview expanded in the action bar
             searchItem.expandActionView();
-
         }
 
         //Manage events when there are expand/collapse actions on SearchView
@@ -131,9 +124,12 @@ public class AddPostSearchFragment extends Fragment {
         List<Tag> newData = tagsAdapterSearch.getData();
         addPostActivity.getFilledTagsAdapter().setData(newData);
 
-        if(newData!=null) {
-            addPostActivity.hideAddTagsLayout();
-            addPostActivity.displaySelectedTagsRV();
+        if(newData.size()!=0) {
+            addPostActivity.getFragmentMain().hideAddTagsLayout();
+            addPostActivity.getFragmentMain().displaySelectedTagsRV();
+        } else {
+            addPostActivity.getFragmentMain().displayAddTagsLayout();
+            addPostActivity.getFragmentMain().hideSelectedTagsRV();
         }
     }
 
@@ -143,5 +139,9 @@ public class AddPostSearchFragment extends Fragment {
 
     public SearchAndSelectTagManager getSearchAndSelectTagManager() {
         return searchAndSelectTagManager;
+    }
+
+    public RecyclerView getSelectedTagsRV() {
+        return selectedTagsRV;
     }
 }

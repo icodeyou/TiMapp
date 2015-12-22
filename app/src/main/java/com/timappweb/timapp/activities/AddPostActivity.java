@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -62,7 +63,7 @@ public class AddPostActivity extends BaseActivity {
     private OnFragmentInteractionListener mListener;
     private String                      comment = null;
     private Boolean                     dummyLocation = true;
-    private Boolean                     isActivityCreated = false;
+    private Boolean                     noTags = true;
     private String                      mAddressOutput;
     private AddPostMainFragment         fragmentMain;
     private AddPostSearchFragment       fragmentSearch;
@@ -97,7 +98,6 @@ public class AddPostActivity extends BaseActivity {
         //Initialize variables
         fragmentMainView = findViewById(R.id.fragment_main);
         fragmentSearchView = findViewById(R.id.fragment_search);
-        addTagsLayout = (LinearLayout) findViewById(R.id.add_tags_layout);
         fragmentMain = (AddPostMainFragment) fragmentManager.findFragmentById(R.id.fragment_main);
         fragmentSearch = (AddPostSearchFragment) fragmentManager.findFragmentById(R.id.fragment_search);
 
@@ -105,7 +105,6 @@ public class AddPostActivity extends BaseActivity {
         initLocationListener();
         initLocationProvider();
         initSelectedTagsAdapter();
-        hideSelectedTagsRV();
         displayMainFragment();
 
         // -----------------------------------------------------------------------------------------
@@ -117,19 +116,17 @@ public class AddPostActivity extends BaseActivity {
         tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
         progressBarLocation = (ProgressBar) findViewById(R.id.progress_bar_location);
         mTvComment = (TextView) findViewById(R.id.comment_textview);
-
-        isActivityCreated = true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (isSearchFragmentDisplayed()){
-            menu.findItem(R.id.action_add_tags).setVisible(false);
+            //show Search Menu
             menu.findItem(R.id.action_search).setVisible(true);
             menu.findItem(R.id.action_validate).setVisible(true);
         }
         else {
-            menu.findItem(R.id.action_add_tags).setVisible(true);
+            //show Main menu
             menu.findItem(R.id.action_search).setVisible(false);
             menu.findItem(R.id.action_validate).setVisible(false);
         }
@@ -153,6 +150,13 @@ public class AddPostActivity extends BaseActivity {
         invalidateOptionsMenu();
         //display the searchview expanded in the action bar
         fragmentSearch.getSearchItem().expandActionView();
+
+        //get Tags and add them in the horizontal recycler view
+        List<Tag> data = getFilledTagsAdapter().getData();
+        HorizontalTagsAdapter horizontalSelectedTagsAdapter = (HorizontalTagsAdapter) fragmentSearch.getSelectedTagsRV().getAdapter();
+        horizontalSelectedTagsAdapter.setData(data);
+        horizontalSelectedTagsAdapter.notifyDataSetChanged();
+
     }
 
     public void displayMainFragment() {
@@ -186,14 +190,6 @@ public class AddPostActivity extends BaseActivity {
         fragmentMain.getSelectedTagsRV().setAdapter(tagsAdapter);
     }
 
-    private void hideSelectedTagsRV() {
-        fragmentMain.getSelectedTagsRV().setVisibility(View.GONE);
-    }
-
-    public void displaySelectedTagsRV() {
-        fragmentMain.getSelectedTagsRV().setVisibility(View.VISIBLE);
-    }
-
     private void initLocationProvider() {
         locationProvider = new MyLocationProvider(this, mLocationListener);
 
@@ -213,49 +209,6 @@ public class AddPostActivity extends BaseActivity {
     protected void onStop() {
         locationProvider.disconnect();
         super.onStop();
-    }
-
-    public void onAddCommentClick(View view) {
-        LayoutInflater inflater = getLayoutInflater();
-        // Create
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        //Create EditText and place it in AlertDialog
-        final EditText comment_dialog_text = new EditText(this);
-        if (comment!=null) { comment_dialog_text.setText(comment); };
-        builder.setView(comment_dialog_text);
-
-        //Place cursor at the end of the EditText box
-        comment_dialog_text.setSelection(comment_dialog_text.getText().length());
-
-        //Set title and buttons
-        builder.setTitle(R.string.add_comment_title)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(comment_dialog_text.getWindowToken(), 0);
-                        comment = comment_dialog_text.getText().toString();
-                        //Set comment in the textview
-                        TextView comment_textview = (TextView) findViewById(R.id.comment_textview);
-                        Log.i(TAG, "new comment : " + comment);
-                        comment_textview.setText(comment);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(comment_dialog_text.getWindowToken(), 0);
-                    }
-                });
-
-        //Create Alertdialog
-        AlertDialog comment_dialog = builder.create();
-
-        //show Alertdialog
-        comment_dialog.show();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
     }
 
     public AddPostMainFragment getFragmentMain() {
@@ -300,10 +253,6 @@ public class AddPostActivity extends BaseActivity {
         return inputTags;
     }
 
-    public void hideAddTagsLayout() {
-        addTagsLayout.setVisibility(View.GONE);
-    }
-
     public void submitNewPost(){
 
         Location location = null;
@@ -339,12 +288,13 @@ public class AddPostActivity extends BaseActivity {
         // - Build the spot
         final Post post = new Post(userLatLng);
         post.tag_string = getTagsToString();
-        post.comment = (String) mTvComment.getText();
+        TextView commentTV = fragmentMain.getCommentTV();
+        post.comment = (String) commentTV.getText();
         post.latitude = location.getLatitude();
         post.longitude = location.getLongitude();
 
         // Validating user input
-        if (!post.validateForSubmit(mTvComment)){
+        if (!post.validateForSubmit(commentTV)){
             return;
         }
         Log.d(TAG, "Building spot: " + post);
