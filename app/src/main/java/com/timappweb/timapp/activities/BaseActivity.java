@@ -1,21 +1,13 @@
 package com.timappweb.timapp.activities;
-//test youpi j'ai modifié baseactivity youpi hahahahahah nan mais trop carrément quoi hourah
-
-//TEST NUMERO 2 ATTENTION !!!!!
-import android.app.Dialog;
 import android.content.Intent;
-import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Window;
 
 import com.timappweb.timapp.R;
 
 /**
- * Created by stephane on 11/1/2015.
- *
  * All class must inherit from BaseActivity
  */
 public class BaseActivity extends AppCompatActivity {
@@ -28,9 +20,12 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolbar(boolean homeUpEnabled){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(toolbar==null) {
+            toolbar = (Toolbar) findViewById(R.id.toolbar_transparent);
+        }
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(homeUpEnabled);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 /*
     @Override

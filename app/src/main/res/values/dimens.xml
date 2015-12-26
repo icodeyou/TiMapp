@@ -14,4 +14,5 @@
     <dimen name="height_item_friend_invited">50dp</dimen>
     <dimen name="height_rv_displayed_tags">50dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
+    <dimen name="height_place_box">180dp</dimen>
 </resources>

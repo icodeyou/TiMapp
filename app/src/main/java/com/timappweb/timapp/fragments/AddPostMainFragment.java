@@ -22,14 +22,19 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPostActivity;
+import com.timappweb.timapp.adapters.FilledTagsAdapter;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddPostMainFragment extends Fragment {
 
     private View view;
     private Boolean         GroupMode;
     private LinearLayout    top_layout_if_not_loaded;
-    private EditText    top_layout_if_no_group;
+    private EditText        top_layout_if_no_group;
     private LinearLayout    top_layout_with_group;
     private LinearLayout    addTagsLayout;
     private LinearLayout    tabsLayout;
@@ -45,7 +50,7 @@ public class AddPostMainFragment extends Fragment {
     private LinearLayout    commentLayout;
     private TextView        commentTV;
     private TextView        addTagsTV;
-
+    private InputMethodManager    imm;
     private FragmentManager fragmentManager;
 
     @Override
@@ -56,8 +61,11 @@ public class AddPostMainFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        //Initialize variables
+        //get Context
         addPostActivity = (AddPostActivity) getActivity();
+
+        //initialize variables
+        imm = (InputMethodManager) addPostActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         fragmentManager =   getFragmentManager();
         top_layout_if_not_loaded = (LinearLayout) view.findViewById(R.id.top_layout_if_not_loaded);
         top_layout_if_no_group = (EditText) view.findViewById(R.id.top_layout_without_group);
@@ -76,7 +84,6 @@ public class AddPostMainFragment extends Fragment {
         commentET = (EditText) view.findViewById(R.id.comment_edit_text);
 
         setVisibilites();
-        hideSelectedTagsRV();
 
         //set listeners
         addTagsLayout.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +103,6 @@ public class AddPostMainFragment extends Fragment {
             public void onClick(View v) {
                 onAloneClick();
                 //hide keyboard if displayed
-                InputMethodManager imm = (InputMethodManager) addPostActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(top_layout_if_no_group.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
@@ -188,7 +194,9 @@ public class AddPostMainFragment extends Fragment {
     }
 
     public void displayEditComment() {
+        //show keyboard
         commentLayout.requestFocus();
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         commentET.setText(commentTV.getText());
 
@@ -207,6 +215,10 @@ public class AddPostMainFragment extends Fragment {
     }
 
     public void hideEditComment() {
+        //hide keyboard
+        commentLayout.requestFocus();
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
         commentLayout.setVisibility(View.GONE);
 
         tabsLayout.setVisibility(View.VISIBLE);
@@ -239,11 +251,11 @@ public class AddPostMainFragment extends Fragment {
     }
 
     public void hideSelectedTagsRV() {
-        getSelectedTagsRV().setVisibility(View.GONE);
+        selectedTagsRV.setVisibility(View.GONE);
     }
 
     public void displaySelectedTagsRV() {
-        getSelectedTagsRV().setVisibility(View.VISIBLE);
+        selectedTagsRV.setVisibility(View.VISIBLE);
     }
 
     public boolean isCommentEditDisplayed() {
@@ -254,19 +266,17 @@ public class AddPostMainFragment extends Fragment {
         }
     }
 
-    public void saveComment()  {
-
-    }
-
     public boolean isTags() {
-        return getSelectedTagsRV().getAdapter().getItemCount() != 0;
+        return selectedTagsRV.getAdapter().getItemCount() != 0;
     }
 
-    public RecyclerView getSelectedTagsRV() {
-        return selectedTagsRV;
-    }
+    //getters
 
     public TextView getCommentTV() {
         return commentTV;
+    }
+
+    public FilledTagsAdapter getSelectedTagsAdapter() {
+        return (FilledTagsAdapter) selectedTagsRV.getAdapter();
     }
 }

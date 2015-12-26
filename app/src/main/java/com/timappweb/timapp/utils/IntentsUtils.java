@@ -3,18 +3,15 @@ package com.timappweb.timapp.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.activities.ExploreActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.fragments.ExploreMapFragment;
 
 public class IntentsUtils {
 
@@ -30,7 +27,7 @@ public class IntentsUtils {
     }
 
     public static void home(Activity activity) {
-        Intent intent = new Intent(activity, DrawerActivity.class);
+        Intent intent = new Intent(activity, ExploreActivity.class);
         activity.startActivity(intent);
     }
 

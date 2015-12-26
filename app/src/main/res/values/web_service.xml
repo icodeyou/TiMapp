@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="ws_endpoint" >http://82.122.64.111:8083</string>
+    <string name="ws_endpoint" >http://82.122.88.71:8083</string>
     <!-- <string name="ws_endpoint" >http://192.168.1.25:8083</string>-->
    <string name="feedback_webservice_add_spot">Your post has been created ! Thanks and enjoy :)</string>
 

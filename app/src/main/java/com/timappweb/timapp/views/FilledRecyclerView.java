@@ -10,9 +10,6 @@ import com.timappweb.timapp.listeners.MyLinearLayoutManager;
 
 import java.util.LinkedList;
 
-/**
- * Created by stephane on 12/15/2015.
- */
 public class FilledRecyclerView extends TagRecyclerView{
 
     private static final String TAG = "SuggestedTagRecycler";

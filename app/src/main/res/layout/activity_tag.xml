@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TagActivity"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar_transparent">
+
+        <!-- TITLE -->
+        <!-- **********************************************************************-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose "
+                android:textSize="30dp"
+                android:layout_gravity="center_horizontal"/>
+            <TextView
+                android:id="@+id/num_left_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textSize="30dp"
+                android:layout_gravity="center_horizontal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" tags"
+                android:textSize="30dp"
+                android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+
+        <!-- SUGGESTED TAGS -->
+        <!-- **********************************************************************-->
+        <com.timappweb.timapp.views.FilledRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <!-- SELECETED TAGS -->
+        <!-- **********************************************************************-->
+        <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_rv_displayed_tags"
+            android:visibility="gone" />
+
+        <!-- SEARCH VIEW -->
+        <!-- **********************************************************************-->
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:queryHint="Type a tag"/>
+
+
+        <!-- PLACE -->
+        <!-- **********************************************************************-->
+        <include layout="@layout/adapter_place" />
+    </LinearLayout>
+
+    <include android:id="@+id/toolbar_transparent"
+        layout="@layout/toolbar_transparent" />
+
+</RelativeLayout>

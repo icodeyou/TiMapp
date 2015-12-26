@@ -2,13 +2,11 @@ package com.timappweb.timapp.fragments;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,11 +17,12 @@ import android.view.ViewGroup;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPostActivity;
-import com.timappweb.timapp.adapters.TagsAdapter;
+import com.timappweb.timapp.adapters.FilledTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.views.FilledRecyclerView;
 import com.timappweb.timapp.views.HorizontalRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddPostSearchFragment extends Fragment {
@@ -35,6 +34,7 @@ public class AddPostSearchFragment extends Fragment {
     private Menu searchMenu;
     private MenuItem searchItem;
     private FragmentManager fragmentManager;
+    private List<Tag>  initialData;
     private SearchAndSelectTagManager searchAndSelectTagManager;
 
     @Override
@@ -62,17 +62,13 @@ public class AddPostSearchFragment extends Fragment {
         setSearchview();
 
         //Set the manager for inputs and suggestions of tags
-        searchAndSelectTagManager = new SearchAndSelectTagManager(getActivity(),
+        searchAndSelectTagManager = new SearchAndSelectTagManager(addPostActivity,
                 searchView, suggestedTagsRV, selectedTagsRV);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(addPostActivity);
-                return true;
             case R.id.action_validate:
                 validateAndChangeFragment();
         }
@@ -92,13 +88,15 @@ public class AddPostSearchFragment extends Fragment {
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
+                return true; // to expand the search view
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                setTagsInMainFragment(initialData);
                 addPostActivity.displayMainFragment();
-                return false;
+                return false; // to prevend the search view to collapse
+                // so the main fragment is directly shown when back button is pressed
             }
         });
 
@@ -115,14 +113,14 @@ public class AddPostSearchFragment extends Fragment {
         searchView.setQueryHint(addPostActivity.getString(R.string.hint_searchview_add_post));
     }
 
+    public void setInitialData(List<Tag> tags) {
+        initialData = tags;
+    }
+
     private void validateAndChangeFragment() {
-
-        addPostActivity.displayMainFragment();
-
-        //add new tags to the adapter
-        TagsAdapter tagsAdapterSearch = selectedTagsRV.getAdapter();
-        List<Tag> newData = tagsAdapterSearch.getData();
-        addPostActivity.getFilledTagsAdapter().setData(newData);
+        //add new tags in main Recycler View
+        List<Tag> newData = selectedTagsRV.getAdapter().getData();
+        setTagsInMainFragment(newData);
 
         if(newData.size()!=0) {
             addPostActivity.getFragmentMain().hideAddTagsLayout();
@@ -131,6 +129,14 @@ public class AddPostSearchFragment extends Fragment {
             addPostActivity.getFragmentMain().displayAddTagsLayout();
             addPostActivity.getFragmentMain().hideSelectedTagsRV();
         }
+
+        addPostActivity.displayMainFragment();
+    }
+
+    public void setTagsInMainFragment(List<Tag> newData) {
+        FilledTagsAdapter filledTagsAdapter = addPostActivity.getFragmentMain().getSelectedTagsAdapter();
+        filledTagsAdapter.setData(newData);
+        filledTagsAdapter.notifyDataSetChanged();
     }
 
     public MenuItem getSearchItem() {

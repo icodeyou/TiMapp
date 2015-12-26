@@ -1,20 +1,18 @@
 package com.timappweb.timapp.activities;
 
+
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,132 +38,73 @@ import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class AddPostActivity extends BaseActivity {
+public class LocateActivity extends BaseActivity{
 
-    private static final String     TAG = "AddSpot";
+    private String TAG = "LocateActivity";
 
     // ---------------------------------------------------------------------------------------------
-    private OnFragmentInteractionListener mListener;
     private String                      comment = null;
     private Boolean                     dummyLocation = true;
     private Boolean                     noTags = true;
     private String                      mAddressOutput;
-    private AddPostMainFragment         fragmentMain;
-    private AddPostSearchFragment       fragmentSearch;
 
 
     // Views
-    private TextView                    tvUserLocation;
-    private ProgressBar                 progressBarLocation;
-    private static ProgressDialog       progressDialog = null;
-    private TextView                    mTvComment = null;
-    private View                        fragmentMainView;
-    private View                        fragmentSearchView;
-    private LinearLayout                addTagsLayout;
-    private FragmentManager             fragmentManager =   getFragmentManager();
+    private TextView tvUserLocation;
+    private ProgressBar progressBarLocation;
+    private static ProgressDialog progressDialog = null;
+    private LinearLayout addTagsLayout;
+    private FragmentManager fragmentManager =   getFragmentManager();
 
     // Location
     private MyLocationProvider          locationProvider;
     private LocationListener            mLocationListener;
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
-    private SearchAndSelectTagManager   searchAndSelectTagManager;
+    private SearchAndSelectTagManager searchAndSelectTagManager;
 
-    // ---------------------------------------------------------------------------------------------
 
+    // ----------------------------------------------------------------------------------------------
+    //OVERRIDE METHODS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "Creating add spot activity");
-
+        Log.d(TAG, "Creating LocateActivity");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_post);
+        setContentView(R.layout.activity_locate);
         this.initToolbar(true);
 
-        //Initialize variables
-        fragmentMainView = findViewById(R.id.fragment_main);
-        fragmentSearchView = findViewById(R.id.fragment_search);
-        fragmentMain = (AddPostMainFragment) fragmentManager.findFragmentById(R.id.fragment_main);
-        fragmentSearch = (AddPostSearchFragment) fragmentManager.findFragmentById(R.id.fragment_search);
-
-        // -----------------------------------------------------------------------------------------
         initLocationListener();
         initLocationProvider();
-        displayMainFragment();
 
         // -----------------------------------------------------------------------------------------
         // Init variables
         mResultReceiver = new AddressResultReceiver(new Handler());
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getResources().getString(R.string.please_wait));
-
-        tvUserLocation = (TextView) findViewById(R.id.tv_user_location);
-        progressBarLocation = (ProgressBar) findViewById(R.id.progress_bar_location);
-        mTvComment = (TextView) findViewById(R.id.comment_textview);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if (isSearchFragmentDisplayed()){
-            //show Search Menu
-            menu.findItem(R.id.action_search).setVisible(true);
-            menu.findItem(R.id.action_validate).setVisible(true);
-        }
-        else {
-            //show Main menu
-            menu.findItem(R.id.action_search).setVisible(false);
-            menu.findItem(R.id.action_validate).setVisible(false);
-        }
-
-        return true;
+    protected void onStart() {
+        super.onStart();
+        locationProvider.connect();
     }
 
     @Override
-    public void onBackPressed() {
-        if (isSearchFragmentDisplayed()){
-            //TODO : vider la horizontale list view
-            displayMainFragment();
-        } else {
-            super.onBackPressed();
-        }
+    protected void onStop() {
+        locationProvider.disconnect();
+        super.onStop();
     }
 
-    public void displaySearchFragment() {
-        fragmentMainView.setVisibility(View.GONE);
-        fragmentSearchView.setVisibility(View.VISIBLE);
-        invalidateOptionsMenu();
-        //display the searchview expanded in the action bar
-        fragmentSearch.getSearchItem().expandActionView();
-
-        //get Tags and add them in the horizontal recycler view
-        List<Tag> data = fragmentMain.getSelectedTagsAdapter().getData();
-        HorizontalTagsAdapter horizontalSelectedTagsAdapter = (HorizontalTagsAdapter) fragmentSearch.getSelectedTagsRV().getAdapter();
-        horizontalSelectedTagsAdapter.setData(data);
-        horizontalSelectedTagsAdapter.notifyDataSetChanged();
-
-        //inform fragmentSearch what is the current data in fragmentMain
-        fragmentSearch.setInitialData(data);
-    }
-
-    public void displayMainFragment() {
-        fragmentMainView.setVisibility(View.VISIBLE);
-        fragmentSearchView.setVisibility(View.GONE);
-        invalidateOptionsMenu();
-    }
-
-    public boolean isSearchFragmentDisplayed() {
-        if (fragmentSearchView.getVisibility()==View.VISIBLE){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------
+    //PRIVATE METHODS
     private void initLocationListener() {
         mLocationListener = new LocationListener() {
             @Override
@@ -185,55 +124,12 @@ public class AddPostActivity extends BaseActivity {
         }
     }
 
+    private void displayAddressOutput() {
+        progressBarLocation.setVisibility(View.INVISIBLE);
+        tvUserLocation.setText(this.mAddressOutput);
+        // TODO update size of tvUserLoaction to match parent size
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        locationProvider.connect();
-    }
-    @Override
-    protected void onStop() {
-        locationProvider.disconnect();
-        super.onStop();
-    }
-
-    public AddPostMainFragment getFragmentMain() {
-        return fragmentMain;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
-    public List<Tag> generateDummyData() {
-        List<Tag> data = new ArrayList<>();
-        data.add(new Tag("test", 0));
-        data.add(new Tag("test2", 0));
-        return data;
-    }
-
-    public String getTagsToString(){
-        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter)
-                fragmentSearch.getSearchAndSelectTagManager().getSelectedTagsRecyclerView().getAdapter();
-        String inputTags = "";
-        List<Tag> selectedTags = adapter.getData();
-
-        for (Tag tag: selectedTags){
-            inputTags += tag.name + ",";
-        }
-        return inputTags;
+        //tvUserLocation.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     public void submitNewPost(){
@@ -271,8 +167,6 @@ public class AddPostActivity extends BaseActivity {
         // - Build the spot
         final Post post = new Post(userLatLng);
         post.tag_string = getTagsToString();
-        TextView commentTV = fragmentMain.getCommentTV();
-        post.comment = (String) commentTV.getText();
         post.latitude = location.getLatitude();
         post.longitude = location.getLongitude();
 
@@ -288,6 +182,12 @@ public class AddPostActivity extends BaseActivity {
         RestClient.service().addPost(post, new AddPostCallback(this, post));
     }
 
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------
+    //PROTECTED METHODS
     protected void startIntentServiceReverseGeocoding(Location location) {
         Log.d(TAG, "Starting IntentService to get use address from location");
         Intent intent = new Intent(this, FetchAddressIntentService.class);
@@ -296,24 +196,15 @@ public class AddPostActivity extends BaseActivity {
         startService(intent);
     }
 
-    private void displayAddressOutput() {
-        progressBarLocation.setVisibility(View.INVISIBLE);
-        tvUserLocation.setText(this.mAddressOutput);
-        // TODO update size of tvUserLoaction to match parent size
-
-        //tvUserLocation.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    public void testClick(View view) {
+        Intent intent = new Intent(this,TagActivity.class);
+        startActivity(intent);
     }
 
-
-
-
-
-
-
-
-
-
-
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // INNER CLASSES
 
@@ -344,7 +235,7 @@ public class AddPostActivity extends BaseActivity {
         private final Post post;
         // TODO get post from server instead. (in case tags are in a black list)
 
-        AddPostCallback(Context context,Post post){
+        AddPostCallback(Context context, Post post) {
             super(context);
             this.post = post;
         }
@@ -353,13 +244,12 @@ public class AddPostActivity extends BaseActivity {
         public void success(RestFeedback restFeedback, Response response) {
             progressDialog.hide();
 
-            if (restFeedback.success && restFeedback.data.containsKey("id")){
+            if (restFeedback.success && restFeedback.data.containsKey("id")) {
                 int id = Integer.valueOf(restFeedback.data.get("id"));
                 Log.i(TAG, "Post has been saved. Id is : " + id);
                 //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
                 IntentsUtils.post(this.context, id);
-            }
-            else{
+            } else {
                 Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
                 MyApplication.showAlert(this.context, restFeedback.message);
             }
@@ -371,6 +261,27 @@ public class AddPostActivity extends BaseActivity {
             progressDialog.hide();
             MyApplication.showAlert(this.context, R.string.error_webservice_connection);
         }
-
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    // GETTERS AND SETTERS
+
+    public String getTagsToString(){
+        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter)
+                searchAndSelectTagManager.getSelectedTagsRecyclerView().getAdapter();
+        String inputTags = "";
+        List<Tag> selectedTags = adapter.getData();
+
+        for (Tag tag: selectedTags){
+            inputTags += tag.name + ",";
+        }
+        return inputTags;
+    }
+
+
+
 }

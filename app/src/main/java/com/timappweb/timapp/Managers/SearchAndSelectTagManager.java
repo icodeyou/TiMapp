@@ -55,8 +55,8 @@ public class SearchAndSelectTagManager {
             @Override
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
                 Log.d(TAG, "Clicked on suggested item");
-                FilledTagsAdapter adapter = (FilledTagsAdapter) recyclerView.getAdapter();
-                String selectedTag = adapter.getData(position).getName();
+                FilledTagsAdapter suggestedAdapter = (FilledTagsAdapter) recyclerView.getAdapter();
+                String selectedTag = suggestedAdapter.getData(position).getName();
                 selectedTagsRecyclerView.getAdapter().addData(selectedTag);
                 selectedTagsRecyclerView.scrollToEnd();
             }

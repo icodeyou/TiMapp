@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -116,4 +117,5 @@ public class ProfileActivity extends BaseActivity{
             IntentsUtils.post(this, post);
         }
     }
+
 }

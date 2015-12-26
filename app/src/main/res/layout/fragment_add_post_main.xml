@@ -104,7 +104,8 @@
         android:singleLine="true"
         android:gravity="center"
         android:textSize="30dp"
-        android:hint="Title"
+        android:capitalize="words"
+        android:hint="Location name"
         android:background="@drawable/border"/>
 
     <!-- ******************************************************************* -->
@@ -137,21 +138,23 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:background="@color/LightSkyBlue">
+        android:gravity="center">
         <TextView
             android:id="@+id/add_tags_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/addpost_if_no_tag"
             android:padding="20dp"
-            android:textSize="17dp"/>
+            android:textSize="17dp"
+            android:background="@color/LightSkyBlue"/>
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:background="@color/LightSkyBlue">
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -194,7 +197,7 @@
             android:layout_toLeftOf="@+id/anonymous_layout"
             android:layout_toStartOf="@+id/anonymous_layout"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:minHeight="80dp"
             android:maxHeight="300dp"
             android:padding="5dp"
