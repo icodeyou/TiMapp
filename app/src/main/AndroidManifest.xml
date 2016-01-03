@@ -113,21 +113,6 @@
         </activity>
 
         <!-- ADDPOSTACTIVITY ACTIVITY //////////////////////////////////////////////-->
-        <activity
-            android:name=".activities.AddPostActivity"
-            android:label="@string/title_activity_add_spot"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
-            android:parentActivityName=".activities.ExploreActivity">
-            <!-- Make activity searchable -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
-        </activity>
 
         <!-- POST ACTIVITY //////////////////////////////////////////////-->
         <activity

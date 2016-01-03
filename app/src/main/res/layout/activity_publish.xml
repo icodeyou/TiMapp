@@ -31,6 +31,7 @@
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:id="@+id/rv_search_selected_tags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"/>
 

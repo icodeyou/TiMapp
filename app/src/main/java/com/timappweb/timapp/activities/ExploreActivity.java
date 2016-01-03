@@ -293,7 +293,7 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
             startActivity(intent);
         }
         else if (id == R.id.menu_item_add_post){
-            MyApplication.startRequireLoggedInActivity(this, AddPostActivity.class);
+            MyApplication.startRequireLoggedInActivity(this, LocateActivity.class);
         }
         else if (id == R.id.menu_item_place) {
             MyApplication.startRequireLoggedInActivity(this, PlaceActivity.class);

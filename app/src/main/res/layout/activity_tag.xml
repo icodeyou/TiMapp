@@ -41,11 +41,10 @@
 
         <!-- SEARCH VIEW -->
         <!-- **********************************************************************-->
-        <SearchView
+        <android.support.v7.widget.SearchView
+            android:id="@+id/searchview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:queryHint="@string/hint_searchview_activity_tag"/>
+            android:layout_height="wrap_content"/>
 
         <!-- Separator Top -->
         <!-- **********************************************************************-->
@@ -57,6 +56,7 @@
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:id="@+id/rv_search_selected_tags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"/>
 
@@ -70,6 +70,7 @@
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.FilledRecyclerView
+            android:id="@+id/rv_search_suggested_tags"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
