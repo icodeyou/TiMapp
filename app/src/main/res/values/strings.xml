@@ -57,4 +57,11 @@
     <string name="error_no_internet">\"We cannot reach our servers. Internet must be enabled\"</string>
     <string name="hint_searchview_add_post">Press space to add a tag</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
+    <string name="title_activity_locate">Where are you ?</string>
+    <string name="title_activity_publish">Check and send</string>
+    <string name="title_activity_tag_1">"Choose "</string>
+    <string name="title_activity_tag_2">" tags"</string>
+    <string name="hint_searchview_activity_tag">Or type them</string>
+    <string name="main_text_publish_activity">confirm</string>
+    <string name="text_anonymous">Anonymous</string>
 </resources>

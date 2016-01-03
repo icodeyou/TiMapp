@@ -9,37 +9,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/toolbar_transparent">
+        android:orientation="vertical">
 
         <!-- TITLE -->
         <!-- **********************************************************************-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="@dimen/height_small_header"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center_horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose "
+                android:text="@string/title_activity_tag_1"
                 android:textSize="30dp"
-                android:layout_gravity="center_horizontal"/>
-            <TextView
+                android:layout_gravity="center_vertical"/>
+            /<TextView
                 android:id="@+id/num_left_tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3"
                 android:textSize="30dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_vertical"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" tags"
+                android:text="@string/title_activity_tag_2"
                 android:textSize="30dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_vertical"/>
         </LinearLayout>
+
+        <!-- SEARCH VIEW -->
+        <!-- **********************************************************************-->
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/hint_searchview_activity_tag"/>
+
+        <!-- Separator Top -->
+        <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
+
+        <!-- SELECTED TAGS -->
+        <!-- **********************************************************************-->
+        <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_rv_displayed_tags"/>
+
+        <!-- Separator Bottom -->
+        <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
 
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
@@ -47,21 +73,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
-
-        <!-- SELECETED TAGS -->
-        <!-- **********************************************************************-->
-        <com.timappweb.timapp.views.HorizontalRecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_rv_displayed_tags"
-            android:visibility="gone" />
-
-        <!-- SEARCH VIEW -->
-        <!-- **********************************************************************-->
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:queryHint="Type a tag"/>
-
 
         <!-- PLACE -->
         <!-- **********************************************************************-->

@@ -11,43 +11,72 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <!-- Title -->
+        <!-- **********************************************************************-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_big_header"
+            android:gravity="center"
+            android:text="@string/title_activity_publish"
+            android:textSize="@dimen/text_big"
+            android:layout_gravity="center_horizontal"/>
+
+        <!-- Separator Top -->
+        <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
+
+        <!-- SELECTED TAGS -->
+        <!-- **********************************************************************-->
+        <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_rv_displayed_tags"/>
+
+        <!-- Separator Bottom -->
+        <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
+
+        <!-- Confirm button -->
+        <!-- **********************************************************************-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:background="@color/colorAccent"
+                android:textColor="@color/White"
+                android:textSize="@dimen/text_mountain"
+                android:textAllCaps="true"
+                android:text="@string/main_text_publish_activity"/>
+
+
+        <!-- Anonymous button -->
+        <!-- **********************************************************************-->
         <LinearLayout
+            android:id="@+id/layout_checkbox"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="@color/colorAccent">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="#cometogether"
-                android:padding="5dp"
-                android:background="@drawable/border_radius"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="#FUN"
-                android:padding="5dp"
-                android:background="@drawable/border_radius"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="#ambiance"
-                android:padding="5dp"
-                android:background="@drawable/border_radius"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="70dp"
-                android:text="PUBLISH"/>
+            android:gravity="center">
             <CheckBox
+                android:id="@+id/checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Anonymous"/>
+                android:textSize="@dimen/text_normal"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_anonymous"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/Black"/>
         </LinearLayout>
+
 
         <!-- PLACE -->
         <!-- **********************************************************************-->
@@ -55,7 +84,8 @@
 
     </LinearLayout>
 
-
+    <!-- Toolbar -->
+    <!-- **********************************************************************-->
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />
 
