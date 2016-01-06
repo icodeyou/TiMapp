@@ -1,4 +1,4 @@
-package com.timappweb.timapp.managers;
+package com.timappweb.timapp.Managers2;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
