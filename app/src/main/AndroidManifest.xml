@@ -189,6 +189,5 @@
                 android:value=".activities.ExploreActivity" />
         </activity>
 
-
     </application>
 </manifest>

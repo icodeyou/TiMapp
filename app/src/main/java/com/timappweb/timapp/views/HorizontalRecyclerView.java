@@ -11,9 +11,7 @@ import com.timappweb.timapp.entities.Tag;
 
 import java.util.LinkedList;
 
-/**
- * Created by stephane on 12/15/2015.
- */
+
 public class HorizontalRecyclerView extends TagRecyclerView {
 
 
@@ -33,6 +31,8 @@ public class HorizontalRecyclerView extends TagRecyclerView {
     }
 
     protected void init(){
+        this.setHasFixedSize(true);
+
         this.setAdapter(new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>()));
 
         GridLayoutManager manager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);

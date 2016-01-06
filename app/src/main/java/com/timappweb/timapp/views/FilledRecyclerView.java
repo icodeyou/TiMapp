@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 
 import com.timappweb.timapp.adapters.FilledTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.listeners.MyLinearLayoutManager;
+import com.timappweb.timapp.managers.MyLinearLayoutManager;
 
 import java.util.LinkedList;
 
@@ -36,8 +36,6 @@ public class FilledRecyclerView extends TagRecyclerView{
         MyLinearLayoutManager layoutManager = new MyLinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
         this.setLayoutManager(layoutManager);
         this.scrollToEnd();
-
-
     }
 
 }

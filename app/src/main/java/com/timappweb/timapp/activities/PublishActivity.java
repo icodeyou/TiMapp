@@ -8,11 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
@@ -22,7 +20,6 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalRecyclerView;
 
 import java.util.List;

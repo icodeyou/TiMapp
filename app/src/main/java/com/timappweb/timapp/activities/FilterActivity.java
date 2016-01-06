@@ -1,20 +1,16 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
+import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
@@ -22,7 +18,6 @@ import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalRecyclerView;
 import com.timappweb.timapp.views.FilledRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilterActivity extends BaseActivity {

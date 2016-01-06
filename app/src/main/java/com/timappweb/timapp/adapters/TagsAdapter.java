@@ -27,18 +27,6 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
             this.data = data;
     }
 
-    public List<Tag> getData() {
-        return this.data;
-    }
-    public void addData(String selectedTag) {
-        Tag newTag = new Tag(selectedTag, 0);
-        if (!this.data.contains(newTag)){
-            this.data.add(newTag);
-            this.notifyDataSetChanged();
-        }
-    }
-
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View saved_tags_view = inflater.inflate(idItemDesign, parent, false);
@@ -64,6 +52,17 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
 
     public Tag getData(int position) {
         return this.data.get(position);
+    }
+
+    public List<Tag> getData() {
+        return this.data;
+    }
+    public void addData(String selectedTag) {
+        Tag newTag = new Tag(selectedTag, 0);
+        if (!this.data.contains(newTag)){
+            this.data.add(newTag);
+            this.notifyDataSetChanged();
+        }
     }
 
     public void removeData(int position) {

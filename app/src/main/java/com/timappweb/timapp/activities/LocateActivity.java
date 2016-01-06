@@ -2,49 +2,24 @@ package com.timappweb.timapp.activities;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.maps.model.LatLng;
-import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.exceptions.NoLastLocationException;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
-import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
-
-import java.util.List;
-
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class LocateActivity extends BaseActivity{
 
@@ -74,6 +49,10 @@ public class LocateActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
         this.initToolbar(true);
+
+        //Initialize variables
+        this.progressDialog = new ProgressDialog(this);
+        this.progressDialog.setMessage("Please wait...");
 
         initLocationListener();
         initLocationProvider();
