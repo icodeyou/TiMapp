@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -60,6 +61,16 @@ public class LocateActivity extends BaseActivity{
         // -----------------------------------------------------------------------------------------
         // Init variables
         mResultReceiver = new AddressResultReceiver(new Handler());
+        Button buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
+
+        //Listeners
+        buttonAddSpot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),AddSpotActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

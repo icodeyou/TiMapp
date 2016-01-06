@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar_transparent">
 
         <!-- TITLE -->
         <!-- **********************************************************************-->
@@ -41,13 +42,6 @@
 
         </LinearLayout>
 -->
-        <!-- SEARCH VIEW -->
-        <!-- **********************************************************************-->
-        <android.support.v7.widget.SearchView
-            android:id="@+id/searchview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"/>
 
         <!-- Separator Top -->
         <!-- **********************************************************************-->
@@ -59,7 +53,7 @@
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.HorizontalRecyclerView
-            android:id="@+id/rv_search_selected_tags"
+            android:id="@+id/rv_selected_tags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"/>
 
@@ -73,7 +67,7 @@
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.FilledRecyclerView
-            android:id="@+id/rv_search_suggested_tags"
+            android:id="@+id/rv_suggested_tags"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>

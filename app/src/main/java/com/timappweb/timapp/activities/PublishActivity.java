@@ -46,7 +46,7 @@ public class PublishActivity extends BaseActivity{
         //Initialize variables
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
         LinearLayout layout_checkbox = (LinearLayout) findViewById(R.id.layout_checkbox);
-        selectedTagsRV = (HorizontalRecyclerView) findViewById(R.id.rv_search_selected_tags);
+        selectedTagsRV = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
 
         layout_checkbox.setOnClickListener(new View.OnClickListener() {
             @Override

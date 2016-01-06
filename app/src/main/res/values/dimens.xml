@@ -33,4 +33,5 @@
     <dimen name="logo_small">20dp</dimen>
     <dimen name="logo_normal">30dp</dimen>
     <dimen name="logo_big">25dp</dimen>
+    <dimen name="height_button_add_place">60dp</dimen>
 </resources>

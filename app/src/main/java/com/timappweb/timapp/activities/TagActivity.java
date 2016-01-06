@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -18,7 +19,6 @@ public class TagActivity extends BaseActivity{
     private InputMethodManager              imm;
 
     //Views
-    private SearchView                      searchView;
     private HorizontalRecyclerView          selectedTagsRV;
     private FilledRecyclerView              suggestedTagsRV;
 
@@ -33,17 +33,24 @@ public class TagActivity extends BaseActivity{
 
         //Initialize variables
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        searchView = (SearchView) findViewById(R.id.searchview);
-        selectedTagsRV = (HorizontalRecyclerView) findViewById(R.id.rv_search_selected_tags);
-        suggestedTagsRV = (FilledRecyclerView) findViewById(R.id.rv_search_suggested_tags);
+        selectedTagsRV = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
+        suggestedTagsRV = (FilledRecyclerView) findViewById(R.id.rv_suggested_tags);
+    }
 
-        //set searchview
-        searchView.setIconifiedByDefault(false);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_search_tags, menu);
+
+        setSearchview(menu);
+
+        //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_activity_tag));
 
-        //Set the manager for inputs and suggestions of tags
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                 searchView, suggestedTagsRV, selectedTagsRV);
+
+        return true;
     }
 
     //----------------------------------------------------------------------------------------------
