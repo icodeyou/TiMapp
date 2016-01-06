@@ -10,16 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!-- Title -->
-        <!-- **********************************************************************-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_big_header"
-            android:gravity="center"
-            android:text="@string/title_activity_publish"
-            android:textSize="@dimen/text_big"
-            android:layout_gravity="center_horizontal"/>
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar_transparent">
 
         <!-- Separator Top -->
         <!-- **********************************************************************-->

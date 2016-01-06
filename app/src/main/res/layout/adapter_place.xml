@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/adapter_place">
+    android:background="@drawable/adapter_place"
+    android:onClick="testClick">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,8 +22,7 @@
                 android:padding="5dp"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_category_music"
-                android:onClick="testClick"/>
+                android:src="@drawable/ic_category_music"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

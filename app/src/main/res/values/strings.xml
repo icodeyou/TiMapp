@@ -61,7 +61,7 @@
     <string name="title_activity_publish">Check and send</string>
     <string name="title_activity_tag_1">"Choose "</string>
     <string name="title_activity_tag_2">" tags"</string>
-    <string name="hint_searchview_activity_tag">Or type them</string>
+    <string name="hint_searchview_activity_tag">Choose 3 tags</string>
     <string name="main_text_publish_activity">confirm</string>
     <string name="text_anonymous">Anonymous</string>
 </resources>

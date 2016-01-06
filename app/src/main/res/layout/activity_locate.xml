@@ -9,20 +9,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_big_header"
-            android:gravity="center"
-            android:text="@string/title_activity_locate"
-            android:textSize="@dimen/text_big"
-            android:layout_gravity="center_horizontal"/>
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar_transparent">
 
-        <!--TODO : DELETE THE 3 INCLUDE -->
-        <include layout="@layout/adapter_place" />
-        <include layout="@layout/adapter_place" />
-        <include layout="@layout/adapter_place" />
-        <include layout="@layout/adapter_place" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <!--TODO : DELETE THE 3 INCLUDE -->
+            <include layout="@layout/adapter_place" />
+            <include layout="@layout/adapter_place" />
+            <include layout="@layout/adapter_place" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+        </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"
