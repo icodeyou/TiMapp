@@ -1,4 +1,4 @@
-package com.timappweb.timapp.Managers2;
+package com.timappweb.timapp.managers;
 
 import android.app.Activity;
 import android.app.SearchManager;

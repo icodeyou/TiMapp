@@ -7,7 +7,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.timappweb.timapp.Managers2.SearchAndSelectTagManager;
+import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.views.FilledRecyclerView;
 import com.timappweb.timapp.views.HorizontalRecyclerView;

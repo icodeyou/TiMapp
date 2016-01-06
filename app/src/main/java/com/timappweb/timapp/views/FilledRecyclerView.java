@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 
 import com.timappweb.timapp.adapters.FilledTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.Managers2.MyLinearLayoutManager;
+import com.timappweb.timapp.managers.MyLinearLayoutManager;
 
 import java.util.LinkedList;
 
