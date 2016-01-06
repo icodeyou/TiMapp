@@ -22,9 +22,6 @@ import java.util.List;
 
 import retrofit.client.Response;
 
-/**
- * Created by stephane on 12/15/2015.
- */
 public class SearchAndSelectTagManager {
 
     private static final String TAG = "SearchAndSelectTag";
@@ -58,8 +55,8 @@ public class SearchAndSelectTagManager {
             @Override
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
                 Log.d(TAG, "Clicked on suggested item");
-                FilledTagsAdapter adapter = (FilledTagsAdapter) recyclerView.getAdapter();
-                String selectedTag = adapter.getData(position).getName();
+                FilledTagsAdapter suggestedAdapter = (FilledTagsAdapter) recyclerView.getAdapter();
+                String selectedTag = suggestedAdapter.getData(position).getName();
                 selectedTagsRecyclerView.getAdapter().addData(selectedTag);
                 selectedTagsRecyclerView.scrollToEnd();
             }

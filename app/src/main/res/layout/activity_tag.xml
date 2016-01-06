@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TagActivity"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- TITLE -->
+        <!-- **********************************************************************-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_small_header"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_activity_tag_1"
+                android:textSize="30dp"
+                android:layout_gravity="center_vertical"/>
+            /<TextView
+                android:id="@+id/num_left_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textSize="30dp"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_activity_tag_2"
+                android:textSize="30dp"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <!-- SEARCH VIEW -->
+        <!-- **********************************************************************-->
+        <android.support.v7.widget.SearchView
+            android:id="@+id/searchview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Separator Top -->
+        <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
+
+        <!-- SELECTED TAGS -->
+        <!-- **********************************************************************-->
+        <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:id="@+id/rv_search_selected_tags"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_rv_displayed_tags"/>
+
+        <!-- Separator Bottom -->
+        <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark"/>
+
+        <!-- SUGGESTED TAGS -->
+        <!-- **********************************************************************-->
+        <com.timappweb.timapp.views.FilledRecyclerView
+            android:id="@+id/rv_search_suggested_tags"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <!-- PLACE -->
+        <!-- **********************************************************************-->
+        <include layout="@layout/adapter_place" />
+    </LinearLayout>
+
+    <include android:id="@+id/toolbar_transparent"
+        layout="@layout/toolbar_transparent" />
+
+</RelativeLayout>

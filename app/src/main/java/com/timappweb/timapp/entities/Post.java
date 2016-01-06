@@ -190,9 +190,9 @@ public class Post implements Serializable, MarkerValueInterface {
         return this.id;
     }
 
-    public boolean validateForSubmit(TextView mTvComment) {
+    public boolean validateForSubmit() {
         if (this.tag_string.length() == 0) {
-            mTvComment.setError("You must select at least one tag");
+            //mTvComment.setError("You must select at least one tag");
             return false;
         }
         return true;

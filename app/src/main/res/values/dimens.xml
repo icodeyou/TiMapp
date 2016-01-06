@@ -8,10 +8,29 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="add_spot_button_margin">1dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!--Box dimensions -->
+    <dimen name="height_big_header">104dp</dimen>
+    <dimen name="height_small_header">60dp</dimen>
     <dimen name="profile_picture_side">70dp</dimen>
-    <dimen name="height_profile_box_post">150dp</dimen>
+    <dimen name="height_profile_box_post">250dp</dimen>
     <dimen name="last_post_box">5dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
     <dimen name="height_rv_displayed_tags">50dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
+    <dimen name="height_place_box">160dp</dimen>
+
+    <!-- Text dimensions -->
+    <dimen name="text_tiny">10dp</dimen>
+    <dimen name="text_small">15dp</dimen>
+    <dimen name="text_normal">20dp</dimen>
+    <dimen name="text_big">30dp</dimen>
+    <dimen name="text_huge">40dp</dimen>
+    <dimen name="text_mountain">70dp</dimen>
+
+    <!-- Logo dimensions -->
+    <dimen name="logo_tiny">15dp</dimen>
+    <dimen name="logo_small">20dp</dimen>
+    <dimen name="logo_normal">30dp</dimen>
+    <dimen name="logo_big">25dp</dimen>
 </resources>

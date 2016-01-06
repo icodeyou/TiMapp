@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="30dp"
+                    android:textSize="@dimen/text_big"
                     android:textColor="@color/Black"
                     android:gravity="center"
                     android:id="@+id/tv_profile_username"/>
@@ -53,7 +53,7 @@
                     android:gravity="center"
                     android:background="@drawable/border"
                     android:text="Posts"
-                    android:textSize="15dp"/>
+                    android:textSize="@dimen/text_small"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -62,7 +62,7 @@
                     android:background="@drawable/border"
                     android:text="0"
                     android:id="@+id/tv_profile_count_posts"
-                    android:textSize="15dp"/>
+                    android:textSize="@dimen/text_small"/>
             </LinearLayout>
 
             <Space
@@ -83,7 +83,7 @@
                     android:gravity="center"
                     android:background="@drawable/border"
                     android:text="Followers"
-                    android:textSize="15dp"/>
+                    android:textSize="@dimen/text_small"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -91,12 +91,11 @@
                     android:gravity="center"
                     android:background="@drawable/border"
                     android:text="35"
-                    android:textSize="15dp"/>
+                    android:textSize="@dimen/text_small"/>
             </LinearLayout>
 
         </LinearLayout>
 
-        <!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -119,19 +118,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#wakeboard"
-                        android:textSize="30dp"
+                        android:textSize="@dimen/text_big"
                         android:textColor="@color/Goldenrod"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#party"
-                        android:textSize="30dp"
+                        android:textSize="@dimen/text_big"
                         android:textColor="@color/Goldenrod"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="#drums"
-                        android:textSize="30dp"
+                        android:textSize="@dimen/text_big"
                         android:textColor="@color/Goldenrod"/>
                 </LinearLayout>
                 <LinearLayout
@@ -147,7 +146,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-        -->
 
     </LinearLayout>
     <LinearLayout
@@ -167,6 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Last post"
+            android:textSize="@dimen/text_small"
             android:textStyle="italic" />
 
         <!-- Visible only if there is a last post for this user -->
@@ -191,7 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="20dp"
+                    android:textSize="@dimen/text_normal"
                     android:textColor="@color/DarkGray"/>
                 <View
                     android:layout_weight="1"
@@ -208,7 +207,7 @@
                 android:gravity="center"
                 android:text="Spot name"
                 android:textColor="@color/black"
-                android:textSize="20dp"
+                android:textSize="@dimen/text_normal"
                 android:id="@+id/tv_last_post_name"/>
 
             <com.timappweb.timapp.views.HorizontalRecyclerView

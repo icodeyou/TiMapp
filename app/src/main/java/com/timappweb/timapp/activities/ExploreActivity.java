@@ -26,8 +26,8 @@ import com.timappweb.timapp.utils.IntentsUtils;
 //import android.support.design.widget.FloatingActionButton;
 
 
-public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "DrawerActivity";
+public class ExploreActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "ExploreActivity";
     /* ============================================================================================*/
     /* PROPERTIES */
     /* ============================================================================================*/
@@ -81,9 +81,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer);
+        setContentView(R.layout.activity_explore);
 
-        //Toolbar
+        //Import toolbar without calling function initToolbar, because of the toggle button
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -293,7 +293,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             startActivity(intent);
         }
         else if (id == R.id.menu_item_add_post){
-            MyApplication.startRequireLoggedInActivity(this, AddPostActivity.class);
+            MyApplication.startRequireLoggedInActivity(this, LocateActivity.class);
         }
         else if (id == R.id.menu_item_place) {
             MyApplication.startRequireLoggedInActivity(this, PlaceActivity.class);
@@ -371,13 +371,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         @Override
         public void onClick(View view) {
-            MyApplication.startRequireLoggedInActivity(getBaseContext(), AddPostActivity.class);
+            MyApplication.startRequireLoggedInActivity(getBaseContext(), LocateActivity.class);
         }
     }
 
     private class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
-        public MyActionBarDrawerToggle(DrawerActivity drawerActivity, DrawerLayout mDrawerLayout, Toolbar toolbar, int drawer_open, int drawer_close) {
-            super(drawerActivity, mDrawerLayout, toolbar, drawer_open, drawer_close);
+        public MyActionBarDrawerToggle(ExploreActivity exploreActivity, DrawerLayout mDrawerLayout, Toolbar toolbar, int drawer_open, int drawer_close) {
+            super(exploreActivity, mDrawerLayout, toolbar, drawer_open, drawer_close);
         }
 
         /** Called when a drawer has settled in a completely closed state. */

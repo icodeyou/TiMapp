@@ -14,9 +14,6 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <!-- TOOLBAR -->
-        <include layout="@layout/toolbar"/>
-
         <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
         <FrameLayout
@@ -28,8 +25,11 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:showIn="@layout/app_bar_main"
-            tools:context=".DrawerActivity" />
-        
+            tools:context=".ExploreActivity" />
+
+        <!-- TOOLBAR -->
+        <include layout="@layout/toolbar"/>
+
         <!-- FLOATING ACTION BUTTON -->
         <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
             android:layout_width="wrap_content" android:layout_height="wrap_content"

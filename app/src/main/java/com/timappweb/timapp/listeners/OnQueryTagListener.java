@@ -5,10 +5,6 @@ import android.support.v7.widget.SearchView;
 import com.timappweb.timapp.Managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 
-/**
- * Created by stephane on 12/15/2015.
- */
-
 public class OnQueryTagListener implements SearchView.OnQueryTextListener {
 
     private final SearchAndSelectTagManager manager;

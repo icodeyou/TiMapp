@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity"
+    tools:context=".AddPostActivity"
     android:background="@color/background">
-
-    <!-- TOOLBAR -->
-    <include layout="@layout/toolbar"/>
 
     <fragment
         android:id="@+id/fragment_main"
@@ -22,4 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <include layout="@layout/toolbar_transparent" />
+
+</RelativeLayout>

@@ -31,8 +31,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
         <activity
-            android:name=".activities.DrawerActivity"
+            android:name=".activities.ExploreActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
@@ -50,6 +51,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <!-- LOGIN ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
@@ -61,10 +63,11 @@
             android:exported="false" >
         </service>
 
+        <!-- FILTER ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.FilterActivity"
             android:label="@string/title_activity_filter"
-            android:parentActivityName=".activities.DrawerActivity"
+            android:parentActivityName=".activities.ExploreActivity"
             android:windowSoftInputMode="stateVisible">
 
             <!-- Make activity searchable -->
@@ -78,44 +81,59 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+                android:value=".activities.ExploreActivity" />
         </activity>
 
-        <activity
-            android:name=".activities.AddPostActivity"
-            android:label="@string/title_activity_add_spot"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".activities.DrawerActivity">
-            <!-- Make activity searchable -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
+        <!-- LOCATE ACTIVITY //////////////////////////////////////////////-->
+        <activity android:name=".activities.LocateActivity"
+            android:parentActivityName=".activities.ExploreActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+                android:value=".activities.ExploreActivity" />
         </activity>
 
+        <!-- TAG ACTIVITY //////////////////////////////////////////////-->
+        <activity android:name=".activities.TagActivity"
+            android:parentActivityName=".activities.LocateActivity"
+            android:windowSoftInputMode="adjustNothing" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.LocateActivity" />
+        </activity>
+
+        <!-- PUBLISH ACTIVITY //////////////////////////////////////////////-->
+        <activity android:name=".activities.PublishActivity"
+            android:parentActivityName=".activities.TagActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.TagActivity" />
+        </activity>
+
+        <!-- ADDPOSTACTIVITY ACTIVITY //////////////////////////////////////////////-->
+
+        <!-- POST ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.PostActivity"
             android:label="@string/title_activity_post"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:parentActivityName=".activities.ExploreActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+                android:value=".activities.ExploreActivity" />
         </activity>
-        <!-- **************************************************** -->
-        <!-- PLACE -->
+
+        <!-- PLACE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.PlaceActivity"
             android:label="@string/title_activity_place"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:parentActivityName=".activities.ExploreActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+                android:value=".activities.ExploreActivity" />
         </activity>
         <activity
             android:name=".activities.PlaceFriendsActivity"
@@ -126,6 +144,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.timappweb.timapp.activities.PlaceActivity" />
         </activity>
+
+        <!-- PLACEPOSTS ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.PlacePostsActivity"
             android:label="@string/title_activity_comment"
@@ -135,24 +155,40 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.timappweb.timapp.activities.PlaceActivity" />
         </activity>
+
+        <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:parentActivityName=".activities.PlacePostsActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+                android:value=".activities.PlacePostsActivity" />
         </activity>
 
+        <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
+        <activity
+            android:name=".activities.MyProfileActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".activities.ExploreActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ExploreActivity" />
+        </activity>
+
+        <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:parentActivityName=".activities.ExploreActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.DrawerActivity" />
+                android:value=".activities.ExploreActivity" />
         </activity>
+
+
     </application>
 </manifest>
