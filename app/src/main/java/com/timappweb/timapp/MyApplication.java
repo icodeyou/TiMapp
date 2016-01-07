@@ -8,10 +8,13 @@ import android.util.Log;
 
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.data.LocalPersistenceManager;
+import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MyApplication extends Application{
 
@@ -22,7 +25,7 @@ public class MyApplication extends Application{
         return RestClient.instance().getCurrentUser();
     }
 
-    public static HashMap<String, Integer> mapNameToIcon = new HashMap<>();
+    public static List<Category> mapNameToCategory = new LinkedList<>();
 
 
     @Override
@@ -34,15 +37,19 @@ public class MyApplication extends Application{
         RestClient.init(this, endpoint);
 
         initCategories();
-
     }
 
     public void initCategories(){
-        mapNameToIcon.put("concert", R.drawable.ic_category_music);
-        mapNameToIcon.put("bar", R.drawable.ic_category_bar);
-        mapNameToIcon.put("party", R.drawable.ic_category_bar);
-        mapNameToIcon.put("show", R.drawable.ic_category_bar);
-        mapNameToIcon.put("sport", R.drawable.ic_category_bar);
+//        mapNameToCategory.put("music", new Category(1, "music", R.drawable.ic_category_music));
+//        mapNameToCategory.put("bar", new Category(2, "bar", R.drawable.ic_category_bar));
+//        mapNameToCategory.put("party", new Category(3, "party", R.drawable.ic_category_party));
+//        mapNameToCategory.put("sport", new Category(4, "sport", R.drawable.ic_category_sport));
+//        mapNameToCategory.put("show", new Category(5, "show", R.drawable.ic_category_show));
+        mapNameToCategory.add(new Category(1, "music", R.drawable.ic_category_music));
+        mapNameToCategory.add(new Category(2, "bar", R.drawable.ic_category_bar));
+        mapNameToCategory.add(new Category(3, "party", R.drawable.ic_category_party));
+        mapNameToCategory.add(new Category(4, "sport", R.drawable.ic_category_sport));
+        mapNameToCategory.add(new Category(5, "show", R.drawable.ic_category_show));
     }
 
     /**
