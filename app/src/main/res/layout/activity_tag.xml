@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TagActivity"
     android:background="@color/background">
 
@@ -72,11 +73,19 @@
 
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
-        <com.timappweb.timapp.views.FilledRecyclerView
+        <com.greenfrvr.hashtagview.HashtagView
             android:id="@+id/rv_search_suggested_tags"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            app:tagBackground="@color/colorPrimaryDark"
+            app:tagForeground="@color/colorPrimaryDark"
+            app:tagPaddingBottom="@dimen/tag_padding_vertical"
+            app:tagPaddingLeft="@dimen/tag_padding_left"
+            app:tagPaddingRight="@dimen/tag_padding_right"
+            app:tagPaddingTop="@dimen/tag_padding_vertical"
+            app:tagTextColor="#E5E5E5"
+            />
 
         <!-- PLACE -->
         <!-- **********************************************************************-->

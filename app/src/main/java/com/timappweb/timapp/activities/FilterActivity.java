@@ -10,13 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalRecyclerView;
-import com.timappweb.timapp.views.FilledRecyclerView;
 
 import java.util.List;
 
@@ -50,10 +50,10 @@ public class FilterActivity extends BaseActivity {
 
         setSearchview();
 
-        FilledRecyclerView filledRecyclerView = (FilledRecyclerView) findViewById(R.id.rv_suggested_tags_filter);
+        HashtagView hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         HorizontalRecyclerView selectedTagsRecyclerView = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                searchView, filledRecyclerView, selectedTagsRecyclerView);
+                searchView, hashtagView, selectedTagsRecyclerView);
 
         return true;
     }

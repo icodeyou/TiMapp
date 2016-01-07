@@ -50,4 +50,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.3.0'
 
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
+
+    compile 'com.github.greenfrvr:hashtag-view:1.2.1'
 }

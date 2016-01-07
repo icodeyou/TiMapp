@@ -52,7 +52,7 @@
 
             <!-- ******************************************************************* -->
             <!-- Second part: ListView : Suggestion of tags -->
-            <com.timappweb.timapp.views.FilledRecyclerView
+            <com.greenfrvr.hashtagview.HashtagView
                 android:id="@+id/rv_suggested_tags_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
