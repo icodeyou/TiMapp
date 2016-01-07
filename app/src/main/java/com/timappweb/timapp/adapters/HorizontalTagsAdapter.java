@@ -7,7 +7,7 @@ import java.util.List;
 public class HorizontalTagsAdapter extends TagsAdapter {
 
     public HorizontalTagsAdapter(Context context, List<Tag> data) {
-        super(context, data, R.id.item_horizontal_tags, R.layout.design_horizontal_tags);
+        super(context, data, R.id.item_horizontal_tags, R.layout.item_horizontal_tags);
     }
 
 }

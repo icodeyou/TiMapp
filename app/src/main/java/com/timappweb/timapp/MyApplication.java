@@ -11,9 +11,8 @@ import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 
-/**
- * Created by stephane on 8/21/2015.
- */
+import java.util.HashMap;
+
 public class MyApplication extends Application{
 
     private static final String TAG = "MyApplication";
@@ -22,6 +21,8 @@ public class MyApplication extends Application{
     public static User getCurrentUser(){
         return RestClient.instance().getCurrentUser();
     }
+
+    public static HashMap<String, Integer> mapNameToIcon = new HashMap<>();
 
 
     @Override
@@ -32,6 +33,12 @@ public class MyApplication extends Application{
         String endpoint = getResources().getString(R.string.ws_endpoint);
         RestClient.init(this, endpoint);
 
+        initCategories();
+
+    }
+
+    public void initCategories(){
+        mapNameToIcon.put("music", R.drawable.ic_category_music);
     }
 
     /**

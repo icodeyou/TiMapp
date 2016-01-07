@@ -14,6 +14,9 @@ import com.timappweb.timapp.entities.Tag;
 import java.util.ArrayList;
 
 public class PlaceActivity extends BaseActivity{
+    private String TAG = "PlaceActivity";
+    private ListView lvTags;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,16 +24,10 @@ public class PlaceActivity extends BaseActivity{
 
         this.initToolbar(true);
 
-        //Create ListView
-        //////////////////////////////////////////////////////////////////////////////
-        //Find listview in XML
-        ListView lvTags = (ListView) findViewById(R.id.list_tags);
+        //Initialize
+        lvTags = (ListView) findViewById(R.id.list_tags);
 
-        // pass context and data to the custom adapter
-        TagsAndCountersAdapter tagsAndCountersAdapter = new TagsAndCountersAdapter(this,generateData());
-
-        //Set adapter
-        lvTags.setAdapter(tagsAndCountersAdapter);
+        initAdapter();
     }
 
     //Menu Action Bar
@@ -58,26 +55,13 @@ public class PlaceActivity extends BaseActivity{
     }
 
 
-    //Generate Data for ListView
-    //////////////////////////////////////////////////////////////////////////////
-    private ArrayList<Tag> generateData(){
-        ArrayList<Tag> tags = new ArrayList<>();
-        tags.add(new Tag("#friteschezjojo",1587));
-        tags.add(new Tag("#boeing",747));
-        tags.add(new Tag("#airbus",380));
-        tags.add(new Tag("#lolilol",185));
-        tags.add(new Tag("#whatever",184));
-        tags.add(new Tag("#salt",154));
-        tags.add(new Tag("#beer",146));
-        tags.add(new Tag("#idontknowwhattosay",130));
-        tags.add(new Tag("#nowords",114));
-        tags.add(new Tag("#amazing",104));
-        tags.add(new Tag("#wtf",85));
-        tags.add(new Tag("#youhavetoseeittobelieveit",55));
-        tags.add(new Tag("#ohmygod",30));
-        tags.add(new Tag("#thisissofunny",21));
-        tags.add(new Tag("#beach",14));
-        return tags;
+    private void initAdapter() {
+        // pass context and data to the custom adapter
+        TagsAndCountersAdapter tagsAndCountersAdapter = new TagsAndCountersAdapter(this);
+        tagsAndCountersAdapter.generateDummyData();
+
+        //Set adapter
+        lvTags.setAdapter(tagsAndCountersAdapter);
     }
 
     //essayer de le faire programmatiquement

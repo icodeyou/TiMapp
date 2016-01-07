@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.HashMap;
@@ -28,6 +29,11 @@ public class QueryCondition {
         queryMap.put("lon_sw", String.valueOf(bounds.southwest.longitude));
     }
 
+    public void setUserLocation(LatLng latLng){
+        queryMap.put("latitude", String.valueOf(latLng.latitude));
+        queryMap.put("longitude", String.valueOf(latLng.longitude));
+    }
+
     public void setTimestampMin(int min) {
         if (min > 0)
             queryMap.put("ts_min", String.valueOf(min));
@@ -53,5 +59,10 @@ public class QueryCondition {
 
     public void setTimeRange(int timeRange) {
         this.queryMap.put("time_range", String.valueOf(timeRange));
+    }
+
+    public void setUserLocation(double latitude, double longitude) {
+        queryMap.put("latitude", String.valueOf(latitude));
+        queryMap.put("longitude", String.valueOf(longitude));
     }
 }

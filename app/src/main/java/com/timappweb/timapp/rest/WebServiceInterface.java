@@ -81,4 +81,7 @@ public interface WebServiceInterface {
 
     @GET("/Places/around_me.json")
     void placeAroundMe(@QueryMap QueryCondition conditions, RestCallback<List<Place>>  callback);
+
+    @GET("/Places/reachable.json")
+    void placeReachable(QueryCondition conditions, RestCallback<List<Place>> restCallback);
 }

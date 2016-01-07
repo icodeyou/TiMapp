@@ -5,38 +5,34 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
-import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Category;
 
 import java.util.Collections;
 import java.util.List;
 
-public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> {
-    private final int idTextView;
-    protected LayoutInflater inflater;
-    protected List<Tag> data = Collections.emptyList();
-    private int idLayout;
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
 
-    public TagsAdapter(Context context, List<Tag> data, int idTextView, int idLayout) {
-        this.idTextView = idTextView;
-        this.idLayout = idLayout;
+    protected LayoutInflater inflater;
+    protected List<Category> data = Collections.emptyList();
+
+    public CategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        if (data != null)
-            this.data = data;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View saved_tags_view = inflater.inflate(idLayout, parent, false);
+        View saved_tags_view = inflater.inflate(R.layout.item_category, parent, false);
         MyViewHolder holder = new MyViewHolder(saved_tags_view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Tag current = data.get(position);
-        holder.textView.setText(current.name);
+        Category current = data.get(position);
+        holder.categoryIcon.setImageResource(current.getIconId());
     }
 
     @Override
@@ -44,22 +40,23 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
         return data != null ? data.size() : 0;
     }
 
-    public void setData(List<Tag> data) {
+    public void setData(List<Category> data) {
         this.data = data;
         this.notifyDataSetChanged();
     }
 
-    public Tag getData(int position) {
+    public Category getData(int position) {
         return this.data.get(position);
     }
 
-    public List<Tag> getData() {
+    public List<Category> getData() {
         return this.data;
     }
-    public void addData(String selectedTag) {
-        Tag newTag = new Tag(selectedTag, 0);
-        if (!this.data.contains(newTag)){
-            this.data.add(newTag);
+
+    public void addData(String nameCategory) {
+        Category newCategory = new Category(nameCategory);
+        if (!this.data.contains(newCategory)){
+            this.data.add(newCategory);
             this.notifyDataSetChanged();
         }
     }
@@ -70,11 +67,11 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView textView;
+        ImageView categoryIcon;
 
         public MyViewHolder(View view) {
             super(view);
-            textView = (TextView) view.findViewById(idTextView);
+            categoryIcon = (ImageView) view.findViewById(R.id.category_icon);
         }
     }
 }

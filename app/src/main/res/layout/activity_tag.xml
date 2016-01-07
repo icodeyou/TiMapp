@@ -83,7 +83,7 @@
 
         <!-- PLACE -->
         <!-- **********************************************************************-->
-        <include layout="@layout/adapter_place" />
+        <include layout="@layout/item_place" />
     </LinearLayout>
 
     <include android:id="@+id/toolbar_transparent"
