@@ -38,7 +38,11 @@ public class MyApplication extends Application{
     }
 
     public void initCategories(){
-        mapNameToIcon.put("music", R.drawable.ic_category_music);
+        mapNameToIcon.put("concert", R.drawable.ic_category_music);
+        mapNameToIcon.put("bar", R.drawable.ic_category_bar);
+        mapNameToIcon.put("party", R.drawable.ic_category_bar);
+        mapNameToIcon.put("show", R.drawable.ic_category_bar);
+        mapNameToIcon.put("sport", R.drawable.ic_category_bar);
     }
 
     /**
