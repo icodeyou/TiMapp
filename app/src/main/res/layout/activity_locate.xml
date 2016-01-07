@@ -9,37 +9,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         android:layout_below="@+id/toolbar_transparent">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <!--TODO : DELETE THE 3 INCLUDE -->
-                <include layout="@layout/adapter_place" />
-                <include layout="@layout/adapter_place" />
-                <include layout="@layout/adapter_place" />
-                <include layout="@layout/adapter_place" />
-                <include layout="@layout/adapter_place" />
-                <include layout="@layout/adapter_place" />
-                <include layout="@layout/adapter_place" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryDark" />
-            </LinearLayout>
-
-        </ScrollView>
-
         <ListView
+            android:id="@+id/list_places"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimaryDark" />
     </LinearLayout>
 
     <Button

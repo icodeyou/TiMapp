@@ -28,7 +28,7 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:debuggable="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
@@ -190,7 +190,7 @@
         </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
-        <activity android:name=".activities.AddSpotActivity"
+        <activity android:name=".activities.AddPlaceActivity"
             android:label="Add Spot"
             android:parentActivityName=".activities.LocateActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->

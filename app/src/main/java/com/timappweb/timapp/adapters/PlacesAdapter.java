@@ -11,65 +11,75 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class PostsAdapter extends ArrayAdapter<Post> {
+public class PlacesAdapter extends ArrayAdapter<Place> {
     private final Context context;
-    private final ArrayList<Post> postsArrayList;
 
-    public PostsAdapter(Context context, ArrayList<Post> postsArrayList) {
-        super(context, R.layout.item_post, postsArrayList);
+    public PlacesAdapter(Context context) {
+        super(context, R.layout.item_place);
         this.context = context;
-        this.postsArrayList = postsArrayList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Post post = postsArrayList.get(position);
+        Place place = this.getItem(position);
 
         // Get the view from inflater
         View postBox = convertView;
         if(convertView==null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            postBox = inflater.inflate(R.layout.item_post, parent, false);
+            postBox = inflater.inflate(R.layout.item_place, parent, false);
         }
 
-        // Get text views from item_post.xml
-        TextView tvAddress = (TextView) postBox.findViewById(R.id.tv_address);
-        TextView tvUsername = (TextView) postBox.findViewById(R.id.tv_username);
-        TextView tvTime = (TextView) postBox.findViewById(R.id.tv_time);
-        TextView tvComment = (TextView) postBox.findViewById(R.id.tv_comment);
+        // Initialize
+        TextView tvLocation = (TextView) postBox.findViewById(R.id.title_place);
+        TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);
+        TextView countPosts = (TextView) postBox.findViewById(R.id.people_counter_place);
         RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
 
+        // Get
+        String location = place.location;
+        String time = place.getTime();
+        ArrayList<Tag> mainTags = getMainTags();
 
-        // Get the address, name, time, and comment from Post.
-        String address = post.getAdress();
-        String username = post.getUsername();
-        String time = post.getPrettyTimeCreated();
-        String comment = post.getComment();
-        ArrayList<Tag> tags = post.getTags();
-
-        //Set the text
-        tvAddress.setText(address);
-        tvUsername.setText(username);
+        //Set texts
+        tvLocation.setText(location);
         tvTime.setText(time);
-        tvComment.setText(comment);
 
-        //Set the adapter for the Recycler View (which displays tags)
+        //Set the adapter for RV
         HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>());
-        horizontalTagsAdapter.setData(tags);
+        horizontalTagsAdapter.setData(mainTags);
         rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 
-        //Set LayoutManager
+        //Set LayoutManager for RV
         GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         rv_lastPostTags.setLayoutManager(manager_savedTags);
 
         //return the view
         return postBox;
+    }
+
+    @Override
+    public void add(Place place) {
+        super.add(place);
+        super.notifyDataSetChanged();
+    }
+
+    private ArrayList<Tag> getMainTags() {
+        ArrayList<Tag> emptyList = new ArrayList<Tag>();
+        return emptyList;
+    }
+
+    public void generateDummyData() {
+        Place dummyPlace = Place.createDummy();
+        add(dummyPlace);
+        Place dummyPlace2 = Place.createDummy();
+        add(dummyPlace2);
     }
 }

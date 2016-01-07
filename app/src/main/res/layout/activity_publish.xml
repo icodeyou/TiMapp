@@ -73,7 +73,7 @@
 
         <!-- PLACE -->
         <!-- **********************************************************************-->
-        <include layout="@layout/adapter_place" />
+        <include layout="@layout/item_place" />
 
     </LinearLayout>
 

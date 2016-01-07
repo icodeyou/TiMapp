@@ -24,7 +24,7 @@ public class PlaceFriendsActivity extends BaseActivity {
         //Listview - Friends
         lvFriendsHere = (ListView) findViewById(R.id.list_friends);
         friendsAdapter = new PlaceFriendsAdapter(this);
-        friendsAdapter.initializeData();
+        friendsAdapter.initializeDummyData();
         lvFriendsHere.setAdapter(friendsAdapter);
     }
 

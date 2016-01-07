@@ -16,11 +16,16 @@ import java.util.Objects;
 
 public class PlaceFriendsAdapter extends ArrayAdapter<User> {
     private final Context context;
+    private int idLayout;
+
+    //TODO : item_friend est utilisé deux fois parce qu'on appelle la methode super.
+    // On le fait pas dans la classe TagsAdapter, par exemple. Du coup, est-ce vraiment utile?
 
 
     public PlaceFriendsAdapter(Context context) {
-        super(context, R.layout.item_friend, new ArrayList<User>());
+        super(context, R.layout.item_friend);
         this.context = context;
+        //this.idLayout =
     }
 
     @Override
@@ -65,7 +70,7 @@ public class PlaceFriendsAdapter extends ArrayAdapter<User> {
     }
 
     //Generate Data for ListView
-    public void initializeData(){
+    public void initializeDummyData(){
         User dummyUser = User.createDummy();
         dummyUser.setStatus(false);
         this.add(dummyUser);

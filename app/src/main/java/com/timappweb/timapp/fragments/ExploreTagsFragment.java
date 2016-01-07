@@ -41,7 +41,7 @@ public class ExploreTagsFragment extends Fragment {
         ListView lvTags = (ListView) root.findViewById(R.id.list_tags_explore);
 
         // pass context and data to the custom adapter
-        mTagsAndCountersAdapter = new TagsAndCountersAdapter(context, new ArrayList<Tag>());
+        mTagsAndCountersAdapter = new TagsAndCountersAdapter(context);
         lvTags.setAdapter(mTagsAndCountersAdapter);
 
         return root;

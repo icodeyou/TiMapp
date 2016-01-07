@@ -10,11 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/toolbar_transparent">
-
+        android:layout_below="@+id/toolbar">
+        <EditText
+            android:id="@+id/location_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_big"
+            android:hint="@string/hint_location_name"
+            android:singleLine="true"/>
+        <com.timappweb.timapp.views.HorizontalRecyclerView
+            android:id="@+id/categories_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <include android:id="@+id/toolbar_transparent"
-        layout="@layout/toolbar_transparent" />
+    <include android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
 </RelativeLayout>

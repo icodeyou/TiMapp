@@ -187,7 +187,7 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     private void addMarker(Place place){
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .title(place.name)
+                .title(place.location)
                 .position(place.getPosition())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         mapMarkers.put(marker, place);

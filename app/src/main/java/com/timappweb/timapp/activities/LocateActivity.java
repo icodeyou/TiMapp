@@ -12,11 +12,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.MyLocationProvider;
@@ -27,6 +29,7 @@ public class LocateActivity extends BaseActivity{
     private String TAG = "LocateActivity";
 
     //Views
+    ListView listPlaces;
 
     // ProgressBar and ProgressDialog
     private ProgressBar progressBarLocation;
@@ -62,12 +65,18 @@ public class LocateActivity extends BaseActivity{
         // Init variables
         mResultReceiver = new AddressResultReceiver(new Handler());
         Button buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
+        listPlaces = (ListView) findViewById(R.id.list_places);
+
+        //Set adapter
+        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        placesAdapter.generateDummyData();
+        listPlaces.setAdapter(placesAdapter);
 
         //Listeners
         buttonAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),AddSpotActivity.class);
+                Intent intent = new Intent(getApplicationContext(),AddPlaceActivity.class);
                 startActivity(intent);
             }
         });

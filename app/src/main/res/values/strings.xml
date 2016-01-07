@@ -65,4 +65,5 @@
     <string name="main_text_publish_activity">confirm</string>
     <string name="text_anonymous">Anonymous</string>
     <string name="button_add_spot">Add spot</string>
+    <string name="hint_location_name">Location name</string>
 </resources>
