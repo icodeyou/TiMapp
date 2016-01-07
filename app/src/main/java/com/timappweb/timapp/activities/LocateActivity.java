@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.rest.QueryCondition;
@@ -75,19 +77,23 @@ public class LocateActivity extends BaseActivity{
         Button buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
         listPlaces = (ListView) findViewById(R.id.list_places);
 
-        //Set adapter
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
-        placesAdapter.generateDummyData();
         listPlaces.setAdapter(placesAdapter);
+
+        showLoader();
 
         //Listeners
         buttonAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),AddPlaceActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AddPlaceActivity.class);
                 startActivity(intent);
             }
         });
+
+        if (BuildConfig.DEBUG){
+            placesAdapter.generateDummyData();
+        }
 
     }
 
@@ -144,9 +150,20 @@ public class LocateActivity extends BaseActivity{
 
             @Override
             public void success(List<Place> place, Response response) {
-
+                if (place.size() != 0){
+                    showPlaces();
+                    ((PlacesAdapter)listPlaces.getAdapter()).addAll(place);
+                }
             }
         });
+    }
+
+    private void showPlaces() {
+        // TODO jean: affiche le layout qui contient les places et cache celui qui affiche le chargement de la position de l'utilisateur
+    }
+
+    private void showLoader(){
+        // TODO jean: affiche un loader tant que l'on a pas la position GPS de l'utilisateur
     }
 
     // ---------------------------------------------------------------------------------------------
