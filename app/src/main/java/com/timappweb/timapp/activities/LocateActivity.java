@@ -17,10 +17,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
+
+import java.util.List;
+
+import retrofit.client.Response;
 
 public class LocateActivity extends BaseActivity{
 
@@ -71,6 +79,9 @@ public class LocateActivity extends BaseActivity{
                 startActivity(intent);
             }
         });
+
+        // Data
+        loadPlaces();
     }
 
     @Override
@@ -108,6 +119,17 @@ public class LocateActivity extends BaseActivity{
         if (!locationProvider.isGPSEnabled()){
             locationProvider.askUserToEnableGPS();
         }
+    }
+
+    private void loadPlaces(){
+        QueryCondition conditions = new QueryCondition();
+        RestClient.service().placeAroundMe(conditions, new RestCallback<List<Place>>(this) {
+
+            @Override
+            public void success(List<Place> place, Response response) {
+
+            }
+        });
     }
 
     // ---------------------------------------------------------------------------------------------

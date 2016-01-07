@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest;
 
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.Tag;
@@ -78,4 +79,6 @@ public interface WebServiceInterface {
     void loadTagsFromPost(@Path("id") int id, RestCallback<ArrayList<Tag>> restCallback);
 
 
+    @GET("/Places/around_me.json")
+    void placeAroundMe(@QueryMap QueryCondition conditions, RestCallback<List<Place>>  callback);
 }
