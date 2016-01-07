@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 
@@ -20,6 +21,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
     public CategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
+        this.data = MyApplication.mapNameToCategory;
     }
 
     @Override
@@ -53,13 +55,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         return this.data;
     }
 
-    public void addData(String nameCategory) {
-        Category newCategory = new Category(nameCategory);
-        if (!this.data.contains(newCategory)){
-            this.data.add(newCategory);
-            this.notifyDataSetChanged();
-        }
-    }
 
     public void removeData(int position) {
         this.data.remove(position);

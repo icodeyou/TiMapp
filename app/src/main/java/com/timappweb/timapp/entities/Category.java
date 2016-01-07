@@ -1,25 +1,21 @@
 package com.timappweb.timapp.entities;
 
-import android.media.Image;
-import android.widget.ImageView;
-
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
-
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class Category implements Serializable{
 
     public Integer id;
     public String name;
+    public int resource;
 
-    public Category(String name) {
+    public Category(int id, String name, int resource) {
+        this.id = id;
         this.name = name;
+        this.resource = resource;
     }
 
     public int getIconId(){
-        return MyApplication.mapNameToIcon.get(this.name);
+        return resource;
     }
     public String getName() {
         return name;
