@@ -141,21 +141,31 @@ public class LocateActivity extends BaseActivity{
         if (!locationProvider.isGPSEnabled()){
             locationProvider.askUserToEnableGPS();
         }
+
+
+        locationProvider.requestMultipleUpdates();
     }
 
     private void loadPlaces(Location location){
         QueryCondition conditions = new QueryCondition();
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
-        RestClient.service().placeReachable(conditions, new RestCallback<List<Place>>(this) {
+        RestClient.service().placeReachable(conditions.toMap(), new RestCallback<List<Place>>(this) {
 
             @Override
             public void success(List<Place> place, Response response) {
-                if (place.size() != 0){
+                Log.d(TAG, "Loading " + place.size() + " place(s)");
+                if (place.size() != 0) {
                     showPlaces();
-                    ((PlacesAdapter)listPlaces.getAdapter()).addAll(place);
+                    ((PlacesAdapter) listPlaces.getAdapter()).addAll(place);
+                } else {
+                    showNoPlaceMessage();
                 }
             }
         });
+    }
+
+    private void showNoPlaceMessage() {
+        // TODO jean: affiche message no place around the user
     }
 
     private void showPlaces() {

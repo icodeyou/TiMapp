@@ -1,19 +1,31 @@
 package com.timappweb.timapp.entities;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 public class Place implements Serializable, MarkerValueInterface {
 
+    private static final String TAG = "PlaceEntity" ;
     public int id;
     public String location;
     public double latitude;
+    public int created;
     public double longitude;
     public int count_post;
     public int category_id;
+    public List<Tag> main_tags;
 
     public ArrayList<Post> posts;
 
@@ -24,6 +36,7 @@ public class Place implements Serializable, MarkerValueInterface {
         this.location = location;
         this.count_post = 0;
         this.posts = new ArrayList<>();
+        this.main_tags = new ArrayList<>();
     }
 
     public void addPost(Post post){
@@ -40,6 +53,7 @@ public class Place implements Serializable, MarkerValueInterface {
 
     public static Place createDummy(){
         Place place = new Place(1, dummyIndice, dummyIndice, "Test");
+        place.main_tags.add(Tag.createDummy());
         place.addPost(Post.createDummy());
         place.addPost(Post.createDummy());
         place.addPost(Post.createDummy());
@@ -59,6 +73,23 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public String getTime() {
-        return posts.get(posts.size()-1).getPrettyTimeCreated();
+        if (posts.size() > 0){
+            return posts.get(posts.size()-1).getPrettyTimeCreated();
+        }
+        return this.getPrettyTimeCreated();
+    }
+
+    public List<Tag> getMainTags() {
+        return main_tags;
+    }
+
+    /**
+     * Get the created as a pretty time format
+     *
+     * @return
+     */
+    public String getPrettyTimeCreated() {
+        PrettyTime p = new PrettyTime();
+        return p.format(new Date(((long) this.created) * 1000));
     }
 }

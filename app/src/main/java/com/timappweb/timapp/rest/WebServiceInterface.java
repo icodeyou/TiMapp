@@ -8,6 +8,7 @@ import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,8 +81,8 @@ public interface WebServiceInterface {
 
 
     @GET("/Places/around_me.json")
-    void placeAroundMe(@QueryMap QueryCondition conditions, RestCallback<List<Place>>  callback);
+    void placeAroundMe(@QueryMap Map<String, String> conditions, RestCallback<List<Place>>  callback);
 
     @GET("/Places/reachable.json")
-    void placeReachable(QueryCondition conditions, RestCallback<List<Place>> restCallback);
+    void placeReachable(@QueryMap Map<String, String> conditions, RestCallback<List<Place>> restCallback);
 }

@@ -46,7 +46,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         // Get
         String location = place.location;
         String time = place.getTime();
-        ArrayList<Tag> mainTags = getMainTags();
 
         //Set texts
         tvLocation.setText(location);
@@ -54,7 +53,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
         //Set the adapter for RV
         HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>());
-        horizontalTagsAdapter.setData(mainTags);
+        horizontalTagsAdapter.setData(place.getMainTags());
         rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 
         //Set LayoutManager for RV
@@ -71,10 +70,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         super.notifyDataSetChanged();
     }
 
-    private ArrayList<Tag> getMainTags() {
-        ArrayList<Tag> emptyList = new ArrayList<Tag>();
-        return emptyList;
-    }
 
     public void generateDummyData() {
         Place dummyPlace = Place.createDummy();

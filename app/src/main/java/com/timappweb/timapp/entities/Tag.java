@@ -45,4 +45,8 @@ public class Tag implements Serializable{
     public int hashCode() {
         return name.hashCode();
     }
+
+    public static Tag createDummy() {
+        return new Tag("DummyTag", 34);
+    }
 }
