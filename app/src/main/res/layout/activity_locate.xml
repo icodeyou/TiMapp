@@ -12,20 +12,30 @@
         android:orientation="vertical"
         android:layout_below="@+id/toolbar_transparent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center">
-            <!--TODO : DELETE THE 3 INCLUDE -->
-            <include layout="@layout/adapter_place" />
-            <include layout="@layout/adapter_place" />
-            <include layout="@layout/adapter_place" />
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <!--TODO : DELETE THE 3 INCLUDE -->
+                <include layout="@layout/adapter_place" />
+                <include layout="@layout/adapter_place" />
+                <include layout="@layout/adapter_place" />
+                <include layout="@layout/adapter_place" />
+                <include layout="@layout/adapter_place" />
+                <include layout="@layout/adapter_place" />
+                <include layout="@layout/adapter_place" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimaryDark" />
+            </LinearLayout>
+
+        </ScrollView>
 
         <ListView
             android:layout_width="match_parent"
@@ -33,16 +43,16 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/button_add_spot"
         android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/height_button_add_place"
         android:background="@drawable/button_add_place"
         android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:text="Add place"
+        android:text="@string/button_add_spot"
         android:textSize="@dimen/text_big"
-        android:textColor="@color/white"
-        android:onClick="testClick" />
+        android:textColor="@color/white" />
 
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />

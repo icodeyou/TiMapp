@@ -4,12 +4,13 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.SuperscriptSpan;
 
+import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.entities.Tag;
 
 /**
  * Created by stephane on 1/7/2016.
  */
-public class DataTransformTag implements com.greenfrvr.hashtagview.HashtagView.DataTransform<com.timappweb.timapp.entities.Tag> {
+public class DataTransformTag implements HashtagView.DataTransform<Tag> {
 
     @Override
     public CharSequence prepare(Tag item) {

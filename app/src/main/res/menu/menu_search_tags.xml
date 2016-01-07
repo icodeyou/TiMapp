@@ -11,5 +11,5 @@
         android:id="@+id/action_validate"
         android:icon="@android:drawable/ic_menu_send"
         app:showAsAction="always"
-        android:title="Validate tags"/>
+        android:title="Validate tag"/>
 </menu>
