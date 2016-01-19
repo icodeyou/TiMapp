@@ -10,7 +10,7 @@ import java.util.List;
 public class FilledTagsAdapter extends TagsAdapter {
 
     public FilledTagsAdapter(Context context, List<Tag> data) {
-        super(context, data, R.id.item_filled_tags, R.layout.design_filled_tags);
+        super(context, data, R.id.item_filled_tags, R.layout.useless_design_filled_tags);
     }
 
 }

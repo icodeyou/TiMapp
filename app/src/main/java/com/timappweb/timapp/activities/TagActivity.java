@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -24,12 +25,14 @@ public class TagActivity extends BaseActivity{
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
     private HashtagView suggestedTagsRV;
+    private View progressBarView;
 
     // @Bind(R.id.hashtags1)
     protected HashtagView suggestedTagsView;
 
     //others
     private SearchAndSelectTagManager searchAndSelectTagManager;
+    private View selectedTagsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,11 @@ public class TagActivity extends BaseActivity{
 
         //Initialize variables
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
+        selectedTagsView = findViewById(R.id.rv_selected_tags);
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
+        this.progressBarView = findViewById(R.id.progressbar);
+
+        setSelectedTagsViewGONE();
     }
 
     @Override
@@ -48,6 +55,7 @@ public class TagActivity extends BaseActivity{
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);
 
         setSearchview(menu);
+        searchView.clearFocus();
 
         //set hint for searchview
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
@@ -58,14 +66,37 @@ public class TagActivity extends BaseActivity{
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        return true;
+    }
+
     //----------------------------------------------------------------------------------------------
     //Private methods
 
     //----------------------------------------------------------------------------------------------
     //Public methods
+    public void setSelectedTagsViewGONE() {
+        findViewById(R.id.top_line_hrv).setVisibility(View.GONE);
+        selectedTagsView.setVisibility(View.GONE);
+        findViewById(R.id.bottom_line_hrv).setVisibility(View.GONE);
+    }
+
+    public void setSelectedTagsViewVISIBLE() {
+        findViewById(R.id.top_line_hrv).setVisibility(View.VISIBLE);
+        selectedTagsView.setVisibility(View.VISIBLE);
+        findViewById(R.id.bottom_line_hrv).setVisibility(View.VISIBLE);
+    }
+
 
     //----------------------------------------------------------------------------------------------
     //GETTER and SETTERS
+
+    public View getProgressBarView() {
+        return progressBarView;
+    }
 
     //----------------------------------------------------------------------------------------------
     //Miscellaneous

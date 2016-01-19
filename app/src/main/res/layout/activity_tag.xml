@@ -47,9 +47,10 @@
         <!-- Separator Top -->
         <!-- **********************************************************************-->
         <View
+            android:id="@+id/top_line_hrv"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark"/>
+            android:background="@color/background"/>
 
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
@@ -61,25 +62,42 @@
         <!-- Separator Bottom -->
         <!-- **********************************************************************-->
         <View
+            android:id="@+id/bottom_line_hrv"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorPrimaryDark"/>
 
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
-        <com.greenfrvr.hashtagview.HashtagView
-            android:id="@+id/rv_search_suggested_tags"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tagBackground="@color/colorPrimaryDark"
-            app:tagForeground="@color/colorPrimaryDark"
-            app:tagPaddingBottom="@dimen/tag_padding_vertical"
-            app:tagPaddingLeft="@dimen/tag_padding_left"
-            app:tagPaddingRight="@dimen/tag_padding_right"
-            app:tagPaddingTop="@dimen/tag_padding_vertical"
-            app:tagTextColor="#E5E5E5"
-            />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <com.greenfrvr.hashtagview.HashtagView
+                android:id="@+id/rv_search_suggested_tags"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+
+                app:tagTextSize="@dimen/text_normal"
+                app:tagTextGravity="center"
+
+                app:tagBackground="@drawable/tag_background"
+
+                app:tagPaddingBottom="@dimen/tag_padding"
+                app:tagPaddingLeft="@dimen/tag_padding"
+                app:tagPaddingRight="@dimen/tag_padding"
+                app:tagPaddingTop="@dimen/tag_padding"
+                app:tagTextColor="@color/White"
+                />
+
+        </ScrollView>
 
         <!-- PLACE -->
         <!-- **********************************************************************-->

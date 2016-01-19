@@ -14,6 +14,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {

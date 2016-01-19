@@ -48,7 +48,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     public void setData(List<Tag> data) {
         this.data = data;
         this.notifyDataSetChanged();
-    }
+    };
 
     public Tag getData(int position) {
         return this.data.get(position);
@@ -71,7 +71,7 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     }
 
     public void resetData() {
-        this.data = Collections.emptyList();
+        this.data.clear();
         this.notifyDataSetChanged();
     }
 

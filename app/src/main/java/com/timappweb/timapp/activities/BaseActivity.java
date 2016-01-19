@@ -31,7 +31,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(homeUpEnabled);
         actionBar.setDisplayShowTitleEnabled(false);
     }
 

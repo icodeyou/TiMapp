@@ -15,18 +15,14 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter) manager.getSelectedTagsRecyclerView().getAdapter();
-        adapter.addData(query);
-        manager.getSelectedTagsRecyclerView().scrollToEnd();
+        manager.addTag(query);
         manager.getSearchView().setIconified(true);
-        manager.decreaseCounter();
-        manager.setCounterHint();
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        //manager.suggestTag(newText);
+        manager.suggestTag(newText);
         return false;
     }
 }

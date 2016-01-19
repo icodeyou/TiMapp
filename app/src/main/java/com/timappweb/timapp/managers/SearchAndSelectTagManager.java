@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.activities.PublishActivity;
+import com.timappweb.timapp.activities.TagActivity;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnQueryTagListener;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
@@ -35,6 +37,7 @@ public class SearchAndSelectTagManager {
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView suggestedRecyclerView;
     private SearchHistory<Tag> searchHistory;
+    private HorizontalTagsAdapter horizontalAdapter;
 
     private int remaining_tags;
 
@@ -46,6 +49,7 @@ public class SearchAndSelectTagManager {
         this.searchView = searchView;
         this.suggestedRecyclerView = suggestedRecyclerView;
         this.selectedTagsRecyclerView = selectedRecyclerView;
+        this.horizontalAdapter = (HorizontalTagsAdapter) selectedTagsRecyclerView.getAdapter();
         this.init();
         this.loadTags("");
     }
@@ -68,15 +72,14 @@ public class SearchAndSelectTagManager {
 
         }));
 */
-        resetCounter();
+
         setCounterHint();
 
         suggestedRecyclerView.addOnTagClickListener(new HashtagView.TagsClickListener() {
             @Override
             public void onItemClicked(Object item) {
-                //TODO: add tag
-                decreaseCounter();
-                setCounterHint();
+                Tag tag = (Tag) item;
+                addTag(tag.name);
             }
         });
 
@@ -85,8 +88,7 @@ public class SearchAndSelectTagManager {
             @Override
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
                 Log.d(TAG, "Clicked on selected item");
-                selectedTagsRecyclerView.getAdapter().removeData(position);
-                increaseCounter();
+                horizontalAdapter.removeData(position);
                 setCounterHint();
             }
 
@@ -104,41 +106,37 @@ public class SearchAndSelectTagManager {
     }
 
 
-    public void decreaseCounter() {
-        remaining_tags = remaining_tags-1;
+    public void addTag(String tag) {
+        String finalTag = "#" + tag;
+        horizontalAdapter.addData(finalTag);
+        selectedTagsRecyclerView.scrollToEnd();
+        setCounterHint();
     }
-
-    public void increaseCounter() {
-        remaining_tags = remaining_tags+1;
-    }
-
-    public void resetCounter() {
-        remaining_tags = 3;
-    }
-
     public void setCounterHint() {
-        switch (remaining_tags) {
-            case 3:
-                searchView.setQueryHint("choose 3 tags");
-                break;
-            case 2:
-                searchView.setQueryHint("Choose 2 tags");
+        TagActivity tagActivity = (TagActivity) activity;
+        switch (horizontalAdapter.getData().size()) {
+            case 0:
+                tagActivity.setSelectedTagsViewGONE();
+                searchView.setQueryHint("Choose 3 tags");
                 break;
             case 1:
+                tagActivity.setSelectedTagsViewVISIBLE();
+                searchView.setQueryHint("Choose 2 tags");
+                break;
+            case 2:
                 searchView.setQueryHint("One more !");
                 break;
-            case 0:
+            case 3:
                 //Save data
-                 ArrayList<String> finalTags = selectedTagsRecyclerView.getAdapter().getStringsFromTags();
+                 ArrayList<String> finalTags = horizontalAdapter.getStringsFromTags();
 
                 //Change activity
                 Intent intent = new Intent(activity, PublishActivity.class);
-                intent.putStringArrayListExtra("finalTags",finalTags);
+                intent.putStringArrayListExtra("finalTags", finalTags);
                 activity.startActivity(intent);
 
                 //Clear list of tags in case back button is pressed in PublishActivity
-                selectedTagsRecyclerView.getAdapter().resetData();
-                resetCounter();
+                horizontalAdapter.resetData();
                 setCounterHint();
             default:
                 break;
@@ -163,13 +161,13 @@ public class SearchAndSelectTagManager {
 
         // Data are in cache
         if (searchHistory.hasTerm(term)){
-            suggestedRecyclerView.setData(searchHistory.get(term).getData());
+            setData(searchHistory.get(term).getData());
         }
         else {
             // Data are not in cache, try searching for a sub term
             SearchHistory.Item subHistory = searchHistory.get(term);
             if (subHistory != null){
-                suggestedRecyclerView.setData(subHistory.getData());
+                setData(subHistory.getData());
                 if (subHistory.isComplete()){
                     return ;
                 }
@@ -179,11 +177,13 @@ public class SearchAndSelectTagManager {
             RestClient.service().suggest(term, new RestCallback<List<Tag>>(activity) {
                 @Override
                 public void success(List<Tag> tags, Response response) {
+                    TagActivity tagActivity = (TagActivity) activity;
+                    tagActivity.getProgressBarView().setVisibility(View.GONE);
                     Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
                     searchHistory.set(term, tags);
                     if (searchHistory.isLastSearch(term)) {
                         Log.d(TAG, "'" + term + "' is the last search, setting data");
-                        suggestedRecyclerView.setData(tags);
+                        setData(tags);
                     }
                 }
 
@@ -191,8 +191,12 @@ public class SearchAndSelectTagManager {
         }
     }
 
-    // Getters
+    private void setData(List<Tag> tags) {
+        suggestedRecyclerView.setData(tags);
+        horizontalAdapter.notifyDataSetChanged();
+    }
 
+    // Getters
     public Activity getActivity() {
         return activity;
     }

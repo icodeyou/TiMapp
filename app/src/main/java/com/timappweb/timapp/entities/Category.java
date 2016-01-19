@@ -40,8 +40,4 @@ public class Category implements Serializable{
         return name.hashCode();
     }
 
-    public Category getCategoryFromID(int id) {
-        return this;
-        //TODO : retourner en fonction de l'ID !!!!
-    }
 }

@@ -9,7 +9,7 @@
         android:title="Search tags" />
     <item
         android:id="@+id/action_validate"
-        android:icon="@android:drawable/ic_menu_send"
+        android:icon="@drawable/ic_validate_button"
         app:showAsAction="always"
         android:title="Validate tag"/>
 </menu>

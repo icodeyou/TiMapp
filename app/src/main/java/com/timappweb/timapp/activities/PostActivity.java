@@ -92,17 +92,8 @@ public class PostActivity extends BaseActivity {
 
     private void fetchDataToView(){
         TextView textViewCreated = (TextView) findViewById(R.id.post_created);
-        TextView textViewComment = (TextView) findViewById(R.id.post_comment);
         TextView textViewUsername = (TextView) findViewById(R.id.post_username);
         TextView textViewPostName = (TextView) findViewById(R.id.post_name);
-
-        // Hide the comment container if there isn't one
-        if (currentPost.comment != null && currentPost.comment.length() > 0){
-            textViewComment.setText(currentPost.comment);
-        }
-        else{
-            textViewComment.setVisibility(View.INVISIBLE);
-        }
 
         textViewCreated.setText(currentPost.getPrettyTimeCreated());
         textViewUsername.setText(currentPost.getUsername());

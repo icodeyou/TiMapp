@@ -13,13 +13,6 @@
         android:orientation="vertical"
         android:layout_below="@+id/toolbar_transparent">
 
-        <!-- Separator Top -->
-        <!-- **********************************************************************-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark"/>
-
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.HorizontalTagsRecyclerView
@@ -27,22 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"/>
 
-        <!-- Separator Bottom -->
-        <!-- **********************************************************************-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark"/>
-
         <!-- Confirm button -->
         <!-- **********************************************************************-->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
+                android:layout_marginRight="2dp"
+                android:layout_marginLeft="2dp"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@color/colorAccent"
+                android:background="@drawable/border_radius"
                 android:textColor="@color/White"
                 android:textSize="@dimen/text_mountain"
                 android:textAllCaps="true"

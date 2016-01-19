@@ -2,19 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="wrap_content"
     android:layout_height="35dp"
-    android:background="@drawable/selected_tag_background"
+    android:background="@color/background"
     android:gravity="center"
     android:padding="5dp">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/selected_tag_text_color"
-        android:textSize="20dp"
-        android:text="@string/hashtag"/>
     <TextView
         android:id="@+id/item_horizontal_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
         android:textSize="20dp"
-        android:textColor="@color/selected_tag_text_color"/>
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"/>
 </LinearLayout>

@@ -62,19 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:textSize="17dp"
-            android:gravity="center"
-            android:id="@+id/post_comment"
-            android:text=""
-            android:background="@drawable/border_comment"/>
-
     </LinearLayout>
 
     <LinearLayout

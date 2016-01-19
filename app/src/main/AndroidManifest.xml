@@ -86,7 +86,8 @@
 
         <!-- LOCATE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.LocateActivity"
-            android:parentActivityName=".activities.ExploreActivity">
+            android:parentActivityName=".activities.ExploreActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -96,7 +97,7 @@
         <!-- TAG ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.TagActivity"
             android:parentActivityName=".activities.LocateActivity"
-            android:windowSoftInputMode="adjustNothing" >
+            android:windowSoftInputMode="adjustNothing|stateHidden" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
