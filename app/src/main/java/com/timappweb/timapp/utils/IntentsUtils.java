@@ -8,18 +8,21 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.ExploreActivity;
 import com.timappweb.timapp.activities.FilterActivity;
+import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
+import com.timappweb.timapp.activities.TagActivity;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 
 public class IntentsUtils {
 
 
-    public static void login(Activity activity){
-        Intent intent = new Intent(activity, LoginActivity.class);
-        activity.startActivity(intent);
+    public static void login(Context context){
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 
     public static void profile(Activity activity){
@@ -49,15 +52,21 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void post(Activity activity, Post post) {
+    public static void viewPost(Activity activity, Post post) {
         Intent intent = new Intent(activity, PostActivity.class);
         intent.putExtra("post", post);          // TODO use constant
         activity.startActivity(intent);
     }
-    public static void post(Context activity, int postId) {
+    public static void viewPost(Context activity, int postId) {
         Intent intent = new Intent(activity, PostActivity.class);
         intent.putExtra("post.id", postId);          // TODO use constant
         activity.startActivity(intent);
+    }
+
+    public static void addPost(Context context, Place place) {
+        Intent intent = new Intent(context, TagActivity.class);
+        intent.putExtra("place", place);          // TODO use constant
+        context.startActivity(intent);
     }
 
     public static void viewPlace(Activity activity) {

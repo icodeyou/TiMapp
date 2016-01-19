@@ -24,6 +24,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
@@ -319,10 +320,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 }
 
             } catch (retrofit.RetrofitError ex){
-                MyApplication.showAlert(getApplicationContext(), R.string.error_server_unavailable);
+                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG);
                 Log.e(TAG, "Server unavailable");
             } catch (Exception ex){
-                MyApplication.showAlert(getApplicationContext(), "An unexpected error occured. Consider updating your app");
+                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG);
                 Log.e(TAG, "Exception: " + ex);
             }
             return false;

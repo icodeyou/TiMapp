@@ -1,32 +1,33 @@
 package com.timappweb.timapp.activities;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
+import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
 
@@ -77,8 +78,18 @@ public class LocateActivity extends BaseActivity{
         Button buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
         listPlaces = (ListView) findViewById(R.id.list_places);
 
-        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        final PlacesAdapter placesAdapter = new PlacesAdapter(this);
         listPlaces.setAdapter(placesAdapter);
+
+        final LocateActivity that = this;
+        listPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Place place = placesAdapter.getItem(position);
+                IntentsUtils.addPost(that, place);
+            }
+        });
+
 
         showLoader();
 
@@ -214,6 +225,7 @@ public class LocateActivity extends BaseActivity{
         }
     }
 
+
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
@@ -227,10 +239,6 @@ public class LocateActivity extends BaseActivity{
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // MISCELLANEOUS
-    public void testClick(View view) {
-        Intent intent = new Intent(this,TagActivity.class);
-        startActivity(intent);
-    }
 
 
 }

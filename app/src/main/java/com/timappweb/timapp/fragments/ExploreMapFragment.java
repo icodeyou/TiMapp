@@ -155,7 +155,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
     private void showMarkerDetail(final Post postIncomplete){
-        IntentsUtils.post(getActivity(), postIncomplete.getId());
+        IntentsUtils.viewPost(getActivity(), postIncomplete.getId());
     }
 
     private void showMarkerDetail(Place place){

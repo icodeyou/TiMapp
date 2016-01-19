@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.TagsAdapter;
@@ -124,10 +124,10 @@ public class PublishActivity extends BaseActivity{
                 int id = Integer.valueOf(restFeedback.data.get("id"));
                 Log.i(TAG, "Post has been saved. Id is : " + id);
                 //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
-                IntentsUtils.post(this.context, id);
+                IntentsUtils.viewPost(this.context, id);
             } else {
                 Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
-                MyApplication.showAlert(this.context, restFeedback.message);
+                Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG);
             }
         }
 
@@ -135,7 +135,7 @@ public class PublishActivity extends BaseActivity{
         public void failure(RetrofitError error) {
             super.failure(error);
             progressDialog.hide();
-            MyApplication.showAlert(this.context, R.string.error_webservice_connection);
+            Toast.makeText(this.context, R.string.error_webservice_connection, Toast.LENGTH_LONG);
         }
     }
 

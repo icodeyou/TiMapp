@@ -1,19 +1,19 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
@@ -37,6 +37,15 @@ public class TagActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check that we gave the place as an extra parameter
+        Bundle extras = getIntent().getExtras();
+        Place place = (Place) extras.getSerializable("post");
+        if (place == null){
+            IntentsUtils.addPlace(this);
+            return;
+        }
+
         setContentView(R.layout.activity_tag);
         this.initToolbar(true);
 
@@ -46,7 +55,7 @@ public class TagActivity extends BaseActivity{
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         this.progressBarView = findViewById(R.id.progressbar);
 
-        setSelectedTagsViewGONE();
+        setSelectedTagsViewGone();
     }
 
     @Override
@@ -78,13 +87,13 @@ public class TagActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Public methods
-    public void setSelectedTagsViewGONE() {
+    public void setSelectedTagsViewGone() {
         findViewById(R.id.top_line_hrv).setVisibility(View.GONE);
         selectedTagsView.setVisibility(View.GONE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.GONE);
     }
 
-    public void setSelectedTagsViewVISIBLE() {
+    public void setSelectedTagsViewVisible() {
         findViewById(R.id.top_line_hrv).setVisibility(View.VISIBLE);
         selectedTagsView.setVisibility(View.VISIBLE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.VISIBLE);

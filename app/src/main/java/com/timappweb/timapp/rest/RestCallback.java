@@ -6,6 +6,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.model.RestError;
+import com.timappweb.timapp.utils.IntentsUtils;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -19,7 +20,7 @@ public abstract class RestCallback<T> implements Callback<T> {
         this.context = context;
     }
 
-    public  void failure(RestError error){
+    public void failure(RestError error){
         String userMessage = null;
         switch (error.getCode()){
             case 500:
@@ -28,15 +29,14 @@ public abstract class RestCallback<T> implements Callback<T> {
                 break;
             case 300:
             case 403:
-                userMessage = context.getString(R.string.error_require_login);//"You must be logged in to perform this action";
-                break;
+                IntentsUtils.login(this.context);
+                return;
             case -1:
                 userMessage = context.getString(R.string.error_no_internet);
                 break;
             default:
                 userMessage = context.getString(R.string.error_unkown);
         }
-        MyApplication.showAlert(context, userMessage);
         Log.i(TAG, "Get server error: " + userMessage + "(" + error.toString() + ")");
     }
 

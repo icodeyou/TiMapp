@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -114,7 +113,7 @@ public class ProfileActivity extends BaseActivity{
         if (mUser != null && mUser.posts.size() > 0){
             Post post = mUser.posts.getFirst();
             post.user = mUser;
-            IntentsUtils.post(this, post);
+            IntentsUtils.viewPost(this, post);
         }
     }
 

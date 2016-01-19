@@ -116,11 +116,11 @@ public class SearchAndSelectTagManager {
         TagActivity tagActivity = (TagActivity) activity;
         switch (horizontalAdapter.getData().size()) {
             case 0:
-                tagActivity.setSelectedTagsViewGONE();
+                tagActivity.setSelectedTagsViewGone();
                 searchView.setQueryHint("Choose 3 tags");
                 break;
             case 1:
-                tagActivity.setSelectedTagsViewVISIBLE();
+                tagActivity.setSelectedTagsViewVisible();
                 searchView.setQueryHint("Choose 2 tags");
                 break;
             case 2:

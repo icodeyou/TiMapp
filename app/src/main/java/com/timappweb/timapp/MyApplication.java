@@ -98,6 +98,8 @@ public class MyApplication extends Application{
     }
 
     static AlertDialog dialog = null;
+
+    /*
     public static void showAlert(Context context, String message) {
         if (dialog == null){
             Log.d(TAG, "Creating new dialog");
@@ -108,7 +110,9 @@ public class MyApplication extends Application{
             dialog.show();
         }
     }
+
     public static void showAlert(Context context, int id){
         showAlert(context, context.getResources().getString(id));
     }
+    */
 }
