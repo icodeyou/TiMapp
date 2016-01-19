@@ -8,6 +8,8 @@ public class Tag implements Serializable{
     public Integer id;
     public String name;
     public int count_ref;
+    public static final int MINLENGTH = 3;
+    public static final int MAXLENGTH = 31;
 
     public Tag(String name, int count_ref) {
         this.count_ref = count_ref;
@@ -53,5 +55,13 @@ public class Tag implements Serializable{
 
     public static Tag createDummy() {
         return new Tag("DummyTag", 34);
+    }
+
+    public boolean isValid() {
+        int length = getName().length();
+        boolean bool =  getName().length()>=MINLENGTH && getName().length()<= MAXLENGTH;
+        return  bool;
+
+
     }
 }

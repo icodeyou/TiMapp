@@ -1,6 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +19,12 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     protected LayoutInflater inflater;
     protected List<Tag> data = Collections.emptyList();
     private int idLayout;
+    private Context context;
 
     public TagsAdapter(Context context, List<Tag> data, int idTextView, int idLayout) {
         this.idTextView = idTextView;
         this.idLayout = idLayout;
+        this.context = context;
         inflater = LayoutInflater.from(context);
         if (data != null)
             this.data = data;
@@ -59,9 +62,12 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     }
     public void addData(String selectedTag) {
         Tag newTag = new Tag(selectedTag, 0);
-        if (!this.data.contains(newTag)){
+        if (!this.data.contains(newTag) && newTag.isValid()){
             this.data.add(newTag);
             this.notifyDataSetChanged();
+        }
+        else {
+
         }
     }
 

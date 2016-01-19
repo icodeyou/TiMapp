@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
-import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
@@ -26,6 +27,7 @@ public class TagActivity extends BaseActivity{
     private HorizontalTagsRecyclerView selectedTagsRV;
     private HashtagView suggestedTagsRV;
     private View progressBarView;
+    private ListView placeListView;
 
     // @Bind(R.id.hashtags1)
     protected HashtagView suggestedTagsView;
@@ -50,10 +52,13 @@ public class TagActivity extends BaseActivity{
         this.initToolbar(true);
 
         //Initialize variables
-        selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         selectedTagsView = findViewById(R.id.rv_selected_tags);
+        selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
-        this.progressBarView = findViewById(R.id.progressbar);
+        progressBarView = findViewById(R.id.progressbar_view);
+        placeListView = (ListView) findViewById(R.id.place_lv);
+
+        initAdapterPlace();
 
         setSelectedTagsViewGone();
     }
@@ -77,13 +82,20 @@ public class TagActivity extends BaseActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String query = searchView.getQuery().toString();
+        searchAndSelectTagManager.addTag(query);
 
         return true;
     }
 
     //----------------------------------------------------------------------------------------------
     //Private methods
+
+    private void initAdapterPlace() {
+        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        //placesAdapter.add(myPlace);
+        placeListView.setAdapter(placesAdapter);
+    }
 
     //----------------------------------------------------------------------------------------------
     //Public methods
