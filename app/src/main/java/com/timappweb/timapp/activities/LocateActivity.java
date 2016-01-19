@@ -1,11 +1,9 @@
 package com.timappweb.timapp.activities;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
@@ -14,11 +12,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.rest.QueryCondition;
@@ -39,11 +35,11 @@ public class LocateActivity extends BaseActivity{
     private String TAG = "LocateActivity";
 
     //Views
-    ListView listPlaces;
+    private ListView    listPlaces;
+    private View        placesAndBottomLine;
 
     // ProgressBar and ProgressDialog
-    private ProgressBar progressBarLocation;
-    private static ProgressDialog progressDialog = null;
+    private View progressBarView;
 
     // Location
     private MyLocationProvider          locationProvider;
@@ -65,8 +61,10 @@ public class LocateActivity extends BaseActivity{
         this.initToolbar(true);
 
         //Initialize variables
-        this.progressDialog = new ProgressDialog(this);
-        this.progressDialog.setMessage("Please wait...");
+        this.progressBarView = findViewById(R.id.progressbar_view);
+        this.placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
+
+        placesAndBottomLine.setVisibility(View.GONE);
 
         initLocationListener();
         initLocationProvider();
@@ -79,8 +77,6 @@ public class LocateActivity extends BaseActivity{
 
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         listPlaces.setAdapter(placesAdapter);
-
-        showLoader();
 
         //Listeners
         buttonAddSpot.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +122,6 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onLocationChanged(Location location) {
                 Log.i(TAG, "Location has changed: " + Util.print(location));
-                progressDialog.hide();
 
                 loadPlaces(location);
                 startIntentServiceReverseGeocoding(location);
@@ -155,8 +150,9 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void success(List<Place> place, Response response) {
                 Log.d(TAG, "Loading " + place.size() + " viewPlace(s)");
+                progressBarView.setVisibility(View.GONE);
+                placesAndBottomLine.setVisibility(View.VISIBLE);
                 if (place.size() != 0) {
-                    showPlaces();
                     ((PlacesAdapter) listPlaces.getAdapter()).addAll(place);
                 } else {
                     showNoPlaceMessage();
@@ -167,14 +163,6 @@ public class LocateActivity extends BaseActivity{
 
     private void showNoPlaceMessage() {
         // TODO jean: affiche message no viewPlace around the user
-    }
-
-    private void showPlaces() {
-        // TODO jean: affiche le layout qui contient les places et cache celui qui affiche le chargement de la position de l'utilisateur
-    }
-
-    private void showLoader(){
-        // TODO jean: affiche un loader tant que l'on a pas la position GPS de l'utilisateur
     }
 
     // ---------------------------------------------------------------------------------------------

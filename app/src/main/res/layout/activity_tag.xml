@@ -67,11 +67,16 @@
             android:layout_height="1dp"
             android:background="@color/colorPrimaryDark"/>
 
-        <ProgressBar
-            android:id="@+id/progressbar"
+        <LinearLayout
+            android:id="@+id/progressbar_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center">
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+        </LinearLayout>
 
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
@@ -101,7 +106,10 @@
 
         <!-- PLACE -->
         <!-- **********************************************************************-->
-        <include layout="@layout/item_place" />
+        <ListView
+            android:id="@+id/place_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <include android:id="@+id/toolbar_transparent"

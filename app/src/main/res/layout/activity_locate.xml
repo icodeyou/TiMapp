@@ -7,6 +7,17 @@
     android:background="@color/background">
 
     <LinearLayout
+        android:id="@+id/progressbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/places_and_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -20,7 +31,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark" />
+            android:background="@color/colorPrimaryDark"/>
     </LinearLayout>
 
     <Button

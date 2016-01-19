@@ -43,7 +43,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         TextView countPosts = (TextView) postBox.findViewById(R.id.people_counter_place);
         RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
 
-        // Get
+        // Get location and time
         String location = place.name;
         String time = place.getTime();
 
