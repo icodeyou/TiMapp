@@ -34,7 +34,6 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.utils.MyLocationListener;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.HashMap;
@@ -160,7 +159,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
     private void showMarkerDetail(Place place){
-        IntentsUtils.place(getActivity());
+        IntentsUtils.viewPlace(getActivity());
     }
 
     private void centerMap(){
@@ -168,7 +167,7 @@ public class ExploreMapFragment extends SupportMapFragment {
         MyLocationProvider locationProvider = new MyLocationProvider(getActivity(), new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.d(TAG, "LOCATION CHANGED ! location");
+                Log.d(TAG, "LOCATION CHANGED ! name");
             }
         });
 
@@ -176,7 +175,7 @@ public class ExploreMapFragment extends SupportMapFragment {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(locationProvider.getLastGPSLocation()), 12.0f));
         }
         catch (NoLastLocationException ex){
-            Log.d(TAG, "Cannot center: no last location");
+            Log.d(TAG, "Cannot center: no last name");
         }
     }
 
@@ -187,7 +186,7 @@ public class ExploreMapFragment extends SupportMapFragment {
 
     private void addMarker(Place place){
         Marker marker = mMap.addMarker(new MarkerOptions()
-                .title(place.location)
+                .title(place.name)
                 .position(place.getPosition())
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         mapMarkers.put(marker, place);
@@ -252,7 +251,7 @@ public class ExploreMapFragment extends SupportMapFragment {
             public boolean onMarkerClick(Marker marker) {
                 MarkerValueInterface markerValue = mapMarkers.get(marker);
                 if (markerValue != null){
-                    Log.i(TAG, "You clicked on a marker with place: " + markerValue.getId());
+                    Log.i(TAG, "You clicked on a marker with viewPlace: " + markerValue.getId());
                     showMarkerDetail(markerValue);
                 }
                 else{

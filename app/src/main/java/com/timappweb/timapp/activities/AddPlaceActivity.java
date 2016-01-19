@@ -5,23 +5,29 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.utils.IntentsUtils;
+
+import retrofit.client.Response;
 
 public class AddPlaceActivity extends BaseActivity {
     private String TAG = "PublishActivity";
     private InputMethodManager imm;
 
     //Views
-    private EditText locationET;
+    private EditText groupNameET;
     RecyclerView categoriesRV;
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
@@ -36,7 +42,7 @@ public class AddPlaceActivity extends BaseActivity {
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        locationET = (EditText) findViewById(R.id.location_edit_text);
+        groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
 
         initAdapterAndManager();
@@ -51,6 +57,22 @@ public class AddPlaceActivity extends BaseActivity {
         categoriesRV.setLayoutManager(manager);
     }
 
+    private void submitPlace(final Place place){
+        Log.d(TAG, "Submit place " + place.toString());
+        RestClient.service().addPlace(place, new RestCallback<RestFeedback>(this) {
+            @Override
+            public void success(RestFeedback restFeedback, Response response) {
+                if (restFeedback.success){
+                    Log.d(TAG, "Place has been saved: " + place);
+                    IntentsUtils.addPlace(this.context);
+                }
+                else{
+                    Log.d(TAG, "Cannot save viewPlace: " + place);
+                    // TODO display message
+                }
+            }
+        });
+    }
     //----------------------------------------------------------------------------------------------
     //Public methods
     public RecyclerView getCategoriesRV() {
@@ -65,6 +87,12 @@ public class AddPlaceActivity extends BaseActivity {
 
     public void setCategory(Category category) {
         categorySelected = category;
+    }
+
+    public void onCreatePlaceClick(View view) {
+        final Place place = new Place(0, 0, groupNameET.getText().toString(), categorySelected);
+        // TODO validate place
+        this.submitPlace(place);
     }
 
     //----------------------------------------------------------------------------------------------

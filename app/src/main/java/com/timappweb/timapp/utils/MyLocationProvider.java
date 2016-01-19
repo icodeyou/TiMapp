@@ -50,8 +50,8 @@ public class MyLocationProvider implements
     private LocationRequest     mLocationRequest;           // Location request object
     LocationManager             mLocationManager = null;    // LocationManager
 
-    private Location            mLastLocation = null;       // The last location from any provider
-    private boolean             mRequestingLocationUpdates = true;  // Enable or disable location requests
+    private Location            mLastLocation = null;       // The last name from any provider
+    private boolean             mRequestingLocationUpdates = true;  // Enable or disable name requests
 
     // ---------------------------------------------------------------------------------------------
     // static
@@ -119,7 +119,7 @@ public class MyLocationProvider implements
             mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             return mLastLocation;
         }
-        throw new NoLastLocationException("No location");
+        throw new NoLastLocationException("No name");
     }
 
 
@@ -176,7 +176,7 @@ public class MyLocationProvider implements
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
             // TODO
-            Log.d(TAG, "Show request location explanation to the user");
+            Log.d(TAG, "Show request name explanation to the user");
         } else {
             // No explanation needed, we can request the permission.
             ActivityCompat.requestPermissions(this.activity,
@@ -201,13 +201,13 @@ public class MyLocationProvider implements
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Log.d(TAG, "User granted location request");
+                    Log.d(TAG, "User granted name request");
                     // this.updateLastLocation();
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     // TODO
-                    Log.i(TAG, "User rejected location request");
+                    Log.i(TAG, "User rejected name request");
                 }
                 return;
             }
@@ -218,17 +218,17 @@ public class MyLocationProvider implements
 
 
     protected void startLocationUpdates() {
-        Log.d(TAG, "Starting location updates");
+        Log.d(TAG, "Starting name updates");
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
     }
     /**
-     * Removes location updates from the FusedLocationApi.
+     * Removes name updates from the FusedLocationApi.
      */
     public void stopLocationUpdates() {
-        Log.d(TAG, "Stopping location updates");
-        // It is a good practice to remove location requests when the activity is in a paused or
+        Log.d(TAG, "Stopping name updates");
+        // It is a good practice to remove name requests when the activity is in a paused or
         // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
+        // recommended in applications that request frequent name updates.
 
         // The final argument to {@code requestLocationUpdates()} is a LocationListener
         // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
@@ -266,7 +266,7 @@ public class MyLocationProvider implements
         Criteria c = this.getBestCriteria();
         String locationProvider = mLocationManager.getBestProvider(c, true);
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.d(TAG, "Best location provider is: " + locationProvider);
+        Log.d(TAG, "Best name provider is: " + locationProvider);
 
         //mLocationManager.requestSingleUpdate(c, mLocationListener, null);
         //mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
@@ -297,7 +297,7 @@ public class MyLocationProvider implements
      */
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.e(TAG, "Google location api onConnected()");
+        Log.e(TAG, "Google name api onConnected()");
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mRequestingLocationUpdates) {
@@ -323,7 +323,7 @@ public class MyLocationProvider implements
         if (checkSelfPermission(this.activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(this.activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions();
-            Log.e(TAG, "Cannot get user location. No permission");
+            Log.e(TAG, "Cannot get user name. No permission");
             return false;
         }
 
@@ -331,7 +331,7 @@ public class MyLocationProvider implements
             this.askUserToEnableGPS();
         }
 
-        Log.d(TAG, "User has requested his location");
+        Log.d(TAG, "User has requested his name");
 
         Criteria c = this.getBestCriteria();
         String locationProvider = mLocationManager.getBestProvider(c, true);
@@ -340,19 +340,19 @@ public class MyLocationProvider implements
 
         if (mLastLocation != null){
             long locationTime = mLastLocation.getTime();
-            Log.i(TAG, "Last known location is " + mLastLocation.getLongitude() + "-" + mLastLocation.getLongitude() +
+            Log.i(TAG, "Last known name is " + mLastLocation.getLongitude() + "-" + mLastLocation.getLongitude() +
                     "  " + ((System.currentTimeMillis()-locationTime)/1000) + " seconds ago" );
             if (locationTime > (System.currentTimeMillis() + MIN_UPDATE_TIME) ){
                 Log.d(TAG, "This is too old, requesting update...");
             }
             else{
-                Log.d(TAG, "Using last location");
+                Log.d(TAG, "Using last name");
                 mLocationListener.onLocationChanged(mLastLocation);
                 return true;
             }
         }
 
-        Log.d(TAG, "Best location provider is: " + locationProvider);
+        Log.d(TAG, "Best name provider is: " + locationProvider);
 
         //mLocationManager.requestSingleUpdate(c, mLocationListener, null);
         //mLocationManager.requestLocationUpdates(locationProvider, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, mLocationListener);

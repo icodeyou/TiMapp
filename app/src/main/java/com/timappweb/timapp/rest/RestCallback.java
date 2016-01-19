@@ -27,9 +27,9 @@ public abstract class RestCallback<T> implements Callback<T> {
                 userMessage = context.getString(R.string.error_server_unavailable);
                 break;
             case 300:
+            case 403:
                 userMessage = context.getString(R.string.error_require_login);//"You must be logged in to perform this action";
                 break;
-            // We cannot connect to internet
             case -1:
                 userMessage = context.getString(R.string.error_no_internet);
                 break;
@@ -37,7 +37,7 @@ public abstract class RestCallback<T> implements Callback<T> {
                 userMessage = context.getString(R.string.error_unkown);
         }
         MyApplication.showAlert(context, userMessage);
-        Log.i(TAG, "Get server error: " + error.toString());
+        Log.i(TAG, "Get server error: " + userMessage + "(" + error.toString() + ")");
     }
 
 

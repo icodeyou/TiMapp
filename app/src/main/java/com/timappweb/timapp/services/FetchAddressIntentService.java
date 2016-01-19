@@ -130,7 +130,7 @@ public class FetchAddressIntentService extends IntentService {
 
         String errorMessage = "";
 
-        // Get the location passed to this service through an extra.
+        // Get the name passed to this service through an extra.
         Location location = intent.getParcelableExtra(
                 Constants.LOCATION_DATA_EXTRA);
         mReceiver = (ResultReceiver) intent.getParcelableExtra(Constants.RECEIVER);
@@ -138,7 +138,7 @@ public class FetchAddressIntentService extends IntentService {
         List<Address> addresses = null;
 
         try {
-            Log.d(TAG, "Runing geocoder with location: " + location.toString());
+            Log.d(TAG, "Runing geocoder with name: " + location.toString());
             addresses = geocoder.getFromLocation(
                     location.getLatitude(),
                     location.getLongitude(),

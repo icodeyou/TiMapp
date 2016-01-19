@@ -79,6 +79,11 @@ public interface WebServiceInterface {
     @GET("/SpotsTags/post/{id}.json")
     void loadTagsFromPost(@Path("id") int id, RestCallback<ArrayList<Tag>> restCallback);
 
+    // ---------------------------------------------------------------------------------------------
+    // Places
+
+    @POST("/Places/add.json")
+    void addPlace(@Body Place place, RestCallback<RestFeedback> restFeedback);
 
     @GET("/Places/around_me.json")
     void placeAroundMe(@QueryMap Map<String, String> conditions, RestCallback<List<Place>>  callback);

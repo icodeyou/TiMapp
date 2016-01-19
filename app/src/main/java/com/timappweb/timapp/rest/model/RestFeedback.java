@@ -16,11 +16,10 @@ public class RestFeedback extends RestResponse {
     @SerializedName("returnCode")
     public int code;
 
-    @SerializedName("comment")
+    @SerializedName("message")
     public String message;
 
-    @SerializedName("steps")
-    public String steps;
+    @SerializedName("data")
     public HashMap<String, String> data;
 
 

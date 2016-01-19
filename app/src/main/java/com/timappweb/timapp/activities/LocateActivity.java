@@ -91,11 +91,13 @@ public class LocateActivity extends BaseActivity{
             }
         });
 
-        if (BuildConfig.DEBUG){
-            placesAdapter.generateDummyData();
-        }
+        //if (BuildConfig.DEBUG){
+        //   placesAdapter.generateDummyData();
+        //}
+
 
     }
+
 
     @Override
     protected void onStart() {
@@ -117,17 +119,16 @@ public class LocateActivity extends BaseActivity{
     //PRIVATE METHODS
 
     /**
-     * Load places once user location is known
+     * Load places once user name is known
      */
     private void initLocationListener() {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i(TAG, "User location has changed: " + Util.print(location));
+                Log.i(TAG, "Location has changed: " + Util.print(location));
                 progressDialog.hide();
 
                 loadPlaces(location);
-
                 startIntentServiceReverseGeocoding(location);
             }
         };
@@ -153,7 +154,7 @@ public class LocateActivity extends BaseActivity{
 
             @Override
             public void success(List<Place> place, Response response) {
-                Log.d(TAG, "Loading " + place.size() + " place(s)");
+                Log.d(TAG, "Loading " + place.size() + " viewPlace(s)");
                 if (place.size() != 0) {
                     showPlaces();
                     ((PlacesAdapter) listPlaces.getAdapter()).addAll(place);
@@ -165,7 +166,7 @@ public class LocateActivity extends BaseActivity{
     }
 
     private void showNoPlaceMessage() {
-        // TODO jean: affiche message no place around the user
+        // TODO jean: affiche message no viewPlace around the user
     }
 
     private void showPlaces() {
@@ -183,7 +184,7 @@ public class LocateActivity extends BaseActivity{
     // ----------------------------------------------------------------------------------------------
     //PROTECTED METHODS
     protected void startIntentServiceReverseGeocoding(Location location) {
-        Log.d(TAG, "Starting IntentService to get use address from location");
+        Log.d(TAG, "Starting IntentService to get use address from name");
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
         intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);

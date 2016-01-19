@@ -1,25 +1,19 @@
 package com.timappweb.timapp.entities;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 
 public class Place implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
     public int id;
-    public String location;
+    public String name;
     public double latitude;
     public int created;
     public double longitude;
@@ -29,14 +23,21 @@ public class Place implements Serializable, MarkerValueInterface {
 
     public ArrayList<Post> posts;
 
-    public Place(int id, double lat, double lng, String location) {
+    public Place(int id, double lat, double lng, String name) {
         this.id = id;
         this.latitude = lat;
         this.longitude = lng;
-        this.location = location;
+        this.name = name;
         this.count_post = 0;
         this.posts = new ArrayList<>();
         this.main_tags = new ArrayList<>();
+    }
+
+    public Place(int lat, int lng, String name, Category category) {
+        this.latitude = lat;
+        this.longitude = lng;
+        this.name = name;
+        this.category_id = category.id;
     }
 
     public void addPost(Post post){
@@ -73,7 +74,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public String getTime() {
-        if (posts.size() > 0){
+        if (this.posts != null && posts.size() > 0){
             return posts.get(posts.size()-1).getPrettyTimeCreated();
         }
         return this.getPrettyTimeCreated();
@@ -91,5 +92,17 @@ public class Place implements Serializable, MarkerValueInterface {
     public String getPrettyTimeCreated() {
         PrettyTime p = new PrettyTime();
         return p.format(new Date(((long) this.created) * 1000));
+    }
+
+    @Override
+    public String toString() {
+        return "Place{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", latitude=" + latitude +
+                ", created=" + created +
+                ", longitude=" + longitude +
+                ", category_id=" + category_id +
+                '}';
     }
 }

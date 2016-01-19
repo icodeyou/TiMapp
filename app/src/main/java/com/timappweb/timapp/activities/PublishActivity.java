@@ -71,7 +71,7 @@ public class PublishActivity extends BaseActivity{
     //Private methods
     private void submitNewPost(){
 
-        //Create dummy location
+        //Create dummy name
         Location location = null;
         Log.i(TAG, "Debug mode. Using mock position.");
         String providerName = "";

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.ExploreActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.LoginActivity;
@@ -59,11 +60,15 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void place(Activity activity) {
+    public static void viewPlace(Activity activity) {
         Intent intent = new Intent(activity, PlaceActivity.class);
         activity.startActivity(intent);
     }
 
+    public static void addPlace(Context activity) {
+        Intent intent = new Intent(activity, AddPlaceActivity.class);
+        activity.startActivity(intent);
+    }
     /**
      * Redirect to the last activity we attempt to go
      * before being redirected to the login activity

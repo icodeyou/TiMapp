@@ -14,7 +14,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
@@ -44,7 +43,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
 
         // Get
-        String location = place.location;
+        String location = place.name;
         String time = place.getTime();
 
         //Set texts

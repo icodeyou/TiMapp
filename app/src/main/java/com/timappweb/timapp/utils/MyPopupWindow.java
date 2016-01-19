@@ -37,11 +37,11 @@ public class MyPopupWindow {
 
         int location[] = new int[2];
 
-        // Get the View's(the one that was clicked in the Fragment) location
+        // Get the View's(the one that was clicked in the Fragment) name
         anchorView.getLocationOnScreen(location);
         Log.d(TAG, "Anchor view position for popup: " + location[0] + "-" + location[1]);
 
-        // Using location, the PopupWindow will be displayed right under anchorView
+        // Using name, the PopupWindow will be displayed right under anchorView
         popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY,   location[0], location[1] + anchorView.getHeight());
 
     }

@@ -1,6 +1,5 @@
 package com.timappweb.timapp.rest;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.util.Log;
@@ -11,11 +10,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.fragments.AlertDialog;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.Date;
@@ -90,7 +87,7 @@ public class RestClient {
         // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
         mExecutorService = Executors.newCachedThreadPool();
         builder = new RestAdapter.Builder()
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.BASIC : RestAdapter.LogLevel.BASIC)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
                 .setEndpoint(endpoint)
                 .setRequestInterceptor(new SessionRequestInterceptor())
                 .setConverter(new GsonConverter(gson))

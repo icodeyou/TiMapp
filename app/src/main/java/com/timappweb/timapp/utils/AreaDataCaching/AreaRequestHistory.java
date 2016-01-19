@@ -102,7 +102,7 @@ public class AreaRequestHistory{
     }
 
     /**
-     * Get the area coordinate that contains the location
+     * Get the area coordinate that contains the name
      *
      * @param location
      * @return
