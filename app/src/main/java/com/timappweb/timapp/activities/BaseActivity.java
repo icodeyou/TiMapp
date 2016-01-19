@@ -58,5 +58,6 @@ public class BaseActivity extends AppCompatActivity {
 
         //set searchView
         searchView = (SearchView) searchItem.getActionView();
+        searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 }
