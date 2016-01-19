@@ -72,7 +72,8 @@ public class TagActivity extends BaseActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        String query = searchView.getQuery().toString();
+        searchAndSelectTagManager.addTag(query);
 
         return true;
     }

@@ -371,7 +371,7 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
 
         @Override
         public void onClick(View view) {
-            MyApplication.startRequireLoggedInActivity(getBaseContext(), LocateActivity.class);
+            MyApplication.startRequireLoggedInActivity(getBaseContext(), TagActivity.class);
         }
     }
 

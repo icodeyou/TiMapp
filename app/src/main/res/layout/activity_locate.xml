@@ -22,7 +22,8 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_below="@+id/toolbar_transparent">
+        android:layout_below="@+id/toolbar_transparent"
+        android:visibility="gone">
 
         <ListView
             android:id="@+id/list_places"
@@ -32,6 +33,19 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_if_no_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Désolé"/>
     </LinearLayout>
 
     <Button

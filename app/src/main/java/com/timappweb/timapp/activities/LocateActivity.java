@@ -37,9 +37,10 @@ public class LocateActivity extends BaseActivity{
     //Views
     private ListView    listPlaces;
     private View        placesAndBottomLine;
+    private View        noPlaceView;
 
     // ProgressBar and ProgressDialog
-    private View progressBarView;
+    private View        progressBarView;
 
     // Location
     private MyLocationProvider          locationProvider;
@@ -63,8 +64,7 @@ public class LocateActivity extends BaseActivity{
         //Initialize variables
         this.progressBarView = findViewById(R.id.progressbar_view);
         this.placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
-
-        placesAndBottomLine.setVisibility(View.GONE);
+        this.noPlaceView = findViewById(R.id.layout_if_no_place);
 
         initLocationListener();
         initLocationProvider();
@@ -151,18 +151,14 @@ public class LocateActivity extends BaseActivity{
             public void success(List<Place> place, Response response) {
                 Log.d(TAG, "Loading " + place.size() + " viewPlace(s)");
                 progressBarView.setVisibility(View.GONE);
-                placesAndBottomLine.setVisibility(View.VISIBLE);
                 if (place.size() != 0) {
                     ((PlacesAdapter) listPlaces.getAdapter()).addAll(place);
+                    placesAndBottomLine.setVisibility(View.VISIBLE);
                 } else {
-                    showNoPlaceMessage();
+                    noPlaceView.setVisibility(View.GONE);
                 }
             }
         });
-    }
-
-    private void showNoPlaceMessage() {
-        // TODO jean: affiche message no viewPlace around the user
     }
 
     // ---------------------------------------------------------------------------------------------
