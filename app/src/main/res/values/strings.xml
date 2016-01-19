@@ -66,4 +66,5 @@
     <string name="text_anonymous">Anonymous</string>
     <string name="button_add_spot">Add spot</string>
     <string name="hint_location_name">Location name</string>
+    <string name="add_spot_button">create</string>
 </resources>

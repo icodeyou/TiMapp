@@ -3,7 +3,6 @@ package com.timappweb.timapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 
 import android.view.Menu;
 import android.view.View;
@@ -14,17 +13,16 @@ import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
 
 public class TagActivity extends BaseActivity{
 
     private String TAG = "TagActivity";
-    private InputMethodManager              imm;
 
     //Views
-    private HorizontalRecyclerView          selectedTagsRV;
+    private HorizontalTagsRecyclerView selectedTagsRV;
     private HashtagView suggestedTagsRV;
 
     // @Bind(R.id.hashtags1)
@@ -40,8 +38,7 @@ public class TagActivity extends BaseActivity{
         this.initToolbar(true);
 
         //Initialize variables
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        selectedTagsRV = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
+        selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
     }
 
@@ -53,7 +50,6 @@ public class TagActivity extends BaseActivity{
         setSearchview(menu);
 
         //set hint for searchview
-        searchView.setQueryHint(getString(R.string.hint_searchview_activity_tag));
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                 searchView, suggestedTagsView, selectedTagsRV);
 

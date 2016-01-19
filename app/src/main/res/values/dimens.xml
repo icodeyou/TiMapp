@@ -18,6 +18,10 @@
     <dimen name="height_rv_displayed_tags">50dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
+    <dimen name="ic_place">80dp</dimen>
+    <dimen name="height_button_add_place">60dp</dimen>
+    <dimen name="height_categories_choose">180dp</dimen>
+    <dimen name="width_categories_choose">280dp</dimen>
 
     <!-- Text dimensions -->
     <dimen name="text_tiny">10dp</dimen>
@@ -33,11 +37,12 @@
     <dimen name="logo_normal">30dp</dimen>
     <dimen name="logo_big">25dp</dimen>
 
+
     <dimen name="tag_padding_bottom">1dp</dimen>
     <dimen name="tag_padding_top">1dp</dimen>
     <dimen name="tag_padding_left">1dp</dimen>
     <dimen name="tag_padding_right">1dp</dimen>
     <dimen name="tag_padding_vertical">1dp</dimen>
 
-    <dimen name="height_button_add_place">60dp</dimen>
+
 </resources>

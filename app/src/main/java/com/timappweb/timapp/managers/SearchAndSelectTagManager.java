@@ -3,20 +3,23 @@ package com.timappweb.timapp.managers;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 
 import com.greenfrvr.hashtagview.HashtagView;
+import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnQueryTagListener;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.SearchHistory;
-import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -29,14 +32,16 @@ public class SearchAndSelectTagManager {
 
     private Activity activity;
     private SearchView searchView;
-    private HorizontalRecyclerView selectedTagsRecyclerView;
+    private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView suggestedRecyclerView;
     private SearchHistory<Tag> searchHistory;
+
+    private int remaining_tags;
 
     public SearchAndSelectTagManager(Activity activity,
                                      SearchView searchView,
                                      HashtagView suggestedRecyclerView,
-                                     HorizontalRecyclerView selectedRecyclerView) {
+                                     HorizontalTagsRecyclerView selectedRecyclerView) {
         this.activity = activity;
         this.searchView = searchView;
         this.suggestedRecyclerView = suggestedRecyclerView;
@@ -63,12 +68,26 @@ public class SearchAndSelectTagManager {
 
         }));
 */
+        resetCounter();
+        setCounterHint();
+
+        suggestedRecyclerView.addOnTagClickListener(new HashtagView.TagsClickListener() {
+            @Override
+            public void onItemClicked(Object item) {
+                //TODO: add tag
+                decreaseCounter();
+                setCounterHint();
+            }
+        });
+
         selectedTagsRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(activity, new RecyclerItemTouchListener.OnItemClickListener() {
 
             @Override
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
                 Log.d(TAG, "Clicked on selected item");
                 selectedTagsRecyclerView.getAdapter().removeData(position);
+                increaseCounter();
+                setCounterHint();
             }
 
         }));
@@ -84,6 +103,47 @@ public class SearchAndSelectTagManager {
         this.searchHistory = new SearchHistory<>();
     }
 
+
+    public void decreaseCounter() {
+        remaining_tags = remaining_tags-1;
+    }
+
+    public void increaseCounter() {
+        remaining_tags = remaining_tags+1;
+    }
+
+    public void resetCounter() {
+        remaining_tags = 3;
+    }
+
+    public void setCounterHint() {
+        switch (remaining_tags) {
+            case 3:
+                searchView.setQueryHint("choose 3 tags");
+                break;
+            case 2:
+                searchView.setQueryHint("Choose 2 tags");
+                break;
+            case 1:
+                searchView.setQueryHint("One more !");
+                break;
+            case 0:
+                //Save data
+                 ArrayList<String> finalTags = selectedTagsRecyclerView.getAdapter().getStringsFromTags();
+
+                //Change activity
+                Intent intent = new Intent(activity, PublishActivity.class);
+                intent.putStringArrayListExtra("finalTags",finalTags);
+                activity.startActivity(intent);
+
+                //Clear list of tags in case back button is pressed in PublishActivity
+                selectedTagsRecyclerView.getAdapter().resetData();
+                resetCounter();
+                setCounterHint();
+            default:
+                break;
+        }
+    }
 
     /**
      * Suggest tag according to user input
@@ -141,12 +201,8 @@ public class SearchAndSelectTagManager {
         return searchView;
     }
 
-    public HorizontalRecyclerView getSelectedTagsRecyclerView() {
+    public HorizontalTagsRecyclerView getSelectedTagsRecyclerView() {
         return selectedTagsRecyclerView;
-    }
-
-    public HashtagView getFillRecyclerView() {
-        return suggestedRecyclerView;
     }
 
 }

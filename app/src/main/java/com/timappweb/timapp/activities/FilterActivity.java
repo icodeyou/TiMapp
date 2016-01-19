@@ -14,7 +14,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class FilterActivity extends BaseActivity {
         searchView.setQueryHint(getString(R.string.hint_searchview_add_post));
 
         HashtagView hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
-        HorizontalRecyclerView selectedTagsRecyclerView = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
+        HorizontalTagsRecyclerView selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                 searchView, hashtagView, selectedTagsRecyclerView);
 

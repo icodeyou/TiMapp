@@ -14,14 +14,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.TagsAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.views.HorizontalRecyclerView;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RetrofitError;
@@ -33,7 +35,7 @@ public class PublishActivity extends BaseActivity{
     private static ProgressDialog progressDialog = null;
 
     //Views
-    private HorizontalRecyclerView selectedTagsRV;
+    private HorizontalTagsRecyclerView selectedTagsRV;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -46,7 +48,16 @@ public class PublishActivity extends BaseActivity{
         //Initialize variables
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
         LinearLayout layout_checkbox = (LinearLayout) findViewById(R.id.layout_checkbox);
-        selectedTagsRV = (HorizontalRecyclerView) findViewById(R.id.rv_selected_tags);
+        selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
+
+        //init adapter
+        TagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
+
+        //Get Extra
+        Intent intent = getIntent();
+        ArrayList<String> finalTagsString = intent.getStringArrayListExtra("finalTags");
+        ArrayList<Tag> finalTags = selectedTagsAdapter.getTagsFromStrings(finalTagsString);
+        selectedTagsAdapter.setData(finalTags);
 
         layout_checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +66,6 @@ public class PublishActivity extends BaseActivity{
             }
         });
     }
-
 
     //----------------------------------------------------------------------------------------------
     //Private methods

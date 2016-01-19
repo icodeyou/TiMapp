@@ -33,11 +33,15 @@ public class Category implements Serializable{
         Category category = (Category) o;
 
         return name.equals(category.name);
-
     }
 
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public Category getCategoryFromID(int id) {
+        return this;
+        //TODO : retourner en fonction de l'ID !!!!
     }
 }

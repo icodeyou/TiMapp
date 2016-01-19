@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.entities.Tag;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,6 +68,28 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     public void removeData(int position) {
         this.data.remove(position);
         this.notifyDataSetChanged();
+    }
+
+    public void resetData() {
+        this.data = Collections.emptyList();
+        this.notifyDataSetChanged();
+    }
+
+    public ArrayList<String> getStringsFromTags() {
+        ArrayList<String> res = new ArrayList<String>();
+        for (Tag tag : this.data) {
+            res.add(tag.getName());
+        }
+        return res;
+    }
+
+    public ArrayList<Tag> getTagsFromStrings(ArrayList<String> tagsString) {
+        ArrayList<Tag> tagsList = new ArrayList<Tag>();
+        for(String s : tagsString ) {
+            Tag tag = new Tag(s);
+            tagsList.add(tag);
+        }
+        return tagsList;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

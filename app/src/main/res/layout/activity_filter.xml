@@ -37,7 +37,7 @@
             <!-- ******************************************************************* -->
             <!-- First part: RecyclerView : Saved tags -->
 
-            <com.timappweb.timapp.views.HorizontalRecyclerView
+            <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                 android:id="@+id/rv_selected_tags"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_rv_displayed_tags"

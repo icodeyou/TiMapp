@@ -27,7 +27,6 @@ public class MyApplication extends Application{
 
     public static List<Category> mapNameToCategory = new LinkedList<>();
 
-
     @Override
     public void onCreate(){
         super.onCreate();
@@ -47,9 +46,10 @@ public class MyApplication extends Application{
 //        mapNameToCategory.put("show", new Category(5, "show", R.drawable.ic_category_show));
         mapNameToCategory.add(new Category(1, "music", R.drawable.ic_category_music));
         mapNameToCategory.add(new Category(2, "bar", R.drawable.ic_category_bar));
-        mapNameToCategory.add(new Category(3, "party", R.drawable.ic_category_party));
+        mapNameToCategory.add(new Category(3, "party", R.drawable.ic_party));
         mapNameToCategory.add(new Category(4, "sport", R.drawable.ic_category_sport));
-        mapNameToCategory.add(new Category(5, "show", R.drawable.ic_category_show));
+        mapNameToCategory.add(new Category(5,"strike", R.drawable.ic_category_strike));
+        mapNameToCategory.add(new Category(6, "show", R.drawable.ic_show));
     }
 
     /**

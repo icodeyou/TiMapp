@@ -19,12 +19,14 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
         adapter.addData(query);
         manager.getSelectedTagsRecyclerView().scrollToEnd();
         manager.getSearchView().setIconified(true);
+        manager.decreaseCounter();
+        manager.setCounterHint();
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        manager.suggestTag(newText);
+        //manager.suggestTag(newText);
         return false;
     }
 }

@@ -9,32 +9,46 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.entities.Category;
 
 import java.util.Collections;
 import java.util.List;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder> {
 
     protected LayoutInflater inflater;
     protected List<Category> data = Collections.emptyList();
 
+    private Context context;
+    private Category selectedCategory = null;
+    private ImageView currentCategoryIcon;
+
+
     public CategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         this.data = MyApplication.mapNameToCategory;
+        this.context = context;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View saved_tags_view = inflater.inflate(R.layout.item_category, parent, false);
-        MyViewHolder holder = new MyViewHolder(saved_tags_view);
+    public CategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View categories_view = inflater.inflate(R.layout.item_category, parent, false);
+
+        //set holder
+        CategoriesViewHolder holder = new CategoriesViewHolder(categories_view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(CategoriesViewHolder holder, int position) {
         Category current = data.get(position);
-        holder.categoryIcon.setImageResource(current.getIconId());
+        holder.newCategoryIcon.setImageResource(current.getIconId());
+
+        //set selectedCategory in AddPlaceActivity
+        selectedCategory = data.get(position);
+        AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
+        addPlaceActivity.setCategory(selectedCategory);
     }
 
     @Override
@@ -47,26 +61,39 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         this.notifyDataSetChanged();
     }
 
-    public Category getData(int position) {
+    public Category getCategory(int position) {
         return this.data.get(position);
     }
 
-    public List<Category> getData() {
+    public List<Category> getCategories() {
         return this.data;
     }
-
 
     public void removeData(int position) {
         this.data.remove(position);
         this.notifyDataSetChanged();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView categoryIcon;
-
-        public MyViewHolder(View view) {
+    class CategoriesViewHolder extends RecyclerView.ViewHolder {
+        ImageView newCategoryIcon;
+        public CategoriesViewHolder(View view) {
             super(view);
-            categoryIcon = (ImageView) view.findViewById(R.id.category_icon);
+            newCategoryIcon = (ImageView) view.findViewById(R.id.category_icon);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(currentCategoryIcon!=null) {
+                        currentCategoryIcon.setBackgroundDrawable(null);
+                    }
+                    newCategoryIcon.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.background_ctg_selected));
+                    currentCategoryIcon = newCategoryIcon;
+                }
+            });
         }
     }
+
+    private void resetBackground() {
+
+    }
+
 }

@@ -110,7 +110,7 @@
             android:padding="3dp"
             android:gravity="center">
 
-            <com.timappweb.timapp.views.HorizontalRecyclerView
+            <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                 android:id="@+id/rv_horizontal_tags"
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
