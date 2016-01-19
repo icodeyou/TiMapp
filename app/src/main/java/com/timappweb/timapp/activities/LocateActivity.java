@@ -166,9 +166,11 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void success(List<Place> place, Response response) {
                 Log.d(TAG, "Loading " + place.size() + " viewPlace(s)");
+                PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
+                placeAdapter.clear();
                 if (place.size() != 0) {
                     showPlaces();
-                    ((PlacesAdapter) listPlaces.getAdapter()).addAll(place);
+                    placeAdapter.addAll(place);
                 } else {
                     showNoPlaceMessage();
                 }

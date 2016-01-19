@@ -27,20 +27,20 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     // Posts
 
-    @GET("/spots/posts.json")
+    @GET("/posts/posts.json")
     void listPosts(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
 
-    @GET("/spots/posts.json")
+    @GET("/posts/posts.json")
     List<Post> listPosts(@QueryMap Map<String, String> conditions);
 
-    @GET("/spots/view/{id}.json")
+    @GET("/posts/view/{id}.json")
     void viewPost(@Path("id") int id, RestCallback<Post> restCallback);
 
-    @GET("/spots/view/{id}.json")
+    @GET("/posts/view/{id}.json")
     Post viewPost(@Path("id") int id);
 
-    @POST("/spots/add.json")
-    void addPost(@Body Post spot, RestCallback<RestFeedback> cb);
+    @POST("/posts/add.json")
+    void addPost(@Body Post post, RestCallback<RestFeedback> cb);
 
     // ---------------------------------------------------------------------------------------------
     // USER
