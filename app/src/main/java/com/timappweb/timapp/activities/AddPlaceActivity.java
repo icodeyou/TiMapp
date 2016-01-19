@@ -64,7 +64,7 @@ public class AddPlaceActivity extends BaseActivity {
             public void success(RestFeedback restFeedback, Response response) {
                 if (restFeedback.success){
                     Log.d(TAG, "Place has been saved: " + place);
-                    IntentsUtils.addPlace(this.context);
+                    IntentsUtils.addPost(this.context, place);
                 }
                 else{
                     Log.d(TAG, "Cannot save viewPlace: " + place);

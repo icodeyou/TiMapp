@@ -22,6 +22,7 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.IntentsUtils;
@@ -30,6 +31,7 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class LocateActivity extends BaseActivity{
@@ -67,43 +69,39 @@ public class LocateActivity extends BaseActivity{
         this.progressBarView = findViewById(R.id.progressbar_view);
         this.placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
         this.noPlaceView = findViewById(R.id.layout_if_no_place);
-
-        initLocationListener();
-        initLocationProvider();
+        listPlaces = (ListView) findViewById(R.id.list_places);
+        Button buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
 
         // -----------------------------------------------------------------------------------------
         // Init variables
+        final LocateActivity that = this;
         mResultReceiver = new AddressResultReceiver(new Handler());
-        Button buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
-        listPlaces = (ListView) findViewById(R.id.list_places);
-
         final PlacesAdapter placesAdapter = new PlacesAdapter(this);
         listPlaces.setAdapter(placesAdapter);
-
-        final LocateActivity that = this;
         listPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "Click on item: " + position);
                 Place place = placesAdapter.getItem(position);
                 IntentsUtils.addPost(that, place);
             }
         });
 
 
-        showLoader();
-
         //Listeners
         buttonAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AddPlaceActivity.class);
-                startActivity(intent);
+                IntentsUtils.addPlace(that);
             }
         });
 
         //if (BuildConfig.DEBUG){
         //   placesAdapter.generateDummyData();
         //}
+
+        initLocationListener();
+        initLocationProvider();
 
 
     }
@@ -157,6 +155,7 @@ public class LocateActivity extends BaseActivity{
     }
 
     private void loadPlaces(Location location){
+        Log.d(TAG, "Loading places with location: " + Util.print(location));
         QueryCondition conditions = new QueryCondition();
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
         RestClient.service().placeReachable(conditions.toMap(), new RestCallback<List<Place>>(this) {
@@ -173,7 +172,15 @@ public class LocateActivity extends BaseActivity{
                 } else {
                     noPlaceView.setVisibility(View.GONE);
                 }
+                placeAdapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void failure(RetrofitError error) {
+                super.failure(error);
+                Toast.makeText(this.context, R.string.error_server_unavailable, Toast.LENGTH_LONG);
+            }
+
         });
     }
 

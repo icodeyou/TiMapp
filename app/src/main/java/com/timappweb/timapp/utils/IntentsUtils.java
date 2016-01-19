@@ -3,6 +3,7 @@ package com.timappweb.timapp.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
@@ -13,6 +14,7 @@ import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
+import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
@@ -65,18 +67,25 @@ public class IntentsUtils {
 
     public static void addPost(Context context, Place place) {
         Intent intent = new Intent(context, TagActivity.class);
-        intent.putExtra("place", place);          // TODO use constant
+        Bundle extras = new Bundle();
+        extras.putSerializable("place", place);          // TODO use constant
+        intent.putExtras(extras);
         context.startActivity(intent);
     }
 
-    public static void viewPlace(Activity activity) {
-        Intent intent = new Intent(activity, PlaceActivity.class);
-        activity.startActivity(intent);
+    public static void addPost(Context context) {
+        Intent intent = new Intent(context, LocateActivity.class);
+        context.startActivity(intent);
     }
 
-    public static void addPlace(Context activity) {
-        Intent intent = new Intent(activity, AddPlaceActivity.class);
-        activity.startActivity(intent);
+    public static void viewPlace(Context context) {
+        Intent intent = new Intent(context, PlaceActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void addPlace(Context context) {
+        Intent intent = new Intent(context, AddPlaceActivity.class);
+        context.startActivity(intent);
     }
     /**
      * Redirect to the last activity we attempt to go
@@ -85,5 +94,10 @@ public class IntentsUtils {
      */
     public static void lastActivityBeforeLogin(Activity activity) {
         home(activity);
+    }
+
+    public static void settings(Context context) {
+        Intent intent = new Intent(context,SettingsActivity.class);
+        context.startActivity(intent);
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
+    private static final String TAG = "PlacesAdapter";
     private final Context context;
 
     public PlacesAdapter(Context context) {
@@ -27,6 +29,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        Log.d(TAG, "Get view for " + position + "/" + this.getCount());
         Place place = this.getItem(position);
 
         // Get the view from inflater
@@ -44,11 +47,11 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
 
         // Get location and time
-        String location = place.name;
+        String name = place.name;
         String time = place.getTime();
 
         //Set texts
-        tvLocation.setText(location);
+        tvLocation.setText(name);
         tvTime.setText(time);
 
         //Set the adapter for RV

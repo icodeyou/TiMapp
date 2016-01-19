@@ -131,8 +131,14 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
     protected void initAddSpotButton() {
         if (addSpotFloatingButton == null){
             addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
+            final Activity that = this;
             Log.d(TAG, "Init add_spot_button button");
-            addSpotFloatingButton.setOnClickListener(new AddSpotClickListener(this));
+            addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.addPost(that);
+                }
+            });
         }
     }
     protected void hideAddSpotButton(){
@@ -289,17 +295,16 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
             IntentsUtils.profile(this);
         }
         else if (id == R.id.menu_item_settings) {
-            Intent intent = new Intent(this,SettingsActivity.class);
-            startActivity(intent);
+            IntentsUtils.settings(this);
         }
         else if (id == R.id.menu_item_add_post){
-            MyApplication.startRequireLoggedInActivity(this, LocateActivity.class);
+            IntentsUtils.addPost(this);
         }
         else if (id == R.id.menu_item_place) {
-            MyApplication.startRequireLoggedInActivity(this, PlaceActivity.class);
+            IntentsUtils.addPlace(this);
         }
         else if (id == R.id.menu_item_login){
-        IntentsUtils.login(this);
+            IntentsUtils.login(this);
         }
         else if (id == R.id.menu_item_logout) {
             IntentsUtils.logout(this);
@@ -362,18 +367,6 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
 
     }
 
-    private class AddSpotClickListener implements View.OnClickListener {
-        private final Activity activity;
-
-        public AddSpotClickListener(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        public void onClick(View view) {
-            MyApplication.startRequireLoggedInActivity(getBaseContext(), TagActivity.class);
-        }
-    }
 
     private class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
         public MyActionBarDrawerToggle(ExploreActivity exploreActivity, DrawerLayout mDrawerLayout, Toolbar toolbar, int drawer_open, int drawer_close) {

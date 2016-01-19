@@ -57,16 +57,16 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     // TAGS
 
-    @POST("/SpotsTags/latest.json")
+    @POST("/PostsTags/latest.json")
     List<MapTag> listSpotsTags();
 
-    @POST("/SpotsTags/latest.json")
+    @POST("/PostsTags/latest.json")
     void listSpotsTags(RestCallback<List<MapTag>> restCallback);
 
-    @GET("/Spots/trending_tags.json")
+    @GET("/Posts/trending_tags.json")
     List<Tag> trendingTags();
 
-    @GET("/Spots/trending_tags.json")
+    @GET("/Posts/trending_tags.json")
     void trendingTags(@QueryMap Map<String, String> conditions, RestCallback<List<Tag>> restCallback);
 
 

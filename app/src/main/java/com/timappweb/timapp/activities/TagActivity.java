@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
@@ -28,6 +30,7 @@ public class TagActivity extends BaseActivity{
     private HashtagView suggestedTagsRV;
     private View progressBarView;
     private ListView placeListView;
+    private Place currentPlace = null;
 
     // @Bind(R.id.hashtags1)
     protected HashtagView suggestedTagsView;
@@ -42,9 +45,15 @@ public class TagActivity extends BaseActivity{
 
         // Check that we gave the place as an extra parameter
         Bundle extras = getIntent().getExtras();
-        Place place = (Place) extras.getSerializable("post");
-        if (place == null){
-            IntentsUtils.addPlace(this);
+        if (extras == null){
+            Log.d(TAG, "No extra given");
+            IntentsUtils.addPost(this);
+            return;
+        }
+        this.currentPlace = (Place) extras.getSerializable("place");
+        if (this.currentPlace == null){
+            Log.d(TAG, "Place is null");
+            IntentsUtils.addPost(this);
             return;
         }
 
@@ -93,7 +102,7 @@ public class TagActivity extends BaseActivity{
 
     private void initAdapterPlace() {
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
-        //placesAdapter.add(myPlace);
+        placesAdapter.add(this.currentPlace);
         placeListView.setAdapter(placesAdapter);
     }
 

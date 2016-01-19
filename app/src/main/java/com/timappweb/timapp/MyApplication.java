@@ -87,15 +87,6 @@ public class MyApplication extends Application{
         }
     }
 
-    public static void startRequireLoggedInActivity(Context currentContext, Class<?> newActivity){
-
-        if (MyApplication.requireLoggedIn(currentContext)){
-            Intent intent = new Intent(currentContext, newActivity);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            currentContext.startActivity(intent);
-        }
-
-    }
 
     static AlertDialog dialog = null;
 
