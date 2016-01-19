@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -7,15 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 
-/**
- * All class must inherit from BaseActivity
- */
 public class BaseActivity extends AppCompatActivity {
 
     protected SearchView searchView;
@@ -58,6 +61,34 @@ public class BaseActivity extends AppCompatActivity {
 
         //set searchView
         searchView = (SearchView) searchItem.getActionView();
-        searchView.setInputType(InputType.TYPE_CLASS_NUMBER);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+        //This doesn't work. There isn't any way to remove the suggestions.
+        //searchView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        ////searchView.setImeOptions(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
+
+        ////////////////// Test Get EditText in SearchView and handle on Space event
+        //////////////////////////////////////////////////////////////////////////
+        /*int searchPlateId = getResources().getIdentifier("android:id/search_src_text", null, null);
+        View searchPlate = searchView.findViewById(searchPlateId);
+        if (searchPlate!=null) {
+            searchPlate.setBackgroundColor(Color.CYAN);
+            int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+            TextView searchText = (TextView) searchPlate.findViewById(searchTextId);
+            if (searchText != null) {
+                searchText.setTextColor(Color.BLACK);
+                searchText.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                                (keyCode == KeyEvent.KEYCODE_SPACE)) {
+                            Log.d("youpi", "ohyeah");
+                        }
+                        return true;
+                    }
+                });
+            }
+        }*/
     }
 }

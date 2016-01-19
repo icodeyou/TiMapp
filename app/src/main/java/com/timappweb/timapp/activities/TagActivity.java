@@ -1,8 +1,10 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.view.KeyEvent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +58,7 @@ public class TagActivity extends BaseActivity{
             IntentsUtils.addPost(this);
             return;
         }
-
+        
         setContentView(R.layout.activity_tag);
         this.initToolbar(true);
 
@@ -102,7 +104,7 @@ public class TagActivity extends BaseActivity{
 
     private void initAdapterPlace() {
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
-        placesAdapter.add(this.currentPlace);
+        placesAdapter.add(currentPlace);
         placeListView.setAdapter(placesAdapter);
     }
 
@@ -118,6 +120,17 @@ public class TagActivity extends BaseActivity{
         findViewById(R.id.top_line_hrv).setVisibility(View.VISIBLE);
         selectedTagsView.setVisibility(View.VISIBLE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.VISIBLE);
+    }
+
+    public void simulateKey() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Instrumentation inst = new Instrumentation();
+                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_SPACE);
+                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_DEL);
+            }
+        }).start();
     }
 
 

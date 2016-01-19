@@ -1,13 +1,14 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
@@ -63,11 +64,22 @@ public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.MyViewHolder> 
     public void addData(String selectedTag) {
         Tag newTag = new Tag(selectedTag, 0);
         if (!this.data.contains(newTag) && newTag.isValid()){
+            String hashtagString = "#" + newTag.getName();
+            newTag.setName(hashtagString);
             this.data.add(newTag);
             this.notifyDataSetChanged();
         }
         else {
-
+            String nameTag = newTag.getName();
+            int lengthTag = nameTag.length();
+            if(lengthTag == 1) {
+                if(!nameTag.equals(" ")) {
+                    Toast.makeText(context, R.string.toast_tiny_text_size, Toast.LENGTH_LONG).show();
+                }
+            }
+            else if (lengthTag > 30) {
+                Toast.makeText(context, R.string.toast_huge_text_size, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

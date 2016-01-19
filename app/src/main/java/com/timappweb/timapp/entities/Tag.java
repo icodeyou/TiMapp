@@ -8,8 +8,8 @@ public class Tag implements Serializable{
     public Integer id;
     public String name;
     public int count_ref;
-    public static final int MINLENGTH = 3;
-    public static final int MAXLENGTH = 31;
+    public static final int MINLENGTH = 2;
+    public static final int MAXLENGTH = 30;
 
     public Tag(String name, int count_ref) {
         this.count_ref = count_ref;

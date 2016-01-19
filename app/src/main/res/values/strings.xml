@@ -67,4 +67,6 @@
     <string name="button_add_spot">Add spot</string>
     <string name="hint_place_name">Spot name</string>
     <string name="add_spot_button">create</string>
+    <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
+    <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
 </resources>

@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.activities.PublishActivity;
@@ -107,8 +111,7 @@ public class SearchAndSelectTagManager {
 
 
     public void addTag(String tag) {
-        String finalTag = "#" + tag;
-        horizontalAdapter.addData(finalTag);
+        horizontalAdapter.addData(tag);
         selectedTagsRecyclerView.scrollToEnd();
         setCounterHint();
     }
