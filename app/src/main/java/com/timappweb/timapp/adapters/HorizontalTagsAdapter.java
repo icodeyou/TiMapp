@@ -42,7 +42,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Tag current = data.get(position);
-        holder.textView.setText(current.name);
+        holder.textView.setText("#" + current.name);
     }
 
     @Override
@@ -114,11 +114,9 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
-        String text = textView.getText().toString();
 
         public MyViewHolder(View view) {
             super(view);
-            //textView.setText("#" + text);
             this.textView = (TextView) view.findViewById(R.id.item_horizontal_tag);
         }
     }
