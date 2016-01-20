@@ -59,13 +59,15 @@ public class PublishActivity extends BaseActivity{
         setContentView(R.layout.activity_publish);
         this.initToolbar(true);
 
-
         //Initialize variables
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
         LinearLayout layout_checkbox = (LinearLayout) findViewById(R.id.layout_checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
 
-        //init adapter
+        //set saved tags in selectedTagsRV
+        HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
+        selectedTagsAdapter.setData(currentPost.getTags());
+
         layout_checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +117,7 @@ public class PublishActivity extends BaseActivity{
 
         @Override
         public void success(RestFeedback restFeedback, Response response) {
-            progressDialog.hide();
+            //progressDialog.hide();
 
             if (restFeedback.success && restFeedback.data.containsKey("id")) {
                 int id = Integer.valueOf(restFeedback.data.get("id"));

@@ -44,9 +44,16 @@ public class Post implements Serializable, MarkerValueInterface {
     private List<Tag> tags;
 
     public void setTags(List<Tag> tags){
-        for (Tag tag: tags){
-            this.tag_string += tag.name + ",";
+        this.tag_string = "";
+        if (tags.size() == 0){
+            this.tags = tags;
+            return;
         }
+        for (int i = 0; i < tags.size() - 1; i++){
+            this.tag_string += tags.get(i).name + ",";
+        }
+        this.tag_string += tags.get(tags.size() -1).name;
+        this.tags = tags;
     }
 
     public Post() {

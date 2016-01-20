@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.IntentsUtils;
@@ -94,19 +96,39 @@ public class TagActivity extends BaseActivity{
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                 searchView, suggestedTagsView, selectedTagsRV);
 
+        suggestedTagsRV = searchAndSelectTagManager.getSuggestedTagsRV();
+        suggestedTagsRV.addOnTagClickListener(new HashtagView.TagsClickListener() {
+            @Override
+            public void onItemClicked(Object item) {
+                Tag tag = (Tag) item;
+                suggestedTagsRV.removeItem(item);
+                addTag(tag.name);
+            }
+        });
+
+        selectedTagsRV.addOnItemTouchListener(new RecyclerItemTouchListener(this, new RecyclerItemTouchListener.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(RecyclerView recyclerView, View view, int position) {
+                Log.d(TAG, "Clicked on selected item");
+                selectedTagsRV.getAdapter().removeData(position);
+                setCounterHint();
+            }
+        }));
+
         suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
 
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String query = searchView.getQuery().toString();
-        searchAndSelectTagManager.addTag(query);
+        addTag(query);
         setCounterHint();
 
         return true;
-    }
+    }*/
 
     //----------------------------------------------------------------------------------------------
     //Private methods
@@ -115,6 +137,12 @@ public class TagActivity extends BaseActivity{
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         placesAdapter.add(currentPlace);
         placeListView.setAdapter(placesAdapter);
+    }
+
+    public void addTag(String tag) {
+        selectedTagsRV.getAdapter().addData(tag);
+        selectedTagsRV.scrollToEnd();
+        setCounterHint();
     }
 
     public void setCounterHint() {

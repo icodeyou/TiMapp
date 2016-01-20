@@ -63,27 +63,6 @@ public class SearchAndSelectTagManager {
 
     private void init(){
 
-        suggestedRecyclerView.addOnTagClickListener(new HashtagView.TagsClickListener() {
-            @Override
-            public void onItemClicked(Object item) {
-                Tag tag = (Tag) item;
-
-                suggestedRecyclerView.removeItem(item);
-                addTag(tag.name);
-            }
-        });
-
-        selectedTagsRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(activity, new RecyclerItemTouchListener.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(RecyclerView recyclerView, View view, int position) {
-                Log.d(TAG, "Clicked on selected item");
-                horizontalAdapter.removeData(position);
-                //setCounterHint();
-            }
-
-        }));
-
         final SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView.OnQueryTextListener queryTextListener =
@@ -112,19 +91,13 @@ public class SearchAndSelectTagManager {
 
             @Override
             public void onSearchComplete(String term, List<Tag> tags) {
-                if (searchHistory.isLastSearch(term)){
-                    if (tags.size()==0)
+                if (searchHistory.isLastSearch(term)) {
+                    if (tags.size() == 0)
                         tags.add(new Tag(term));
                     setData(tags);
                 }
             }
         });
-    }
-
-
-    public void addTag(String tag) {
-        horizontalAdapter.addData(tag);
-        selectedTagsRecyclerView.scrollToEnd();
     }
     /**
      * Suggest tag according to user input
@@ -166,5 +139,9 @@ public class SearchAndSelectTagManager {
 
     public void resetSelectedTags() {
         horizontalAdapter.resetData();
+    }
+
+    public HashtagView getSuggestedTagsRV() {
+        return suggestedRecyclerView;
     }
 }

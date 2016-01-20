@@ -1,5 +1,6 @@
 package com.timappweb.timapp.listeners;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
@@ -19,7 +20,8 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        manager.addTag(query);
+        TagActivity tagActivity = (TagActivity) manager.getActivity();
+        tagActivity.addTag(query);
         manager.getSearchView().setIconified(true);
         return true;
     }

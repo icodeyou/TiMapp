@@ -65,7 +65,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     public void addData(String selectedTag) {
         Tag newTag = new Tag(selectedTag, 0);
         if (!this.data.contains(newTag) && newTag.isValid()){
-            String hashtagString = "#" + newTag.getName();
+            String hashtagString = newTag.getName();
             newTag.setName(hashtagString);
             data.add(newTag);
             notifyDataSetChanged();
@@ -114,9 +114,11 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
+        String text = textView.getText().toString();
 
         public MyViewHolder(View view) {
             super(view);
+            //textView.setText("#" + text);
             this.textView = (TextView) view.findViewById(R.id.item_horizontal_tag);
         }
     }
