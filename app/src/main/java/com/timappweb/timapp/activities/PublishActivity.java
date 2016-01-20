@@ -11,9 +11,11 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.RestCallback;
@@ -35,14 +37,28 @@ public class PublishActivity extends BaseActivity{
 
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
+    private Place currentPlace = null;
+    private Post currentPost = null;
+    public Location currentLocation = null;
 
     //----------------------------------------------------------------------------------------------
     //Override
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check that we gave the place as an extra parameter
+        this.currentPlace = IntentsUtils.extractPlace(getIntent());
+        this.currentPost = IntentsUtils.extractPost(getIntent());
+        if (this.currentPlace == null || this.currentPost == null){
+            Log.d(TAG, "Place is null");
+            IntentsUtils.addPost(this);
+            return;
+        }
+
         setContentView(R.layout.activity_publish);
         this.initToolbar(true);
+
 
         //Initialize variables
         final CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
@@ -50,57 +66,39 @@ public class PublishActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
 
         //init adapter
-        HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
-
-        //Get Extra
-        Intent intent = getIntent();
-        ArrayList<String> finalTagsString = intent.getStringArrayListExtra("finalTags");
-        ArrayList<Tag> finalTags = selectedTagsAdapter.getTagsFromStrings(finalTagsString);
-        selectedTagsAdapter.setData(finalTags);
-
         layout_checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkBox.toggle();
             }
         });
+
+        this.initLocationProvider(new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location location) {
+                currentLocation = location;
+            }
+        });
     }
 
     //----------------------------------------------------------------------------------------------
     //Private methods
-    private void submitNewPost(){
-
-        //Create dummy name
-        Location location = null;
-        Log.i(TAG, "Debug mode. Using mock position.");
-        String providerName = "";
-        location = new Location(providerName);
-        location.setLatitude(10);
-        location.setLongitude(10);
-        location.setAltitude(0);
-        location.setTime(System.currentTimeMillis());
-
-        // if precision sucks..
-        LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Log.i(TAG, "User position is: " + userLatLng + " with an accuracy of " + location.getAccuracy());
-
-        // Call the service to add the spot
-        // - Build the spot
-        final Post post = new Post(userLatLng);
-        post.tag_string = getTagsToString();
-        post.latitude = location.getLatitude();
-        post.longitude = location.getLongitude();
+    public void submitNewPost(View view){
+        this.currentPost.latitude = currentLocation.getLatitude();
+        this.currentPost.longitude = currentLocation.getLongitude();
 
         // Validating user input
-        if (!post.validateForSubmit()){
+        if (!currentPost.validateForSubmit()){
+            Toast.makeText(this, "Invalid inputs", Toast.LENGTH_LONG); // TODO proper message
             return;
         }
-        Log.d(TAG, "Building spot: " + post);
+        Log.d(TAG, "Submitting post: " + currentPost);
 
         // Starting service
-        this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
-        this.progressDialog.show();
-        RestClient.service().addPost(post, new AddPostCallback(this, post));
+        //this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
+        //this.progressDialog.show();
+        RestClient.service().addPost(this.currentPost, new AddPostCallback(this, this.currentPost));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -125,7 +123,7 @@ public class PublishActivity extends BaseActivity{
                 //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
                 IntentsUtils.viewPost(this.context, id);
             } else {
-                Log.i(TAG, "Cannot add spot: " + response.getReason() + " - " + restFeedback.toString());
+                Log.i(TAG, "Cannot add post: " + response.getReason() + " - " + restFeedback.toString());
                 Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG);
             }
         }
@@ -133,7 +131,7 @@ public class PublishActivity extends BaseActivity{
         @Override
         public void failure(RetrofitError error) {
             super.failure(error);
-            progressDialog.hide();
+            //progressDialog.hide();
             Toast.makeText(this.context, R.string.error_webservice_connection, Toast.LENGTH_LONG);
         }
     }
@@ -152,10 +150,4 @@ public class PublishActivity extends BaseActivity{
         return inputTags;
     }
 
-    //----------------------------------------------------------------------------------------------
-    //Miscellaneous
-    public void testClick(View view) {
-        Intent intent = new Intent(this,PublishActivity.class);
-        startActivity(intent);
-    }
 }

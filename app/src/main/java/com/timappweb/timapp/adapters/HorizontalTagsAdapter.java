@@ -94,6 +94,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         this.notifyDataSetChanged();
     }
 
+    /*
     public ArrayList<String> getStringsFromTags() {
         ArrayList<String> res = new ArrayList<String>();
         for (Tag tag : this.data) {
@@ -101,7 +102,6 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         }
         return res;
     }
-
     public ArrayList<Tag> getTagsFromStrings(ArrayList<String> tagsString) {
         ArrayList<Tag> tagsList = new ArrayList<Tag>();
         for(String s : tagsString ) {
@@ -110,6 +110,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         }
         return tagsList;
     }
+    */
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textView;

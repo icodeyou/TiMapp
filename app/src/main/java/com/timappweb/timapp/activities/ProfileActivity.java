@@ -19,7 +19,6 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntentsUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -88,9 +87,9 @@ public class ProfileActivity extends BaseActivity{
                 // Setting the last post
                 if (mUser.posts != null && mUser.posts.size() > 0){
                     Post post = mUser.posts.getFirst();
-                    horizontalTagsAdapter.setData(post.tags);
+                    horizontalTagsAdapter.setData(post.getTags());
                     tvDateCreated.setText(post.getPrettyTimeCreated());
-                    tvPostName.setText(post.getAdress());
+                    tvPostName.setText(post.getAddress());
                     View layout = findViewById(R.id.box_profile_last_post);
                     layout.setVisibility(View.VISIBLE);
                 }

@@ -70,7 +70,7 @@ public class PostActivity extends BaseActivity {
         RestClient.service().loadTagsFromPost(currentPost.getId(), new RestCallback<ArrayList<Tag>>(this) {
             @Override
             public void success(ArrayList<Tag> tags, Response response) {
-                currentPost.tags = tags;
+                currentPost.setTags(tags);
                 fetchDataToView();
             }
         });
@@ -97,7 +97,7 @@ public class PostActivity extends BaseActivity {
 
         textViewCreated.setText(currentPost.getPrettyTimeCreated());
         textViewUsername.setText(currentPost.getUsername());
-        textViewPostName.setText(currentPost.getAdress());
+        textViewPostName.setText(currentPost.getAddress());
 
         if (currentPost.hasTagsLoaded()){
             tagsAdapter.addAll(currentPost.getTagsToStringArray());

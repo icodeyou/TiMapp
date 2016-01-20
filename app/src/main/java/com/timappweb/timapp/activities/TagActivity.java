@@ -15,12 +15,14 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class TagActivity extends BaseActivity{
@@ -46,13 +48,7 @@ public class TagActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
 
         // Check that we gave the place as an extra parameter
-        Bundle extras = getIntent().getExtras();
-        if (extras == null){
-            Log.d(TAG, "No extra given");
-            IntentsUtils.addPost(this);
-            return;
-        }
-        this.currentPlace = (Place) extras.getSerializable("place");
+        this.currentPlace = IntentsUtils.extractPlace(getIntent());
         if (this.currentPlace == null){
             Log.d(TAG, "Place is null");
             IntentsUtils.addPost(this);
@@ -72,6 +68,18 @@ public class TagActivity extends BaseActivity{
         initAdapterPlace();
 
         setSelectedTagsViewGone();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (searchAndSelectTagManager != null){
+            //Clear list of tags in case back button is pressed in PublishActivity
+            searchAndSelectTagManager.resetSelectedTags();
+            setCounterHint();
+        }
     }
 
     @Override
@@ -95,6 +103,7 @@ public class TagActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         String query = searchView.getQuery().toString();
         searchAndSelectTagManager.addTag(query);
+        setCounterHint();
 
         return true;
     }
@@ -106,6 +115,30 @@ public class TagActivity extends BaseActivity{
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         placesAdapter.add(currentPlace);
         placeListView.setAdapter(placesAdapter);
+    }
+
+    public void setCounterHint() {
+        switch (searchAndSelectTagManager.getSelectedTags().size()) {
+            case 0:
+                setSelectedTagsViewGone();
+                searchView.setQueryHint("Choose 3 tags");
+                break;
+            case 1:
+                setSelectedTagsViewVisible();
+                searchView.setQueryHint("Choose 2 tags");
+                break;
+            case 2:
+                searchView.setQueryHint("One more !");
+                break;
+            case 3:
+                Post post = new Post();
+                post.setTags(searchAndSelectTagManager.getSelectedTags());
+                post.place_id = this.currentPlace.id;
+
+                IntentsUtils.addPost(this, this.currentPlace, post);
+            default:
+                break;
+        }
     }
 
     //----------------------------------------------------------------------------------------------
