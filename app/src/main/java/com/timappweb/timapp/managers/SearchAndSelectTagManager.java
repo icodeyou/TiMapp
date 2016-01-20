@@ -22,10 +22,12 @@ import com.timappweb.timapp.listeners.OnQueryTagListener;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -61,8 +63,6 @@ public class SearchAndSelectTagManager {
 
     private void init(){
 
-        setCounterHint();
-
         suggestedRecyclerView.addOnTagClickListener(new HashtagView.TagsClickListener() {
             @Override
             public void onItemClicked(Object item) {
@@ -78,7 +78,7 @@ public class SearchAndSelectTagManager {
             public void onItemClick(RecyclerView recyclerView, View view, int position) {
                 Log.d(TAG, "Clicked on selected item");
                 horizontalAdapter.removeData(position);
-                setCounterHint();
+                //setCounterHint();
             }
 
         }));
@@ -92,7 +92,7 @@ public class SearchAndSelectTagManager {
         searchView.setOnQueryTextListener(queryTextListener);
 
         this.searchHistory = new SearchHistory<Tag>(MINIMAL_SEARCH_LENGTH, MAXIMAL_RESULT_SIZE);
-        this.searchHistory.setDataProvider(new SearchHistory.DataProvider<Tag>(){
+        this.searchHistory.setDataProvider(new SearchHistory.DataProvider<Tag>() {
 
             @Override
             public void load(final String term) {
@@ -111,7 +111,7 @@ public class SearchAndSelectTagManager {
 
             @Override
             public void onSearchComplete(String term, List<Tag> tags) {
-                if (searchHistory.isLastSearch(term)){
+                if (searchHistory.isLastSearch(term)) {
                     setData(tags);
                 }
             }
@@ -122,39 +122,7 @@ public class SearchAndSelectTagManager {
     public void addTag(String tag) {
         horizontalAdapter.addData(tag);
         selectedTagsRecyclerView.scrollToEnd();
-        setCounterHint();
     }
-    public void setCounterHint() {
-        TagActivity tagActivity = (TagActivity) activity;
-        switch (horizontalAdapter.getData().size()) {
-            case 0:
-                tagActivity.setSelectedTagsViewGone();
-                searchView.setQueryHint("Choose 3 tags");
-                break;
-            case 1:
-                tagActivity.setSelectedTagsViewVisible();
-                searchView.setQueryHint("Choose 2 tags");
-                break;
-            case 2:
-                searchView.setQueryHint("One more !");
-                break;
-            case 3:
-                //Save data
-                 ArrayList<String> finalTags = horizontalAdapter.getStringsFromTags();
-
-                //Change activity
-                Intent intent = new Intent(activity, PublishActivity.class);
-                intent.putStringArrayListExtra("finalTags", finalTags);
-                activity.startActivity(intent);
-
-                //Clear list of tags in case back button is pressed in PublishActivity
-                horizontalAdapter.resetData();
-                setCounterHint();
-            default:
-                break;
-        }
-    }
-
     /**
      * Suggest tag according to user input
      * Cache results according to the term given
@@ -189,4 +157,11 @@ public class SearchAndSelectTagManager {
         return selectedTagsRecyclerView;
     }
 
+    public List<Tag> getSelectedTags() {
+        return horizontalAdapter.getData();
+    }
+
+    public void resetSelectedTags() {
+        horizontalAdapter.resetData();
+    }
 }

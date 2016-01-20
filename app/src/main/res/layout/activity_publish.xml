@@ -34,6 +34,7 @@
                 android:textColor="@color/White"
                 android:textSize="@dimen/text_mountain"
                 android:textAllCaps="true"
+                android:onClick="submitNewPost"
                 android:text="@string/main_text_publish_activity"/>
 
 

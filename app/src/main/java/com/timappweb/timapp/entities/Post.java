@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +27,7 @@ public class Post implements Serializable, MarkerValueInterface {
     public User user;
     public double latitude;
     public double longitude;
+    public int place_id;
     protected int created;
     public String tag_string;
     public String comment;
@@ -39,8 +41,13 @@ public class Post implements Serializable, MarkerValueInterface {
 
     public String address = "";
 
-    public ArrayList<Tag> tags;
+    private List<Tag> tags;
 
+    public void setTags(List<Tag> tags){
+        for (Tag tag: tags){
+            this.tag_string += tag.name + ",";
+        }
+    }
 
     public Post() {
         this.tags = new ArrayList<>();
@@ -181,7 +188,7 @@ public class Post implements Serializable, MarkerValueInterface {
         return res;
     }
 
-    public ArrayList<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
@@ -198,7 +205,7 @@ public class Post implements Serializable, MarkerValueInterface {
         return true;
     }
 
-    public String getAdress() {
+    public String getAddress() {
         if (country != null) {
             if (city != null) {
                 if (route != null) {

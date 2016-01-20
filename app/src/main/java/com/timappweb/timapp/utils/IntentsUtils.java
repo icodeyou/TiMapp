@@ -14,6 +14,7 @@ import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
+import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.entities.Place;
@@ -73,6 +74,15 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
+    public static void addPost(Context context, Place place, Post post) {
+        Intent intent = new Intent(context, PublishActivity.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("place", place);          // TODO use constant
+        extras.putSerializable("post", post);          // TODO use constant
+        intent.putExtras(extras);
+        context.startActivity(intent);
+    }
+
     public static void addPost(Context context) {
         Intent intent = new Intent(context, LocateActivity.class);
         context.startActivity(intent);
@@ -99,5 +109,21 @@ public class IntentsUtils {
     public static void settings(Context context) {
         Intent intent = new Intent(context,SettingsActivity.class);
         context.startActivity(intent);
+    }
+
+
+    public static Place extractPlace(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras == null){
+            return null;
+        }
+        return (Place) extras.getSerializable("place");
+    }
+    public static Post extractPost(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras == null){
+            return null;
+        }
+        return (Post) extras.getSerializable("post");
     }
 }

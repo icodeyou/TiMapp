@@ -15,7 +15,7 @@ import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 public class PostsAdapter extends ArrayAdapter<Post> {
     private final Context context;
@@ -48,11 +48,11 @@ public class PostsAdapter extends ArrayAdapter<Post> {
 
 
         // Get the address, name, time, and comment from Post.
-        String address = post.getAdress();
+        String address = post.getAddress();
         String username = post.getUsername();
         String time = post.getPrettyTimeCreated();
         String comment = post.getComment();
-        ArrayList<Tag> tags = post.getTags();
+        List<Tag> tags = post.getTags();
 
         //Set the text
         tvAddress.setText(address);
