@@ -33,7 +33,7 @@ public class Place implements Serializable, MarkerValueInterface {
         this.main_tags = new ArrayList<>();
     }
 
-    public Place(int lat, int lng, String name, Category category) {
+    public Place(double lat, double lng, String name, Category category) {
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;

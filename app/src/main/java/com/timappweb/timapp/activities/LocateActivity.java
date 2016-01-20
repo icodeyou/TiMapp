@@ -47,13 +47,13 @@ public class LocateActivity extends BaseActivity{
     private View        progressBarView;
 
     // Location
-    private MyLocationProvider          locationProvider;
-    private LocationListener            mLocationListener;
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
 
     //others
     private InputMethodManager imm;
     private Menu mainMenu;
+
+    private LocationListener mLocationListener;
 
 
     // ----------------------------------------------------------------------------------------------
@@ -101,7 +101,6 @@ public class LocateActivity extends BaseActivity{
         //}
 
         initLocationListener();
-        initLocationProvider();
 
 
     }
@@ -110,12 +109,10 @@ public class LocateActivity extends BaseActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        locationProvider.connect();
     }
 
     @Override
     protected void onStop() {
-        locationProvider.disconnect();
         super.onStop();
     }
 
@@ -134,25 +131,14 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onLocationChanged(Location location) {
                 Log.i(TAG, "Location has changed: " + Util.print(location));
-
                 loadPlaces(location);
-                startIntentServiceReverseGeocoding(location);
+                //startIntentServiceReverseGeocoding(location);
             }
         };
+
+        initLocationProvider(mLocationListener);
     }
 
-
-
-    private void initLocationProvider() {
-        locationProvider = new MyLocationProvider(this, mLocationListener);
-
-        if (!locationProvider.isGPSEnabled()){
-            locationProvider.askUserToEnableGPS();
-        }
-
-
-        locationProvider.requestMultipleUpdates();
-    }
 
     private void loadPlaces(Location location){
         Log.d(TAG, "Loading places with location: " + Util.print(location));
@@ -178,7 +164,7 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast.makeText(this.context, R.string.error_server_unavailable, Toast.LENGTH_LONG);
+                Toast.makeText(this.context, R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
             }
 
         });

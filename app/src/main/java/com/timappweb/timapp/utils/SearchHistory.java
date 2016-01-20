@@ -90,7 +90,12 @@ public class SearchHistory<T>{
     public Item getTermOrSubTerm(String term){
         if (!this.data.containsKey(term) || this.data.get(term).pending){
             if (term.length() > this.minimumSearchLength){
-                return this.getTermOrSubTerm(term.substring(0, term.length() - 2));
+                if (term.length() <= 1){
+                    return this.hasTerm("") ? this.data.get("") : null;
+                }
+                else{
+                    return this.getTermOrSubTerm(term.substring(0, term.length() - 2));
+                }
             }
             else{
                 return null;

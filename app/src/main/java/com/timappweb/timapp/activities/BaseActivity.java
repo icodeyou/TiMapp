@@ -17,16 +17,47 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.MyLocationProvider;
 
 public class BaseActivity extends AppCompatActivity {
 
     protected SearchView searchView;
+    private MyLocationProvider          locationProvider;
 
     protected void enableGPS(){
         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivity(gpsOptionsIntent);
     }
+
+    protected void initLocationProvider(LocationListener mLocationListener) {
+        locationProvider = new MyLocationProvider(this, mLocationListener);
+
+        if (!locationProvider.isGPSEnabled()){
+            locationProvider.askUserToEnableGPS();
+        }
+
+        locationProvider.requestMultipleUpdates();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (locationProvider != null){
+            locationProvider.connect();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        if (locationProvider != null){
+            locationProvider.disconnect();
+        }
+        super.onStop();
+    }
+
 
     protected void initToolbar(boolean homeUpEnabled){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

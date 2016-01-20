@@ -33,7 +33,8 @@ import retrofit.client.Response;
 public class SearchAndSelectTagManager {
 
     private static final String TAG = "SearchAndSelectTag";
-    private static final int MINIMAL_SEARCH_LENGTH = 2;
+    private static final int MINIMAL_SEARCH_LENGTH = 0;
+    private static final int MAXIMAL_RESULT_SIZE = 40;
 
 
     private Activity activity;
@@ -106,7 +107,8 @@ public class SearchAndSelectTagManager {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
 
-        this.searchHistory = new SearchHistory<Tag>(new SearchHistory.DataProvider<Tag>(){
+        this.searchHistory = new SearchHistory<Tag>(MINIMAL_SEARCH_LENGTH, MAXIMAL_RESULT_SIZE);
+        this.searchHistory.setDataProvider(new SearchHistory.DataProvider<Tag>(){
 
             @Override
             public void load(final String term) {
