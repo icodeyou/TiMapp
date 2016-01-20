@@ -24,7 +24,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     private String TAG = "HorizontalTagsAdapter";
 
     protected LayoutInflater inflater;
-    protected List<Tag> data = Collections.emptyList();
+    private List<Tag> data = new ArrayList<>();
     private Context context;
 
     public HorizontalTagsAdapter(Context context) {
@@ -52,7 +52,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     public void setData(List<Tag> data) {
         this.data = data;
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     };
 
     public Tag getData(int position) {
@@ -67,8 +67,8 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         if (!this.data.contains(newTag) && newTag.isValid()){
             String hashtagString = "#" + newTag.getName();
             newTag.setName(hashtagString);
-            this.data.add(newTag);
-            this.notifyDataSetChanged();
+            data.add(newTag);
+            notifyDataSetChanged();
         }
         else {
             String nameTag = newTag.getName();

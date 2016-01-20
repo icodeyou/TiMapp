@@ -67,6 +67,7 @@ public class SearchAndSelectTagManager {
             @Override
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
+
                 suggestedRecyclerView.removeItem(item);
                 addTag(tag.name);
             }
@@ -112,6 +113,8 @@ public class SearchAndSelectTagManager {
             @Override
             public void onSearchComplete(String term, List<Tag> tags) {
                 if (searchHistory.isLastSearch(term)){
+                    if (tags.size()==0)
+                        tags.add(new Tag(term));
                     setData(tags);
                 }
             }

@@ -95,6 +95,8 @@
 
                 app:tagBackground="@drawable/tag_background"
 
+                app:dynamicMode="true"
+
                 app:tagPaddingBottom="@dimen/tag_padding"
                 app:tagPaddingLeft="@dimen/tag_padding"
                 app:tagPaddingRight="@dimen/tag_padding"
