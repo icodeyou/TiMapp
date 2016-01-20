@@ -88,8 +88,18 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void viewPlace(Context context) {
+    public static void viewPlace(Context context, int id) {
         Intent intent = new Intent(context, PlaceActivity.class);
+        intent.putExtra("id", id);
+        context.startActivity(intent);
+    }
+
+
+    public static void viewPlace(Context context, Place place) {
+        Intent intent = new Intent(context, PlaceActivity.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("place", place);          // TODO use constant
+        intent.putExtras(extras);
         context.startActivity(intent);
     }
 

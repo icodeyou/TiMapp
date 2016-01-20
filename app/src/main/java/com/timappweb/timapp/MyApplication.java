@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.data.LocalPersistenceManager;
@@ -12,7 +11,6 @@ import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class MyApplication extends Application{
         return RestClient.instance().getCurrentUser();
     }
 
-    public static List<Category> mapNameToCategory = new LinkedList<>();
+    public static List<Category> categories = new LinkedList<>();
 
     @Override
     public void onCreate(){
@@ -39,12 +37,20 @@ public class MyApplication extends Application{
     }
 
     public void initCategories(){
-        mapNameToCategory.add(new Category(1, "music", R.drawable.ic_category_music));
-        mapNameToCategory.add(new Category(2, "bar", R.drawable.ic_category_bar));
-        mapNameToCategory.add(new Category(3, "party", R.drawable.ic_party));
-        mapNameToCategory.add(new Category(4, "sport", R.drawable.ic_category_sport));
-        mapNameToCategory.add(new Category(5, "strike", R.drawable.ic_category_strike));
-        mapNameToCategory.add(new Category(6, "show", R.drawable.ic_show));
+        categories.add(new Category(1, "music", R.drawable.ic_category_music));
+        categories.add(new Category(2, "bar", R.drawable.ic_category_bar));
+        categories.add(new Category(3, "party", R.drawable.ic_party));
+        categories.add(new Category(4, "sport", R.drawable.ic_category_sport));
+        categories.add(new Category(5, "strike", R.drawable.ic_category_strike));
+        categories.add(new Category(6, "show", R.drawable.ic_show));
+    }
+    public static Category getCategory(int id){
+        for (Category c: categories){
+            if (c.id == id){
+                return c;
+            }
+        }
+        return  null;
     }
 
     /**

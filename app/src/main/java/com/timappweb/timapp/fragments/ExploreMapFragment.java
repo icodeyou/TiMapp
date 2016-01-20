@@ -159,7 +159,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
     private void showMarkerDetail(Place place){
-        IntentsUtils.viewPlace(getActivity());
+        IntentsUtils.viewPlace(getActivity(), place);
     }
 
     private void centerMap(){

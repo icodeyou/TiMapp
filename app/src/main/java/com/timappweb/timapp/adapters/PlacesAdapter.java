@@ -9,15 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.utils.IntentsUtils;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
@@ -30,7 +29,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Log.d(TAG, "Get view for " + position + "/" + this.getCount());
+        //Log.d(TAG, "Get view for " + position + "/" + this.getCount());
         final Place place = this.getItem(position);
 
         // Get the view from inflater
@@ -44,16 +43,22 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         // Initialize
         TextView tvLocation = (TextView) postBox.findViewById(R.id.title_place);
         TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);
-        TextView countPosts = (TextView) postBox.findViewById(R.id.people_counter_place);
+        TextView tvCountPosts = (TextView) postBox.findViewById(R.id.people_counter_place);
         RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
-
-        // Get location and time
-        String name = place.name;
-        String time = place.getTime();
+        ImageView categoryIcon = (ImageView) postBox.findViewById(R.id.image_category_place);
 
         //Set texts
-        tvLocation.setText(name);
-        tvTime.setText(time);
+        tvLocation.setText(place.name);
+        tvTime.setText(place.getTime());
+        tvCountPosts.setText(String.valueOf(place.countUsers()));
+
+        Category category = MyApplication.getCategory(place.category_id);
+        if (category != null){
+            categoryIcon.setImageResource(MyApplication.getCategory(place.category_id).resource);
+        }
+        else{
+            // TODO if no category thats weird man
+        }
 
         //Set the adapter for RV
         HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());

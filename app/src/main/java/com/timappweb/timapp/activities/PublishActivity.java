@@ -40,6 +40,7 @@ public class PublishActivity extends BaseActivity{
     private Place currentPlace = null;
     private Post currentPost = null;
     public Location currentLocation = null;
+    private CheckBox checkBox = null;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -60,18 +61,16 @@ public class PublishActivity extends BaseActivity{
         this.initToolbar(true);
 
         //Initialize variables
-        final CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
-        LinearLayout layout_checkbox = (LinearLayout) findViewById(R.id.layout_checkbox);
+        checkBox = (CheckBox) findViewById(R.id.checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
-
-        //set saved tags in selectedTagsRV
         HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
         selectedTagsAdapter.setData(currentPost.getTags());
 
-        layout_checkbox.setOnClickListener(new View.OnClickListener() {
+        currentPost.anonymous = checkBox.isSelected();
+        checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkBox.toggle();
+                currentPost.anonymous = v.isSelected();
             }
         });
 
@@ -89,7 +88,6 @@ public class PublishActivity extends BaseActivity{
     public void submitNewPost(View view){
         this.currentPost.latitude = currentLocation.getLatitude();
         this.currentPost.longitude = currentLocation.getLongitude();
-
         // Validating user input
         if (!currentPost.validateForSubmit()){
             Toast.makeText(this, "Invalid inputs", Toast.LENGTH_LONG); // TODO proper message
@@ -123,7 +121,7 @@ public class PublishActivity extends BaseActivity{
                 int id = Integer.valueOf(restFeedback.data.get("id"));
                 Log.i(TAG, "Post has been saved. Id is : " + id);
                 //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
-                IntentsUtils.viewPost(this.context, id);
+                IntentsUtils.viewPlace(this.context, id);
             } else {
                 Log.i(TAG, "Cannot add post: " + response.getReason() + " - " + restFeedback.toString());
                 Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG);

@@ -27,7 +27,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     public CategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        this.data = MyApplication.mapNameToCategory;
+        this.data = MyApplication.categories;
         this.context = context;
     }
 

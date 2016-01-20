@@ -105,4 +105,8 @@ public class Place implements Serializable, MarkerValueInterface {
                 ", category_id=" + category_id +
                 '}';
     }
+
+    public int countUsers() {
+        return this.count_post;
+    }
 }
