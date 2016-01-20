@@ -1,9 +1,11 @@
 package com.timappweb.timapp.entities;
 
+import com.timappweb.timapp.utils.SearchHistory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tag implements Serializable{
+public class Tag implements Serializable, SearchHistory.SearchableItem{
 
     public Integer id;
     public String name;
@@ -63,5 +65,10 @@ public class Tag implements Serializable{
         return  bool;
 
 
+    }
+
+    @Override
+    public boolean matchSearch(String term) {
+        return this.name.startsWith(term);
     }
 }

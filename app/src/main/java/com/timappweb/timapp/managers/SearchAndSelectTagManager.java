@@ -36,7 +36,7 @@ public class SearchAndSelectTagManager {
     private SearchView searchView;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView suggestedRecyclerView;
-    private SearchHistory<Tag> searchHistory;
+    private SearchHistory searchHistory;
     private HorizontalTagsAdapter horizontalAdapter;
 
     private int remaining_tags;
@@ -94,7 +94,7 @@ public class SearchAndSelectTagManager {
 
         }));
 
-        SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
+        final SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
 
         SearchView.OnQueryTextListener queryTextListener =
                 new OnQueryTagListener(this);
@@ -102,7 +102,30 @@ public class SearchAndSelectTagManager {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
 
-        this.searchHistory = new SearchHistory<>();
+        this.searchHistory = new SearchHistory<Tag>(new SearchHistory.DataProvider<Tag>(){
+
+            @Override
+            public void load(final String term) {
+                RestClient.service().suggest(term, new RestCallback<List<Tag>>(activity) {
+                    @Override
+                    public void success(List<Tag> tags, Response response) {
+                        TagActivity tagActivity = (TagActivity) activity;
+                        tagActivity.getProgressBarView().setVisibility(View.GONE);
+                        Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
+
+                        searchHistory.addInCache(term, tags);
+                    }
+
+                });
+            }
+
+            @Override
+            public void onSearchComplete(String term, List<Tag> tags) {
+                if (searchHistory.isLastSearch(term)){
+                    setData(tags);
+                }
+            }
+        });
     }
 
 
@@ -156,39 +179,7 @@ public class SearchAndSelectTagManager {
     }
 
     private void loadTags(final String term){
-        // add data to adapter
-        searchHistory.setLastSearch(term);
-
-        // Data are in cache
-        if (searchHistory.hasTerm(term)){
-            setData(searchHistory.get(term).getData());
-        }
-        else {
-            // Data are not in cache, try searching for a sub term
-            SearchHistory.Item subHistory = searchHistory.get(term);
-            if (subHistory != null){
-                setData(subHistory.getData());
-                if (subHistory.isComplete()){
-                    return ;
-                }
-            }
-            searchHistory.create(term);
-
-            RestClient.service().suggest(term, new RestCallback<List<Tag>>(activity) {
-                @Override
-                public void success(List<Tag> tags, Response response) {
-                    TagActivity tagActivity = (TagActivity) activity;
-                    tagActivity.getProgressBarView().setVisibility(View.GONE);
-                    Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
-                    searchHistory.set(term, tags);
-                    if (searchHistory.isLastSearch(term)) {
-                        Log.d(TAG, "'" + term + "' is the last search, setting data");
-                        setData(tags);
-                    }
-                }
-
-            });
-        }
+        searchHistory.search(term);
     }
 
     private void setData(List<Tag> tags) {

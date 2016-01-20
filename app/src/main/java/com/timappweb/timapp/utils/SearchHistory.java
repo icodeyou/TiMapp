@@ -1,33 +1,77 @@
 package com.timappweb.timapp.utils;
 
+import android.util.Log;
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by stephane on 12/9/2015.
  */
 public class SearchHistory<T>{
+    private static final String TAG = "SearchHistory";
     private int minimumSearchLength;
-    private HashMap<String, Item<T>> data;
+    private HashMap<String, Item> data;
     private int maximumResults;
     private String lastSearch = ""; // Last search to update view accordingly...
 
-    public SearchHistory(int minimumSearchLength, int maximumResults) {
+    private DataProvider provider;
+    public void setDataProvider(DataProvider provider){
+        this.provider = provider;
+    }
+
+    public SearchHistory(DataProvider provider, int minimumSearchLength, int maximumResults) {
         this.data = new HashMap<>();
         this.minimumSearchLength = minimumSearchLength;
         this.maximumResults = maximumResults;
+        this.provider = provider;
     }
-    public SearchHistory() {
-        this(2, 20);
+    public SearchHistory(DataProvider provider) {
+        this(provider, 2, 20);
+    }
+    public SearchHistory(int minimumSearchLength, int maximumResults) {
+        this(null, minimumSearchLength, maximumResults);
     }
 
-    public void set(String term, List<T> items) {
-        assert (term.length() >= this.minimumSearchLength);
-        Item<T> node = this.data.get(term);
+    public void search(String term){
+        if (term.length() < this.minimumSearchLength){
+            return ;
+        }
+        Log.d(TAG, "Search for term " + term);
+
+        // add data to adapter
+        this.setLastSearch(term);
+
+        // Data are in cache and fetch is done
+        if (this.hasTerm(term) && !this.data.get(term).pending){
+            this.provider.onSearchComplete(term, this.data.get(term).getData());
+        }
+        else if (!this.hasTerm(term)){
+            // Data are not in cache, try searching for a sub term
+            SearchHistory.Item subHistory = this.getTermOrSubTerm(term);
+            if (subHistory != null){
+                this.provider.onSearchComplete(term, subHistory.getFilteredData(term));
+                if (subHistory.isComplete()){
+                    return ;
+                }
+            }
+
+            this.create(term);
+            provider.load(term);
+        }
+    }
+
+    public void addInCache(String term, List<T> items) {
+        Log.d(TAG, "Adding in cache " + items.size() + " element(s) for search " + term);
+       // assert (term.length() >= this.minimumSearchLength);
+        Item node = this.data.get(term);
         if (node == null) return;
         node.setPending(false);
         node.setData(items);
-        node.setComplete(this.maximumResults > 0 && items.size() > this.maximumResults);
+        //node.setComplete(this.maximumResults > 0 && items.size() >= this.maximumResults);
+        node.setComplete(true);
+        this.provider.onSearchComplete(term, items);
     }
 
     public boolean hasTerm(String term){
@@ -35,13 +79,18 @@ public class SearchHistory<T>{
     }
 
     public boolean hasTermOrSubTerm(String term){
-        return this.get(term) != null;
+        return this.getTermOrSubTerm(term) != null;
     }
 
-    public Item<T> get(String term){
-        if (!this.data.containsKey(term)){
+    /**
+     * Get the biggest search term that is not pending
+     * @param term
+     * @return
+     */
+    public Item getTermOrSubTerm(String term){
+        if (!this.data.containsKey(term) || this.data.get(term).pending){
             if (term.length() > this.minimumSearchLength){
-                return this.get(term.substring(0, term.length() - 2));
+                return this.getTermOrSubTerm(term.substring(0, term.length() - 2));
             }
             else{
                 return null;
@@ -53,12 +102,13 @@ public class SearchHistory<T>{
     }
 
     public void create(String term) {
-        this.data.put(term, new Item<T>(null, false));
+        this.data.put(term, new Item(null, false));
     }
 
     public void setLastSearch(String lastSearch) {
         this.lastSearch = lastSearch;
     }
+
     public boolean isLastSearch(String search){
         return this.lastSearch == search;
     }
@@ -75,6 +125,15 @@ public class SearchHistory<T>{
         return lastSearch;
     }
 
+    public static <T> List<T> filterData(List<T> data, String term){
+        List<T> results = new LinkedList<>();
+        for (T d: data){
+            if (((SearchableItem)d).matchSearch(term)){
+                results.add(d);
+            }
+        }
+        return results;
+    }
 
     public class Item<T>{
         boolean complete = false;
@@ -107,6 +166,26 @@ public class SearchHistory<T>{
             return complete;
         }
 
+        /**
+         * @param term
+         * @return data filtered with term
+         */
+        public List<T> getFilteredData(String term) {
+            return SearchHistory.filterData(this.data, term);
+        }
+
 
     };
+
+    public interface SearchableItem{
+        boolean matchSearch(String term);
+    }
+
+    public interface DataProvider<T>{
+
+        void load(final String term) ;
+
+        void onSearchComplete(String term, List<T> data);
+    }
+
 }
