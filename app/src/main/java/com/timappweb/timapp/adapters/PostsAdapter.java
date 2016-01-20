@@ -61,7 +61,7 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         tvComment.setText(comment);
 
         //Set the adapter for the Recycler View (which displays tags)
-        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>());
+        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
         horizontalTagsAdapter.setData(tags);
         rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 

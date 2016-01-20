@@ -17,15 +17,11 @@ import java.util.Objects;
 public class PlaceFriendsAdapter extends ArrayAdapter<User> {
     private final Context context;
     private int idLayout;
-
-    //TODO : item_friend est utilisé deux fois parce qu'on appelle la methode super.
-    // On le fait pas dans la classe TagsAdapter, par exemple. Du coup, est-ce vraiment utile?
-
+    private int resource = R.layout.item_friend;
 
     public PlaceFriendsAdapter(Context context) {
-        super(context, R.layout.item_friend);
+        super(context, 0);
         this.context = context;
-        //this.idLayout =
     }
 
     @Override
@@ -37,7 +33,7 @@ public class PlaceFriendsAdapter extends ArrayAdapter<User> {
         if(convertView==null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowUser = inflater.inflate(R.layout.item_friend, parent, false);
+            rowUser = inflater.inflate(resource, parent, false);
         }
 
         // Get text view from item_post.xml

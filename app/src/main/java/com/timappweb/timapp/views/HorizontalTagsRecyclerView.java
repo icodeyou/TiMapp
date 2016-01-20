@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 
 
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.adapters.TagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 
 import java.util.LinkedList;
@@ -34,8 +33,8 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
 
     // Override
     @Override
-    public TagsAdapter getAdapter() {
-        return (TagsAdapter) super.getAdapter();
+    public HorizontalTagsAdapter getAdapter() {
+        return (HorizontalTagsAdapter) super.getAdapter();
     }
 
 
@@ -44,7 +43,7 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
     private void init(){
         this.setHasFixedSize(true);
 
-        this.setAdapter(new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>()));
+        this.setAdapter(new HorizontalTagsAdapter(getContext()));
 
         GridLayoutManager manager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         this.setLayoutManager(manager);

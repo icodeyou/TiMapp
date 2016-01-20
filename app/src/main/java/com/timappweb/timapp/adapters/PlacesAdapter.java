@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.utils.IntentsUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,9 +29,9 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         Log.d(TAG, "Get view for " + position + "/" + this.getCount());
-        Place place = this.getItem(position);
+        final Place place = this.getItem(position);
 
         // Get the view from inflater
         View postBox = convertView;
@@ -55,13 +56,22 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         tvTime.setText(time);
 
         //Set the adapter for RV
-        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext(), new LinkedList<Tag>());
+        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
         horizontalTagsAdapter.setData(place.getMainTags());
         rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 
         //Set LayoutManager for RV
         GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         rv_lastPostTags.setLayoutManager(manager_savedTags);
+
+        //Set OnClickListener for the entire view !
+        postBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Click on item: " + position);
+                IntentsUtils.addPost(context, place);
+            }
+        });
 
         //return the view
         return postBox;

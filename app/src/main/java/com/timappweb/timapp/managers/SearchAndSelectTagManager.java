@@ -61,29 +61,13 @@ public class SearchAndSelectTagManager {
 
     private void init(){
 
-        // Source de listener à double implémentation que tu trouves bizarre que tu veux enlever :
-        // http://stackoverflow.com/questions/24471109/recyclerview-onclick
-        /*
-        suggestedRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(activity, new RecyclerItemTouchListener.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(RecyclerView recyclerView, View view, int position) {
-                Log.d(TAG, "Clicked on suggested item");
-                FilledTagsAdapter suggestedAdapter = (FilledTagsAdapter) recyclerView.getAdapter();
-                String selectedTag = suggestedAdapter.getData(position).getName();
-                selectedTagsRecyclerView.getAdapter().addData(selectedTag);
-                selectedTagsRecyclerView.scrollToEnd();
-            }
-
-        }));
-*/
-
         setCounterHint();
 
         suggestedRecyclerView.addOnTagClickListener(new HashtagView.TagsClickListener() {
             @Override
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
+                suggestedRecyclerView.removeItem(item);
                 addTag(tag.name);
             }
         });

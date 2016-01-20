@@ -78,14 +78,6 @@ public class LocateActivity extends BaseActivity{
         mResultReceiver = new AddressResultReceiver(new Handler());
         final PlacesAdapter placesAdapter = new PlacesAdapter(this);
         listPlaces.setAdapter(placesAdapter);
-        listPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "Click on item: " + position);
-                Place place = placesAdapter.getItem(position);
-                IntentsUtils.addPost(that, place);
-            }
-        });
 
 
         //Listeners

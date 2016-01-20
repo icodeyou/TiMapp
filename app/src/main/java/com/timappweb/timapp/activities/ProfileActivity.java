@@ -51,7 +51,7 @@ public class ProfileActivity extends BaseActivity{
         tvPostName = (TextView) findViewById(R.id.tv_last_post_name);
 
         //set Adapter
-        horizontalTagsAdapter = new HorizontalTagsAdapter(this, new LinkedList<Tag>());
+        horizontalTagsAdapter = new HorizontalTagsAdapter(this);
         rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 
         //Set LayoutManager
