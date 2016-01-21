@@ -4,7 +4,6 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -26,7 +26,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class TagActivity extends BaseActivity{
@@ -46,6 +45,7 @@ public class TagActivity extends BaseActivity{
     //others
     private SearchAndSelectTagManager searchAndSelectTagManager;
     private View selectedTagsView;
+    private Post currentPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +53,10 @@ public class TagActivity extends BaseActivity{
 
         // Check that we gave the place as an extra parameter
         this.currentPlace = IntentsUtils.extractPlace(getIntent());
-        if (this.currentPlace == null){
+        this.currentPost = IntentsUtils.extractPost(getIntent());
+        if (this.currentPlace == null || this.currentPost == null){
             Log.d(TAG, "Place is null");
-            IntentsUtils.addPost(this);
+            IntentsUtils.addPostStepLocate(this);
             return;
         }
         
@@ -168,11 +169,10 @@ public class TagActivity extends BaseActivity{
                 searchView.setQueryHint("One more !");
                 break;
             case 3:
-                Post post = new Post();
-                post.setTags(searchAndSelectTagManager.getSelectedTags());
-                post.place_id = this.currentPlace.id;
+                currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
+                currentPost.place_id = this.currentPlace.id;
 
-                IntentsUtils.addPost(this, this.currentPlace, post);
+                IntentsUtils.addPostStepPublish(this, this.currentPlace, currentPost);
             default:
                 break;
         }

@@ -1,15 +1,12 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.ExploreFragment;
@@ -121,7 +119,7 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
             addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.addPost(that);
+                    IntentsUtils.addPostStepLocate(that);
                 }
             });
         }
@@ -283,7 +281,7 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
             IntentsUtils.settings(this);
         }
         else if (id == R.id.menu_item_add_post){
-            IntentsUtils.addPost(this);
+            IntentsUtils.addPostStepLocate(this);
         }
         else if (id == R.id.menu_item_place) {
             IntentsUtils.addPlace(this);

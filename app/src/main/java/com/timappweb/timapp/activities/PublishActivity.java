@@ -2,15 +2,12 @@ package com.timappweb.timapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +25,6 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RetrofitError;
@@ -43,7 +39,6 @@ public class PublishActivity extends BaseActivity{
     private HorizontalTagsRecyclerView selectedTagsRV;
     private Place currentPlace = null;
     private Post currentPost = null;
-    public Location currentLocation = null;
     private CheckBox checkBox = null;
     private ListView placeListView;
 
@@ -58,7 +53,7 @@ public class PublishActivity extends BaseActivity{
         this.currentPost = IntentsUtils.extractPost(getIntent());
         if (this.currentPlace == null || this.currentPost == null){
             Log.d(TAG, "Place is null");
-            IntentsUtils.addPost(this);
+            IntentsUtils.addPostStepLocate(this);
             return;
         }
 
@@ -80,20 +75,13 @@ public class PublishActivity extends BaseActivity{
             }
         });
 
-        this.initLocationProvider(new LocationListener() {
-
-            @Override
-            public void onLocationChanged(Location location) {
-                currentLocation = location;
-            }
-        });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                IntentsUtils.addPost(this, currentPlace);
+                IntentsUtils.addPostStepTags(this, currentPlace, currentPost);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -112,8 +100,6 @@ public class PublishActivity extends BaseActivity{
     }
 
     public void submitNewPost(View view){
-        this.currentPost.latitude = currentLocation.getLatitude();
-        this.currentPost.longitude = currentLocation.getLongitude();
         // Validating user input
         if (!currentPost.validateForSubmit()){
             Toast.makeText(this, "Invalid inputs", Toast.LENGTH_LONG); // TODO proper message

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,17 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
     private final Context context;
+
+    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
+        this.itemAdapterClickListener = itemAdapterClickListener;
+    }
+
+    private OnItemAdapterClickListener itemAdapterClickListener;
 
     public PlacesAdapter(Context context) {
         super(context, R.layout.item_place);
@@ -70,13 +75,15 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         rv_lastPostTags.setLayoutManager(manager_savedTags);
 
         //Set OnClickListener for the entire view !
-        postBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Click on item: " + position);
-                IntentsUtils.addPost(context, place);
-            }
-        });
+
+        if (this.itemAdapterClickListener != null){
+            postBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemAdapterClickListener.onClick(position);
+                }
+            });
+        }
 
         //return the view
         return postBox;

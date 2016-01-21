@@ -17,6 +17,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -35,7 +36,7 @@ public class AddPlaceActivity extends BaseActivity {
     RecyclerView categoriesRV;
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
-    private Location location = null;
+    private Location currentLocation = null;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -65,7 +66,7 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void onLocationChanged(Location l) {
                 Log.i(TAG, "Location has changed: " + Util.print(l));
-                location = l;
+                currentLocation = l;
             }
         });
     }
@@ -85,7 +86,10 @@ public class AddPlaceActivity extends BaseActivity {
             public void success(RestFeedback restFeedback, Response response) {
                 if (restFeedback.success){
                     Log.d(TAG, "Place has been saved: " + place);
-                    IntentsUtils.addPost(this.context, place);
+                    Post post = new Post();
+                    post.latitude = currentLocation.getLatitude();
+                    post.longitude = currentLocation.getLongitude();
+                    IntentsUtils.addPostStepTags(this.context, place, post);
                 }
                 else{
                     Log.d(TAG, "Cannot save viewPlace: " + place);
@@ -111,8 +115,8 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     public void onCreatePlaceClick(View view) {
-        if (location != null){
-            final Place place = new Place(location.getLatitude(), location.getLongitude(), groupNameET.getText().toString(), categorySelected);
+        if (currentLocation != null){
+            final Place place = new Place(currentLocation.getLatitude(), currentLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
             // TODO validate place
             this.submitPlace(place);
         }

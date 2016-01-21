@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.ExploreActivity;
@@ -66,15 +67,16 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void addPost(Context context, Place place) {
+    public static void addPostStepTags(Context context, Place place, Post post) {
         Intent intent = new Intent(context, TagActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
+        extras.putSerializable("post", post);          // TODO use constant
         intent.putExtras(extras);
         context.startActivity(intent);
     }
 
-    public static void addPost(Context context, Place place, Post post) {
+    public static void addPostStepPublish(Context context, Place place, Post post) {
         Intent intent = new Intent(context, PublishActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
@@ -83,7 +85,7 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void addPost(Context context) {
+    public static void addPostStepLocate(Context context) {
         Intent intent = new Intent(context, LocateActivity.class);
         context.startActivity(intent);
     }

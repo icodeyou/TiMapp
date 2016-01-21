@@ -16,17 +16,18 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.Constants;
 import com.timappweb.timapp.utils.IntentsUtils;
-import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -54,12 +55,14 @@ public class LocateActivity extends BaseActivity{
     private Menu mainMenu;
 
     private LocationListener mLocationListener;
+    private Location currentLocation = null;
 
 
     // ----------------------------------------------------------------------------------------------
     //OVERRIDE METHODS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         Log.d(TAG, "Creating LocateActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
@@ -77,6 +80,20 @@ public class LocateActivity extends BaseActivity{
         final LocateActivity that = this;
         mResultReceiver = new AddressResultReceiver(new Handler());
         final PlacesAdapter placesAdapter = new PlacesAdapter(this);
+
+        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d(TAG, "Click on place adapter");
+                Place place = placesAdapter.getItem(position);
+                Post post = new Post();
+                post.longitude = currentLocation.getLongitude();
+                post.latitude = currentLocation.getLatitude();
+                IntentsUtils.addPostStepTags(that, place, post);
+            }
+
+        });
+
         listPlaces.setAdapter(placesAdapter);
 
 
@@ -124,6 +141,7 @@ public class LocateActivity extends BaseActivity{
             public void onLocationChanged(Location location) {
                 Log.i(TAG, "Location has changed: " + Util.print(location));
                 loadPlaces(location);
+                currentLocation = location;
                 //startIntentServiceReverseGeocoding(location);
             }
         };
