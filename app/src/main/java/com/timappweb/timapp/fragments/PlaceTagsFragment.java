@@ -18,14 +18,13 @@ import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.client.Response;
 
-public class ExploreTagsFragment extends Fragment {
+public class PlaceTagsFragment extends Fragment {
 
-    private static final String TAG = "ExploreTagsFragment";
+    private static final String TAG = "PlaceTagsFragment";
     TagsAndCountersAdapter mTagsAndCountersAdapter;
 
     @Nullable
@@ -33,12 +32,12 @@ public class ExploreTagsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context= getActivity().getApplicationContext();
 
-        View root = inflater.inflate(R.layout.fragment_explore_tags, container, false);
+        View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
 
         //Create ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
-        ListView lvTags = (ListView) root.findViewById(R.id.list_tags_explore);
+        ListView lvTags = (ListView) root.findViewById(R.id.list_tags);
 
         // pass context and data to the custom adapter
         mTagsAndCountersAdapter = new TagsAndCountersAdapter(context);
@@ -49,11 +48,10 @@ public class ExploreTagsFragment extends Fragment {
 
     public void onResume(){
         super.onResume();
-        Log.d(TAG, "ExploreTagsFragment.onResume()");
+        Log.d(TAG, "PlaceTagsFragment.onResume()");
         // TODO check if bounds have changed
         this.loadData();
     }
-
 
     private void loadData() {
         QueryCondition conditions = new QueryCondition();
@@ -76,7 +74,7 @@ public class ExploreTagsFragment extends Fragment {
         });
     }
 
-    private ArrayList<Tag> generateDummyData() {
+    /*private ArrayList<Tag> generateDummyData() {
         ArrayList<Tag> tags = new ArrayList<>();
         tags.add(new Tag("#friteschezjojo", 1587));
         tags.add(new Tag("#boeing", 747));
@@ -94,5 +92,5 @@ public class ExploreTagsFragment extends Fragment {
         tags.add(new Tag("#thisissofunny", 21));
         tags.add(new Tag("#beach", 14));
         return tags;
-    }
+    }*/
 }

@@ -164,9 +164,10 @@ public class LocateActivity extends BaseActivity{
                 progressBarView.setVisibility(View.GONE);
                 if (place.size() != 0) {
                     placeAdapter.addAll(place);
+                    noPlaceView.setVisibility(View.GONE);
                     placesAndBottomLine.setVisibility(View.VISIBLE);
                 } else {
-                    noPlaceView.setVisibility(View.GONE);
+                    noPlaceView.setVisibility(View.VISIBLE);
                 }
                 placeAdapter.notifyDataSetChanged();
             }

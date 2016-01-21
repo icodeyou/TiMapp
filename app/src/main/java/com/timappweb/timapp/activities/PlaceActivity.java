@@ -1,20 +1,27 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.fragments.PlacePeopleFragment;
+import com.timappweb.timapp.fragments.PlaceTagsFragment;
+
+import java.util.List;
+import java.util.Vector;
 
 public class PlaceActivity extends BaseActivity{
     private String TAG = "PlaceActivity";
     private ListView tagsListView;
     private ListView placeListView;
+    private MyPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +34,22 @@ public class PlaceActivity extends BaseActivity{
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
 
-        initAdapters();
+        //initAdapters();
+
+        // Création de la liste de Fragments que fera défiler le PagerAdapter
+        List fragments = new Vector();
+
+        // Ajout des Fragments dans la liste
+        fragments.add(Fragment.instantiate(this, PlaceTagsFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, PlacePeopleFragment.class.getName()));
+
+        // Création de l'adapter qui s'occupera de l'affichage de la liste de
+        // Fragments
+        this.pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), fragments);
+
+        ViewPager pager = (ViewPager) super.findViewById(R.id.place_viewpager);
+        // Affectation de l'adapter au ViewPager
+        pager.setAdapter(this.pagerAdapter);
     }
 
     //Menu Action Bar

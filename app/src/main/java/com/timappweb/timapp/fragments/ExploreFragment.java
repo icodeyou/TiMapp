@@ -48,7 +48,7 @@ public class ExploreFragment extends Fragment{
             if (position == 0) {
                 return new ExploreMapFragment();
             } else {
-                return new ExploreTagsFragment();
+                return new ExplorePlacesFragment();
             }
         }
 

@@ -18,16 +18,17 @@
 
     <include layout="@layout/item_place" />
 
-    <ViewPager
+    <!-- TAGS -->
+    <!-- **********************************************************************-->
+    <android.support.v4.view.ViewPager
         android:id="@+id/place_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <!-- TAGS -->
-    <!-- **********************************************************************-->
     <ListView
         android:id="@+id/tags_lv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:visibility="gone"/>
 
 </LinearLayout>
