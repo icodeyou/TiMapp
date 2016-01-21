@@ -12,9 +12,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_add_spot">Post</string>
     <string name="title_activity_post">Post</string>
-    <string name="title_activity_place">Place</string>
-    <string name="title_activity_people">Place - People</string>
-    <string name="title_activity_comment">Place - Comments</string>
+    <string name="title_activity_place">Spot</string>
+    <string name="title_activity_people">Spot - People</string>
+    <string name="title_activity_comment">Spot - Comments</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>

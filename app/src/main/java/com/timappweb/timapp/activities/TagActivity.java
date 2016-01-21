@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -70,8 +71,6 @@ public class TagActivity extends BaseActivity{
         initAdapterPlace();
 
         setSelectedTagsViewGone();
-
-
     }
 
     @Override
@@ -90,7 +89,7 @@ public class TagActivity extends BaseActivity{
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);
 
         setSearchview(menu);
-        searchView.clearFocus();
+        searchView.requestFocus();
 
         //set hint for searchview
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
@@ -121,14 +120,18 @@ public class TagActivity extends BaseActivity{
         return true;
     }
 
-    /*@Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String query = searchView.getQuery().toString();
-        addTag(query);
-        setCounterHint();
+        switch (item.getItemId()) {
+            case R.id.action_validate:
+                String query = searchView.getQuery().toString();
+                addTag(query);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-        return true;
-    }*/
+
 
     //----------------------------------------------------------------------------------------------
     //Private methods
@@ -153,7 +156,7 @@ public class TagActivity extends BaseActivity{
                 break;
             case 1:
                 setSelectedTagsViewVisible();
-                searchView.setQueryHint("Choose 2 tags");
+                searchView.setQueryHint("2 tags left");
                 break;
             case 2:
                 searchView.setQueryHint("One more !");

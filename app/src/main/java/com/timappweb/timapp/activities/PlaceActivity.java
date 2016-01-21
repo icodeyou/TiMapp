@@ -1,18 +1,19 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 
 public class PlaceActivity extends BaseActivity{
     private String TAG = "PlaceActivity";
-    private ListView lvTags;
+    private ListView tagsListView;
+    private ListView placeListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +23,10 @@ public class PlaceActivity extends BaseActivity{
         this.initToolbar(true);
 
         //Initialize
-        lvTags = (ListView) findViewById(R.id.tags_lv);
+        tagsListView = (ListView) findViewById(R.id.tags_lv);
+        placeListView = (ListView) findViewById(R.id.place_lv);
 
-        initAdapter();
+        initAdapters();
     }
 
     //Menu Action Bar
@@ -52,12 +54,17 @@ public class PlaceActivity extends BaseActivity{
     }
 
 
-    private void initAdapter() {
-        // pass context and data to the custom adapter
+    private void initAdapters() {
+        // //PlacesAdapter
+        //PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        //placesAdapter.add(currentPlace);
+        //placeListView.setAdapter(placesAdapter);
+
+        // TagsAndCountersAdapter
         TagsAndCountersAdapter tagsAndCountersAdapter = new TagsAndCountersAdapter(this);
         tagsAndCountersAdapter.generateDummyData();
 
         //Set adapter
-        lvTags.setAdapter(tagsAndCountersAdapter);
+        tagsListView.setAdapter(tagsAndCountersAdapter);
     }
 }

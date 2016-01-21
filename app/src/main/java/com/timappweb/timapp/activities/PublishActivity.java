@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -85,6 +87,17 @@ public class PublishActivity extends BaseActivity{
                 currentLocation = location;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                IntentsUtils.addPost(this, currentPlace);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //----------------------------------------------------------------------------------------------

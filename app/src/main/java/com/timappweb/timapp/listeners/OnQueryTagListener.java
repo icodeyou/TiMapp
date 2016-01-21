@@ -31,8 +31,10 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
         if(newText.contains(" ")) {
             newText = newText.substring(0, newText.length()-1);
             onQueryTextSubmit(newText);
-            manager.getSearchView().setQuery("", false);
             TagActivity tagActivity = (TagActivity) manager.getActivity();
+
+            //if this action is removed, onQueryTextChange will not be called
+            // the second time the spacebar is pressed.
             tagActivity.simulateKey();
         }
         else {

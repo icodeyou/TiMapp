@@ -21,6 +21,9 @@
     <ListView
         android:id="@+id/place_lv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <include layout="@layout/item_place" />
 
 </LinearLayout>
