@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
@@ -125,7 +126,12 @@ public class TagActivity extends BaseActivity{
         switch (item.getItemId()) {
             case R.id.action_validate:
                 String query = searchView.getQuery().toString();
-                addTag(query);
+                if(query.isEmpty()) {
+                    Toast.makeText(this, "Type a tag before submitting", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    searchView.setQuery(query, true);
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
