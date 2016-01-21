@@ -24,11 +24,11 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!--android:debuggable="true" has been removed -->
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:debuggable="true"
-        android:icon="@drawable/ic_newlogo"
+        android:icon="@drawable/test20"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->

@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -41,6 +43,7 @@ public class PublishActivity extends BaseActivity{
     private Post currentPost = null;
     public Location currentLocation = null;
     private CheckBox checkBox = null;
+    private ListView placeListView;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -63,8 +66,9 @@ public class PublishActivity extends BaseActivity{
         //Initialize variables
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
-        HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
-        selectedTagsAdapter.setData(currentPost.getTags());
+        placeListView = (ListView) findViewById(R.id.place_lv);
+
+        initAdapters();
 
         currentPost.anonymous = checkBox.isSelected();
         checkBox.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +89,15 @@ public class PublishActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Private methods
+    private void initAdapters() {
+        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        placesAdapter.add(currentPlace);
+        placeListView.setAdapter(placesAdapter);
+
+        HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
+        selectedTagsAdapter.setData(currentPost.getTags());
+    }
+
     public void submitNewPost(View view){
         this.currentPost.latitude = currentLocation.getLatitude();
         this.currentPost.longitude = currentLocation.getLongitude();

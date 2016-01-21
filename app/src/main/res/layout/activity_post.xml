@@ -57,7 +57,7 @@
         android:id="@+id/linearLayout">
 
         <ListView
-            android:id="@+id/list_tags"
+            android:id="@+id/tags_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>

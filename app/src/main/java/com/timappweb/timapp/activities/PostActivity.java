@@ -32,7 +32,7 @@ public class PostActivity extends BaseActivity {
         setContentView(R.layout.activity_post);
 
         //------------------------------------------------------------------------------------------
-        ListView listViewTags = (ListView) findViewById(R.id.list_tags);
+        ListView listViewTags = (ListView) findViewById(R.id.tags_lv);
         tagsAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,

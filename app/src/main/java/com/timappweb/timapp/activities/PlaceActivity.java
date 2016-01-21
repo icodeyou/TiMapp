@@ -9,9 +9,6 @@ import android.widget.ListView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
-import com.timappweb.timapp.entities.Tag;
-
-import java.util.ArrayList;
 
 public class PlaceActivity extends BaseActivity{
     private String TAG = "PlaceActivity";
@@ -25,7 +22,7 @@ public class PlaceActivity extends BaseActivity{
         this.initToolbar(true);
 
         //Initialize
-        lvTags = (ListView) findViewById(R.id.list_tags);
+        lvTags = (ListView) findViewById(R.id.tags_lv);
 
         initAdapter();
     }
@@ -62,16 +59,5 @@ public class PlaceActivity extends BaseActivity{
 
         //Set adapter
         lvTags.setAdapter(tagsAndCountersAdapter);
-    }
-
-    //essayer de le faire programmatiquement
-    public void onPeopleClick(View view) {
-        Intent intent = new Intent(this,PlaceFriendsActivity.class);
-        startActivity(intent);
-    }
-
-    public void onCommentClick(View view) {
-        Intent intent = new Intent(this,PlacePostsActivity.class);
-        startActivity(intent);
     }
 }
