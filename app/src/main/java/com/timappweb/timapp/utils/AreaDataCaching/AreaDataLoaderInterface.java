@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by stephane on 12/9/2015.
  */
-public interface AreaDataLoaderInterface {
+public interface AreaDataLoaderInterface<T> {
 
     /**
      * Filll the AreaRequestItem with data according to conditions for the point pCpy
@@ -19,7 +19,7 @@ public interface AreaDataLoaderInterface {
      */
     void load(IntPoint point, AreaRequestItem request, QueryCondition conditions);
 
-    void clear(List<Post> data);
+    void clear(List<T> data);
 
     void clearAll();
 

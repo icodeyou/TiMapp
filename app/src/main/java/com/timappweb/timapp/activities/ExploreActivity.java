@@ -331,16 +331,8 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
         String newFragmentTAG = "Explore";
 
         Log.i(TAG, "You clicked on button " + position);
-        // TODO check user access with RestClient.instance().checkToken();
-        // TODO use constants
 
         switch (FragmentId.values()[position]){
-            case Explore:             // DO THIS
-                showAddSpotButton();
-                newFragmentTAG = "Explore";
-                newFragment = new ExploreFragment();
-                break;
-
             default:            // By default go to Explore
                 showAddSpotButton();
                 newFragmentTAG = "Explore";

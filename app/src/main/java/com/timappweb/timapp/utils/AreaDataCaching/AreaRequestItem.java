@@ -11,14 +11,14 @@ import java.util.List;
  * Represents a request for a data area
  *
  */
-public class AreaRequestItem {
+public class AreaRequestItem<T> {
     public int dataTimestamp;       // Timestamp on the server
     public int localTimestamp;      // Timestamp on the local machine
 
-    public List<Post> data;         // LIFO: Last spot in => First spot out
+    public List<T> data;         // LIFO: Last spot in => First spot out
     //public boolean isDisplayed = false;    // True if it's display on the map
 
-    public AreaRequestItem(int dataTimestamp, List<Post> spots) {
+    public AreaRequestItem(int dataTimestamp, List<T> spots) {
         this.setDataTimestamp(dataTimestamp);
         this.updateLocalTimestamp();
         this.data = spots;

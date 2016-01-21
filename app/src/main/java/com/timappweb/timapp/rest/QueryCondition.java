@@ -53,9 +53,6 @@ public class QueryCondition {
         return res;
     }
 
-    public void setVisualisation(String val) {
-        this.queryMap.put("visualization", val);
-    }
 
     public void setTimeRange(int timeRange) {
         this.queryMap.put("time_range", String.valueOf(timeRange));

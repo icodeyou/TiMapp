@@ -41,10 +41,12 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
         TextView counterView = (TextView) rowView.findViewById(R.id.tv_tag_counter);
 
         // Set the text for textView
-        String tagString = String.valueOf(tagsArrayList.get(position).getName());
-        String tagCounterString = String.valueOf(tagsArrayList.get(position).getCountRef());
-        tagView.setText(tagString);
-        counterView.setText(tagCounterString);
+        if (tagsArrayList.size() > 0){
+            String tagString = String.valueOf(tagsArrayList.get(position).getName());
+            String tagCounterString = String.valueOf(tagsArrayList.get(position).getCountRef());
+            tagView.setText(tagString);
+            counterView.setText(tagCounterString);
+        }
 
         // return rowView
         return rowView;

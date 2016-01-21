@@ -30,9 +30,6 @@ public interface WebServiceInterface {
     @GET("/posts/posts.json")
     void listPosts(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
 
-    @GET("/posts/posts.json")
-    List<Post> listPosts(@QueryMap Map<String, String> conditions);
-
     @GET("/posts/view/{id}.json")
     void viewPost(@Path("id") int id, RestCallback<Post> restCallback);
 
@@ -56,19 +53,8 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     // TAGS
-
-    @POST("/PostsTags/latest.json")
-    List<MapTag> listSpotsTags();
-
-    @POST("/PostsTags/latest.json")
-    void listSpotsTags(RestCallback<List<MapTag>> restCallback);
-
-    @GET("/Posts/trending_tags.json")
-    List<Tag> trendingTags();
-
     @GET("/Posts/trending_tags.json")
     void trendingTags(@QueryMap Map<String, String> conditions, RestCallback<List<Tag>> restCallback);
-
 
     @GET("/Tags/suggest/{term}.json")
     void suggest(@Path("term") String term, RestCallback<List<Tag>> restCallback);
@@ -82,12 +68,35 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     // Places
 
+    /**
+     * Find places to display on the map
+     * @param conditions
+     * @param callback
+     */
+    @POST("/Places/populars.json")
+    void bestPlaces(@QueryMap Map<String, String> conditions, RestCallback<List<Place>>  callback);
+
+    /**
+     * Adding a place
+     * @param place
+     * @param restFeedback
+     */
     @POST("/Places/add.json")
     void addPlace(@Body Place place, RestCallback<RestFeedback> restFeedback);
 
+    /**
+     * Used to get all place that are in a area
+     * @param conditions
+     * @param callback
+     */
     @GET("/Places/around_me.json")
     void placeAroundMe(@QueryMap Map<String, String> conditions, RestCallback<List<Place>>  callback);
 
+    /**
+     * Used to get all place that are around user position
+     * @param conditions
+     * @param restCallback
+     */
     @GET("/Places/reachable.json")
     void placeReachable(@QueryMap Map<String, String> conditions, RestCallback<List<Place>> restCallback);
 }

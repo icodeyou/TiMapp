@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.entities.MarkerValueInterface;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.rest.QueryCondition;
@@ -19,7 +20,7 @@ import retrofit.client.Response;
 /**
  * Created by stephane on 12/9/2015.
  */
-public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
+public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
     private Context mContext;
@@ -35,13 +36,12 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
         Log.i(TAG, "Request loading of area: " + conditions.toString());
-        conditions.setVisualisation("post"); // For to return posts instead of cluster
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         final int requestId = this.requestCounter++;
-        RestClient.service().listPosts(conditions.toMap(), new RestCallback<List<Post>>(mContext) {
+        RestClient.service().bestPlaces(conditions.toMap(), new RestCallback<List<Place>>(mContext) {
             @Override
-            public void success(List<Post> posts, Response response) {
-                Log.i(TAG, "WS loaded tags done. Loaded " + posts.size() + " result(s). " + " for point " + pCpy);
+            public void success(List<Place> places, Response response) {
+                Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
                 // Test if request is out dated
                 // TODO cancel requests instead
                 if (requestId <= lastClear) {
@@ -57,13 +57,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
                 // Setting the last timestamp retrieved from the server
                 // TODO what happens if two row have the same timestamp for the same area ?
                 request.setDataTimestamp(
-                        posts.size() > 1
-                                ? posts.get(posts.size() - 1).getCreated()
+                        places.size() > 1
+                                ? places.get(places.size() - 1).created
                                 : 0);
 
-                request.data.addAll(posts);
+                request.data.addAll(places);
 
-                for (MarkerValueInterface d : posts) {
+                for (MarkerValueInterface d : places) {
                     mClusterManagerPost.addItem(d);
                 }
                 mClusterManagerPost.cluster();
@@ -72,9 +72,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface {
     }
 
     @Override
-    public void clear(List<Post> data) {
-        for (Post spot: data){
-            mClusterManagerPost.removeItem(spot);
+    public void clear(List<Place> data) {
+        for (Place place: data){
+            mClusterManagerPost.removeItem(place);
         }
     }
 

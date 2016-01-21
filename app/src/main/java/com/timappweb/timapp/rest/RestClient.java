@@ -173,7 +173,6 @@ public class RestClient {
 
     /**
      * Check login on the server side thanks to the token
-     * TODO do asynchronous tache
      */
     public void checkToken() {
         Log.i(TAG, "Checking user token...");
