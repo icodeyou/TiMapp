@@ -8,14 +8,6 @@
     <!-- TOOLBAR -->
     <include layout="@layout/toolbar"/>
 
-    <!-- TAGS -->
-    <!-- **********************************************************************-->
-    <ListView
-        android:id="@+id/tags_lv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
     <!-- PLACE -->
     <!-- **********************************************************************-->
     <ListView
@@ -25,5 +17,17 @@
         android:visibility="gone"/>
 
     <include layout="@layout/item_place" />
+
+    <ViewPager
+        android:id="@+id/place_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <!-- TAGS -->
+    <!-- **********************************************************************-->
+    <ListView
+        android:id="@+id/tags_lv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>

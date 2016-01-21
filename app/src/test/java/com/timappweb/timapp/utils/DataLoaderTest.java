@@ -152,7 +152,7 @@ public class DataLoaderTest {
         }
 
         @Override
-        public void clear(List<Post> data) {
+        public void clear(List data) {
             countClearCall++;
         }
 

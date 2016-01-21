@@ -9,6 +9,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
+import com.timappweb.timapp.entities.Tag;
 
 public class PlaceActivity extends BaseActivity{
     private String TAG = "PlaceActivity";
@@ -62,7 +63,8 @@ public class PlaceActivity extends BaseActivity{
 
         // TagsAndCountersAdapter
         TagsAndCountersAdapter tagsAndCountersAdapter = new TagsAndCountersAdapter(this);
-        tagsAndCountersAdapter.generateDummyData();
+        tagsAndCountersAdapter.add(Tag.createDummy());
+        tagsAndCountersAdapter.notifyDataSetChanged();
 
         //Set adapter
         tagsListView.setAdapter(tagsAndCountersAdapter);

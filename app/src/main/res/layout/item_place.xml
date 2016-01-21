@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -105,26 +106,16 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/horizontal_tags_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="3dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginBottom="10dp">
 
             <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                 android:id="@+id/rv_horizontal_tags"
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
-            <!--
-                <TextView
-                    android:id="@+id/tags_place"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="#yolo #GoT #living"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="30dp"/>
-            -->
+                android:layout_height="30dp" />
 
         </LinearLayout>
     </LinearLayout>

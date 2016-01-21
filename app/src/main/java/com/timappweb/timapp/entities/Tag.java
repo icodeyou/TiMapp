@@ -4,6 +4,7 @@ import com.timappweb.timapp.utils.SearchHistory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tag implements Serializable, SearchHistory.SearchableItem{
 
@@ -63,8 +64,6 @@ public class Tag implements Serializable, SearchHistory.SearchableItem{
         int length = getName().length();
         boolean bool =  getName().length()>=MINLENGTH && getName().length()<= MAXLENGTH;
         return  bool;
-
-
     }
 
     @Override
