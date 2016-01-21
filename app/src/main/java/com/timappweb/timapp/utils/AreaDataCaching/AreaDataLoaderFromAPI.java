@@ -24,11 +24,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
     private Context mContext;
-    private ClusterManager<MarkerValueInterface> mClusterManagerPost;
+    private ClusterManager<Place> mClusterManagerPost;
     private int requestCounter = 0;
     private int lastClear = -1;
 
-    public AreaDataLoaderFromAPI(Context context, ClusterManager<MarkerValueInterface> clusterManagerPost) {
+    public AreaDataLoaderFromAPI(Context context, ClusterManager<Place> clusterManagerPost) {
         this.mContext = context;
         this.mClusterManagerPost = clusterManagerPost;
     }
@@ -62,10 +62,10 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                                 : 0);
 
                 request.data.addAll(places);
-
-                for (MarkerValueInterface d : places) {
-                    mClusterManagerPost.addItem(d);
-                }
+                mClusterManagerPost.addItems(places);
+                //for (MarkerValueInterface d : places) {
+                //    mClusterManagerPost.addItem(d);
+                //}
                 mClusterManagerPost.cluster();
             }
         });

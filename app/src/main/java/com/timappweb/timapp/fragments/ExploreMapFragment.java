@@ -23,12 +23,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
+import com.timappweb.timapp.map.PlaceClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
@@ -45,13 +47,13 @@ public class ExploreMapFragment extends SupportMapFragment {
     private static LatLngBounds mapBounds;
 
     // Declare a variable for the cluster manager.
-    private ClusterManager<MarkerValueInterface> mClusterManagerPost;
+    private ClusterManager<Place> mClusterManagerPost;
     private GoogleMap mMap = null;
     private MapView mapView = null;
     private float previousZoomLevel = -1;
     private float currentZoomLevel = -1;
 
-    private static HashMap<Marker, MarkerValueInterface> mapMarkers;
+    private static HashMap<Marker, Place> mapMarkers;
     private AreaDataLoaderInterface dataLoader;
 
     enum ZoomType {IN, OUT, NONE};
@@ -188,15 +190,15 @@ public class ExploreMapFragment extends SupportMapFragment {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .title(place.name)
                 .position(place.getPosition())
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                .icon(BitmapDescriptorFactory.fromResource(MyApplication.getCategory(1).resource)));
         mapMarkers.put(marker, place);
     }
     /**
      * Create dummy data on the map
      */
     private void loadDummyData(){
-        mClusterManagerPost.addItem(Post.createDummy());
-        mClusterManagerPost.cluster();
+       // mClusterManagerPost.addItem(Post.createDummy());
+       // mClusterManagerPost.cluster();
 
         Place place = Place.createDummy();
         addMarker(place);
@@ -267,18 +269,19 @@ public class ExploreMapFragment extends SupportMapFragment {
         Log.i(TAG, "Setting up cluster!");
 
         // Initialize the manager with the context and the map.
-        mClusterManagerPost = new ClusterManager<MarkerValueInterface>(getActivity(), mMap);
-        mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MarkerValueInterface>() {
+        mClusterManagerPost = new ClusterManager<Place>(getActivity(), mMap);
+        mClusterManagerPost.setRenderer(new PlaceClusterRenderer(getContext(), mMap, mClusterManagerPost));
+        mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Place>() {
             @Override
-            public boolean onClusterClick(Cluster<MarkerValueInterface> cluster) {
+            public boolean onClusterClick(Cluster<Place> cluster) {
                 Log.d(TAG, "You clicked on a post cluster");
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
                 return true;
             }
         });
-        mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MarkerValueInterface>() {
+        mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Place>() {
             @Override
-            public boolean onClusterItemClick(MarkerValueInterface item) {
+            public boolean onClusterItemClick(Place item) {
                 Log.d(TAG, "You clicked on a cluster item: " + item);
                 showMarkerDetail(item);
                 return true;
@@ -288,7 +291,7 @@ public class ExploreMapFragment extends SupportMapFragment {
         mMap.setOnMarkerClickListener(mClusterManagerPost);
         mMap.setOnCameraChangeListener(new OnCameraChangeListener());
 
-        mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<MarkerValueInterface>());
+        mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Place>());
 
         this.dataLoader = new AreaDataLoaderFromAPI(this.getContext(), mClusterManagerPost);
     }

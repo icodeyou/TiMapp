@@ -1,6 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.MyApplication;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -108,5 +109,9 @@ public class Place implements Serializable, MarkerValueInterface {
 
     public int countUsers() {
         return this.count_post;
+    }
+
+    public int getResource() {
+        return MyApplication.getCategory(this.category_id).resource;
     }
 }
