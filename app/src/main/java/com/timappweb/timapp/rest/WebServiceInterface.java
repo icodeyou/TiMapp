@@ -69,6 +69,14 @@ public interface WebServiceInterface {
     // Places
 
     /**
+     *
+     * @param id
+     * @param callback
+     */
+    @POST("/Places/view/{id}.json")
+    void viewPlace(@Path("id") int id, RestCallback<Place>  callback);
+
+    /**
      * Find places to display on the map
      * @param conditions
      * @param callback
