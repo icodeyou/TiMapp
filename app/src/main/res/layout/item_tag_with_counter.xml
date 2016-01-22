@@ -5,15 +5,16 @@
 
     <TextView
         android:id="@+id/tv_tag"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="#thistagisatestabeautifultest"
+        android:textSize="@dimen/text_normal"
         android:textColor="@color/list_tags_color"/>
 
     <TextView
         android:id="@+id/tv_tag_counter"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical|end"
         android:text="487"

@@ -14,9 +14,9 @@ public class Tag implements Serializable, SearchHistory.SearchableItem{
     public static final int MINLENGTH = 2;
     public static final int MAXLENGTH = 30;
 
-    public Tag(String name, int count_ref) {
-        this.count_ref = count_ref;
+    public Tag(String name, int count_ref)  {
         this.name = name;
+        this.count_ref = count_ref;
     }
 
     public Tag(String name) {

@@ -58,7 +58,7 @@ public class ExploreFragment extends Fragment{
                 return "MAP";
             }
             else {
-                return "TAGS";
+                return "SPOTS";
             }
         }
     }

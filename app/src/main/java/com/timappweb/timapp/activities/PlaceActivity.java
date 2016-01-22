@@ -127,7 +127,7 @@ public class PlaceActivity extends BaseActivity{
 
 
     private void initAdapters() {
-        // //PlacesAdapter
+        /*// //PlacesAdapter
         //PlacesAdapter placesAdapter = new PlacesAdapter(this);
         //placesAdapter.add(currentPlace);
         //placeListView.setAdapter(placesAdapter);
@@ -138,6 +138,6 @@ public class PlaceActivity extends BaseActivity{
         tagsAndCountersAdapter.notifyDataSetChanged();
 
         //Set adapter
-        tagsListView.setAdapter(tagsAndCountersAdapter);
+        tagsListView.setAdapter(tagsAndCountersAdapter);*/
     }
 }

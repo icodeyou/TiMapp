@@ -58,7 +58,7 @@ public class PublishActivity extends BaseActivity{
         }
 
         setContentView(R.layout.activity_publish);
-        this.initToolbar(true);
+        this.initToolbar(false);
 
         //Initialize variables
         checkBox = (CheckBox) findViewById(R.id.checkbox);

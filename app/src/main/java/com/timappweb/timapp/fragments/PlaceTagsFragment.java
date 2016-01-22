@@ -18,6 +18,7 @@ import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -25,7 +26,8 @@ import retrofit.client.Response;
 public class PlaceTagsFragment extends Fragment {
 
     private static final String TAG = "PlaceTagsFragment";
-    TagsAndCountersAdapter mTagsAndCountersAdapter;
+    TagsAndCountersAdapter tagsAndCountersAdapter;
+    ListView               lvTags;
 
     @Nullable
     @Override
@@ -37,41 +39,18 @@ public class PlaceTagsFragment extends Fragment {
         //Create ListView
         //////////////////////////////////////////////////////////////////////////////
         //Find listview in XML
-        ListView lvTags = (ListView) root.findViewById(R.id.list_tags);
+        lvTags = (ListView) root.findViewById(R.id.list_tags);
 
-        // pass context and data to the custom adapter
-        mTagsAndCountersAdapter = new TagsAndCountersAdapter(context);
-        lvTags.setAdapter(mTagsAndCountersAdapter);
+        initAdapter();
 
         return root;
     }
 
-    public void onResume(){
-        super.onResume();
-        Log.d(TAG, "PlaceTagsFragment.onResume()");
-        // TODO check if bounds have changed
-        this.loadData();
-    }
-
-    private void loadData() {
-        QueryCondition conditions = new QueryCondition();
-        LatLngBounds bounds = ExploreMapFragment.getMapBounds();
-        if (bounds == null){
-            // TODO take care of this case
-            Log.d(TAG, "There is no bound registered");
-            return ;
-        }
-        conditions.setBounds(bounds);
-        conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
-
-        RestClient.service().trendingTags(conditions.toMap(), new RestCallback<List<Tag>>(getContext()) {
-            @Override
-            public void success(List<Tag> tags, Response response) {
-                Log.i(TAG, "Updating list with " + tags.size() + " items");
-                mTagsAndCountersAdapter.clear();
-                mTagsAndCountersAdapter.addAll(tags);
-            }
-        });
+    private void initAdapter() {
+        ArrayList<Tag> data = new ArrayList<Tag>();
+        tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
+        tagsAndCountersAdapter.add(Tag.createDummy());
+        lvTags.setAdapter(tagsAndCountersAdapter);
     }
 
     /*private ArrayList<Tag> generateDummyData() {

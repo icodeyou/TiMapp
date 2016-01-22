@@ -17,12 +17,10 @@ import java.util.ArrayList;
 
 public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
     private final Context context;
-    private final ArrayList<Tag> tagsArrayList;
 
     public TagsAndCountersAdapter(Context context) {
         super(context, 0);
         this.context = context;
-        this.tagsArrayList = new ArrayList<>();
     }
 
     @Override
@@ -42,14 +40,24 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
 
         // Set the text for textView
         //TODO: The if loop should not be necessary
-        if (tagsArrayList.size() > 0){
-            String tagString = String.valueOf(tagsArrayList.get(position).getName());
-            String tagCounterString = String.valueOf(tagsArrayList.get(position).getCountRef());
+        if (getData().size() > 0){
+            String tagString = String.valueOf(this.getItem(position).getName());
+            String tagCounterString = String.valueOf(this.getItem(position).getCountRef());
             tagView.setText(tagString);
             counterView.setText(tagCounterString);
         }
 
         // return rowView
         return rowView;
+    }
+
+    public ArrayList<Tag> getData() {
+        ArrayList<Tag> tags = new ArrayList<Tag>();
+
+        for (int i=0; i<this.getCount(); i++) {
+            tags.add(getItem(i));
+        }
+
+        return tags;
     }
 }

@@ -30,7 +30,7 @@
         android:allowBackup="true"
         android:icon="@drawable/test20"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.ExploreActivity"
@@ -136,36 +136,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ExploreActivity" />
         </activity>
-        <activity
-            android:name=".activities.PlaceFriendsActivity"
-            android:label="@string/title_activity_people"
-            android:parentActivityName=".activities.PlaceActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.PlaceActivity" />
-        </activity>
-
-        <!-- PLACEPOSTS ACTIVITY //////////////////////////////////////////////-->
-        <activity
-            android:name=".activities.PlacePostsActivity"
-            android:label="@string/title_activity_comment"
-            android:parentActivityName=".activities.PlaceActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.timappweb.timapp.activities.PlaceActivity" />
-        </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".activities.PlacePostsActivity" >
+            android:parentActivityName=".activities.ExploreActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.PlacePostsActivity" />
+                android:value=".activities.ExploreActivity" />
         </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
