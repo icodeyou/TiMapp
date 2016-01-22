@@ -61,7 +61,7 @@ public class TagActivity extends BaseActivity{
         }
         
         setContentView(R.layout.activity_tag);
-        this.initToolbar(true);
+        this.initToolbar(false);
 
         //Initialize variables
         selectedTagsView = findViewById(R.id.rv_selected_tags);

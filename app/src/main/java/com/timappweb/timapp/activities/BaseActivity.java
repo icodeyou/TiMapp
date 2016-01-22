@@ -59,15 +59,15 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void initToolbar(boolean homeUpEnabled){
+    protected void initToolbar(boolean showTitle){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if(toolbar==null) {
             toolbar = (Toolbar) findViewById(R.id.toolbar_transparent);
         }
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(homeUpEnabled);
-        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(showTitle);
     }
 
     protected void setSearchview(Menu menu) {

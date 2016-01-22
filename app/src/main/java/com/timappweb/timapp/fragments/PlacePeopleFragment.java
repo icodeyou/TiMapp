@@ -30,8 +30,8 @@ public class PlacePeopleFragment extends Fragment {
         ListView lvTags = (ListView) root.findViewById(R.id.list_people);
 
         // pass context and data to the custom adapter
-        mTagsAndCountersAdapter = new TagsAndCountersAdapter(context);
-        lvTags.setAdapter(mTagsAndCountersAdapter);
+        //mTagsAndCountersAdapter = new TagsAndCountersAdapter(context);
+        //lvTags.setAdapter(mTagsAndCountersAdapter);
 
         return root;
     }

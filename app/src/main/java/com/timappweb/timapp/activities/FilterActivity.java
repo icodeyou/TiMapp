@@ -32,7 +32,7 @@ public class FilterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-        this.initToolbar(true);
+        this.initToolbar(false);
     }
 ////////////////////////////////////////////////////////////////////////////////
     //// onCreateOptionsMenu
