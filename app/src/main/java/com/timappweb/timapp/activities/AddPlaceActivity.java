@@ -89,6 +89,7 @@ public class AddPlaceActivity extends BaseActivity {
                     Post post = new Post();
                     post.latitude = currentLocation.getLatitude();
                     post.longitude = currentLocation.getLongitude();
+                    place.id = Integer.parseInt(restFeedback.data.get("id"));
                     IntentsUtils.addPostStepTags(this.context, place, post);
                 }
                 else{
