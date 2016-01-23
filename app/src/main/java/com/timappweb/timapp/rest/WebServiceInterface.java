@@ -69,6 +69,22 @@ public interface WebServiceInterface {
     // Places
 
     /**
+     * Get posts for a place
+     * @param id
+     * @param callback
+     */
+    @POST("/posts/place/{id}.json")
+    void viewPostsForPlace(@Path("id") int id, RestCallback<List<Post>>  callback);
+
+    /**
+     * Get most popular tags for a place
+     * @param id
+     * @param callback
+     */
+    @POST("/tags/place/{id}.json")
+    void viewPopularTagsForPlace(@Path("id") int id, RestCallback<List<Tag>>  callback);
+
+    /**
      *
      * @param id
      * @param callback
