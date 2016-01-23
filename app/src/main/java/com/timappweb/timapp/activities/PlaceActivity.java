@@ -5,11 +5,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
@@ -18,6 +21,8 @@ import com.timappweb.timapp.fragments.PlaceTagsFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntentsUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Vector;
@@ -42,17 +47,13 @@ public class PlaceActivity extends BaseActivity{
             IntentsUtils.home(this);
         }
 
-
         setContentView(R.layout.activity_place);
-
 
         this.initToolbar(true);
 
         //Initialize
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
-
-        //initAdapters();
 
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         List fragments = new Vector();
@@ -99,6 +100,8 @@ public class PlaceActivity extends BaseActivity{
     private void notifyPlaceLoaded() {
         // called when the place is loaded
         // this.place is the place loaded
+
+        initPlaceAdapters();
     }
 
     //Menu Action Bar
@@ -126,18 +129,10 @@ public class PlaceActivity extends BaseActivity{
     }
 
 
-    private void initAdapters() {
-        /*// //PlacesAdapter
-        //PlacesAdapter placesAdapter = new PlacesAdapter(this);
-        //placesAdapter.add(currentPlace);
-        //placeListView.setAdapter(placesAdapter);
-
-        // TagsAndCountersAdapter
-        TagsAndCountersAdapter tagsAndCountersAdapter = new TagsAndCountersAdapter(this);
-        tagsAndCountersAdapter.add(Tag.createDummy());
-        tagsAndCountersAdapter.notifyDataSetChanged();
-
-        //Set adapter
-        tagsListView.setAdapter(tagsAndCountersAdapter);*/
+    private void initPlaceAdapters() {
+         //PlacesAdapter
+        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        placesAdapter.add(place);
+        placeListView.setAdapter(placesAdapter);
     }
 }
