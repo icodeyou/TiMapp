@@ -5,10 +5,8 @@
         <menu>
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_menu_camera"
                 android:title="Explore" />
-            <item android:id="@+id/menu_item_add_post" android:icon="@android:drawable/ic_menu_camera"
-                android:title="Add post" />
-            <item android:id="@+id/menu_item_place" android:icon="@android:drawable/ic_menu_camera"
-                android:title="Place" />
+            <item android:id="@+id/menu_item_threel" android:icon="@drawable/grey_plus_button"
+                android:title="Threel" />
             <!--
             <item android:id="@+id/item_spot" android:icon="@android:drawable/ic_menu_send"
                 android:title="Spot" />

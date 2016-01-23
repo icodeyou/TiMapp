@@ -39,11 +39,12 @@ public class MyApplication extends Application{
     public void initCategories(){
         categories.add(new Category(1, "music", R.drawable.ic_category_music));
         categories.add(new Category(2, "bar", R.drawable.ic_category_bar));
-        categories.add(new Category(3, "party", R.drawable.ic_party));
+        categories.add(new Category(3, "party", R.drawable.ic_category_party));
         categories.add(new Category(4, "sport", R.drawable.ic_category_sport));
         categories.add(new Category(5, "strike", R.drawable.ic_category_strike));
-        categories.add(new Category(6, "show", R.drawable.ic_show));
+        categories.add(new Category(6, "show", R.drawable.ic_category_show));
     }
+
     public static Category getCategory(int id){
         for (Category c: categories){
             if (c.id == id){

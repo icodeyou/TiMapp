@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
@@ -37,6 +38,7 @@ public class AddPlaceActivity extends BaseActivity {
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
     private Location currentLocation = null;
+    private TextView createButton;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -49,8 +51,9 @@ public class AddPlaceActivity extends BaseActivity {
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
-        categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
+        categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);createButton = (TextView) findViewById(R.id.create_place_button);
 
+        setListeners();
         initAdapterAndManager();
         initLocationListener();
     }
@@ -93,7 +96,7 @@ public class AddPlaceActivity extends BaseActivity {
                     IntentsUtils.addPostStepTags(this.context, place, post);
                 }
                 else{
-                    Log.d(TAG, "Cannot save viewPlace: " + place);
+                    Log.d(TAG, "Cannot save viewPlaceFromPublish: " + place);
                     Toast.makeText(context, "We cannot save your place right now. Please try again later", Toast.LENGTH_LONG).show();
                 }
             }
@@ -115,16 +118,21 @@ public class AddPlaceActivity extends BaseActivity {
         categorySelected = category;
     }
 
-    public void onCreatePlaceClick(View view) {
-        if (currentLocation != null){
-            final Place place = new Place(currentLocation.getLatitude(), currentLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
-            // TODO validate place
-            this.submitPlace(place);
-        }
-        else {
-            Log.d(TAG, "Click on add place before having a user location");
-            Toast.makeText(this, "We don't have your position yet. Please wait", Toast.LENGTH_LONG).show();
-        }
+    private void setListeners() {
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentLocation != null){
+                    final Place place = new Place(currentLocation.getLatitude(), currentLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
+                    // TODO validate place
+                    submitPlace(place);
+                }
+                else {
+                    Log.d(TAG, "Click on add place before having a user location");
+                    Toast.makeText(getBaseContext(), "We don't have your position yet. Please wait", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     //----------------------------------------------------------------------------------------------

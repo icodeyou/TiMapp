@@ -69,4 +69,7 @@
     <string name="add_spot_button">create</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
     <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
+    <string name="searchview_hint_3">Choose 3 tags</string>
+    <string name="searchview_hint_2">2 tags left</string>
+    <string name="searchview_hint_1">One more !</string>
 </resources>

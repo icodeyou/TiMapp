@@ -280,11 +280,8 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
         else if (id == R.id.menu_item_settings) {
             IntentsUtils.settings(this);
         }
-        else if (id == R.id.menu_item_add_post){
+        else if (id == R.id.menu_item_threel){
             IntentsUtils.addPostStepLocate(this);
-        }
-        else if (id == R.id.menu_item_place) {
-            IntentsUtils.addPlace(this);
         }
         else if (id == R.id.menu_item_login){
             IntentsUtils.login(this);

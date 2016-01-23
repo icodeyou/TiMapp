@@ -23,7 +23,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     private Context context;
     private Category selectedCategory = null;
     private ImageView currentCategoryIcon;
-
+    private int currentCategoryId;
 
     public CategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
@@ -41,14 +41,35 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(CategoriesViewHolder holder, int position) {
-        Category current = data.get(position);
-        holder.newCategoryIcon.setImageResource(current.getIconId());
+    public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
+        final Category newCategory = data.get(position);
+        final ImageView newCategoryIcon = holder.newCategoryIcon;
 
-        //set selectedCategory in AddPlaceActivity
-        selectedCategory = data.get(position);
-        AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
-        addPlaceActivity.setCategory(selectedCategory);
+        newCategoryIcon.setImageResource(newCategory.getIconId());
+
+        holder.getItemView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Set image to normal for old selected category
+                if (selectedCategory != null) {
+                    ImageView oldCategoryIcon = currentCategoryIcon;
+                    String oldCategoryName = "ic_category_" + selectedCategory.name;
+                    int oldCategoryResId = context.getResources().getIdentifier(oldCategoryName, "drawable", context.getPackageName());
+                    oldCategoryIcon.setImageResource(oldCategoryResId);
+                }
+                //Set image to highlight for new selected category
+                String newCategoryName = "ic_category_highlight_" + newCategory.name;
+                int newCategoryResId = context.getResources().getIdentifier(newCategoryName, "drawable", context.getPackageName());
+                newCategoryIcon.setImageResource(newCategoryResId);
+
+                currentCategoryIcon = newCategoryIcon;
+                selectedCategory = data.get(position);
+
+                //set selectedCategory in AddPlaceActivity
+                AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
+                addPlaceActivity.setCategory(selectedCategory);
+            }
+        });
     }
 
     @Override
@@ -76,19 +97,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     class CategoriesViewHolder extends RecyclerView.ViewHolder {
         ImageView newCategoryIcon;
+
         public CategoriesViewHolder(View view) {
             super(view);
             newCategoryIcon = (ImageView) view.findViewById(R.id.category_icon);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(currentCategoryIcon!=null) {
-                        currentCategoryIcon.setBackgroundDrawable(null);
-                    }
-                    newCategoryIcon.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.background_ctg_selected));
-                    currentCategoryIcon = newCategoryIcon;
-                }
-            });
+
+
+        }
+
+        public View getItemView() {
+            return itemView;
         }
     }
 

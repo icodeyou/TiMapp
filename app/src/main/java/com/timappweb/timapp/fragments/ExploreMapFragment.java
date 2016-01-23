@@ -161,7 +161,7 @@ public class ExploreMapFragment extends SupportMapFragment {
     }
 
     private void showMarkerDetail(Place place){
-        IntentsUtils.viewPlace(getActivity(), place);
+        IntentsUtils.viewPlaceFromMap(getActivity(), place);
     }
 
     private void centerMap(){
@@ -253,7 +253,7 @@ public class ExploreMapFragment extends SupportMapFragment {
             public boolean onMarkerClick(Marker marker) {
                 MarkerValueInterface markerValue = mapMarkers.get(marker);
                 if (markerValue != null){
-                    Log.i(TAG, "You clicked on a marker with viewPlace: " + markerValue.getId());
+                    Log.i(TAG, "You clicked on a marker with viewPlaceFromPublish: " + markerValue.getId());
                     showMarkerDetail(markerValue);
                 }
                 else{

@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -11,8 +10,6 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -133,7 +130,7 @@ public class PublishActivity extends BaseActivity{
                 int id = Integer.valueOf(restFeedback.data.get("id"));
                 Log.i(TAG, "Post has been saved. Id is : " + id);
                 //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
-                IntentsUtils.viewPlace(this.context, post.place_id);
+                IntentsUtils.viewPlaceFromPublish(this.context, post.place_id);
             } else {
                 Log.i(TAG, "Cannot add post: " + response.getReason() + " - " + restFeedback.toString());
                 Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG);

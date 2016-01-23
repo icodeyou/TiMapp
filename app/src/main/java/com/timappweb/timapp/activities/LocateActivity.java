@@ -158,7 +158,7 @@ public class LocateActivity extends BaseActivity{
 
             @Override
             public void success(List<Place> place, Response response) {
-                Log.d(TAG, "Loading " + place.size() + " viewPlace(s)");
+                Log.d(TAG, "Loading " + place.size() + " viewPlaceFromPublish(s)");
                 PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
                 placeAdapter.clear();
                 progressBarView.setVisibility(View.GONE);

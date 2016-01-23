@@ -103,7 +103,7 @@ public class TagActivity extends BaseActivity{
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
                 suggestedTagsRV.removeItem(item);
-                addTag(tag.name);
+                searchView.setQuery(tag.name, true);
             }
         });
 
@@ -118,6 +118,9 @@ public class TagActivity extends BaseActivity{
         }));
 
         suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
+
+        //Initialize Query hint in searchview
+        setCounterHint();
 
         return true;
     }
@@ -139,7 +142,6 @@ public class TagActivity extends BaseActivity{
     }
 
 
-
     //----------------------------------------------------------------------------------------------
     //Private methods
 
@@ -159,14 +161,14 @@ public class TagActivity extends BaseActivity{
         switch (searchAndSelectTagManager.getSelectedTags().size()) {
             case 0:
                 setSelectedTagsViewGone();
-                searchView.setQueryHint("Choose 3 tags");
+                searchView.setQueryHint(getResources().getString(R.string.searchview_hint_3));
                 break;
             case 1:
                 setSelectedTagsViewVisible();
-                searchView.setQueryHint("2 tags left");
+                searchView.setQueryHint(getResources().getString(R.string.searchview_hint_2));
                 break;
             case 2:
-                searchView.setQueryHint("One more !");
+                searchView.setQueryHint(getResources().getString(R.string.searchview_hint_1));
                 break;
             case 3:
                 currentPost.setTags(searchAndSelectTagManager.getSelectedTags());

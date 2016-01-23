@@ -29,13 +29,14 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
     @Override
     public boolean onQueryTextChange(String newText) {
         if(newText.contains(" ")) {
+            if(newText.length()<2) {
+                //if this action is removed, onQueryTextChange will not be called
+                // the second time the spacebar is pressed.
+                TagActivity tagActivity = (TagActivity) manager.getActivity();
+                tagActivity.simulateKey();
+            }
             newText = newText.substring(0, newText.length()-1);
             onQueryTextSubmit(newText);
-            TagActivity tagActivity = (TagActivity) manager.getActivity();
-
-            //if this action is removed, onQueryTextChange will not be called
-            // the second time the spacebar is pressed.
-            tagActivity.simulateKey();
         }
         else {
             manager.suggestTag(newText);

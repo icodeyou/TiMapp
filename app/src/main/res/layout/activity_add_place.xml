@@ -31,16 +31,17 @@
                 />
         </LinearLayout>
         <TextView
+            android:id="@+id/create_place_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:gravity="center"
             android:text="@string/add_spot_button"
             android:textAllCaps="true"
+            android:clickable="true"
             android:background="@color/colorAccent"
             android:textSize="@dimen/text_big"
-            android:textColor="@color/White"
-            android:onClick="onCreatePlaceClick"/>
+            android:textColor="@color/White"/>
     </LinearLayout>
 
     <include android:id="@+id/toolbar_layout"

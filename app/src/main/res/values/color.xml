@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#436b67</color>
     <color name="colorPrimaryDark">#345350</color>
-    <color name="colorAccent">@color/Goldenrod</color>
+    <color name="colorAccent">#f4b184</color>
     <color name="background">#fff3f3f3</color>
     <color name="darker_background">#e7e7e7</color>
     <color name="border">#bababa</color>
