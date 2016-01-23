@@ -97,6 +97,8 @@ public class PlaceActivity extends BaseActivity{
         });
     }
 
+
+
     private void notifyPlaceLoaded() {
         // called when the place is loaded
         // this.place is the place loaded
@@ -134,5 +136,9 @@ public class PlaceActivity extends BaseActivity{
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         placesAdapter.add(place);
         placeListView.setAdapter(placesAdapter);
+    }
+
+    public Place getPlace() {
+        return place;
     }
 }

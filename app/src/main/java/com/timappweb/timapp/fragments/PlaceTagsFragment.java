@@ -4,17 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -42,7 +40,7 @@ public class PlaceTagsFragment extends Fragment {
         lvTags = (ListView) root.findViewById(R.id.list_tags);
 
         initAdapter();
-
+        loadTags();
         return root;
     }
 
@@ -51,6 +49,22 @@ public class PlaceTagsFragment extends Fragment {
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         tagsAndCountersAdapter.add(Tag.createDummy());
         lvTags.setAdapter(tagsAndCountersAdapter);
+    }
+
+
+    private void loadTags() {
+        // TODO check that this is a PlaceActivity
+        final PlaceActivity placeActivity = (PlaceActivity) getActivity();
+        RestClient.service().viewPopularTagsForPlace(placeActivity.getPlace().id, new RestCallback<List<Tag>>(getContext()) {
+            @Override
+            public void success(List<Tag> tags, Response response) {
+                notifyTagsLoaded(tags);
+            }
+        });
+    }
+
+    private void notifyTagsLoaded(List<Tag> tags) {
+        // TODO jean
     }
 
     /*private ArrayList<Tag> generateDummyData() {
