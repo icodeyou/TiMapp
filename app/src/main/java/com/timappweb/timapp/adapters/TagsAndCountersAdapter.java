@@ -41,8 +41,8 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
         // Set the text for textView
         //TODO: The if loop should not be necessary
         if (getData().size() > 0){
-            String tagString = String.valueOf(this.getItem(position).getName());
-            String tagCounterString = String.valueOf(this.getItem(position).getCountRef());
+            String tagString = String.valueOf(getItem(position).getName());
+            String tagCounterString = String.valueOf(getItem(position).getCountRef());
             tagView.setText(tagString);
             counterView.setText(tagCounterString);
         }

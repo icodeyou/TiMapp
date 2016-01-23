@@ -19,17 +19,15 @@ import java.util.List;
 
 public class PostsAdapter extends ArrayAdapter<Post> {
     private final Context context;
-    private final ArrayList<Post> postsArrayList;
 
-    public PostsAdapter(Context context, ArrayList<Post> postsArrayList) {
-        super(context, R.layout.item_post, postsArrayList);
+    public PostsAdapter(Context context) {
+        super(context, R.layout.item_post, 0);
         this.context = context;
-        this.postsArrayList = postsArrayList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Post post = postsArrayList.get(position);
+        Post post = getItem(position);
 
         // Get the view from inflater
         View postBox = convertView;
@@ -40,25 +38,19 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         }
 
         // Get text views from item_post.xml
-        TextView tvAddress = (TextView) postBox.findViewById(R.id.tv_address);
         TextView tvUsername = (TextView) postBox.findViewById(R.id.tv_username);
         TextView tvTime = (TextView) postBox.findViewById(R.id.tv_time);
-        TextView tvComment = (TextView) postBox.findViewById(R.id.tv_comment);
         RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
 
 
         // Get the address, name, time, and comment from Post.
-        String address = post.getAddress();
         String username = post.getUsername();
         String time = post.getPrettyTimeCreated();
-        String comment = post.getComment();
         List<Tag> tags = post.getTags();
 
         //Set the text
-        tvAddress.setText(address);
         tvUsername.setText(username);
         tvTime.setText(time);
-        tvComment.setText(comment);
 
         //Set the adapter for the Recycler View (which displays tags)
         HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());

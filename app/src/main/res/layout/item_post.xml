@@ -8,18 +8,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp">
         <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Lieu (if!=null)"
-            android:textColor="@color/list_post_color"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp">
-        <TextView
             android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -39,13 +27,5 @@
         android:id="@+id/rv_horizontal_tags"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_rv_displayed_tags"/>
-
-    <TextView
-        android:id="@+id/tv_comment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="commentaire"
-        android:textColor="@color/list_post_color"/>
 
 </LinearLayout>

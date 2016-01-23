@@ -3,12 +3,16 @@ package com.timappweb.timapp.activities;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +42,7 @@ public class AddPlaceActivity extends BaseActivity {
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
     private Location currentLocation = null;
-    private TextView createButton;
+    private Button createButton;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -51,7 +55,8 @@ public class AddPlaceActivity extends BaseActivity {
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
-        categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);createButton = (TextView) findViewById(R.id.create_place_button);
+        categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
+        createButton = (Button) findViewById(R.id.create_place_button);
 
         setListeners();
         initAdapterAndManager();
@@ -87,20 +92,29 @@ public class AddPlaceActivity extends BaseActivity {
         RestClient.service().addPlace(place, new RestCallback<RestFeedback>(this) {
             @Override
             public void success(RestFeedback restFeedback, Response response) {
-                if (restFeedback.success){
+                if (restFeedback.success) {
                     Log.d(TAG, "Place has been saved: " + place);
                     Post post = new Post();
                     post.latitude = currentLocation.getLatitude();
                     post.longitude = currentLocation.getLongitude();
                     place.id = Integer.parseInt(restFeedback.data.get("id"));
                     IntentsUtils.addPostStepTags(this.context, place, post);
-                }
-                else{
+                } else {
                     Log.d(TAG, "Cannot save viewPlaceFromPublish: " + place);
                     Toast.makeText(context, "We cannot save your place right now. Please try again later", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    public void setButtonValidation(boolean bool) {
+        if (bool&&categorySelected!=null) {
+            createButton.setEnabled(true);
+            createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+        } else {
+            createButton.setEnabled(false);
+            createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.LightGrey));
+        }
     }
     //----------------------------------------------------------------------------------------------
     //Public methods
@@ -119,15 +133,34 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void setListeners() {
+        groupNameET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String textAfterChange = s.toString();
+                if(!textAfterChange.equals("")) {
+                    setButtonValidation(true);
+                }
+                else {
+                    setButtonValidation(false);
+                }
+            }
+        });
+
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentLocation != null){
+                if (currentLocation != null) {
                     final Place place = new Place(currentLocation.getLatitude(), currentLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
-                    // TODO validate place
                     submitPlace(place);
-                }
-                else {
+
+                } else {
                     Log.d(TAG, "Click on add place before having a user location");
                     Toast.makeText(getBaseContext(), "We don't have your position yet. Please wait", Toast.LENGTH_LONG).show();
                 }

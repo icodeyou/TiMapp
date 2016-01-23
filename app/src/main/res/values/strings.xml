@@ -54,7 +54,7 @@
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>
     <string name="error_unkown">Unkown error occured</string>
-    <string name="error_no_internet">\"We cannot reach our servers. Internet must be enabled\"</string>
+    <string name="error_no_internet">\"It is not my fucking fault if you do not have internet right now. Check your goddamn phone\"</string>
     <string name="hint_searchview_add_post">Press space to add a tag</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
     <string name="title_activity_locate">Where are you ?</string>
@@ -64,7 +64,7 @@
     <string name="hint_searchview_activity_tag">Choose 3 tags</string>
     <string name="main_text_publish_activity">confirm</string>
     <string name="text_anonymous">Anonymous</string>
-    <string name="button_add_spot">Add spot</string>
+    <string name="button_add_spot">New Spot</string>
     <string name="hint_place_name">Spot name</string>
     <string name="add_spot_button">create</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>

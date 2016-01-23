@@ -47,13 +47,12 @@ public class PlaceTagsFragment extends Fragment {
     private void initAdapter() {
         ArrayList<Tag> data = new ArrayList<Tag>();
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
-        tagsAndCountersAdapter.add(Tag.createDummy());
         lvTags.setAdapter(tagsAndCountersAdapter);
     }
 
 
     private void loadTags() {
-        // TODO check that this is a PlaceActivity
+        // TODO pass PLACE from activity to fragment thanks to "setargument"
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
         RestClient.service().viewPopularTagsForPlace(placeActivity.getPlace().id, new RestCallback<List<Tag>>(getContext()) {
             @Override
@@ -64,7 +63,12 @@ public class PlaceTagsFragment extends Fragment {
     }
 
     private void notifyTagsLoaded(List<Tag> tags) {
-        // TODO jean
+        //add tags to adapter
+        for (Tag tag : tags) {
+            String addedhastag = "#" + tag.getName();
+            tag.setName(addedhastag);
+            tagsAndCountersAdapter.add(tag);
+        }
     }
 
     /*private ArrayList<Tag> generateDummyData() {

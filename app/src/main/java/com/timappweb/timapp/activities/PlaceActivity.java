@@ -5,24 +5,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
-import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.fragments.PlacePeopleFragment;
+import com.timappweb.timapp.fragments.PlacePostsFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntentsUtils;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Vector;
@@ -60,7 +54,7 @@ public class PlaceActivity extends BaseActivity{
 
         // Ajout des Fragments dans la liste
         fragments.add(Fragment.instantiate(this, PlaceTagsFragment.class.getName()));
-        fragments.add(Fragment.instantiate(this, PlacePeopleFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, PlacePostsFragment.class.getName()));
 
         // Création de l'adapter qui s'occupera de l'affichage de la liste de
         // Fragments

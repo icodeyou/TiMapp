@@ -11,6 +11,8 @@ import android.widget.ListView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.activities.PostActivity;
+import com.timappweb.timapp.adapters.PostsAdapter;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -21,10 +23,10 @@ import java.util.List;
 
 import retrofit.client.Response;
 
-public class PlacePeopleFragment extends Fragment {
+public class PlacePostsFragment extends Fragment {
 
     private static final String TAG = "PlaceTagsFragment";
-    TagsAndCountersAdapter mTagsAndCountersAdapter;
+    PostsAdapter postsAdapter;
 
     @Nullable
     @Override
@@ -39,28 +41,30 @@ public class PlacePeopleFragment extends Fragment {
         ListView lvTags = (ListView) root.findViewById(R.id.list_people);
 
         // pass context and data to the custom adapter
-        //mTagsAndCountersAdapter = new TagsAndCountersAdapter(context);
-        //lvTags.setAdapter(mTagsAndCountersAdapter);
+        postsAdapter = new PostsAdapter(context);
+        lvTags.setAdapter(postsAdapter);
         loadPosts();
 
         return root;
     }
 
 
-
     private void loadPosts() {
-        // TODO check that this is a PlaceActivity
+        // TODO pass PLACE from activity to fragment thanks to "setargument"
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
         RestClient.service().viewPostsForPlace(placeActivity.getPlace().id, new RestCallback<List<Post>>(getContext()) {
             @Override
-            public void success(List<Post> tags, Response response) {
-                notifyTagsLoaded(tags);
+            public void success(List<Post> posts, Response response) {
+                notifyPostsLoaded(posts);
             }
         });
     }
 
-    private void notifyTagsLoaded(List<Post> tags) {
-        // TODO jean
+    private void notifyPostsLoaded(List<Post> posts) {
+        //add tags to adapter
+        for (Post post : posts) {
+            postsAdapter.add(post);
+        }
     }
 
 }

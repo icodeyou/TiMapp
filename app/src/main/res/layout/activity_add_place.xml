@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 />
         </LinearLayout>
-        <TextView
+        <Button
             android:id="@+id/create_place_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:text="@string/add_spot_button"
             android:textAllCaps="true"
             android:clickable="true"
-            android:background="@color/colorAccent"
+            android:background="@color/LightGrey"
             android:textSize="@dimen/text_big"
             android:textColor="@color/White"/>
     </LinearLayout>

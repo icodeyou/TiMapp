@@ -9,6 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.timappweb.timapp.activities.LoginActivity"
+    android:background="@color/background"
     android:id="@+id/action_login">
 
     <!-- Login progress -->

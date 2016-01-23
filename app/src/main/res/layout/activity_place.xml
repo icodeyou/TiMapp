@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"  android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background"
     tools:context=".PlaceActivity">
 
     <!-- TOOLBAR -->
@@ -14,6 +15,11 @@
         android:id="@+id/place_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"/>
 
     <!-- TAGS -->
     <!-- **********************************************************************-->

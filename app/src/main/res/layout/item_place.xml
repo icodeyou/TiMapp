@@ -115,7 +115,7 @@
             <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                 android:id="@+id/rv_horizontal_tags"
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </LinearLayout>

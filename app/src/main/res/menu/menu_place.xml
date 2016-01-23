@@ -6,9 +6,4 @@
         android:icon="@android:drawable/ic_menu_share"
         app:showAsAction="ifRoom"
         android:title="Search tags" />
-    <item
-        android:id="@+id/action_RT"
-        android:icon="@drawable/ic_retag"
-        app:showAsAction="ifRoom"
-        android:title="ReTag" />
 </menu>
