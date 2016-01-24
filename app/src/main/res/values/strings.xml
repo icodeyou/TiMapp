@@ -75,4 +75,5 @@
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
     <string name="button_add_some_tags">Add some tags</string>
+    <string name="text_last_post">Last post</string>
 </resources>

@@ -148,6 +148,10 @@ public class PlaceActivity extends BaseActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        IntentsUtils.home(this);
+    }
 
     private void initPlaceAdapters() {
          //PlacesAdapter

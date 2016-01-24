@@ -6,134 +6,179 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="vertical" android:layout_below="@+id/toolbar"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:background="@color/background">
+
 
         <include layout="@layout/toolbar"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="80dp"
             android:orientation="horizontal"
             android:background="@color/LightYellow"
             android:gravity="bottom">
-            <LinearLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
+                android:layout_marginLeft="100dp"
+                android:scrollbars="none">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="@dimen/text_big"
-                    android:textColor="@color/Black"
-                    android:gravity="center"
-                    android:id="@+id/tv_profile_username"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:layout_marginLeft="@dimen/profile_picture_side"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:gravity="center">
-            <LinearLayout
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="right">
-                <TextView
-                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:background="@drawable/border"
-                    android:text="Posts"
-                    android:textSize="@dimen/text_small"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:background="@drawable/border"
-                    android:text="0"
-                    android:id="@+id/tv_profile_count_posts"
-                    android:textSize="@dimen/text_small"/>
-            </LinearLayout>
-
-            <Space
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent" />
-            <LinearLayout
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="left"
-                android:visibility="invisible">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:background="@drawable/border"
-                    android:text="Followers"
-                    android:textSize="@dimen/text_small"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:background="@drawable/border"
-                    android:text="35"
-                    android:textSize="@dimen/text_small"/>
-            </LinearLayout>
-
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_profile_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_big"
+                        android:textColor="@color/Black"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="22 years old"
+                        android:textSize="@dimen/text_normal"
+                        android:textColor="@color/Black"/>
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:gravity="center">
+            android:layout_marginTop="@dimen/half_profile_picture_side"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:gravity="center">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_margin="10dp">
+                    <ImageView
+                        android:layout_width="@dimen/logo_big"
+                        android:layout_height="@dimen/logo_big"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_hashtag"/>
                     <TextView
+                        android:id="@+id/tags_counter"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="#wakeboard"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:textSize="@dimen/text_big"
-                        android:textColor="@color/Goldenrod"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="#party"
-                        android:textSize="@dimen/text_big"
-                        android:textColor="@color/Goldenrod"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="#drums"
-                        android:textSize="@dimen/text_big"
-                        android:textColor="@color/Goldenrod"/>
+                        android:textColor="@color/Black"/>
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tags shared"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/Black"/>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/LightGrey"/>
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+                    <ImageView
+                        android:layout_width="@dimen/logo_big"
+                        android:layout_height="@dimen/logo_big"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/ic_location"/>
+                    <TextView
+                        android:id="@+id/places_counter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="12"
+                        android:textSize="@dimen/text_big"
+                        android:textColor="@color/Black"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Places created"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/Black"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_tag1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#wakeboard"
+                android:padding="5dp"
+                android:textSize="@dimen/text_big"
+                android:textColor="@color/Goldenrod"/>
+            <TextView
+                android:id="@+id/tv_tag2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="#party"
+                android:textSize="@dimen/text_big"
+                android:textColor="@color/Goldenrod"/>
+            <TextView
+                android:id="@+id/tv_tag3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="#drums"
+                android:textSize="@dimen/text_big"
+                android:textColor="@color/Goldenrod"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingBottom="5dp"
+            android:text="@string/text_last_post"
+            android:textColor="@color/Gray"
+            android:textSize="@dimen/text_normal"/>
+        <ListView
+            android:id="@+id/place_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/profile_picture_side"
+        android:layout_height="@dimen/profile_picture_side"
+        android:layout_marginTop="95dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/ic_profile"/>
+</RelativeLayout>
+
+<!--
+<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/border_green_left"
@@ -144,86 +189,4 @@
                         android:layout_height="100dp"
                         android:src="@drawable/ic_info" />
                 </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:clickable="true"
-            android:onClick="onLastPostClick"
-            android:id="@+id/box_profile_last_post"
-            android:visibility="invisible">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Last post"
-                android:textSize="@dimen/text_small"
-                android:textStyle="italic" />
-
-            <!-- Visible only if there is a last post for this user -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="vertical"
-                android:background="@drawable/border">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <View
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
-                        android:background="@color/LightPink"
-                        android:layout_gravity="center_vertical"/>
-                    <TextView
-                        android:id="@+id/tv_last_post_created"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textSize="@dimen/text_normal"
-                        android:textColor="@color/DarkGray"/>
-                    <View
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_margin="@dimen/activity_horizontal_margin"
-                        android:background="@color/LightPink"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Spot name"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_normal"
-                    android:id="@+id/tv_last_post_name"/>
-
-                <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                    android:id="@+id/rv_horizontal_tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/last_post_box"/>
-            </LinearLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <ImageView
-        android:layout_width="@dimen/profile_picture_side"
-        android:layout_height="@dimen/profile_picture_side"
-        android:layout_marginTop="140dp"
-        android:src="@drawable/ic_profile"/>
-</RelativeLayout>
+-->

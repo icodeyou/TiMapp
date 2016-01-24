@@ -1,16 +1,16 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
@@ -27,12 +27,16 @@ public class ProfileActivity extends BaseActivity{
 
     String TAG = "ProfileActivity";
 
-    private HorizontalTagsAdapter horizontalTagsAdapter = null;
     private User mUser = null;
-    private TextView tvUsername = null;
-    private TextView tvDateCreated = null;
-    private TextView tvPostName = null;
-    private TextView tvCountPosts = null;
+
+    private TextView tvUsername;
+    private TextView tvCountTags;
+    private TextView tvCountPlaces;
+    private TextView tvTag1;
+    private TextView tvTag2;
+    private TextView tvTag3;
+
+    private ListView placeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +46,16 @@ public class ProfileActivity extends BaseActivity{
         //Toolbar
         this.initToolbar(true);
 
-        /////////////////Fetch tags for Recycler view in LastPost box ! //////////////////////////////////////
-        final RecyclerView rv_lastPostTags = (RecyclerView) findViewById(R.id.rv_horizontal_tags);
+        //Initialize
         tvUsername = (TextView) findViewById(R.id.tv_profile_username);
-        tvCountPosts = (TextView) findViewById(R.id.tv_profile_count_posts);
-        tvDateCreated = (TextView) findViewById(R.id.tv_last_post_created);
-        tvPostName = (TextView) findViewById(R.id.tv_last_post_name);
+        tvCountTags = (TextView) findViewById(R.id.tags_counter);
+        tvCountPlaces = (TextView) findViewById(R.id.places_counter);
+        placeView = (ListView) findViewById(R.id.place_lv);
+        tvTag1 = (TextView) findViewById(R.id.tv_tag1);
+        tvTag2 = (TextView) findViewById(R.id.tv_tag2);
+        tvTag3 = (TextView) findViewById(R.id.tv_tag3);
 
-        //set Adapter
-        horizontalTagsAdapter = new HorizontalTagsAdapter(this);
-        rv_lastPostTags.setAdapter(horizontalTagsAdapter);
-
-        //Set LayoutManager
-        GridLayoutManager manager_savedTags = new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
-        rv_lastPostTags.setLayoutManager(manager_savedTags);
+        initAdapter();
 
         // Get data
         String username = null;
@@ -74,6 +74,14 @@ public class ProfileActivity extends BaseActivity{
         this.loadUser(username); // TODO get username by bundle of current username if none
     }
 
+    private void initAdapter() {
+        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        //TODO : find last place
+        Place place = new Place(1, 0, 0, "test");
+        placesAdapter.add(place);
+        placeView.setAdapter(placesAdapter);
+    }
+
     private void loadUser(final String username){
 
         RestClient.service().profile(username, new RestCallback<User>(this) {
@@ -82,16 +90,23 @@ public class ProfileActivity extends BaseActivity{
                 Log.i(TAG, user + " loaded");
                 mUser = user;
                 tvUsername.setText(mUser.username);
-                tvCountPosts.setText(String.valueOf(mUser.count_posts));
+                tvCountTags.setText(String.valueOf(mUser.count_posts));
+                //TODO : set number of places that the user created
+                //tvCountPlaces.setText();
 
                 // Setting the last post
                 if (mUser.posts != null && mUser.posts.size() > 0){
+                    //TODO : User should be different from zero
                     Post post = mUser.posts.getFirst();
-                    horizontalTagsAdapter.setData(post.getTags());
-                    tvDateCreated.setText(post.getPrettyTimeCreated());
-                    tvPostName.setText(post.getAddress());
-                    View layout = findViewById(R.id.box_profile_last_post);
-                    layout.setVisibility(View.VISIBLE);
+                    ArrayList<String> arrayTags = post.getTagsToStringArray();
+                    String tag1 = "#" + arrayTags.get(1);
+                    String tag2 = "#" + arrayTags.get(2);
+                    String tag3 = "#" + arrayTags.get(3);
+                    tvTag1.setText(tag1);
+                    tvTag2.setText(tag2);
+                    tvTag3.setText(tag3);
+
+                    //TODO : Loader
                 }
             }
         });

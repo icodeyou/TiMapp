@@ -38,8 +38,8 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <ImageView
-                        android:layout_height="@dimen/logo_big"
-                        android:layout_width="@dimen/logo_big"
+                        android:layout_height="@dimen/logo_small"
+                        android:layout_width="@dimen/logo_small"
                         android:src="@drawable/ic_location"/>
                     <TextView
                         android:id="@+id/title_place"
@@ -65,8 +65,8 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
                         <ImageView
-                            android:layout_height="@dimen/logo_big"
-                            android:layout_width="@dimen/logo_big"
+                            android:layout_height="@dimen/logo_small"
+                            android:layout_width="@dimen/logo_small"
                             android:src="@drawable/ic_clock"/>
                         <TextView
                             android:id="@+id/time_place"
@@ -87,8 +87,8 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
                         <ImageView
-                            android:layout_width="@dimen/logo_big"
-                            android:layout_height="@dimen/logo_big"
+                            android:layout_width="@dimen/logo_small"
+                            android:layout_height="@dimen/logo_small"
                             android:src="@drawable/ic_people"/>
                         <TextView
                             android:id="@+id/people_counter_place"
