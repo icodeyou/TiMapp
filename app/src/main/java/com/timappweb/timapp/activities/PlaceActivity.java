@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class PlaceActivity extends BaseActivity{
     private int placeId;
     private Button comingButton;
     private Button addTagsButton;
+    private View   progressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class PlaceActivity extends BaseActivity{
         placeListView = (ListView) findViewById(R.id.place_lv);
         comingButton = (Button) findViewById(R.id.button_coming);
         addTagsButton = (Button) findViewById(R.id.button_add_some_tags);
+        progressView = findViewById(R.id.progress_view);
 
         initFragments();
         initBottomButton();
@@ -68,8 +71,10 @@ public class PlaceActivity extends BaseActivity{
     }
 
     private void initBottomButton() {
-        double latitude =  MyApplication.lastLocation.getLatitude();
-        double longitude = MyApplication.lastLocation.getLongitude();
+        if(MyApplication.lastLocation!=null) {
+            double latitude =  MyApplication.lastLocation.getLatitude();
+            double longitude = MyApplication.lastLocation.getLongitude();
+        }
         // TODO steph: display the right button. ex: comingButton.setVisibility(View.VISIBLE);
     }
 
@@ -115,6 +120,7 @@ public class PlaceActivity extends BaseActivity{
         // called when the place is loaded
         // this.place is the place loaded
 
+        progressView.setVisibility(View.GONE);
         initPlaceAdapters();
     }
 

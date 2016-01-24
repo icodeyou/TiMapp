@@ -12,9 +12,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_add_spot">Post</string>
     <string name="title_activity_post">Post</string>
-    <string name="title_activity_place">Spot</string>
-    <string name="title_activity_people">Spot - People</string>
-    <string name="title_activity_comment">Spot - Comments</string>
+    <string name="title_activity_place">Event</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
@@ -41,7 +39,6 @@
     <string name="title_drawer">Menu</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer close</string>
-    <string name="button_submit_spot">Post</string>
     <string name="action_filter">Filter</string>
     <string name="search_hint">Type a tag</string>
     <string name="mood_location">WORLD</string>
@@ -64,9 +61,9 @@
     <string name="hint_searchview_activity_tag">Choose 3 tags</string>
     <string name="main_text_publish_activity">confirm</string>
     <string name="text_anonymous">Anonymous</string>
-    <string name="button_add_spot">New Spot</string>
-    <string name="hint_place_name">Spot name</string>
-    <string name="add_spot_button">create</string>
+    <string name="button_add_place">New Event</string>
+    <string name="hint_place_name">Type the event</string>
+    <string name="add_place_button">create</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
     <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
     <string name="searchview_hint_3">Choose 3 tags</string>

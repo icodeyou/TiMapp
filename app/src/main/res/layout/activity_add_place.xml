@@ -36,7 +36,7 @@
             android:layout_height="50dp"
             android:padding="5dp"
             android:gravity="center"
-            android:text="@string/add_spot_button"
+            android:text="@string/add_place_button"
             android:textAllCaps="true"
             android:clickable="true"
             android:background="@color/LightGrey"

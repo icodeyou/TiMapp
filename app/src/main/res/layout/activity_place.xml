@@ -11,6 +11,15 @@
 
     <!-- PLACE -->
     <!-- **********************************************************************-->
+    <LinearLayout
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center">
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+    </LinearLayout>
     <ListView
         android:id="@+id/place_lv"
         android:layout_width="match_parent"
