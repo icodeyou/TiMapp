@@ -68,7 +68,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
                 //set selectedCategory in AddPlaceActivity
                 AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
                 addPlaceActivity.setCategory(selectedCategory);
-                addPlaceActivity.setButtonValidation(true);
+                addPlaceActivity.setButtonValidation();
             }
         });
     }

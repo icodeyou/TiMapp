@@ -1,11 +1,11 @@
 package com.timappweb.timapp.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,7 +30,8 @@ import retrofit.client.Response;
 public class PublishActivity extends BaseActivity{
 
     private String TAG = "PublishActivity";
-    private static ProgressDialog progressDialog = null;
+    private View progressView;
+    private Context context;
 
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
@@ -38,12 +39,14 @@ public class PublishActivity extends BaseActivity{
     private Post currentPost = null;
     private CheckBox checkBox = null;
     private ListView placeListView;
+    private Button confirmButton;
 
     //----------------------------------------------------------------------------------------------
     //Override
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
 
         // Check that we gave the place as an extra parameter
         this.currentPlace = IntentsUtils.extractPlace(getIntent());
@@ -61,16 +64,12 @@ public class PublishActivity extends BaseActivity{
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         placeListView = (ListView) findViewById(R.id.place_lv);
+        progressView = findViewById(R.id.progress_view);
+        confirmButton = (Button) findViewById(R.id.confirm_button);
 
         initAdapters();
-
-        currentPost.anonymous = checkBox.isSelected();
-        checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentPost.anonymous = v.isSelected();
-            }
-        });
+        setListeners();
+        setCheckbox();
 
     }
 
@@ -96,18 +95,48 @@ public class PublishActivity extends BaseActivity{
         selectedTagsAdapter.setData(currentPost.getTags());
     }
 
-    public void submitNewPost(View view){
-        // Validating user input
-        if (!currentPost.validateForSubmit()){
-            Toast.makeText(this, "Invalid inputs", Toast.LENGTH_LONG); // TODO proper message
-            return;
-        }
-        Log.d(TAG, "Submitting post: " + currentPost);
+    private void setCheckbox() {
 
-        // Starting service
-        //this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
-        //this.progressDialog.show();
-        RestClient.service().addPost(this.currentPost, new AddPostCallback(this, this.currentPost));
+        currentPost.anonymous = checkBox.isSelected();
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentPost.anonymous = v.isSelected();
+            }
+        });
+    }
+
+    public void setListeners() {
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setProgressView(true);
+                // Validating user input
+                if (!currentPost.validateForSubmit()) {
+                    Toast.makeText(context, "Invalid inputs", Toast.LENGTH_LONG); // TODO proper message
+                    return;
+                }
+                Log.d(TAG, "Submitting post: " + currentPost);
+
+                // Starting service
+                //this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
+                //this.progressDialog.show();
+                RestClient.service().addPost(currentPost, new AddPostCallback(context, currentPost));
+            }
+        });
+    }
+
+    private void setProgressView(boolean bool) {
+        if(bool) {
+            progressView.setVisibility(View.VISIBLE);
+            confirmButton.setVisibility(View.GONE);
+            selectedTagsRV.setVisibility(View.GONE);
+        }
+        else {
+            progressView.setVisibility(View.GONE);
+            confirmButton.setVisibility(View.VISIBLE);
+            selectedTagsRV.setVisibility(View.VISIBLE);
+        }
     }
 
     //----------------------------------------------------------------------------------------------
@@ -124,8 +153,6 @@ public class PublishActivity extends BaseActivity{
 
         @Override
         public void success(RestFeedback restFeedback, Response response) {
-            //progressDialog.hide();
-
             if (restFeedback.success && restFeedback.data.containsKey("id")) {
                 int id = Integer.valueOf(restFeedback.data.get("id"));
                 Log.i(TAG, "Post has been saved. Id is : " + id);
@@ -134,13 +161,14 @@ public class PublishActivity extends BaseActivity{
             } else {
                 Log.i(TAG, "Cannot add post: " + response.getReason() + " - " + restFeedback.toString());
                 Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG);
+                setProgressView(false);
             }
         }
 
         @Override
         public void failure(RetrofitError error) {
             super.failure(error);
-            //progressDialog.hide();
+            progressView.setVisibility(View.GONE);
             Toast.makeText(this.context, R.string.error_webservice_connection, Toast.LENGTH_LONG);
         }
     }

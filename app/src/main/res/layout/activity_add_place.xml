@@ -33,7 +33,7 @@
         <Button
             android:id="@+id/create_place_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:padding="5dp"
             android:gravity="center"
             android:text="@string/add_spot_button"
@@ -42,6 +42,23 @@
             android:background="@color/LightGrey"
             android:textSize="@dimen/text_big"
             android:textColor="@color/White"/>
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone">
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Thanks for sharing"
+                android:textSize="@dimen/text_normal"/>
+        </LinearLayout>
     </LinearLayout>
 
     <include android:id="@+id/toolbar_layout"

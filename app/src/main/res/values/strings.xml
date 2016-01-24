@@ -72,4 +72,10 @@
     <string name="searchview_hint_3">Choose 3 tags</string>
     <string name="searchview_hint_2">2 tags left</string>
     <string name="searchview_hint_1">One more !</string>
+    <string name="loading_tags">Loading tags</string>
+    <string name="loading_posts">Loading people</string>
+    <string name="uploading_tags">Uploading tags</string>
+    <string name="no_tags">No tags yet.</string>
+    <string name="no_people">Nobody has posted here.</string>
+    <string name="button_add_some_tags">Add some tags</string>
 </resources>

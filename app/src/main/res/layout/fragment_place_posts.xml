@@ -20,25 +20,24 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_normal"
             android:textColor="@color/black"
-            android:text="@string/loading_tags" />
+            android:text="@string/loading_posts" />
     </LinearLayout>
 
     <!-- No tags yet -->
     <!-- **********************************************************************-->
     <TextView
-        android:id="@+id/no_tags_view"
+        android:id="@+id/no_posts_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="@dimen/text_normal"
-        android:text="@string/no_tags"
+        android:text="@string/no_people"
         android:gravity="center"
         android:visibility="gone"/>
 
     <!-- List View -->
     <!-- **********************************************************************-->
     <ListView
-        android:id="@+id/list_tags"
+        android:id="@+id/list_people"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="@android:color/transparent"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

@@ -66,7 +66,7 @@ public class TagActivity extends BaseActivity{
         selectedTagsView = findViewById(R.id.rv_selected_tags);
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
-        progressBarView = findViewById(R.id.progressbar_view);
+        progressBarView = findViewById(R.id.progress_view);
         placeListView = (ListView) findViewById(R.id.place_lv);
 
         initAdapterPlace();

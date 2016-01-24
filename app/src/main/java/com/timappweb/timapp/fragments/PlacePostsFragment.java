@@ -11,11 +11,8 @@ import android.widget.ListView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.adapters.PostsAdapter;
-import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -26,35 +23,41 @@ import retrofit.client.Response;
 public class PlacePostsFragment extends Fragment {
 
     private static final String TAG = "PlaceTagsFragment";
-    PostsAdapter postsAdapter;
+    private Context         context;
+    private PostsAdapter    postsAdapter;
+    private ListView        lvTags;
+    private View            progressView;
+    private View            noPostsView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Context context= getActivity().getApplicationContext();
+        context= getActivity().getApplicationContext();
 
-        View root = inflater.inflate(R.layout.fragment_place_people, container, false);
+        View root = inflater.inflate(R.layout.fragment_place_posts, container, false);
 
-        //Create ListView
-        //////////////////////////////////////////////////////////////////////////////
-        //Find listview in XML
-        ListView lvTags = (ListView) root.findViewById(R.id.list_people);
+        //Initialize
+        lvTags = (ListView) root.findViewById(R.id.list_people);
+        progressView = root.findViewById(R.id.progress_view);
+        noPostsView = root.findViewById(R.id.no_posts_view);
 
-        // pass context and data to the custom adapter
-        postsAdapter = new PostsAdapter(context);
-        lvTags.setAdapter(postsAdapter);
+        initAdapter();
         loadPosts();
 
         return root;
     }
 
+    private void initAdapter() {
+        postsAdapter = new PostsAdapter(context);
+        lvTags.setAdapter(postsAdapter);
+    }
 
     private void loadPosts() {
-        // TODO pass PLACE from activity to fragment thanks to "setargument"
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
-        RestClient.service().viewPostsForPlace(placeActivity.getPlace().id, new RestCallback<List<Post>>(getContext()) {
+        RestClient.service().viewPostsForPlace(placeActivity.getPlaceId(), new RestCallback<List<Post>>(getContext()) {
             @Override
             public void success(List<Post> posts, Response response) {
+                progressView.setVisibility(View.GONE);
                 notifyPostsLoaded(posts);
             }
         });
@@ -64,6 +67,9 @@ public class PlacePostsFragment extends Fragment {
         //add tags to adapter
         for (Post post : posts) {
             postsAdapter.add(post);
+        }
+        if(posts.isEmpty()) {
+            noPostsView.setVisibility(View.VISIBLE);
         }
     }
 

@@ -20,22 +20,44 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"/>
 
+        <!-- Progress View -->
+        <!-- **********************************************************************-->
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <ProgressBar
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_huge"
+                android:textColor="@color/colorAccent"
+                android:text="@string/uploading_tags" />
+        </LinearLayout>
+
         <!-- Confirm button -->
         <!-- **********************************************************************-->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:layout_marginRight="2dp"
-                android:layout_marginLeft="2dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/border_radius"
-                android:textColor="@color/White"
-                android:textSize="@dimen/text_mountain"
-                android:textAllCaps="true"
-                android:onClick="submitNewPost"
-                android:text="@string/main_text_publish_activity"/>
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/border_radius"
+            android:textColor="@color/White"
+            android:textSize="@dimen/text_mountain"
+            android:textAllCaps="true"
+            android:text="@string/main_text_publish_activity"/>
 
 
         <!-- Anonymous button -->

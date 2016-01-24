@@ -26,6 +26,25 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/place_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/button_coming"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorAccent"
+        android:textColor="@color/White"
+        android:text="Coming"
+        android:textSize="@dimen/text_huge"/>
+
+    <Button
+        android:id="@+id/button_add_some_tags"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorAccent"
+        android:textColor="@color/White"
+        android:text="@string/button_add_some_tags"
+        android:textSize="@dimen/text_huge"/>
 
 </LinearLayout>

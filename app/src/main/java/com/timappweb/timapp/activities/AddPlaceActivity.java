@@ -26,6 +26,7 @@ import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
@@ -42,6 +43,7 @@ public class AddPlaceActivity extends BaseActivity {
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
     private Button createButton;
+    private View progressView;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -56,6 +58,7 @@ public class AddPlaceActivity extends BaseActivity {
         groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
         createButton = (Button) findViewById(R.id.create_place_button);
+        progressView = findViewById(R.id.progress_view);
 
         setListeners();
         initAdapterAndManager();
@@ -85,6 +88,17 @@ public class AddPlaceActivity extends BaseActivity {
         categoriesRV.setLayoutManager(manager);
     }
 
+    private void setProgressView(boolean bool) {
+        if(bool) {
+            progressView.setVisibility(View.VISIBLE);
+            createButton.setVisibility(View.GONE);
+        }
+        else {
+            progressView.setVisibility(View.GONE);
+            createButton.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void submitPlace(final Place place){
         Context context = this;
         Log.d(TAG, "Submit place " + place.toString());
@@ -101,13 +115,22 @@ public class AddPlaceActivity extends BaseActivity {
                 } else {
                     Log.d(TAG, "Cannot save viewPlaceFromPublish: " + place);
                     Toast.makeText(context, "We cannot save your place right now. Please try again later", Toast.LENGTH_LONG).show();
+                    setProgressView(false);
                 }
+            }
+
+            @Override
+            public void failure(RestError error) {
+                super.failure(error);
+                setProgressView(true);
             }
         });
     }
 
-    public void setButtonValidation(boolean bool) {
-        if (bool&&categorySelected!=null) {
+    public void setButtonValidation() {
+        String textAfterChange = groupNameET.getText().toString();
+
+        if (categorySelected!=null && !textAfterChange.equals("")) {
             createButton.setEnabled(true);
             createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {
@@ -142,13 +165,7 @@ public class AddPlaceActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String textAfterChange = s.toString();
-                if(!textAfterChange.equals("")) {
-                    setButtonValidation(true);
-                }
-                else {
-                    setButtonValidation(false);
-                }
+                setButtonValidation();
             }
         });
 
@@ -156,9 +173,9 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (MyApplication.lastLocation != null) {
+                    setProgressView(true);
                     final Place place = new Place(MyApplication.lastLocation.getLatitude(), MyApplication.lastLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
                     submitPlace(place);
-
                 } else {
                     Log.d(TAG, "Click on add place before having a user location");
                     Toast.makeText(getBaseContext(), "We don't have your position yet. Please wait", Toast.LENGTH_LONG).show();

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,13 +31,16 @@ public class PlaceActivity extends BaseActivity{
     private ListView placeListView;
     private MyPagerAdapter pagerAdapter;
     private Place place;
+    private int placeId;
+    private Button comingButton;
+    private Button addTagsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.place = IntentsUtils.extractPlace(getIntent());
-        int placeId = getIntent().getIntExtra("id", -1);
+        placeId = getIntent().getIntExtra("id", -1);
         if (place == null && placeId == -1){
             IntentsUtils.home(this);
         }
@@ -48,6 +52,8 @@ public class PlaceActivity extends BaseActivity{
         //Initialize
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
+        comingButton = (Button) findViewById(R.id.button_coming);
+        addTagsButton = (Button) findViewById(R.id.button_add_some_tags);
 
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         List fragments = new Vector();
@@ -65,6 +71,7 @@ public class PlaceActivity extends BaseActivity{
         pager.setAdapter(this.pagerAdapter);
 
         if (place != null){
+            placeId = place.id;
             this.notifyPlaceLoaded();
         }
         else{
@@ -134,5 +141,9 @@ public class PlaceActivity extends BaseActivity{
 
     public Place getPlace() {
         return place;
+    }
+
+    public int getPlaceId() {
+        return placeId;
     }
 }

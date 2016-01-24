@@ -24,8 +24,10 @@ import retrofit.client.Response;
 public class PlaceTagsFragment extends Fragment {
 
     private static final String TAG = "PlaceTagsFragment";
-    TagsAndCountersAdapter tagsAndCountersAdapter;
-    ListView               lvTags;
+    private TagsAndCountersAdapter  tagsAndCountersAdapter;
+    private ListView                lvTags;
+    private View                    progressView;
+    private View                    noTagsView;
 
     @Nullable
     @Override
@@ -34,10 +36,10 @@ public class PlaceTagsFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
 
-        //Create ListView
-        //////////////////////////////////////////////////////////////////////////////
-        //Find listview in XML
+        //Initialize
         lvTags = (ListView) root.findViewById(R.id.list_tags);
+        progressView = root.findViewById(R.id.progress_view);
+        noTagsView = root.findViewById(R.id.no_tags_view);
 
         initAdapter();
         loadTags();
@@ -52,11 +54,11 @@ public class PlaceTagsFragment extends Fragment {
 
 
     private void loadTags() {
-        // TODO pass PLACE from activity to fragment thanks to "setargument"
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
-        RestClient.service().viewPopularTagsForPlace(placeActivity.getPlace().id, new RestCallback<List<Tag>>(getContext()) {
+        RestClient.service().viewPopularTagsForPlace(placeActivity.getPlaceId(), new RestCallback<List<Tag>>(getContext()) {
             @Override
             public void success(List<Tag> tags, Response response) {
+                progressView.setVisibility(View.GONE);
                 notifyTagsLoaded(tags);
             }
         });
@@ -69,25 +71,8 @@ public class PlaceTagsFragment extends Fragment {
             tag.setName(addedhastag);
             tagsAndCountersAdapter.add(tag);
         }
+        if(tags.isEmpty()) {
+            noTagsView.setVisibility(View.VISIBLE);
+        }
     }
-
-    /*private ArrayList<Tag> generateDummyData() {
-        ArrayList<Tag> tags = new ArrayList<>();
-        tags.add(new Tag("#friteschezjojo", 1587));
-        tags.add(new Tag("#boeing", 747));
-        tags.add(new Tag("#airbus", 380));
-        tags.add(new Tag("#lolilol", 185));
-        tags.add(new Tag("#whatever", 184));
-        tags.add(new Tag("#salt", 154));
-        tags.add(new Tag("#beer", 146));
-        tags.add(new Tag("#idontknowwhattosay", 130));
-        tags.add(new Tag("#nowords", 114));
-        tags.add(new Tag("#amazing", 104));
-        tags.add(new Tag("#wtf", 85));
-        tags.add(new Tag("#youhavetoseeittobelieveit", 55));
-        tags.add(new Tag("#ohmygod", 30));
-        tags.add(new Tag("#thisissofunny", 21));
-        tags.add(new Tag("#beach", 14));
-        return tags;
-    }*/
 }

@@ -44,7 +44,7 @@ public class LocateActivity extends BaseActivity{
     private View        noPlaceView;
 
     // ProgressBar and ProgressDialog
-    private View        progressBarView;
+    private View progressView;
 
     // Location
     private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
@@ -54,7 +54,6 @@ public class LocateActivity extends BaseActivity{
     private Menu mainMenu;
 
     private LocationListener mLocationListener;
-
 
     // ----------------------------------------------------------------------------------------------
     //OVERRIDE METHODS
@@ -67,7 +66,7 @@ public class LocateActivity extends BaseActivity{
         this.initToolbar(false);
 
         //Initialize variables
-        this.progressBarView = findViewById(R.id.progressbar_view);
+        this.progressView = findViewById(R.id.progress_view);
         this.placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
         this.noPlaceView = findViewById(R.id.layout_if_no_place);
         listPlaces = (ListView) findViewById(R.id.list_places);
@@ -160,7 +159,7 @@ public class LocateActivity extends BaseActivity{
                 Log.d(TAG, "Loading " + place.size() + " viewPlaceFromPublish(s)");
                 PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
                 placeAdapter.clear();
-                progressBarView.setVisibility(View.GONE);
+                progressView.setVisibility(View.GONE);
                 if (place.size() != 0) {
                     placeAdapter.addAll(place);
                     noPlaceView.setVisibility(View.GONE);
