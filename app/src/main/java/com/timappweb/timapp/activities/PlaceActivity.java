@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -46,8 +47,7 @@ public class PlaceActivity extends BaseActivity{
         }
 
         setContentView(R.layout.activity_place);
-
-        this.initToolbar(true);
+        initToolbar(true);
 
         //Initialize
         tagsListView = (ListView) findViewById(R.id.tags_lv);
@@ -55,6 +55,25 @@ public class PlaceActivity extends BaseActivity{
         comingButton = (Button) findViewById(R.id.button_coming);
         addTagsButton = (Button) findViewById(R.id.button_add_some_tags);
 
+        initFragments();
+        initBottomButton();
+
+        if (place != null){
+            placeId = place.id;
+            this.notifyPlaceLoaded();
+        }
+        else{
+            loadPlace(placeId);
+        };
+    }
+
+    private void initBottomButton() {
+        double latitude =  MyApplication.lastLocation.getLatitude();
+        double longitude = MyApplication.lastLocation.getLongitude();
+        // TODO steph: display the right button. ex: comingButton.setVisibility(View.VISIBLE);
+    }
+
+    private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         List fragments = new Vector();
 
@@ -69,14 +88,6 @@ public class PlaceActivity extends BaseActivity{
         ViewPager pager = (ViewPager) super.findViewById(R.id.place_viewpager);
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
-
-        if (place != null){
-            placeId = place.id;
-            this.notifyPlaceLoaded();
-        }
-        else{
-            loadPlace(placeId);
-        };
     }
 
     private void loadPlace(int placeId) {

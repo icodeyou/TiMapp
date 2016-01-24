@@ -36,7 +36,8 @@
         android:background="@color/colorAccent"
         android:textColor="@color/White"
         android:text="Coming"
-        android:textSize="@dimen/text_huge"/>
+        android:textSize="@dimen/text_huge"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/button_add_some_tags"
@@ -45,6 +46,7 @@
         android:background="@color/colorAccent"
         android:textColor="@color/White"
         android:text="@string/button_add_some_tags"
-        android:textSize="@dimen/text_huge"/>
+        android:textSize="@dimen/text_huge"
+        android:visibility="gone"/>
 
 </LinearLayout>
