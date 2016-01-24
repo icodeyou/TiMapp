@@ -3,9 +3,11 @@ package com.timappweb.timapp;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.support.v7.app.AlertDialog;
 
 import com.timappweb.timapp.activities.LoginActivity;
+import com.timappweb.timapp.config.Configuration;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.User;
@@ -17,13 +19,13 @@ import java.util.List;
 public class MyApplication extends Application{
 
     private static final String TAG = "MyApplication";
-    private static AlertDialog alertDialog = null;
-
     public static User getCurrentUser(){
         return RestClient.instance().getCurrentUser();
     }
-
     public static List<Category> categories = new LinkedList<>();
+    public static Location lastLocation = null;
+    public static Configuration config;
+
 
     @Override
     public void onCreate(){
@@ -34,6 +36,9 @@ public class MyApplication extends Application{
         RestClient.init(this, endpoint);
 
         initCategories();
+
+        // Load configuration
+        config = new Configuration(getApplicationContext(), "configuration.properties"); // TODO use ressource
     }
 
     public void initCategories(){
@@ -60,12 +65,6 @@ public class MyApplication extends Application{
     public static boolean isLoggedIn(){
         boolean isLoggedIn = LocalPersistenceManager.instance.pref.getBoolean(RestClient.IS_LOGIN, false);
         return isLoggedIn;
-        // TODO
-        //if (isLoggedIn){
-        //    int lastLoggedIn = LocalPersistenceManager.instance.pref.getInt(RestClient.LAST_LOGGED_IN, 0);
-        //    return lastLoggedIn < RestClient.LOGIN
-        //}
-        //return false;
     }
 
 
@@ -95,9 +94,11 @@ public class MyApplication extends Application{
     }
 
 
-    static AlertDialog dialog = null;
 
     /*
+    private static AlertDialog alertDialog = null;
+
+    static AlertDialog dialog = null;
     public static void showAlert(Context context, String message) {
         if (dialog == null){
             Log.d(TAG, "Creating new dialog");

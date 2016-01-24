@@ -19,7 +19,7 @@ import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.List;

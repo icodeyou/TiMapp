@@ -16,11 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.ExploreFragment;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 //import android.support.design.widget.FloatingActionButton;
 
 

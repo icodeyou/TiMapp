@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="2dp"
+    android:layout_width="@dimen/map_icon"
+    android:layout_height="@dimen/map_icon">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="@dimen/map_icon"
+        android:layout_height="@dimen/map_icon"/>
+
+    <TextView
+        android:id="@id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAppearance="@style/Bubble.TextAppearance.Light"
+        android:paddingLeft="@dimen/map_icon_padding"
+        android:paddingRight="@dimen/map_icon_padding"
+        android:layout_gravity="center"
+        android:alpha=".8"/>
+
+</FrameLayout>

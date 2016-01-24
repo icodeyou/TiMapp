@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -23,7 +22,7 @@ import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;

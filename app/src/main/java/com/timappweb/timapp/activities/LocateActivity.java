@@ -10,13 +10,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
@@ -26,8 +25,8 @@ import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.services.FetchAddressIntentService;
-import com.timappweb.timapp.utils.Constants;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.Constants;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -55,7 +54,6 @@ public class LocateActivity extends BaseActivity{
     private Menu mainMenu;
 
     private LocationListener mLocationListener;
-    private Location currentLocation = null;
 
 
     // ----------------------------------------------------------------------------------------------
@@ -85,10 +83,11 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Click on place adapter");
+                // We know that lastLocation is define because places are loaded only when location is defined
                 Place place = placesAdapter.getItem(position);
                 Post post = new Post();
-                post.longitude = currentLocation.getLongitude();
-                post.latitude = currentLocation.getLatitude();
+                post.longitude = MyApplication.lastLocation.getLongitude();
+                post.latitude = MyApplication.lastLocation.getLatitude();
                 IntentsUtils.addPostStepTags(that, place, post);
             }
 
@@ -141,7 +140,7 @@ public class LocateActivity extends BaseActivity{
             public void onLocationChanged(Location location) {
                 Log.i(TAG, "Location has changed: " + Util.print(location));
                 loadPlaces(location);
-                currentLocation = location;
+                MyApplication.lastLocation = location;
                 //startIntentServiceReverseGeocoding(location);
             }
         };

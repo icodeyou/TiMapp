@@ -18,7 +18,7 @@ public class Place implements Serializable, MarkerValueInterface {
     public double latitude;
     public int created;
     public double longitude;
-    public int count_post;
+    public int count_posts;
     public int category_id;
     public List<Tag> main_tags;
 
@@ -29,7 +29,7 @@ public class Place implements Serializable, MarkerValueInterface {
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
-        this.count_post = 0;
+        this.count_posts = 0;
         this.posts = new ArrayList<>();
         this.main_tags = new ArrayList<>();
     }
@@ -42,12 +42,12 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public void addPost(Post post){
-        this.count_post++;
+        this.count_posts++;
         this.posts.add(post);
     }
 
     public int countSpot(){
-        return this.count_post;
+        return this.count_posts;
     }
 
     // Dummy data
@@ -108,7 +108,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public int countUsers() {
-        return this.count_post;
+        return this.count_posts;
     }
 
     public int getResource() {

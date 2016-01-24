@@ -3,10 +3,9 @@ package com.timappweb.timapp.rest;
 import android.content.Context;
 import android.util.Log;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.model.RestError;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;

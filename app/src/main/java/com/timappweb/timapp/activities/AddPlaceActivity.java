@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.entities.Category;
@@ -27,7 +27,7 @@ import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 
 import retrofit.client.Response;
@@ -41,7 +41,6 @@ public class AddPlaceActivity extends BaseActivity {
     RecyclerView categoriesRV;
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
-    private Location currentLocation = null;
     private Button createButton;
 
     //----------------------------------------------------------------------------------------------
@@ -74,7 +73,7 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void onLocationChanged(Location l) {
                 Log.i(TAG, "Location has changed: " + Util.print(l));
-                currentLocation = l;
+                MyApplication.lastLocation = l;
             }
         });
     }
@@ -95,8 +94,8 @@ public class AddPlaceActivity extends BaseActivity {
                 if (restFeedback.success) {
                     Log.d(TAG, "Place has been saved: " + place);
                     Post post = new Post();
-                    post.latitude = currentLocation.getLatitude();
-                    post.longitude = currentLocation.getLongitude();
+                    post.latitude = MyApplication.lastLocation.getLatitude();
+                    post.longitude = MyApplication.lastLocation.getLongitude();
                     place.id = Integer.parseInt(restFeedback.data.get("id"));
                     IntentsUtils.addPostStepTags(this.context, place, post);
                 } else {
@@ -156,8 +155,8 @@ public class AddPlaceActivity extends BaseActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentLocation != null) {
-                    final Place place = new Place(currentLocation.getLatitude(), currentLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
+                if (MyApplication.lastLocation != null) {
+                    final Place place = new Place(MyApplication.lastLocation.getLatitude(), MyApplication.lastLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
                     submitPlace(place);
 
                 } else {

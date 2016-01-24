@@ -35,7 +35,7 @@ import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.HashMap;
@@ -270,7 +270,7 @@ public class ExploreMapFragment extends SupportMapFragment {
 
         // Initialize the manager with the context and the map.
         mClusterManagerPost = new ClusterManager<Place>(getActivity(), mMap);
-        mClusterManagerPost.setRenderer(new PlaceClusterRenderer(getContext(), mMap, mClusterManagerPost));
+        mClusterManagerPost.setRenderer(new PlaceClusterRenderer(getActivity(), mMap, mClusterManagerPost));
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Place>() {
             @Override
             public boolean onClusterClick(Cluster<Place> cluster) {

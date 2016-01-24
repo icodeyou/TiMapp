@@ -27,12 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.BuildConfig;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

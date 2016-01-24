@@ -3,31 +3,22 @@ package com.timappweb.timapp.managers;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.greenfrvr.hashtagview.HashtagView;
-import com.timappweb.timapp.activities.PublishActivity;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.config.Configuration;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnQueryTagListener;
-import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.utils.IntentsUtils;
 import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import retrofit.client.Response;
@@ -35,9 +26,6 @@ import retrofit.client.Response;
 public class SearchAndSelectTagManager {
 
     private static final String TAG = "SearchAndSelectTag";
-    private static final int MINIMAL_SEARCH_LENGTH = 0;
-    private static final int MAXIMAL_RESULT_SIZE = 40;
-
 
     private Activity activity;
     private SearchView searchView;
@@ -71,7 +59,9 @@ public class SearchAndSelectTagManager {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
 
-        this.searchHistory = new SearchHistory<Tag>(MINIMAL_SEARCH_LENGTH, MAXIMAL_RESULT_SIZE);
+        this.searchHistory = new SearchHistory<Tag>(
+                MyApplication.config.getInt(Configuration.TAG_MIN_SEARCH_LENGTH, 0),
+                MyApplication.config.getInt(Configuration.TAG_MAX_RESULT_SIZE, 2));
         this.searchHistory.setDataProvider(new SearchHistory.DataProvider<Tag>() {
 
             @Override
@@ -105,7 +95,7 @@ public class SearchAndSelectTagManager {
      * @param term
      */
     public void suggestTag(final String term){
-        if (term.length() < MINIMAL_SEARCH_LENGTH){
+        if (term.length() < MyApplication.config.getInt(Configuration.TAG_MIN_SEARCH_LENGTH, 0)){
             return;
         }
         this.loadTags(term);

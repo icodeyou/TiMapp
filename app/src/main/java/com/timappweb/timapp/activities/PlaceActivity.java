@@ -16,7 +16,7 @@ import com.timappweb.timapp.fragments.PlacePostsFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.utils.IntentsUtils;
+import com.timappweb.timapp.config.IntentsUtils;
 
 import java.util.List;
 import java.util.Vector;
