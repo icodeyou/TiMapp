@@ -104,9 +104,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             }
         });
 
-        Place place = new Place(0,1,1,"Super endroit !!!");
-        IntentsUtils.viewPlaceFromMap(this, place);
-
     }
 
     @Override

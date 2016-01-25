@@ -1,15 +1,16 @@
 package com.timappweb.timapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
@@ -136,17 +137,17 @@ public class PlaceActivity extends BaseActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_place, menu);
-        MenuItem shareItem = menu.findItem(R.id.action_share);
-        //shareActionProvider =
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.action_share:
-                /////Handle share actions here
+                setDefaultShareIntent();
                 return true;
             case R.id.action_reload:
                 IntentsUtils.reload(this);
@@ -154,6 +155,14 @@ public class PlaceActivity extends BaseActivity{
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setDefaultShareIntent() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_message_subject));
+        startActivity(Intent.createChooser(sharingIntent, "Share using"));
     }
 
     @Override
