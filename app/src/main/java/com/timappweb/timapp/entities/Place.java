@@ -20,7 +20,7 @@ public class Place implements Serializable, MarkerValueInterface {
     public double longitude;
     public int count_posts;
     public int category_id;
-    public List<Tag> main_tags;
+    public List<Tag> tags;
 
     public ArrayList<Post> posts;
 
@@ -31,7 +31,7 @@ public class Place implements Serializable, MarkerValueInterface {
         this.name = name;
         this.count_posts = 0;
         this.posts = new ArrayList<>();
-        this.main_tags = new ArrayList<>();
+        this.tags = new ArrayList<>();
     }
 
     public Place(double lat, double lng, String name, Category category) {
@@ -55,7 +55,7 @@ public class Place implements Serializable, MarkerValueInterface {
 
     public static Place createDummy(){
         Place place = new Place(1, dummyIndice, dummyIndice, "Test");
-        place.main_tags.add(Tag.createDummy());
+        place.tags.add(Tag.createDummy());
         place.addPost(Post.createDummy());
         place.addPost(Post.createDummy());
         place.addPost(Post.createDummy());
@@ -82,7 +82,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public List<Tag> getMainTags() {
-        return main_tags;
+        return tags;
     }
 
     /**

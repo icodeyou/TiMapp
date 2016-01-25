@@ -62,4 +62,8 @@ public class QueryCondition {
         queryMap.put("latitude", String.valueOf(latitude));
         queryMap.put("longitude", String.valueOf(longitude));
     }
+
+    public void setMainTags(boolean b) {
+        queryMap.put("main_tags", b ? "1" : "0");
+    }
 }
