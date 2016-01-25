@@ -91,10 +91,10 @@ public class ExploreFragment extends Fragment{
         @Override
         public CharSequence getPageTitle(int position) {
             if (position == 0) {
-                return "MAP";
+                return "Map";
             }
             else {
-                return "LIST";
+                return "List";
             }
         }
     }
