@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
 import android.view.Menu;
@@ -105,6 +106,8 @@ public class TagActivity extends BaseActivity{
                 searchView.setQuery(tag.name, true);
             }
         });
+
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         selectedTagsRV.addOnItemTouchListener(new RecyclerItemTouchListener(this, new RecyclerItemTouchListener.OnItemClickListener() {
 

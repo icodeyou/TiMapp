@@ -34,6 +34,9 @@
     <string name="error_credential_invalid">Invalid credential</string>
     <string name="title_search">Search</string>
 
+    <!-- Nav -->
+    <string name="tag_around">Tag around</string>
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_drawer">Menu</string>
@@ -74,6 +77,6 @@
     <string name="uploading_tags">Uploading tags</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
-    <string name="button_add_some_tags">Add some tags</string>
     <string name="text_last_post">Last post</string>
+    <string name="button_add_tags">Add 3 tags</string>
 </resources>

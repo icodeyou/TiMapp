@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +61,7 @@ public class AddPlaceActivity extends BaseActivity {
         createButton = (Button) findViewById(R.id.create_place_button);
         progressView = findViewById(R.id.progress_view);
 
+        initKeyboard();
         setListeners();
         initAdapterAndManager();
         initLocationListener();
@@ -79,6 +81,10 @@ public class AddPlaceActivity extends BaseActivity {
                 MyApplication.lastLocation = l;
             }
         });
+    }
+
+    private void initKeyboard() {
+        groupNameET.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
     }
 
     private void initAdapterAndManager() {
