@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
+import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.rest.QueryCondition;
@@ -22,9 +23,23 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
     private Context mContext;
-    private ClusterManager<Place> mClusterManagerPost;
+
+    private ClusterManager<Place> mClusterManagerPost = null;
     private int requestCounter = 0;
     private int lastClear = -1;
+    private PlacesAdapter placesAdapter = null;
+
+    public AreaDataLoaderFromAPI(Context context) {
+        this.mContext = context;
+    }
+
+    public void setClusterManager(ClusterManager<Place> mClusterManagerPost) {
+        this.mClusterManagerPost = mClusterManagerPost;
+    }
+
+    public void setPlacesAdapter(PlacesAdapter placesAdapter) {
+        this.placesAdapter = placesAdapter;
+    }
 
     public AreaDataLoaderFromAPI(Context context, ClusterManager<Place> clusterManagerPost) {
         this.mContext = context;
@@ -61,25 +76,40 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                                 : 0);
 
                 request.data.addAll(places);
-                mClusterManagerPost.addItems(places);
-                //for (MarkerValueInterface d : places) {
-                //    mClusterManagerPost.addItem(d);
-                //}
-                mClusterManagerPost.cluster();
+
+                if (mClusterManagerPost != null){
+                    mClusterManagerPost.addItems(places);
+                    mClusterManagerPost.cluster();
+                }
+
+                if (placesAdapter != null){
+                    placesAdapter.addAll(places);
+                }
             }
         });
     }
 
     @Override
     public void clear(List<Place> data) {
-        for (Place place: data){
-            mClusterManagerPost.removeItem(place);
+        if (mClusterManagerPost != null){
+            for (Place place: data){
+                mClusterManagerPost.removeItem(place);
+            }
+        }
+        if (placesAdapter != null){
+            placesAdapter.clear();
         }
     }
 
     @Override
     public void clearAll() {
         lastClear = this.requestCounter;        // Every request id that is less or equal is out dated
-        mClusterManagerPost.clearItems();
+
+        if (mClusterManagerPost != null){
+            mClusterManagerPost.clearItems();
+        }
+        if (placesAdapter != null){
+            placesAdapter.clear();
+        }
     }
 }

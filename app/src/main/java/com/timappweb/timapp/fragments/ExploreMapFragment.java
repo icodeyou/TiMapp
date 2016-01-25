@@ -2,7 +2,6 @@ package com.timappweb.timapp.fragments;
 
 import android.location.Location;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -37,7 +36,6 @@ import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.PlaceClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
-import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.MyLocationProvider;
@@ -46,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ExploreMapFragment extends Fragment{
-    private Context context;
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
     private static LatLngBounds mapBounds;
@@ -64,9 +61,10 @@ public class ExploreMapFragment extends Fragment{
     private PlacesAdapter placesAdapter;
 
     private static HashMap<Marker, Place> mapMarkers;
-    private AreaDataLoaderInterface dataLoader;
     private GoogleMap map;
     private Bundle mapBundle;
+
+    private ExploreFragment exploreFragment;
 
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
@@ -86,10 +84,12 @@ public class ExploreMapFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        context= getActivity().getApplicationContext();
+        Log.d(TAG, "onCreateView");
+
         root = inflater.inflate(R.layout.fragment_explore_map, container, false);
 
-        Log.i(TAG, "OnViewCreated");
+        exploreFragment = (ExploreFragment) getParentFragment();
+
         setHasOptionsMenu(true);
 
         //initialize
@@ -242,9 +242,9 @@ public class ExploreMapFragment extends Fragment{
         Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 
         if (currentZoomMode == ZoomType.OUT || history == null){
-            // Remove previous cache and all spots
+            // Remove previous cache and all markers
             mClusterManagerPost.clearItems();
-            this.history = new AreaRequestHistory(bounds, this.dataLoader);
+            this.history = new AreaRequestHistory(bounds, exploreFragment.getDataLoader());
         }
 
         history.update(bounds);
@@ -292,6 +292,7 @@ public class ExploreMapFragment extends Fragment{
         return placesViewer.getVisibility()==View.VISIBLE;
     }
 
+
     private void setUpClusterer(){
         Log.i(TAG, "Setting up cluster!");
 
@@ -320,7 +321,7 @@ public class ExploreMapFragment extends Fragment{
 
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Place>());
 
-        this.dataLoader = new AreaDataLoaderFromAPI(this.getContext(), mClusterManagerPost);
+        this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
     }
 
     @Override

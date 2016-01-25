@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
-import com.timappweb.timapp.activities.ExploreActivity;
+import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
@@ -35,7 +34,7 @@ public class IntentsUtils {
     }
 
     public static void home(Activity activity) {
-        Intent intent = new Intent(activity, ExploreActivity.class);
+        Intent intent = new Intent(activity, DrawerActivity.class);
         activity.startActivity(intent);
     }
 
@@ -127,7 +126,7 @@ public class IntentsUtils {
         activity.overridePendingTransition( 0, 0);
         Intent intent = activity.getIntent();
         activity.startActivity(intent);
-        activity.overridePendingTransition( 0, 0);
+        activity.overridePendingTransition(0, 0);
     }
 
     public static Place extractPlace(Intent intent) {

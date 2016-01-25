@@ -41,7 +41,7 @@
 
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
         <activity
-            android:name=".activities.ExploreActivity"
+            android:name=".activities.DrawerActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
@@ -68,7 +68,7 @@
         <activity
             android:name=".activities.FilterActivity"
             android:label="@string/title_activity_filter"
-            android:parentActivityName=".activities.ExploreActivity"
+            android:parentActivityName=".activities.DrawerActivity"
             android:windowSoftInputMode="stateVisible">
 
             <!-- Make activity searchable -->
@@ -82,17 +82,17 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- LOCATE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.LocateActivity"
-            android:parentActivityName=".activities.ExploreActivity"
+            android:parentActivityName=".activities.DrawerActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- TAG ACTIVITY //////////////////////////////////////////////-->
@@ -120,55 +120,55 @@
         <activity
             android:name=".activities.PostActivity"
             android:label="@string/title_activity_post"
-            android:parentActivityName=".activities.ExploreActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- PLACE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.PlaceActivity"
             android:label="@string/title_activity_place"
-            android:parentActivityName=".activities.ExploreActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".activities.ExploreActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.MyProfileActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.ExploreActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.ExploreActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
@@ -178,7 +178,7 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ExploreActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
     </application>

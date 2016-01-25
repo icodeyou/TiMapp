@@ -25,8 +25,8 @@ import com.timappweb.timapp.fragments.ExploreMapFragment;
 //import android.support.design.widget.FloatingActionButton;
 
 
-public class ExploreActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "ExploreActivity";
+public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "DrawerActivity";
     /* ============================================================================================*/
     /* PROPERTIES */
     /* ============================================================================================*/
@@ -285,8 +285,8 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
 
 
     private class MyActionBarDrawerToggle extends ActionBarDrawerToggle {
-        public MyActionBarDrawerToggle(ExploreActivity exploreActivity, DrawerLayout mDrawerLayout, Toolbar toolbar, int drawer_open, int drawer_close) {
-            super(exploreActivity, mDrawerLayout, toolbar, drawer_open, drawer_close);
+        public MyActionBarDrawerToggle(DrawerActivity drawerActivity, DrawerLayout mDrawerLayout, Toolbar toolbar, int drawer_open, int drawer_close) {
+            super(drawerActivity, mDrawerLayout, toolbar, drawer_open, drawer_close);
         }
 
         /** Called when a drawer has settled in a completely closed state. */
