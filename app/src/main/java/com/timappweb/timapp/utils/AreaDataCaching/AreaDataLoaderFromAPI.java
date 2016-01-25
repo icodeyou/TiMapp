@@ -37,6 +37,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
         Log.i(TAG, "Request loading of area: " + conditions.toString());
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
+        conditions.setMainTags(true);
         final int requestId = this.requestCounter++;
         RestClient.service().bestPlaces(conditions.toMap(), new RestCallback<List<Place>>(mContext) {
             @Override
