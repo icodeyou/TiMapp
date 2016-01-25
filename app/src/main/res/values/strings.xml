@@ -23,8 +23,11 @@
     <string name="country">France</string>-->
 
     <!-- Add Post Activity -->
-    <string name="add_comment_title">Add a comment ...</string>
     <string name="add_comment_message">Type here</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_logout">Log out</string>
+    <string name="nav_login">Log in</string>
 
     <string name="message_broadcast">broadcast</string>
     <string name="button_broadcast">broadcast</string>
@@ -35,7 +38,8 @@
     <string name="title_search">Search</string>
 
     <!-- Nav -->
-    <string name="tag_around">Tag around</string>
+    <string name="nav_tag_around">Tag around</string>
+    <string name="nav_explore">Explore</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -79,4 +83,8 @@
     <string name="no_people">Nobody has posted here.</string>
     <string name="text_last_post">Last post</string>
     <string name="button_add_tags">Add 3 tags</string>
+    <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
+    <string name="text_no_event_around">There isn\'t any event near you right now. Feel free to create one to inform the world.</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_reload">Reload</string>
 </resources>

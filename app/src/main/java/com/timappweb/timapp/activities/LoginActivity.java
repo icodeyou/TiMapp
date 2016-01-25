@@ -319,10 +319,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 }
 
             } catch (retrofit.RetrofitError ex){
-                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Server unavailable");
             } catch (Exception ex){
-                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Exception: " + ex);
             }
             return false;

@@ -113,7 +113,7 @@ public class PublishActivity extends BaseActivity{
                 setProgressView(true);
                 // Validating user input
                 if (!currentPost.validateForSubmit()) {
-                    Toast.makeText(context, "Invalid inputs", Toast.LENGTH_LONG); // TODO proper message
+                    Toast.makeText(context, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
                     return;
                 }
                 Log.d(TAG, "Submitting post: " + currentPost);
@@ -160,7 +160,7 @@ public class PublishActivity extends BaseActivity{
                 IntentsUtils.viewPlaceFromPublish(this.context, post.place_id);
             } else {
                 Log.i(TAG, "Cannot add post: " + response.getReason() + " - " + restFeedback.toString());
-                Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG);
+                Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG).show();
                 setProgressView(false);
             }
         }
@@ -168,8 +168,7 @@ public class PublishActivity extends BaseActivity{
         @Override
         public void failure(RetrofitError error) {
             super.failure(error);
-            progressView.setVisibility(View.GONE);
-            Toast.makeText(this.context, R.string.error_webservice_connection, Toast.LENGTH_LONG);
+            setProgressView(false);
         }
     }
 

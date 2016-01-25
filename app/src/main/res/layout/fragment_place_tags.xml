@@ -8,19 +8,28 @@
     <LinearLayout
         android:id="@+id/progress_view"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
         android:orientation="vertical">
         <ProgressBar
+            android:id="@+id/progress_tar"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"/>
+            android:layout_height="0dp"
+            android:layout_weight="0.45"
+            android:layout_gravity="center"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/progress_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:gravity="center"
             android:textSize="@dimen/text_normal"
             android:textColor="@color/black"
-            android:text="@string/loading_tags" />
+            android:text="@string/loading_tags"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.45"/>
     </LinearLayout>
 
     <!-- No tags yet -->

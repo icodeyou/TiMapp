@@ -18,8 +18,10 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.fragments.ExploreMapFragment;
 //import android.support.design.widget.FloatingActionButton;
 
 
@@ -35,6 +37,7 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
     ActionBarDrawerToggle mDrawerToggle;
     private TextView tvUsername = null;
     private Toolbar toolbar;
+    private ExploreFragment exploreFragment;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -101,9 +104,23 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
             }
         });
 
+        Place place = new Place(0,1,1,"Super endroit !!!");
+        IntentsUtils.viewPlaceFromMap(this, place);
+
     }
 
-     /* ============================================================================================*/
+    @Override
+    public void onBackPressed() {
+        ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
+        if (exploreFragment.getCurrentItem()==0 && exploreMapFragment.isPlacesViewerVisible()) {
+            exploreMapFragment.hidePlace();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    /* ============================================================================================*/
     /* Methods */
     /* ============================================================================================*/
 
@@ -166,79 +183,6 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
 
         return res;
     }
-
-    /*  A QUOI CA SERT CA ???????????????????????????????????????????????????????????
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     *
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     *
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         *
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         *
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.useless_fragment_main, container, false);
-            return rootView;
-        }
-    }
-*/
 
     /* ============================================================================================*/
     /* DRAWER */
@@ -316,6 +260,7 @@ public class ExploreActivity extends BaseActivity implements NavigationView.OnNa
                 showAddSpotButton();
                 newFragmentTAG = "Explore";
                 newFragment = new ExploreFragment();
+                exploreFragment = (ExploreFragment) newFragment;
         }
 
         //Set The action bar Title

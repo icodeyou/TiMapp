@@ -1,6 +1,7 @@
 package com.timappweb.timapp.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,15 +16,23 @@ import com.timappweb.timapp.R;
 
 public class ExploreFragment extends Fragment{
 
+    private TabsAdapter tabsAdapter;
+    private ViewPager viewPager;
+
+    public ExploreMapFragment getExploreMapFragment(){
+        return tabsAdapter.getExploreMapFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_explore, container, false);
         Log.d("ExploreFragment", "View is created");
-        ViewPager viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
+        viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
         PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
         /** Important: Must use the child FragmentManager or you will see side effects. */
-        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
+        this.tabsAdapter =new TabsAdapter(getChildFragmentManager());
+        viewPager.setAdapter(this.tabsAdapter);
 
         //hide underline
         pagerTabStrip.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -33,10 +42,20 @@ public class ExploreFragment extends Fragment{
         return root;
     }
 
-    public static class MyAdapter extends FragmentPagerAdapter {
-        public MyAdapter(FragmentManager fm) {
+    public int getCurrentItem() {
+        return viewPager.getCurrentItem();
+    }
+
+    public static class TabsAdapter extends FragmentPagerAdapter {
+        public TabsAdapter(FragmentManager fm) {
             super(fm);
         }
+
+        public ExploreMapFragment getExploreMapFragment() {
+            return exploreMapFragment;
+        }
+
+        private ExploreMapFragment exploreMapFragment;
 
         @Override
         public int getCount() {
@@ -46,7 +65,8 @@ public class ExploreFragment extends Fragment{
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
-                return new ExploreMapFragment();
+                exploreMapFragment = new ExploreMapFragment();
+                return exploreMapFragment;
             } else {
                 return new ExplorePlacesFragment();
             }
@@ -58,7 +78,7 @@ public class ExploreFragment extends Fragment{
                 return "MAP";
             }
             else {
-                return "SPOTS";
+                return "EVENTS";
             }
         }
     }

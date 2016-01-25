@@ -2,12 +2,14 @@ package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
@@ -37,6 +39,8 @@ public class PlaceActivity extends BaseActivity{
     private Button comingButton;
     private Button addTagsButton;
     private View   progressView;
+
+    private ShareActionProvider shareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,8 @@ public class PlaceActivity extends BaseActivity{
             loadPlace(placeId);
         };
     }
+
+
 
     private void initBottomButton() {
         if(MyApplication.lastLocation!=null) {
@@ -107,7 +113,7 @@ public class PlaceActivity extends BaseActivity{
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG);
+                Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG).show();
                 // TODO cannot load place (invalid ? )
                 IntentsUtils.home(that);
             }
@@ -130,6 +136,8 @@ public class PlaceActivity extends BaseActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_place, menu);
+        MenuItem shareItem = menu.findItem(R.id.action_share);
+        //shareActionProvider =
         return true;
     }
 
@@ -140,8 +148,8 @@ public class PlaceActivity extends BaseActivity{
             case R.id.action_share:
                 /////Handle share actions here
                 return true;
-            case R.id.action_RT:
-                /////Handle RT actions here
+            case R.id.action_reload:
+                IntentsUtils.reload(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -150,7 +158,7 @@ public class PlaceActivity extends BaseActivity{
 
     @Override
     public void onBackPressed() {
-        IntentsUtils.home(this);
+        NavUtils.navigateUpFromSameTask(this);
     }
 
     private void initPlaceAdapters() {

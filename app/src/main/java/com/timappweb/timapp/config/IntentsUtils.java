@@ -122,6 +122,13 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
+    public static void reload(Activity activity) {
+        activity.finish();
+        activity.overridePendingTransition( 0, 0);
+        Intent intent = activity.getIntent();
+        activity.startActivity(intent);
+        activity.overridePendingTransition( 0, 0);
+    }
 
     public static Place extractPlace(Intent intent) {
         Bundle extras = intent.getExtras();

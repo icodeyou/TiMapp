@@ -2,6 +2,7 @@ package com.timappweb.timapp.rest;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.model.RestError;
@@ -21,6 +22,7 @@ public abstract class RestCallback<T> implements Callback<T> {
 
     public void failure(RestError error){
         String userMessage = null;
+
         switch (error.getCode()){
             case 500:
             case 400:
@@ -42,13 +44,18 @@ public abstract class RestCallback<T> implements Callback<T> {
 
     @Override
     public void failure(RetrofitError error) {
-        RestError restError = (RestError) error.getBodyAs(RestError.class);
-
-        if (restError != null){
-            failure(restError);
+        if(error.isNetworkError()) {
+            Toast.makeText(this.context, R.string.please_enable_internet, Toast.LENGTH_LONG).show();
         }
         else {
-            failure(new RestError(error.getMessage(), -1));
+            RestError restError = (RestError) error.getBodyAs(RestError.class);
+
+            if (restError != null){
+                failure(restError);
+            }
+            else {
+                failure(new RestError(error.getMessage(), -1));
+            }
         }
     }
 

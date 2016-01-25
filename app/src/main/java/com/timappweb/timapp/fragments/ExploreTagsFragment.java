@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.QueryCondition;

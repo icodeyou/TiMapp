@@ -9,14 +9,14 @@ import android.widget.Toast;
 public class Feedback {
 
     public static void show(Context c, String m){
-        Toast.makeText(c, m, Toast.LENGTH_LONG);
+        Toast.makeText(c, m, Toast.LENGTH_LONG).show();
     }
 
     public static void show(Context c, int r){
-        Toast.makeText(c, c.getResources().getString(r), Toast.LENGTH_LONG);
+        Toast.makeText(c, c.getResources().getString(r), Toast.LENGTH_LONG).show();
     }
 
     public static void error(Context applicationContext, String s) {
-        Toast.makeText(applicationContext, s, Toast.LENGTH_LONG);
+        Toast.makeText(applicationContext, s, Toast.LENGTH_LONG).show();
     }
 }
