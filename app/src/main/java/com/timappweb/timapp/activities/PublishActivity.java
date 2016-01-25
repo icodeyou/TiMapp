@@ -96,12 +96,12 @@ public class PublishActivity extends BaseActivity{
     }
 
     private void setCheckbox() {
-
         currentPost.anonymous = checkBox.isSelected();
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPost.anonymous = v.isSelected();
+                Log.d(TAG, "Is anonymous: " + checkBox.isSelected());
+                currentPost.anonymous = checkBox.isSelected();
             }
         });
     }
