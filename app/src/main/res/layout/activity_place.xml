@@ -54,7 +54,7 @@
         android:layout_height="50dp"
         android:background="@color/colorAccent"
         android:textColor="@color/White"
-        android:text="@string/button_add_some_tags"
+        android:text="@string/button_add_tags"
         android:textSize="@dimen/text_huge"
         android:visibility="gone"/>
 

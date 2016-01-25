@@ -172,7 +172,7 @@
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.AddPlaceActivity"
-            android:label="Add Spot"
+            android:label="Add Event"
             android:parentActivityName=".activities.LocateActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

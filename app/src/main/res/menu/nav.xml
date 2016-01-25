@@ -6,7 +6,7 @@
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_menu_camera"
                 android:title="Explore" />
             <item android:id="@+id/menu_item_threel" android:icon="@drawable/grey_plus_button"
-                android:title="Threel" />
+                android:title="@string/tag_around" />
             <!--
             <item android:id="@+id/item_spot" android:icon="@android:drawable/ic_menu_send"
                 android:title="Spot" />
