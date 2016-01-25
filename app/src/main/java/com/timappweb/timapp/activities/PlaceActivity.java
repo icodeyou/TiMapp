@@ -161,7 +161,6 @@ public class PlaceActivity extends BaseActivity{
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text));
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_message_subject));
         startActivity(Intent.createChooser(sharingIntent, "Share using"));
     }
 

@@ -38,8 +38,9 @@
     <string name="title_search">Search</string>
 
     <!-- Nav -->
-    <string name="nav_tag_around">Tag around</string>
     <string name="nav_explore">Explore</string>
+    <string name="nav_tag_around">Tag around</string>
+    <string name="nav_share">Share with your friends</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -90,4 +91,6 @@
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
+    <string name="text_share_activity">Your experience will improve as the number of users raises.\nHelp us make this app famous by sharing it as much as possible.</string>
+    <string name="subject_share_activity">Share TiMapp \n with your friends !</string>
 </resources>

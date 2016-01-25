@@ -16,6 +16,7 @@ import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
+import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
@@ -30,6 +31,11 @@ public class IntentsUtils {
 
     public static void profile(Activity activity){
         Intent intent = new Intent(activity, ProfileActivity.class);
+        activity.startActivity(intent);
+    }
+
+    public static void share(Activity activity){
+        Intent intent = new Intent(activity, ShareActivity.class);
         activity.startActivity(intent);
     }
 
@@ -123,7 +129,7 @@ public class IntentsUtils {
 
     public static void reload(Activity activity) {
         activity.finish();
-        activity.overridePendingTransition( 0, 0);
+        activity.overridePendingTransition(0, 0);
         Intent intent = activity.getIntent();
         activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);

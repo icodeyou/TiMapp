@@ -104,6 +104,7 @@ public class TagActivity extends BaseActivity{
                 Tag tag = (Tag) item;
                 suggestedTagsRV.removeItem(item);
                 searchView.setQuery(tag.name, true);
+                searchView.clearFocus();
             }
         });
 

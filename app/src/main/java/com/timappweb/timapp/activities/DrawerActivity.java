@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
@@ -214,14 +213,17 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             IntentsUtils.home(this);
             //changeCurrentFragment(FragmentId.Explore);
         }
+        else if (id == R.id.menu_item_tag_around){
+            IntentsUtils.addPostStepLocate(this);
+        }
+        else if (id == R.id.menu_item_share){
+            IntentsUtils.share(this);
+        }
         else if (id == R.id.menu_item_profile) {
             IntentsUtils.profile(this);
         }
         else if (id == R.id.menu_item_settings) {
             IntentsUtils.settings(this);
-        }
-        else if (id == R.id.menu_item_threel){
-            IntentsUtils.addPostStepLocate(this);
         }
         else if (id == R.id.menu_item_login){
             IntentsUtils.login(this);
