@@ -85,7 +85,8 @@
     <string name="text_last_post">Last post</string>
     <string name="button_add_tags">Add 3 tags</string>
     <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
-    <string name="text_no_event_around">There isn\'t any event near you right now. Feel free to create one to inform the world.</string>
+    <string name="text_no_event_around1">There isn\'t any event near you right now.</string>
+    <string name="text_no_event_around2">Feel free to create one to inform the world.</string>
     <string name="menu_share">Share</string>
     <string name="menu_reload">Reload</string>
     <string name="share_place_text">http://Lien_de_la_place</string>
@@ -93,4 +94,5 @@
     <string name="share_message_subject">TiMapp</string>
     <string name="text_share_activity">Your experience will improve as the number of users raises.\nHelp us make this app famous by sharing it as much as possible.</string>
     <string name="subject_share_activity">Share TiMapp \n with your friends !</string>
+    <string name="loading_location">Loading Location</string>
 </resources>

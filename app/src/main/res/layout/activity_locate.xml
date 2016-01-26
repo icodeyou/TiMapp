@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_huge"
-            android:text="Where are you ?"/>
+            android:text="@string/loading_location"/>
         <ProgressBar
             android:layout_width="50dp"
             android:layout_height="50dp" />
@@ -47,21 +47,30 @@
             android:background="@color/colorPrimaryDark"/>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_if_no_place"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
         android:visibility="gone">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/Black"
+            android:gravity="center"
+            android:textSize="@dimen/text_huge"
+            android:text="@string/text_no_event_around1"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="80dp"
             android:gravity="center"
             android:textColor="@color/Black"
             android:textSize="@dimen/text_normal"
-            android:text="@string/text_no_event_around"/>
-    </LinearLayout>
+            android:text="@string/text_no_event_around2"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/button_add_spot"
