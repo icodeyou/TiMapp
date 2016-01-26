@@ -20,6 +20,8 @@ public class Configuration {
     public static final String TAG_MIN_SEARCH_LENGTH = "tag.minsearchlength";
     public static final String TAG_MAX_RESULT_SIZE = "tag.maxresults";
     public static final String PLACE_REACHABLE_DISTANCE = "place.reachabledistance";
+    public static final java.lang.String GPS_MIN_ACCURACY = "gps.accuracy";
+    public static final java.lang.String GPS_MIN_TIME_DELAY = "gps.time";
 
     private Context context;
     private static Properties properties;
@@ -68,5 +70,4 @@ public class Configuration {
             return defaultValue;
         }
     }
-
 }

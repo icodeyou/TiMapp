@@ -137,9 +137,10 @@ public class LocateActivity extends BaseActivity{
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i(TAG, "Location has changed: " + Util.print(location));
-                loadPlaces(location);
                 MyApplication.setLastLocation(location);
+                if (MyApplication.hasFineLocation()){
+                    loadPlaces(location);
+                }
                 //startIntentServiceReverseGeocoding(location);
             }
         };

@@ -13,6 +13,7 @@ import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -95,11 +96,27 @@ public class MyApplication extends Application{
         }
     }
     public static void setLastLocation(Location l) {
+        Log.i(TAG, "Location has changed: " + Util.print(l));
         Log.d(TAG, "Last location accuracy: " + l.getAccuracy());
         lastLocation = l;
     }
+
+    /**
+     * Check if there is a last location that is not outdated
+     * @return
+     */
     public static boolean hasLastLocation() {
-        return lastLocation != null;
+        return lastLocation != null &&
+                (lastLocation.getTime() - System.currentTimeMillis()) < MyApplication.config.getInt(Configuration.GPS_MIN_TIME_DELAY, 10000);
+    }
+
+    /**
+     * Check if there is a last location with a fine location
+     * @return
+     */
+    public static boolean hasFineLocation() {
+        return hasLastLocation() &&
+                lastLocation.getAccuracy() <= MyApplication.config.getInt(Configuration.GPS_MIN_ACCURACY);
     }
 
     public static Location getLastLocation() {

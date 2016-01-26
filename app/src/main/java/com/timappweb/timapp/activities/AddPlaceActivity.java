@@ -178,13 +178,15 @@ public class AddPlaceActivity extends BaseActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MyApplication.hasLastLocation()) {
+                if (MyApplication.hasFineLocation()) {
                     setProgressView(true);
                     final Place place = new Place(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude(), groupNameET.getText().toString(), categorySelected);
                     submitPlace(place);
+                } else if (MyApplication.hasLastLocation()){
+                    Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Click on add place before having a user location");
-                    Toast.makeText(getBaseContext(), "We don't have your position yet. Please wait", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Please wait we are getting your location...", Toast.LENGTH_LONG).show();
                 }
             }
         });
