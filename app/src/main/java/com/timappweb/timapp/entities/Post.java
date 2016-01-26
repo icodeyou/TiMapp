@@ -32,6 +32,7 @@ public class Post implements Serializable, MarkerValueInterface {
     public String tag_string;
     public String comment;
     public boolean anonymous;
+    private List<Tag> tags;
 
     public String country;
     public String state;
@@ -41,7 +42,6 @@ public class Post implements Serializable, MarkerValueInterface {
 
     public String address = "";
 
-    private List<Tag> tags;
 
     public void setTags(List<Tag> tags){
         this.tag_string = "";

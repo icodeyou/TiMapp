@@ -91,14 +91,17 @@ public class ProfileActivity extends BaseActivity{
                 mUser = user;
                 tvUsername.setText(mUser.username);
                 tvCountTags.setText(String.valueOf(mUser.count_posts));
-                //TODO : set number of places that the user created
-                //tvCountPlaces.setText();
+                tvCountPlaces.setText(String.valueOf(mUser.count_places));
 
                 // Setting the last post
-                if (mUser.posts != null && mUser.posts.size() > 0){
-                    //TODO : User should be different from zero
+                if (mUser.posts != null && mUser.posts.size() > 0) {
                     Post post = mUser.posts.getFirst();
                     ArrayList<String> arrayTags = post.getTagsToStringArray();
+                    /*
+                    for (Tag tag : arrayTags) {
+                        String tag1 = "#" + arrayTags.get(1);
+
+                    }*/
                     String tag1 = "#" + arrayTags.get(1);
                     String tag2 = "#" + arrayTags.get(2);
                     String tag3 = "#" + arrayTags.get(3);

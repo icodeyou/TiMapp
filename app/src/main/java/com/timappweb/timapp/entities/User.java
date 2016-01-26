@@ -14,6 +14,7 @@ public class User implements Serializable {
     public String password;
     public String email;
     public int count_posts = 0;
+    public int count_places = 0;
     public int id;
     private boolean status = false;
 
