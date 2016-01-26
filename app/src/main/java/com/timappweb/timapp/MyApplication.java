@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.Configuration;
@@ -23,9 +24,8 @@ public class MyApplication extends Application{
         return RestClient.instance().getCurrentUser();
     }
     public static List<Category> categories = new LinkedList<>();
-    public static Location lastLocation = null;
+    private static Location lastLocation = null;
     public static Configuration config;
-
 
     @Override
     public void onCreate(){
@@ -94,6 +94,18 @@ public class MyApplication extends Application{
             RestClient.instance().logoutUser();
         }
     }
+    public static void setLastLocation(Location l) {
+        Log.d(TAG, "Last location accuracy: " + l.getAccuracy());
+        lastLocation = l;
+    }
+    public static boolean hasLastLocation() {
+        return lastLocation != null;
+    }
+
+    public static Location getLastLocation() {
+        return lastLocation;
+    }
+
 
 
 

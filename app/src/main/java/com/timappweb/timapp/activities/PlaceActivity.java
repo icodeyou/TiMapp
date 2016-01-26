@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
@@ -38,7 +40,7 @@ public class PlaceActivity extends BaseActivity{
     private Place place;
     private int placeId;
     private Button comingButton;
-    private Button addTagsButton;
+    private Button addPostButton;
     private View   progressView;
 
     private ShareActionProvider shareActionProvider;
@@ -60,7 +62,7 @@ public class PlaceActivity extends BaseActivity{
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
         comingButton = (Button) findViewById(R.id.button_coming);
-        addTagsButton = (Button) findViewById(R.id.button_add_some_tags);
+        addPostButton = (Button) findViewById(R.id.button_add_some_tags);
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
@@ -78,9 +80,9 @@ public class PlaceActivity extends BaseActivity{
 
 
     private void initBottomButton() {
-        if(MyApplication.lastLocation!=null) {
-            double latitude =  MyApplication.lastLocation.getLatitude();
-            double longitude = MyApplication.lastLocation.getLongitude();
+        if(MyApplication.hasLastLocation()) {
+            double latitude =  MyApplication.getLastLocation().getLatitude();
+            double longitude = MyApplication.getLastLocation().getLongitude();
         }
         // TODO steph: display the right button. ex: comingButton.setVisibility(View.VISIBLE);
     }
@@ -124,11 +126,36 @@ public class PlaceActivity extends BaseActivity{
 
 
     private void notifyPlaceLoaded() {
-        // called when the place is loaded
-        // this.place is the place loaded
-
         progressView.setVisibility(View.GONE);
         initPlaceAdapters();
+
+        if (!MyApplication.hasLastLocation()) {
+            this.initLocationProvider(new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    MyApplication.setLastLocation(location);
+                    updateBtnVisible();
+                }
+            });
+        }
+        else{
+            this.updateBtnVisible();
+        }
+    }
+
+    /**
+     * Show or hide add post or comming button according to user location
+     */
+    private void updateBtnVisible(){
+        // Check if the user can post in this place
+        if (place.isReachable()){
+            addPostButton.setVisibility(View.VISIBLE);
+            comingButton.setVisibility(View.GONE);
+        }
+        else{
+            comingButton.setVisibility(View.VISIBLE);
+            addPostButton.setVisibility(View.GONE);
+        }
     }
 
     //Menu Action Bar

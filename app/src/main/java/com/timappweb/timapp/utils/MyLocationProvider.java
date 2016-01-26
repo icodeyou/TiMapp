@@ -21,6 +21,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
@@ -245,13 +246,10 @@ public class MyLocationProvider implements
 
         // Est-ce que le fournisseur doit être capable de donner une altitude ?
         criteria.setAltitudeRequired(false);
-
         // Est-ce que le fournisseur doit être capable de donner une direction ?
         criteria.setBearingRequired(false);
-
         // Est-ce que le fournisseur peut être payant ?
         criteria.setCostAllowed(false);
-
         // Pour indiquer la consommation d'énergie demandée
         // Criteria.POWER_HIGH pour une haute consommation, Criteria.POWER_MEDIUM pour une consommation moyenne et Criteria.POWER_LOW pour une basse consommation
         criteria.setPowerRequirement(Criteria.POWER_HIGH);

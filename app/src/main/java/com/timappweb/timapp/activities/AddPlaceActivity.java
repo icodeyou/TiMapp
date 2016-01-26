@@ -78,7 +78,7 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void onLocationChanged(Location l) {
                 Log.i(TAG, "Location has changed: " + Util.print(l));
-                MyApplication.lastLocation = l;
+                MyApplication.setLastLocation(l);
             }
         });
     }
@@ -114,8 +114,8 @@ public class AddPlaceActivity extends BaseActivity {
                 if (restFeedback.success) {
                     Log.d(TAG, "Place has been saved: " + place);
                     Post post = new Post();
-                    post.latitude = MyApplication.lastLocation.getLatitude();
-                    post.longitude = MyApplication.lastLocation.getLongitude();
+                    post.latitude = MyApplication.getLastLocation().getLatitude();
+                    post.longitude = MyApplication.getLastLocation().getLongitude();
                     place.id = Integer.parseInt(restFeedback.data.get("id"));
                     IntentsUtils.addPostStepTags(this.context, place, post);
                 } else {
@@ -178,9 +178,9 @@ public class AddPlaceActivity extends BaseActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MyApplication.lastLocation != null) {
+                if (MyApplication.hasLastLocation()) {
                     setProgressView(true);
-                    final Place place = new Place(MyApplication.lastLocation.getLatitude(), MyApplication.lastLocation.getLongitude(), groupNameET.getText().toString(), categorySelected);
+                    final Place place = new Place(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude(), groupNameET.getText().toString(), categorySelected);
                     submitPlace(place);
                 } else {
                     Log.d(TAG, "Click on add place before having a user location");

@@ -2,6 +2,8 @@ package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.config.Configuration;
+import com.timappweb.timapp.utils.DistanceHelper;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -113,5 +115,19 @@ public class Place implements Serializable, MarkerValueInterface {
 
     public int getResource() {
         return MyApplication.getCategory(this.category_id).resource;
+    }
+
+    /**
+     * @param latitude
+     * @param longitude
+     * @return true if the user can post in the place
+     */
+    public boolean isReachable(double latitude, double longitude) {
+        return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
+                < MyApplication.config.getInt(Configuration.PLACE_REACHABLE_DISTANCE, 0);
+    }
+
+    public boolean isReachable() {
+        return this.isReachable(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude());
     }
 }

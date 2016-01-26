@@ -85,8 +85,8 @@ public class LocateActivity extends BaseActivity{
                 // We know that lastLocation is define because places are loaded only when location is defined
                 Place place = placesAdapter.getItem(position);
                 Post post = new Post();
-                post.longitude = MyApplication.lastLocation.getLongitude();
-                post.latitude = MyApplication.lastLocation.getLatitude();
+                post.longitude = MyApplication.getLastLocation().getLongitude();
+                post.latitude = MyApplication.getLastLocation().getLatitude();
                 IntentsUtils.addPostStepTags(that, place, post);
             }
 
@@ -139,7 +139,7 @@ public class LocateActivity extends BaseActivity{
             public void onLocationChanged(Location location) {
                 Log.i(TAG, "Location has changed: " + Util.print(location));
                 loadPlaces(location);
-                MyApplication.lastLocation = location;
+                MyApplication.setLastLocation(location);
                 //startIntentServiceReverseGeocoding(location);
             }
         };

@@ -19,6 +19,7 @@ public class Configuration {
     public static final String TAG_MAX_LENGTH = "tag.maxlength";
     public static final String TAG_MIN_SEARCH_LENGTH = "tag.minsearchlength";
     public static final String TAG_MAX_RESULT_SIZE = "tag.maxresults";
+    public static final String PLACE_REACHABLE_DISTANCE = "place.reachabledistance";
 
     private Context context;
     private static Properties properties;
