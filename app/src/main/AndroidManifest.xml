@@ -171,10 +171,20 @@
                 android:value=".activities.DrawerActivity" />
         </activity>
 
-        <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
+        <!-- ADDPLACE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.AddPlaceActivity"
             android:label="Add Event"
             android:parentActivityName=".activities.LocateActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.LocateActivity" />
+        </activity>
+
+        <!-- SHARE ACTIVITY //////////////////////////////////////////////-->
+        <activity android:name=".activities.ShareActivity"
+            android:label="Add Event"
+            android:parentActivityName=".activities.DrawerActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

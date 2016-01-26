@@ -5,8 +5,10 @@
         <menu>
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_menu_camera"
                 android:title="@string/nav_explore" />
-            <item android:id="@+id/menu_item_threel" android:icon="@android:drawable/ic_input_add"
+            <item android:id="@+id/menu_item_tag_around" android:icon="@android:drawable/ic_input_add"
                 android:title="@string/nav_tag_around" />
+            <item android:id="@+id/menu_item_share" android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/nav_share" />
             <!--
             <item android:id="@+id/item_spot" android:icon="@android:drawable/ic_menu_send"
                 android:title="Spot" />
