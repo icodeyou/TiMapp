@@ -82,6 +82,10 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Click on place adapter");
+                if (!MyApplication.hasFineLocation()){
+                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 // We know that lastLocation is define because places are loaded only when location is defined
                 Place place = placesAdapter.getItem(position);
                 Post post = new Post();

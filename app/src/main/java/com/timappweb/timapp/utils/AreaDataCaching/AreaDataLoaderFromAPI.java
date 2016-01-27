@@ -83,6 +83,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                 }
 
                 if (placesAdapter != null){
+                    placesAdapter.clear();
                     placesAdapter.addAll(places);
                 }
             }

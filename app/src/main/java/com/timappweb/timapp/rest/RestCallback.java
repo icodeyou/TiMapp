@@ -20,7 +20,7 @@ public abstract class RestCallback<T> implements Callback<T> {
         this.context = context;
     }
 
-    public void failure(RestError error){
+    private void failure(RestError error){
         String userMessage = null;
 
         switch (error.getCode()){

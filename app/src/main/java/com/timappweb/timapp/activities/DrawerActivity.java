@@ -28,7 +28,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private static final String TAG = "DrawerActivity";
     /* ============================================================================================*/
     /* PROPERTIES */
-    /* ============================================================================================*/
+    /* =========================================
+    ===================================================*/
     // Drawer
     private DrawerLayout mDrawerLayout;
     private CharSequence mDrawerTitle;

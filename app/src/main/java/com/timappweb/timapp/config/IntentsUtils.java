@@ -149,4 +149,11 @@ public class IntentsUtils {
         }
         return (Post) extras.getSerializable("post");
     }
+
+    public static void addPostStepTags(Context context, Place place) {
+        Post post = new Post();
+        post.latitude = MyApplication.getLastLocation().getLatitude();
+        post.longitude = MyApplication.getLastLocation().getLongitude();
+        IntentsUtils.addPostStepTags(context, place, post);
+    }
 }

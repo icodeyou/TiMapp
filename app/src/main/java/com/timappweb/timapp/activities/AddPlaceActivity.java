@@ -32,6 +32,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 
+import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class AddPlaceActivity extends BaseActivity {
@@ -126,7 +127,7 @@ public class AddPlaceActivity extends BaseActivity {
             }
 
             @Override
-            public void failure(RestError error) {
+            public void failure(RetrofitError error) {
                 super.failure(error);
                 setProgressView(true);
             }

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +22,15 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.fragments.PlacePostsFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
+import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.rest.model.RestError;
+import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
 import java.util.Vector;
@@ -42,12 +48,14 @@ public class PlaceActivity extends BaseActivity{
     private Button comingButton;
     private Button addPostButton;
     private View   progressView;
+    private Activity currentActivity;
 
     private ShareActionProvider shareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentActivity = this;
 
         this.place = IntentsUtils.extractPlace(getIntent());
         placeId = getIntent().getIntExtra("id", -1);
@@ -62,7 +70,70 @@ public class PlaceActivity extends BaseActivity{
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
         comingButton = (Button) findViewById(R.id.button_coming);
+        comingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO fine location
+                if (!MyApplication.hasLastLocation()){
+                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                QueryCondition conditions = new QueryCondition();
+                conditions.setPlaceId(placeId);
+                conditions.setAnonymous(false);
+                conditions.setUserLocation(MyApplication.getLastLocation());
+                RestClient.service().placeComing(conditions.toMap(), new RestCallback<RestFeedback>(currentActivity) {
+                    @Override
+                    public void success(RestFeedback restFeedback, Response response) {
+                        if (restFeedback.success){
+                            Log.d(TAG, "Success register here for user");
+                        }
+                        else{
+                            Log.d(TAG, "Fail register here for user");
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        super.failure(error);
+                        Log.d(TAG, "Fail register coming for user");
+                    }
+                });
+            }
+        });
+
         addPostButton = (Button) findViewById(R.id.button_add_some_tags);
+        addPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO fine location
+                if (!MyApplication.hasLastLocation()){
+                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                QueryCondition conditions = new QueryCondition();
+                conditions.setPlaceId(placeId);
+                conditions.setAnonymous(false);
+                conditions.setUserLocation(MyApplication.getLastLocation());
+                RestClient.service().placeComing(conditions.toMap(), new RestCallback<RestFeedback>(currentActivity) {
+                    @Override
+                    public void success(RestFeedback restFeedback, Response response) {
+                        if (restFeedback.success){
+                            Log.d(TAG, "Success register here for user");
+                        }
+                        else{
+                            Log.d(TAG, "Fail register here for user");
+                        }
+                        // TODO jean:  google map
+                    }
+
+                });
+
+                IntentsUtils.addPostStepTags(currentActivity, place);
+            }
+        });
+
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
@@ -128,8 +199,10 @@ public class PlaceActivity extends BaseActivity{
     private void notifyPlaceLoaded() {
         progressView.setVisibility(View.GONE);
         initPlaceAdapters();
+        this.updateBtnVisible();
 
         if (!MyApplication.hasLastLocation()) {
+            Log.d(TAG, "There is no last known location");
             this.initLocationProvider(new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
@@ -138,17 +211,19 @@ public class PlaceActivity extends BaseActivity{
                 }
             });
         }
-        else{
-            this.updateBtnVisible();
-        }
     }
 
     /**
      * Show or hide add post or comming button according to user location
      */
     private void updateBtnVisible(){
+        Log.d(TAG, "PlaceActivity.updateBtnVisible()");
         // Check if the user can post in this place
-        if (place.isReachable()){
+        if (!MyApplication.hasLastLocation()) {
+            addPostButton.setVisibility(View.GONE);
+            comingButton.setVisibility(View.GONE);
+        }
+        else if (place.isReachable()){
             addPostButton.setVisibility(View.VISIBLE);
             comingButton.setVisibility(View.GONE);
         }

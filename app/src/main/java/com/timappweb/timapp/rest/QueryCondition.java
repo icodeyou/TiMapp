@@ -1,5 +1,7 @@
 package com.timappweb.timapp.rest;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -65,5 +67,18 @@ public class QueryCondition {
 
     public void setMainTags(boolean b) {
         queryMap.put("main_tags", b ? "1" : "0");
+    }
+
+    public void setPlaceId(int placeId) {
+        queryMap.put("place_id", String.valueOf(placeId));
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        queryMap.put("anonymous", anonymous ? "1" : "0");
+    }
+
+    public void setUserLocation(Location lastLocation) {
+        queryMap.put("latitude", String.valueOf(lastLocation.getLatitude()));
+        queryMap.put("longitude", String.valueOf(lastLocation.getLongitude()));
     }
 }

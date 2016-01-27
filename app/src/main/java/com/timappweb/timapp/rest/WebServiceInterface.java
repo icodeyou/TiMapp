@@ -118,9 +118,30 @@ public interface WebServiceInterface {
 
     /**
      * Used to get all place that are around user position
-     * @param conditions
+     * @param conditions"
      * @param restCallback
      */
     @GET("/Places/reachable.json")
     void placeReachable(@QueryMap Map<String, String> conditions, RestCallback<List<Place>> restCallback);
+
+    // ---------------------------------------------------------------------------------------------
+    // PlacesUsers
+    /**
+     *
+     * @param callback
+     */
+    @POST("/PlacesUsers/coming.json")
+    void placeComing(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
+    /**
+     *
+     * @param callback
+     */
+    @POST("/PlacesUsers/gone.json")
+    void placeGone(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
+    /**
+     *
+     * @param callback
+     */
+    @POST("/PlacesUsers/here.json")
+    void placeHere(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
 }
