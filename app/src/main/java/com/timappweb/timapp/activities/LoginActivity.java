@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,36 +14,44 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsLogger;
+import com.sromku.simple.fb.Permission;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit.client.Response;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "Login";
+    private static final String TAG = "LoginActivity";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -59,15 +68,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     // UI references.
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+//    private EditText mPasswordView;
+//    private View mProgressView;
+//    private View mLoginFormView;
+
+    private SimpleFacebook mSimpleFacebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
+        initToolbar(false);
+
+
+        /*// Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -95,8 +109,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 attemptLogin();
             }
         });
-        mLoginFormView = findViewById(R.id.login_form);
+        mLoginFormView = findViewById(R.id.sign_up_form);
         mProgressView = findViewById(R.id.login_progress);
+*/
+        setListeners();
 
         final Activity that = this;
         Button skipLogin = (Button) findViewById(R.id.skip_loggin_button);
@@ -104,6 +120,63 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             @Override
             public void onClick(View v) {
                 IntentsUtils.home(that);
+            }
+        });
+    }
+
+    private void setListeners() {
+
+        final Activity that = this;
+        ImageButton loginButton = (ImageButton) findViewById(R.id.login_button);
+        final OnLoginListener onLoginListener = new OnLoginListener() {
+
+            @Override
+            public void onLogin(String accessToken, List<Permission> acceptedPermissions, List<Permission> declinedPermissions) {
+                Log.i(TAG, "Logging in");
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("access_token", accessToken);
+                RestClient.service().facebookLogin(params, new RestCallback<RestFeedback>(that) {
+                    @Override
+                    public void success(RestFeedback restFeedback, Response response) {
+                        if (restFeedback.success
+                                && restFeedback.data.containsKey("token")
+                                && restFeedback.data.containsKey("username")) {
+                            User user = new User("", "");
+                            String token = (String) restFeedback.data.get("token");
+                            user.username = restFeedback.data.get("username");
+                            Log.i(TAG, "Session created with session token: " + token);
+                            RestClient.instance().createLoginSession(token, user);
+                            IntentsUtils.lastActivityBeforeLogin(that);
+                        } else {
+                            Log.i(TAG, "User attempt to connect with wrong credential");
+                        }
+
+                    }
+
+                });
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "Facebook connection canceled");
+            }
+
+            @Override
+            public void onFail(String reason) {
+                Log.d(TAG, "Facebook connection failed : " + reason);
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                Log.d(TAG, "Facebook connection.. OnException: " + throwable.getMessage());
+            }
+
+        };
+
+        loginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSimpleFacebook.login(onLoginListener);
             }
         });
     }
@@ -119,7 +192,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    public void attemptLogin() {
+    /*public void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
@@ -169,8 +242,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 IntentsUtils.home(this);
             }
             else{
-                showProgress(true);
-                mAuthTask = new UserLoginTask(this, email, password);
+                //showProgress(true);
+                mAuthTask = new UserLoginTask(this);
                 mAuthTask.execute((Void) null);
             }
         }
@@ -186,9 +259,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         return password.length() > MINMUM_PASSWORD_LENGTH;
     }
 
-    /**
+    *//**
      * Shows the progress UI and hides the login form.
-     */
+     *//*
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -220,6 +293,30 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -282,19 +379,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
         private final Activity activity;
 
-        UserLoginTask(Activity act, String email, String password) {
+        /*UserLoginTask(Activity act, String email, String password) {
             mEmail = email;
             mPassword = password;
             this.activity = act;
+        }*/
+
+        UserLoginTask(Activity activity) {
+            this.activity = activity;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            User user = new User(mEmail, mPassword);
+            User user = new User("test@mail.com", "test");
             Log.d(TAG, "Try login for user: " + user.toString());
 
             try{
@@ -328,10 +427,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             return false;
         }
 
-        @Override
+        /*@Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
+            //showProgress(false);
 
             if (success) {
                 finish();
@@ -344,8 +443,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
-        }
+            //showProgress(false);
+        }*/
     }
 }
 

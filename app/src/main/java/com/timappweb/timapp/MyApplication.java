@@ -7,6 +7,9 @@ import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import com.sromku.simple.fb.Permission;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.Configuration;
 import com.timappweb.timapp.data.LocalPersistenceManager;
@@ -40,6 +43,23 @@ public class MyApplication extends Application{
 
         // Load configuration
         config = new Configuration(getApplicationContext(), "configuration.properties"); // TODO use ressource
+
+        //*******FACEBOOK******
+        initFacebookPermissions();
+
+    }
+
+    private void initFacebookPermissions() {
+        Permission[] permissions = new Permission[] {
+                Permission.USER_PHOTOS,
+                Permission.EMAIL,
+        };
+        SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
+                .setAppId(getResources().getString(R.string.app_id))
+                .setNamespace(getResources().getString(R.string.namespace))
+                .setPermissions(permissions)
+                .build();
+        SimpleFacebook.setConfiguration(configuration);
     }
 
     public void initCategories(){

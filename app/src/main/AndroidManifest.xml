@@ -28,7 +28,7 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/test20"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
@@ -38,6 +38,9 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id"/>
 
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
         <activity
@@ -56,7 +59,11 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".activities.DrawerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <service
@@ -190,6 +197,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
         </activity>
+
+        <!-- FACEBOOK ACTIVITY //////////////////////////////////////////////-->
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
 
     </application>
 </manifest>

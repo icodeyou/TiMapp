@@ -35,10 +35,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:inputType="textCapWords"
             android:gravity="center"
             android:textSize="@dimen/text_small"
-            android:textColor="@color/colorAccent"
-            android:text="Name of the category"/>
+            android:textColor="@color/colorAccent"/>
 
         <Button
             android:id="@+id/create_place_button"

@@ -17,6 +17,7 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.MyLocationProvider;
@@ -47,7 +48,6 @@ public class BaseActivity extends AppCompatActivity {
         if (locationProvider != null){
             locationProvider.connect();
         }
-
     }
 
     @Override
@@ -57,7 +57,6 @@ public class BaseActivity extends AppCompatActivity {
         }
         super.onStop();
     }
-
 
     protected void initToolbar(boolean showTitle){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,4 +121,5 @@ public class BaseActivity extends AppCompatActivity {
             }
         }*/
     }
+
 }

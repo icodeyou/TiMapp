@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
@@ -46,6 +47,7 @@ public class AddPlaceActivity extends BaseActivity {
     private Category categorySelected;
     private Button createButton;
     private View progressView;
+    private TextView nameCategoryTV;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -61,6 +63,7 @@ public class AddPlaceActivity extends BaseActivity {
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
         createButton = (Button) findViewById(R.id.create_place_button);
         progressView = findViewById(R.id.progress_view);
+        nameCategoryTV = (TextView) findViewById(R.id.category_name);
 
         initKeyboard();
         setListeners();
@@ -145,6 +148,11 @@ public class AddPlaceActivity extends BaseActivity {
             createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.LightGrey));
         }
     }
+
+    public void setNameCategoryTV(String name) {
+        nameCategoryTV.setText(name);
+    }
+
     //----------------------------------------------------------------------------------------------
     //Public methods
     public RecyclerView getCategoriesRV() {
