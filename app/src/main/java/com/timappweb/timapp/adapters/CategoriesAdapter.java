@@ -50,6 +50,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         holder.getItemView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
                 //Set image to normal for old selected category
                 if (selectedCategory != null) {
                     ImageView oldCategoryIcon = currentCategoryIcon;
@@ -65,8 +66,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
                 currentCategoryIcon = newCategoryIcon;
                 selectedCategory = data.get(position);
 
+                //Set text of category selected
+                String capitalizedNameCategory = newCategory.name.substring(0,1).toUpperCase() + newCategory.name.substring(1);
+                addPlaceActivity.setNameCategoryTV(capitalizedNameCategory);
+
                 //set selectedCategory in AddPlaceActivity
-                AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
                 addPlaceActivity.setCategory(selectedCategory);
                 addPlaceActivity.setButtonValidation();
             }

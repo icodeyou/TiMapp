@@ -1,5 +1,7 @@
 package com.timappweb.timapp.rest.model;
 
+import android.app.Activity;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -21,6 +23,7 @@ public class RestFeedback extends RestResponse {
 
     @SerializedName("data")
     public HashMap<String, String> data;
+
 
 
     public String toString(){

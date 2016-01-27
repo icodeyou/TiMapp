@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.ExploreFragment;
@@ -37,6 +40,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private TextView tvUsername = null;
     private Toolbar toolbar;
     private ExploreFragment exploreFragment;
+
+    private SimpleFacebook mSimpleFacebook;
+    private OnLogoutListener onLogoutListener;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -95,6 +101,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         tvUsername = (TextView) headerView.findViewById(R.id.drawer_username);
 
         // -----------------------------------------------------------------------------------------
+        setListeners();
+
+    }
+
+    private void setListeners() {
         final Activity that = this;
         tvUsername.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +114,24 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             }
         });
 
+        onLogoutListener = new OnLogoutListener() {
+            @Override
+            public void onLogout() {
+                Log.i(TAG, "You are logged out");
+            }
+        };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -217,7 +246,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             IntentsUtils.addPostStepLocate(this);
         }
         else if (id == R.id.menu_item_share){
-            IntentsUtils.share(this);
+//            IntentsUtils.share(this);
+            mSimpleFacebook.logout(onLogoutListener);
         }
         else if (id == R.id.menu_item_profile) {
             IntentsUtils.profile(this);
@@ -230,6 +260,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
         else if (id == R.id.menu_item_logout) {
             IntentsUtils.logout(this);
+            mSimpleFacebook.logout(onLogoutListener);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

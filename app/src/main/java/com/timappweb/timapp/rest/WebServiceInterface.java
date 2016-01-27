@@ -51,6 +51,9 @@ public interface WebServiceInterface {
     @GET("/users/profile/{username}.json")
     void profile(@Path("username") String username, RestCallback<User> restCallback);
 
+    @POST("/users/facebook_login.json")
+    void facebookLogin(@Body Map<String,String> accessToken, RestCallback<RestFeedback> restFeedback);
+
     // ---------------------------------------------------------------------------------------------
     // TAGS
     @GET("/Posts/trending_tags.json")
@@ -123,4 +126,5 @@ public interface WebServiceInterface {
      */
     @GET("/Places/reachable.json")
     void placeReachable(@QueryMap Map<String, String> conditions, RestCallback<List<Place>> restCallback);
+
 }
