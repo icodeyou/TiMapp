@@ -11,7 +11,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public abstract class RestCallback<T> implements Callback<T> {
+public class RestCallback<T> implements Callback<T> {
     private static final String TAG = "RestError";
     protected Context context = null;
 
