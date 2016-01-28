@@ -112,6 +112,8 @@ public class AddPlaceActivity extends BaseActivity {
     private void submitPlace(final Place place){
         Context context = this;
         Log.d(TAG, "Submit place " + place.toString());
+        IntentsUtils.addPostStepTags(context, place);
+        /*
         RestClient.service().addPlace(place, new RestCallback<RestFeedback>(this) {
             @Override
             public void success(RestFeedback restFeedback, Response response) {
@@ -135,6 +137,7 @@ public class AddPlaceActivity extends BaseActivity {
                 setProgressView(true);
             }
         });
+        */
     }
 
     public void setButtonValidation() {

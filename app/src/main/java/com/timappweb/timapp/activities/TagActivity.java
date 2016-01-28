@@ -175,7 +175,6 @@ public class TagActivity extends BaseActivity{
                 break;
             case 3:
                 currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
-                currentPost.place_id = this.currentPlace.id;
                 IntentsUtils.addPostStepPublish(this, this.currentPlace, currentPost);
             default:
                 break;

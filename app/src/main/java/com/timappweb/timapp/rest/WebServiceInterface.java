@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest;
 
+import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.MapTag;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.Field;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -38,6 +40,9 @@ public interface WebServiceInterface {
 
     @POST("/posts/add.json")
     void addPost(@Body Post post, RestCallback<RestFeedback> cb);
+
+    @POST("/posts/add.json")
+    void addPost(@Field("post") Post post, @Field("place") Place place, RestCallback<RestFeedback> cb);
 
     // ---------------------------------------------------------------------------------------------
     // USER
@@ -108,8 +113,9 @@ public interface WebServiceInterface {
      * @param place
      * @param restFeedback
      */
-    @POST("/Places/add.json")
-    void addPlace(@Body Place place, RestCallback<RestFeedback> restFeedback);
+    // @POST("/Places/add.json")
+    // void addPlace(@Body Place place, RestCallback<RestFeedback> restFeedback);
+
 
     /**
      * Used to get all place that are in a area
@@ -147,5 +153,4 @@ public interface WebServiceInterface {
      */
     @POST("/PlacesUsers/here.json")
     void placeHere(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
-
 }

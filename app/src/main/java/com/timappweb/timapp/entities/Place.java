@@ -15,7 +15,7 @@ import java.util.List;
 public class Place implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
-    public int id;
+    public int id = -1;
     public String name;
     public double latitude;
     public int created;
@@ -46,6 +46,14 @@ public class Place implements Serializable, MarkerValueInterface {
     public void addPost(Post post){
         this.count_posts++;
         this.posts.add(post);
+    }
+
+    /**
+     * Return true if this place is not saved on the server
+     * @return
+     */
+    public boolean isNew(){
+        return this.id == -1;
     }
 
     public int countSpot(){
@@ -134,4 +142,6 @@ public class Place implements Serializable, MarkerValueInterface {
     public static boolean isValidName(String name) {
         return name.trim().length() >= MyApplication.config.getInt(Configuration.PLACE_MIN_LENGTH);
     }
+
+
 }

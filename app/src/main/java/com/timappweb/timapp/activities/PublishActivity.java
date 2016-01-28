@@ -22,6 +22,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.RetrofitError;
@@ -121,7 +122,13 @@ public class PublishActivity extends BaseActivity{
                 // Starting service
                 //this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
                 //this.progressDialog.show();
-                RestClient.service().addPost(currentPost, new AddPostCallback(context, currentPost));
+                if (currentPlace.isNew()){
+                    RestClient.service().addPost(currentPost, currentPlace, new AddPostCallback(context, currentPost));
+                }
+                else{
+                    currentPost.place_id = currentPlace.id;
+                    RestClient.service().addPost(currentPost, new AddPostCallback(context, currentPost));
+                }
             }
         });
     }
