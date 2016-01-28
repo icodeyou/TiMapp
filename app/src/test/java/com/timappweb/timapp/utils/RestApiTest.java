@@ -1,5 +1,6 @@
 package com.timappweb.timapp.utils;
 
+
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
@@ -7,6 +8,10 @@ import com.timappweb.timapp.rest.WebServiceInterface;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import org.junit.Test;
+
+import java.io.IOException;
+
+import retrofit2.Response;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -18,21 +23,26 @@ import static org.junit.Assert.assertNotEquals;
 public class RestApiTest {
 
     @Test
-    public void testViewPost(){
+    public void testViewPost() throws IOException {
         WebServiceInterface service = RestClient.service();
-        Post post = service.viewPost(1);
-        assertNotEquals(post, null);
+        retrofit2.Call<Post> call = service.viewPost(1);
+        Response<Post> response = call.execute();
+        assertNotEquals(response.body(), null);
 
     }
 
+    /*
     public void testLogin(){
         User user = new User();
         user.username = "dummy@tiemapp.com";
         user.password = "dummy";
+
+
         RestFeedback feedback = RestClient.service().login(user);
         assertNotEquals(feedback, null);
         assert(feedback.code == 0);
     }
+    */
 
 
 }

@@ -26,8 +26,10 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
 /**
@@ -88,12 +90,17 @@ public class RestClient {
 
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.addInterceptor(new SessionRequestInterceptor());
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClientBuilder.addInterceptor(logging);
         // Executor use to cancel pending request to the server
         // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
         mExecutorService = Executors.newCachedThreadPool();
         builder = new Retrofit.Builder()
                 //.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
                 .baseUrl(endpoint)
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClientBuilder.build());
                 //.setRequestInterceptor(new SessionRequestInterceptor())
                 //.setConverter(new GsonConverter(gson))
