@@ -18,7 +18,9 @@ import com.timappweb.timapp.rest.RestClient;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class PlacePostsFragment extends Fragment {
 
@@ -54,11 +56,15 @@ public class PlacePostsFragment extends Fragment {
 
     private void loadPosts() {
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
-        RestClient.service().viewPostsForPlace(placeActivity.getPlaceId(), new RestCallback<List<Post>>(getContext()) {
+        Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
+        call.enqueue(new RestCallback<List<Post>>(getContext()) {
             @Override
-            public void success(List<Post> posts, Response response) {
-                progressView.setVisibility(View.GONE);
-                notifyPostsLoaded(posts);
+            public void onResponse(Response<List<Post>> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    progressView.setVisibility(View.GONE);
+                    notifyPostsLoaded(response.body());
+                }
             }
         });
     }

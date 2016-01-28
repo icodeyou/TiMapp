@@ -18,6 +18,7 @@ import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -25,8 +26,9 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class PublishActivity extends BaseActivity{
 
@@ -119,16 +121,15 @@ public class PublishActivity extends BaseActivity{
                 }
                 Log.d(TAG, "Submitting post: " + currentPost);
 
-                // Starting service
-                //this.progressDialog.setMessage(getResources().getString(R.string.please_wait));
-                //this.progressDialog.show();
+                Call<RestFeedback> call = null;
                 if (currentPlace.isNew()){
-                    RestClient.service().addPost(currentPost, currentPlace, new AddPostCallback(context, currentPost));
+                    call = RestClient.service().addPost(currentPost, currentPlace);
                 }
                 else{
                     currentPost.place_id = currentPlace.id;
-                    RestClient.service().addPost(currentPost, new AddPostCallback(context, currentPost));
+                    call = RestClient.service().addPost(currentPost);
                 }
+                call.enqueue(new AddPostCallback(context, currentPost));
             }
         });
     }
@@ -148,7 +149,7 @@ public class PublishActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Inner classes
-    private class AddPostCallback extends RestCallback<RestFeedback> {
+    private class AddPostCallback extends RestFeedbackCallback {
 
         private final Post post;
         // TODO get post from server instead. (in case tags are in a black list)
@@ -159,22 +160,22 @@ public class PublishActivity extends BaseActivity{
         }
 
         @Override
-        public void success(RestFeedback restFeedback, Response response) {
-            if (restFeedback.success && restFeedback.data.containsKey("id")) {
-                int id = Integer.valueOf(restFeedback.data.get("id"));
-                Log.i(TAG, "Post has been saved. Id is : " + id);
-                //Feedback.show(getApplicationContext(), R.string.feedback_webservice_add_spot)
-                IntentsUtils.viewPlaceFromPublish(this.context, post.place_id);
-            } else {
-                Log.i(TAG, "Cannot add post: " + response.getReason() + " - " + restFeedback.toString());
-                Toast.makeText(this.context, restFeedback.message, Toast.LENGTH_LONG).show();
-                setProgressView(false);
-            }
+        public void onActionSuccess(RestFeedback feedback) {
+            int id = Integer.valueOf(feedback.data.get("id"));
+            Log.i(TAG, "Post has been saved. Id is : " + id);
+            IntentsUtils.viewPlaceFromPublish(this.context, post.place_id);
         }
 
         @Override
-        public void failure(RetrofitError error) {
-            super.failure(error);
+        public void onActionFail(RestFeedback feedback) {
+            Toast.makeText(this.context, feedback.message, Toast.LENGTH_LONG).show();
+            setProgressView(false);
+        }
+
+
+        @Override
+        public void onFailure(Throwable t) {
+            super.onFailure(t);
             setProgressView(false);
         }
     }

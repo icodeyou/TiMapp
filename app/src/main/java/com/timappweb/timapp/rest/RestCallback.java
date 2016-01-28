@@ -5,14 +5,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.config.IntentsUtils;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public abstract class RestCallback<T> implements Callback<T> {
-
     private static final String TAG = "RestError";
     protected Context context = null;
 
@@ -20,43 +19,37 @@ public abstract class RestCallback<T> implements Callback<T> {
         this.context = context;
     }
 
-    private void failure(RestError error){
-        String userMessage = null;
-
-        switch (error.getCode()){
-            case 500:
-            case 400:
-                userMessage = context.getString(R.string.error_server_unavailable);
-                break;
-            case 300:
-            case 403:
-                IntentsUtils.login(this.context);
-                return;
-            case -1:
-                userMessage = context.getString(R.string.error_no_internet);
-                break;
-            default:
-                userMessage = context.getString(R.string.error_unkown);
+    @Override
+    public void onResponse(Response<T> response) {
+        if (!response.isSuccess()){
+            String userMessage =  "";
+            switch (response.code()){
+                case 500:
+                case 400:
+                    userMessage = context.getString(R.string.error_server_unavailable);
+                    break;
+                case 300:
+                case 403:
+                    IntentsUtils.login(this.context);
+                    return;
+                case -1:
+                    userMessage = context.getString(R.string.error_no_internet);
+                    break;
+                default:
+                    userMessage = context.getString(R.string.error_unkown);
+            }
+            Log.i(TAG, "Get server error: " + userMessage + "(" + response.errorBody() + ")");
         }
-        Log.i(TAG, "Get server error: " + userMessage + "(" + error.toString() + ")");
     }
 
-
     @Override
-    public void failure(RetrofitError error) {
-        if(error.isNetworkError()) {
-            Toast.makeText(this.context, R.string.please_enable_internet, Toast.LENGTH_LONG).show();
-        }
-        else {
-            RestError restError = (RestError) error.getBodyAs(RestError.class);
+    public void onFailure(Throwable t) {
+        // handle execution failures like no internet connectivity
+        Log.i(TAG, "onFailure: " + t.getMessage());
 
-            if (restError != null){
-                failure(restError);
-            }
-            else {
-                failure(new RestError(error.getMessage(), -1));
-            }
-        }
+        //if(error.isNetworkError()) {
+        //    Toast.makeText(this.context, R.string.please_enable_internet, Toast.LENGTH_LONG).show();
+        //}
     }
 
 

@@ -36,6 +36,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 
@@ -44,7 +45,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -64,7 +68,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    //private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -135,21 +139,22 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 Log.i(TAG, "Logging in");
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
-                RestClient.service().facebookLogin(params, new RestCallback<RestFeedback>(that) {
+
+                Call<RestFeedback> call = RestClient.service().facebookLogin(params);
+                call.enqueue(new RestFeedbackCallback(that) {
                     @Override
-                    public void success(RestFeedback restFeedback, Response response) {
-                        if (restFeedback.success
-                                && restFeedback.data.containsKey("token")
-                                && restFeedback.data.containsKey("username")) {
-                            User user = new User("", "");
-                            String token = (String) restFeedback.data.get("token");
-                            user.username = restFeedback.data.get("username");
-                            Log.i(TAG, "Session created with session token: " + token);
-                            RestClient.instance().createLoginSession(token, user);
-                            IntentsUtils.lastActivityBeforeLogin(that);
-                        } else {
-                            Log.i(TAG, "User attempt to connect with wrong credential");
-                        }
+                    public void onActionSuccess(RestFeedback feedback) {
+                        User user = new User("", "");
+                        String token = (String) feedback.data.get("token");
+                        user.username = feedback.data.get("username");
+                        Log.i(TAG, "Session created with session token: " + token);
+                        RestClient.instance().createLoginSession(token, user);
+                        IntentsUtils.lastActivityBeforeLogin(that);
+                    }
+
+                    @Override
+                    public void onActionFail(RestFeedback feedback) {
+                        Log.i(TAG, "User attempt to connect with wrong credential: server message: " + feedback.message);
                     }
                 });
             }
@@ -374,6 +379,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
+     *
+     * TODO: remove useless
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -395,7 +402,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             Log.d(TAG, "Try login for user: " + user.toString());
 
             try{
-                RestFeedback response = RestClient.service().login(user);
+                RestFeedback response = null; //= RestClient.service().login(user);
                 Log.i(TAG, "Server response: " + response);
 
                 if (response.success
@@ -415,10 +422,12 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     Log.i(TAG, "User attempt to connect with wrong credential");
                 }
 
-            } catch (retrofit.RetrofitError ex){
-                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
-                Log.e(TAG, "Server unavailable");
-            } catch (Exception ex){
+            }
+            //catch (retrofit.RetrofitError ex){
+            //    Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
+             //   Log.e(TAG, "Server unavailable");
+            //}
+            catch (Exception ex){
                 Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
                 Log.e(TAG, "Exception: " + ex);
             }

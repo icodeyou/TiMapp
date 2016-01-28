@@ -21,7 +21,9 @@ import com.timappweb.timapp.config.IntentsUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class ProfileActivity extends BaseActivity{
 
@@ -83,20 +85,28 @@ public class ProfileActivity extends BaseActivity{
     }
 
     private void loadUser(final String username){
-
-        RestClient.service().profile(username, new RestCallback<User>(this) {
+        Call<User> call = RestClient.service().profile(username);
+        call.enqueue(new RestCallback<User>(this) {
             @Override
-            public void success(User user, Response response) {
-                Log.i(TAG, user + " loaded");
-                mUser = user;
-                tvUsername.setText(mUser.username);
-                tvCountTags.setText(String.valueOf(mUser.count_posts));
-                tvCountPlaces.setText(String.valueOf(mUser.count_places));
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
 
-                // Setting the last post
-                if (mUser.posts != null && mUser.posts.size() > 0) {
-                    Post post = mUser.posts.getFirst();
-                    ArrayList<String> arrayTags = post.getTagsToStringArray();
+            @Override
+            public void onResponse(Response<User> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    User user = response.body();
+                    Log.i(TAG, user + " loaded");
+                    mUser = user;
+                    tvUsername.setText(mUser.username);
+                    tvCountTags.setText(String.valueOf(mUser.count_posts));
+                    tvCountPlaces.setText(String.valueOf(mUser.count_places));
+
+                    // Setting the last post
+                    if (mUser.posts != null && mUser.posts.size() > 0) {
+                        Post post = mUser.posts.getFirst();
+                        ArrayList<String> arrayTags = post.getTagsToStringArray();
                     /*
                     for (Tag tag : arrayTags) {
                         String tag1 = "#" + arrayTags.get(1);
@@ -110,6 +120,7 @@ public class ProfileActivity extends BaseActivity{
                     tvTag3.setText(tag3);
 
                     //TODO : Loader
+                    }
                 }
             }
         });

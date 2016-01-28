@@ -29,14 +29,15 @@ import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
 import java.util.Vector;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class PlaceActivity extends BaseActivity{
     private String TAG = "PlaceActivity";
@@ -82,20 +83,16 @@ public class PlaceActivity extends BaseActivity{
                 conditions.setPlaceId(placeId);
                 conditions.setAnonymous(false);
                 conditions.setUserLocation(MyApplication.getLastLocation());
-                RestClient.service().placeComing(conditions.toMap(), new RestCallback<RestFeedback>(currentActivity) {
+
+                Call<RestFeedback> call = RestClient.service().placeComing(conditions.toMap());
+                call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
-                    public void success(RestFeedback restFeedback, Response response) {
-                        if (restFeedback.success){
-                            Log.d(TAG, "Success register here for user");
-                        }
-                        else{
-                            Log.d(TAG, "Fail register here for user");
-                        }
+                    public void onActionSuccess(RestFeedback feedback) {
+                        Log.d(TAG, "Success register coming for user");
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        super.failure(error);
+                    public void onActionFail(RestFeedback feedback) {
                         Log.d(TAG, "Fail register coming for user");
                     }
                 });
@@ -116,18 +113,17 @@ public class PlaceActivity extends BaseActivity{
                 conditions.setPlaceId(placeId);
                 conditions.setAnonymous(false);
                 conditions.setUserLocation(MyApplication.getLastLocation());
-                RestClient.service().placeComing(conditions.toMap(), new RestCallback<RestFeedback>(currentActivity) {
+                Call<RestFeedback> call = RestClient.service().placeHere(conditions.toMap());
+                call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
-                    public void success(RestFeedback restFeedback, Response response) {
-                        if (restFeedback.success){
-                            Log.d(TAG, "Success register here for user");
-                        }
-                        else{
-                            Log.d(TAG, "Fail register here for user");
-                        }
-                        // TODO jean:  google map
+                    public void onActionSuccess(RestFeedback feedback) {
+                        Log.d(TAG, "Success register here for user");
                     }
 
+                    @Override
+                    public void onActionFail(RestFeedback feedback) {
+                        Log.d(TAG, "Fail register here for user");
+                    }
                 });
 
                 IntentsUtils.addPostStepTags(currentActivity, place);
@@ -177,20 +173,29 @@ public class PlaceActivity extends BaseActivity{
 
     private void loadPlace(int placeId) {
         final PlaceActivity that = this;
-        RestClient.service().viewPlace(placeId, new RestCallback<Place>(this) {
+        Call<Place> call = RestClient.service().viewPlace(placeId);
+        call.enqueue(new RestCallback<Place>(this) {
             @Override
-            public void success(Place p, Response response) {
-                place = p;
-                notifyPlaceLoaded();
+            public void onResponse(Response<Place> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    Place p = response.body();
+                    place = p;
+                    notifyPlaceLoaded();
+                }
+                else{
+                    Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG).show();
+                    IntentsUtils.home(that);
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
                 Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG).show();
-                // TODO cannot load place (invalid ? )
                 IntentsUtils.home(that);
             }
+
         });
     }
 

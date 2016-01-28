@@ -19,7 +19,9 @@ import com.timappweb.timapp.rest.RestClient;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class PlaceTagsFragment extends Fragment {
 
@@ -55,12 +57,17 @@ public class PlaceTagsFragment extends Fragment {
 
     private void loadTags() {
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
-        RestClient.service().viewPopularTagsForPlace(placeActivity.getPlaceId(), new RestCallback<List<Tag>>(getContext()) {
+        Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(placeActivity.getPlaceId());
+        call.enqueue(new RestCallback<List<Tag>>(getContext()) {
             @Override
-            public void success(List<Tag> tags, Response response) {
-                progressView.setVisibility(View.GONE);
-                notifyTagsLoaded(tags);
+            public void onResponse(Response<List<Tag>> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    progressView.setVisibility(View.GONE);
+                    notifyTagsLoaded(response.body());
+                }
             }
+
         });
     }
 

@@ -20,7 +20,9 @@ import com.timappweb.timapp.rest.RestClient;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class ExploreTagsFragment extends Fragment {
 
@@ -61,12 +63,17 @@ public class ExploreTagsFragment extends Fragment {
         conditions.setBounds(bounds);
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
 
-        RestClient.service().trendingTags(conditions.toMap(), new RestCallback<List<Tag>>(getContext()) {
+        Call<List<Tag>> call = RestClient.service().trendingTags(conditions.toMap());
+        call.enqueue(new RestCallback<List<Tag>>(getContext()) {
             @Override
-            public void success(List<Tag> tags, Response response) {
-                Log.i(TAG, "Updating list with " + tags.size() + " items");
-                placesAdapter.clear();
-                placesAdapter.addAll(tags);
+            public void onResponse(Response<List<Tag>> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    List<Tag> tags = response.body();
+                    Log.i(TAG, "Updating list with " + tags.size() + " items");
+                    placesAdapter.clear();
+                    placesAdapter.addAll(tags);
+                }
             }
         });
     }

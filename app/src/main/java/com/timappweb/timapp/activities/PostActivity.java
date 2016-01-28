@@ -17,8 +17,11 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.config.IntentsUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class PostActivity extends BaseActivity {
 
@@ -67,25 +70,41 @@ public class PostActivity extends BaseActivity {
     }
 
     private void loadTagsForPost() {
-        RestClient.service().loadTagsFromPost(currentPost.getId(), new RestCallback<ArrayList<Tag>>(this) {
+        Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentPost.getId());
+        call.enqueue(new RestCallback<List<Tag>>(this) {
             @Override
-            public void success(ArrayList<Tag> tags, Response response) {
-                currentPost.setTags(tags);
-                fetchDataToView();
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+
+            @Override
+            public void onResponse(Response<List<Tag>> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    List<Tag> tags = response.body();
+                    currentPost.setTags(tags);
+                    fetchDataToView();
+                }
             }
         });
     }
 
     private void loadPost(int postId) {
-        RestClient.service().viewPost(postId, new RestCallback<Post>(this) {
+        Call<Post> call = RestClient.service().viewPost(currentPost.getId());
+        call.enqueue(new RestCallback<Post>(this) {
             @Override
-            public void success(Post post, Response response) {
-                if(post == null){
-                    // TODO
-                    return;
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+
+            @Override
+            public void onResponse(Response<Post> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    Post post = response.body();
+                    currentPost = post;
+                    fetchDataToView();
                 }
-                currentPost = post;
-                fetchDataToView();
             }
         });
     }

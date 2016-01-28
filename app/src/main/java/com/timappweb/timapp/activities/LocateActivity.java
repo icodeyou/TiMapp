@@ -31,8 +31,8 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class LocateActivity extends BaseActivity{
 
@@ -157,30 +157,35 @@ public class LocateActivity extends BaseActivity{
         Log.d(TAG, "Loading places with location: " + Util.print(location));
         QueryCondition conditions = new QueryCondition();
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
-        RestClient.service().placeReachable(conditions.toMap(), new RestCallback<List<Place>>(this) {
+
+        Call<List<Place>> call = RestClient.service().placeReachable(conditions.toMap());
+        call.enqueue(new RestCallback<List<Place>>(this) {
 
             @Override
-            public void success(List<Place> place, Response response) {
-                Log.d(TAG, "Loading " + place.size() + " viewPlaceFromPublish(s)");
-                PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
-                placeAdapter.clear();
-                progressView.setVisibility(View.GONE);
-                if (place.size() != 0) {
-                    placeAdapter.addAll(place);
-                    noPlaceView.setVisibility(View.GONE);
-                    placesAndBottomLine.setVisibility(View.VISIBLE);
-                } else {
-                    noPlaceView.setVisibility(View.VISIBLE);
+            public void onResponse(Response<List<Place>> response) {
+                super.onResponse(response);
+
+                if (response.isSuccess()){
+                    List<Place> places = response.body();
+                    Log.d(TAG, "Loading " + places.size() + " viewPlaceFromPublish(s)");
+                    PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
+                    placeAdapter.clear();
+                    progressView.setVisibility(View.GONE);
+                    if (places.size() != 0) {
+                        placeAdapter.addAll(places);
+                        noPlaceView.setVisibility(View.GONE);
+                        placesAndBottomLine.setVisibility(View.VISIBLE);
+                    } else {
+                        noPlaceView.setVisibility(View.VISIBLE);
+                    }
+                    placeAdapter.notifyDataSetChanged();
                 }
-                placeAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
-                Toast.makeText(this.context, R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
             }
-
         });
     }
 

@@ -15,17 +15,20 @@ import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.android.MainThreadExecutor;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by stephane on 8/21/2015.
@@ -71,7 +74,7 @@ public class RestClient {
 
     protected WebServiceInterface service;
 
-    private static RestAdapter.Builder builder = null;
+    private static Retrofit.Builder builder = null;
 
     protected RestClient(Application app, String endpoint){
         this.app = app;
@@ -83,15 +86,18 @@ public class RestClient {
                 .registerTypeAdapter(Date.class, new DateTypeAdapter())
                 .create();
 
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+        httpClientBuilder.addInterceptor(new SessionRequestInterceptor());
         // Executor use to cancel pending request to the server
         // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
         mExecutorService = Executors.newCachedThreadPool();
-        builder = new RestAdapter.Builder()
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
-                .setEndpoint(endpoint)
-                .setRequestInterceptor(new SessionRequestInterceptor())
-                .setConverter(new GsonConverter(gson))
-                .setExecutors(mExecutorService, new MainThreadExecutor());
+        builder = new Retrofit.Builder()
+                //.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
+                .baseUrl(endpoint)
+                .client(httpClientBuilder.build());
+                //.setRequestInterceptor(new SessionRequestInterceptor())
+                //.setConverter(new GsonConverter(gson))
+                //.setExecutors(mExecutorService, new MainThreadExecutor());
 
 
         this.createService();
@@ -177,18 +183,18 @@ public class RestClient {
     public void checkToken() {
         Log.i(TAG, "Checking user token...");
         final RestClient that = this;
-        this.service.checkToken(new Callback<RestFeedback>() {
+        Call<RestFeedback> call = this.service.checkToken();
+        call.enqueue(new Callback<RestFeedback>() {
             @Override
-            public void success(RestFeedback restFeedback, Response response) {
-                if (!restFeedback.success) {
+            public void onResponse(retrofit2.Response<RestFeedback> response) {
+                if (!response.isSuccess() || !response.body().success) {
                     Log.i(TAG, "Token is not valid anymore. Login out");
                     MyApplication.logout();
                 }
-
             }
 
             @Override
-            public void failure(RetrofitError retrofitError) {
+            public void onFailure(Throwable t) {
                 Log.i(TAG, "Token is not valid anymore. Login out");
                 MyApplication.logout();
             }

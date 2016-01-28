@@ -21,7 +21,9 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 public class SearchAndSelectTagManager {
 
@@ -66,17 +68,23 @@ public class SearchAndSelectTagManager {
 
             @Override
             public void load(final String term) {
-                RestClient.service().suggest(term, new RestCallback<List<Tag>>(activity) {
-                    @Override
-                    public void success(List<Tag> tags, Response response) {
-                        TagActivity tagActivity = (TagActivity) activity;
-                        tagActivity.getProgressBarView().setVisibility(View.GONE);
-                        Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
 
-                        searchHistory.addInCache(term, tags);
-                    }
+                Call<List<Tag>> call = RestClient.service().suggest(term);
+                call.enqueue(new RestCallback<List<Tag>>(activity) {
+                         @Override
+                         public void onResponse(Response<List<Tag>> response) {
+                             super.onResponse(response);
+                             if (response.isSuccess()){
+                                 List<Tag> tags = response.body();
+                                 TagActivity tagActivity = (TagActivity) activity;
+                                 tagActivity.getProgressBarView().setVisibility(View.GONE);
+                                 Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
 
-                });
+                                 searchHistory.addInCache(term, tags);
+                             }
+                         }
+                 });
+
             }
 
             @Override

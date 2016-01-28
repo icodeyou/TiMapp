@@ -14,7 +14,9 @@ import com.timappweb.timapp.utils.IntPoint;
 
 import java.util.List;
 
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 /**
  * Created by stephane on 12/9/2015.
@@ -52,39 +54,47 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         conditions.setMainTags(true);
         final int requestId = this.requestCounter++;
-        RestClient.service().bestPlaces(conditions.toMap(), new RestCallback<List<Place>>(mContext) {
+        Call<List<Place>> call = RestClient.service().bestPlaces(conditions.toMap());
+
+        call.enqueue(new RestCallback<List<Place>>(mContext) {
+
             @Override
-            public void success(List<Place> places, Response response) {
-                Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
-                // Test if request is out dated
-                // TODO cancel requests instead
-                if (requestId <= lastClear) {
-                    Log.d(TAG, "This request is out dated");
-                    return;
-                }
-                // If activity has been destroyed in the mean time
-                // TODO cancel requests instead
-                // if (mClusterManagerPost == null){
-                //    return;
-                //}
+            public void onResponse(Response<List<Place>> response) {
+                super.onResponse(response);
+                if (response.isSuccess()){
+                    List<Place> places = response.body();
 
-                // Setting the last timestamp retrieved from the server
-                // TODO what happens if two row have the same timestamp for the same area ?
-                request.setDataTimestamp(
-                        places.size() > 1
-                                ? places.get(places.size() - 1).created
-                                : 0);
+                    Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
+                    // Test if request is out dated
+                    // TODO cancel requests instead
+                    if (requestId <= lastClear) {
+                        Log.d(TAG, "This request is out dated");
+                        return;
+                    }
+                    // If activity has been destroyed in the mean time
+                    // TODO cancel requests instead
+                    // if (mClusterManagerPost == null){
+                    //    return;
+                    //}
 
-                request.data.addAll(places);
+                    // Setting the last timestamp retrieved from the server
+                    // TODO what happens if two row have the same timestamp for the same area ?
+                    request.setDataTimestamp(
+                            places.size() > 1
+                                    ? places.get(places.size() - 1).created
+                                    : 0);
 
-                if (mClusterManagerPost != null){
-                    mClusterManagerPost.addItems(places);
-                    mClusterManagerPost.cluster();
-                }
+                    request.data.addAll(places);
 
-                if (placesAdapter != null){
-                    placesAdapter.clear();
-                    placesAdapter.addAll(places);
+                    if (mClusterManagerPost != null){
+                        mClusterManagerPost.addItems(places);
+                        mClusterManagerPost.cluster();
+                    }
+
+                    if (placesAdapter != null){
+                        placesAdapter.clear();
+                        placesAdapter.addAll(places);
+                    }
                 }
             }
         });

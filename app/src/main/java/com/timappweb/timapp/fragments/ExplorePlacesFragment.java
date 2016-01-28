@@ -24,8 +24,6 @@ import com.timappweb.timapp.rest.RestClient;
 
 import java.util.List;
 
-import retrofit.client.Response;
-
 public class ExplorePlacesFragment extends Fragment {
 
     private static final String TAG = "PlaceTagsFragment";

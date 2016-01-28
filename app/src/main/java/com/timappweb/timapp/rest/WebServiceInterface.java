@@ -13,16 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.http.QueryMap;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by stephane on 8/20/2015.
@@ -33,49 +32,43 @@ public interface WebServiceInterface {
     // Posts
 
     @GET("/posts/posts.json")
-    void listPosts(@QueryMap Map<String, String> conditions, RestCallback<List<Post>> restCallback);
+    Call<List<Post>> listPosts(@QueryMap Map<String, String> conditions);
 
     @GET("/posts/view/{id}.json")
-    void viewPost(@Path("id") int id, RestCallback<Post> restCallback);
-
-    @GET("/posts/view/{id}.json")
-    Post viewPost(@Path("id") int id);
+    Call<Post> viewPost(@Path("id") int id);
 
     @POST("/posts/add.json")
-    void addPost(@Body Post post, RestCallback<RestFeedback> cb);
+    Call<RestFeedback> addPost(@Body Post post);
 
     @Multipart
     @POST("/posts/add.json")
-    void addPost(@Part("post") Post post, @Part("place") Place place, RestCallback<RestFeedback> cb);
+    Call<RestFeedback>  addPost(@Part("post") Post post, @Part("place") Place place);
 
     // ---------------------------------------------------------------------------------------------
     // USER
 
     @POST("/users/login.json")
-    RestFeedback login(@Body User user);
+    Call<RestFeedback>  login(@Body User user);
 
     @GET("/users/check_token.json")
-    void checkToken(Callback<RestFeedback> cb);
+    Call<RestFeedback>  checkToken();
 
     @GET("/users/profile/{username}.json")
-    void profile(@Path("username") String username, RestCallback<User> restCallback);
+    Call<User>  profile(@Path("username") String username);
 
     @POST("/users/facebook_login.json")
-    void facebookLogin(@Body Map<String,String> accessToken, RestCallback<RestFeedback> restFeedback);
+    Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
     // ---------------------------------------------------------------------------------------------
     // TAGS
     @GET("/Posts/trending_tags.json")
-    void trendingTags(@QueryMap Map<String, String> conditions, RestCallback<List<Tag>> restCallback);
+    Call<List<Tag>> trendingTags(@QueryMap Map<String, String> conditions);
 
     @GET("/Tags/suggest/{term}.json")
-    void suggest(@Path("term") String term, RestCallback<List<Tag>> restCallback);
-
-    @GET("/Tags/suggest/{term}.json")
-    List<Tag>  suggest(@Path("term") String term);
+    Call<List<Tag>>  suggest(@Path("term") String term);
 
     @GET("/SpotsTags/post/{id}.json")
-    void loadTagsFromPost(@Path("id") int id, RestCallback<ArrayList<Tag>> restCallback);
+    Call<List<Tag>> loadTagsFromPost(@Path("id") int id);
 
     // ---------------------------------------------------------------------------------------------
     // Places
@@ -83,35 +76,30 @@ public interface WebServiceInterface {
     /**
      * Get posts for a place
      * @param id
-     * @param callback
      */
     @POST("/posts/place/{id}.json")
-    void viewPostsForPlace(@Path("id") int id, RestCallback<List<Post>>  callback);
+    Call<List<Post>> viewPostsForPlace(@Path("id") int id);
 
     /**
      * Get most popular tags for a place
      * @param id
-     * @param callback
      */
     @POST("/tags/place/{id}.json")
-    void viewPopularTagsForPlace(@Path("id") int id, RestCallback<List<Tag>>  callback);
+    Call<List<Tag>> viewPopularTagsForPlace(@Path("id") int id);
 
     /**
      *
      * @param id
-     * @param callback
      */
     @POST("/Places/view/{id}.json")
-    void viewPlace(@Path("id") int id, RestCallback<Place>  callback);
+    Call<Place> viewPlace(@Path("id") int id);
 
     /**
      * Find places to display on the map
      * @param conditions
-     * @param callback
      */
     @POST("/Places/populars.json")
-    void bestPlaces(@QueryMap Map<String, String> conditions, RestCallback<List<Place>>  callback);
-
+    Call<List<Place>> bestPlaces(@QueryMap Map<String, String> conditions);
     /**
      * Adding a place
      * @param place
@@ -124,37 +112,32 @@ public interface WebServiceInterface {
     /**
      * Used to get all place that are in a area
      * @param conditions
-     * @param callback
      */
     @GET("/Places/around_me.json")
-    void placeAroundMe(@QueryMap Map<String, String> conditions, RestCallback<List<Place>>  callback);
+    Call<List<Place>> placeAroundMe(@QueryMap Map<String, String> conditions);
 
     /**
      * Used to get all place that are around user position
      * @param conditions"
-     * @param restCallback
      */
     @GET("/Places/reachable.json")
-    void placeReachable(@QueryMap Map<String, String> conditions, RestCallback<List<Place>> restCallback);
+    Call<List<Place>> placeReachable(@QueryMap Map<String, String> conditions);
 
     // ---------------------------------------------------------------------------------------------
     // PlacesUsers
     /**
      *
-     * @param callback
      */
     @POST("/PlacesUsers/coming.json")
-    void placeComing(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
+    Call<RestFeedback> placeComing(@Body Map<String, String> conditions);
     /**
      *
-     * @param callback
      */
     @POST("/PlacesUsers/gone.json")
-    void placeGone(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
+    Call<RestFeedback> placeGone(@Body Map<String, String> conditions);
     /**
      *
-     * @param callback
      */
     @POST("/PlacesUsers/here.json")
-    void placeHere(@Body Map<String, String> conditions, RestCallback<RestFeedback>  callback);
+    Call<RestFeedback> placeHere(@Body Map<String, String> conditions);
 }
