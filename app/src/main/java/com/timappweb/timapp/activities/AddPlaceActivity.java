@@ -134,7 +134,7 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void failure(RetrofitError error) {
                 super.failure(error);
-                setProgressView(true);
+                setProgressView(false);
             }
         });
         */

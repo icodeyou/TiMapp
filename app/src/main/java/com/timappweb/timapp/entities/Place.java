@@ -97,10 +97,6 @@ public class Place implements Serializable, MarkerValueInterface {
         return this.getPrettyTimeCreated();
     }
 
-    public List<Tag> getMainTags() {
-        return tags;
-    }
-
     /**
      * Get the created as a pretty time format
      *

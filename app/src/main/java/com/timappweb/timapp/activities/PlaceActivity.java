@@ -273,7 +273,7 @@ public class PlaceActivity extends BaseActivity{
 
     private void initPlaceAdapters() {
          //PlacesAdapter
-        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        PlacesAdapter placesAdapter = new PlacesAdapter(this, false);
         placesAdapter.add(place);
         placeListView.setAdapter(placesAdapter);
     }
