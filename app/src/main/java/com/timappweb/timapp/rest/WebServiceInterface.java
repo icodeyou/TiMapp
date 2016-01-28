@@ -18,7 +18,9 @@ import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.QueryMap;
 
@@ -42,9 +44,9 @@ public interface WebServiceInterface {
     @POST("/posts/add.json")
     void addPost(@Body Post post, RestCallback<RestFeedback> cb);
 
-    @FormUrlEncoded
+    @Multipart
     @POST("/posts/add.json")
-    void addPost(@Field("post") Post post, @Field("place") Place place, RestCallback<RestFeedback> cb);
+    void addPost(@Part("post") Post post, @Part("place") Place place, RestCallback<RestFeedback> cb);
 
     // ---------------------------------------------------------------------------------------------
     // USER
