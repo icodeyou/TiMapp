@@ -156,12 +156,12 @@ public class ExploreMapFragment extends Fragment{
             }
         });
 
-        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        /*gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 hidePlace();
             }
-        });
+        });*/
     }
 
     private void displayPlace(Place place) {

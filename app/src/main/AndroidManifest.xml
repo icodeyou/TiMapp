@@ -158,7 +158,7 @@
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
-            android:name=".activities.MyProfileActivity"
+            android:name=".activities.EditProfileActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->

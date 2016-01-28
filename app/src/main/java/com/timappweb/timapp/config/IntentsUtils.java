@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
@@ -47,6 +48,11 @@ public class IntentsUtils {
     public static void profile(Activity activity, String username) {
         Intent intent = new Intent(activity, ProfileActivity.class);
         intent.putExtra("username", username); // TODO use constant
+        activity.startActivity(intent);
+    }
+
+    public static void editProfile(Activity activity) {
+        Intent intent = new Intent(activity, EditProfileActivity.class);
         activity.startActivity(intent);
     }
 

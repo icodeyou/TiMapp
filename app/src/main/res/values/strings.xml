@@ -37,6 +37,11 @@
     <string name="error_credential_invalid">Invalid credential</string>
     <string name="title_search">Search</string>
 
+    <!-- Menus action bar-->
+    <string name="menu_share">Share</string>
+    <string name="menu_reload">Reload</string>
+    <string name="menu_edit_profile">Edit profile</string>
+
     <!-- Nav -->
     <string name="nav_explore">Explore</string>
     <string name="nav_tag_around">Tag around</string>
@@ -91,8 +96,6 @@
     <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
     <string name="text_no_event_around1">There isn\'t any event near you\nright now.</string>
     <string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_reload">Reload</string>
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>

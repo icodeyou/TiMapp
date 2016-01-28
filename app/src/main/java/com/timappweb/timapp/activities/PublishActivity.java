@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -42,7 +44,7 @@ public class PublishActivity extends BaseActivity{
     private Post currentPost = null;
     private CheckBox checkBox = null;
     private ListView placeListView;
-    private Button confirmButton;
+    private LinearLayout confirmButton;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -68,7 +70,7 @@ public class PublishActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         placeListView = (ListView) findViewById(R.id.place_lv);
         progressView = findViewById(R.id.progress_view);
-        confirmButton = (Button) findViewById(R.id.confirm_button);
+        confirmButton = (LinearLayout) findViewById(R.id.confirm_button);
 
         initAdapters();
         setListeners();
@@ -123,7 +125,7 @@ public class PublishActivity extends BaseActivity{
 
                 Call<RestFeedback> call = null;
                 if (currentPlace.isNew()){
-                    call = RestClient.service().addPost(currentPost, currentPlace);
+                    call = RestClient.service().addPost(new PostAndPlaceRequest(currentPost, currentPlace));
                 }
                 else{
                     currentPost.place_id = currentPlace.id;
@@ -162,8 +164,10 @@ public class PublishActivity extends BaseActivity{
         @Override
         public void onActionSuccess(RestFeedback feedback) {
             int id = Integer.valueOf(feedback.data.get("id"));
+            int placeId = Integer.valueOf(feedback.data.get("place_id"));
             Log.i(TAG, "Post has been saved. Id is : " + id);
-            IntentsUtils.viewPlaceFromPublish(this.context, post.place_id);
+            post.place_id = placeId;
+            IntentsUtils.viewPlaceFromPublish(this.context, placeId);
         }
 
         @Override

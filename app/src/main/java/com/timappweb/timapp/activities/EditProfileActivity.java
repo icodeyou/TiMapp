@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import com.timappweb.timapp.R;
 
-public class MyProfileActivity extends BaseActivity{
+public class EditProfileActivity extends BaseActivity{
 
-    String TAG = "MyProfileActivity";
+    String TAG = "EditProfileActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,12 +16,15 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:src="@drawable/ic_location"
-            android:layout_margin="20dp"/>
+            android:src="@drawable/ic_location"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:textSize="@dimen/text_huge"
+            android:gravity="center"
+            android:typeface="serif"
             android:text="@string/loading_location"/>
         <ProgressBar
             android:layout_width="50dp"
@@ -84,9 +87,11 @@
         android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:textAllCaps="false"
         android:text="@string/button_add_place"
         android:textSize="@dimen/text_big"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone"/>
 
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />

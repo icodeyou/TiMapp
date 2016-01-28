@@ -1,15 +1,19 @@
 package com.timappweb.timapp.rest;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.timappweb.timapp.rest.model.RestFeedback;
 
+import bolts.Bolts;
 import retrofit2.Response;
 
 /**
  * Created by stephane on 1/28/2016.
  */
 public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
+
+    private static final String TAG = "RestFeedbackCallback";
 
     public RestFeedbackCallback(Context context) {
         super(context);
@@ -22,11 +26,21 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
     public void onResponse(Response<RestFeedback> response) {
         super.onResponse(response);
         if (response.isSuccess()){
-            this.onActionSuccess(response.body());
+            RestFeedback feedback = response.body();
+            if (feedback.success){
+                this.onActionSuccess(feedback);
+            }
+            else{
+                this.onActionFail(feedback);
+            }
         }
-        else{
-            this.onActionFail(response.body());
+        else {
+            this.onResponseFail(response);
         }
+    }
+
+    private void onResponseFail(Response<RestFeedback> response) {
+        Log.i(TAG, "Response fail: " + response.code());
     }
 
     @Override

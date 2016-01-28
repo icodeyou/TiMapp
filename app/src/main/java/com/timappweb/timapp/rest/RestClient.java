@@ -26,7 +26,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.logging.HttpLoggingInterceptor;
+//import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
@@ -56,7 +56,7 @@ public class RestClient {
 
     // Current user
     private static final String CURRENT_USER = "current_user";
-    private static ExecutorService mExecutorService = null;
+    //private static ExecutorService mExecutorService = null;
 
 
     // KEY ID
@@ -82,21 +82,23 @@ public class RestClient {
         this.app = app;
 
         Log.i(TAG, "Initializing server connection at " + endpoint);
+        /*
         Gson gson = new GsonBuilder()
                 .setDateFormat(SQL_DATE_FORMAT)
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(Date.class, new DateTypeAdapter())
-                .create();
+                .create();*/
 
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.addInterceptor(new SessionRequestInterceptor());
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        httpClientBuilder.addInterceptor(logging);
+
+        //HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        //logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpClientBuilder.addInterceptor(new LogRequestInterceptor());
         // Executor use to cancel pending request to the server
         // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
-        mExecutorService = Executors.newCachedThreadPool();
+        //mExecutorService = Executors.newCachedThreadPool();
         builder = new Retrofit.Builder()
                 //.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
                 .baseUrl(endpoint)
@@ -208,10 +210,11 @@ public class RestClient {
         });
     }
 
-
+/*
     public static void stopPendingRequest() {
         List<Runnable> pendingAndOngoing = mExecutorService.shutdownNow();
         Log.d(TAG, "Stopping " + pendingAndOngoing.size() + " request(s) to the server");
     }
+    */
 }
 

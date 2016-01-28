@@ -44,6 +44,7 @@
         android:layout_height="50dp"
         android:background="@color/colorAccent"
         android:textColor="@color/White"
+        android:textAllCaps="false"
         android:text="Coming"
         android:textSize="@dimen/text_huge"
         android:visibility="gone"/>
@@ -54,6 +55,7 @@
         android:layout_height="50dp"
         android:background="@color/colorAccent"
         android:textColor="@color/White"
+        android:textAllCaps="false"
         android:text="@string/button_add_tags"
         android:textSize="@dimen/text_huge"
         android:visibility="gone"/>

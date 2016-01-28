@@ -2,6 +2,8 @@ package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -74,6 +76,23 @@ public class ProfileActivity extends BaseActivity{
             MyApplication.redirectLogin(this);
         }
         this.loadUser(username); // TODO get username by bundle of current username if none
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_place, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_profile:
+                IntentsUtils.editProfile(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initAdapter() {
