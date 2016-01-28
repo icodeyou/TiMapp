@@ -8,9 +8,15 @@ import com.timappweb.timapp.utils.DistanceHelper;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit.converter.ConversionException;
+import retrofit.converter.Converter;
+import retrofit.mime.TypedInput;
+import retrofit.mime.TypedOutput;
 
 public class Place implements Serializable, MarkerValueInterface {
 
@@ -142,6 +148,5 @@ public class Place implements Serializable, MarkerValueInterface {
     public static boolean isValidName(String name) {
         return name.trim().length() >= MyApplication.config.getInt(Configuration.PLACE_MIN_LENGTH);
     }
-
 
 }
