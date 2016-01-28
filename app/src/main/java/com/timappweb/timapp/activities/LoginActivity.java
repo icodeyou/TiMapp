@@ -150,9 +150,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         } else {
                             Log.i(TAG, "User attempt to connect with wrong credential");
                         }
-
                     }
-
                 });
             }
 

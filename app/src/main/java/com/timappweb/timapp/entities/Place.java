@@ -130,4 +130,8 @@ public class Place implements Serializable, MarkerValueInterface {
     public boolean isReachable() {
         return this.isReachable(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude());
     }
+
+    public static boolean isValidName(String name) {
+        return name.trim().length() >= MyApplication.config.getInt(Configuration.PLACE_MIN_LENGTH);
+    }
 }

@@ -22,6 +22,7 @@ public class Configuration {
     public static final String PLACE_REACHABLE_DISTANCE = "place.reachabledistance";
     public static final java.lang.String GPS_MIN_ACCURACY = "gps.accuracy";
     public static final java.lang.String GPS_MIN_TIME_DELAY = "gps.time";
+    public static final java.lang.String PLACE_MIN_LENGTH = "place.minlength";
 
     private Context context;
     private static Properties properties;

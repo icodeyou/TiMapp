@@ -42,6 +42,7 @@
 
 
     <dimen name="tag_padding">10dp</dimen>
+    <dimen name="tag_margin">5dp</dimen>
     <dimen name="tag_padding_bottom">1dp</dimen>
     <dimen name="tag_padding_top">1dp</dimen>
     <dimen name="tag_padding_left">1dp</dimen>

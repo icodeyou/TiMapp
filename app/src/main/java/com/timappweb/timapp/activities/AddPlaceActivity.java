@@ -140,7 +140,7 @@ public class AddPlaceActivity extends BaseActivity {
     public void setButtonValidation() {
         String textAfterChange = groupNameET.getText().toString();
 
-        if (categorySelected!=null && !textAfterChange.equals("")) {
+        if (categorySelected!=null && Place.isValidName(textAfterChange)) {
             createButton.setEnabled(true);
             createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
         } else {

@@ -65,7 +65,7 @@
             android:id="@+id/bottom_line_hrv"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark"/>
+            android:background="@color/colorAccent"/>
 
         <LinearLayout
             android:id="@+id/progress_view"
@@ -97,10 +97,13 @@
 
                 app:dynamicMode="true"
 
+                app:tagEllipsize="marquee"
                 app:tagPaddingBottom="@dimen/tag_padding"
                 app:tagPaddingLeft="@dimen/tag_padding"
                 app:tagPaddingRight="@dimen/tag_padding"
                 app:tagPaddingTop="@dimen/tag_padding"
+                app:rowMargin="@dimen/tag_margin"
+                app:tagMargin="@dimen/tag_margin"
                 app:tagTextColor="@color/White"
                 />
 
