@@ -16,6 +16,7 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -41,6 +42,7 @@ public interface WebServiceInterface {
     @POST("/posts/add.json")
     void addPost(@Body Post post, RestCallback<RestFeedback> cb);
 
+    @FormUrlEncoded
     @POST("/posts/add.json")
     void addPost(@Field("post") Post post, @Field("place") Place place, RestCallback<RestFeedback> cb);
 
