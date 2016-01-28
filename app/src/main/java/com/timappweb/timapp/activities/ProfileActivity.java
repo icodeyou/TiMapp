@@ -80,7 +80,7 @@ public class ProfileActivity extends BaseActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_place, menu);
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
     }
 
@@ -88,7 +88,7 @@ public class ProfileActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_profile:
-                IntentsUtils.editProfile(this);
+                IntentsUtils.editFirstProfile(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

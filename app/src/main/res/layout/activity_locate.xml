@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginBottom="@dimen/height_button_add_place">
+        android:layout_marginBottom="@dimen/height_bottom_button">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -82,7 +82,7 @@
     <Button
         android:id="@+id/button_add_spot"
         android:layout_width="250dp"
-        android:layout_height="@dimen/height_button_add_place"
+        android:layout_height="@dimen/height_bottom_button"
         android:background="@drawable/button_add_place"
         android:gravity="center"
         android:layout_centerHorizontal="true"

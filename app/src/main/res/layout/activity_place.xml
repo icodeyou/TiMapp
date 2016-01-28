@@ -41,7 +41,7 @@
     <Button
         android:id="@+id/button_coming"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/height_bottom_button"
         android:background="@color/colorAccent"
         android:textColor="@color/White"
         android:textAllCaps="false"
@@ -52,7 +52,7 @@
     <Button
         android:id="@+id/button_add_some_tags"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/height_bottom_button"
         android:background="@color/colorAccent"
         android:textColor="@color/White"
         android:textAllCaps="false"

@@ -22,7 +22,7 @@
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
     <dimen name="ic_place">80dp</dimen>
-    <dimen name="height_button_add_place">60dp</dimen>
+    <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="height_categories_choose">180dp</dimen>
     <dimen name="width_categories_choose">280dp</dimen>
 

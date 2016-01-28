@@ -17,6 +17,8 @@
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_edit_profile">Edit profile</string>
+    <string name="title_activity_first_edit_profile">First edit profile</string>
 
     <string name="default_username">Not logged in</string>
     <!--<string name="city">Paris</string>

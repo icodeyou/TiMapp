@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.activities.EditFirstProfileActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.LocateActivity;
@@ -53,6 +54,11 @@ public class IntentsUtils {
 
     public static void editProfile(Activity activity) {
         Intent intent = new Intent(activity, EditProfileActivity.class);
+        activity.startActivity(intent);
+    }
+
+    public static void editFirstProfile(Activity activity) {
+        Intent intent = new Intent(activity, EditFirstProfileActivity.class);
         activity.startActivity(intent);
     }
 

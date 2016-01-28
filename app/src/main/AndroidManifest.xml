@@ -138,11 +138,11 @@
         <activity
             android:name=".activities.PlaceActivity"
             android:label="@string/title_activity_place"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:parentActivityName=".activities.ProfileActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
+                android:value=".activities.ProfileActivity" />
         </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
@@ -156,15 +156,26 @@
                 android:value=".activities.DrawerActivity" />
         </activity>
 
-        <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
+        <!-- EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.EditProfileActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:label="@string/title_activity_edit_profile"
+            android:parentActivityName=".activities.ProfileActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
+                android:value=".activities.ProfileActivity" />
+        </activity>
+
+        <!-- FIRST EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
+        <activity
+            android:name=".activities.EditFirstProfileActivity"
+            android:label="@string/title_activity_first_edit_profile"
+            android:parentActivityName=".activities.ProfileActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ProfileActivity" />
         </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
