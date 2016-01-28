@@ -20,6 +20,8 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
     private final Context context;
+    private RecyclerView rv_lastPostTags;
+    private boolean isTagsVisible;
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
         this.itemAdapterClickListener = itemAdapterClickListener;
@@ -30,6 +32,13 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     public PlacesAdapter(Context context) {
         super(context, R.layout.item_place);
         this.context = context;
+        this.isTagsVisible = true;
+    }
+
+    public PlacesAdapter(Context context, boolean bool) {
+        super(context, R.layout.item_place);
+        this.context = context;
+        this.isTagsVisible = bool;
     }
 
     @Override
@@ -49,7 +58,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         TextView tvLocation = (TextView) postBox.findViewById(R.id.title_place);
         TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);
         TextView tvCountPosts = (TextView) postBox.findViewById(R.id.people_counter_place);
-        RecyclerView rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
+        rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
         ImageView categoryIcon = (ImageView) postBox.findViewById(R.id.image_category_place);
 
         //Set texts
@@ -65,14 +74,19 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             // TODO if no category thats weird man
         }
 
-        //Set the adapter for RV
-        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
-        horizontalTagsAdapter.setData(place.getMainTags());
-        rv_lastPostTags.setAdapter(horizontalTagsAdapter);
+        if(isTagsVisible) {
+            //Set the adapter for RV
+            HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
+            horizontalTagsAdapter.setData(place.tags);
+            rv_lastPostTags.setAdapter(horizontalTagsAdapter);
 
-        //Set LayoutManager for RV
-        GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
-        rv_lastPostTags.setLayoutManager(manager_savedTags);
+            //Set LayoutManager for RV
+            GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
+            rv_lastPostTags.setLayoutManager(manager_savedTags);
+        }
+        else {
+            rv_lastPostTags.setVisibility(View.GONE);
+        }
 
         //Set OnClickListener for the entire view !
 
@@ -94,7 +108,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         super.add(place);
         super.notifyDataSetChanged();
     }
-
 
     public void generateDummyData() {
         Place dummyPlace = Place.createDummy();

@@ -96,7 +96,7 @@ public class ExploreMapFragment extends Fragment{
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(mapBundle);
         placesViewer = (ListView) root.findViewById(R.id.places_viewer);
-        placesAdapter = new PlacesAdapter(getActivity());
+        placesAdapter = new PlacesAdapter(getActivity(), false);
 
         if (savedInstanceState == null){
             // TODO what happens with instance
