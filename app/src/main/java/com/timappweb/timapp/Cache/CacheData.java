@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class CacheData {
 
-    public static HashMap<Integer, PlaceStatus> mapPlaceStatus;
+    public static HashMap<Integer, PlaceStatus> mapPlaceStatus = new HashMap<>();
     private static Place lastPlace = null;
     private static Post lastPost = null;
 
