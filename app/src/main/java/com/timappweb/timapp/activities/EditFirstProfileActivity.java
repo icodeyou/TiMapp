@@ -1,12 +1,15 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Instrumentation;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,6 +54,8 @@ public class EditFirstProfileActivity extends BaseActivity{
     private void init() {
         counterTags = 0;
         editText.requestFocus();
+        editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_CLASS_TEXT |
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
     }
 
     private void initAdapter() {
@@ -77,6 +82,7 @@ public class EditFirstProfileActivity extends BaseActivity{
                     Toast.makeText(EditFirstProfileActivity.this, R.string.toast_no_space, Toast.LENGTH_SHORT).show();
                     string = string.substring(0, string.length()-1);
                     editText.setText(string);
+                    editText.setSelection(2);
                 }
             }
         });
@@ -91,18 +97,6 @@ public class EditFirstProfileActivity extends BaseActivity{
                 return false;
             }
         });
-    }
-
-
-    private void simulateBackKey() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Instrumentation inst = new Instrumentation();
-                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_SPACE);
-                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_DEL);
-            }
-        }).start();
     }
 
     private void onSubmitTag() {
@@ -121,6 +115,11 @@ public class EditFirstProfileActivity extends BaseActivity{
             case 2:
                 horizontalTagsAdapter.addData(editText.getText().toString());
                 horizontalTagsAdapter.notifyDataSetChanged();
+
+                //Hide keyboard
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
                 editText.setVisibility(View.GONE);
                 skipButton.setVisibility(View.GONE);
                 submitView.setVisibility(View.VISIBLE);
