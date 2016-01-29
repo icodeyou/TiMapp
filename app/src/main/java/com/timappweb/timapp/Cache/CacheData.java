@@ -26,17 +26,17 @@ public class CacheData {
 
     // Last post
     public static boolean isAllowedToAddPlace(){
-        return lastPlace == null || Util.isOlderThan(lastPlace.created, 60 * 1000);
+        return lastPlace == null || Util.isOlderThan(lastPlace.created, 60 );
     }
     public static boolean isAllowedToAddPost(){
-        return lastPost == null || Util.isOlderThan(lastPost.created, 60 * 1000);
+        return lastPost == null || Util.isOlderThan(lastPost.created, 60 );
     }
     // Last place status
     public static boolean isAllowedToAddUserStatus(int placeId, UserPlaceStatus status){
         if (mapPlaceStatus.containsKey(placeId)){
             PlaceStatus placeStatus = mapPlaceStatus.get(placeId);
             // If there is already a user status
-            if (placeStatus.status == status && !Util.isOlderThan(placeStatus.created, 60* 1000) ){
+            if (placeStatus.status == status && !Util.isOlderThan(placeStatus.created, 60) ){
                 return true;
             }
         }
