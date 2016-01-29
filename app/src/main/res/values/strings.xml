@@ -107,4 +107,7 @@
     <string name="or_text_login">Or</string>
     <string name="text_create_account_login">Create account</string>
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
+    <string name="hint_et_edit_first_profile">Type a word</string>
+    <string name="post_shared">Posts shared</string>
+    <string name="places_created">Places created</string>
 </resources>
