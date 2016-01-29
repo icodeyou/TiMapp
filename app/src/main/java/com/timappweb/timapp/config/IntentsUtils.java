@@ -25,6 +25,9 @@ import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.Tag;
+
+import java.util.List;
 
 public class IntentsUtils {
 
@@ -32,13 +35,6 @@ public class IntentsUtils {
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
-    }
-
-    public static void profile(Activity activity){
-        if (!requireLogin(activity))
-            return;
-        Intent intent = new Intent(activity, ProfileActivity.class);
-        activity.startActivity(intent);
     }
 
     public static void share(Activity activity){
@@ -53,11 +49,29 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
+    public static void profile(Activity activity){
+        if (!requireLogin(activity))
+            return;
+        Intent intent = new Intent(activity, ProfileActivity.class);
+        activity.startActivity(intent);
+    }
+
     public static void profile(Activity activity, String username) {
         if (!requireLogin(activity))
             return;
         Intent intent = new Intent(activity, ProfileActivity.class);
         intent.putExtra("username", username); // TODO use constant
+        activity.startActivity(intent);
+    }
+
+    public static void profile(Activity activity, List<Tag> tags) {
+        if (!requireLogin(activity))
+            return;
+        Intent intent = new Intent(activity, ProfileActivity.class);
+        // TODO : Converts list to char sequence, put it in the extra
+        intent.putExtra("tag1", tags.get(0));
+        intent.putExtra("tag2", tags.get(1));
+        intent.putExtra("tag3", tags.get(2));
         activity.startActivity(intent);
     }
 

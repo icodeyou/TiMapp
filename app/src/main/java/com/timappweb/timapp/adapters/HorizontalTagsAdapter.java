@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,12 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     protected LayoutInflater inflater;
     private List<Tag> data = new ArrayList<>();
     private Context context;
+
+    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
+        this.itemAdapterClickListener = itemAdapterClickListener;
+    }
+
+    private OnItemAdapterClickListener itemAdapterClickListener;
 
     public HorizontalTagsAdapter(Context context) {
         this.context = context;
@@ -37,6 +44,15 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         Tag current = data.get(position);
         holder.textView.setText("#" + current.name);
+
+        if (itemAdapterClickListener != null){
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemAdapterClickListener.onClick(position);
+                }
+            });
+        }
     }
 
     @Override
