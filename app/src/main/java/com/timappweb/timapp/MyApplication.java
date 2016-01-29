@@ -64,12 +64,12 @@ public class MyApplication extends Application{
 
     public void initCategories(){
         categories.add(new Category(1, "music", R.drawable.ic_category_music));
-        categories.add(new Category(2, "bar", R.drawable.ic_category_bar));
+        categories.add(new Category(2, "strike", R.drawable.ic_category_strike));
         categories.add(new Category(3, "streetshow", R.drawable.ic_category_streetshow));
         categories.add(new Category(4, "sport", R.drawable.ic_category_sport));
-        categories.add(new Category(5, "strike", R.drawable.ic_category_strike));
+        categories.add(new Category(5, "bar", R.drawable.ic_category_bar));
         categories.add(new Category(6, "show", R.drawable.ic_category_show));
-        categories.add(new Category(7, "house", R.drawable.ic_category_house));
+        categories.add(new Category(7, "party", R.drawable.ic_category_party));
         categories.add(new Category(8, "unknown", R.drawable.ic_category_unknown));
     }
 

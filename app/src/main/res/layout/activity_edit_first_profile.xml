@@ -16,12 +16,73 @@
             android:gravity="center"/>
 
     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+        android:id="@+id/selected_tags_profile"
         android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_height="50dp" />
 
 
     <EditText
+        android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/hint_et_edit_first_profile"
+        android:singleLine="true"
         android:textSize="@dimen/text_huge"/>
+
+    <Button
+        android:id="@+id/skip_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@color/background"
+        android:textAllCaps="true"
+        android:textColor="@color/Gray"
+        android:text="skip"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/submit_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <Button
+            android:id="@+id/button_submit"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@drawable/border_radius"
+            android:layout_gravity="center"
+            android:textAllCaps="true"
+            android:textColor="@color/White"
+            android:textSize="@dimen/text_big"
+            android:text="Submit"
+            android:visibility="visible"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="@dimen/text_normal"
+                android:text="Well done."/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:gravity="center"
+                android:text="Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like."/>
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

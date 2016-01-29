@@ -78,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tags shared"
+                    android:text="@string/post_shared"
                     android:textSize="@dimen/text_normal"
                     android:textColor="@color/Black"/>
             </LinearLayout>
@@ -113,7 +113,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Places created"
+                    android:text="@string/places_created"
                     android:textSize="@dimen/text_normal"
                     android:textColor="@color/Black"/>
 

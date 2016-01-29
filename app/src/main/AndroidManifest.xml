@@ -171,6 +171,7 @@
         <activity
             android:name=".activities.EditFirstProfileActivity"
             android:label="@string/title_activity_first_edit_profile"
+            android:windowSoftInputMode="adjustNothing"
             android:parentActivityName=".activities.ProfileActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
