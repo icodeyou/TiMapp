@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
@@ -213,6 +214,7 @@ public class PlaceActivity extends BaseActivity{
         // Set timer to update points for the place
         TimerTask updatePlacePoints = new TimerTask() {
 
+            private Handler mHandler = new Handler();
             @Override
             public void run() {
                 Log.d(TAG, "Running updatePlacePoints");
@@ -221,9 +223,15 @@ public class PlaceActivity extends BaseActivity{
                     @Override
                     public void run()
                     {
-                        // TODO place expired
-                        place.points = place.points - 1;
-                        placesAdapter.notifyDataSetChanged();
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // TODO place expired
+                                place.points = place.points - 1;
+                                placesAdapter.notifyDataSetChanged();
+                                updateBtnVisible();
+                            }
+                        });
                     }
                 }).start();
             }
