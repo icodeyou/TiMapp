@@ -237,7 +237,7 @@ public class PlaceActivity extends BaseActivity{
             }
         };
         timer = new Timer();
-        timer.scheduleAtFixedRate(updatePlacePoints, 1000, 1000);
+//        timer.scheduleAtFixedRate(updatePlacePoints, 1000, 1000);
 
         if (!MyApplication.hasLastLocation()) {
             Log.d(TAG, "There is no last known location");

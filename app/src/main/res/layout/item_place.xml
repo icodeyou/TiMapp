@@ -89,7 +89,7 @@
                         <ImageView
                             android:layout_width="@dimen/logo_small"
                             android:layout_height="@dimen/logo_small"
-                            android:src="@drawable/ic_people"/>
+                            android:src="@drawable/ic_hot"/>
                         <TextView
                             android:id="@+id/people_counter_place"
                             android:layout_width="wrap_content"
@@ -99,7 +99,8 @@
                             android:singleLine="true"
                             android:text="878"
                             android:textSize="@dimen/text_small"
-                            android:textColor="@color/Black"/>
+                            android:textStyle="bold"
+                            android:textColor="@color/colorPrimaryDark"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
