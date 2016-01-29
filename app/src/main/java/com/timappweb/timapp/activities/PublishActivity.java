@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -23,6 +24,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.HashMap;
@@ -131,7 +133,7 @@ public class PublishActivity extends BaseActivity{
                     currentPost.place_id = currentPlace.id;
                     call = RestClient.service().addPost(currentPost);
                 }
-                call.enqueue(new AddPostCallback(context, currentPost));
+                call.enqueue(new AddPostCallback(context, currentPost, currentPlace));
             }
         });
     }
@@ -153,12 +155,14 @@ public class PublishActivity extends BaseActivity{
     //Inner classes
     private class AddPostCallback extends RestFeedbackCallback {
 
-        private final Post post;
+        private Post post;
+        private Place place;
         // TODO get post from server instead. (in case tags are in a black list)
 
-        AddPostCallback(Context context, Post post) {
+        AddPostCallback(Context context, Post post, Place place) {
             super(context);
             this.post = post;
+            this.place = place;
         }
 
         @Override
@@ -166,7 +170,17 @@ public class PublishActivity extends BaseActivity{
             int id = Integer.valueOf(feedback.data.get("id"));
             int placeId = Integer.valueOf(feedback.data.get("place_id"));
             Log.i(TAG, "Post has been saved. Id is : " + id);
+
+            // Caching data
             post.place_id = placeId;
+            post.created = Util.getCurrentTimeSec();
+            if (place.isNew()){
+                place.id = placeId;
+                place.created = Util.getCurrentTimeSec();
+                CacheData.setLastPlace(place);
+            }
+            CacheData.setLastPost(post);
+
             IntentsUtils.viewPlaceFromPublish(this.context, placeId);
         }
 

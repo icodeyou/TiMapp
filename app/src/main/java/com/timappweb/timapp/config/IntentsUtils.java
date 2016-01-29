@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
@@ -32,11 +34,15 @@ public class IntentsUtils {
     }
 
     public static void profile(Activity activity){
+        if (!requireLogin(activity))
+            return;
         Intent intent = new Intent(activity, ProfileActivity.class);
         activity.startActivity(intent);
     }
 
     public static void share(Activity activity){
+        if (!requireLogin(activity))
+            return;
         Intent intent = new Intent(activity, ShareActivity.class);
         activity.startActivity(intent);
     }
@@ -47,22 +53,30 @@ public class IntentsUtils {
     }
 
     public static void profile(Activity activity, String username) {
+        if (!requireLogin(activity))
+            return;
         Intent intent = new Intent(activity, ProfileActivity.class);
         intent.putExtra("username", username); // TODO use constant
         activity.startActivity(intent);
     }
 
     public static void editProfile(Activity activity) {
+        if (!requireLogin(activity))
+            return;
         Intent intent = new Intent(activity, EditProfileActivity.class);
         activity.startActivity(intent);
     }
 
     public static void editFirstProfile(Activity activity) {
+        if (!requireLogin(activity))
+            return;
         Intent intent = new Intent(activity, EditFirstProfileActivity.class);
         activity.startActivity(intent);
     }
 
     public static void logout(Activity activity) {
+        if (!requireLogin(activity))
+            return;
         MyApplication.logout();
         Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivity(intent);
@@ -85,6 +99,12 @@ public class IntentsUtils {
     }
 
     public static void addPostStepTags(Context context, Place place, Post post) {
+        if (!requireLogin(context))
+            return;
+        if (!CacheData.isAllowedToAddPost()){
+            Toast.makeText(context, "You've already added a post a moment ago. Please wait before adding a new one!", Toast.LENGTH_LONG);
+            return;
+        }
         Intent intent = new Intent(context, TagActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
@@ -94,6 +114,8 @@ public class IntentsUtils {
     }
 
     public static void addPostStepPublish(Context context, Place place, Post post) {
+        if (!requireLogin(context))
+            return;
         Intent intent = new Intent(context, PublishActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
@@ -103,6 +125,8 @@ public class IntentsUtils {
     }
 
     public static void addPostStepLocate(Context context) {
+        if (!requireLogin(context))
+            return;
         Intent intent = new Intent(context, LocateActivity.class);
         context.startActivity(intent);
     }
@@ -122,6 +146,12 @@ public class IntentsUtils {
     }
 
     public static void addPlace(Context context) {
+        if (!requireLogin(context))
+            return;
+        if (!CacheData.isAllowedToAddPlace()){
+            Toast.makeText(context, "You've already added a place a moment ago. Please wait before adding a new one!", Toast.LENGTH_LONG);
+            return;
+        }
         Intent intent = new Intent(context, AddPlaceActivity.class);
         context.startActivity(intent);
     }
@@ -135,6 +165,8 @@ public class IntentsUtils {
     }
 
     public static void settings(Context context) {
+        if (!requireLogin(context))
+            return;
         Intent intent = new Intent(context,SettingsActivity.class);
         context.startActivity(intent);
     }
@@ -163,9 +195,19 @@ public class IntentsUtils {
     }
 
     public static void addPostStepTags(Context context, Place place) {
+        if (!requireLogin(context))
+            return;
         Post post = new Post();
         post.latitude = MyApplication.getLastLocation().getLatitude();
         post.longitude = MyApplication.getLastLocation().getLongitude();
         IntentsUtils.addPostStepTags(context, place, post);
+    }
+
+    public static boolean requireLogin(Context context){
+        if (!MyApplication.isLoggedIn()){
+            IntentsUtils.login(context);
+            return false;
+        }
+        return true;
     }
 }

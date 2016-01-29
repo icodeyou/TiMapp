@@ -54,6 +54,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             postBox = inflater.inflate(R.layout.item_place, parent, false);
         }
 
+
         // Initialize
         TextView tvLocation = (TextView) postBox.findViewById(R.id.title_place);
         TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);

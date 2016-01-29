@@ -28,7 +28,7 @@ public class Post implements Serializable, MarkerValueInterface {
     public double latitude;
     public double longitude;
     public int place_id;
-    protected int created;
+    public int created;
     public String tag_string;
     public String comment;
     public boolean anonymous;
@@ -136,19 +136,6 @@ public class Post implements Serializable, MarkerValueInterface {
         Log.i(TAG, "Removing the spot from pref");
         LocalPersistenceManager.instance.editor.putBoolean(KEY_IS_BROADCASTING, false);
         LocalPersistenceManager.instance.editor.commit();
-    }
-
-    public void setCreated(int created) {
-        this.created = created;
-    }
-
-    /**
-     * Get created date as a timestamp
-     *
-     * @return
-     */
-    public int getCreated() {
-        return created;
     }
 
     /**

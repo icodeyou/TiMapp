@@ -17,28 +17,26 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePostsFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -251,17 +249,17 @@ public class PlaceActivity extends BaseActivity{
     private void updateBtnVisible(){
         Log.d(TAG, "PlaceActivity.updateBtnVisible()");
         // Check if the user can post in this place
-        if (!MyApplication.hasLastLocation()) {
-            addPostButton.setVisibility(View.GONE);
-            comingButton.setVisibility(View.GONE);
-        }
-        else if (place.isReachable()){
+        if (MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isReachable()){
             addPostButton.setVisibility(View.VISIBLE);
             comingButton.setVisibility(View.GONE);
         }
-        else{
+        else if (MyApplication.hasLastLocation() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)){
             comingButton.setVisibility(View.VISIBLE);
             addPostButton.setVisibility(View.GONE);
+        }
+        else{
+            addPostButton.setVisibility(View.GONE);
+            comingButton.setVisibility(View.GONE);
         }
     }
 
