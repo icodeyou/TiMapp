@@ -54,6 +54,13 @@
     <string name="app_id">1634741340120823</string>
     <string name="namespace">timappweb</string>
 
+    <!-- _____________________________________________________________-->
+    <!-- TOASTS -->
+    <string name="toast_no_space">
+You cannot type any space. To submit a tag, please press the touch "Done" of your keyboard.
+    </string>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_drawer">Menu</string>
     <string name="drawer_open">Drawer Open</string>

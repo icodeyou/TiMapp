@@ -1,14 +1,9 @@
 package com.timappweb.timapp.listeners;
 
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.support.v7.widget.SearchView;
-import android.view.KeyEvent;
-import android.view.Menu;
 
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 
 public class OnQueryTagListener implements SearchView.OnQueryTextListener {
 
@@ -33,7 +28,7 @@ public class OnQueryTagListener implements SearchView.OnQueryTextListener {
                 //if this action is removed, onQueryTextChange will not be called
                 // the second time the spacebar is pressed.
                 TagActivity tagActivity = (TagActivity) manager.getActivity();
-                tagActivity.simulateKey();
+                tagActivity.simulateKeys();
             }
             newText = newText.substring(0, newText.length()-1);
             onQueryTextSubmit(newText);

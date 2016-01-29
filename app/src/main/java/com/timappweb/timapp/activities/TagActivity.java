@@ -195,7 +195,7 @@ public class TagActivity extends BaseActivity{
         findViewById(R.id.bottom_line_hrv).setVisibility(View.VISIBLE);
     }
 
-    public void simulateKey() {
+    public void simulateKeys() {
         new Thread(new Runnable() {
             @Override
             public void run() {
