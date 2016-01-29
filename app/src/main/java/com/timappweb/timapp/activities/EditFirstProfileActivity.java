@@ -1,12 +1,16 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Instrumentation;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
@@ -56,6 +60,27 @@ public class EditFirstProfileActivity extends BaseActivity{
 
 
     private void setListener() {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                if (string.contains(" ")) {
+                    Toast.makeText(EditFirstProfileActivity.this, R.string.toast_no_space, Toast.LENGTH_SHORT).show();
+                    string = string.substring(0, string.length()-1);
+                    editText.setText(string);
+                }
+            }
+        });
+
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -66,6 +91,18 @@ public class EditFirstProfileActivity extends BaseActivity{
                 return false;
             }
         });
+    }
+
+
+    private void simulateBackKey() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Instrumentation inst = new Instrumentation();
+                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_SPACE);
+                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_DEL);
+            }
+        }).start();
     }
 
     private void onSubmitTag() {

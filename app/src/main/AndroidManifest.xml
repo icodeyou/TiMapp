@@ -138,11 +138,11 @@
         <activity
             android:name=".activities.PlaceActivity"
             android:label="@string/title_activity_place"
-            android:parentActivityName=".activities.ProfileActivity" >
+            android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProfileActivity" />
+                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
@@ -193,11 +193,11 @@
         <!-- ADDPLACE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.AddPlaceActivity"
             android:label="Add Event"
-            android:parentActivityName=".activities.LocateActivity">
+            android:parentActivityName=".activities.ProfileActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.LocateActivity" />
+                android:value=".activities.ProfileActivity" />
         </activity>
 
         <!-- SHARE ACTIVITY //////////////////////////////////////////////-->
