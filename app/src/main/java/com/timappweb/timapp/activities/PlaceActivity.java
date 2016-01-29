@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.Cache.CacheData;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
@@ -94,6 +94,8 @@ public class PlaceActivity extends BaseActivity{
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user");
+                        CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
+                        updateBtnVisible();
                     }
 
                     @Override
@@ -255,6 +257,7 @@ public class PlaceActivity extends BaseActivity{
      */
     private void updateBtnVisible(){
         Log.d(TAG, "PlaceActivity.updateBtnVisible()");
+
         // Check if the user can post in this place
         if (MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isReachable()){
             addPostButton.setVisibility(View.VISIBLE);

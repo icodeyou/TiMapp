@@ -46,19 +46,6 @@ public class User implements Serializable {
         return user;
     }
 
-    public void loadFromPref(){
-        this.email = LocalPersistenceManager.instance.pref.getString(KEY_EMAIL, null);
-        this.password = "";
-        this.username = LocalPersistenceManager.instance.pref.getString(KEY_NAME, null);
-        Log.d(TAG, "Loading user form pref: " + this);
-    }
-
-    public void writeToPref() {
-        Log.d(TAG, "Writing user form pref: " + this);
-        LocalPersistenceManager.instance.editor.putString(KEY_NAME, this.username);
-        LocalPersistenceManager.instance.editor.putString(KEY_EMAIL, this.email);
-    }
-
     @Override
     public String toString() {
         return "User{" +

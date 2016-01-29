@@ -4,18 +4,21 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.config.Configuration;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
@@ -24,9 +27,77 @@ import java.util.List;
 public class MyApplication extends Application{
 
     private static final String TAG = "MyApplication";
-    public static User getCurrentUser(){
-        return RestClient.instance().getCurrentUser();
+    public static final String KEY_IS_LOGIN = "IsLoggedIn";
+    private static final String KEY_CURRENT_USER = "current_user";
+    private static final String KEY_LOGIN_TIME = "LoginTime";
+
+    private static User currentUser = null;
+
+
+    /**
+     * @return true if user is logged in
+     */
+    public static boolean isLoggedIn(){
+        if (currentUser != null){
+            return true;
+        }
+        return LocalPersistenceManager.out().getBoolean(MyApplication.KEY_IS_LOGIN, false);
     }
+
+    public static void checkToken(Context context){
+        int loginTime = LocalPersistenceManager.out().getInt(MyApplication.KEY_LOGIN_TIME, 0);
+        if (Util.isOlderThan(loginTime, 3600)){
+            RestClient.instance().checkToken(new RestFeedbackCallback(context) {
+                @Override
+                public void onActionSuccess(RestFeedback feedback) {
+                    Log.i(TAG, "Token is still valid.");
+                    LocalPersistenceManager.in().putInt(KEY_LOGIN_TIME, Util.getCurrentTimeSec());
+                }
+
+                @Override
+                public void onActionFail(RestFeedback feedback) {
+                    Log.i(TAG, "Token is not valid anymore. Login out");
+                    MyApplication.logout();
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.i(TAG, "Server is not available. Login out");
+                    MyApplication.logout();
+                }
+            });
+        }
+    }
+
+    public static User getCurrentUser(){
+        if (currentUser != null){
+            return currentUser;
+        }
+        else {
+            currentUser = new User();
+            currentUser.email = LocalPersistenceManager.out().getString(User.KEY_EMAIL, null);
+            currentUser.username = LocalPersistenceManager.out().getString(User.KEY_NAME, null);
+            Log.d(TAG, "Loading user form pref: " + currentUser);
+            return currentUser;
+        }
+    }
+
+    public static void setCurrentUser(User user){
+        Log.d(TAG, "Writing user form pref: " + user);
+        LocalPersistenceManager.in().putString(User.KEY_NAME, user.username);
+        LocalPersistenceManager.in().putString(User.KEY_EMAIL, user.email);
+        currentUser = user;
+    }
+
+    public static void login(User user, String token){
+        setCurrentUser(user);
+        LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, true);
+        LocalPersistenceManager.in().putInt(KEY_LOGIN_TIME, Util.getCurrentTimeSec());
+        RestClient.instance().login(token);
+
+        LocalPersistenceManager.in().commit();
+    }
+
     public static List<Category> categories = new LinkedList<>();
     private static Location lastLocation = null;
     public static Configuration config;
@@ -47,6 +118,8 @@ public class MyApplication extends Application{
         //*******FACEBOOK******
         initFacebookPermissions();
 
+        // Loading cache in memory
+        CacheData.load();
     }
 
     private void initFacebookPermissions() {
@@ -82,27 +155,6 @@ public class MyApplication extends Application{
         return  null;
     }
 
-    /**
-     * @return true if user is logged in
-     */
-    public static boolean isLoggedIn(){
-        boolean isLoggedIn = LocalPersistenceManager.instance.pref.getBoolean(RestClient.IS_LOGIN, false);
-        return isLoggedIn;
-    }
-
-
-    /**
-     * If user is logged in do nothing
-     * If not redirect to login page
-     * @param currentContext
-     */
-    public static boolean requireLoggedIn(Context currentContext) {
-        if (!isLoggedIn()){
-            redirectLogin(currentContext);
-            return false;
-        }
-        return true;
-    }
 
     public static void redirectLogin(Context currentContext){
         Intent intent = new Intent(currentContext, LoginActivity.class);
@@ -112,6 +164,7 @@ public class MyApplication extends Application{
 
     public static void logout() {
         if (isLoggedIn()){
+            LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, false);
             RestClient.instance().logoutUser();
         }
     }

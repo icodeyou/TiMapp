@@ -5,13 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.timappweb.timapp.Cache.CacheData;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -19,7 +18,6 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
-import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -27,11 +25,9 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class PublishActivity extends BaseActivity{

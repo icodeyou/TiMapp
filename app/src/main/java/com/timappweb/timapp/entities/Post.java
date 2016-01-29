@@ -105,52 +105,20 @@ public class Post implements Serializable, MarkerValueInterface {
     private static final String KEY_TAG = "tags";
     private static final String KEY_IS_BROADCASTING = "isBroadcasting";
 
-    public void writeToPref() {
-        Log.i(TAG, "Writing the spot in pref: " + this);
-        LocalPersistenceManager.instance.editor.putFloat(KEY_LATITUDE, (float) this.latitude);
-        LocalPersistenceManager.instance.editor.putFloat(KEY_LONGITUDE, (float) this.longitude);
-        LocalPersistenceManager.instance.editor.putLong(KEY_CREATED, this.created);
-        LocalPersistenceManager.instance.editor.putString(KEY_TAG, this.tag_string);
-        LocalPersistenceManager.instance.editor.putBoolean(KEY_IS_BROADCASTING, true);
-
-        LocalPersistenceManager.instance.editor.commit();
-    }
-
-    public static Post loadFromPref() {
-        Post spot = new Post();
-        Log.i(TAG, "Loading the spot from pref");
-        spot.longitude = LocalPersistenceManager.instance.pref.getFloat(KEY_LONGITUDE, 0);
-        spot.latitude = LocalPersistenceManager.instance.pref.getFloat(KEY_LATITUDE, 0);
-        spot.created = LocalPersistenceManager.instance.pref.getInt(KEY_CREATED, 0);
-        spot.tag_string = LocalPersistenceManager.instance.pref.getString(KEY_TAG, "");
-
-        return spot;
-    }
-
-
-    public static boolean isBroadcasting() {
-        return LocalPersistenceManager.instance.pref.getBoolean(KEY_IS_BROADCASTING, false);
-    }
-
-    public static void removeFromPref() {
-        Log.i(TAG, "Removing the spot from pref");
-        LocalPersistenceManager.instance.editor.putBoolean(KEY_IS_BROADCASTING, false);
-        LocalPersistenceManager.instance.editor.commit();
-    }
-
     /**
      * Get the created as a pretty time format
      *
      * @return
      */
     public String getPrettyTimeCreated() {
+        /*
         Calendar mCalendar = new GregorianCalendar();
         TimeZone mTimeZone = mCalendar.getTimeZone();
         int mGMTOffset = mTimeZone.getRawOffset();
         Log.d(TAG, "GMT offset is " + (mGMTOffset / 1000) + " seconds for time zone " + mTimeZone.getDisplayName());
-
+        return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
+        */
         PrettyTime p = new PrettyTime();
-        //return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
         // TODO [TEST] diffent time zone on phone
         return p.format(new Date(((long) this.created) * 1000));
     }

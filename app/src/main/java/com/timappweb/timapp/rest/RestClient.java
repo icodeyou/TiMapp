@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -43,21 +44,11 @@ public class RestClient {
 
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
+    public static final String KEY_TOKEN = "token";
 
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
     private final Application app;
-
-    // All Shared Preferences Keys
-    public static final String IS_LOGIN = "IsLoggedIn";
-
-    // User name (make variable public to access from outside)
-    public static final String KEY_TOKEN = "token";
-
-    // Current user
-    private static final String CURRENT_USER = "current_user";
-    //private static ExecutorService mExecutorService = null;
-
 
     // KEY ID
     //public static final String KEY_SESSION_ID = "id";
@@ -114,7 +105,7 @@ public class RestClient {
 
     }
 
-    private void createService(){
+    public void createService(){
         this.service =  builder.build().create(WebServiceInterface.class);
     }
 
@@ -124,55 +115,12 @@ public class RestClient {
     }
 
     /**
-     * Check login method wil check user login status
-     * If false it will redirect user to login page
-     * Else won't do anything
-     * */
-    public void checkLogin() {
-        // Check login status
-        if(!MyApplication.isLoggedIn()){
-            Log.d(TAG, "Checking login failed. Redirected to login page");
-            // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(app, LoginActivity.class);
-            // Closing all the Activities
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            // Add new Flag to start new Activity
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            // Staring Login Activity
-            app.startActivity(i);
-        }
-
-        Log.d(TAG, "Login success!");
-    }
-    /**
-     * Create login session
-     **/
-    public void createLoginSession(String token, User user){
-        user.writeToPref();
-        LocalPersistenceManager.instance.editor.putString(KEY_TOKEN, token);
-        LocalPersistenceManager.instance.editor.putBoolean(IS_LOGIN, true);
-        LocalPersistenceManager.instance.editor.commit();
-
-        // Update the service
-        this.createService();
-    }
-
-    /**
-     * Get stored session data
-     * */
-    public User getCurrentUser(){
-        User user = new User();
-        user.loadFromPref();
-        return user;
-    }
-
-    /**
      * Clear session details
      * */
     public void logoutUser(){
         // Clearing all data from Shared Preferences
-        LocalPersistenceManager.instance.editor.clear();
-        LocalPersistenceManager.instance.editor.commit();
+        LocalPersistenceManager.in().clear();
+        LocalPersistenceManager.in().commit();
 
         // After logout redirect user to Login Activity
         Intent i = new Intent(app, LoginActivity.class);
@@ -189,25 +137,18 @@ public class RestClient {
     /**
      * Check login on the server side thanks to the token
      */
-    public void checkToken() {
+    public void checkToken(RestFeedbackCallback callback) {
         Log.i(TAG, "Checking user token...");
-        final RestClient that = this;
         Call<RestFeedback> call = this.service.checkToken();
-        call.enqueue(new Callback<RestFeedback>() {
-            @Override
-            public void onResponse(retrofit2.Response<RestFeedback> response) {
-                if (!response.isSuccess() || !response.body().success) {
-                    Log.i(TAG, "Token is not valid anymore. Login out");
-                    MyApplication.logout();
-                }
-            }
+        call.enqueue(callback);
+    }
 
-            @Override
-            public void onFailure(Throwable t) {
-                Log.i(TAG, "Token is not valid anymore. Login out");
-                MyApplication.logout();
-            }
-        });
+    public String getToken() {
+        return LocalPersistenceManager.out().getString(KEY_TOKEN, null);
+    }
+
+    public void login(String token) {
+        LocalPersistenceManager.in().putString(KEY_TOKEN, token);
     }
 
 /*

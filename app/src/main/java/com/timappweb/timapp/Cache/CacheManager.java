@@ -1,4 +1,4 @@
-package com.timappweb.timapp.Cache;
+package com.timappweb.timapp.cache;
 
 import android.content.Context;
 
@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * Created by stephane on 1/29/2016.

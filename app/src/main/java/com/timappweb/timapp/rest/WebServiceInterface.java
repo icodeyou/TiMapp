@@ -114,8 +114,8 @@ public interface WebServiceInterface {
      * Used to get all place that are in a area
      * @param conditions
      */
-    @GET("Places/around_me.json")
-    Call<List<Place>> placeAroundMe(@QueryMap Map<String, String> conditions);
+    //@GET("Places/around_me.json")
+    //Call<List<Place>> placeAroundMe(@QueryMap Map<String, String> conditions);
 
     /**
      * Used to get all place that are around user position

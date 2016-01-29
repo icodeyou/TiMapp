@@ -23,7 +23,7 @@ public class SessionRequestInterceptor implements Interceptor
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
-        String token = LocalPersistenceManager.instance.pref.getString(RestClient.KEY_TOKEN, null);
+        String token = RestClient.instance().getToken();
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()

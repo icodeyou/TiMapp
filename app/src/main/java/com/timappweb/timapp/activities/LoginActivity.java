@@ -32,6 +32,7 @@ import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestCallback;
@@ -148,7 +149,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         String token = (String) feedback.data.get("token");
                         user.username = feedback.data.get("username");
                         Log.i(TAG, "Session created with session token: " + token);
-                        RestClient.instance().createLoginSession(token, user);
+                        MyApplication.login(user, token);
                         IntentsUtils.lastActivityBeforeLogin(that);
                     }
 
@@ -410,7 +411,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         && response.data.containsKey("username")){
                     String token = (String) response.data.get("token");
                     user.username = response.data.get("username");
-                    RestClient.instance().createLoginSession(token, user);
+                    MyApplication.login(user, token);
                     Log.i(TAG, "Session created with session token: " + token);
                     IntentsUtils.lastActivityBeforeLogin(this.activity);
                     return true;

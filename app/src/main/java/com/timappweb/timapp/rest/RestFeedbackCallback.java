@@ -18,6 +18,9 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
     public RestFeedbackCallback(Context context) {
         super(context);
     }
+    public RestFeedbackCallback() {
+        super(null);
+    }
 
     public abstract void onActionSuccess(RestFeedback feedback);
     public abstract void onActionFail(RestFeedback feedback);
@@ -37,14 +40,18 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
         else {
             this.onResponseFail(response);
         }
+        this.after();
     }
 
     private void onResponseFail(Response<RestFeedback> response) {
         Log.i(TAG, "Response fail: " + response.code());
+        this.after();
     }
 
     @Override
     public void onFailure(Throwable t) {
         super.onFailure(t);
     }
+
+    public void after(){}
 }
