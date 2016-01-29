@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,11 +18,17 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+
+import java.util.List;
 
 public class EditFirstProfileActivity extends BaseActivity{
 
     String TAG = "EditProfileActivity";
+    private Activity activity = this;
 
     private HorizontalTagsRecyclerView horizontalTagsRecyclerView;
     private HorizontalTagsAdapter horizontalTagsAdapter;
@@ -82,7 +89,7 @@ public class EditFirstProfileActivity extends BaseActivity{
                     Toast.makeText(EditFirstProfileActivity.this, R.string.toast_no_space, Toast.LENGTH_SHORT).show();
                     string = string.substring(0, string.length()-1);
                     editText.setText(string);
-                    editText.setSelection(2);
+                    editText.setSelection(string.length());
                 }
             }
         });
@@ -90,11 +97,34 @@ public class EditFirstProfileActivity extends BaseActivity{
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                int length = editText.getText().length();
+                if (length == 0) {
+                    Toast.makeText(EditFirstProfileActivity.this, R.string.toast_no_tag, Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (length == 1) {
+                    Toast.makeText(EditFirstProfileActivity.this, R.string.toast_tag_one_letter, Toast.LENGTH_SHORT).show();
+                    editText.requestFocus();
+                    return false;
+                } else if (actionId == EditorInfo.IME_ACTION_DONE) {
                     onSubmitTag();
                     return true;
                 }
                 return false;
+            }
+        });
+
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Tag> tagList = horizontalTagsAdapter.getData();
+                IntentsUtils.profile(activity, tagList);
+            }
+        });
+
+        horizontalTagsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                Toast.makeText(EditFirstProfileActivity.this, "YOUPI", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -105,11 +135,13 @@ public class EditFirstProfileActivity extends BaseActivity{
             case 0:
                 horizontalTagsAdapter.addData(editText.getText().toString());
                 horizontalTagsAdapter.notifyDataSetChanged();
+                editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile2));
                 editText.setText("");
                 break;
             case 1:
                 horizontalTagsAdapter.addData(editText.getText().toString());
                 horizontalTagsAdapter.notifyDataSetChanged();
+                editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile3));
                 editText.setText("");
                 break;
             case 2:

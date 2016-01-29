@@ -90,7 +90,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         }
 
         //Set OnClickListener for the entire view !
-
         if (this.itemAdapterClickListener != null){
             postBox.setOnClickListener(new View.OnClickListener() {
                 @Override

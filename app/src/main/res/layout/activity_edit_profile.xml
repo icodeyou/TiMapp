@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/border_radius"
+        android:background="@drawable/border_radius_accent"
         android:layout_marginRight="1dp"
         android:layout_marginLeft="1dp"
         android:layout_marginBottom="2dp"

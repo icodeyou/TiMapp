@@ -59,6 +59,8 @@
     <string name="toast_no_space">
 You cannot type any space. To submit a tag, please press the touch "Done" of your keyboard.
     </string>
+    <string name="toast_no_tag">Please add a tag.</string>
+    <string name="toast_tag_one_letter">Your tag should have at least 2 letters.</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -115,8 +117,12 @@ You cannot type any space. To submit a tag, please press the touch "Done" of you
     <string name="text_create_account_login">Create account</string>
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
     <string name="hint_et_edit_first_profile">Type a word</string>
+    <string name="hint_et_edit_first_profile2">Another one</string>
+    <string name="hint_et_edit_first_profile3">Last one</string>
     <string name="post_shared">Posts shared</string>
     <string name="places_created">Places created</string>
+    <string name="edit_first_profile1">Well done.</string>
+    <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
     <string name="create_second_post_delay">You\'ve already added a post a moment ago. Please wait before adding a new one!</string>
     <string name="create_second_place_delay">You\'ve already added a place a moment ago. Please wait before adding a new one!</string>
 </resources>

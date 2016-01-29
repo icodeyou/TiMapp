@@ -53,10 +53,11 @@
             android:layout_marginLeft="2dp"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@drawable/border_radius">
+            android:background="@drawable/border_radius_accent">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textColor="@color/White"
                 android:textSize="@dimen/text_mountain"
                 android:layout_marginBottom="10dp"

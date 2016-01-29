@@ -20,6 +20,7 @@ import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
@@ -72,6 +73,8 @@ public class TagActivity extends BaseActivity{
 
         initAdapterPlace();
 
+        initListeners();
+
         setSelectedTagsViewGone();
     }
 
@@ -110,16 +113,6 @@ public class TagActivity extends BaseActivity{
 
         searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
-        selectedTagsRV.addOnItemTouchListener(new RecyclerItemTouchListener(this, new RecyclerItemTouchListener.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(RecyclerView recyclerView, View view, int position) {
-                Log.d(TAG, "Clicked on selected item");
-                selectedTagsRV.getAdapter().removeData(position);
-                setCounterHint();
-            }
-        }));
-
         suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
 
         //Initialize Query hint in searchview
@@ -147,6 +140,17 @@ public class TagActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Private methods
+
+    private void initListeners() {
+        selectedTagsRV.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d(TAG, "Clicked on selected item");
+                selectedTagsRV.getAdapter().removeData(position);
+                setCounterHint();
+            }
+        });
+    }
 
     private void initAdapterPlace() {
         PlacesAdapter placesAdapter = new PlacesAdapter(this);

@@ -21,7 +21,6 @@
                 android:id="@+id/image_category_place"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:padding="5dp"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_category_music"/>
@@ -38,19 +37,19 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <ImageView
-                        android:layout_height="@dimen/logo_small"
-                        android:layout_width="@dimen/logo_small"
+                        android:layout_height="@dimen/logo_normal"
+                        android:layout_width="@dimen/logo_normal"
                         android:src="@drawable/ic_location"/>
                     <TextView
                         android:id="@+id/title_place"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_width="match_parent"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
-                        android:maxHeight="40dp"
                         android:gravity="center_vertical|left"
+                        android:textStyle="bold"
                         android:text="Club Never Stop The Music"
-                        android:textSize="@dimen/text_small"
+                        android:textSize="@dimen/text_normal"
                         android:textColor="@color/Black"/>
                 </LinearLayout>
 
@@ -59,31 +58,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_height="@dimen/logo_small"
-                            android:layout_width="@dimen/logo_small"
-                            android:src="@drawable/ic_clock"/>
-                        <TextView
-                            android:id="@+id/time_place"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="5 min"
-                            android:textSize="@dimen/text_small"
-                            android:textColor="@color/Black"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:paddingRight="20dp"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
                         <ImageView
@@ -101,6 +78,28 @@
                             android:textSize="@dimen/text_small"
                             android:textStyle="bold"
                             android:textColor="@color/colorPrimaryDark"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageView
+                            android:layout_height="@dimen/logo_small"
+                            android:layout_width="@dimen/logo_small"
+                            android:src="@drawable/ic_clock_gray"/>
+                        <TextView
+                            android:id="@+id/time_place"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="5 min"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/DarkGray"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
