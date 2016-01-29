@@ -24,6 +24,7 @@ public class Place implements Serializable, MarkerValueInterface {
     public double longitude;
     public int count_posts;
     public int category_id;
+    public int points;
     public List<Tag> tags;
 
     public ArrayList<Post> posts;

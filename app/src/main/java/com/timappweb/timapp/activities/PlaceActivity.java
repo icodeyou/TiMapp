@@ -34,7 +34,11 @@ import com.timappweb.timapp.rest.model.RestError;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -52,6 +56,8 @@ public class PlaceActivity extends BaseActivity{
     private Activity currentActivity;
 
     private ShareActionProvider shareActionProvider;
+    private PlacesAdapter placesAdapter;
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +212,27 @@ public class PlaceActivity extends BaseActivity{
         initPlaceAdapters();
         this.updateBtnVisible();
 
+        // Set timer to update points for the place
+        TimerTask updatePlacePoints = new TimerTask() {
+
+            @Override
+            public void run() {
+                Log.d(TAG, "Running updatePlacePoints");
+                new Thread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        // TODO place expired
+                        place.points = place.points - 1;
+                        placesAdapter.notifyDataSetChanged();
+                    }
+                }).start();
+            }
+        };
+        timer = new Timer();
+        timer.scheduleAtFixedRate(updatePlacePoints, 1000, 1000);
+
         if (!MyApplication.hasLastLocation()) {
             Log.d(TAG, "There is no last known location");
             this.initLocationProvider(new LocationListener() {
@@ -276,7 +303,7 @@ public class PlaceActivity extends BaseActivity{
 
     private void initPlaceAdapters() {
          //PlacesAdapter
-        PlacesAdapter placesAdapter = new PlacesAdapter(this, false);
+        placesAdapter = new PlacesAdapter(this, false);
         placesAdapter.add(place);
         placeListView.setAdapter(placesAdapter);
     }

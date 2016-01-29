@@ -57,14 +57,14 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         // Initialize
         TextView tvLocation = (TextView) postBox.findViewById(R.id.title_place);
         TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);
-        TextView tvCountPosts = (TextView) postBox.findViewById(R.id.people_counter_place);
+        TextView tvCountPoints = (TextView) postBox.findViewById(R.id.people_counter_place);
         rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
         ImageView categoryIcon = (ImageView) postBox.findViewById(R.id.image_category_place);
 
         //Set texts
         tvLocation.setText(place.name);
         tvTime.setText(place.getTime());
-        tvCountPosts.setText(String.valueOf(place.countUsers()));
+        tvCountPoints.setText(String.valueOf(place.points));
 
         Category category = MyApplication.getCategory(place.category_id);
         if (category != null){
