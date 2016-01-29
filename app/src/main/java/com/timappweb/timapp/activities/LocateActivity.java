@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -104,6 +105,10 @@ public class LocateActivity extends BaseActivity{
         buttonAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!CacheData.isAllowedToAddPlace()){
+                    Toast.makeText(getApplicationContext(), R.string.create_second_place_delay, Toast.LENGTH_LONG);
+                    return;
+                }
                 IntentsUtils.addPlace(that);
             }
         });

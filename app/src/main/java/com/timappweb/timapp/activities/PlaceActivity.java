@@ -213,7 +213,6 @@ public class PlaceActivity extends BaseActivity{
 
         // Set timer to update points for the place
         TimerTask updatePlacePoints = new TimerTask() {
-
             private Handler mHandler = new Handler();
             @Override
             public void run() {

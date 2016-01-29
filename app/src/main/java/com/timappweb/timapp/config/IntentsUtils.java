@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditFirstProfileActivity;
@@ -102,7 +103,7 @@ public class IntentsUtils {
         if (!requireLogin(context))
             return;
         if (!CacheData.isAllowedToAddPost()){
-            Toast.makeText(context, "You've already added a post a moment ago. Please wait before adding a new one!", Toast.LENGTH_LONG);
+            Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG);
             return;
         }
         Intent intent = new Intent(context, TagActivity.class);
@@ -149,7 +150,7 @@ public class IntentsUtils {
         if (!requireLogin(context))
             return;
         if (!CacheData.isAllowedToAddPlace()){
-            Toast.makeText(context, "You've already added a place a moment ago. Please wait before adding a new one!", Toast.LENGTH_LONG);
+            Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG);
             return;
         }
         Intent intent = new Intent(context, AddPlaceActivity.class);

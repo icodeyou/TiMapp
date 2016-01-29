@@ -117,4 +117,6 @@ You cannot type any space. To submit a tag, please press the touch "Done" of you
     <string name="hint_et_edit_first_profile">Type a word</string>
     <string name="post_shared">Posts shared</string>
     <string name="places_created">Places created</string>
+    <string name="create_second_post_delay">You\'ve already added a post a moment ago. Please wait before adding a new one!</string>
+    <string name="create_second_place_delay">You\'ve already added a place a moment ago. Please wait before adding a new one!</string>
 </resources>
