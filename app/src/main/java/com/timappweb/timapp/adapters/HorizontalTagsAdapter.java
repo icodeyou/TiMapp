@@ -104,6 +104,15 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         this.notifyDataSetChanged();
     }
 
+    public boolean isOneSimilarValue(String string) {
+        for (Tag t : data) {
+            if(t.getName().equalsIgnoreCase(string)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*
     public ArrayList<String> getStringsFromTags() {
         ArrayList<String> res = new ArrayList<String>();

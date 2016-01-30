@@ -157,19 +157,10 @@
         </activity>
 
         <!-- EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
-        <activity
-            android:name=".activities.EditProfileActivity"
-            android:label="@string/title_activity_edit_profile"
-            android:parentActivityName=".activities.ProfileActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProfileActivity" />
-        </activity>
 
         <!-- FIRST EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
-            android:name=".activities.EditFirstProfileActivity"
+            android:name=".activities.EditProfileActivity"
             android:label="@string/title_activity_first_edit_profile"
             android:windowSoftInputMode="adjustNothing|stateVisible"
             android:parentActivityName=".activities.ProfileActivity" >

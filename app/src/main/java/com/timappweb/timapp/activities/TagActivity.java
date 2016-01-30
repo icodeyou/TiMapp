@@ -4,7 +4,6 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -21,7 +20,6 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.listeners.RecyclerItemTouchListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -84,7 +82,7 @@ public class TagActivity extends BaseActivity{
         if (searchAndSelectTagManager != null){
             //Clear list of tags in case back button is pressed in PublishActivity
             searchAndSelectTagManager.resetSelectedTags();
-            setCounterHint();
+            actionCounter();
         }
     }
 
@@ -116,7 +114,7 @@ public class TagActivity extends BaseActivity{
         suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
 
         //Initialize Query hint in searchview
-        setCounterHint();
+        actionCounter();
 
         return true;
     }
@@ -147,7 +145,7 @@ public class TagActivity extends BaseActivity{
             public void onClick(int position) {
                 Log.d(TAG, "Clicked on selected item");
                 selectedTagsRV.getAdapter().removeData(position);
-                setCounterHint();
+                actionCounter();
             }
         });
     }
@@ -161,10 +159,10 @@ public class TagActivity extends BaseActivity{
     public void addTag(String tag) {
         selectedTagsRV.getAdapter().addData(tag);
         selectedTagsRV.scrollToEnd();
-        setCounterHint();
+        actionCounter();
     }
 
-    public void setCounterHint() {
+    public void actionCounter() {
         switch (searchAndSelectTagManager.getSelectedTags().size()) {
             case 0:
                 setSelectedTagsViewGone();
