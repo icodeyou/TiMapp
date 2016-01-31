@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:padding="10dp">
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp" android:paddingLeft="10dp" android:paddingRight="10dp">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_chineseman"></ImageView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp">
-        <TextView
-            android:id="@+id/tv_username"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Jean-Mi de la Vallonie"
-            android:textColor="@color/list_post_color"/>
-
-        <TextView
-            android:id="@+id/tv_time"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:text="vend. 2 nov à 17h35"
-            android:textColor="@color/list_post_color"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Jean-Mi de la Vallonie"
+                android:textColor="@color/Black"/>
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|end"
+                android:text="vend. 2 nov à 17h35"
+                android:textColor="@color/Gray"/>
+        </LinearLayout>
+
+        <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+            android:id="@+id/rv_horizontal_tags"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_rv_displayed_tags"/>
     </LinearLayout>
-
-    <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-        android:id="@+id/rv_horizontal_tags"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_rv_displayed_tags"/>
-
 </LinearLayout>

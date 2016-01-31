@@ -17,7 +17,7 @@
         android:gravity="bottom">
         <ImageView android:layout_width="80dp" android:layout_height="80dp"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/ic_chineseman"
             android:id="@+id/drawer_user_picture" />
 
         <LinearLayout
