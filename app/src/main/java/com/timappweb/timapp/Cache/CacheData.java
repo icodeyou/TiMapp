@@ -32,6 +32,9 @@ public class CacheData {
         lastPlace = LocalPersistenceManager.readObject(CacheData.KEY_LAST_PLACE, Place.class);
         lastPost = LocalPersistenceManager.readObject(CacheData.KEY_LAST_POST, Post.class);
         mapPlaceStatus = LocalPersistenceManager.readObject(CacheData.KEY_MAP_USER_PLACES, HashMap.class);
+        if (mapPlaceStatus == null){
+            mapPlaceStatus = new HashMap<>();
+        }
     }
 
     public static void setLastPlace(Place lastPlace) {
