@@ -43,7 +43,6 @@ public class ExploreFragment extends Fragment{
         /** Important: Must use the child FragmentManager or you will see side effects. */
         this.tabsAdapter = new TabsAdapter(getChildFragmentManager());
         viewPager.setAdapter(this.tabsAdapter);
-
         //hide underline
         pagerTabStrip.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         pagerTabStrip.setTextColor(getResources().getColor(R.color.White));
@@ -56,6 +55,10 @@ public class ExploreFragment extends Fragment{
 
     public int getCurrentItem() {
         return viewPager.getCurrentItem();
+    }
+
+    public ViewPager getViewPager() {
+        return viewPager;
     }
 
     public static class TabsAdapter extends FragmentPagerAdapter {

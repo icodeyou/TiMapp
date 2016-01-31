@@ -42,6 +42,7 @@ public class ExploreTagsFragment extends Fragment {
         placesAdapter = new TagsAndCountersAdapter(context);
         lvTags.setAdapter(placesAdapter);
 
+
         return root;
     }
 

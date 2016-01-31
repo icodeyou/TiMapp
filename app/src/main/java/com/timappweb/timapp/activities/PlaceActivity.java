@@ -33,6 +33,8 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.utils.EachSecondTimerTask;
+import com.timappweb.timapp.utils.TimeTaskCallback;
 
 import java.util.List;
 import java.util.Timer;
@@ -56,7 +58,7 @@ public class PlaceActivity extends BaseActivity{
 
     private ShareActionProvider shareActionProvider;
     private PlacesAdapter placesAdapter;
-    private Timer timer;
+    private EachSecondTimerTask eachSecondTimerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +180,7 @@ public class PlaceActivity extends BaseActivity{
         pager.setAdapter(this.pagerAdapter);
     }
 
+
     private void loadPlace(int placeId) {
         final PlaceActivity that = this;
         Call<Place> call = RestClient.service().viewPlace(placeId);
@@ -185,12 +188,11 @@ public class PlaceActivity extends BaseActivity{
             @Override
             public void onResponse(Response<Place> response) {
                 super.onResponse(response);
-                if (response.isSuccess()){
+                if (response.isSuccess()) {
                     Place p = response.body();
                     place = p;
                     notifyPlaceLoaded();
-                }
-                else{
+                } else {
                     Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG).show();
                     IntentsUtils.home(that);
                 }
@@ -212,33 +214,6 @@ public class PlaceActivity extends BaseActivity{
         progressView.setVisibility(View.GONE);
         initPlaceAdapters();
         this.updateBtnVisible();
-
-        // Set timer to update points for the place
-        TimerTask updatePlacePoints = new TimerTask() {
-            private Handler mHandler = new Handler();
-            @Override
-            public void run() {
-                Log.d(TAG, "Running updatePlacePoints");
-                new Thread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // TODO place expired
-                                place.points = place.points - 1;
-                                placesAdapter.notifyDataSetChanged();
-                                updateBtnVisible();
-                            }
-                        });
-                    }
-                }).start();
-            }
-        };
-        timer = new Timer();
-        timer.scheduleAtFixedRate(updatePlacePoints, 1000, 1000);
 
         if (!MyApplication.hasLastLocation()) {
             Log.d(TAG, "There is no last known location");
@@ -315,6 +290,24 @@ public class PlaceActivity extends BaseActivity{
         placesAdapter.add(place);
         placeListView.setAdapter(placesAdapter);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        eachSecondTimerTask.cancel();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
+            @Override
+            public void update() {
+                placesAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 
     public Place getPlace() {
         return place;

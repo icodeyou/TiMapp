@@ -125,8 +125,6 @@ public class ProfileActivity extends BaseActivity{
     private void initAdapter() {
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         //TODO : find last place
-        Place place = new Place(1, 0, 0, "test");
-        placesAdapter.add(place);
         placeView.setAdapter(placesAdapter);
     }
 

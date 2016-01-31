@@ -38,7 +38,9 @@ import com.timappweb.timapp.map.PlaceClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
+import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.MyLocationProvider;
+import com.timappweb.timapp.utils.TimeTaskCallback;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +67,7 @@ public class ExploreMapFragment extends Fragment{
     private Bundle mapBundle;
 
     private ExploreFragment exploreFragment;
+    private EachSecondTimerTask eachSecondTimerTask;
 
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
@@ -97,6 +100,7 @@ public class ExploreMapFragment extends Fragment{
         mapView.onCreate(mapBundle);
         placesViewer = (ListView) root.findViewById(R.id.places_viewer);
         placesAdapter = new PlacesAdapter(getActivity(), false);
+        placesViewer.setAdapter(placesAdapter);
 
         if (savedInstanceState == null){
             // TODO what happens with instance
@@ -134,6 +138,8 @@ public class ExploreMapFragment extends Fragment{
     public void onPause() {
         mapView.onPause();
         super.onPause();
+
+        eachSecondTimerTask.cancel();
     }
 
     @Override
@@ -142,7 +148,15 @@ public class ExploreMapFragment extends Fragment{
         super.onResume();
         Log.d(TAG, "ExploreMapFragment.onResume()");
         this.loadMapIfNeeded();
+
+        eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
+            @Override
+            public void update() {
+                placesAdapter.notifyDataSetChanged();
+            }
+        });
     }
+
 
 
 
@@ -168,8 +182,9 @@ public class ExploreMapFragment extends Fragment{
         placesViewer.setVisibility(View.VISIBLE);
         placesAdapter.clear();
         placesAdapter.add(place);
-        placesViewer.setAdapter(placesAdapter);
     }
+
+
 
     public void hidePlace() {
         placesViewer.setVisibility(View.GONE);
@@ -304,6 +319,9 @@ public class ExploreMapFragment extends Fragment{
             public boolean onClusterClick(Cluster<Place> cluster) {
                 Log.d(TAG, "You clicked on a post cluster");
                 gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
+                placesAdapter.clear();
+                placesAdapter.addAll(cluster.getItems());
+                ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                 return true;
             }
         });

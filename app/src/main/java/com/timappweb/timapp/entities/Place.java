@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.Configuration;
 import com.timappweb.timapp.utils.DistanceHelper;
+import com.timappweb.timapp.utils.Util;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -25,11 +26,17 @@ public class Place implements Serializable, MarkerValueInterface {
     public int count_posts;
     public int category_id;
     public int points;
+    public int loaded_time = -1;
     public List<Tag> tags;
 
     public ArrayList<Post> posts;
 
+    public Place(){
+        this.loaded_time = Util.getCurrentTimeSec();
+    }
+
     public Place(int id, double lat, double lng, String name) {
+        this.loaded_time = Util.getCurrentTimeSec();
         this.id = id;
         this.latitude = lat;
         this.longitude = lng;
@@ -40,6 +47,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public Place(double lat, double lng, String name, Category category) {
+        this.loaded_time = Util.getCurrentTimeSec();
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
@@ -142,4 +150,7 @@ public class Place implements Serializable, MarkerValueInterface {
         return name.trim().length() >= MyApplication.config.getInt(Configuration.PLACE_MIN_LENGTH);
     }
 
+    public int getPoints() {
+        return this.points - (Util.getCurrentTimeSec() - this.loaded_time);
+    }
 }

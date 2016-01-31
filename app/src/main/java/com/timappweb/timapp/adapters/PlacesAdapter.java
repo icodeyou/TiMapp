@@ -65,7 +65,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         //Set texts
         tvLocation.setText(place.name);
         tvTime.setText(place.getTime());
-        tvCountPoints.setText(String.valueOf(place.points));
+        tvCountPoints.setText(String.valueOf(place.getPoints()));
 
         Category category = MyApplication.getCategory(place.category_id);
         if (category != null){

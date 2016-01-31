@@ -21,6 +21,8 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.EachSecondTimerTask;
+import com.timappweb.timapp.utils.TimeTaskCallback;
 
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class ExplorePlacesFragment extends Fragment {
     private static final String TAG = "PlaceTagsFragment";
     private PlacesAdapter   placesAdapter;
     private ExploreFragment exploreFragment;
+    private EachSecondTimerTask eachSecondTimerTask;
 
     @Nullable
     @Override
@@ -58,18 +61,25 @@ public class ExplorePlacesFragment extends Fragment {
 
     public void onResume(){
         super.onResume();
+
+        eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
+            @Override
+            public void update() {
+                placesAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        eachSecondTimerTask.cancel();
     }
 
     private void loadData() {
         //TODO : load data
     }
 
-    private void loadDummyData(){
-        Place place = new Place(1,0,0,"Event Test 1");
-        Place place2 = new Place(1,0,0,"Event Test 2");
-        Place place3 = new Place(1,0,0,"Event Test 3");
-        placesAdapter.add(place);
-        placesAdapter.add(place2);
-        placesAdapter.add(place3);
-    }
 }
