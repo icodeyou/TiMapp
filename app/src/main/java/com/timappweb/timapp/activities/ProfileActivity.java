@@ -37,6 +37,8 @@ public class ProfileActivity extends BaseActivity{
     private TextView tvUsername;
     private TextView tvCountTags;
     private TextView tvCountPlaces;
+
+    // TODO jean: remplace ca par un adapter. Les tags de l'utilsateur: MyApplication.getCurrentUser().tags
     private TextView tvTag1;
     private TextView tvTag2;
     private TextView tvTag3;
@@ -63,25 +65,17 @@ public class ProfileActivity extends BaseActivity{
         initAdapter();
 
         // Get data
-        String username = null;
-        Bundle extras = getIntent().getExtras();
-        if(extras!=null) {
-            if (extras.containsKey("username")){
-                username = extras.getString("username");
-            }
-            else if(extras.containsKey("tag1")) {
-                setNewTagsProfile();
-            }
+        int userId = IntentsUtils.extractUserId(getIntent());
+        if (userId == -1 && MyApplication.isLoggedIn()){
+            userId = MyApplication.getCurrentUser().id;
         }
-        else if (MyApplication.isLoggedIn()){
-            username = MyApplication.getCurrentUser().username;
-        }
-        if (username == null){
-            // Redirect to login activity
+        else{
             Log.e(TAG, "Username should be set to see profile activity.");
             MyApplication.redirectLogin(this);
+            return;
         }
-        this.loadUser(username); // TODO get username by bundle of current username if none
+
+        this.loadUser(userId);
     }
 
     @Override
@@ -112,24 +106,14 @@ public class ProfileActivity extends BaseActivity{
         }
     }
 
-    private void setNewTagsProfile() {
-        Bundle extras = getIntent().getExtras();
-        String tag1 = extras.getString("tag1");
-        String tag2 = extras.getString("tag2");
-        String tag3 = extras.getString("tag2");
-        tvTag1.setText(tag1);
-        tvTag2.setText(tag2);
-        tvTag3.setText(tag3);
-    }
-
     private void initAdapter() {
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         //TODO : find last place
         placeView.setAdapter(placesAdapter);
     }
 
-    private void loadUser(final String username){
-        Call<User> call = RestClient.service().profile(username);
+    private void loadUser(int userId){
+        Call<User> call = RestClient.service().profile(userId);
         call.enqueue(new RestCallback<User>(this) {
             @Override
             public void onFailure(Throwable t) {
@@ -150,12 +134,6 @@ public class ProfileActivity extends BaseActivity{
                     // Setting the last post
                     if (mUser.posts != null && mUser.posts.size() > 0) {
                         Post post = mUser.posts.getFirst();
-                        ArrayList<String> arrayTags = post.getTagsToStringArray();
-                    /*
-                    for (Tag tag : arrayTags) {
-                        String tag1 = "#" + arrayTags.get(1);
-
-                    }*/
                     }
                     if(mUser.username.equals(MyApplication.getCurrentUser().username)) {
                         invalidateOptionsMenu();
@@ -172,7 +150,7 @@ public class ProfileActivity extends BaseActivity{
     public List<Tag> generateDummyData() {
         List<Tag> data = new ArrayList<>();
         data.add(new Tag("sexygirls", 0));
-        data.add(new Tag("smimmingpool", 0));
+        data.add(new Tag("swimmingpool", 0));
         data.add(new Tag("swimsuit", 0));
         data.add(new Tag("beautifulplace", 0));
         return data;

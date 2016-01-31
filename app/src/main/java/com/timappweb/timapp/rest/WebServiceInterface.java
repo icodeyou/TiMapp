@@ -54,8 +54,8 @@ public interface WebServiceInterface {
     @GET("users/check_token.json")
     Call<RestFeedback>  checkToken();
 
-    @GET("users/profile/{username}.json")
-    Call<User>  profile(@Path("username") String username);
+    @GET("users/profile/{id}.json")
+    Call<User>  profile(@Path("id") int username);
 
     @POST("users/facebook_login.json")
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);

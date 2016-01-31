@@ -75,6 +75,7 @@ public class MyApplication extends Application{
         }
         else {
             currentUser = new User();
+            currentUser.id = LocalPersistenceManager.out().getInt(User.KEY_ID, -1);
             currentUser.email = LocalPersistenceManager.out().getString(User.KEY_EMAIL, null);
             currentUser.username = LocalPersistenceManager.out().getString(User.KEY_NAME, null);
             Log.d(TAG, "Loading user form pref: " + currentUser);
@@ -84,6 +85,7 @@ public class MyApplication extends Application{
 
     public static void setCurrentUser(User user){
         Log.d(TAG, "Writing user form pref: " + user);
+        LocalPersistenceManager.in().putInt(User.KEY_ID, user.id);
         LocalPersistenceManager.in().putString(User.KEY_NAME, user.username);
         LocalPersistenceManager.in().putString(User.KEY_EMAIL, user.email);
         currentUser = user;

@@ -130,6 +130,23 @@ public class SearchHistory<T>{
         return lastSearch;
     }
 
+    /**
+     * TODO bugs when searching fast
+     * 01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime: java.lang.NullPointerException: Attempt to invoke interface method 'java.util.Iterator java.util.List.iterator()' on a null object reference
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.utils.SearchHistory.filterData(SearchHistory.java:135)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.utils.SearchHistory$Item.getFilteredData(SearchHistory.java:179)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.utils.SearchHistory.search(SearchHistory.java:54)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.managers.SearchAndSelectTagManager.loadTags(SearchAndSelectTagManager.java:113)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.managers.SearchAndSelectTagManager.suggestTag(SearchAndSelectTagManager.java:109)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.listeners.OnQueryTagListener.onQueryTextChange(OnQueryTagListener.java:37)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at android.support.v7.widget.SearchView.onTextChanged(SearchView.java:1148)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at android.support.v7.widget.SearchView.access$2000(SearchView.java:101)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at android.support.v7.widget.SearchView$12.onTextChanged(SearchView.java:1622)
+     * @param data
+     * @param term
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> filterData(List<T> data, String term){
         List<T> results = new LinkedList<>();
         for (T d: data){

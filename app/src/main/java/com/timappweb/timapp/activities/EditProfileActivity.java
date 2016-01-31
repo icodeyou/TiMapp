@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -121,8 +122,8 @@ public class EditProfileActivity extends BaseActivity{
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Tag> tagList = horizontalTagsAdapter.getData();
-                IntentsUtils.profile(activity, tagList);
+                MyApplication.getCurrentUser().tags = horizontalTagsAdapter.getData();
+                IntentsUtils.profile(activity);
             }
         });
 

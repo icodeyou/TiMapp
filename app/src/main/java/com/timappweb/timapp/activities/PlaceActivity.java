@@ -58,7 +58,7 @@ public class PlaceActivity extends BaseActivity{
 
     private ShareActionProvider shareActionProvider;
     private PlacesAdapter placesAdapter;
-    private EachSecondTimerTask eachSecondTimerTask;
+    private EachSecondTimerTask eachSecondTimerTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +66,10 @@ public class PlaceActivity extends BaseActivity{
         currentActivity = this;
 
         this.place = IntentsUtils.extractPlace(getIntent());
-        placeId = getIntent().getIntExtra("id", -1);
-        if (place == null && placeId == -1){
+        placeId = IntentsUtils.extractPlaceId(getIntent());
+        if (place == null && placeId <= 0){
             IntentsUtils.home(this);
+            return;
         }
 
         setContentView(R.layout.activity_place);
@@ -95,14 +96,14 @@ public class PlaceActivity extends BaseActivity{
                 call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
-                        Log.d(TAG, "Success register coming for user");
+                        Log.d(TAG, "Success register coming for user on place " + placeId);
                         CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
                         updateBtnVisible();
                     }
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
-                        Log.d(TAG, "Fail register coming for user");
+                        Log.d(TAG, "Fail register coming for user on place " + placeId);
                     }
                 });
             }
@@ -143,6 +144,8 @@ public class PlaceActivity extends BaseActivity{
 
         initFragments();
         initBottomButton();
+        initPlaceAdapters();
+
 
         if (place != null){
             placeId = place.id;
@@ -151,6 +154,7 @@ public class PlaceActivity extends BaseActivity{
         else{
             loadPlace(placeId);
         };
+
     }
 
 
@@ -193,7 +197,7 @@ public class PlaceActivity extends BaseActivity{
                     place = p;
                     notifyPlaceLoaded();
                 } else {
-                    Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG).show();
+                    Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
                     IntentsUtils.home(that);
                 }
             }
@@ -201,7 +205,7 @@ public class PlaceActivity extends BaseActivity{
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                Toast.makeText(that, "This place does not exists anymore", Toast.LENGTH_LONG).show();
+                Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
                 IntentsUtils.home(that);
             }
 
@@ -212,8 +216,9 @@ public class PlaceActivity extends BaseActivity{
 
     private void notifyPlaceLoaded() {
         progressView.setVisibility(View.GONE);
-        initPlaceAdapters();
         this.updateBtnVisible();
+        placesAdapter.add(place);
+
 
         if (!MyApplication.hasLastLocation()) {
             Log.d(TAG, "There is no last known location");
@@ -238,7 +243,7 @@ public class PlaceActivity extends BaseActivity{
             addPostButton.setVisibility(View.VISIBLE);
             comingButton.setVisibility(View.GONE);
         }
-        else if (MyApplication.hasLastLocation() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)){
+        else if (place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)){
             comingButton.setVisibility(View.VISIBLE);
             addPostButton.setVisibility(View.GONE);
         }
@@ -287,13 +292,13 @@ public class PlaceActivity extends BaseActivity{
     private void initPlaceAdapters() {
          //PlacesAdapter
         placesAdapter = new PlacesAdapter(this, false);
-        placesAdapter.add(place);
         placeListView.setAdapter(placesAdapter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
         eachSecondTimerTask.cancel();
     }
     @Override
@@ -304,6 +309,7 @@ public class PlaceActivity extends BaseActivity{
             @Override
             public void update() {
                 placesAdapter.notifyDataSetChanged();
+                updateBtnVisible();
             }
         });
     }

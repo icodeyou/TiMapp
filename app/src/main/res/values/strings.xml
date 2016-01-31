@@ -126,4 +126,5 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
     <string name="create_second_post_delay">You\'ve already added a post a moment ago. Please wait before adding a new one!</string>
     <string name="create_second_place_delay">You\'ve already added a place a moment ago. Please wait before adding a new one!</string>
+    <string name="place_removed">This place does not exists anymore</string>
 </resources>

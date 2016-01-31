@@ -165,7 +165,7 @@ public class PublishActivity extends BaseActivity{
         public void onActionSuccess(RestFeedback feedback) {
             int id = Integer.valueOf(feedback.data.get("id"));
             int placeId = Integer.valueOf(feedback.data.get("place_id"));
-            Log.i(TAG, "Post has been saved. Id is : " + id);
+            Log.i(TAG, "Post for place " + placeId + " has been saved with id: " + id);
 
             // Caching data
             post.place_id = placeId;

@@ -63,16 +63,6 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void profile(Activity activity, List<Tag> tags) {
-        if (!requireLogin(activity))
-            return;
-        Intent intent = new Intent(activity, ProfileActivity.class);
-        // TODO : Converts list to char sequence, put it in the extra
-        intent.putExtra("tag1", tags.get(0));
-        intent.putExtra("tag2", tags.get(1));
-        intent.putExtra("tag3", tags.get(2));
-        activity.startActivity(intent);
-    }
 
     public static void editProfile(Activity activity) {
         if (!requireLogin(activity))
@@ -140,7 +130,7 @@ public class IntentsUtils {
 
     public static void viewPlaceFromPublish(Context context, int id) {
         Intent intent = new Intent(context, PlaceActivity.class);
-        intent.putExtra("id", id);
+        intent.putExtra("place_id", id);
         context.startActivity(intent);
     }
 
@@ -201,6 +191,14 @@ public class IntentsUtils {
         return (Post) extras.getSerializable("post");
     }
 
+    public static int extractUserId(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras == null){
+            return -1;
+        }
+        return extras.getInt("user_id", -1);
+    }
+
     public static void addPostStepTags(Context context, Place place) {
         if (!requireLogin(context))
             return;
@@ -216,5 +214,13 @@ public class IntentsUtils {
             return false;
         }
         return true;
+    }
+
+    public static int extractPlaceId(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras == null){
+            return -1;
+        }
+        return extras.getInt("place_id", -1);
     }
 }

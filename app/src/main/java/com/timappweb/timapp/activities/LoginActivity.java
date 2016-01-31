@@ -146,8 +146,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         User user = new User("", "");
-                        String token = (String) feedback.data.get("token");
+                        String token = feedback.data.get("token");
                         user.username = feedback.data.get("username");
+                        user.id = Integer.parseInt(feedback.data.get("id"));
                         Log.i(TAG, "Session created with session token: " + token);
                         MyApplication.login(user, token);
                         IntentsUtils.lastActivityBeforeLogin(that);
@@ -408,9 +409,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
                 if (response.success
                         && response.data.containsKey("token")
+                        && response.data.containsKey("id")
                         && response.data.containsKey("username")){
                     String token = (String) response.data.get("token");
                     user.username = response.data.get("username");
+                    user.id = Integer.parseInt(response.data.get("id"));
                     MyApplication.login(user, token);
                     Log.i(TAG, "Session created with session token: " + token);
                     IntentsUtils.lastActivityBeforeLogin(this.activity);

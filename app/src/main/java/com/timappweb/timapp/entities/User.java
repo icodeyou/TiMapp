@@ -7,6 +7,7 @@ import com.timappweb.timapp.data.LocalPersistenceManager;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.List;
 
 public class User implements Serializable {
     private static final String TAG = "UserEntity" ;
@@ -15,15 +16,17 @@ public class User implements Serializable {
     public String email;
     public int count_posts = 0;
     public int count_places = 0;
-    public int id;
+    public int id = -1;
     private boolean status = false;
 
 
     @SerializedName("spots")
     public LinkedList<Post> posts;
 
-    public static final String KEY_NAME = "name";
-    public static final String KEY_EMAIL = "email";
+    public static final String KEY_NAME = "user.name";
+    public static final String KEY_ID = "user.id";
+    public static final String KEY_EMAIL = "user.email";
+    public List<Tag> tags;
 
     public User(){
 
