@@ -247,8 +247,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             IntentsUtils.addPostStepLocate(this);
         }
         else if (id == R.id.menu_item_share){
-//            IntentsUtils.share(this);
-            mSimpleFacebook.logout(onLogoutListener);
+            IntentsUtils.share(this);
         }
         else if (id == R.id.menu_item_profile) {
             IntentsUtils.profile(this);

@@ -1,177 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar"/>
 
     <LinearLayout
-        android:orientation="vertical" android:layout_below="@+id/toolbar"
-        android:layout_width="match_parent" android:layout_height="match_parent"
-        android:background="@color/background">
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    </LinearLayout>
 
-
-        <include layout="@layout/toolbar"/>
-
+    <RelativeLayout
+        android:id="@+id/loaded_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:background="@color/colorLightPrimary"
-            android:gravity="bottom">
-            <HorizontalScrollView
+            android:orientation="vertical"
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:background="@color/background">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="100dp"
-                android:scrollbars="none">
-                <LinearLayout
+                android:layout_height="80dp"
+                android:orientation="horizontal"
+                android:background="@color/colorLightPrimary"
+                android:gravity="bottom">
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tv_profile_username"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:scrollbars="none">
+                    <LinearLayout
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/tv_profile_username"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/Black"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="22 years old"
+                            android:textSize="@dimen/text_normal"
+                            android:textColor="@color/Black"/>
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/half_profile_picture_side"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_big"
-                        android:textColor="@color/Black"/>
+                        android:layout_margin="10dp">
+                        <ImageView
+                            android:layout_width="@dimen/logo_big"
+                            android:layout_height="@dimen/logo_big"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_hashtag"/>
+                        <TextView
+                            android:id="@+id/tags_counter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/Black"/>
+                    </LinearLayout>
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="22 years old"
+                        android:text="@string/post_shared"
                         android:textSize="@dimen/text_normal"
                         android:textColor="@color/Black"/>
                 </LinearLayout>
-            </HorizontalScrollView>
-        </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/LightGrey"/>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp">
+                        <ImageView
+                            android:layout_width="@dimen/logo_big"
+                            android:layout_height="@dimen/logo_big"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_location"/>
+                        <TextView
+                            android:id="@+id/places_counter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:textSize="@dimen/text_big"
+                            android:textColor="@color/Black"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/places_created"
+                        android:textSize="@dimen/text_normal"
+                        android:textColor="@color/Black"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="@dimen/half_profile_picture_side"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+                </LinearLayout>
+            </LinearLayout>
+
+
             <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:orientation="vertical"
                 android:gravity="center">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
-                    <ImageView
-                        android:layout_width="@dimen/logo_big"
-                        android:layout_height="@dimen/logo_big"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_hashtag"/>
-                    <TextView
-                        android:id="@+id/tags_counter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_big"
-                        android:textColor="@color/Black"/>
-                </LinearLayout>
                 <TextView
+                    android:id="@+id/tv_tag1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/post_shared"
-                    android:textSize="@dimen/text_normal"
-                    android:textColor="@color/Black"/>
+                    android:text="#wakeboard"
+                    android:padding="5dp"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/Goldenrod"/>
+                <TextView
+                    android:id="@+id/tv_tag2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="#party"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/Goldenrod"/>
+                <TextView
+                    android:id="@+id/tv_tag3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="#drums"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/Goldenrod"/>
             </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/LightGrey"/>
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
-                    <ImageView
-                        android:layout_width="@dimen/logo_big"
-                        android:layout_height="@dimen/logo_big"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_location"/>
-                    <TextView
-                        android:id="@+id/places_counter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_big"
-                        android:textColor="@color/Black"/>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/places_created"
-                    android:textSize="@dimen/text_normal"
-                    android:textColor="@color/Black"/>
 
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingBottom="5dp"
+                android:text="@string/text_last_post"
+                android:textColor="@color/Gray"
+                android:textSize="@dimen/text_normal"/>
+            <ListView
+                android:id="@+id/place_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/tv_tag1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="#wakeboard"
-                android:padding="5dp"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/Goldenrod"/>
-            <TextView
-                android:id="@+id/tv_tag2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="#party"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/Goldenrod"/>
-            <TextView
-                android:id="@+id/tv_tag3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="#drums"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/Goldenrod"/>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingBottom="5dp"
-            android:text="@string/text_last_post"
-            android:textColor="@color/Gray"
-            android:textSize="@dimen/text_normal"/>
-        <ListView
-            android:id="@+id/place_lv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="@dimen/profile_picture_side"
-        android:layout_height="@dimen/profile_picture_side"
-        android:layout_marginTop="95dp"
-        android:layout_marginLeft="20dp"
-        android:src="@drawable/ic_chineseman"/>
-</RelativeLayout>
+        <ImageView
+            android:layout_width="@dimen/profile_picture_side"
+            android:layout_height="@dimen/profile_picture_side"
+            android:layout_marginTop="45dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_chineseman"/>
+    </RelativeLayout>
+</LinearLayout>

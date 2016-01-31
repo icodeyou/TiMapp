@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_et_edit_first_profile"
         android:singleLine="true"
-        android:textColorHighlight="@color/White"
+        android:textColorHint="@color/Gray"
         android:textColor="@color/White"
         android:textSize="@dimen/text_huge"/>
 

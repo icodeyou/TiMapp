@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -160,6 +161,7 @@ public class MyLocationProvider implements
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        NavUtils.navigateUpFromSameTask(activity);
                     }
                 });
         AlertDialog alert = alertDialogBuilder.create();

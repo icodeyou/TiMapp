@@ -42,8 +42,10 @@ public class ProfileActivity extends BaseActivity{
     private TextView tvTag1;
     private TextView tvTag2;
     private TextView tvTag3;
-
     private ListView placeView;
+    private View loadingView;
+    private View loadedView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class ProfileActivity extends BaseActivity{
         tvTag1 = (TextView) findViewById(R.id.tv_tag1);
         tvTag2 = (TextView) findViewById(R.id.tv_tag2);
         tvTag3 = (TextView) findViewById(R.id.tv_tag3);
+        loadingView = findViewById(R.id.loading_view);
+        loadedView = findViewById(R.id.loaded_view);
 
         initAdapter();
 
@@ -139,7 +143,8 @@ public class ProfileActivity extends BaseActivity{
                         invalidateOptionsMenu();
                     }
 
-                    //TODO : Hide Loader
+                    loadedView.setVisibility(View.VISIBLE);
+                    loadingView.setVisibility(View.GONE);
                 }
             }
         });
