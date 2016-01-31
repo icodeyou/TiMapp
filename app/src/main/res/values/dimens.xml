@@ -18,7 +18,7 @@
     <dimen name="profile_picture_side">70dp</dimen> <dimen name="half_profile_picture_side">35dp</dimen>
     <dimen name="last_post_box">5dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
-    <dimen name="height_rv_displayed_tags">50dp</dimen>
+    <dimen name="height_rv_displayed_tags">35dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
     <dimen name="ic_place">80dp</dimen>

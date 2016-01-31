@@ -173,5 +173,5 @@
         android:layout_height="@dimen/profile_picture_side"
         android:layout_marginTop="95dp"
         android:layout_marginLeft="20dp"
-        android:src="@drawable/ic_profile"/>
+        android:src="@drawable/ic_chineseman"/>
 </RelativeLayout>
