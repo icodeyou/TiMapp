@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@color/colorPrimary">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
     <include android:id="@+id/toolbar_transparent" layout="@layout/toolbar_transparent" />
 
@@ -16,12 +19,14 @@
             android:gravity="center"/>
 
     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
         android:id="@+id/selected_tags_profile"
         android:layout_width="match_parent"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_height="50dp" />
-
+        android:layout_height="50dp"
+        myattrs:text_color="@color/colorAccent"
+        myattrs:background_color="@color/colorPrimary" />
 
     <EditText
         android:id="@+id/edit_text"
@@ -29,7 +34,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_et_edit_first_profile"
         android:singleLine="true"
-        android:textColorHint="@color/Gray"
+        android:textColorHint="@color/colorPrimaryDark"
         android:textColor="@color/White"
         android:textSize="@dimen/text_huge"/>
 
@@ -44,7 +49,7 @@
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimaryVeryDark"
             android:text="skip"/>
     </LinearLayout>
 
@@ -53,13 +58,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
         <Button
             android:id="@+id/button_submit"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/border_radius_white"
             android:layout_gravity="center"
             android:textAllCaps="true"

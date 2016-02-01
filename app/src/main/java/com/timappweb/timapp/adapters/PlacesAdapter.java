@@ -77,9 +77,9 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
         if(isTagsVisible) {
             //Set the adapter for RV
-            HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
-            horizontalTagsAdapter.setData(place.tags);
-            rv_lastPostTags.setAdapter(horizontalTagsAdapter);
+            HorizontalTagsAdapter htAdapter = (HorizontalTagsAdapter) rv_lastPostTags.getAdapter();
+            htAdapter.setData(place.tags);
+            rv_lastPostTags.setAdapter(htAdapter);
 
             //Set LayoutManager for RV
             GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);

@@ -53,9 +53,9 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         tvTime.setText(time);
 
         //Set the adapter for the Recycler View (which displays tags)
-        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
-        horizontalTagsAdapter.setData(tags);
-        rv_lastPostTags.setAdapter(horizontalTagsAdapter);
+        HorizontalTagsAdapter htAdapter = (HorizontalTagsAdapter) rv_lastPostTags.getAdapter();
+        htAdapter.setData(tags);
+        rv_lastPostTags.setAdapter(htAdapter);
 
         //Set LayoutManager
         GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);

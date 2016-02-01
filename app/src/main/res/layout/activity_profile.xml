@@ -13,8 +13,32 @@
         android:layout_height="match_parent"
         android:gravity="center">
         <ProgressBar
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:id="@+id/progressbar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/colorAccent"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_connection_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/ic_phone_connection"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_normal"
+            android:gravity="center"
+            android:text="@string/cannot_load_profile"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -143,7 +167,6 @@
                     android:id="@+id/tv_tag1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="#wakeboard"
                     android:padding="5dp"
                     android:textSize="@dimen/text_big"
                     android:textColor="@color/Goldenrod"/>
@@ -160,7 +183,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="#drums"
                     android:textSize="@dimen/text_big"
                     android:textColor="@color/Goldenrod"/>
             </LinearLayout>

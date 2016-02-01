@@ -25,6 +25,7 @@ import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.entities.User;
 
 import java.util.List;
 
@@ -64,10 +65,11 @@ public class IntentsUtils {
     }
 
 
-    public static void editProfile(Activity activity) {
+    public static void editProfile(Activity activity, User user) {
         if (!requireLogin(activity))
             return;
         Intent intent = new Intent(activity, EditProfileActivity.class);
+        intent.putExtra("user", user);
         activity.startActivity(intent);
     }
 
@@ -189,6 +191,14 @@ public class IntentsUtils {
             return null;
         }
         return (Post) extras.getSerializable("post");
+    }
+
+    public static User extractUser(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras == null){
+            return null;
+        }
+        return (User) extras.getSerializable("user");
     }
 
     public static int extractUserId(Intent intent) {

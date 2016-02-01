@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
@@ -45,6 +46,8 @@ public class ProfileActivity extends BaseActivity{
     private ListView placeView;
     private View loadingView;
     private View loadedView;
+    private View noConnectionView;
+    private List<Tag> tags;
 
 
     @Override
@@ -65,6 +68,7 @@ public class ProfileActivity extends BaseActivity{
         tvTag3 = (TextView) findViewById(R.id.tv_tag3);
         loadingView = findViewById(R.id.loading_view);
         loadedView = findViewById(R.id.loaded_view);
+        noConnectionView = findViewById(R.id.no_connection_view);
 
         initAdapter();
 
@@ -103,7 +107,7 @@ public class ProfileActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_profile:
-                IntentsUtils.editProfile(this);
+                IntentsUtils.editProfile(this, mUser);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -122,16 +126,20 @@ public class ProfileActivity extends BaseActivity{
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
+                loadingView.setVisibility(View.GONE);
+                noConnectionView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onResponse(Response<User> response) {
                 super.onResponse(response);
-                if (response.isSuccess()){
+                if (response.isSuccess()) {
                     User user = response.body();
                     Log.i(TAG, user + " loaded");
                     mUser = user;
                     tvUsername.setText(mUser.username);
+                    tags = mUser.tags;
+                    setTags(tags);
                     tvCountTags.setText(String.valueOf(mUser.count_posts));
                     tvCountPlaces.setText(String.valueOf(mUser.count_places));
 
@@ -139,7 +147,7 @@ public class ProfileActivity extends BaseActivity{
                     if (mUser.posts != null && mUser.posts.size() > 0) {
                         Post post = mUser.posts.getFirst();
                     }
-                    if(mUser.username.equals(MyApplication.getCurrentUser().username)) {
+                    if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
                         invalidateOptionsMenu();
                     }
 
@@ -150,17 +158,18 @@ public class ProfileActivity extends BaseActivity{
         });
     }
 
-
-    ///////// Generate pre-selected tags here/////////////////////
-    public List<Tag> generateDummyData() {
-        List<Tag> data = new ArrayList<>();
-        data.add(new Tag("sexygirls", 0));
-        data.add(new Tag("swimmingpool", 0));
-        data.add(new Tag("swimsuit", 0));
-        data.add(new Tag("beautifulplace", 0));
-        return data;
+    private void setTags(List<Tag> tags) {
+        if(tags.size()==0) {
+            tvTag2.setText("#Newbie");
+        } else {
+            tvTag1.setText(tags.get(0).name);
+            tvTag2.setText(tags.get(1).name);
+            tvTag3.setText(tags.get(2).name);
+        }
     }
 
+
+    ///////// Generate pre-selected tags here/////////////////////
     public void onLastPostClick(View view) {
         if (mUser != null && mUser.posts.size() > 0){
             Post post = mUser.posts.getFirst();

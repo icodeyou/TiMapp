@@ -1,6 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,9 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     protected LayoutInflater inflater;
     private List<Tag> data = new ArrayList<>();
     private Context context;
+
+    private int textColor;
+    private int backgroundColor;
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
         this.itemAdapterClickListener = itemAdapterClickListener;
@@ -72,26 +76,31 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     public List<Tag> getData() {
         return this.data;
     }
-    public void addData(String selectedTag) {
+
+    public boolean tryAddData(String selectedTag) {
         Tag newTag = new Tag(selectedTag, 0);
-        if (!this.data.contains(newTag) && newTag.isValid()){
-            String hashtagString = newTag.getName();
-            newTag.setName(hashtagString);
-            data.add(newTag);
-            notifyDataSetChanged();
+        if (this.data.contains(newTag)) {
+            Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(newTag.toString().isEmpty()) {
+            Toast.makeText(context, R.string.toast_no_tag, Toast.LENGTH_SHORT).show();
+        }
+        else if (!newTag.isShortEnough()){
+            Toast.makeText(context, R.string.toast_tiny_text_size, Toast.LENGTH_LONG).show();
+            return false;
+        }
+        else if (!newTag.isLongEnough()) {
+            Toast.makeText(context, R.string.toast_huge_text_size, Toast.LENGTH_LONG).show();
+            return false;
         }
         else {
-            String nameTag = newTag.getName();
-            int lengthTag = nameTag.length();
-            if(lengthTag == 1) {
-                if(!nameTag.equals(" ")) {
-                    Toast.makeText(context, R.string.toast_tiny_text_size, Toast.LENGTH_LONG).show();
-                }
-            }
-            else if (lengthTag > 30) {
-                Toast.makeText(context, R.string.toast_huge_text_size, Toast.LENGTH_LONG).show();
-            }
+            newTag.setName(newTag.getName());
+            data.add(newTag);
+            notifyDataSetChanged();
+            return true;
         }
+        return false;
     }
 
     public void removeData(int position) {
@@ -111,6 +120,11 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             }
         }
         return false;
+    }
+
+    public void setColors(int textColor, int backgroundColor) {
+        this.textColor = textColor;
+        this.backgroundColor = backgroundColor;
     }
 
     /*
@@ -137,6 +151,8 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         public MyViewHolder(View view) {
             super(view);
             this.textView = (TextView) view.findViewById(R.id.item_horizontal_tag);
+            view.setBackgroundColor(backgroundColor);
+            textView.setTextColor(textColor);
         }
     }
 }

@@ -44,6 +44,7 @@ public class LocateActivity extends BaseActivity{
     private View        placesAndBottomLine;
     private View        noPlaceView;
     private Button buttonAddSpot;
+    private View noConnectionView;
 
     // ProgressBar and ProgressDialog
     private View progressView;
@@ -68,11 +69,12 @@ public class LocateActivity extends BaseActivity{
         this.initToolbar(false);
 
         //Initialize variables
-        this.progressView = findViewById(R.id.progress_view);
-        this.placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
-        this.noPlaceView = findViewById(R.id.layout_if_no_place);
+        progressView = findViewById(R.id.progress_view);
+        placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
+        noPlaceView = findViewById(R.id.layout_if_no_place);
         listPlaces = (ListView) findViewById(R.id.list_places);
         buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
+        noConnectionView = findViewById(R.id.no_connection_view);
 
         // -----------------------------------------------------------------------------------------
         // Init variables
@@ -192,6 +194,8 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
+                progressView.setVisibility(View.GONE);
+                noConnectionView.setVisibility(View.VISIBLE);
             }
         });
     }

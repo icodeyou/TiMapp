@@ -157,7 +157,7 @@ public class TagActivity extends BaseActivity{
     }
 
     public void addTag(String tag) {
-        selectedTagsRV.getAdapter().addData(tag);
+        selectedTagsRV.getAdapter().tryAddData(tag);
         selectedTagsRV.scrollToEnd();
         actionCounter();
     }

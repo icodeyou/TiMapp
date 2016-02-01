@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,16 +20,15 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-
-import java.util.List;
 
 public class EditProfileActivity extends BaseActivity{
 
     String TAG = "EditProfileActivity";
     private Activity activity = this;
+    private InputMethodManager imm;
 
     private HorizontalTagsRecyclerView horizontalTagsRecyclerView;
     private HorizontalTagsAdapter horizontalTagsAdapter;
@@ -38,7 +38,8 @@ public class EditProfileActivity extends BaseActivity{
     private Button buttonSubmit;
 
     private int counterTags;
-    private InputMethodManager imm;
+
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class EditProfileActivity extends BaseActivity{
         skipView = findViewById(R.id.skip_button);
         buttonSubmit = (Button) findViewById(R.id.button_submit);
         submitView = findViewById(R.id.submit_view);
+        currentUser = IntentsUtils.extractUser(getIntent());
 
         init();
 
@@ -63,14 +65,14 @@ public class EditProfileActivity extends BaseActivity{
         editText.requestFocus();
         editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_CLASS_TEXT |
                 InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
-        //for keyboard
-        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        //for hide/close keyboard
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void initAdapter() {
-        horizontalTagsAdapter = new HorizontalTagsAdapter(this);
-        horizontalTagsRecyclerView.setAdapter(horizontalTagsAdapter);
+        horizontalTagsAdapter = horizontalTagsRecyclerView.getAdapter();
     }
 
 
@@ -98,21 +100,18 @@ public class EditProfileActivity extends BaseActivity{
         });
 
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            //OnEditorAction returns false if we close the keyboard
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (!editText.getText().toString().isEmpty() && actionId == EditorInfo.IME_ACTION_DONE) {
-                    if(horizontalTagsAdapter.isOneSimilarValue(editText.getText().toString())) {
-                        Toast.makeText(EditProfileActivity.this, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
-                        editText.setText("");
-                        //Doesnt work :
-                        // imm.showSoftInput(editText,0);
-                        // editText.requestfocus();
-//                        editText.performClick();
-//                        editText.callOnClick();
-                        return false;
+                if(actionId==EditorInfo.IME_ACTION_NEXT) {
+                    String value = editText.getText().toString();
+
+                    boolean isTagValid = horizontalTagsAdapter.tryAddData(value);
+                    horizontalTagsAdapter.notifyDataSetChanged();
+
+                    if(isTagValid) {
+                        setViewsAndCounter();
                     }
-                    addTag();
-                    setViewsAndCounter();
                     return true;
                 }
                 return false;
@@ -122,7 +121,8 @@ public class EditProfileActivity extends BaseActivity{
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MyApplication.getCurrentUser().tags = horizontalTagsAdapter.getData();
+                currentUser.tags = horizontalTagsAdapter.getData();
+                //TODO Steph : Save tags
                 IntentsUtils.profile(activity);
             }
         });
@@ -133,45 +133,37 @@ public class EditProfileActivity extends BaseActivity{
                 removeTag(position);
                 counterTags = counterTags - 2;
                 setViewsAndCounter();
+                editText.setVisibility(View.VISIBLE);
+                skipView.setVisibility(View.VISIBLE);
+                submitView.setVisibility(View.GONE);
                 editText.requestFocus();
+                imm.showSoftInput(editText, 0);
             }
         });
     }
 
     private void setViewsAndCounter() {
+        counterTags = counterTags + 1;
         switch (counterTags) {
-            case -1:
+            case 0:
                 editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile));
                 editText.setText("");
                 break;
-            case 0:
+            case 1:
                 editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile2));
                 editText.setText("");
                 break;
-            case 1:
+            case 2:
                 editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile3));
                 editText.setText("");
-                editText.setVisibility(View.VISIBLE);
-                skipView.setVisibility(View.VISIBLE);
-                submitView.setVisibility(View.GONE);
                 break;
-            case 2:
-                //Hide keyboard
-                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-
+            case 3:
                 editText.setVisibility(View.GONE);
                 skipView.setVisibility(View.GONE);
                 submitView.setVisibility(View.VISIBLE);
+                imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);   //Hide keyboard
                 break;
         }
-
-        counterTags= counterTags + 1;
-
-    }
-
-    private void addTag() {
-        horizontalTagsAdapter.addData(editText.getText().toString());
-        horizontalTagsAdapter.notifyDataSetChanged();
     }
 
     private void removeTag(int position) {

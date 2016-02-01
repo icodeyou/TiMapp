@@ -30,6 +30,7 @@ public class PlaceTagsFragment extends Fragment {
     private ListView                lvTags;
     private View                    progressView;
     private View                    noTagsView;
+    private View                    noConnectionView;
 
     @Nullable
     @Override
@@ -42,6 +43,7 @@ public class PlaceTagsFragment extends Fragment {
         lvTags = (ListView) root.findViewById(R.id.list_tags);
         progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
+        noConnectionView = root.findViewById(R.id.no_connection_view);
 
         initAdapter();
         loadTags();
@@ -68,6 +70,12 @@ public class PlaceTagsFragment extends Fragment {
                 }
             }
 
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                progressView.setVisibility(View.GONE);
+                noConnectionView.setVisibility(View.VISIBLE);
+            }
         });
     }
 

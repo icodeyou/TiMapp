@@ -60,9 +60,13 @@ public class Tag implements Serializable, SearchHistory.SearchableItem{
         return new Tag("DummyTag", 34);
     }
 
-    public boolean isValid() {
-        int length = getName().length();
-        boolean bool =  getName().length()>=MINLENGTH && getName().length()<= MAXLENGTH;
+    public boolean isShortEnough() {
+        boolean bool =  getName().length()>=MINLENGTH;
+        return  bool;
+    }
+
+    public boolean isLongEnough() {
+        boolean bool =  getName().length()<= MAXLENGTH;
         return  bool;
     }
 
