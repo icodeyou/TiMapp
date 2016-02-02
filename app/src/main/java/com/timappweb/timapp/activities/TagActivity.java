@@ -23,6 +23,7 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
@@ -95,8 +96,15 @@ public class TagActivity extends BaseActivity{
         searchView.requestFocus();
 
         //set hint for searchview
+        final TagActivity thatActivity = this;
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                searchView, suggestedTagsView, selectedTagsRV);
+                searchView, suggestedTagsView, selectedTagsRV, new SearchTagDataProvider(){
+            @Override
+            public void onLoadEnds() {
+                thatActivity.getProgressBarView().setVisibility(View.GONE);
+            }
+        });
+
 
         suggestedTagsRV = searchAndSelectTagManager.getSuggestedTagsRV();
         suggestedTagsRV.addOnTagClickListener(new HashtagView.TagsClickListener() {

@@ -151,6 +151,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public int getPoints() {
-        return Math.min(0,this.points - (Util.getCurrentTimeSec() - this.loaded_time));
+        int points = this.points - (Util.getCurrentTimeSec() - this.loaded_time);
+        return points > 0 ? points : 0;
     }
 }

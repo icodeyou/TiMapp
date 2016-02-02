@@ -205,8 +205,22 @@ public class SearchHistory<T>{
 
     public interface DataProvider<T>{
 
+        /**
+         * Data loader. For the search term it loads the corresponding data
+         * @param term
+         */
         void load(final String term) ;
 
+        /**
+         * Called when load ends
+         */
+        void onLoadEnds();
+
+        /**
+         * Triggered when the search with term is done
+         * @param term
+         * @param data
+         */
         void onSearchComplete(String term, List<T> data);
     }
 
