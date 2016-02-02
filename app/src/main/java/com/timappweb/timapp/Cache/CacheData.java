@@ -2,7 +2,7 @@ package com.timappweb.timapp.cache;
 
 import android.util.Log;
 
-import com.timappweb.timapp.data.LocalPersistenceManager;
+import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.UserPlaceStatus;

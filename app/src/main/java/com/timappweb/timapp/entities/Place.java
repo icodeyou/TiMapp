@@ -2,14 +2,13 @@ package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.Configuration;
+import com.timappweb.timapp.config.ConfigurationAccessor;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +68,7 @@ public class Place implements Serializable, MarkerValueInterface {
         return this.id == -1;
     }
 
-    public int countSpot(){
+    public int countPosts(){
         return this.count_posts;
     }
 
@@ -131,7 +130,9 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public int getResource() {
-        return MyApplication.getCategory(this.category_id).resource;
+        int level = this.getLevel();
+        // TODO jack: return the appropriate ressource according
+        return MyApplication.getCategory(this.category_id).getResource(level);
     }
 
     /**
@@ -141,7 +142,7 @@ public class Place implements Serializable, MarkerValueInterface {
      */
     public boolean isReachable(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
-                < MyApplication.config.getInt(Configuration.PLACE_REACHABLE_DISTANCE, 0);
+                < MyApplication.getServerConfiguration().place_max_reachable;
     }
 
     public boolean isReachable() {
@@ -149,11 +150,27 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public static boolean isValidName(String name) {
-        return name.trim().length() >= MyApplication.config.getInt(Configuration.PLACE_MIN_LENGTH);
+        return name.trim().length() >= MyApplication.getServerConfiguration().places_min_name_length;
     }
 
     public int getPoints() {
         int points = this.points - (Util.getCurrentTimeSec() - this.loaded_time);
         return points > 0 ? points : 0;
+    }
+
+    public int getLevel(){
+        return Place.computeLevel(this.getPoints());
+    }
+
+    private static int computeLevel(int points) {
+        List<Integer> levels = MyApplication.getServerConfiguration().place_levels;
+        int num = 0;
+        for (int level: levels){
+            if (level >= points){
+                return num;
+            }
+            num++;
+        }
+        return num;
     }
 }

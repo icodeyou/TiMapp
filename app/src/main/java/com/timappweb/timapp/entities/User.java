@@ -1,9 +1,6 @@
 package com.timappweb.timapp.entities;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.data.LocalPersistenceManager;
 
 import java.io.Serializable;
 import java.util.LinkedList;

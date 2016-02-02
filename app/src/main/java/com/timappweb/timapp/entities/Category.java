@@ -40,4 +40,7 @@ public class Category implements Serializable{
         return name.hashCode();
     }
 
+    public int getResource(int level) {
+        return resource;
+    }
 }

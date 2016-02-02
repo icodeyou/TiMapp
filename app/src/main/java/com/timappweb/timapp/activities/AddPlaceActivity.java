@@ -188,7 +188,7 @@ public class AddPlaceActivity extends BaseActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MyApplication.hasFineLocation()) {
+                if (MyApplication.hasFineLocation(MyApplication.getServerConfiguration().gps_min_accuracy_add_place)) {
                     setProgressView(true);
                     final Place place = new Place(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude(), groupNameET.getText().toString(), categorySelected);
                     submitPlace(place);

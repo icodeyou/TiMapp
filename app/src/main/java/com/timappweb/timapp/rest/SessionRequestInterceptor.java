@@ -3,7 +3,6 @@ package com.timappweb.timapp.rest;
 import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.LocalPersistenceManager;
 
 import java.io.IOException;
 

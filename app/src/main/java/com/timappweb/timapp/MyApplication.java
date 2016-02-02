@@ -11,9 +11,9 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.cache.CacheData;
-import com.timappweb.timapp.config.Configuration;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.LocalPersistenceManager;
+import com.timappweb.timapp.config.ConfigurationAccessor;
+import com.timappweb.timapp.config.ServerConfiguration;
+import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
@@ -107,7 +107,11 @@ public class MyApplication extends Application{
 
     public static List<Category> categories = new LinkedList<>();
     private static Location lastLocation = null;
-    public static Configuration config;
+    public static ConfigurationAccessor config;
+
+    public static ServerConfiguration getServerConfiguration() {
+        return config.getServerConfiguration();
+    }
 
     @Override
     public void onCreate(){
@@ -119,14 +123,14 @@ public class MyApplication extends Application{
 
         initCategories();
 
-        // Load configuration
-        config = new Configuration(getApplicationContext(), "configuration.properties"); // TODO use ressource
-
         //*******FACEBOOK******
         initFacebookPermissions();
 
         // Loading cache in memory
         CacheData.load();
+
+        // Load configuration
+        config = new ConfigurationAccessor(getApplicationContext(), "configuration.properties");
     }
 
     private void initFacebookPermissions() {
@@ -187,7 +191,7 @@ public class MyApplication extends Application{
      */
     public static boolean hasLastLocation() {
         return lastLocation != null &&
-                (lastLocation.getTime() - System.currentTimeMillis()) < MyApplication.config.getInt(Configuration.GPS_MIN_TIME_DELAY, 10000);
+                (lastLocation.getTime() - System.currentTimeMillis()) < getServerConfiguration().gps_min_time_delay;
     }
 
     /**
@@ -195,13 +199,17 @@ public class MyApplication extends Application{
      * @return
      */
     public static boolean hasFineLocation() {
+        return hasFineLocation(getServerConfiguration().gps_min_accuracy);
+    }
+    public static boolean hasFineLocation(int minAccuracy) {
         return hasLastLocation() &&
-                lastLocation.getAccuracy() <= MyApplication.config.getInt(Configuration.GPS_MIN_ACCURACY);
+                lastLocation.getAccuracy() <= minAccuracy;
     }
 
     public static Location getLastLocation() {
         return lastLocation;
     }
+
 
 
 

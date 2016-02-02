@@ -8,7 +8,7 @@ import android.support.v7.widget.SearchView;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.config.Configuration;
+import com.timappweb.timapp.config.ConfigurationAccessor;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnQueryTagListener;
 import com.timappweb.timapp.utils.SearchHistory;
@@ -58,8 +58,8 @@ public class SearchAndSelectTagManager {
         searchView.setOnQueryTextListener(queryTextListener);
 
         this.searchHistory = new SearchHistory<Tag>(
-                MyApplication.config.getInt(Configuration.TAG_MIN_SEARCH_LENGTH, 0),
-                MyApplication.config.getInt(Configuration.TAG_MAX_RESULT_SIZE, 2));
+                MyApplication.getServerConfiguration().tags_min_search_length,
+                MyApplication.getServerConfiguration().tags_suggest_limit);
 
     }
     /**
@@ -68,7 +68,7 @@ public class SearchAndSelectTagManager {
      * @param term
      */
     public void suggestTag(final String term){
-        if (term.length() < MyApplication.config.getInt(Configuration.TAG_MIN_SEARCH_LENGTH, 0)){
+        if (term.length() < MyApplication.getServerConfiguration().tags_min_search_length){
             return;
         }
         this.loadTags(term);

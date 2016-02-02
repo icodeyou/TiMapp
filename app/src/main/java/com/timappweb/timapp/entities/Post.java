@@ -1,23 +1,13 @@
 package com.timappweb.timapp.entities;
 
-import android.util.Log;
-import android.widget.TextView;
-
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
-import com.timappweb.timapp.data.LocalPersistenceManager;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 public class Post implements Serializable, MarkerValueInterface {
 

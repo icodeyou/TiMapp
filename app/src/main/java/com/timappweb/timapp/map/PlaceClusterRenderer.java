@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.*;
@@ -60,7 +61,8 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
         // Draw a single person.
         // Set the info window to show their name.
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(place.getResource()));
+        BitmapDescriptor image = BitmapDescriptorFactory.fromResource(place.getResource());
+        markerOptions.icon(image);
     }
 
 

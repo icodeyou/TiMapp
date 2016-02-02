@@ -1,35 +1,16 @@
 package com.timappweb.timapp.rest;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.bind.DateTypeAdapter;
-import com.timappweb.timapp.BuildConfig;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.data.LocalPersistenceManager;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 //import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
