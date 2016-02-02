@@ -122,8 +122,8 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.10.19" level="project" />
     <orderEntry type="library" exported="" name="guava-base-r03" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.10.19" level="project" />
     <orderEntry type="library" exported="" name="play-services-identity-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="facebook-android-sdk-4.7.0" level="project" />
     <orderEntry type="library" exported="" name="android-maps-utils-0.4" level="project" />
