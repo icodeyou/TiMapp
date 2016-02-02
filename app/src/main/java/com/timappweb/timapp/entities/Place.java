@@ -44,6 +44,7 @@ public class Place implements Serializable, MarkerValueInterface {
         this.count_posts = 0;
         this.posts = new ArrayList<>();
         this.tags = new ArrayList<>();
+
     }
 
     public Place(double lat, double lng, String name, Category category) {
@@ -52,6 +53,7 @@ public class Place implements Serializable, MarkerValueInterface {
         this.longitude = lng;
         this.name = name;
         this.category_id = category.id;
+        this.created = Util.getCurrentTimeSec();
     }
 
     public void addPost(Post post){
