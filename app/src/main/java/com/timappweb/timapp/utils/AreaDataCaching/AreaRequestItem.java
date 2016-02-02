@@ -1,10 +1,14 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import com.timappweb.timapp.entities.Post;
+import android.util.Log;
+
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * Created by stephane on 9/13/2015.
@@ -12,11 +16,12 @@ import java.util.List;
  *
  */
 public class AreaRequestItem<T> {
+    private static final String TAG = "AreaRequestItem";
     public int dataTimestamp;       // Timestamp on the server
     public int localTimestamp;      // Timestamp on the local machine
-
+    private int currentRequestId = -1;  // Request id
     public List<T> data;         // LIFO: Last spot in => First spot out
-    //public boolean isDisplayed = false;    // True if it's display on the map
+    private Call<List<Place>> pendingCall;
 
     public AreaRequestItem(int dataTimestamp, List<T> spots) {
         this.setDataTimestamp(dataTimestamp);
@@ -56,5 +61,33 @@ public class AreaRequestItem<T> {
      */
     public int getLastUpdateDelay() {
         return Util.getCurrentTimeSec() - this.localTimestamp;
+    }
+
+    public int setPendingCall(Call<List<Place>> pendingCall) {
+        if (this.pendingCall != null){
+            Log.d(TAG, "Cancel old call");
+            this.pendingCall.cancel();
+        }
+        this.pendingCall = pendingCall;
+        this.currentRequestId++;
+        return currentRequestId;
+    }
+
+
+    public void appendData(List<T> places) {
+        data.addAll(places);
+    }
+
+    public boolean isOutdated(int itemRequestId) {
+        Log.d(TAG, "Current request id: " + currentRequestId + ". Request id: " + itemRequestId);
+        return currentRequestId == -1 || currentRequestId > itemRequestId;
+    }
+
+    public void cancel() {
+        Log.d(TAG, "Cancel request");
+        this.currentRequestId = -1;
+        if (pendingCall != null){
+            pendingCall.cancel();
+        }
     }
 }

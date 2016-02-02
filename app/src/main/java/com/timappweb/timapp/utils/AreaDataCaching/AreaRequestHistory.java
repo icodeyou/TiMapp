@@ -62,12 +62,14 @@ public class AreaRequestHistory{
     // ---------------------------------------------------------------------------------------------
 
     public AreaRequestHistory(LatLngBounds bounds, AreaDataLoaderInterface dataLoader) {
+        Log.d(TAG, "Building a new AreaRequestHistory with bounds: " + bounds);
         this.setAreaSize(bounds);
         this.areas = new HashMap<>();
         this.dataLoader = dataLoader;
     }
 
     private void resizeArea(LatLngBounds bounds) {
+        Log.d(TAG, "Resizing area request history base area: " + bounds);
         this.dataLoader.clearAll();
         this.areas.clear();
         this.setAreaSize(bounds);
@@ -223,5 +225,11 @@ public class AreaRequestHistory{
 
     public IntLatLng getCenter() {
         return center;
+    }
+
+    public void clearAll() {
+        for (AreaRequestItem area: this.areas.values()) {
+            area.cancel();
+        }
     }
 }

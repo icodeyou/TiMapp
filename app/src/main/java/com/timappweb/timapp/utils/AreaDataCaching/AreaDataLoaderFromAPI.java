@@ -50,32 +50,36 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
-        Log.i(TAG, "Request loading of area: " + conditions.toString());
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         conditions.setMainTags(true);
         final int requestId = this.requestCounter++;
+
         Call<List<Place>> call = RestClient.service().bestPlaces(conditions.toMap());
+
+        final int itemRequestId = request.setPendingCall(call);
+        Log.i(TAG, "Request loading of area " + conditions.toString()+ ". Request id: " + itemRequestId);
+
 
         call.enqueue(new RestCallback<List<Place>>(mContext) {
 
             @Override
             public void onResponse(Response<List<Place>> response) {
                 super.onResponse(response);
+
+                if (request.isOutdated(itemRequestId)){
+                    Log.d(TAG, "Outdated request. Do not load tags");
+                    return;
+                }
+
                 if (response.isSuccess()){
                     List<Place> places = response.body();
 
                     Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
                     // Test if request is out dated
-                    // TODO cancel requests instead
                     if (requestId <= lastClear) {
                         Log.d(TAG, "This request is out dated");
                         return;
                     }
-                    // If activity has been destroyed in the mean time
-                    // TODO cancel requests instead
-                    // if (mClusterManagerPost == null){
-                    //    return;
-                    //}
 
                     // Setting the last timestamp retrieved from the server
                     // TODO what happens if two row have the same timestamp for the same area ?
@@ -84,7 +88,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                                     ? places.get(places.size() - 1).created
                                     : 0);
 
-                    request.data.addAll(places);
+                    request.appendData(places);
 
                     if (mClusterManagerPost != null){
                         mClusterManagerPost.addItems(places);

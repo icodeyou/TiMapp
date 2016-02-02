@@ -137,9 +137,14 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     public void onBackPressed() {
-        ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-        if (exploreFragment.getCurrentItem()==0 && exploreMapFragment.isPlacesViewerVisible()) {
-            exploreMapFragment.hidePlace();
+        if (exploreFragment != null){
+            ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
+            if (exploreFragment.getCurrentItem()==0 && exploreMapFragment.isPlacesViewerVisible()) {
+                exploreMapFragment.hidePlace();
+            }
+            else{
+                super.onBackPressed();
+            }
         }
         else {
             super.onBackPressed();

@@ -41,7 +41,8 @@ public class MyApplication extends Application{
         if (currentUser != null){
             return true;
         }
-        return LocalPersistenceManager.out().getBoolean(MyApplication.KEY_IS_LOGIN, false);
+        currentUser = getCurrentUser();
+        return currentUser != null;
     }
 
     public static void checkToken(Context context){
@@ -74,8 +75,12 @@ public class MyApplication extends Application{
             return currentUser;
         }
         else {
+            int userId = LocalPersistenceManager.out().getInt(User.KEY_ID, -1);
+            if (userId == -1){
+                return null;
+            }
             currentUser = new User();
-            currentUser.id = LocalPersistenceManager.out().getInt(User.KEY_ID, -1);
+            currentUser.id = userId;
             currentUser.email = LocalPersistenceManager.out().getString(User.KEY_EMAIL, null);
             currentUser.username = LocalPersistenceManager.out().getString(User.KEY_NAME, null);
             Log.d(TAG, "Loading user form pref: " + currentUser);

@@ -239,7 +239,7 @@ public class PlaceActivity extends BaseActivity{
         Log.d(TAG, "PlaceActivity.updateBtnVisible()");
 
         // Check if the user can post in this place
-        if (MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isReachable()){
+        if (place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isReachable()){
             addPostButton.setVisibility(View.VISIBLE);
             comingButton.setVisibility(View.GONE);
         }
