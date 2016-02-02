@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
@@ -168,12 +169,12 @@ public class ExploreMapFragment extends Fragment{
             }
         });
 
-        /*gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 hidePlace();
             }
-        });*/
+        });
     }
 
     private void displayPlace(Place place) {
