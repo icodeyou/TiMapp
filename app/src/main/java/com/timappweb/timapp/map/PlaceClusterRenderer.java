@@ -3,7 +3,10 @@ package com.timappweb.timapp.map;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -59,10 +62,17 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
     @Override
     protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
-        // Draw a single person.
-        // Set the info window to show their name.
-        BitmapDescriptor image = BitmapDescriptorFactory.fromResource(place.getResource());
-        markerOptions.icon(image);
+        // Draw a single place.
+        Bitmap bitmap = Bitmap.createBitmap(30, 30, Bitmap.Config.ALPHA_8);
+        Canvas c = new Canvas(bitmap);
+        ImageView i = new ImageView(context);
+        i.setImageResource(place.getResource());
+        // TODO use appropriate background
+        i.setBackgroundColor(0);
+        i.draw(c);
+
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+        markerOptions.icon(bitmapDescriptor);
     }
 
 
@@ -77,7 +87,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         for (Place p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            Drawable drawable = context.getResources().getDrawable(p.getResource());
+            Drawable drawable = ContextCompat.getDrawable(context, p.getResource());
             drawable.setBounds(0, 0, width, height);
             profilePhotos.add(drawable);
         }
