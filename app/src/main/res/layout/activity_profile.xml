@@ -158,11 +158,13 @@
 
 
             <LinearLayout
+                android:id="@+id/layout_tags_profile"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:background="@color/background">
                 <TextView
                     android:id="@+id/tv_tag1"
                     android:layout_width="wrap_content"
@@ -178,6 +180,11 @@
                     android:text="#party"
                     android:textSize="@dimen/text_big"
                     android:textColor="@color/Goldenrod"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@drawable/background_defined_tags"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/tv_tag3"
                     android:layout_width="wrap_content"

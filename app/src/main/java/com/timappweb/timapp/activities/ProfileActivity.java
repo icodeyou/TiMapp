@@ -1,11 +1,15 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +50,7 @@ public class ProfileActivity extends BaseActivity{
     private ListView placeView;
     private View loadingView;
     private View loadedView;
+    private LinearLayout layoutTagsProfile;
     private View noConnectionView;
     private List<Tag> tags;
 
@@ -69,8 +74,10 @@ public class ProfileActivity extends BaseActivity{
         loadingView = findViewById(R.id.loading_view);
         loadedView = findViewById(R.id.loaded_view);
         noConnectionView = findViewById(R.id.no_connection_view);
+        layoutTagsProfile = (LinearLayout) findViewById(R.id.layout_tags_profile);
 
         initAdapter();
+        setListeners();
 
         // Get data
         int userId = IntentsUtils.extractUserId(getIntent());
@@ -118,6 +125,35 @@ public class ProfileActivity extends BaseActivity{
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         //TODO : find last place
         placeView.setAdapter(placesAdapter);
+    }
+
+    private void setListeners() {
+        final Activity activity = this;
+
+        layoutTagsProfile.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(getResources().getColor(R.color.LightGrey), PorterDuff.Mode.SRC_ATOP);
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+        layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.editProfile(activity, mUser);
+            }
+        });
     }
 
     private void loadUser(int userId){

@@ -321,8 +321,10 @@ public class ExploreMapFragment extends Fragment{
             public boolean onClusterClick(Cluster<Place> cluster) {
                 Log.d(TAG, "You clicked on a post cluster");
                 gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
-                placesAdapter.clear();
-                placesAdapter.addAll(cluster.getItems());
+                // Steph, je sais pas pourquoi tu fais des modifications sur cet adapter.
+                // C'est l'adapter qui concerne le "placeViewer" qui au bottom de la page
+                //placesAdapter.clear();
+                //placesAdapter.addAll(cluster.getItems());
                 ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                 return true;
             }
