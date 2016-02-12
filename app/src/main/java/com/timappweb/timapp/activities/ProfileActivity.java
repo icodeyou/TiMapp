@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -53,6 +54,7 @@ public class ProfileActivity extends BaseActivity{
     private LinearLayout layoutTagsProfile;
     private View noConnectionView;
     private List<Tag> tags;
+    private ImageView profilePicture;
 
 
     @Override
@@ -75,6 +77,9 @@ public class ProfileActivity extends BaseActivity{
         loadedView = findViewById(R.id.loaded_view);
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = (LinearLayout) findViewById(R.id.layout_tags_profile);
+        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        profilePicture.setImageResource(R.drawable.ic_category_bar);
+        profilePicture.setBackgroundResource(R.drawable.b1);
 
         initAdapter();
         setListeners();

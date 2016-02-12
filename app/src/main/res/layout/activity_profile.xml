@@ -211,10 +211,11 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/profile_picture"
             android:layout_width="@dimen/profile_picture_side"
             android:layout_height="@dimen/profile_picture_side"
             android:layout_marginTop="45dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_chineseman"/>
+            android:src="@drawable/ic_category_bar"/>
     </RelativeLayout>
 </LinearLayout>

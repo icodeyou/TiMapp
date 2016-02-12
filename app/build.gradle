@@ -65,7 +65,7 @@ dependencies {
     compile 'com.github.greenfrvr:hashtag-view:1.2.1'
 
     //Needed for Facebook - added by Jack
-    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
+    //compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 
     //library facebook
     compile 'com.sromku:simple-fb:4.1.1'

@@ -78,8 +78,22 @@ public class LocateActivity extends BaseActivity{
 
         // -----------------------------------------------------------------------------------------
         // Init variables
-        final LocateActivity that = this;
         mResultReceiver = new AddressResultReceiver(new Handler());
+
+        setListeners();
+
+
+        //if (BuildConfig.DEBUG){
+        //   placesAdapter.generateDummyData();
+        //}
+
+        initLocationListener();
+
+
+    }
+
+    private void setListeners() {
+        final LocateActivity that = this;
         final PlacesAdapter placesAdapter = new PlacesAdapter(this);
 
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
@@ -112,16 +126,9 @@ public class LocateActivity extends BaseActivity{
                     return;
                 }
                 IntentsUtils.addPlace(that);
+                buttonAddSpot.setEnabled(false);
             }
         });
-
-        //if (BuildConfig.DEBUG){
-        //   placesAdapter.generateDummyData();
-        //}
-
-        initLocationListener();
-
-
     }
 
 

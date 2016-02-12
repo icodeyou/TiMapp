@@ -3,10 +3,15 @@ package com.timappweb.timapp.map;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,13 +27,11 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
-/**
- * Created by stephane on 1/21/2016.
- */
 public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
     private final IconGenerator mIconGenerator;
@@ -62,18 +65,41 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
     @Override
     protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
-        // Draw a single place.
-        Bitmap bitmap = Bitmap.createBitmap(30, 30, Bitmap.Config.ALPHA_8);
-        Canvas c = new Canvas(bitmap);
-        ImageView i = new ImageView(context);
-        i.setImageResource(place.getResource());
-        // TODO use appropriate background
-        i.setBackgroundColor(0);
-        i.draw(c);
+        ImageView categoryImage= new ImageView(context);
+        categoryImage.setImageResource(place.getResource());
+        categoryImage = setCategoryBackground(categoryImage,place.getLevel());
 
-        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-        markerOptions.icon(bitmapDescriptor);
+        categoryImage.setDrawingCacheEnabled(true);
+
+        // Without this code, the view will have a dimension of 0,0 and the bitmap will be null
+        categoryImage.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        categoryImage.layout(0, 0, categoryImage.getMeasuredWidth(), categoryImage.getMeasuredHeight());
+        categoryImage.buildDrawingCache(true);
+        Bitmap bmp = Bitmap.createScaledBitmap(categoryImage.getDrawingCache(),100,100,true);
+        categoryImage.setDrawingCacheEnabled(false); // clear drawing cache
+
+        bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);
+
+        //add marker to Map
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bmp));
     }
+
+    /*private Bitmap getResizedBitmap(Bitmap bmp, int newWidth, int newHeight) {
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bmp, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }*/
 
 
     @Override
@@ -103,5 +129,28 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     protected boolean shouldRenderAsCluster(Cluster cluster) {
         // Always render clusters.
         return cluster.getSize() > 1;
+    }
+
+    public ImageView setCategoryBackground(ImageView i, int level) {
+        switch (level) {
+            case 1:
+                i.setBackgroundResource(R.drawable.b1);
+                return i;
+            case 2:
+                i.setBackgroundResource(R.drawable.b2);
+                return i;
+            case 3:
+                i.setBackgroundResource(R.drawable.b3);
+                return i;
+            case 4:
+                i.setBackgroundResource(R.drawable.b4);
+                return i;
+            case 5:
+                i.setBackgroundResource(R.drawable.b5);
+                return i;
+            default:
+                i.setBackgroundColor(0);
+                return i;
+        }
     }
 }
