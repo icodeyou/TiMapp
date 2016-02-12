@@ -133,19 +133,19 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
     public ImageView setCategoryBackground(ImageView i, int level) {
         switch (level) {
-            case 1:
+            case 0:
                 i.setBackgroundResource(R.drawable.b1);
                 return i;
-            case 2:
+            case 1:
                 i.setBackgroundResource(R.drawable.b2);
                 return i;
-            case 3:
+            case 2:
                 i.setBackgroundResource(R.drawable.b3);
                 return i;
-            case 4:
+            case 3:
                 i.setBackgroundResource(R.drawable.b4);
                 return i;
-            case 5:
+            case 4:
                 i.setBackgroundResource(R.drawable.b5);
                 return i;
             default:
