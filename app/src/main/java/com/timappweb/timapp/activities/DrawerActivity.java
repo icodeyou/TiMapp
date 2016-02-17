@@ -38,7 +38,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     ActionBarDrawerToggle mDrawerToggle;
-    private TextView tvUsername = null;
     private Toolbar toolbar;
     private ExploreFragment exploreFragment;
 
@@ -99,7 +98,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
         View headerView = getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
-        tvUsername = (TextView) headerView.findViewById(R.id.drawer_username);
 
         // -----------------------------------------------------------------------------------------
         setListeners();
@@ -108,12 +106,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     private void setListeners() {
         final Activity that = this;
-        tvUsername.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.profile(that);
-            }
-        });
 
         onLogoutListener = new OnLogoutListener() {
             @Override
@@ -338,11 +330,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             /** Called when a drawer has settled in a completely open state. */
         public void onDrawerOpened(View drawerView) {
             super.onDrawerOpened(drawerView);
-
-            if (MyApplication.isLoggedIn()){
-                tvUsername.setText(MyApplication.getCurrentUser().username);
-            }
-            //getActionBar().setTitle(mDrawerTitle); TODO: application crash when used
             invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
         }
     }

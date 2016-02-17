@@ -3,7 +3,7 @@
 
     <item android:title="Activity">
         <menu>
-            <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_menu_camera"
+            <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_menu_view"
                 android:title="@string/nav_explore" />
             <item android:id="@+id/menu_item_tag_around" android:icon="@android:drawable/ic_input_add"
                 android:title="@string/nav_tag_around" />
@@ -20,11 +20,11 @@
 
     <item android:title="Account">
         <menu>
-            <item android:id="@+id/menu_item_profile" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/menu_item_profile" android:icon="@android:drawable/ic_menu_myplaces"
                 android:title="@string/nav_profile" />
-            <item android:id="@+id/menu_item_settings" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/menu_item_settings" android:icon="@android:drawable/ic_menu_preferences"
                 android:title="@string/nav_settings" />
-            <item android:id="@+id/menu_item_logout" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/menu_item_logout" android:icon="@android:drawable/ic_lock_power_off"
                 android:title="@string/nav_logout" />
             <item android:id="@+id/menu_item_login" android:icon="@android:drawable/ic_menu_send"
                 android:title="@string/nav_login" />

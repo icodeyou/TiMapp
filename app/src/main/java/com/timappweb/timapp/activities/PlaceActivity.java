@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
@@ -37,8 +36,6 @@ import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.TimeTaskCallback;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.Vector;
 
 import retrofit2.Call;
@@ -51,8 +48,8 @@ public class PlaceActivity extends BaseActivity{
     private MyPagerAdapter pagerAdapter;
     private Place place;
     private int placeId;
-    private Button comingButton;
-    private Button addPostButton;
+    private View comingButton;
+    private View addPostButton;
     private View   progressView;
     private Activity currentActivity;
 
@@ -78,7 +75,27 @@ public class PlaceActivity extends BaseActivity{
         //Initialize
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
-        comingButton = (Button) findViewById(R.id.button_coming);
+        comingButton = findViewById(R.id.button_coming);
+        addPostButton = findViewById(R.id.button_add_tags);
+        progressView = findViewById(R.id.progress_view);
+
+        initFragments();
+        initBottomButton();
+        initPlaceAdapters();
+        setListeners();
+
+
+        if (place != null){
+            placeId = place.id;
+            this.notifyPlaceLoaded();
+        }
+        else{
+            loadPlace(placeId);
+        };
+
+    }
+
+    private void setListeners() {
         comingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +126,6 @@ public class PlaceActivity extends BaseActivity{
             }
         });
 
-        addPostButton = (Button) findViewById(R.id.button_add_some_tags);
         addPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,24 +155,7 @@ public class PlaceActivity extends BaseActivity{
                 IntentsUtils.addPostStepTags(currentActivity, place);
             }
         });
-
-        progressView = findViewById(R.id.progress_view);
-
-        initFragments();
-        initBottomButton();
-        initPlaceAdapters();
-
-
-        if (place != null){
-            placeId = place.id;
-            this.notifyPlaceLoaded();
-        }
-        else{
-            loadPlace(placeId);
-        };
-
     }
-
 
 
     private void initBottomButton() {
@@ -246,10 +245,6 @@ public class PlaceActivity extends BaseActivity{
         else if (place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)){
             comingButton.setVisibility(View.VISIBLE);
             addPostButton.setVisibility(View.GONE);
-        }
-        else{
-            addPostButton.setVisibility(View.GONE);
-            comingButton.setVisibility(View.GONE);
         }
     }
 

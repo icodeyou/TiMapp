@@ -20,6 +20,9 @@
             android:layout_height="50dp"
             android:layout_width="50dp"/>
     </LinearLayout>
+
+    <!-- PLACE -->
+    <!-- ************************************* -->
     <ListView
         android:id="@+id/place_lv"
         android:layout_width="match_parent"
@@ -30,34 +33,57 @@
         android:layout_height="2dp"
         android:background="@color/colorPrimary"/>
 
-    <!-- TAGS -->
-    <!-- **********************************************************************-->
+    <!-- Fragments -->
+    <!-- ************************************* -->
     <android.support.v4.view.ViewPager
         android:id="@+id/place_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <Button
+
+    <!-- BUTTONS -->
+    <!-- ************************************* -->
+    <LinearLayout
         android:id="@+id/button_coming"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
-        android:background="@color/colorAccent"
-        android:textColor="@color/White"
-        android:textAllCaps="false"
-        android:text="Coming"
-        android:textSize="@dimen/text_huge"
-        android:visibility="gone"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/border">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_action_navigate"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:textColor="@color/colorAccent"
+            android:textAllCaps="false"
+            android:text="Coming"
+            android:gravity="center"
+            android:textSize="@dimen/text_big"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_add_some_tags"
+    <LinearLayout
+        android:id="@+id/button_add_tags"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
         android:background="@color/colorAccent"
-        android:textColor="@color/White"
-        android:textAllCaps="false"
-        android:text="@string/button_add_tags"
-        android:textSize="@dimen/text_huge"
-        android:visibility="gone"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:textColor="@color/White"
+            android:textAllCaps="false"
+            android:text="@string/button_add_tags"
+            android:textSize="@dimen/text_big"/>
+    </LinearLayout>
 
 </LinearLayout>
