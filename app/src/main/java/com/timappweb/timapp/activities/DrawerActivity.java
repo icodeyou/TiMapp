@@ -215,6 +215,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         return res;
     }
 
+
+    public Fragment getExploreFragment() {
+        return exploreFragment;
+    }
+
     /* ============================================================================================*/
     /* DRAWER */
     /* ============================================================================================*/

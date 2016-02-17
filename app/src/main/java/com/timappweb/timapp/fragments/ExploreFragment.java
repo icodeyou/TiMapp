@@ -48,7 +48,7 @@ public class ExploreFragment extends Fragment{
         pagerTabStrip.setTextColor(getResources().getColor(R.color.White));
         pagerTabStrip.setDrawFullUnderline(false);
 
-        this.dataLoader = new AreaDataLoaderFromAPI(this.getContext());
+        this.dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this);
 
         return root;
     }

@@ -12,13 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
-        <ProgressBar
-            android:id="@+id/progressbar"
-            android:layout_width="80dp"
+        <include layout="@layout/progressbar"
             android:layout_height="80dp"
-            android:indeterminate="true"
-            android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/colorAccent"/>
+            android:layout_width="80dp"/>
     </LinearLayout>
 
     <LinearLayout

@@ -60,6 +60,7 @@ public class ExploreMapFragment extends Fragment{
     private View root;
     private ListView placesViewer;
     private PlacesAdapter placesAdapter;
+    private View progressView;
 
     private static HashMap<Marker, Place> mapMarkers;
     private GoogleMap map;
@@ -96,6 +97,7 @@ public class ExploreMapFragment extends Fragment{
 
         //initialize
         mapView = (MapView) root.findViewById(R.id.map);
+        progressView = root.findViewById(R.id.progress_view);
         mapView.onCreate(mapBundle);
         placesViewer = (ListView) root.findViewById(R.id.places_viewer);
         placesAdapter = new PlacesAdapter(getActivity(), false);
@@ -156,8 +158,19 @@ public class ExploreMapFragment extends Fragment{
         });
     }
 
+    public void setLoaderVisibility(boolean bool) {
+        if(bool) {
+            progressView.setVisibility(View.VISIBLE);
+        }
+        else {
+            progressView.setVisibility(View.GONE);
+        }
+    }
 
 
+    public void hidePlace() {
+        placesViewer.setVisibility(View.GONE);
+    }
 
 
     private void initListeners() {
@@ -181,12 +194,6 @@ public class ExploreMapFragment extends Fragment{
         placesViewer.setVisibility(View.VISIBLE);
         placesAdapter.clear();
         placesAdapter.add(place);
-    }
-
-
-
-    public void hidePlace() {
-        placesViewer.setVisibility(View.GONE);
     }
 
     private void loadMapIfNeeded() {

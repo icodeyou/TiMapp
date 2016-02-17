@@ -11,15 +11,11 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:orientation="vertical">
-        <ProgressBar
-            android:id="@+id/progress_tar"
+        <include layout="@layout/progressbar"
             android:layout_width="50dp"
             android:layout_height="0dp"
             android:layout_weight="0.45"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/colorAccent"/>
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/progress_text"
             android:layout_width="match_parent"

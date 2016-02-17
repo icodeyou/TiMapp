@@ -1,11 +1,17 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.maps.android.clustering.ClusterManager;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
@@ -25,6 +31,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
     private Context mContext;
+    private ExploreFragment exploreFragment;
 
     private ClusterManager<Place> mClusterManagerPost = null;
     private int requestCounter = 0;
@@ -33,6 +40,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     public AreaDataLoaderFromAPI(Context context) {
         this.mContext = context;
+    }
+
+    public AreaDataLoaderFromAPI(Context context, ExploreFragment fragment) {
+        this.mContext = context;
+        this.exploreFragment = fragment;
     }
 
     public void setClusterManager(ClusterManager<Place> mClusterManagerPost) {
@@ -50,6 +62,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
+        final ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
+        exploreMapFragment.setLoaderVisibility(true);
+
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         conditions.setMainTags(true);
         final int requestId = this.requestCounter++;
@@ -63,17 +78,26 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
         call.enqueue(new RestCallback<List<Place>>(mContext) {
 
             @Override
+            public void onFailure(Throwable t) {
+                exploreMapFragment.setLoaderVisibility(false);
+                Toast.makeText(mContext, R.string.cannot_load_events, Toast.LENGTH_SHORT).show();
+                super.onFailure(t);
+            }
+
+            @Override
             public void onResponse(Response<List<Place>> response) {
                 super.onResponse(response);
 
                 if (request.isOutdated(itemRequestId)){
                     Log.d(TAG, "Outdated request. Do not load tags");
+                    exploreMapFragment.setLoaderVisibility(false);
+                    Toast.makeText(mContext, R.string.cannot_load_events, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (response.isSuccess()){
                     List<Place> places = response.body();
-
+                    exploreMapFragment.setLoaderVisibility(false);
                     Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
                     // Test if request is out dated
                     if (requestId <= lastClear) {

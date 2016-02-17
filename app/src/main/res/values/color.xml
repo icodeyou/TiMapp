@@ -7,6 +7,7 @@
     <color name="colorAccentDark">#e97b06</color>
     <color name="colorLightPrimary">#FFCDD2</color>
     <color name="background">#fffef6</color>
+    <color name="background_loading_map">#5d080808</color>
     <color name="darker_background">#e7e7e7</color>
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
