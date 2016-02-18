@@ -2,7 +2,6 @@ package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.ConfigurationAccessor;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 
@@ -142,7 +141,7 @@ public class Place implements Serializable, MarkerValueInterface {
      */
     public boolean isReachable(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
-                < MyApplication.getServerConfiguration().place_max_reachable;
+                < MyApplication.getServerConfig().place_max_reachable;
     }
 
     public boolean isReachable() {
@@ -150,7 +149,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public static boolean isValidName(String name) {
-        return name.trim().length() >= MyApplication.getServerConfiguration().places_min_name_length;
+        return name.trim().length() >= MyApplication.getServerConfig().places_min_name_length;
     }
 
     public int getPoints() {
@@ -163,7 +162,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     private static int computeLevel(int points) {
-        List<Integer> levels = MyApplication.getServerConfiguration().place_levels;
+        List<Integer> levels = MyApplication.getServerConfig().places_points_levels;
         int num = 0;
         for (int level: levels){
             if (level >= points){

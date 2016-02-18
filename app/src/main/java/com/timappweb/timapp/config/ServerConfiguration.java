@@ -1,17 +1,9 @@
 package com.timappweb.timapp.config;
 
-import android.util.Log;
-
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.Util;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by stephane on 2/2/2016.
@@ -22,7 +14,7 @@ public class ServerConfiguration {
     public int updated = 0;
     public int version = 0;
 
-    public List<Integer> place_levels;
+    public List<Integer> places_points_levels;
     public int place_max_reachable = 500;
     public int tags_suggest_limit = 40;
     public int places_populars_limit = 20;
@@ -41,12 +33,7 @@ public class ServerConfiguration {
     public int update_configuration_delay = 3600;
 
     public ServerConfiguration() {
-        this.place_levels = new LinkedList<>();
-        this.place_levels.add(2000);
-        this.place_levels.add(4000);
-        this.place_levels.add(5000);
-        this.place_levels.add(7000);
-        this.place_levels.add(7100);
+        this.places_points_levels = new LinkedList<>();
         this.updated = Util.getCurrentTimeSec();
     }
 
@@ -55,7 +42,7 @@ public class ServerConfiguration {
         return "ServerConfiguration{" +
                 "updated=" + updated +
                 ", version=" + version +
-                ", place_levels=" + place_levels +
+                ", places_points_levels=" + places_points_levels +
                 ", place_max_reachable=" + place_max_reachable +
                 ", tags_suggest_limit=" + tags_suggest_limit +
                 ", places_populars_limit=" + places_populars_limit +

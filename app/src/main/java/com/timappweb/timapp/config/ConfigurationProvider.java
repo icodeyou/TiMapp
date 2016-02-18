@@ -24,7 +24,7 @@ import retrofit2.Response;
 /**
  * Created by stephane on 1/24/2016.
  */
-public class ConfigurationAccessor {
+public class ConfigurationProvider {
 
     private static final String TAG = "AssetsPropertyReader";
 
@@ -32,15 +32,15 @@ public class ConfigurationAccessor {
     private final Gson gson;
     private Context context;
     private static Properties properties;
-
     private ServerConfiguration serverConfiguration = null;
+    private Listener listener;
 
-    public ConfigurationAccessor(Context context, String filename) {
+    public ConfigurationProvider(Context context, String filename, Listener listener) {
         this.gson = new Gson();
         this.context = context;
         this.properties = new Properties();
         this.filename = filename;
-        this.load();
+        this.listener = listener;
     }
 
     public ServerConfiguration getServerConfiguration(){
@@ -111,6 +111,7 @@ public class ConfigurationAccessor {
     public void updateServerConfiguration() {
         if (serverConfiguration != null && !Util.isOlderThan(serverConfiguration.update_configuration_delay, serverConfiguration.updated)){
             Log.d(TAG, "Server configuration is up to date. Last update: " + (Util.getCurrentTimeSec() - serverConfiguration.updated) + " seconds ago.");
+            this.listener.onLoaded();
             return;
         }
         if (serverConfiguration == null){
@@ -129,13 +130,19 @@ public class ConfigurationAccessor {
                 else{
                     Log.d(TAG, "Cannot update configuration: " + response);
                 }
+                listener.onLoaded();
             }
 
             @Override
             public void onFailure(Throwable t) {
                 Log.d(TAG, "onFailure: Cannot update configuration: " + t.getMessage());
+                listener.onFail();
             }
         });
     }
 
+    public interface Listener{
+        void onLoaded();
+        void onFail();
+    }
 }

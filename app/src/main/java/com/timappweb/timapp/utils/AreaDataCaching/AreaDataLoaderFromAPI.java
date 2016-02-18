@@ -67,6 +67,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         conditions.setMainTags(true);
+        //conditions.setTimestampMin(request.dataTimestamp);
         final int requestId = this.requestCounter++;
 
         Call<List<Place>> call = RestClient.service().bestPlaces(conditions.toMap());
@@ -101,7 +102,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                     Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
                     // Test if request is out dated
                     if (requestId <= lastClear) {
-                        Log.d(TAG, "This request is out dated");
+                        Log.d(TAG, "This request is out dated. Data have been cleared");
                         return;
                     }
 
@@ -112,7 +113,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                                     ? places.get(places.size() - 1).created
                                     : 0);
 
-                    request.appendData(places);
+                    request.setData(places);
 
                     if (mClusterManagerPost != null){
                         mClusterManagerPost.addItems(places);

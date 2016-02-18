@@ -11,7 +11,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.cache.CacheData;
-import com.timappweb.timapp.config.ConfigurationAccessor;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Category;
@@ -107,9 +107,9 @@ public class MyApplication extends Application{
 
     public static List<Category> categories = new LinkedList<>();
     private static Location lastLocation = null;
-    public static ConfigurationAccessor config;
+    public static ConfigurationProvider config;
 
-    public static ServerConfiguration getServerConfiguration() {
+    public static ServerConfiguration getServerConfig() {
         return config.getServerConfiguration();
     }
 
@@ -117,9 +117,7 @@ public class MyApplication extends Application{
     public void onCreate(){
         super.onCreate();
         LocalPersistenceManager.init(this);
-
-        String endpoint = getResources().getString(R.string.ws_endpoint);
-        RestClient.init(this, endpoint);
+        RestClient.init(this, getResources().getString(R.string.ws_endpoint));
 
         initCategories();
 
@@ -130,7 +128,18 @@ public class MyApplication extends Application{
         CacheData.load();
 
         // Load configuration
-        config = new ConfigurationAccessor(getApplicationContext(), "configuration.properties");
+        config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProvider.Listener(){
+            @Override
+            public void onLoaded() {
+                // TODO Config has been successfully loaded
+            }
+
+            @Override
+            public void onFail() {
+                // TODO Config cannot be loaded
+            }
+        });
+        config.load();
     }
 
     private void initFacebookPermissions() {
@@ -191,7 +200,7 @@ public class MyApplication extends Application{
      */
     public static boolean hasLastLocation() {
         return lastLocation != null &&
-                (lastLocation.getTime() - System.currentTimeMillis()) < getServerConfiguration().gps_min_time_delay;
+                (lastLocation.getTime() - System.currentTimeMillis()) < getServerConfig().gps_min_time_delay;
     }
 
     /**
@@ -199,8 +208,9 @@ public class MyApplication extends Application{
      * @return
      */
     public static boolean hasFineLocation() {
-        return hasFineLocation(getServerConfiguration().gps_min_accuracy);
+        return hasFineLocation(getServerConfig().gps_min_accuracy);
     }
+
     public static boolean hasFineLocation(int minAccuracy) {
         return hasLastLocation() &&
                 lastLocation.getAccuracy() <= minAccuracy;
@@ -210,27 +220,4 @@ public class MyApplication extends Application{
         return lastLocation;
     }
 
-
-
-
-
-    /*
-    private static AlertDialog alertDialog = null;
-
-    static AlertDialog dialog = null;
-    public static void showAlert(Context context, String message) {
-        if (dialog == null){
-            Log.d(TAG, "Creating new dialog");
-            dialog = (new AlertDialog.Builder(context)).create();
-        }
-        if (!dialog.isShowing()){
-            dialog.setMessage(message);
-            dialog.show();
-        }
-    }
-
-    public static void showAlert(Context context, int id){
-        showAlert(context, context.getResources().getString(id));
-    }
-    */
 }

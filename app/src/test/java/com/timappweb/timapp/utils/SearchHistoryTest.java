@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by stephane on 9/17/2015.
@@ -50,6 +49,10 @@ public class SearchHistoryTest {
             public void load(String term) {
                 counterLoad += 1;
                 new Thread(new LoadDataThread(term, history)).start();
+            }
+            @Override
+            public void onLoadEnds() {
+
             }
 
             @Override

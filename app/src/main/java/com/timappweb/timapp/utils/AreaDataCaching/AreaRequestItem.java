@@ -14,14 +14,17 @@ import retrofit2.Call;
  * Created by stephane on 9/13/2015.
  * Represents a request for a data area
  *
+ *
+ *
  */
 public class AreaRequestItem<T> {
     private static final String TAG = "AreaRequestItem";
-    public int dataTimestamp;       // Timestamp on the server
-    public int localTimestamp;      // Timestamp on the local machine
+
+    public int dataTimestamp;       // Timestamp on the server (used to filter data when we update the area)
+    public int localTimestamp;      // Timestamp on the local machine (used to know when was the last update)
     private int currentRequestId = -1;  // Request id
     public List<T> data;         // LIFO: Last spot in => First spot out
-    private Call<List<Place>> pendingCall;
+    private Call<List<Place>> pendingCall; // Represents api calls in progress
 
     public AreaRequestItem(int dataTimestamp, List<T> spots) {
         this.setDataTimestamp(dataTimestamp);
@@ -51,7 +54,6 @@ public class AreaRequestItem<T> {
     }
 
     public void update(AreaRequestItem item) {
-        this.setDataTimestamp(dataTimestamp);
         data.addAll(item.data);
     }
 
@@ -89,5 +91,9 @@ public class AreaRequestItem<T> {
         if (pendingCall != null){
             pendingCall.cancel();
         }
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
     }
 }

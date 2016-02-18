@@ -24,12 +24,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.RestError;
-import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 
@@ -188,7 +183,7 @@ public class AddPlaceActivity extends BaseActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MyApplication.hasFineLocation(MyApplication.getServerConfiguration().gps_min_accuracy_add_place)) {
+                if (MyApplication.hasFineLocation(MyApplication.getServerConfig().gps_min_accuracy_add_place)) {
                     setProgressView(true);
                     final Place place = new Place(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude(), groupNameET.getText().toString(), categorySelected);
                     submitPlace(place);
