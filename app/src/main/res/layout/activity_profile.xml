@@ -212,6 +212,6 @@
             android:layout_height="@dimen/profile_picture_side"
             android:layout_marginTop="45dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_category_bar"/>
+            android:src="@drawable/ic_chineseman"/>
     </RelativeLayout>
 </LinearLayout>

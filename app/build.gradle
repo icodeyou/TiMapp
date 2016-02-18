@@ -64,6 +64,8 @@ dependencies {
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.greenfrvr:hashtag-view:1.2.1'
 
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     //Needed for Facebook - added by Jack
     //compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 

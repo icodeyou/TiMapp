@@ -1,8 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
@@ -11,11 +8,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,32 +18,26 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.facebook.appevents.AppEventsLogger;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLoginListener;
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -148,6 +137,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         User user = new User("", "");
                         String token = feedback.data.get("token");
                         user.username = feedback.data.get("username");
+                        user.provider_uid = feedback.data.get("social_id");
+                        user.provider = SocialProvider.FACEBOOK;
                         user.id = Integer.parseInt(feedback.data.get("id"));
                         Log.i(TAG, "Session created with session token: " + token);
                         MyApplication.login(user, token);

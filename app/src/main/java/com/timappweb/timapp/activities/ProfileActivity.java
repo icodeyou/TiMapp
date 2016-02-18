@@ -3,7 +3,6 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,23 +11,20 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
-import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.config.IntentsUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -191,6 +187,9 @@ public class ProfileActivity extends BaseActivity{
                     if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
                         invalidateOptionsMenu();
                     }
+                    ImageView ivProfilePicture = (ImageView) findViewById(R.id.profile_picture);
+                    Picasso.with(context).load(mUser.getProfilePictureUrl()).into(ivProfilePicture);
+
 
                     loadedView.setVisibility(View.VISIBLE);
                     loadingView.setVisibility(View.GONE);

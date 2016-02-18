@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest;
 
 import com.timappweb.timapp.config.ServerConfiguration;
+import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -10,10 +11,13 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -70,6 +74,15 @@ public interface WebServiceInterface {
     @GET("SpotsTags/post/{id}.json")
     Call<List<Tag>> loadTagsFromPost(@Path("id") int id);
 
+
+    // ---------------------------------------------------------------------------------------------
+    // Pictures
+
+    @Multipart
+    @POST("/upload")
+    Call<String> upload(
+            @Part("myfile\"; filename=\"image.png\" ") RequestBody file,
+            @Body Picture picture);
     // ---------------------------------------------------------------------------------------------
     // Places
 

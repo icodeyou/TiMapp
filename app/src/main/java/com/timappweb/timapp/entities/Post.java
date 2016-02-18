@@ -175,6 +175,9 @@ public class Post implements Serializable, MarkerValueInterface {
                 ? (anonymous ? "Anonymous" : user.username)
                 : "Former user";
     }
+    public User getUser() {
+        return user;
+    }
 
     public boolean hasTagsLoaded() {
         return tags != null && tags.size() > 0;

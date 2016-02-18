@@ -13,6 +13,8 @@ public class User implements Serializable {
     public String email;
     public int count_posts = 0;
     public int count_places = 0;
+    public SocialProvider provider;
+    public String provider_uid;
     public int id = -1;
     private boolean status = false;
 
@@ -52,6 +54,7 @@ public class User implements Serializable {
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", user_id=" + id +
+                ", provider_uid=" + provider +
                 '}';
     }
 
@@ -67,4 +70,7 @@ public class User implements Serializable {
         return status;
     }
 
+    public String getProfilePictureUrl() {
+        return "https://graph.facebook.com/" + this.provider_uid + "/picture?type=large";
+    }
 }
