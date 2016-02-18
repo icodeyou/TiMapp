@@ -9,12 +9,12 @@
     <!-- TOOLBAR -->
     <include layout="@layout/toolbar"/>
 
-    <!-- PLACE -->
+    <!-- Progress view -->
     <!-- **********************************************************************-->
     <LinearLayout
         android:id="@+id/progress_view"
         android:layout_width="match_parent"
-        android:layout_height="95dp"
+        android:layout_height="93dp"
         android:gravity="center">
         <include layout="@layout/progressbar"
             android:layout_height="50dp"

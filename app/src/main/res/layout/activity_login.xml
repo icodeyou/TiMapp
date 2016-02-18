@@ -8,6 +8,18 @@
     android:background="@color/colorPrimaryDark"
     android:id="@+id/action_login">
 
+    <ImageView
+        android:layout_width="280dp"
+        android:layout_height="210dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_login_clock"/>
+    <ImageView
+        android:layout_width="270dp"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/hashtag_red"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -81,40 +93,37 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="80dp">
-                <ImageView
+                <!--<ImageView
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_location_white"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_location_white"/>-->
+                <com.timappweb.timapp.views.AutoResizeTextView
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:textSize="@dimen/text_normal"
-                    android:textColor="@color/White"
-                    android:text="Let people know\nwhat's going on"/>
-                <ImageView
+                    android:ellipsize="none"
+                    android:maxLines="1"
+                    android:text="@string/slogan"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/White"/>
+                <!--<ImageView
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_hashtag_white"/>
+                    android:src="@drawable/ic_hashtag_white"/>-->
             </LinearLayout>
         </RelativeLayout>
 
         <Button android:id="@+id/skip_loggin_button" style="?android:textAppearanceSmall"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/transparent"
             android:text="@string/action_skip_loggin"
             android:textStyle="bold"
             android:layout_alignParentBottom="true"/>
     </LinearLayout>
 
-
-
-
     <include android:id="@id/toolbar_transparent" layout="@layout/toolbar_transparent" />
-
 </RelativeLayout>
 

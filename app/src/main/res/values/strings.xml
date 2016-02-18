@@ -133,4 +133,5 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_load_posts">We cannot load the posts.\nCheck your internet connection.</string>
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>
+    <string name="slogan">Let people know what\'s going on</string>
 </resources>

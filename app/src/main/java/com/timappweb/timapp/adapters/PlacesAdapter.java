@@ -16,11 +16,12 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.views.AutoResizeTextView;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
     private final Context context;
-    private RecyclerView rv_lastPostTags;
+    private RecyclerView rvLastPostTags;
     private boolean isTagsVisible;
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
@@ -56,10 +57,10 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
 
         // Initialize
-        TextView tvLocation = (TextView) postBox.findViewById(R.id.title_place);
+        AutoResizeTextView tvLocation = (AutoResizeTextView) postBox.findViewById(R.id.title_place);
         TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);
         TextView tvCountPoints = (TextView) postBox.findViewById(R.id.people_counter_place);
-        rv_lastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
+        rvLastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
         ImageView categoryIcon = (ImageView) postBox.findViewById(R.id.image_category_place);
 
         //Set texts
@@ -77,16 +78,16 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
         if(isTagsVisible) {
             //Set the adapter for RV
-            HorizontalTagsAdapter htAdapter = (HorizontalTagsAdapter) rv_lastPostTags.getAdapter();
+            HorizontalTagsAdapter htAdapter = (HorizontalTagsAdapter) rvLastPostTags.getAdapter();
             htAdapter.setData(place.tags);
-            rv_lastPostTags.setAdapter(htAdapter);
+            rvLastPostTags.setAdapter(htAdapter);
 
             //Set LayoutManager for RV
             GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
-            rv_lastPostTags.setLayoutManager(manager_savedTags);
+            rvLastPostTags.setLayoutManager(manager_savedTags);
         }
         else {
-            rv_lastPostTags.setVisibility(View.GONE);
+            rvLastPostTags.setVisibility(View.GONE);
         }
 
         //Set OnClickListener for the entire view !
