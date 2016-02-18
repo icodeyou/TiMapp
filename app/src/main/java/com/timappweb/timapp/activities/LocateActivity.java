@@ -131,6 +131,11 @@ public class LocateActivity extends BaseActivity{
         });
     }
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+    }
 
     @Override
     protected void onStart() {
