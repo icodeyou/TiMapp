@@ -35,7 +35,7 @@
         android:layout_margin="10dp"
         android:hint="@string/hint_et_edit_first_profile"
         android:singleLine="true"
-        android:textColorHint="@color/hint_edit_profile"
+        android:textColorHint="@color/colorAccent"
         android:textColor="@color/White"
         android:textSize="@dimen/text_big"/>
 
