@@ -71,4 +71,7 @@ dependencies {
 
     //library facebook
     compile 'com.sromku:simple-fb:4.1.1'
+
+    //square camera
+    compile 'com.github.boxme:squarecamera:1.1.0'
 }

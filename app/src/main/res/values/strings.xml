@@ -13,6 +13,7 @@
     <string name="title_activity_add_spot">Post</string>
     <string name="title_activity_post">Post</string>
     <string name="title_activity_place">Event</string>
+    <string name="title_activity_incoming">Incoming</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
@@ -88,7 +89,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="title_activity_tag_1">"Choose "</string>
     <string name="title_activity_tag_2">" tags"</string>
     <string name="hint_searchview_activity_tag">Choose 3 tags</string>
-    <string name="main_text_publish_activity">confirm</string>
+    <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
     <string name="button_add_place">New Event</string>
     <string name="hint_place_name">Type the event</string>
@@ -99,12 +100,15 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="searchview_hint_2">2 tags left</string>
     <string name="searchview_hint_1">One more !</string>
     <string name="loading_tags">Loading tags</string>
+    <string name="loading_pictures">Loading pictures</string>
     <string name="loading_posts">Loading people</string>
     <string name="uploading_tags">Uploading tags</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
     <string name="text_last_post">Last post</string>
-    <string name="button_add_tags">Add tags</string>
+    <string name="button_add_tags">Tags</string>
+    <string name="button_add_pic">Picture</string>
+    <string name="button_add_people">People</string>
     <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
     <string name="text_no_event_around1">There isn\'t any event near you\nright now.</string>
     <string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>
@@ -130,8 +134,11 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_load_profile">We cannot load your profile.\nCheck your internet connection.</string>
     <string name="cannot_load_events">We cannot load the events.\nCheck your internet connection.</string>
     <string name="cannot_load_tags">We cannot load the tags.\nCheck your internet connection.</string>
+    <string name="cannot_load_pictures">We cannot load the pictures.\nCheck your internet connection.</string>
     <string name="cannot_load_posts">We cannot load the posts.\nCheck your internet connection.</string>
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>
     <string name="slogan">Let people know what\'s going on</string>
+    <string name="coming_button">I\'m Coming</string>
+    <string name="on_my_way">On My Way</string>
 </resources>

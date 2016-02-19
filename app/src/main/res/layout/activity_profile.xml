@@ -41,7 +41,7 @@
         android:id="@+id/loaded_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent" android:layout_height="match_parent"
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:orientation="horizontal"
-                android:background="@color/colorLightPrimary"
+                android:background="@color/colorAccent"
                 android:gravity="bottom">
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -99,21 +99,21 @@
                             android:layout_width="@dimen/logo_big"
                             android:layout_height="@dimen/logo_big"
                             android:layout_marginRight="10dp"
-                            android:src="@drawable/ic_hashtag"/>
+                            android:src="@drawable/ic_hashtag_circle_blue"/>
                         <TextView
                             android:id="@+id/tags_counter"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/Black"/>
+                            android:textColor="@color/colorAccentDark"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/post_shared"
                         android:textSize="@dimen/text_normal"
-                        android:textColor="@color/Black"/>
+                        android:textColor="@color/colorAccentDark"/>
                 </LinearLayout>
                 <View
                     android:layout_width="1dp"
@@ -133,21 +133,21 @@
                             android:layout_width="@dimen/logo_big"
                             android:layout_height="@dimen/logo_big"
                             android:layout_marginRight="10dp"
-                            android:src="@drawable/ic_location"/>
+                            android:src="@drawable/ic_location_blue"/>
                         <TextView
                             android:id="@+id/places_counter"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/Black"/>
+                            android:textColor="@color/colorAccentDark"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/places_created"
                         android:textSize="@dimen/text_normal"
-                        android:textColor="@color/Black"/>
+                        android:textColor="@color/colorAccentDark"/>
 
                 </LinearLayout>
             </LinearLayout>

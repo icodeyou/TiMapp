@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <!-- Progress view -->
         <!-- **********************************************************************-->
         <LinearLayout
@@ -30,17 +29,17 @@
                 android:gravity="center"
                 android:textSize="@dimen/text_normal"
                 android:textColor="@color/black"
-                android:text="@string/loading_tags"/>
+                android:text="@string/loading_pictures"/>
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.45"/>
         </LinearLayout>
 
-        <!-- No tags yet -->
+        <!-- No pictures yet -->
         <!-- **********************************************************************-->
         <TextView
-            android:id="@+id/no_tags_view"
+            android:id="@+id/no_pictures_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -52,7 +51,7 @@
         <LinearLayout
             android:id="@+id/no_connection_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
@@ -67,23 +66,23 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_normal"
                 android:gravity="center"
-                android:text="@string/cannot_load_tags"/>
+                android:text="@string/cannot_load_pictures"/>
         </LinearLayout>
 
 
         <!-- List View -->
         <!-- **********************************************************************-->
-        <ListView
-            android:id="@+id/list_tags"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pictures_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:listSelector="@android:color/transparent"/>
 
-        <!-- Add tags Button-->
+        <!-- Main Add Button (Add pic)-->
         <!-- **********************************************************************-->
         <LinearLayout
-            android:id="@+id/main_button_tags"
+            android:id="@+id/main_button_pics"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_bottom_button"
             android:orientation="horizontal"
@@ -103,35 +102,16 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorAccentDark"
                 android:textAllCaps="false"
-                android:text="@string/button_add_tags"
+                android:text="@string/button_add_pic"
                 android:gravity="center"
                 android:textSize="@dimen/text_big"/>
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Add pic Button on the left-->
+    <!-- Add Tag Button on right-->
     <!-- **********************************************************************-->
     <LinearLayout
-        android:id="@+id/button_add_pic"
-        android:layout_width="60dp"
-        android:layout_height="@dimen/height_bottom_button"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:gravity="left|bottom"
-        android:background="@drawable/border_radius_top_right"
-        android:visibility="gone">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginBottom="7dp"
-            android:src="@drawable/ic_camera_plus"/>
-    </LinearLayout>
-
-    <!-- Add pic Button on the right-->
-    <!-- **********************************************************************-->
-    <LinearLayout
-        android:id="@+id/button_add_people"
+        android:id="@+id/button_add_tags"
         android:layout_width="60dp"
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
@@ -146,7 +126,7 @@
             android:layout_height="40dp"
             android:layout_marginRight="7dp"
             android:layout_marginBottom="7dp"
-            android:src="@drawable/ic_people_plus"/>
+            android:src="@drawable/ic_hashtag_plus"/>
     </LinearLayout>
 
 </RelativeLayout>

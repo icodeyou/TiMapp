@@ -42,7 +42,7 @@
             android:id="@+id/rv_horizontal_tags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"
-            myattrs:text_color="@color/colorAccent"
+            myattrs:text_color="@color/colorAccentDark"
             myattrs:background_color="@color/background"/>
     </LinearLayout>
 </LinearLayout>

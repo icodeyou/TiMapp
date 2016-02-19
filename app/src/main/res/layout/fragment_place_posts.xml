@@ -8,7 +8,8 @@
     <LinearLayout
         android:id="@+id/progress_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:gravity="bottom"
         android:orientation="vertical">
         <include layout="@layout/progressbar"
@@ -34,7 +35,8 @@
     <LinearLayout
         android:id="@+id/no_connection_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -56,7 +58,8 @@
     <TextView
         android:id="@+id/no_posts_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:textSize="@dimen/text_normal"
         android:text="@string/no_people"
         android:gravity="center"
@@ -67,5 +70,34 @@
     <ListView
         android:id="@+id/list_people"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- Add Button-->
+    <!-- **********************************************************************-->
+    <LinearLayout
+        android:id="@+id/main_button_posts"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_bottom_button"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/colorAccent"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_plus_red"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorAccentDark"
+            android:textAllCaps="false"
+            android:text="@string/button_add_people"
+            android:gravity="center"
+            android:textSize="@dimen/text_big"/>
+    </LinearLayout>
 </LinearLayout>

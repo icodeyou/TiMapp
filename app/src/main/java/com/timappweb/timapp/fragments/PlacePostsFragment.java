@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PostsAdapter;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -26,29 +28,53 @@ public class PlacePostsFragment extends Fragment {
 
     private static final String TAG = "PlaceTagsFragment";
     private Context         context;
+    private PlaceActivity placeActivity;
+    private Place place;
+    private int placeId;
+
     private PostsAdapter    postsAdapter;
     private ListView        lvTags;
     private View            progressView;
     private View            noPostsView;
-    private View noConnectionView;
+    private View            noConnectionView;
+    private View            addButton;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        context= getActivity().getApplicationContext();
-
         View root = inflater.inflate(R.layout.fragment_place_posts, container, false);
 
-        //Initialize
+        initVariables(root);
+        setListeners();
+        initAdapter();
+        loadPosts();
+
+        placeActivity.notifyFragmentsLoaded();
+
+        return root;
+    }
+
+    private void initVariables(View root) {
+        context= getActivity().getApplicationContext();
+        placeActivity = (PlaceActivity) getActivity();
+        place = placeActivity.getPlace();
+        placeId = placeActivity.getPlaceId();
+
+        //Views
+        addButton = root.findViewById(R.id.main_button_posts);
         lvTags = (ListView) root.findViewById(R.id.list_people);
         progressView = root.findViewById(R.id.progress_view);
         noPostsView = root.findViewById(R.id.no_posts_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
+    }
 
-        initAdapter();
-        loadPosts();
-
-        return root;
+    private void setListeners() {
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(placeActivity, "Add people clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initAdapter() {
@@ -63,7 +89,7 @@ public class PlacePostsFragment extends Fragment {
             @Override
             public void onResponse(Response<List<Post>> response) {
                 super.onResponse(response);
-                if (response.isSuccess()){
+                if (response.isSuccess()) {
                     progressView.setVisibility(View.GONE);
                     notifyPostsLoaded(response.body());
                 }
@@ -88,4 +114,12 @@ public class PlacePostsFragment extends Fragment {
         }
     }
 
+    public void setMainButtonVisibility(boolean bool) {
+        if(bool) {
+            addButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            addButton.setVisibility(View.GONE);
+        }
+    }
 }

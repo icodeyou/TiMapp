@@ -20,7 +20,7 @@
             android:id="@+id/rv_selected_tags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"
-            myattrs:text_color="@color/colorAccent"
+            myattrs:text_color="@color/colorAccentDark"
             myattrs:background_color="@color/background"/>
 
         <!-- Progress View -->
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_huge"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccentDark"
                 android:text="@string/uploading_tags" />
         </LinearLayout>
 
@@ -53,48 +53,57 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:layout_marginRight="2dp"
-            android:layout_marginLeft="2dp"
+            android:layout_margin="20dp"
             android:orientation="vertical"
             android:gravity="center"
             android:background="@drawable/border_radius_accent">
-            <TextView
+            <com.timappweb.timapp.views.AutoResizeTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:ellipsize="none"
+                android:maxLines="1"
                 android:gravity="center"
-                android:textColor="@color/White"
+                android:textColor="@color/colorAccentDark"
                 android:textSize="@dimen/text_mountain"
                 android:layout_marginBottom="10dp"
-                android:textAllCaps="true"
                 android:text="@string/main_text_publish_activity"/>
-            <ImageView
-                android:layout_marginTop="10dp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/ic_post_button_white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccentDark"
+                android:textSize="@dimen/text_normal"
+                android:text="Click here to add your tags"/>
         </LinearLayout>
 
 
         <!-- Anonymous button -->
         <!-- **********************************************************************-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/layout_checkbox"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center">
-            <CheckBox
-                android:id="@+id/checkbox"
-                android:layout_width="wrap_content"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/colorAccentDark"
+                    android:text="@string/text_anonymous"/>
+            </LinearLayout>
+            <ImageView
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_normal"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_anonymous"
-                android:textSize="@dimen/text_normal"
-                android:textColor="@color/Black"/>
-        </LinearLayout>
+                android:src="@drawable/ic_anonymous"/>
+        </RelativeLayout>
 
 
         <!-- PLACE -->
@@ -102,7 +111,8 @@
         <ListView
             android:id="@+id/place_lv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
 
     </LinearLayout>
 

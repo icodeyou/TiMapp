@@ -26,7 +26,8 @@
     <ListView
         android:id="@+id/place_lv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
 
     <View
         android:layout_width="match_parent"
@@ -41,8 +42,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-
-    <!-- BUTTONS -->
+    <!-- Button I am Coming -->
     <!-- ************************************* -->
     <LinearLayout
         android:id="@+id/button_coming"
@@ -50,40 +50,58 @@
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@drawable/border">
+        android:background="@color/colorAccent"
+        android:visibility="gone">
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/ic_action_navigate"/>
+            android:src="@drawable/ic_coming_guy"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="3dp"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorAccentDark"
             android:textAllCaps="false"
-            android:text="Coming"
+            android:textStyle="bold"
+            android:text="@string/coming_button"
             android:gravity="center"
             android:textSize="@dimen/text_big"/>
     </LinearLayout>
 
+    <!-- Button On My Way -->
+    <!-- ************************************* -->
     <LinearLayout
-        android:id="@+id/button_add_tags"
+        android:id="@+id/button_on_my_way"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
-        android:background="@color/colorAccent"
         android:orientation="horizontal"
         android:gravity="center"
+        android:background="@color/colorAccent"
         android:visibility="gone">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_left_guy"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:textColor="@color/White"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:textColor="@color/colorAccentDark"
             android:textAllCaps="false"
-            android:text="@string/button_add_tags"
+            android:textStyle="bold"
+            android:text="@string/on_my_way"
+            android:gravity="center"
             android:textSize="@dimen/text_big"/>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_coming_guy"/>
     </LinearLayout>
 
 </LinearLayout>

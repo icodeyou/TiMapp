@@ -139,13 +139,13 @@ public class Place implements Serializable, MarkerValueInterface {
      * @param longitude
      * @return true if the user can post in the place
      */
-    public boolean isReachable(double latitude, double longitude) {
+    public boolean isAround(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
                 < MyApplication.getServerConfig().place_max_reachable;
     }
 
-    public boolean isReachable() {
-        return this.isReachable(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude());
+    public boolean isAround() {
+        return this.isAround(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude());
     }
 
     public static boolean isValidName(String name) {

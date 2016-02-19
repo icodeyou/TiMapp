@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
@@ -71,7 +70,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_explore);
+        setContentView(R.layout.activity_drawer);
 
         //Import toolbar without calling function initToolbar, because of the toggle button
         toolbar = (Toolbar) findViewById(R.id.toolbar);
