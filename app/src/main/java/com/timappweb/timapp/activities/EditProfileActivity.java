@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -66,6 +67,7 @@ public class EditProfileActivity extends BaseActivity{
         editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_CLASS_TEXT |
                 InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        editText.getBackground().mutate().setColorFilter(getResources().getColor(R.color.White), PorterDuff.Mode.SRC_ATOP);
 
         //for hide/close keyboard
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

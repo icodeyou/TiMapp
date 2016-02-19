@@ -32,24 +32,26 @@
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:hint="@string/hint_et_edit_first_profile"
         android:singleLine="true"
-        android:textColorHint="@color/colorPrimaryDark"
+        android:textColorHint="@color/hint_edit_profile"
         android:textColor="@color/White"
-        android:textSize="@dimen/text_huge"/>
+        android:textSize="@dimen/text_big"/>
 
     <LinearLayout
         android:id="@+id/skip_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="bottom|center_horizontal"
+        android:visibility="visible">
         <Button
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:background="@color/colorPrimary"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryVeryDark"
+            android:textColor="@color/hint_edit_profile"
             android:text="skip"/>
     </LinearLayout>
 
@@ -59,24 +61,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone">
-        <Button
-            android:id="@+id/button_submit"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:background="@drawable/border_radius_white"
-            android:layout_gravity="center"
-            android:textAllCaps="true"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/text_big"
-            android:text="Submit"
-            android:visibility="visible"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/button_submit"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/border_radius_accent"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccentDark"
+                android:textSize="@dimen/text_big"
+                android:text="Submit"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center_horizontal">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

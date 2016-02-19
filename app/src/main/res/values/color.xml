@@ -22,6 +22,7 @@
     <color name="item_friend_invited">@color/LightCyan</color>
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
+    <color name="hint_edit_profile">#45ffffff</color>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->
