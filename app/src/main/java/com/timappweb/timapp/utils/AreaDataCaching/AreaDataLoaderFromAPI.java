@@ -73,7 +73,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
             @Override
             public void onFailure(Throwable t) {
                 exploreMapFragment.setLoaderVisibility(false);
-                Toast.makeText(mContext, R.string.cannot_load_events, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, R.string.cannot_load_events, Toast.LENGTH_SHORT).show();
                 super.onFailure(t);
             }
 

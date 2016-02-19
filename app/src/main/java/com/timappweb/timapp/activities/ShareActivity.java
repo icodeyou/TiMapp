@@ -29,5 +29,7 @@ public class ShareActivity extends BaseActivity {
                 startActivity(Intent.createChooser(sharingIntent, "Share using"));
             }
         });
+
+        shareButton.callOnClick();
     }
 }

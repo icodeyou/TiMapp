@@ -206,7 +206,7 @@
 
         <!-- ADDPLACE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.AddPlaceActivity"
-            android:label="Add Event"
+            android:label="@string/title_activity_add_event"
             android:parentActivityName=".activities.ProfileActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -216,7 +216,7 @@
 
         <!-- SHARE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.ShareActivity"
-            android:label="Add Event"
+            android:label="@string/title_activity_share_app"
             android:parentActivityName=".activities.DrawerActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

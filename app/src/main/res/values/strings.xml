@@ -18,6 +18,8 @@
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_add_event">Add event</string>
+    <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
     <string name="title_activity_first_edit_profile">First edit profile</string>
 
