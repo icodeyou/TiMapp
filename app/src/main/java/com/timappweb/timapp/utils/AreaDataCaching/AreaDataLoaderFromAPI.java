@@ -1,15 +1,11 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.DrawerActivity;
-import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
@@ -33,10 +29,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
     private Context mContext;
     private ExploreFragment exploreFragment;
 
-    private ClusterManager<Place> mClusterManagerPost = null;
+    private ClusterManager<Place> mClusterManagerPlaces = null;
     private int requestCounter = 0;
     private int lastClear = -1;
-    private PlacesAdapter placesAdapter = null;
 
     public AreaDataLoaderFromAPI(Context context) {
         this.mContext = context;
@@ -48,16 +43,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
     }
 
     public void setClusterManager(ClusterManager<Place> mClusterManagerPost) {
-        this.mClusterManagerPost = mClusterManagerPost;
+        this.mClusterManagerPlaces = mClusterManagerPost;
     }
 
-    public void setPlacesAdapter(PlacesAdapter placesAdapter) {
-        this.placesAdapter = placesAdapter;
-    }
 
     public AreaDataLoaderFromAPI(Context context, ClusterManager<Place> clusterManagerPost) {
         this.mContext = context;
-        this.mClusterManagerPost = clusterManagerPost;
+        this.mClusterManagerPlaces = clusterManagerPost;
     }
 
     @Override
@@ -115,14 +107,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
                     request.setData(places);
 
-                    if (mClusterManagerPost != null){
-                        mClusterManagerPost.addItems(places);
-                        mClusterManagerPost.cluster();
-                    }
-
-                    if (placesAdapter != null){
-                        placesAdapter.clear();
-                        placesAdapter.addAll(places);
+                    if (mClusterManagerPlaces != null){
+                        mClusterManagerPlaces.addItems(places);
+                        mClusterManagerPlaces.cluster();
                     }
                 }
             }
@@ -131,13 +118,10 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     @Override
     public void clear(List<Place> data) {
-        if (mClusterManagerPost != null){
+        if (mClusterManagerPlaces != null){
             for (Place place: data){
-                mClusterManagerPost.removeItem(place);
+                mClusterManagerPlaces.removeItem(place);
             }
-        }
-        if (placesAdapter != null){
-            placesAdapter.clear();
         }
     }
 
@@ -145,11 +129,8 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
     public void clearAll() {
         lastClear = this.requestCounter;        // Every request id that is less or equal is out dated
 
-        if (mClusterManagerPost != null){
-            mClusterManagerPost.clearItems();
-        }
-        if (placesAdapter != null){
-            placesAdapter.clear();
+        if (mClusterManagerPlaces != null){
+            mClusterManagerPlaces.clearItems();
         }
     }
 }

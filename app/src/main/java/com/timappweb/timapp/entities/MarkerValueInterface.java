@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
@@ -8,4 +9,5 @@ import com.google.maps.android.clustering.ClusterItem;
 public interface MarkerValueInterface extends ClusterItem {
 
     public int getId();
+
 }

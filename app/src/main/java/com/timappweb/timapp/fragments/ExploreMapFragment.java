@@ -3,6 +3,7 @@ package com.timappweb.timapp.fragments;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ import com.timappweb.timapp.utils.TimeTaskCallback;
 import java.util.HashMap;
 import java.util.List;
 
-public class ExploreMapFragment extends Fragment{
+public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener{
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
     private static LatLngBounds mapBounds;
@@ -69,6 +70,15 @@ public class ExploreMapFragment extends Fragment{
     private ExploreFragment exploreFragment;
     private EachSecondTimerTask eachSecondTimerTask;
 
+    @Override
+    public void onTabSelected() {
+        Log.d(TAG, "ExploreMapFragment is now selected");
+    }
+
+    public AreaRequestHistory getAreaRequestHistory() {
+        return history;
+    }
+
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
 
@@ -82,7 +92,7 @@ public class ExploreMapFragment extends Fragment{
     //private HashMap<Marker, Post> markers = new HashMap<>();
     //private HashMap<Post, Marker> mapSpotToMarker = new HashMap<>();
 
-    private AreaRequestHistory history;
+    private AreaRequestHistory<Place> history;
 
     @Nullable
     @Override

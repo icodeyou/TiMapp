@@ -1,5 +1,6 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
+import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.utils.IntPoint;

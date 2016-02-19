@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.utils.IntLatLng;
@@ -39,7 +40,7 @@ import java.util.Map;
  *      - Lazy updating of area item by only requesting news values (DELAY_BEFORE_UPDATE_REQUEST)
  *
  */
-public class AreaRequestHistory{
+public class AreaRequestHistory<T extends MarkerValueInterface>{
 
 
     private static final String TAG                     = "AreaRequestHistory";
@@ -55,7 +56,7 @@ public class AreaRequestHistory{
 
     public int areaWidth;                                           // En degré (1 degré ~= 100 km)
     public int areaHeight;                                          // En degré
-    public HashMap<IntPoint, AreaRequestItem> areas;
+    public HashMap<IntPoint, AreaRequestItem<T>> areas;
     private IntLatLng center;
     private AreaDataLoaderInterface dataLoader = null;
 
@@ -131,7 +132,7 @@ public class AreaRequestHistory{
      * @param p: the south west point for the area
      * @param item: the area request item
      */
-    private void update(IntPoint p, AreaRequestItem item){
+    private void update(IntPoint p, AreaRequestItem<T> item){
         if (areas.containsKey(p)){
             Log.i(TAG, "Updating request history: " + item);
             areas.get(p).update(item);
@@ -173,7 +174,7 @@ public class AreaRequestHistory{
         IntPoint p;
         while ((p = areaIterator.next()) != null){
             IntPoint pCpy = new IntPoint(p);
-            AreaRequestItem request = this.areas.get(p);
+            AreaRequestItem<T> request = this.areas.get(p);
             if (request != null){
                 if (this.DELAY_BEFORE_UPDATE_REQUEST > 0 && request.getLastUpdateDelay() >= this.DELAY_BEFORE_UPDATE_REQUEST){
                     QueryCondition conditions = new QueryCondition();
@@ -189,7 +190,7 @@ public class AreaRequestHistory{
             }
             else{
                 Log.i(TAG, "-> " + p + "  No data in cache; we need a server request");
-                request = new AreaRequestItem();
+                request = new AreaRequestItem<T>();
                 this.update(pCpy, request);
                 // We need to build a new condition object because multi threading
                 QueryCondition conditions = new QueryCondition();
@@ -200,14 +201,14 @@ public class AreaRequestHistory{
         }
     }
 
-    public List<Post> clearTooFarAreas(LatLngBounds bounds){
+    public List<T> clearTooFarAreas(LatLngBounds bounds){
         IntPoint southeastPoint = getIntPoint(bounds.southwest);
 
-        List<Post> dataToClear = new LinkedList<>();
+        List<T> dataToClear = new LinkedList<>();
         Iterator it = areas.entrySet().iterator();
         int distance;
         while (it.hasNext()) {
-            Map.Entry<IntPoint, AreaRequestItem> entry = (Map.Entry) it.next();
+            Map.Entry<IntPoint, AreaRequestItem<T>> entry = (Map.Entry) it.next();
             distance = entry.getKey().distance(southeastPoint);
             if (distance > MAXIMUM_ORIGIN_DISTANCE) {
                 Log.i(TAG, "Post caching too far from origin. Clearing spot history and markers");
@@ -228,8 +229,26 @@ public class AreaRequestHistory{
     }
 
     public void clearAll() {
-        for (AreaRequestItem area: this.areas.values()) {
+        for (AreaRequestItem<T> area: this.areas.values()) {
             area.cancel();
         }
+    }
+
+    /**
+     * Get only item inside the bounds
+     */
+    public List<T> getInsideBoundsItems(LatLngBounds bounds){
+        LinkedList<T> result = new LinkedList<>();
+        AreaIterator areaIterator = this.getAreaIterator(bounds);
+        IntPoint p;
+        while ((p = areaIterator.next()) != null){
+            AreaRequestItem<T> request = this.areas.get(p);
+            for (T marker: request.data){
+                if (bounds.contains(marker.getPosition())){
+                    result.add(marker);
+                }
+            }
+        }
+        return result;
     }
 }

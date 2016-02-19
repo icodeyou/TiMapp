@@ -34,21 +34,24 @@ public class ExploreFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView");
-
         View root = inflater.inflate(R.layout.fragment_explore, container, false);
 
-        viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
-        PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
         /** Important: Must use the child FragmentManager or you will see side effects. */
-        this.tabsAdapter = new TabsAdapter(getChildFragmentManager());
-        viewPager.setAdapter(this.tabsAdapter);
+        tabsAdapter = new TabsAdapter(getChildFragmentManager());
+
+        viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
+        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+        viewPager.setAdapter(tabsAdapter);
+
+        dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this);
+
+        PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
+
         //hide underline
         pagerTabStrip.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         pagerTabStrip.setTextColor(getResources().getColor(R.color.White));
         pagerTabStrip.setDrawFullUnderline(false);
 
-        this.dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this);
 
         return root;
     }
@@ -68,6 +71,7 @@ public class ExploreFragment extends Fragment{
 
         public TabsAdapter(FragmentManager fm) {
             super(fm);
+
         }
 
         public ExploreMapFragment getExploreMapFragment() {
@@ -79,14 +83,19 @@ public class ExploreFragment extends Fragment{
             return 2;
         }
 
+        /**
+         * This is only called when initializing the fragment
+         * @param position
+         * @return
+         */
         @Override
         public Fragment getItem(int position) {
             Log.d(TAG, "TabsAdapter init position " + position);
             if (position == 0) {
-                exploreMapFragment = new ExploreMapFragment();
+                if (exploreMapFragment == null) exploreMapFragment = new ExploreMapFragment();
                 return exploreMapFragment;
             } else {
-                explorePlacesFragment = new ExplorePlacesFragment();
+                if (explorePlacesFragment == null) explorePlacesFragment = new ExplorePlacesFragment();
                 return explorePlacesFragment;
             }
         }
@@ -99,6 +108,25 @@ public class ExploreFragment extends Fragment{
             else {
                 return "List";
             }
+        }
+    }
+
+    private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            Log.d(TAG, "onPageScrolled: " + position);
+            ((OnExploreTabSelectedListener)tabsAdapter.getItem(position)).onTabSelected();
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            //Log.d(TAG, "Page is now selected: " + position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            //Log.d(TAG, "onPageScrollStateChanged: " + state);
         }
     }
 }
