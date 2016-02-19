@@ -3,7 +3,6 @@ package com.timappweb.timapp.fragments;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +37,8 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.PlaceClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
+import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
+import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.TimeTaskCallback;
@@ -75,9 +76,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         Log.d(TAG, "ExploreMapFragment is now selected");
     }
 
-    public AreaRequestHistory getAreaRequestHistory() {
+    public AreaRequestHistory getHistory() {
         return history;
     }
+
 
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
@@ -92,7 +94,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     //private HashMap<Marker, Post> markers = new HashMap<>();
     //private HashMap<Post, Marker> mapSpotToMarker = new HashMap<>();
 
-    private AreaRequestHistory<Place> history;
+    private AreaRequestHistory history;
 
     @Nullable
     @Override
@@ -112,6 +114,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         placesViewer = (ListView) root.findViewById(R.id.places_viewer);
         placesAdapter = new PlacesAdapter(getActivity(), false);
         placesViewer.setAdapter(placesAdapter);
+
 
         if (savedInstanceState == null){
             // TODO what happens with instance
@@ -220,6 +223,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             public void onMapReady(GoogleMap googleMap) {
                 Log.d(TAG, "Map is now ready!");
                 gMap = googleMap;
+                mapBounds = gMap.getProjection().getVisibleRegion().latLngBounds;
                 loadMapData();
             }
         });
@@ -241,7 +245,31 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             setUpClusterer();
             //setUpMapEvents();
             centerMap();
-            //loadDummyData();
+
+            history = new AreaRequestHistory(exploreFragment.getDataLoader());
+            history.setAreaRequestItemFactory(new AreaRequestItemFactory() {
+                @Override
+                public AreaRequestItem build() {
+                    AreaRequestItem<Place> requestItem = new AreaRequestItem<Place>();
+                    requestItem.setListener(new AreaRequestItem.OnDataChangeListener() {
+                        @Override
+                        public void onDataChange() {
+                            Log.d(TAG, "AreaRequestItem.onDataChange(): ");
+                            // Each time data change we reset everything
+                            List<Place> places = history.getInsideBoundsItems(getMapBounds());
+                            mClusterManagerPost.clearItems();
+                            mClusterManagerPost.addItems(places);
+                            mClusterManagerPost.cluster();
+                        }
+                    });
+                    return requestItem;
+                }
+            });
+            exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
+
+            history.resizeArea(getMapBounds());
+            this.updateMapData();
+
         } catch (Exception ex){
             Log.e(TAG, ex.toString());
         }
@@ -268,17 +296,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         return mapBounds;
     }
 
-    private void loadData(){
+    private void updateMapData(){
         final LatLngBounds bounds = getMapBounds();
         Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 
-        if (currentZoomMode == ZoomType.OUT || history == null){
+        if (currentZoomMode == ZoomType.OUT){
             // Remove previous cache and all markers
-            mClusterManagerPost.clearItems();
-            if (history != null){
-                history.clearAll();
-            }
-            this.history = new AreaRequestHistory(bounds, exploreFragment.getDataLoader());
+            history.resizeArea(bounds);
         }
 
         history.update(bounds);
@@ -393,7 +417,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             mapBounds = gMap.getProjection().getVisibleRegion().latLngBounds;
 
             // Updating datas
-            loadData();
+            updateMapData();
         }
     }
 

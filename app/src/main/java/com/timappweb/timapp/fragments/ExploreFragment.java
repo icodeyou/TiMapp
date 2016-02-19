@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
+import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 
 public class ExploreFragment extends Fragment{
 
@@ -30,6 +32,10 @@ public class ExploreFragment extends Fragment{
 
     public AreaDataLoaderFromAPI getDataLoader() {
         return dataLoader;
+    }
+
+    public AreaRequestHistory getAreaRequestHistory() {
+        return getExploreMapFragment().getHistory();
     }
 
     @Override

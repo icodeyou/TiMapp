@@ -46,7 +46,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     private static final String TAG                     = "AreaRequestHistory";
     public static int MAXIMUM_ORIGIN_DISTANCE           = 10;       // Means a 10*10 square from the origin point
     public static final int MAXIMUM_GRID_SIZE_ON_VIEW   = 2;        // Reset request history if we can put more than X area square on one screen
-    public static int DELAY_BEFORE_UPDATE_REQUEST       = 60;       // seconds before checking for new tag again (0 = INFINITE)
+    public static int DELAY_BEFORE_UPDATE_REQUEST       = 10;       // seconds before checking for new tag again (0 = INFINITE)
     public static final int AREA_FACTOR_WIDTH           = 150;      // In percents
     public static final int AREA_FACTOR_HEIGHT          = 150;      // In percents
     public static final double MINIMUM_AREA_WIDTH       = 0.001;    // minimum area width in degrees
@@ -59,20 +59,28 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     public HashMap<IntPoint, AreaRequestItem<T>> areas;
     private IntLatLng center;
     private AreaDataLoaderInterface dataLoader = null;
+    private AreaRequestItemFactory<T> areaRequestItemFactory = null;
 
     // ---------------------------------------------------------------------------------------------
 
-    public AreaRequestHistory(LatLngBounds bounds, AreaDataLoaderInterface dataLoader) {
-        Log.d(TAG, "Building a new AreaRequestHistory with bounds: " + bounds);
-        this.setAreaSize(bounds);
+    public AreaRequestHistory(final AreaDataLoaderInterface dataLoader) {
         this.areas = new HashMap<>();
         this.dataLoader = dataLoader;
+        this.areaRequestItemFactory = new AreaRequestItemFactory<T>() {
+            @Override
+            public AreaRequestItem<T> build() {
+                return new AreaRequestItem<>();
+            }
+        };
     }
 
-    private void resizeArea(LatLngBounds bounds) {
+    public void setAreaRequestItemFactory(AreaRequestItemFactory<T> factory){
+        this.areaRequestItemFactory = factory;
+    }
+
+    public void resizeArea(LatLngBounds bounds) {
         Log.d(TAG, "Resizing area request history base area: " + bounds);
-        this.dataLoader.clearAll();
-        this.areas.clear();
+        clearAll();
         this.setAreaSize(bounds);
     }
 
@@ -180,8 +188,10 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
                     QueryCondition conditions = new QueryCondition();
                     Log.i(TAG, "-> " + p + " Data in cache are too old; updating with new data from dataTimestamp: " + request.dataTimestamp);
                     conditions.setBounds(this.getBoundFromPoint(p).toDouble());
-                    conditions.setTimestampMin(request.dataTimestamp);
+                    //conditions.setTimestampMin(request.dataTimestamp);
                     request.updateLocalTimestamp();
+
+                    // Clear old ones
                     dataLoader.load(pCpy, request, conditions);
                 }
                 else{
@@ -190,7 +200,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
             }
             else{
                 Log.i(TAG, "-> " + p + "  No data in cache; we need a server request");
-                request = new AreaRequestItem<T>();
+                request = areaRequestItemFactory.build();
                 this.update(pCpy, request);
                 // We need to build a new condition object because multi threading
                 QueryCondition conditions = new QueryCondition();
@@ -201,26 +211,21 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         }
     }
 
-    public List<T> clearTooFarAreas(LatLngBounds bounds){
+    public void clearTooFarAreas(LatLngBounds bounds){
         IntPoint southeastPoint = getIntPoint(bounds.southwest);
 
-        List<T> dataToClear = new LinkedList<>();
         Iterator it = areas.entrySet().iterator();
         int distance;
         while (it.hasNext()) {
             Map.Entry<IntPoint, AreaRequestItem<T>> entry = (Map.Entry) it.next();
             distance = entry.getKey().distance(southeastPoint);
+            AreaRequestItem<T> item = entry.getValue();
+
             if (distance > MAXIMUM_ORIGIN_DISTANCE) {
-                Log.i(TAG, "Post caching too far from origin. Clearing spot history and markers");
-                dataToClear.addAll(entry.getValue().data);
+                item.clear();
                 it.remove();
             }
         }
-        if (dataToClear.size() > 0){
-            this.dataLoader.clear(dataToClear);
-        }
-
-        return dataToClear;
     }
 
 
@@ -229,23 +234,34 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     }
 
     public void clearAll() {
-        for (AreaRequestItem<T> area: this.areas.values()) {
-            area.cancel();
+        Log.d(TAG, "clearAll() areas: " + this.areas.size());
+        Iterator it = areas.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<IntPoint, AreaRequestItem<T>> entry = (Map.Entry) it.next();
+            AreaRequestItem<T> item = entry.getValue();
+            item.cancel();
+            item.clear();
+            it.remove();
         }
     }
+
 
     /**
      * Get only item inside the bounds
      */
     public List<T> getInsideBoundsItems(LatLngBounds bounds){
+        Log.d(TAG, "getInsideBoundsItems(): " + bounds);
         LinkedList<T> result = new LinkedList<>();
         AreaIterator areaIterator = this.getAreaIterator(bounds);
         IntPoint p;
         while ((p = areaIterator.next()) != null){
             AreaRequestItem<T> request = this.areas.get(p);
-            for (T marker: request.data){
-                if (bounds.contains(marker.getPosition())){
-                    result.add(marker);
+            Log.d(TAG, "getInsideBoundsItems(): " + p);
+            if (request != null){
+                for (T marker: request.data){
+                    if (bounds.contains(marker.getPosition())){
+                        result.add(marker);
+                    }
                 }
             }
         }

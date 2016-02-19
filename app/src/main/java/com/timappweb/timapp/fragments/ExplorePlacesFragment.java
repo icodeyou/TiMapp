@@ -79,17 +79,14 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         eachSecondTimerTask.cancel();
     }
 
-    private void loadData() {
-        //TODO : load data
-    }
 
     @Override
     public void onTabSelected() {
-        Log.d(TAG, "Explore places framgent is now selected");
+        Log.d(TAG, "Explore places fragment is now selected");
         // Updating the list of places
         placesAdapter.clear();
         ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-        List<Place> markers = exploreMapFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
+        List<Place> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
         placesAdapter.addAll(markers);
     }
 }

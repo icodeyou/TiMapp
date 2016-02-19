@@ -22,9 +22,15 @@ public class AreaRequestItem<T> {
 
     public int dataTimestamp;       // Timestamp on the server (used to filter data when we update the area)
     public int localTimestamp;      // Timestamp on the local machine (used to know when was the last update)
-    private int currentRequestId = -1;  // Request id
+    public int currentRequestId = -1;  // Request id
     public List<T> data;         // LIFO: Last spot in => First spot out
     private Call<List<Place>> pendingCall; // Represents api calls in progress
+
+    public void setListener(OnDataChangeListener listener) {
+        this.listener = listener;
+    }
+
+    private OnDataChangeListener listener = null;
 
     public AreaRequestItem(int dataTimestamp, List<T> spots) {
         this.setDataTimestamp(dataTimestamp);
@@ -38,10 +44,10 @@ public class AreaRequestItem<T> {
         this.localTimestamp = 0;
     }
 
-
     public void setDataTimestamp(int timesamp) {
         this.dataTimestamp = timesamp;
     }
+
     public void updateLocalTimestamp() {
         this.localTimestamp = Util.getCurrentTimeSec(); // OK with only 32 bits
     }
@@ -55,6 +61,7 @@ public class AreaRequestItem<T> {
 
     public void update(AreaRequestItem item) {
         data.addAll(item.data);
+        if (listener != null) listener.onDataChange();
     }
 
     /**
@@ -78,6 +85,7 @@ public class AreaRequestItem<T> {
 
     public void appendData(List<T> places) {
         data.addAll(places);
+        if (listener != null) listener.onDataChange();
     }
 
     public boolean isOutdated(int itemRequestId) {
@@ -95,5 +103,16 @@ public class AreaRequestItem<T> {
 
     public void setData(List<T> data) {
         this.data = data;
+        if (listener != null) listener.onDataChange();
+    }
+
+    public void clear() {
+        Log.d(TAG, "Clearing this item with " + this.data.size() + " elems");
+        this.data.clear();
+        if (listener != null) listener.onDataChange();
+    }
+
+    public interface OnDataChangeListener {
+        void onDataChange();
     }
 }

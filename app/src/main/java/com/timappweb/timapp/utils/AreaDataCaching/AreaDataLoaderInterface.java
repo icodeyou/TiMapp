@@ -20,9 +20,5 @@ public interface AreaDataLoaderInterface<T> {
      */
     void load(IntPoint point, AreaRequestItem request, QueryCondition conditions);
 
-    void clear(List<T> data);
-
-    void clearAll();
-
 }
 
