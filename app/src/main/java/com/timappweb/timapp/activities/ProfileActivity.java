@@ -74,8 +74,6 @@ public class ProfileActivity extends BaseActivity{
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = (LinearLayout) findViewById(R.id.layout_tags_profile);
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
-        profilePicture.setImageResource(R.drawable.ic_category_bar);
-        profilePicture.setBackgroundResource(R.drawable.b1);
 
         initAdapter();
         setListeners();

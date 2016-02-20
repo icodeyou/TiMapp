@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,10 +18,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
+import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
@@ -62,6 +66,7 @@ public class PlaceActivity extends BaseActivity{
 
     //Camera
     private static final int REQUEST_CAMERA = 0;
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     private int loadedFragments; // Number of fragments
     private PlacePicturesFragment fragmentPictures;
@@ -171,6 +176,20 @@ public class PlaceActivity extends BaseActivity{
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK) return;
+
+        if (requestCode == REQUEST_CAMERA) {
+            Uri photoUri = data.getData();
+            // Get the bitmap in according to the width of the device
+            Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), 1000, 1000);
+            fragmentPictures.setImage(bitmap);
+            //TODO : Envoyer la photo au serveur à la place de l'action précédente
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 

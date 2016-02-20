@@ -11,7 +11,8 @@
         android:id="@+id/loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
         <include layout="@layout/progressbar"
             android:layout_height="80dp"
             android:layout_width="80dp"/>
@@ -52,30 +53,29 @@
                 android:orientation="horizontal"
                 android:background="@color/colorAccent"
                 android:gravity="bottom">
-                <HorizontalScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="100dp"
-                    android:scrollbars="none">
-                    <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <com.timappweb.timapp.views.AutoResizeTextView
+                        android:id="@+id/tv_profile_username"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_profile_username"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_big"
-                            android:textColor="@color/Black"/>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="22 years old"
-                            android:textSize="@dimen/text_normal"
-                            android:textColor="@color/Black"/>
-                    </LinearLayout>
-                </HorizontalScrollView>
+                        android:layout_height="wrap_content"
+                        android:ellipsize="none"
+                        android:maxLines="1"
+                        android:textSize="@dimen/text_big"
+                        android:textColor="@color/Black"
+                        android:gravity="center"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="22 years old"
+                        android:textSize="@dimen/text_normal"
+                        android:textColor="@color/Black"/>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -173,7 +173,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="#party"
                     android:textSize="@dimen/text_big"
                     android:textColor="@color/Goldenrod"/>
                 <View
@@ -210,7 +209,7 @@
             android:id="@+id/profile_picture"
             android:layout_width="@dimen/profile_picture_side"
             android:layout_height="@dimen/profile_picture_side"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="25dp"
             android:layout_marginLeft="20dp"
             android:src="@drawable/ic_profile_default"/>
     </RelativeLayout>

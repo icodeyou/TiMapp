@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ public class PlacePicturesFragment extends Fragment {
     private View                    noConnectionView;
     private View                    addButton;
     private View                    smallTagsButton;
+    private ImageView               pictureTaken;
 
     @Nullable
     @Override
@@ -63,6 +66,7 @@ public class PlacePicturesFragment extends Fragment {
         progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
+        pictureTaken = (ImageView) root.findViewById(R.id.picture_taken);
     }
 
     private void setListeners() {
@@ -71,10 +75,13 @@ public class PlacePicturesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //placeActivity.requestForCameraPermission();
-                //placeActivity.takePicture();
+                placeActivity.takePicture();
             }
         });
     }
+
+    //Public methods
+    //////////////////////////////////////////////////////////////////////////////
 
     public void setSmallTagsButtonVisibility(boolean bool) {
         if(bool) {
@@ -92,6 +99,10 @@ public class PlacePicturesFragment extends Fragment {
         else {
             addButton.setVisibility(View.GONE);
         }
+    }
+
+    public void setImage(Bitmap bitmap) {
+        pictureTaken.setImageBitmap(bitmap);
     }
 
 }
