@@ -9,7 +9,7 @@
     <color name="colorAccentDark">#3f3f9a</color>
     <color name="colorLightPrimary">#FFCDD2</color>
     <color name="transparent">#00000000</color>
-    <color name="background">#fffef6</color>
+    <color name="background">#f2feff</color>
     <color name="background_bottom_button_place">#eafffb</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="darker_background">#e7e7e7</color>

@@ -311,8 +311,6 @@ public class PlaceActivity extends BaseActivity{
      * Show or hide add post or comming button according to user location
      */
     private void updateButtonsVisibility(){
-        // Check that the fragments' views have been created
-        View view = fragmentPosts.getView();
         if(place != null && MyApplication.hasLastLocation()) {
             //if we are in the place
             if(place.isAround()) {

@@ -112,7 +112,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="button_add_people">People</string>
     <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
     <string name="text_no_event_around1">There isn\'t any event near you\nright now.</string>
-    <string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>
+    <!--<string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>-->
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>

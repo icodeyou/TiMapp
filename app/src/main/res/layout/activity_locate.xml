@@ -76,6 +76,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="gone">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/background_locate_no_place"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,32 +90,33 @@
             android:textStyle="bold|italic"
             android:textSize="@dimen/text_normal"
             android:text="@string/text_no_event_around1"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="80dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:gravity="center"
-            android:textColor="@color/Black"
-            android:textSize="@dimen/text_normal"
-            android:text="@string/text_no_event_around2"/>
     </RelativeLayout>
 
-    <Button
+    <LinearLayout
         android:id="@+id/button_add_spot"
         android:layout_width="250dp"
         android:layout_height="@dimen/height_bottom_button"
-        android:background="@drawable/button_add_place"
-        android:gravity="center"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:textAllCaps="false"
-        android:text="@string/button_add_place"
-        android:textSize="@dimen/text_big"
-        android:textColor="@color/white"
-        android:visibility="gone"/>
+        android:background="@color/background"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_add_place"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="@string/button_add_place"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_big" />
+        </LinearLayout>
+    </LinearLayout>
 
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />

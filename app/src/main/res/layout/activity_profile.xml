@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
         <include layout="@layout/progressbar"
             android:layout_height="80dp"
             android:layout_width="80dp"/>

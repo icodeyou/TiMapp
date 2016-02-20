@@ -2,15 +2,18 @@ package com.timappweb.timapp.activities;
 
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -43,7 +46,7 @@ public class LocateActivity extends BaseActivity{
     private ListView    listPlaces;
     private View        placesAndBottomLine;
     private View        noPlaceView;
-    private Button buttonAddSpot;
+    private LinearLayout buttonAddSpot;
     private View noConnectionView;
 
     // ProgressBar and ProgressDialog
@@ -73,7 +76,7 @@ public class LocateActivity extends BaseActivity{
         placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
         noPlaceView = findViewById(R.id.layout_if_no_place);
         listPlaces = (ListView) findViewById(R.id.list_places);
-        buttonAddSpot = (Button) findViewById(R.id.button_add_spot);
+        buttonAddSpot = (LinearLayout) findViewById(R.id.button_add_spot);
         noConnectionView = findViewById(R.id.no_connection_view);
 
         // -----------------------------------------------------------------------------------------
@@ -116,8 +119,6 @@ public class LocateActivity extends BaseActivity{
 
         listPlaces.setAdapter(placesAdapter);
 
-
-        //Listeners
         buttonAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +128,25 @@ public class LocateActivity extends BaseActivity{
                 }
                 IntentsUtils.addPlace(that);
                 buttonAddSpot.setEnabled(false);
+            }
+        });
+
+        buttonAddSpot.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.setBackgroundResource(R.drawable.button_add_place);
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.setBackground(null);
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
             }
         });
     }
