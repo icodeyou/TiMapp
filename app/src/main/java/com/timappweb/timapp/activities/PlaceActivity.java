@@ -15,10 +15,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -81,6 +82,11 @@ public class PlaceActivity extends BaseActivity {
     private int counter = 0;
 
     private LocationListener mLocationListener;
+    private GestureDetector gestureDetector;
+    private View.OnTouchListener gestureListener;
+
+    //TODO : Update this variable
+    private boolean isAllowedToAddPic = true;
 
 
     //Override methods
@@ -123,8 +129,6 @@ public class PlaceActivity extends BaseActivity {
         else{
             loadPlace(placeId);
         };
-
-        //fragmentTags.setMenuVisibility(true);
     }
 
     @Override
@@ -195,46 +199,6 @@ public class PlaceActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /*@Override
-    public void onPageSelected(int position) {
-        switch (position) {
-            case 0:
-                PlacePicturesFragment f1 = (PlacePicturesFragment) pagerAdapter.getItem(position);
-                if(f1.getMainButtonVisibility()) {
-                    plusButtonView.setVisibility(View.VISIBLE);
-                }
-                else {
-                    plusButtonView.setVisibility(View.GONE);
-                }
-                break;
-            case 1:
-                PlaceTagsFragment f2 = (PlaceTagsFragment) pagerAdapter.getItem(position);
-                if(f2.getMainButtonVisibility()) {
-                    plusButtonView.setVisibility(View.VISIBLE);
-                }
-                else {
-                    plusButtonView.setVisibility(View.GONE);
-                }
-                break;
-            case 2:
-                PlacePostsFragment f3 = (PlacePostsFragment) pagerAdapter.getItem(position);
-                if(f3.getMainButtonVisibility()) {
-                    plusButtonView.setVisibility(View.VISIBLE);
-                }
-                else {
-                    plusButtonView.setVisibility(View.GONE);
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }*/
-
-
-
     //private methods
     //////////////////////////////////////////////////////////////////////////////
 
@@ -272,6 +236,11 @@ public class PlaceActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
     private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         List fragments = new Vector();
@@ -293,7 +262,54 @@ public class PlaceActivity extends BaseActivity {
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
         pager.setCurrentItem(1);
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.i(TAG,"position : " + position);
+                Log.i(TAG,"positionOffsetPixels : " + positionOffsetPixels);
+
+                //If the user can't add pics nor tags
+                if(!isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
+                    if (position == 1) {
+                        if(positionOffsetPixels < 700) {
+                            plusButtonView.setVisibility(View.GONE);
+                        } else plusButtonView.setVisibility(View.VISIBLE);
+                    }
+                }
+                //If the user can add pics but not tags
+                else if(isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
+                    if (position == 0) {
+                        if(positionOffsetPixels > 700) {
+                            plusButtonView.setVisibility(View.GONE);
+                        } else plusButtonView.setVisibility(View.VISIBLE);
+                    }
+                    if (position == 1) {
+                        if(positionOffsetPixels < 700) {
+                            plusButtonView.setVisibility(View.GONE);
+                        } else plusButtonView.setVisibility(View.VISIBLE);
+                    }
+                }
+                //If the user can add tags but not pics
+                else if(!isAllowedToAddPic && CacheData.isAllowedToAddPost()) {
+                    if (position == 0) {
+                        if(positionOffsetPixels < 700) {
+                            plusButtonView.setVisibility(View.GONE);
+                        } else plusButtonView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
+
 
     private void initLocationListener() {
         mLocationListener = new LocationListener() {
@@ -345,8 +361,6 @@ public class PlaceActivity extends BaseActivity {
         loadedFragments = loadedFragments + 1;
         if(loadedFragments>=3) {
             updateButtonsVisibility();
-            //boolean test = fragmentTags.getMainButtonVisibility();
-            //setPlusButtonVisibility(fragmentTags.getMainButtonVisibility());
         }
     }
 
@@ -359,23 +373,28 @@ public class PlaceActivity extends BaseActivity {
             if(place.isAround()) {
                 iAmComingButton.setVisibility(View.GONE);
                 fragmentPosts.setMainButtonVisibility(true);
-                boolean isAllowedToAddPic = true;
                 //if we can post a pic and a post
                 if(isAllowedToAddPic && CacheData.isAllowedToAddPost()) {
                     setFragmentPicturesButtons(true);
                     setFragmentTagsButtons(true);
                 }
-                else {
-                    //if we can post tags but NOT a pic
-                    if(!isAllowedToAddPic) {
+                //if we can post tags but NOT a pic
+                else if(!isAllowedToAddPic && CacheData.isAllowedToAddPost()) {
                         setFragmentPicturesButtons(false);
                         setFragmentTagsButtons(true);
-                    }
-                    //if we can post a pic but NOT tags
-                    else if(!CacheData.isAllowedToAddPost()) {
-                        setFragmentPicturesButtons(true);
-                        setFragmentTagsButtons(false);
-                    }
+                }
+                //if we can post a pic but NOT tags
+                else if(isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
+                    setFragmentPicturesButtons(true);
+                    setFragmentTagsButtons(false);
+                }
+                //if we can't post a pic NOR a tag
+                else if(!isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
+                    fragmentTags.setMainButtonVisibility(false);
+                    fragmentTags.setSmallPicButtonVisibility(false);
+                    fragmentTags.setSmallPeopleButtonVisibility(true);
+                    fragmentPictures.setMainButtonVisibility(false);
+                    fragmentPictures.setSmallTagsButtonVisibility(false);
                 }
             }
             //if we are away from the place
