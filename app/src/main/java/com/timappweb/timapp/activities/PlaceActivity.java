@@ -73,6 +73,7 @@ public class PlaceActivity extends BaseActivity {
     private PlacePicturesFragment fragmentPictures;
     private PlaceTagsFragment fragmentTags;
     private PlacePostsFragment fragmentPosts;
+    private ViewPager pager;
 
     private ShareActionProvider shareActionProvider;
     private PlacesAdapter placesAdapter;
@@ -80,7 +81,6 @@ public class PlaceActivity extends BaseActivity {
     private int counter = 0;
 
     private LocationListener mLocationListener;
-
 
 
     //Override methods
@@ -124,6 +124,7 @@ public class PlaceActivity extends BaseActivity {
             loadPlace(placeId);
         };
 
+        //fragmentTags.setMenuVisibility(true);
     }
 
     @Override
@@ -287,7 +288,7 @@ public class PlaceActivity extends BaseActivity {
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
         this.pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), fragments);
 
-        ViewPager pager = (ViewPager) super.findViewById(R.id.place_viewpager);
+        pager = (ViewPager) super.findViewById(R.id.place_viewpager);
         pager.setOffscreenPageLimit(2);
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
@@ -344,6 +345,8 @@ public class PlaceActivity extends BaseActivity {
         loadedFragments = loadedFragments + 1;
         if(loadedFragments>=3) {
             updateButtonsVisibility();
+            //boolean test = fragmentTags.getMainButtonVisibility();
+            //setPlusButtonVisibility(fragmentTags.getMainButtonVisibility());
         }
     }
 
@@ -395,6 +398,8 @@ public class PlaceActivity extends BaseActivity {
                     onMyWayButton.setVisibility(View.GONE);
                 }
             }
+
+            pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
     }
 

@@ -115,7 +115,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"

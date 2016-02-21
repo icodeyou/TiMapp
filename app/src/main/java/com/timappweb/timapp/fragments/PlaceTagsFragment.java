@@ -73,17 +73,21 @@ public class PlaceTagsFragment extends Fragment {
 
         placeActivity.notifyFragmentsLoaded();
 
+        //Call setMenuVisibility to update Plus Button visibility
+        //setMenuVisibility(true);
+
         return root;
     }
 
     @Override
     public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
         if (visible) {
             if(addButton!=null) {
-                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
+                boolean test = addButton.getVisibility()==View.VISIBLE;
+                placeActivity.setPlusButtonVisibility(test);
             }
         }
+        super.setMenuVisibility(visible);
     }
 
     private void initAdapter() {
