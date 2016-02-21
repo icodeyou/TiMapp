@@ -108,7 +108,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_people">Nobody has posted here.</string>
     <string name="text_last_post">Last post</string>
     <string name="button_add_tags">Tags</string>
-    <string name="button_add_pic">Picture</string>
+    <string name="button_add_pic">Photos</string>
     <string name="button_add_people">People</string>
     <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
     <string name="text_no_event_around1">There isn\'t any event near you\nright now.</string>

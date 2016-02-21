@@ -59,7 +59,7 @@ public class PlaceTagsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
 
         //Initialize
-        addButton = root.findViewById(R.id.main_button_tags);
+        addButton = root.findViewById(R.id.main_button);
         smallPicButton = root.findViewById(R.id.button_add_pic);
         smallPeopleButton = root.findViewById(R.id.button_add_people);
         lvTags = (ListView) root.findViewById(R.id.list_tags);
@@ -74,6 +74,16 @@ public class PlaceTagsFragment extends Fragment {
         placeActivity.notifyFragmentsLoaded();
 
         return root;
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(addButton!=null) {
+                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
+            }
+        }
     }
 
     private void initAdapter() {
@@ -170,6 +180,15 @@ public class PlaceTagsFragment extends Fragment {
         }
         else {
             addButton.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean getMainButtonVisibility() {
+        if(addButton.getVisibility()==View.VISIBLE) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -91,7 +92,6 @@ public class LocateActivity extends BaseActivity{
         //}
 
         initLocationListener();
-
 
     }
 

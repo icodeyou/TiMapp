@@ -50,7 +50,7 @@ import java.util.Vector;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class PlaceActivity extends BaseActivity{
+public class PlaceActivity extends BaseActivity {
     private String TAG = "PlaceActivity";
     private MyPagerAdapter pagerAdapter;
     private Place place;
@@ -58,11 +58,12 @@ public class PlaceActivity extends BaseActivity{
     private Activity currentActivity;
 
     //Views
-    private View iAmComingButton;
-    private View onMyWayButton;
-    private View   progressView;
-    private ListView tagsListView;
-    private ListView placeListView;
+    private View        iAmComingButton;
+    private View        onMyWayButton;
+    private View        progressView;
+    private View        plusButtonView;
+    private ListView    tagsListView;
+    private ListView    placeListView;
 
     //Camera
     private static final int REQUEST_CAMERA = 0;
@@ -103,6 +104,7 @@ public class PlaceActivity extends BaseActivity{
         //Initialize
         iAmComingButton = findViewById(R.id.button_coming);
         onMyWayButton = findViewById(R.id.button_on_my_way);
+        plusButtonView = findViewById(R.id.plus_button_view);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
         progressView = findViewById(R.id.progress_view);
@@ -191,6 +193,44 @@ public class PlaceActivity extends BaseActivity{
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    /*@Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                PlacePicturesFragment f1 = (PlacePicturesFragment) pagerAdapter.getItem(position);
+                if(f1.getMainButtonVisibility()) {
+                    plusButtonView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    plusButtonView.setVisibility(View.GONE);
+                }
+                break;
+            case 1:
+                PlaceTagsFragment f2 = (PlaceTagsFragment) pagerAdapter.getItem(position);
+                if(f2.getMainButtonVisibility()) {
+                    plusButtonView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    plusButtonView.setVisibility(View.GONE);
+                }
+                break;
+            case 2:
+                PlacePostsFragment f3 = (PlacePostsFragment) pagerAdapter.getItem(position);
+                if(f3.getMainButtonVisibility()) {
+                    plusButtonView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    plusButtonView.setVisibility(View.GONE);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }*/
 
 
 
@@ -337,6 +377,7 @@ public class PlaceActivity extends BaseActivity{
             }
             //if we are away from the place
             else {
+                plusButtonView.setVisibility(View.GONE);
                 fragmentTags.setMainButtonVisibility(false);
                 fragmentTags.setSmallPicButtonVisibility(false);
                 fragmentTags.setSmallPeopleButtonVisibility(false);
@@ -379,6 +420,13 @@ public class PlaceActivity extends BaseActivity{
     //Public methods
     //////////////////////////////////////////////////////////////////////////////
 
+    public void setPlusButtonVisibility(boolean bool) {
+        if(bool) {
+            plusButtonView.setVisibility(View.VISIBLE);
+        }
+        else plusButtonView.setVisibility(View.GONE);
+    }
+
     // Check for camera permission in MashMallow
     public void requestForCameraPermission() {
         final String permission = Manifest.permission.CAMERA;
@@ -410,4 +458,5 @@ public class PlaceActivity extends BaseActivity{
     public int getPlaceId() {
         return placeId;
     }
+
 }

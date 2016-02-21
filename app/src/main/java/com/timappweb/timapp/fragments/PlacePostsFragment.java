@@ -54,6 +54,16 @@ public class PlacePostsFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(addButton!=null) {
+                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
+            }
+        }
+    }
+
     private void initVariables(View root) {
         context= getActivity().getApplicationContext();
         placeActivity = (PlaceActivity) getActivity();
@@ -61,7 +71,7 @@ public class PlacePostsFragment extends Fragment {
         placeId = placeActivity.getPlaceId();
 
         //Views
-        addButton = root.findViewById(R.id.main_button_posts);
+        addButton = root.findViewById(R.id.main_button);
         lvTags = (ListView) root.findViewById(R.id.list_people);
         progressView = root.findViewById(R.id.progress_view);
         noPostsView = root.findViewById(R.id.no_posts_view);
@@ -120,6 +130,15 @@ public class PlacePostsFragment extends Fragment {
         }
         else {
             addButton.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean getMainButtonVisibility() {
+        if(addButton.getVisibility()==View.VISIBLE) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }

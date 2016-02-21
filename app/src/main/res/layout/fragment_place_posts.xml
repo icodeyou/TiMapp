@@ -76,28 +76,26 @@
     <!-- Add Button-->
     <!-- **********************************************************************-->
     <LinearLayout
-        android:id="@+id/main_button_posts"
+        android:id="@+id/main_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:background="@color/colorAccent"
         android:visibility="gone">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_plus_red"/>
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="3dp"
             android:textStyle="bold"
             android:textColor="@color/colorAccentDark"
             android:textAllCaps="false"
             android:text="@string/button_add_people"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:textSize="@dimen/text_big"/>
     </LinearLayout>
 </LinearLayout>
