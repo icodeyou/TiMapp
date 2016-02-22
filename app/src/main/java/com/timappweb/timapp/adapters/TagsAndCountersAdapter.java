@@ -1,6 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,17 +36,34 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
         }
 
         // Get icon,title & counter views from the rowView
-        TextView tagView = (TextView) rowView.findViewById(R.id.tv_tag);
-        TextView counterView = (TextView) rowView.findViewById(R.id.tv_tag_counter);
+        TextView tvTag = (TextView) rowView.findViewById(R.id.tv_tag);
+        TextView tvCounter = (TextView) rowView.findViewById(R.id.tv_tag_counter);
 
         // Set the text for textView
         //TODO: The if loop should not be necessary
         if (getData().size() > 0){
             String tagString = String.valueOf(getItem(position).getName());
             String tagCounterString = String.valueOf(getItem(position).getCountRef());
-            tagView.setText(tagString);
-            counterView.setText(tagCounterString);
+            tvTag.setText(tagString);
+            tvCounter.setText(tagCounterString);
         }
+
+        /*float dimens[] = new float[3];
+        //Convert dp into pixels
+        float pixels2 = rowView.getResources().getDimension(R.dimen.text_lv2);
+        dimens[2] = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels2,
+                rowView.getResources().getDisplayMetrics());
+        float pixels1 = rowView.getResources().getDimension(R.dimen.text_lv1);
+        dimens[1] = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels1,
+                rowView.getResources().getDisplayMetrics());
+        float pixels0 = rowView.getResources().getDimension(R.dimen.text_lv0);
+        dimens[0] = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels0,
+                rowView.getResources().getDisplayMetrics());
+
+        if(position<3) {
+            tvTag.setTextSize(dimens[position]);
+            tvCounter.setTextSize(dimens[position]);
+        }*/
 
         // return rowView
         return rowView;

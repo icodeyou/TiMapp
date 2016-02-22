@@ -27,6 +27,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.MapTag;
@@ -207,6 +208,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         placesViewer.setVisibility(View.VISIBLE);
         placesAdapter.clear();
         placesAdapter.add(place);
+
+        //set opacity of fab button
+        DrawerActivity drawerActivity = (DrawerActivity) exploreFragment.getActivity();
+        drawerActivity.setFabOpacity(128);
     }
 
     private void loadMapIfNeeded() {

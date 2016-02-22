@@ -41,17 +41,16 @@
     <RelativeLayout
         android:id="@+id/loaded_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
+        android:layout_height="match_parent">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent" android:layout_height="match_parent"
             android:background="@color/background">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
-                android:background="@color/colorAccent"
+                android:background="@color/colorAccentLight"
                 android:gravity="bottom">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,15 +65,15 @@
                         android:ellipsize="none"
                         android:maxLines="1"
                         android:textSize="@dimen/text_big"
-                        android:textColor="@color/Black"
+                        android:textColor="@color/colorAccent"
                         android:gravity="center"/>
                     <TextView
+                        android:id="@+id/text_age"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="22 years old"
                         android:textSize="@dimen/text_normal"
-                        android:textColor="@color/Black"/>
+                        android:textColor="@color/colorAccent"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -92,28 +91,50 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp">
-                        <ImageView
-                            android:layout_width="@dimen/logo_big"
-                            android:layout_height="@dimen/logo_big"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/ic_hashtag_circle_blue"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="@dimen/logo_big"
+                                android:layout_height="@dimen/logo_big"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_hashtag_circle_verdo"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/progress_view1"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+                            <include layout="@layout/progressbar"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"/>
+                        </LinearLayout>
                         <TextView
                             android:id="@+id/tags_counter"
-                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:gravity="center_vertical"
+                            android:gravity="center"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/colorAccentDark"/>
+                            android:textColor="@color/colorAccent"
+                            android:visibility="gone"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/post_shared"
                         android:textSize="@dimen/text_normal"
-                        android:textColor="@color/colorAccentDark"/>
+                        android:textColor="@color/colorAccent"/>
                 </LinearLayout>
                 <View
                     android:layout_width="1dp"
@@ -126,28 +147,51 @@
                     android:orientation="vertical"
                     android:gravity="center">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp">
-                        <ImageView
-                            android:layout_width="@dimen/logo_big"
-                            android:layout_height="@dimen/logo_big"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/ic_location_blue"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="@dimen/logo_big"
+                                android:layout_height="@dimen/logo_big"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_location_verdo"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/progress_view2"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:gravity="center">
+                            <include
+                                layout="@layout/progressbar"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"/>
+                        </LinearLayout>
                         <TextView
                             android:id="@+id/places_counter"
-                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:gravity="center_vertical"
+                            android:gravity="center"
                             android:textSize="@dimen/text_big"
-                            android:textColor="@color/colorAccentDark"/>
+                            android:textColor="@color/colorAccent"
+                            android:visibility="gone"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/places_created"
                         android:textSize="@dimen/text_normal"
-                        android:textColor="@color/colorAccentDark"/>
+                        android:textColor="@color/colorAccent"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -166,27 +210,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:text="#snowboard"
+                    android:textStyle="bold"
                     android:textSize="@dimen/text_big"
-                    android:textColor="@color/Goldenrod"/>
+                    android:textColor="@color/colorAccent"/>
                 <TextView
                     android:id="@+id/tv_tag2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:text="#drums"
+                    android:textStyle="bold"
                     android:textSize="@dimen/text_big"
-                    android:textColor="@color/Goldenrod"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:background="@drawable/background_defined_tags"
-                    android:visibility="gone"/>
+                    android:textColor="@color/colorAccent"/>
                 <TextView
                     android:id="@+id/tv_tag3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:text="#cinema"
                     android:textSize="@dimen/text_big"
-                    android:textColor="@color/Goldenrod"/>
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"/>
             </LinearLayout>
 
             <TextView
@@ -209,7 +254,7 @@
             android:id="@+id/profile_picture"
             android:layout_width="@dimen/profile_picture_side"
             android:layout_height="@dimen/profile_picture_side"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="45dp"
             android:layout_marginLeft="20dp"
             android:src="@drawable/ic_profile_default"/>
     </RelativeLayout>

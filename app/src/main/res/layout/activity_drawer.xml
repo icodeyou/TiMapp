@@ -34,7 +34,8 @@
         <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_hashtag" />
+            app:backgroundTint="@color/colorAccent"
+            android:src="@drawable/plus_button_white" />
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- DRAWER -->
@@ -43,8 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemTextColor="@color/colorAccentDark"
-        app:itemIconTint="@color/colorAccentDark"
+        app:itemTextColor="@color/colorAccent"
+        app:itemIconTint="@color/colorAccent"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav" />
 

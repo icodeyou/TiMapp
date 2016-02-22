@@ -4,9 +4,11 @@
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorPrimaryVeryDark">#8c1e1e</color>
     <!--<color name="colorAccent">#ff8707</color>-->
-    <color name="colorAccent">@color/LightBlue</color>
+    <!--<color name="colorAccent">#ADD8E6</color>-->
+    <color name="colorAccentLight">#d4f2ea</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
-    <color name="colorAccentDark">#3f3f9a</color>
+    <color name="TEST">#DAA520</color>
+    <color name="colorAccent">#476e64</color>
     <color name="colorLightPrimary">#FFCDD2</color>
     <color name="transparent">#00000000</color>
     <color name="background">#f2feff</color>
@@ -16,8 +18,6 @@
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>
-    <color name="suggested_tag_text_color">@color/Halfblack</color>
-    <color name="list_tags_color">@color/Halfblack</color>
     <color name="item_friend_here">@color/LightGreen</color>
     <color name="item_friend_invited">@color/LightCyan</color>
     <color name="category_selected_edges">#6a9898</color>

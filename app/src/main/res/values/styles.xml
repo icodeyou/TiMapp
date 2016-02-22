@@ -8,11 +8,11 @@
         <item name="android:windowExitTransition">@android:transition/explode</item>-->
 
         <!-- Customize your theme here. -->
-        <item name="android:textColor">@color/colorAccentDark</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textColorSecondary">@color/colorPrimary</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccentLight</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 

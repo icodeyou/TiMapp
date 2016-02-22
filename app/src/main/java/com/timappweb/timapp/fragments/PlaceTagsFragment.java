@@ -187,13 +187,8 @@ public class PlaceTagsFragment extends Fragment {
         }
     }
 
-    public boolean getMainButtonVisibility() {
-        if(addButton.getVisibility()==View.VISIBLE) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public View getMainButton() {
+        return addButton;
     }
 
     public void setSmallPicButtonVisibility(boolean bool) {

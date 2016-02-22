@@ -37,6 +37,7 @@ public class ProfileActivity extends BaseActivity{
     private User mUser = null;
 
     private TextView tvUsername;
+    private TextView tvAge;
     private TextView tvCountTags;
     private TextView tvCountPlaces;
 
@@ -51,6 +52,8 @@ public class ProfileActivity extends BaseActivity{
     private View noConnectionView;
     private List<Tag> tags;
     private ImageView profilePicture;
+    private View progressView1;
+    private View progressView2;
 
 
     @Override
@@ -63,6 +66,7 @@ public class ProfileActivity extends BaseActivity{
 
         //Initialize
         tvUsername = (TextView) findViewById(R.id.tv_profile_username);
+        tvAge = (TextView) findViewById(R.id.text_age);
         tvCountTags = (TextView) findViewById(R.id.tags_counter);
         tvCountPlaces = (TextView) findViewById(R.id.places_counter);
         placeView = (ListView) findViewById(R.id.place_lv);
@@ -74,6 +78,8 @@ public class ProfileActivity extends BaseActivity{
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = (LinearLayout) findViewById(R.id.layout_tags_profile);
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        progressView1 = findViewById(R.id.progress_view1);
+        progressView2 = findViewById(R.id.progress_view2);
 
         initAdapter();
         setListeners();
@@ -173,10 +179,15 @@ public class ProfileActivity extends BaseActivity{
                     Log.i(TAG, user + " loaded");
                     mUser = user;
                     tvUsername.setText(mUser.username);
+                    tvAge.setText("100 years old");
                     tags = mUser.tags;
-                    setTags(tags);
+                    //setTags(tags);
+                    progressView1.setVisibility(View.GONE);
                     tvCountTags.setText(String.valueOf(mUser.count_posts));
+                    tvCountTags.setVisibility(View.VISIBLE);
+                    progressView2.setVisibility(View.GONE);
                     tvCountPlaces.setText(String.valueOf(mUser.count_places));
+                    tvCountPlaces.setVisibility(View.VISIBLE);
 
                     // Setting the last post
                     if (mUser.posts != null && mUser.posts.size() > 0) {
@@ -187,7 +198,6 @@ public class ProfileActivity extends BaseActivity{
                     }
                     ImageView ivProfilePicture = (ImageView) findViewById(R.id.profile_picture);
                     Picasso.with(context).load(mUser.getProfilePictureUrl()).into(ivProfilePicture);
-
 
                     loadedView.setVisibility(View.VISIBLE);
                     loadingView.setVisibility(View.GONE);
@@ -205,7 +215,6 @@ public class ProfileActivity extends BaseActivity{
             tvTag3.setText(tags.get(2).name);
         }
     }
-
 
     ///////// Generate pre-selected tags here/////////////////////
     public void onLastPostClick(View view) {

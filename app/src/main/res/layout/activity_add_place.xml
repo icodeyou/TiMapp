@@ -38,7 +38,7 @@
             android:inputType="textCapWords"
             android:gravity="center"
             android:textSize="@dimen/text_small"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@color/colorAccentLight"/>
 
         <Button
             android:id="@+id/create_place_button"

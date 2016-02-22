@@ -104,13 +104,8 @@ public class PlacePicturesFragment extends Fragment {
         }
     }
 
-    public boolean getMainButtonVisibility() {
-        if(addButton.getVisibility()==View.VISIBLE) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public View getMainButton() {
+        return addButton;
     }
 
     public void setImage(Bitmap bitmap) {

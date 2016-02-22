@@ -133,12 +133,7 @@ public class PlacePostsFragment extends Fragment {
         }
     }
 
-    public boolean getMainButtonVisibility() {
-        if(addButton.getVisibility()==View.VISIBLE) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public View getMainButton() {
+        return addButton;
     }
 }

@@ -2,18 +2,14 @@ package com.timappweb.timapp.activities;
 
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -130,25 +126,7 @@ public class LocateActivity extends BaseActivity{
                 buttonAddSpot.setEnabled(false);
             }
         });
-
-        buttonAddSpot.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        v.setBackgroundResource(R.drawable.button_add_place);
-                        v.invalidate();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        v.setBackground(null);
-                        v.invalidate();
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+        setMyTouchListener(buttonAddSpot, R.drawable.button_add_place_selected);
     }
 
     @Override

@@ -118,7 +118,7 @@ public class PlaceActivity extends BaseActivity {
         initFragments();
         initPlaceAdapters();
         initLocationListener();
-        setListeners();
+        setClickListeners();
 
 
 
@@ -202,7 +202,7 @@ public class PlaceActivity extends BaseActivity {
     //private methods
     //////////////////////////////////////////////////////////////////////////////
 
-    private void setListeners() {
+    private void setClickListeners() {
         final Activity that = this;
 
         iAmComingButton.setOnClickListener(new View.OnClickListener() {
@@ -234,6 +234,14 @@ public class PlaceActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    private void setTouchListeners() {
+        setMyTouchListener(onMyWayButton, R.color.colorAccentLight);
+        setMyTouchListener(iAmComingButton, R.color.colorAccentLight);
+        setMyTouchListener(fragmentPictures.getMainButton(),R.color.colorAccentLight);
+        setMyTouchListener(fragmentTags.getMainButton(),R.color.colorAccentLight);
+        setMyTouchListener(fragmentPosts.getMainButton(),R.color.colorAccentLight);
     }
 
     @Override
@@ -361,6 +369,7 @@ public class PlaceActivity extends BaseActivity {
         loadedFragments = loadedFragments + 1;
         if(loadedFragments>=3) {
             updateButtonsVisibility();
+            setTouchListeners();
         }
     }
 
