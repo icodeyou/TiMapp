@@ -10,7 +10,7 @@ import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.ServerConfiguration;
@@ -156,14 +156,15 @@ public class MyApplication extends Application{
     }
 
     public void initCategories(){
-        categories.add(new Category(1, "music", R.drawable.ic_category_music));
-        categories.add(new Category(2, "strike", R.drawable.ic_category_strike));
-        categories.add(new Category(3, "streetshow", R.drawable.ic_category_streetshow));
-        categories.add(new Category(4, "sport", R.drawable.ic_category_sport));
-        categories.add(new Category(5, "bar", R.drawable.ic_category_bar));
-        categories.add(new Category(6, "show", R.drawable.ic_category_show));
-        categories.add(new Category(7, "party", R.drawable.ic_category_party));
-        categories.add(new Category(8, "unknown", R.drawable.ic_category_unknown));
+        categories.add(new Category(1, "music", R.drawable.ic_category_music, R.drawable.ic_category_highlight_music));
+        categories.add(new Category(2, "strike", R.drawable.ic_category_strike, R.drawable.ic_category_highlight_strike));
+        categories.add(new Category(3, "streetshow", R.drawable.ic_category_streetshow, R.drawable.ic_category_highlight_streetshow));
+        categories.add(new Category(4, "sport", R.drawable.ic_category_sport, R.drawable.ic_category_highlight_sport));
+        categories.add(new Category(5, "bar", R.drawable.ic_category_bar, R.drawable.ic_category_highlight_bar));
+        categories.add(new Category(6, "nightclub", R.drawable.ic_category_nightclub, R.drawable.ic_category_highlight_nightclub));
+        categories.add(new Category(7, "show", R.drawable.ic_category_show, R.drawable.ic_category_highlight_show));
+        categories.add(new Category(8, "party", R.drawable.ic_category_party, R.drawable.ic_category_highlight_party));
+        categories.add(new Category(9, "unknown", R.drawable.ic_category_unknown, R.drawable.ic_category_highlight_unknown));
     }
 
     public static Category getCategory(int id){

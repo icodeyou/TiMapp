@@ -15,43 +15,43 @@
             android:id="@+id/place_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
             android:textSize="@dimen/text_big"
             android:hint="@string/hint_place_name"
             android:singleLine="true"/>
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:layout_weight="1">
+            <android.support.v4.view.ViewPager
+                android:id="@+id/addplace_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_categories"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
-        </LinearLayout>
+                android:layout_height="40dp" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/category_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:inputType="textCapWords"
-            android:gravity="center"
-            android:textSize="@dimen/text_small"
-            android:textColor="@color/colorAccentLight"/>
-
-        <Button
+        <LinearLayout
             android:id="@+id/create_place_button"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="5dp"
-            android:gravity="center"
-            android:text="@string/add_place_button"
-            android:textAllCaps="true"
-            android:clickable="true"
-            android:background="@color/LightGrey"
-            android:textSize="@dimen/text_big"
-            android:textColor="@color/White"/>
+            android:layout_height="@dimen/height_bottom_button"
+            android:background="@color/background_button"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/text_create_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="3dp"
+                android:textColor="@color/text_button"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:text="@string/add_place_button"
+                android:gravity="center"
+                android:textSize="@dimen/text_big"/>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/progress_view"
             android:layout_width="match_parent"

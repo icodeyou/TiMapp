@@ -1,4 +1,4 @@
-package com.timappweb.timapp.cache;
+package com.timappweb.timapp.Cache;
 
 import android.util.Log;
 
@@ -31,6 +31,10 @@ public class CacheData {
         Log.d(TAG, "Loading configuration from shared pref");
         lastPlace = LocalPersistenceManager.readObject(CacheData.KEY_LAST_PLACE, Place.class);
         lastPost = LocalPersistenceManager.readObject(CacheData.KEY_LAST_POST, Post.class);
+
+        //TODO : Remove this line. Is used to initialize mapPlaceStatus to prevent bugs
+        LocalPersistenceManager.writeObject(KEY_MAP_USER_PLACES, null);
+
         mapPlaceStatus = LocalPersistenceManager.readObject(CacheData.KEY_MAP_USER_PLACES, HashMap.class);
         if (mapPlaceStatus == null){
             mapPlaceStatus = new HashMap<>();
@@ -71,11 +75,11 @@ public class CacheData {
         if (mapPlaceStatus.containsKey(placeId)){
             UsersPlace placeStatus = mapPlaceStatus.get(placeId);
             // If there is already a user status
-            if (placeStatus.status == status && !Util.isOlderThan(placeStatus.created, 60) ){
-                return true;
+            if (placeStatus.status == status){
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 

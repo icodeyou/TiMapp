@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;

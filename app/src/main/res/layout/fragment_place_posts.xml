@@ -83,20 +83,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="@dimen/button_selecting_margin"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@color/colorAccent">
+            android:background="@color/background_button">
             <Space
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>
             <TextView
+                android:id="@+id/text_main_button"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textStyle="bold"
-                android:textColor="@color/White"
+                android:textColor="@color/text_button"
                 android:textAllCaps="false"
                 android:text="@string/button_add_people"
                 android:gravity="center_vertical"

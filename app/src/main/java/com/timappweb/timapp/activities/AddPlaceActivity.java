@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,7 @@ import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
+import com.timappweb.timapp.adapters.CategoryPagerAdapter;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
@@ -38,9 +42,12 @@ public class AddPlaceActivity extends BaseActivity {
     RecyclerView categoriesRV;
     CategoriesAdapter categoriesAdapter;
     private Category categorySelected;
-    private Button createButton;
+    private View createButton;
+    private TextView textCreateButton;
     private View progressView;
     private TextView nameCategoryTV;
+
+    private ViewPager viewPager;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -54,15 +61,18 @@ public class AddPlaceActivity extends BaseActivity {
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
-        createButton = (Button) findViewById(R.id.create_place_button);
+        createButton = findViewById(R.id.create_place_button);
+        textCreateButton = (TextView) findViewById(R.id.text_create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
 
         initKeyboard();
         setListeners();
         initAdapterAndManager();
+        initViewPager();
         initLocationListener();
     }
+
 
     //----------------------------------------------------------------------------------------------
     //Private methods
@@ -87,7 +97,7 @@ public class AddPlaceActivity extends BaseActivity {
     private void initAdapterAndManager() {
         categoriesAdapter = new CategoriesAdapter(this);
         categoriesRV.setAdapter(categoriesAdapter);
-        GridLayoutManager manager = new SpanningGridLayoutManager(this, 2, LinearLayoutManager.HORIZONTAL, false);
+        GridLayoutManager manager = new SpanningGridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
         categoriesRV.setLayoutManager(manager);
     }
 
@@ -100,6 +110,28 @@ public class AddPlaceActivity extends BaseActivity {
             progressView.setVisibility(View.GONE);
             createButton.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void initViewPager() {
+        final AddPlaceActivity that = this;
+        viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
+        final CategoryPagerAdapter categoryPagerAdapter = new CategoryPagerAdapter(this);
+        viewPager.setAdapter(categoryPagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
+        categorySelected = categoriesAdapter.getCategory(0);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            public void onPageSelected(int position) {
+                Category newCategory = categoriesAdapter.getCategory(position);
+                categoriesAdapter.setIconNewCategory(that, newCategory);
+                categorySelected = newCategory;
+            }
+        });
     }
 
     private void submitPlace(final Place place){
@@ -145,14 +177,14 @@ public class AddPlaceActivity extends BaseActivity {
         }
     }
 
-    public void setNameCategoryTV(String name) {
-        nameCategoryTV.setText(name);
-    }
-
     //----------------------------------------------------------------------------------------------
     //Public methods
     public RecyclerView getCategoriesRV() {
         return categoriesRV;
+    }
+
+    public ViewPager getViewPager() {
+        return viewPager;
     }
 
     // ----------------------------------------------------------------------------------------------
@@ -163,6 +195,10 @@ public class AddPlaceActivity extends BaseActivity {
 
     public void setCategory(Category category) {
         categorySelected = category;
+    }
+
+    public Category getCategorySelected() {
+        return categorySelected;
     }
 
     private void setListeners() {
@@ -179,6 +215,9 @@ public class AddPlaceActivity extends BaseActivity {
                 setButtonValidation();
             }
         });
+
+        setMyTouchListener(createButton, textCreateButton,
+                R.color.border_selected_button, R.color.text_selected_button);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

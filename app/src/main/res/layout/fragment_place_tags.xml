@@ -90,22 +90,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="@dimen/button_selecting_margin"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@color/colorAccent">
+                android:background="@color/background_button">
                 <Space
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"/>
                 <TextView
+                    android:id="@+id/text_main_button"
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:textStyle="bold"
                     android:textAllCaps="false"
                     android:text="@string/button_add_tags"
-                    android:textColor="@color/White"
+                    android:textColor="@color/text_button"
                     android:gravity="center_vertical"
                     android:textSize="@dimen/text_big"/>
             </LinearLayout>
@@ -120,35 +121,47 @@
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:gravity="left|bottom"
-        android:background="@drawable/border_radius_top_right"
         android:visibility="gone">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginBottom="7dp"
-            android:src="@drawable/ic_camera_plus"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/button_selecting_margin"
+            android:layout_marginRight="@dimen/button_selecting_margin"
+            android:background="@drawable/border_radius_top_right"
+            android:gravity="left|bottom">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginBottom="7dp"
+                android:src="@drawable/ic_camera_plus_white"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Add pic Button on the right-->
+    <!-- Add people Button on the right-->
     <!-- **********************************************************************-->
     <LinearLayout
         android:id="@+id/button_add_people"
         android:layout_width="60dp"
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:gravity="right|bottom"
-        android:background="@drawable/border_radius_top_left"
         android:visibility="gone">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="7dp"
-            android:layout_marginBottom="7dp"
-            android:src="@drawable/ic_people_plus"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/button_selecting_margin"
+            android:layout_marginLeft="@dimen/button_selecting_margin"
+            android:background="@drawable/border_radius_top_left"
+            android:gravity="right|bottom">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="3dp"
+                android:src="@drawable/ic_people_plus_white"/>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

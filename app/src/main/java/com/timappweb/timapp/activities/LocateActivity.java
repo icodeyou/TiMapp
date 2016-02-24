@@ -12,10 +12,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -40,11 +41,12 @@ public class LocateActivity extends BaseActivity{
     private String TAG = "LocateActivity";
 
     //Views
-    private ListView    listPlaces;
-    private View        placesAndBottomLine;
-    private View        noPlaceView;
-    private LinearLayout buttonAddSpot;
-    private View noConnectionView;
+    private ListView        listPlaces;
+    private View            placesAndBottomLine;
+    private View            noPlaceView;
+    private LinearLayout    buttonAddPlace;
+    private TextView        textButtonAddPlace;
+    private View            noConnectionView;
 
     // ProgressBar and ProgressDialog
     private View progressView;
@@ -73,10 +75,10 @@ public class LocateActivity extends BaseActivity{
         placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
         noPlaceView = findViewById(R.id.layout_if_no_place);
         listPlaces = (ListView) findViewById(R.id.list_places);
-        buttonAddSpot = (LinearLayout) findViewById(R.id.button_add_spot);
+        buttonAddPlace = (LinearLayout) findViewById(R.id.button_add_spot);
+        textButtonAddPlace = (TextView) findViewById(R.id.text_button_add_spot);
         noConnectionView = findViewById(R.id.no_connection_view);
 
-        // -----------------------------------------------------------------------------------------
         // Init variables
         mResultReceiver = new AddressResultReceiver(new Handler());
 
@@ -115,18 +117,19 @@ public class LocateActivity extends BaseActivity{
 
         listPlaces.setAdapter(placesAdapter);
 
-        buttonAddSpot.setOnClickListener(new View.OnClickListener() {
+        buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!CacheData.isAllowedToAddPlace()){
+                if (!CacheData.isAllowedToAddPlace()) {
                     Toast.makeText(getApplicationContext(), R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
                     return;
                 }
                 IntentsUtils.addPlace(that);
-                buttonAddSpot.setEnabled(false);
+                //buttonAddPlace.setEnabled(false);
             }
         });
-        setMyTouchListener(buttonAddSpot, R.drawable.button_add_place_selected);
+        setMyTouchListener(buttonAddPlace, textButtonAddPlace,
+                R.drawable.button_add_place_selected, R.color.text_selected_button);
     }
 
     @Override
@@ -145,9 +148,6 @@ public class LocateActivity extends BaseActivity{
         super.onStop();
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------
     //PRIVATE METHODS
@@ -189,7 +189,7 @@ public class LocateActivity extends BaseActivity{
                     PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);
-                    buttonAddSpot.setVisibility(View.VISIBLE);
+                    buttonAddPlace.setVisibility(View.VISIBLE);
                     if (places.size() != 0) {
                         placeAdapter.addAll(places);
                         noPlaceView.setVisibility(View.GONE);
@@ -212,9 +212,6 @@ public class LocateActivity extends BaseActivity{
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ----------------------------------------------------------------------------------------------
     //PROTECTED METHODS
     protected void startIntentServiceReverseGeocoding(Location location) {
         Log.d(TAG, "Starting IntentService to get use address from name");
@@ -224,9 +221,6 @@ public class LocateActivity extends BaseActivity{
         startService(intent);
     }
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // INNER CLASSES
@@ -251,14 +245,8 @@ public class LocateActivity extends BaseActivity{
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
     // GETTERS AND SETTERS
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // MISCELLANEOUS

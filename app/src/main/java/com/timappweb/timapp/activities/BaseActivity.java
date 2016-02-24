@@ -1,7 +1,10 @@
 package com.timappweb.timapp.activities;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -71,10 +74,10 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setMyTouchListener(View button, final int resource) {
-        button.setOnTouchListener( new View.OnTouchListener() {
+        button.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
+                switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN: {
                         v.setBackgroundResource(resource);
                         v.invalidate();
@@ -82,6 +85,30 @@ public class BaseActivity extends AppCompatActivity {
                     }
                     case MotionEvent.ACTION_UP: {
                         v.setBackground(null);
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    protected void setMyTouchListener(View button, final TextView tv, final int resourceBg, final int resourceTv) {
+        button.setOnTouchListener( new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.setBackgroundResource(resourceBg);
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.setBackground(null);
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
                         v.invalidate();
                         break;
                     }
