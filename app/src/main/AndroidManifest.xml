@@ -6,7 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera2" />
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -29,7 +32,7 @@
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/newlogo2"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
@@ -179,13 +182,12 @@
         </activity>
 
         <!-- EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
-
-        <!-- FIRST EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.EditProfileActivity"
-            android:label="@string/title_activity_first_edit_profile"
+            android:label="@string/title_activity_edit_profile"
             android:windowSoftInputMode="adjustNothing|stateVisible"
-            android:parentActivityName=".activities.ProfileActivity" >
+            android:parentActivityName=".activities.ProfileActivity"
+            android:theme="@style/EditProfileTheme">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

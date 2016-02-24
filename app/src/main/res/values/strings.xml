@@ -21,7 +21,6 @@
     <string name="title_activity_add_event">Add event</string>
     <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
-    <string name="title_activity_first_edit_profile">First edit profile</string>
 
     <string name="default_username">Not logged in</string>
     <!--<string name="city">Paris</string>
@@ -109,11 +108,11 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_people">Nobody has posted here.</string>
     <string name="text_last_post">Last post</string>
     <string name="button_add_tags">Tags</string>
-    <string name="button_add_pic">Picture</string>
+    <string name="button_add_pic">Photos</string>
     <string name="button_add_people">People</string>
     <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
     <string name="text_no_event_around1">There isn\'t any event near you\nright now.</string>
-    <string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>
+    <!--<string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>-->
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>

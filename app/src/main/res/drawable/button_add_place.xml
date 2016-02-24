@@ -15,7 +15,4 @@
             <solid android:color="@color/colorAccent" />
         </shape>
     </item>
-    <item android:state_pressed="true"
-        android:bottom="10dp" android:top="10dp" android:right="20dp" android:left="20dp"
-        android:drawable="@android:drawable/list_selector_background" />
 </layer-list>

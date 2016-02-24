@@ -1,26 +1,20 @@
 package com.timappweb.timapp.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.rest.QueryCondition;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
-
-import retrofit2.Call;
 
 
 public class PlacePicturesFragment extends Fragment {
@@ -37,6 +31,7 @@ public class PlacePicturesFragment extends Fragment {
     private View                    noConnectionView;
     private View                    addButton;
     private View                    smallTagsButton;
+    private ImageView               pictureTaken;
 
     @Nullable
     @Override
@@ -52,17 +47,29 @@ public class PlacePicturesFragment extends Fragment {
         return root;
     }
 
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(addButton!=null) {
+                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
+            }
+        }
+    }
+
     private void initVariables(View root) {
         placeActivity = (PlaceActivity) getActivity();
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
 
         //Views
-        addButton = root.findViewById(R.id.main_button_pics);
+        addButton = root.findViewById(R.id.main_button);
         smallTagsButton = root.findViewById(R.id.button_add_tags);
         progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
+        pictureTaken = (ImageView) root.findViewById(R.id.picture_taken);
     }
 
     private void setListeners() {
@@ -71,10 +78,13 @@ public class PlacePicturesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //placeActivity.requestForCameraPermission();
-                //placeActivity.takePicture();
+                placeActivity.takePicture();
             }
         });
     }
+
+    //Public methods
+    //////////////////////////////////////////////////////////////////////////////
 
     public void setSmallTagsButtonVisibility(boolean bool) {
         if(bool) {
@@ -92,6 +102,14 @@ public class PlacePicturesFragment extends Fragment {
         else {
             addButton.setVisibility(View.GONE);
         }
+    }
+
+    public View getMainButton() {
+        return addButton;
+    }
+
+    public void setImage(Bitmap bitmap) {
+        pictureTaken.setImageBitmap(bitmap);
     }
 
 }

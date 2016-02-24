@@ -20,7 +20,7 @@
             android:id="@+id/rv_selected_tags"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"
-            myattrs:text_color="@color/colorAccentDark"
+            myattrs:text_color="@color/colorAccent"
             myattrs:background_color="@color/background"/>
 
         <!-- Progress View -->
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_huge"
-                android:textColor="@color/colorAccentDark"
+                android:textColor="@color/colorAccent"
                 android:text="@string/uploading_tags" />
         </LinearLayout>
 
@@ -65,14 +65,14 @@
                 android:ellipsize="none"
                 android:maxLines="1"
                 android:gravity="center"
-                android:textColor="@color/colorAccentDark"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_mountain"
                 android:layout_marginBottom="10dp"
                 android:text="@string/main_text_publish_activity"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccentDark"
+                android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_normal"
                 android:text="Click here to add your tags"/>
         </LinearLayout>
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_normal"
-                    android:textColor="@color/colorAccentDark"
+                    android:textColor="@color/colorAccent"
                     android:text="@string/text_anonymous"/>
             </LinearLayout>
             <ImageView

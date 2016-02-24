@@ -1,11 +1,10 @@
 package com.timappweb.timapp.fragments;
 
-import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 
@@ -54,9 +52,10 @@ public class ExploreFragment extends Fragment{
         PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
 
         //hide underline
-        pagerTabStrip.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        pagerTabStrip.setTextColor(getResources().getColor(R.color.White));
-        pagerTabStrip.setDrawFullUnderline(false);
+        pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+        pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(),R.color.White));
+        pagerTabStrip.setDrawFullUnderline(true);
+        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(),R.color.colorAccentLight));
 
 
         return root;

@@ -1,107 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"  android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/background"
     tools:context=".PlaceActivity">
 
-    <!-- TOOLBAR -->
-    <include layout="@layout/toolbar"/>
-
-    <!-- Progress view -->
-    <!-- **********************************************************************-->
     <LinearLayout
-        android:id="@+id/progress_view"
         android:layout_width="match_parent"
-        android:layout_height="93dp"
-        android:gravity="center">
-        <include layout="@layout/progressbar"
-            android:layout_height="50dp"
-            android:layout_width="50dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!-- TOOLBAR -->
+        <include layout="@layout/toolbar"/>
+
+        <!-- Progress view -->
+        <!-- **********************************************************************-->
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="91dp"
+            android:gravity="center">
+            <include layout="@layout/progressbar"
+                android:layout_height="50dp"
+                android:layout_width="50dp"/>
+        </LinearLayout>
+
+        <!-- PLACE -->
+        <!-- ************************************* -->
+        <ListView
+            android:id="@+id/place_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:scrollbars="none"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorPrimary"/>
+
+        <!-- Fragments -->
+        <!-- ************************************* -->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/place_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <!-- Button I am Coming -->
+        <!-- ************************************* -->
+        <LinearLayout
+            android:id="@+id/button_coming"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_bottom_button"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/colorAccentLight">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_coming_guy"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:textColor="@color/colorAccent"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:text="@string/coming_button"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Button On My Way -->
+        <!-- ************************************* -->
+        <LinearLayout
+            android:id="@+id/button_on_my_way"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_bottom_button"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/colorAccentLight"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_left_guy"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:textColor="@color/colorAccent"
+                    android:textAllCaps="false"
+                    android:textStyle="bold"
+                    android:text="@string/on_my_way"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big"/>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_coming_guy"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
-    <!-- PLACE -->
-    <!-- ************************************* -->
-    <ListView
-        android:id="@+id/place_lv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/colorPrimary"/>
-
-    <!-- Fragments -->
-    <!-- ************************************* -->
-    <android.support.v4.view.ViewPager
-        android:id="@+id/place_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <!-- Button I am Coming -->
+    <!-- Plus button -->
     <!-- ************************************* -->
     <LinearLayout
-        android:id="@+id/button_coming"
+        android:id="@+id/plus_button_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@color/colorAccent"
+        android:layout_alignParentBottom="true"
         android:visibility="gone">
-        <ImageView
-            android:layout_width="40dp"
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_coming_guy"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:textColor="@color/colorAccentDark"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:text="@string/coming_button"
-            android:gravity="center"
-            android:textSize="@dimen/text_big"/>
+            android:layout_gravity="center_vertical"
+            android:gravity="right">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_plus_red"/>
+        </LinearLayout>
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
-    <!-- Button On My Way -->
-    <!-- ************************************* -->
-    <LinearLayout
-        android:id="@+id/button_on_my_way"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_bottom_button"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@color/colorAccent"
-        android:visibility="gone">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_left_guy"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:textColor="@color/colorAccentDark"
-            android:textAllCaps="false"
-            android:textStyle="bold"
-            android:text="@string/on_my_way"
-            android:gravity="center"
-            android:textSize="@dimen/text_big"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_coming_guy"/>
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

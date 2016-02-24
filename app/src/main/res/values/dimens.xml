@@ -22,7 +22,7 @@
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
     <dimen name="ic_place">80dp</dimen>
-    <dimen name="height_bottom_button">60dp</dimen>
+    <dimen name="height_bottom_button">70dp</dimen>
     <dimen name="height_categories_choose">180dp</dimen>
     <dimen name="width_categories_choose">280dp</dimen>
 
@@ -33,6 +33,10 @@
     <dimen name="text_big">30dp</dimen>
     <dimen name="text_huge">40dp</dimen>
     <dimen name="text_mountain">70dp</dimen>
+    <dimen name="text_lv_base">20dp</dimen>
+    <dimen name="text_lv0">25dp</dimen>
+    <dimen name="text_lv1">30dp</dimen>
+    <dimen name="text_lv2">35dp</dimen>
 
     <!-- Logo dimensions -->
     <dimen name="logo_tiny">15dp</dimen>

@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -138,6 +139,8 @@ public class TagActivity extends BaseActivity{
                 else {
                     searchView.setQuery(query, true);
                 }
+            case R.id.home:
+                //NavUtils.navigateUpFromSameTask(this);//May be necessary To have a colored home button
             default:
                 return super.onOptionsItemSelected(item);
         }

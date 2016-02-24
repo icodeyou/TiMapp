@@ -83,29 +83,32 @@
         <!-- Add tags Button-->
         <!-- **********************************************************************-->
         <LinearLayout
-            android:id="@+id/main_button_tags"
+            android:id="@+id/main_button"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_bottom_button"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@color/colorAccent"
             android:visibility="gone">
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_plus_red"/>
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="3dp"
-                android:textStyle="bold"
-                android:textColor="@color/colorAccentDark"
-                android:textAllCaps="false"
-                android:text="@string/button_add_tags"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:textSize="@dimen/text_big"/>
+                android:background="@color/colorAccent">
+                <Space
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:text="@string/button_add_tags"
+                    android:textColor="@color/White"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/text_big"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -148,5 +151,4 @@
             android:layout_marginBottom="7dp"
             android:src="@drawable/ic_people_plus"/>
     </LinearLayout>
-
 </RelativeLayout>

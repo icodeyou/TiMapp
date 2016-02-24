@@ -15,7 +15,7 @@ import com.timappweb.timapp.R;
  */
 public class MyPopupWindow {
 
-    private static final String TAG = "PopupWindow";
+    /*private static final String TAG = "PopupWindow";
     private Activity activity;
 
     MyPopupWindow(Activity act){
@@ -44,5 +44,5 @@ public class MyPopupWindow {
         // Using name, the PopupWindow will be displayed right under anchorView
         popupWindow.showAtLocation(anchorView, Gravity.NO_GRAVITY,   location[0], location[1] + anchorView.getHeight());
 
-    }
+    }*/
 }
