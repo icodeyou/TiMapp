@@ -103,19 +103,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="@dimen/button_selecting_margin"
+            android:layout_marginRight="@dimen/button_selecting_margin"
+            android:layout_marginTop="@dimen/button_selecting_margin"
             android:background="@drawable/button_add_place"
             android:gravity="center">
             <TextView
+                android:id="@+id/text_button_add_spot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="@string/button_add_place"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_big"
-                android:textColor="@color/White"/>
+                android:textColor="@color/text_button"/>
         </LinearLayout>
     </LinearLayout>
 

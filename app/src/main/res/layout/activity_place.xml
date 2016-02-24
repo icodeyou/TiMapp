@@ -59,7 +59,7 @@
                 android:layout_marginTop="2dp"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@color/colorAccentLight">
+                android:background="@color/background_button">
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -67,10 +67,11 @@
                     android:layout_marginRight="20dp"
                     android:src="@drawable/ic_coming_guy"/>
                 <TextView
+                    android:id="@+id/text_coming_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_button"
                     android:textAllCaps="false"
                     android:textStyle="bold"
                     android:text="@string/coming_button"
@@ -87,38 +88,31 @@
             android:layout_height="@dimen/height_bottom_button"
             android:orientation="horizontal"
             android:gravity="center"
+            android:background="@color/background_button"
             android:visibility="gone">
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_left_guy_darkred"/>
+            <TextView
+                android:id="@+id/text_onmyway_button"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal"
+                android:layout_margin="3dp"
+                android:textColor="@color/text_button"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:text="@string/on_my_way"
                 android:gravity="center"
-                android:background="@color/colorAccentLight"
-                android:visibility="visible">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:src="@drawable/ic_left_guy"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:textColor="@color/colorAccent"
-                    android:textAllCaps="false"
-                    android:textStyle="bold"
-                    android:text="@string/on_my_way"
-                    android:gravity="center"
-                    android:textSize="@dimen/text_big"/>
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:src="@drawable/ic_coming_guy"/>
-            </LinearLayout>
+                android:textSize="@dimen/text_big"/>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_coming_guy_darkred"/>
         </LinearLayout>
     </LinearLayout>
     <!-- Plus button -->
@@ -133,7 +127,8 @@
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/button_selecting_margin"
             android:layout_gravity="center_vertical"
             android:gravity="right">
             <ImageView

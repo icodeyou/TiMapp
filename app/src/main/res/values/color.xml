@@ -11,8 +11,7 @@
     <color name="colorAccent">#476e64</color>
     <color name="colorLightPrimary">#FFCDD2</color>
     <color name="transparent">#00000000</color>
-    <color name="background">#f2feff</color>
-    <color name="background_bottom_button_place">#eafffb</color>
+    <color name="background">#fcfffe</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="darker_background">#e7e7e7</color>
     <color name="border">#bababa</color>
@@ -23,6 +22,12 @@
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
     <color name="hint_edit_profile">#45ffffff</color>
+
+    <!-- Button -->
+    <color name="background_button">@color/colorAccent</color>
+    <color name="text_button">@color/background</color>
+    <color name="border_selected_button">@color/colorAccentLight</color>
+    <color name="text_selected_button">@color/colorAccentLight</color>
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->

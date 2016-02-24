@@ -6,17 +6,16 @@ public class Category implements Serializable{
 
     public Integer id;
     public String name;
-    public int resource;
+    public int resourceTransparent;
+    public int resourceHighlight;
 
-    public Category(int id, String name, int resource) {
+    public Category(int id, String name, int resourceTransparent, int resourceHighlight) {
         this.id = id;
         this.name = name;
-        this.resource = resource;
+        this.resourceTransparent = resourceTransparent;
+        this.resourceHighlight= resourceHighlight;
     }
 
-    public int getIconId(){
-        return resource;
-    }
     public String getName() {
         return name;
     }
@@ -40,7 +39,5 @@ public class Category implements Serializable{
         return name.hashCode();
     }
 
-    public int getResource(int level) {
-        return resource;
-    }
+
 }

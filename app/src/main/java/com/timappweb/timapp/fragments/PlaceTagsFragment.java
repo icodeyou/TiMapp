@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -48,6 +49,7 @@ public class PlaceTagsFragment extends Fragment {
     private View                    addButton;
     private View                    smallPicButton;
     private View                    smallPeopleButton;
+    private TextView                tvAddButton;
 
     @Nullable
     @Override
@@ -60,6 +62,7 @@ public class PlaceTagsFragment extends Fragment {
 
         //Initialize
         addButton = root.findViewById(R.id.main_button);
+        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallPicButton = root.findViewById(R.id.button_add_pic);
         smallPeopleButton = root.findViewById(R.id.button_add_people);
         lvTags = (ListView) root.findViewById(R.id.list_tags);
@@ -191,6 +194,10 @@ public class PlaceTagsFragment extends Fragment {
         return addButton;
     }
 
+    public TextView getTvMainButton() {
+        return tvAddButton;
+    }
+
     public void setSmallPicButtonVisibility(boolean bool) {
         if(bool) {
             smallPicButton.setVisibility(View.VISIBLE);
@@ -200,6 +207,10 @@ public class PlaceTagsFragment extends Fragment {
         }
     }
 
+    public View getSmallPicButton() {
+        return smallPicButton;
+    }
+
     public void setSmallPeopleButtonVisibility(boolean bool) {
         if(bool) {
             smallPeopleButton.setVisibility(View.VISIBLE);
@@ -207,6 +218,10 @@ public class PlaceTagsFragment extends Fragment {
         else {
             smallPeopleButton.setVisibility(View.GONE);
         }
+    }
+
+    public View getSmallPeopleButton() {
+        return smallPeopleButton;
     }
 
 }

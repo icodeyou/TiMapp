@@ -130,8 +130,7 @@ public class Place implements Serializable, MarkerValueInterface {
 
     public int getResource() {
         int level = this.getLevel();
-        // TODO jack: return the appropriate ressource according
-        return MyApplication.getCategory(this.category_id).getResource(level);
+        return MyApplication.getCategory(this.category_id).resourceTransparent;
     }
 
     /**

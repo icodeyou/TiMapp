@@ -6,8 +6,8 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:layout_width="160dp"
-        android:layout_height="120dp"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:src="@drawable/ic_nav_clock"/>
 
     <LinearLayout

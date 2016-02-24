@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
@@ -24,10 +24,7 @@ import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
-
-import java.util.List;
 
 public class IntentsUtils {
 

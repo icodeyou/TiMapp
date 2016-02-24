@@ -173,11 +173,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     public void setLoaderVisibility(boolean bool) {
-        if(bool) {
-            progressView.setVisibility(View.VISIBLE);
-        }
-        else {
-            progressView.setVisibility(View.GONE);
+        if(progressView!=null) {
+            if(bool) {
+                progressView.setVisibility(View.VISIBLE);
+            }
+            else {
+                progressView.setVisibility(View.GONE);
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
@@ -32,6 +33,7 @@ public class PlacePicturesFragment extends Fragment {
     private View                    addButton;
     private View                    smallTagsButton;
     private ImageView               pictureTaken;
+    private TextView                tvAddButton;
 
     @Nullable
     @Override
@@ -65,6 +67,7 @@ public class PlacePicturesFragment extends Fragment {
 
         //Views
         addButton = root.findViewById(R.id.main_button);
+        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallTagsButton = root.findViewById(R.id.button_add_tags);
         progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
@@ -73,7 +76,6 @@ public class PlacePicturesFragment extends Fragment {
     }
 
     private void setListeners() {
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +97,10 @@ public class PlacePicturesFragment extends Fragment {
         }
     }
 
+    public View getSmallTagsButton() {
+        return smallTagsButton;
+    }
+
     public void setMainButtonVisibility(boolean bool) {
         if(bool) {
             addButton.setVisibility(View.VISIBLE);
@@ -106,6 +112,10 @@ public class PlacePicturesFragment extends Fragment {
 
     public View getMainButton() {
         return addButton;
+    }
+
+    public TextView getTvMainButton() {
+        return tvAddButton;
     }
 
     public void setImage(Bitmap bitmap) {

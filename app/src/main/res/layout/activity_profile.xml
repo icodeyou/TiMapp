@@ -7,16 +7,15 @@
 
     <include layout="@layout/toolbar"/>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="visible">
+        android:gravity="center">
         <include layout="@layout/progressbar"
             android:layout_height="80dp"
             android:layout_width="80dp"/>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/no_connection_view"
@@ -39,7 +38,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/loaded_view"
+        android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -56,8 +55,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="100dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center_horizontal|bottom">
                     <com.timappweb.timapp.views.AutoResizeTextView
                         android:id="@+id/tv_profile_username"
                         android:layout_width="match_parent"

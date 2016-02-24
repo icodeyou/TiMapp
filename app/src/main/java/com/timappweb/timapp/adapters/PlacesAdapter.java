@@ -70,7 +70,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
         Category category = MyApplication.getCategory(place.category_id);
         if (category != null){
-            categoryIcon.setImageResource(MyApplication.getCategory(place.category_id).resource);
+            categoryIcon.setImageResource(MyApplication.getCategory(place.category_id).resourceTransparent);
         }
         else{
             // TODO if no category thats weird man

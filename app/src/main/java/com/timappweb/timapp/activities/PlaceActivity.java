@@ -18,15 +18,15 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
@@ -35,7 +35,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
-import com.timappweb.timapp.fragments.PlacePostsFragment;
+import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
@@ -60,7 +60,9 @@ public class PlaceActivity extends BaseActivity {
 
     //Views
     private View        iAmComingButton;
+    private TextView    iAmComingTv;
     private View        onMyWayButton;
+    private TextView    onMyWayTv;
     private View        progressView;
     private View        plusButtonView;
     private ListView    tagsListView;
@@ -73,7 +75,7 @@ public class PlaceActivity extends BaseActivity {
     private int loadedFragments; // Number of fragments
     private PlacePicturesFragment fragmentPictures;
     private PlaceTagsFragment fragmentTags;
-    private PlacePostsFragment fragmentPosts;
+    private PlacePeopleFragment fragmentPosts;
     private ViewPager pager;
 
     private ShareActionProvider shareActionProvider;
@@ -109,7 +111,9 @@ public class PlaceActivity extends BaseActivity {
 
         //Initialize
         iAmComingButton = findViewById(R.id.button_coming);
+        iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
         onMyWayButton = findViewById(R.id.button_on_my_way);
+        onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         plusButtonView = findViewById(R.id.plus_button_view);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
@@ -237,16 +241,21 @@ public class PlaceActivity extends BaseActivity {
     }
 
     private void setTouchListeners() {
-        setMyTouchListener(onMyWayButton, R.color.colorAccentLight);
-        setMyTouchListener(iAmComingButton, R.color.colorAccentLight);
-        setMyTouchListener(fragmentPictures.getMainButton(),R.color.colorAccentLight);
-        setMyTouchListener(fragmentTags.getMainButton(),R.color.colorAccentLight);
-        setMyTouchListener(fragmentPosts.getMainButton(),R.color.colorAccentLight);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
+        //PlaceActivity
+        setMyTouchListener(iAmComingButton, iAmComingTv,
+                R.color.border_selected_button, R.color.text_selected_button);
+        //Fragment Pictures
+        setMyTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
+        setMyTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton(),
+                R.color.border_selected_button, R.color.text_selected_button);
+        //Fragment Tags
+        setMyTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
+        setMyTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
+        setMyTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton(),
+                R.color.border_selected_button, R.color.text_selected_button);
+        //Fragment Posts
+        setMyTouchListener(fragmentPosts.getMainButton(), fragmentPosts.getTvMainButton(),
+                R.color.border_selected_button, R.color.text_selected_button);
     }
 
     private void initFragments() {
@@ -255,7 +264,7 @@ public class PlaceActivity extends BaseActivity {
 
         fragmentPictures = (PlacePicturesFragment) Fragment.instantiate(this, PlacePicturesFragment.class.getName());
         fragmentTags = (PlaceTagsFragment) Fragment.instantiate(this, PlaceTagsFragment.class.getName());
-        fragmentPosts = (PlacePostsFragment) Fragment.instantiate(this, PlacePostsFragment.class.getName());
+        fragmentPosts = (PlacePeopleFragment) Fragment.instantiate(this, PlacePeopleFragment.class.getName());
 
         // Ajout des Fragments dans la liste
         fragments.add(fragmentPictures);
@@ -380,6 +389,7 @@ public class PlaceActivity extends BaseActivity {
         if(place != null && MyApplication.hasLastLocation()) {
             //if we are in the place
             if(place.isAround()) {
+                plusButtonView.setVisibility(View.VISIBLE);
                 iAmComingButton.setVisibility(View.GONE);
                 fragmentPosts.setMainButtonVisibility(true);
                 //if we can post a pic and a post
@@ -422,8 +432,8 @@ public class PlaceActivity extends BaseActivity {
                     onMyWayButton.setVisibility(View.GONE);
                 }
                 else {
-                    iAmComingButton.setVisibility(View.VISIBLE);
-                    onMyWayButton.setVisibility(View.GONE);
+                    iAmComingButton.setVisibility(View.GONE);
+                    onMyWayButton.setVisibility(View.VISIBLE);
                 }
             }
 

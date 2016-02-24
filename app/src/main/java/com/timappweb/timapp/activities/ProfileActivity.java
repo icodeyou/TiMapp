@@ -1,12 +1,10 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,7 +45,7 @@ public class ProfileActivity extends BaseActivity{
     private TextView tvTag3;
     private ListView placeView;
     private View loadingView;
-    private View loadedView;
+    private View mainView;
     private LinearLayout layoutTagsProfile;
     private View noConnectionView;
     private List<Tag> tags;
@@ -73,8 +71,8 @@ public class ProfileActivity extends BaseActivity{
         tvTag1 = (TextView) findViewById(R.id.tv_tag1);
         tvTag2 = (TextView) findViewById(R.id.tv_tag2);
         tvTag3 = (TextView) findViewById(R.id.tv_tag3);
-        loadingView = findViewById(R.id.loading_view);
-        loadedView = findViewById(R.id.loaded_view);
+        //loadingView = findViewById(R.id.loading_view);
+        mainView = findViewById(R.id.main_view);
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = (LinearLayout) findViewById(R.id.layout_tags_profile);
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
@@ -135,24 +133,7 @@ public class ProfileActivity extends BaseActivity{
     private void setListeners() {
         final Activity activity = this;
 
-        layoutTagsProfile.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        v.getBackground().setColorFilter(getResources().getColor(R.color.LightGrey), PorterDuff.Mode.SRC_ATOP);
-                        v.invalidate();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        v.getBackground().clearColorFilter();
-                        v.invalidate();
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
+        setMyTouchListener(layoutTagsProfile,R.color.colorAccentLight);
         layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,7 +148,8 @@ public class ProfileActivity extends BaseActivity{
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                loadingView.setVisibility(View.GONE);
+                //loadingView.setVisibility(View.GONE);
+                mainView.setVisibility(View.GONE);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 
@@ -199,8 +181,8 @@ public class ProfileActivity extends BaseActivity{
                     ImageView ivProfilePicture = (ImageView) findViewById(R.id.profile_picture);
                     Picasso.with(context).load(mUser.getProfilePictureUrl()).into(ivProfilePicture);
 
-                    loadedView.setVisibility(View.VISIBLE);
-                    loadingView.setVisibility(View.GONE);
+                    //mainView.setVisibility(View.VISIBLE);
+                    //loadingView.setVisibility(View.GONE);
                 }
             }
         });
