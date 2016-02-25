@@ -71,6 +71,7 @@ public class AddPlaceActivity extends BaseActivity {
         initAdapterAndManager();
         initViewPager();
         initLocationListener();
+        setButtonValidation();
     }
 
 
@@ -104,11 +105,9 @@ public class AddPlaceActivity extends BaseActivity {
     private void setProgressView(boolean bool) {
         if(bool) {
             progressView.setVisibility(View.VISIBLE);
-            createButton.setVisibility(View.GONE);
         }
         else {
             progressView.setVisibility(View.GONE);
-            createButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -216,8 +215,7 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
-        setMyTouchListener(createButton, textCreateButton,
-                R.color.border_selected_button, R.color.text_selected_button);
+        setMyTouchListener(createButton, textCreateButton, R.color.text_selected_button);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -69,6 +69,7 @@ public class BaseActivity extends AppCompatActivity {
         }
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(showTitle);
     }
@@ -94,6 +95,28 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
+    protected void setMyTouchListener(View button, final TextView tv, final int resourceTv) {
+        button.setOnTouchListener( new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
     protected void setMyTouchListener(View button, final TextView tv, final int resourceBg, final int resourceTv) {
         button.setOnTouchListener( new View.OnTouchListener() {
             @Override
@@ -109,6 +132,33 @@ public class BaseActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP: {
                         v.setBackground(null);
                         tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    protected void setMyTouchListener(View button, final TextView tv1, final TextView tv2,
+                                      final int resourceBg, final int resourceTv) {
+        button.setOnTouchListener( new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.setBackgroundResource(resourceBg);
+                        tv1.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
+                        tv2.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.setBackground(null);
+                        tv1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
+                        tv2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
                         v.invalidate();
                         break;
                     }

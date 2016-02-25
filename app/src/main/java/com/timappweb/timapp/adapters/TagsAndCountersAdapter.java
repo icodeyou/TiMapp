@@ -1,6 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 
@@ -48,21 +50,31 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
             tvCounter.setText(tagCounterString);
         }
 
-        /*float dimens[] = new float[3];
+        float dimens[] = new float[3];
         //Convert dp into pixels
-        float pixels2 = rowView.getResources().getDimension(R.dimen.text_lv2);
-        dimens[2] = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels2,
-                rowView.getResources().getDisplayMetrics());
-        float pixels1 = rowView.getResources().getDimension(R.dimen.text_lv1);
-        dimens[1] = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels1,
-                rowView.getResources().getDisplayMetrics());
-        float pixels0 = rowView.getResources().getDimension(R.dimen.text_lv0);
-        dimens[0] = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels0,
-                rowView.getResources().getDisplayMetrics());
+        float scale = rowView.getResources().getDisplayMetrics().density;
+        dimens[0] = rowView.getResources().getDimension(R.dimen.text_lv1);
+        dimens[1] = rowView.getResources().getDimension(R.dimen.text_lv2);
+        dimens[2] = rowView.getResources().getDimension(R.dimen.text_lv3);
 
         if(position<3) {
-            tvTag.setTextSize(dimens[position]);
-            tvCounter.setTextSize(dimens[position]);
+            tvTag.setTextSize(Util.convertPixelsToDp(dimens[position], getContext()));
+            tvTag.setTypeface(Typeface.DEFAULT_BOLD);
+            tvCounter.setTextSize(Util.convertPixelsToDp(dimens[position], getContext()));
+            rowView.setBackgroundResource(R.color.background_list_main_tags);
+        }
+        else if(position%2 == 0) {
+            rowView.setBackgroundResource(R.color.background_list_tags);
+        }
+
+        /*if(position<3) {
+            float oldSize = tvTag.getTextSize();
+            float newSize;
+            switch (position) {
+                case 0:
+                    newSize = oldSize+1;
+            }
+            tvTag.getTextSize()
         }*/
 
         // return rowView

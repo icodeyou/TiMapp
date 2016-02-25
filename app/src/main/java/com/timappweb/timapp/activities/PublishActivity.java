@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.Cache.CacheData;
@@ -43,6 +44,8 @@ public class PublishActivity extends BaseActivity{
     private CheckBox checkBox = null;
     private ListView placeListView;
     private LinearLayout confirmButton;
+    private TextView textButton1;
+    private TextView textButton2;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -69,6 +72,8 @@ public class PublishActivity extends BaseActivity{
         placeListView = (ListView) findViewById(R.id.place_lv);
         progressView = findViewById(R.id.progress_view);
         confirmButton = (LinearLayout) findViewById(R.id.confirm_button);
+        textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
+        textButton2 = (TextView) findViewById(R.id.text_confirm_button2);
 
         initAdapters();
         setListeners();
@@ -110,6 +115,9 @@ public class PublishActivity extends BaseActivity{
     }
 
     public void setListeners() {
+        setMyTouchListener(confirmButton,textButton1,textButton2,
+                R.drawable.border_radius_selectedbuttoncolor, R.color.text_selected_button);
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -22,6 +22,8 @@
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
     <color name="hint_edit_profile">#45ffffff</color>
+    <color name="background_list_tags">#f1fffb</color>
+    <color name="background_list_main_tags">@color/colorAccentLight</color>
 
     <!-- Button -->
     <color name="background_button">@color/colorAccent</color>

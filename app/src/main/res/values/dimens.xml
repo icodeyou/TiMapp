@@ -26,6 +26,8 @@
     <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="height_categories_choose">180dp</dimen>
     <dimen name="width_categories_choose">280dp</dimen>
+    <dimen name="horizontal_margin_confirm_button">20dp</dimen>
+    <dimen name="vertical_margin_confirm_button">10dp</dimen>
 
     <!-- Text dimensions -->
     <dimen name="text_tiny">10dp</dimen>
@@ -35,9 +37,9 @@
     <dimen name="text_huge">40dp</dimen>
     <dimen name="text_mountain">70dp</dimen>
     <dimen name="text_lv_base">20dp</dimen>
-    <dimen name="text_lv0">25dp</dimen>
-    <dimen name="text_lv1">30dp</dimen>
-    <dimen name="text_lv2">35dp</dimen>
+    <dimen name="text_lv1">50dp</dimen>
+    <dimen name="text_lv2">40dp</dimen>
+    <dimen name="text_lv3">30dp</dimen>
     <dimen name="text_category">60dp</dimen>
     <dimen name="text_category_padding">0dp</dimen>
 
