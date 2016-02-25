@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".PublishActivity"
     android:background="@color/background">
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,28 +53,38 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:layout_margin="20dp"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="@drawable/border_radius_accent">
-            <com.timappweb.timapp.views.AutoResizeTextView
+            android:layout_marginLeft="@dimen/horizontal_margin_confirm_button"
+            android:layout_marginRight="@dimen/horizontal_margin_confirm_button"
+            android:layout_marginTop="@dimen/vertical_margin_confirm_button"
+            android:layout_marginBottom="@dimen/vertical_margin_confirm_button">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:ellipsize="none"
-                android:maxLines="1"
-                android:gravity="center"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_mountain"
-                android:layout_marginBottom="10dp"
-                android:text="@string/main_text_publish_activity"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="@dimen/text_normal"
-                android:text="Click here to add your tags"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/button_selecting_margin"
+                android:background="@drawable/border_radius_buttoncolor"
+                android:gravity="center">
+                <com.timappweb.timapp.views.AutoResizeTextView
+                    android:id="@+id/text_confirm_button1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:ellipsize="none"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:textColor="@color/text_button"
+                    android:textSize="@dimen/text_mountain"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/main_text_publish_activity"/>
+                <TextView
+                    android:id="@+id/text_confirm_button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_button"
+                    android:textSize="@dimen/text_normal"
+                    android:text="Click here to add your tags"/>
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -89,13 +99,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_normal"
                     android:textColor="@color/colorAccent"
-                    android:text="@string/text_anonymous"/>
+                    android:text="@string/text_anonymous"
+                    app:buttonTint="@color/colorAccent" />
             </LinearLayout>
             <ImageView
                 android:layout_alignParentEnd="true"

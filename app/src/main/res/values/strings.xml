@@ -97,9 +97,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
     <string name="title_activity_locate">Where are you ?</string>
     <string name="title_activity_publish">Check and send</string>
-    <string name="title_activity_tag_1">"Choose "</string>
-    <string name="title_activity_tag_2">" tags"</string>
-    <string name="hint_searchview_activity_tag">Choose 3 tags</string>
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
     <string name="button_add_place">New Event</string>
@@ -152,7 +149,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="slogan">Let people know what\'s going on</string>
     <string name="coming_button">I\'m Coming</string>
     <string name="on_my_way">On My Way</string>
-
+    <string name="tags_upcoming">Tags upcoming</string>
+    <string name="after_create_place_clicked">Thanks for sharing</string>
 
 
 </resources>

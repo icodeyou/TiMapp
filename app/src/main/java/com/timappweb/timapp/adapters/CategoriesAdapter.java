@@ -81,7 +81,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         //set selected category in AddPlaceActivity
         addPlaceActivity.setCategory(newCategory);
-        addPlaceActivity.setButtonValidation();
     }
 
     public ImageView getIconFromId(int categoryId) {

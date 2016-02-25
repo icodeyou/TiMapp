@@ -71,7 +71,7 @@
                 android:layout_height="70dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/border_radius_accent"
+                android:background="@drawable/border_radius_buttoncolor"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
                 android:textColor="@color/colorAccent"
