@@ -49,7 +49,8 @@ dependencies {
     //Needed for Facebook - added by Jack
     compile 'com.facebook.android:facebook-android-sdk:4.7+'
 
-    //library facebook
+    //library AutoLabelUI
+    compile 'com.github.davidpizarro:autolabelui:1.0.1'
 
     //square camera
     compile 'com.android.support:preference-v7:23.1.1'

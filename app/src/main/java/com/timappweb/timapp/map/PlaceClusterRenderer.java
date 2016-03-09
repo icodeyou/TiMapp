@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.*;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
@@ -67,7 +68,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
         categoryImage.setImageResource(place.getResource());
-        categoryImage = setCategoryBackground(categoryImage,place.getLevel());
+        categoryImage = MyApplication.setCategoryBackground(categoryImage,place.getLevel());
 
         categoryImage.setDrawingCacheEnabled(true);
 
@@ -129,28 +130,5 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     protected boolean shouldRenderAsCluster(Cluster cluster) {
         // Always render clusters.
         return cluster.getSize() > 1;
-    }
-
-    public ImageView setCategoryBackground(ImageView i, int level) {
-        switch (level) {
-            case 0:
-                i.setBackgroundResource(R.drawable.b1);
-                return i;
-            case 1:
-                i.setBackgroundResource(R.drawable.b2);
-                return i;
-            case 2:
-                i.setBackgroundResource(R.drawable.b3);
-                return i;
-            case 3:
-                i.setBackgroundResource(R.drawable.b4);
-                return i;
-            case 4:
-                i.setBackgroundResource(R.drawable.b5);
-                return i;
-            default:
-                i.setBackgroundColor(0);
-                return i;
-        }
     }
 }

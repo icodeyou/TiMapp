@@ -76,13 +76,8 @@ public class PlacePicturesFragment extends Fragment {
     }
 
     private void setListeners() {
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //placeActivity.requestForCameraPermission();
-                placeActivity.takePicture();
-            }
-        });
+        addButton.setOnClickListener(placeActivity.getPictureListener());
+        smallTagsButton.setOnClickListener(placeActivity.getTagListener());
     }
 
     //Public methods

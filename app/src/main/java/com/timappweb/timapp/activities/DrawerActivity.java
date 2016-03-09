@@ -334,7 +334,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
     }
 
-    public void setFabOpacity(int opacity) {
+    public void setFabOpacity(float opacity) {
         addSpotFloatingButton.setAlpha(opacity);
     }
 

@@ -84,12 +84,7 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void setListeners() {
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(placeActivity, "Add people clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+        addButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
     private void initAdapter() {

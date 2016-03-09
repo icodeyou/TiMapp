@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F44336</color>
+    <color name="colorPrimary">#f44336</color>
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorPrimaryVeryDark">#8c1e1e</color>
     <!--<color name="colorAccent">#ff8707</color>-->
     <!--<color name="colorAccent">#ADD8E6</color>-->
-    <color name="colorAccentLight">#d4f2ea</color>
+    <!--<color name="colorAccent">#476e64</color>-->
+    <color name="colorAccent">#d3655d</color>
+    <color name="colorAccentLight">#e3c9c7</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
-    <color name="TEST">#DAA520</color>
-    <color name="colorAccent">#476e64</color>
+    <color name="TEST">#F1E5DE</color>
     <color name="colorLightPrimary">#FFCDD2</color>
     <color name="transparent">#00000000</color>
-    <color name="background">#fcfffe</color>
+    <color name="background">#fffafa</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="darker_background">#e7e7e7</color>
     <color name="border">#bababa</color>
@@ -21,16 +22,15 @@
     <color name="item_friend_invited">@color/LightCyan</color>
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
-    <color name="hint_edit_profile">#45ffffff</color>
-    <color name="background_list_tags">#f1fffb</color>
-    <color name="background_list_main_tags">@color/colorAccentLight</color>
+    <color name="color_hint">#45ffffff</color>
+    <color name="background_list_tags">#fff5f4</color>
+    <color name="background_list_main_tags">#fff5f4</color>
 
     <!-- Button -->
     <color name="background_button">@color/colorAccent</color>
     <color name="text_button">@color/background</color>
     <color name="border_selected_button">@color/colorAccentLight</color>
     <color name="text_selected_button">@color/colorAccentLight</color>
-
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:alpha="0.4"
+        android:alpha="0.3"
         android:src="@drawable/image_music"/>
     <com.timappweb.timapp.views.AutoResizeTextView
         android:id="@+id/category_name"

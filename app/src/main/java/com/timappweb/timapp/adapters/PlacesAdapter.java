@@ -3,12 +3,10 @@ package com.timappweb.timapp.adapters;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import com.timappweb.timapp.views.AutoResizeTextView;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
@@ -75,7 +72,8 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
         Category category = MyApplication.getCategory(place.category_id);
         if (category != null){
-            categoryIcon.setImageResource(MyApplication.getCategory(place.category_id).resourceTransparent);
+            categoryIcon.setImageResource(category.resourceWhite);
+            categoryIcon = MyApplication.setCategoryBackground(categoryIcon,place.getLevel());
         }
         else{
             Log.i(TAG,"no category found for id : " + place.category_id );

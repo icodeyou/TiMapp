@@ -186,6 +186,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     public void hidePlace() {
         placesViewer.setVisibility(View.GONE);
+
+        //reset fab opacity
+        DrawerActivity drawerActivity = (DrawerActivity) exploreFragment.getActivity();
+        drawerActivity.setFabOpacity(1f);
     }
 
 
@@ -211,9 +215,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         placesAdapter.clear();
         placesAdapter.add(place);
 
-        //set opacity of fab button
+        //set fab transparent
         DrawerActivity drawerActivity = (DrawerActivity) exploreFragment.getActivity();
-        drawerActivity.setFabOpacity(128);
+        drawerActivity.setFabOpacity(0.2f);
     }
 
     private void loadMapIfNeeded() {
