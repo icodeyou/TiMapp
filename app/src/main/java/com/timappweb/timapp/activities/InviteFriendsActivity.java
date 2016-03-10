@@ -1,26 +1,18 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
-import com.dpizarro.autolabel.library.Label;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.MyRecyclerAdapter;
+import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.entities.Friend;
-import com.timappweb.timapp.entities.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,14 +25,14 @@ public class InviteFriendsActivity extends BaseActivity{
     private AutoLabelUI mAutoLabel;
     private List<Friend> mPersonList;
     private RecyclerView recyclerView;
-    private MyRecyclerAdapter adapter;
+    private SelectFriendsAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Creating InviteFriendsActivity");
         setContentView(R.layout.activity_invite_friends);
-        this.initToolbar(false);
+        this.initToolbar(true);
 
         findViews();
         setListeners();
@@ -131,9 +123,9 @@ public class InviteFriendsActivity extends BaseActivity{
 
         photos.recycle();
 
-        adapter = new MyRecyclerAdapter(mPersonList);
+        adapter = new SelectFriendsAdapter(mPersonList);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new MyRecyclerAdapter.OnItemClickListener() {
+        adapter.setOnItemClickListener(new SelectFriendsAdapter.OnItemClickListener() {
 
             @Override
             public void onItemClick(View v, int position) {

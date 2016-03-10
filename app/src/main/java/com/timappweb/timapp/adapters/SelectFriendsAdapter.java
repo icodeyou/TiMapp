@@ -10,25 +10,19 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.internal.LinkedHashTreeMap;
-import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Friend;
-import com.timappweb.timapp.entities.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
-public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.PersonViewHolder> {
+public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdapter.PersonViewHolder> {
 
     List<Friend> persons;
     OnItemClickListener mItemClickListener;
     Context context;
 
-    public MyRecyclerAdapter(List<Friend> friends) {
+    public SelectFriendsAdapter(List<Friend> friends) {
         this.persons = friends;
     }
 
