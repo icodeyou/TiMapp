@@ -159,10 +159,10 @@
                 android:value=".activities.DrawerActivity" />
         </activity>
 
-        <!-- INCOMING ACTIVITY //////////////////////////////////////////////-->
+        <!-- Add People ACTIVITY //////////////////////////////////////////////-->
         <activity
-            android:name=".activities.IncomingActivity"
-            android:label="@string/title_activity_incoming"
+            android:name=".activities.InviteFriendsActivity"
+            android:label="@string/title_activity_invite_friends"
             android:parentActivityName=".activities.PlaceActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

@@ -107,7 +107,7 @@
                                 android:layout_width="@dimen/logo_big"
                                 android:layout_height="@dimen/logo_big"
                                 android:layout_marginRight="10dp"
-                                android:src="@drawable/ic_hashtag_circle_verdo"/>
+                                android:src="@drawable/ic_hashtag_circle_palred"/>
                         </LinearLayout>
                         <LinearLayout
                             android:id="@+id/progress_view1"
@@ -163,7 +163,7 @@
                                 android:layout_width="@dimen/logo_big"
                                 android:layout_height="@dimen/logo_big"
                                 android:layout_marginRight="10dp"
-                                android:src="@drawable/ic_location_verdo"/>
+                                android:src="@drawable/ic_location_palred"/>
                         </LinearLayout>
                         <LinearLayout
                             android:id="@+id/progress_view2"

@@ -84,11 +84,6 @@ public class LocateActivity extends BaseActivity{
 
         setListeners();
 
-
-        //if (BuildConfig.DEBUG){
-        //   placesAdapter.generateDummyData();
-        //}
-
         initLocationListener();
 
     }

@@ -43,8 +43,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_rv_displayed_tags"
                 android:layout_gravity="center"
-                myattrs:text_color="@color/AliceBlue"
-                myattrs:background_color="@color/colorPrimary"/>
+                myattrs:horizontal_tags_text_color="@color/AliceBlue"
+                myattrs:horizontal_tags_background_color="@color/colorPrimary"/>
 
             <View
                 android:layout_width="match_parent"

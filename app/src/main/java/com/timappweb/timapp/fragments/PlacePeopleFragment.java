@@ -14,8 +14,10 @@ import android.widget.Toast;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PostsAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -82,17 +84,19 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void setListeners() {
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(placeActivity, "Add people clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+        addButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
     private void initAdapter() {
         postsAdapter = new PostsAdapter(context);
         lvTags.setAdapter(postsAdapter);
+        postsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                String username = postsAdapter.getUsername(position);
+                IntentsUtils.profile(placeActivity,username);
+            }
+        });
     }
 
     private void loadPosts() {

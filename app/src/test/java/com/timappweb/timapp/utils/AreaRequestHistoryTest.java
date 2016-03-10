@@ -42,7 +42,7 @@ public class AreaRequestHistoryTest {
         IntPoint p = history.getIntPoint(center);
         assertEquals(p, new IntPoint(0,0));
 
-        // A point in the center has 0,0 coordinate
+        // AddPeopleActivity point in the center has 0,0 coordinate
         p = history.getIntPoint(new IntLatLng(center.latitude + height10, center.longitude + width10));
         assertEquals(p, new IntPoint(0,0));
 

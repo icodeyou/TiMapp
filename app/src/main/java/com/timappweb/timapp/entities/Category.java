@@ -6,14 +6,14 @@ public class Category implements Serializable{
 
     public Integer id;
     public String name;
-    public int resourceTransparent;
-    public int resourceHighlight;
+    public int resourceBlack;
+    public int resourceWhite;
 
-    public Category(int id, String name, int resourceTransparent, int resourceHighlight) {
+    public Category(int id, String name, int resourceBlack, int resourceWhite) {
         this.id = id;
         this.name = name;
-        this.resourceTransparent = resourceTransparent;
-        this.resourceHighlight= resourceHighlight;
+        this.resourceBlack = resourceBlack;
+        this.resourceWhite = resourceWhite;
     }
 
     public String getName() {

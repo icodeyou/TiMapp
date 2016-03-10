@@ -25,8 +25,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:layout_height="50dp"
-        myattrs:text_color="@color/colorAccentLight"
-        myattrs:background_color="@color/colorPrimary" />
+        myattrs:horizontal_tags_text_color="@color/White"
+        myattrs:horizontal_tags_background_color="@color/colorPrimary" />
 
     <EditText
         android:id="@+id/edit_text"
@@ -35,7 +35,7 @@
         android:layout_margin="10dp"
         android:hint="@string/hint_et_edit_first_profile"
         android:singleLine="true"
-        android:textColorHint="@color/hint_edit_profile"
+        android:textColorHint="@color/color_hint"
         android:textColor="@color/White"
         android:textSize="@dimen/text_big"/>
 
@@ -51,7 +51,7 @@
             android:gravity="center"
             android:background="@color/colorPrimary"
             android:textAllCaps="true"
-            android:textColor="@color/hint_edit_profile"
+            android:textColor="@color/color_hint"
             android:text="skip"/>
     </LinearLayout>
 
@@ -74,7 +74,7 @@
                 android:background="@drawable/border_radius_buttoncolor"
                 android:layout_gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/White"
                 android:textSize="@dimen/text_big"
                 android:text="Submit"/>
         </LinearLayout>

@@ -3,7 +3,7 @@ package com.timappweb.timapp.adapters;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +15,19 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.AutoResizeTextView;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+
+import java.util.ArrayList;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
     private final Context context;
-    private RecyclerView rvLastPostTags;
+    private HorizontalTagsRecyclerView rvPlaceTags;
+    private ArrayList<HorizontalTagsRecyclerView> listRvPlacetags;
     private boolean isTagsVisible;
-
-    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
-        this.itemAdapterClickListener = itemAdapterClickListener;
-    }
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
@@ -34,6 +35,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         super(context, R.layout.item_place);
         this.context = context;
         this.isTagsVisible = true;
+        this.listRvPlacetags = new ArrayList<HorizontalTagsRecyclerView>();
     }
 
     public PlacesAdapter(Context context, boolean bool) {
@@ -48,20 +50,20 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         final Place place = this.getItem(position);
 
         // Get the view from inflater
-        View postBox = convertView;
+        View view = convertView;
         if(convertView==null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            postBox = inflater.inflate(R.layout.item_place, parent, false);
+            view = inflater.inflate(R.layout.item_place, parent, false);
         }
 
 
         // Initialize
-        AutoResizeTextView tvLocation = (AutoResizeTextView) postBox.findViewById(R.id.title_place);
-        TextView tvTime = (TextView) postBox.findViewById(R.id.time_place);
-        TextView tvCountPoints = (TextView) postBox.findViewById(R.id.people_counter_place);
-        rvLastPostTags = (RecyclerView) postBox.findViewById(R.id.rv_horizontal_tags);
-        ImageView categoryIcon = (ImageView) postBox.findViewById(R.id.image_category_place);
+        AutoResizeTextView tvLocation = (AutoResizeTextView) view.findViewById(R.id.title_place);
+        TextView tvTime = (TextView) view.findViewById(R.id.time_place);
+        TextView tvCountPoints = (TextView) view.findViewById(R.id.people_counter_place);
+        rvPlaceTags = (HorizontalTagsRecyclerView) view.findViewById(R.id.rv_horizontal_tags);
+        ImageView categoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
 
         //Set texts
         tvLocation.setText(place.name);
@@ -70,29 +72,32 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
         Category category = MyApplication.getCategory(place.category_id);
         if (category != null){
-            categoryIcon.setImageResource(MyApplication.getCategory(place.category_id).resourceTransparent);
+            categoryIcon.setImageResource(category.resourceWhite);
+            categoryIcon = MyApplication.setCategoryBackground(categoryIcon,place.getLevel());
         }
         else{
-            // TODO if no category thats weird man
+            Log.i(TAG,"no category found for id : " + place.category_id );
         }
 
         if(isTagsVisible) {
             //Set the adapter for RV
-            HorizontalTagsAdapter htAdapter = (HorizontalTagsAdapter) rvLastPostTags.getAdapter();
+            HorizontalTagsAdapter htAdapter = rvPlaceTags.getAdapter();
             htAdapter.setData(place.tags);
-            rvLastPostTags.setAdapter(htAdapter);
+            rvPlaceTags.setAdapter(htAdapter);
 
             //Set LayoutManager for RV
             GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
-            rvLastPostTags.setLayoutManager(manager_savedTags);
+            rvPlaceTags.setLayoutManager(manager_savedTags);
         }
         else {
-            rvLastPostTags.setVisibility(View.GONE);
+            rvPlaceTags.setVisibility(View.GONE);
         }
 
-        //Set OnClickListener for the entire view !
+        //listRvPlacetags.add(rvPlaceTags);
+
+        //Listener entire view
         if (this.itemAdapterClickListener != null){
-            postBox.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemAdapterClickListener.onClick(position);
@@ -100,8 +105,13 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             });
         }
 
+        //Listener Horizontal Scroll View
+        HorizontalTagsTouchListener mHorizontalTagsTouchListener =
+                new HorizontalTagsTouchListener(getContext(), itemAdapterClickListener, position);
+        rvPlaceTags.setOnTouchListener(mHorizontalTagsTouchListener);
+
         //return the view
-        return postBox;
+        return view;
     }
 
     @Override
@@ -115,5 +125,13 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         add(dummyPlace);
         Place dummyPlace2 = Place.createDummy();
         add(dummyPlace2);
+    }
+
+    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
+        this.itemAdapterClickListener = itemAdapterClickListener;
+    }
+
+    public ArrayList<HorizontalTagsRecyclerView> getListRvTags() {
+        return listRvPlacetags;
     }
 }

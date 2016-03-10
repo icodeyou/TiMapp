@@ -1,6 +1,5 @@
 package com.timappweb.timapp.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,21 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
-import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.QueryCondition;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.TimeTaskCallback;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelectedListener{
@@ -84,9 +78,15 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
     public void onTabSelected() {
         Log.d(TAG, "Explore places fragment is now selected");
         // Updating the list of places
+        ArrayList<HorizontalTagsRecyclerView> rvs = placesAdapter.getListRvTags();
+        for (HorizontalTagsRecyclerView rv : rvs) {
+            rv.getScrollState();
+        }
+        //TODO : Get scroll position for each horizontal RecyclerView
         placesAdapter.clear();
         ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
         List<Place> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
         placesAdapter.addAll(markers);
+        //TODO : Set scroll position for each horizontal RecyclerView
     }
 }

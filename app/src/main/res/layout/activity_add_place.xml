@@ -5,73 +5,84 @@
     android:layout_height="match_parent"
     tools:context=".AddSpotActivity"
     android:background="@color/background">
+
+    <include android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/addplace_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_layout"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_below="@+id/toolbar_layout">
-        <LinearLayout
-            android:id="@+id/progress_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="gone">
-            <include layout="@layout/progressbar"
-                android:layout_height="wrap_content"
-                android:layout_width="50dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"/>
-            <TextView
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/after_create_place_clicked"
-                android:textSize="@dimen/text_normal"/>
-        </LinearLayout>
         <EditText
             android:id="@+id/place_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:textSize="@dimen/text_big"
+            android:textColor="@color/colorPrimary"
             android:hint="@string/hint_place_name"
+            android:textColorHint="@color/color_hint"
             android:singleLine="true"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-            <android.support.v4.view.ViewPager
-                android:id="@+id/addplace_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_categories"
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
         </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/create_place_button"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_bottom_button"
-            android:background="@color/background_button"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/text_create_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="3dp"
-                android:textColor="@color/text_button"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:text="@string/add_place_button"
-                android:gravity="center"
-                android:textSize="@dimen/text_big"/>
-        </LinearLayout>
     </LinearLayout>
 
-    <include android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar" />
+    <LinearLayout
+        android:id="@+id/create_place_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:background="@drawable/background_button"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/text_create_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:textColor="@color/text_button"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/add_place_button"
+            android:gravity="center"
+            android:textSize="@dimen/text_normal"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/background"
+        android:visibility="gone">
+        <include layout="@layout/progressbar"
+            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"/>
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/after_create_place_clicked"
+            android:textSize="@dimen/text_normal"/>
+    </LinearLayout>
 
 </RelativeLayout>

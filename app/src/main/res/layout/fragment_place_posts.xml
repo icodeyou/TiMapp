@@ -86,7 +86,7 @@
             android:layout_marginTop="@dimen/button_selecting_margin"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@color/background_button">
+            android:background="@drawable/background_button">
             <Space
                 android:layout_weight="1"
                 android:layout_width="0dp"

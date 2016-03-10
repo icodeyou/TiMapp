@@ -19,7 +19,7 @@ public class DummyContent {
     public static List<DummyItem> ITEMS = new ArrayList<DummyItem>();
 
     /**
-     * A map of sample (dummy) items, by ID.
+     * AddPeopleActivity map of sample (dummy) items, by ID.
      */
     public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
@@ -36,7 +36,7 @@ public class DummyContent {
     }
 
     /**
-     * A dummy item representing a piece of content.
+     * AddPeopleActivity dummy item representing a piece of content.
      */
     public static class DummyItem {
         public String id;

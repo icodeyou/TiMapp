@@ -168,11 +168,9 @@ public class AddPlaceActivity extends BaseActivity {
         String textAfterChange = groupNameET.getText().toString();
 
         if (categorySelected!=null && Place.isValidName(textAfterChange)) {
-            createButton.setEnabled(true);
-            createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+            createButton.setVisibility(View.VISIBLE);
         } else {
-            createButton.setEnabled(false);
-            createButton.setBackgroundColor(ContextCompat.getColor(this, R.color.LightGrey));
+            createButton.setVisibility(View.GONE);
         }
     }
 

@@ -7,17 +7,16 @@ import android.util.Log;
 import com.timappweb.timapp.R;
 
 
-public class IncomingActivity extends BaseActivity {
-    private String TAG = "IncomingActivity";
+public class AddPeopleActivity extends BaseActivity {
+    private String TAG = "AddPeopleActivity";
 
     // ----------------------------------------------------------------------------------------------
     //OVERRIDE METHODS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         Log.d(TAG, "Creating LocateActivity");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_incoming);
+        setContentView(R.layout.activity_add_people);
         this.initToolbar(false);
     }
 

@@ -47,13 +47,15 @@ dependencies {
     //compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 
     //Needed for Facebook - added by Jack
-    compile 'com.facebook.android:facebook-android-sdk:4.7+'
+    compile 'com.facebook.android:facebook-android-sdk:4.7'
 
-    //library facebook
+    //library AutoLabelUI
+    compile 'com.github.davidpizarro:autolabelui:1.0.1'
 
     //square camera
     compile 'com.android.support:preference-v7:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.google.maps.android:android-maps-utils:0.4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-SNAPSHOT'

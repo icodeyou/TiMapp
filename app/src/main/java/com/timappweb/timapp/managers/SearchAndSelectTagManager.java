@@ -50,11 +50,10 @@ public class SearchAndSelectTagManager {
 
         final SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
 
-        SearchView.OnQueryTextListener queryTextListener =
-                new OnQueryTagListener(this);
+        OnQueryTagListener queryTagListener = new OnQueryTagListener(this);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
-        searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setOnQueryTextListener(queryTagListener);
 
         this.searchHistory = new SearchHistory<Tag>(
                 MyApplication.getServerConfig().tags_min_search_length,

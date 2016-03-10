@@ -230,7 +230,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     // ----------------------
@@ -334,7 +333,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
     }
 
-    public void setFabOpacity(int opacity) {
+    public void setFabOpacity(float opacity) {
         addSpotFloatingButton.setAlpha(opacity);
     }
 

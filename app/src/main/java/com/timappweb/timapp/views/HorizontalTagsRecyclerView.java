@@ -30,8 +30,8 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
 
         //Get colors from attributes in XML
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.HorizontalTagsRecyclerView, 0, 0);
-        backgroundColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_background_color, 0);
-        textColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_text_color,0);
+        backgroundColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_background_color, 0);
+        textColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_text_color,0);
         ta.recycle();
 
         this.init();

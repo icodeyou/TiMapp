@@ -818,7 +818,7 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
 //        markerOptions.icon(descriptor);
 //
 //        super.onBeforeClusterRendered(cluster, markerOptions);
-//        // Draw multiple people.
+//        // Draw multiple users.
 //        // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
 //
 //

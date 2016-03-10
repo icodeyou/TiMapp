@@ -33,7 +33,7 @@ public class CacheData {
         lastPost = LocalPersistenceManager.readObject(CacheData.KEY_LAST_POST, Post.class);
 
         //TODO : Remove this line. Is used to initialize mapPlaceStatus to prevent bugs
-        LocalPersistenceManager.writeObject(KEY_MAP_USER_PLACES, null);
+        //LocalPersistenceManager.writeObject(KEY_MAP_USER_PLACES, null);
 
         mapPlaceStatus = LocalPersistenceManager.readObject(CacheData.KEY_MAP_USER_PLACES, HashMap.class);
         if (mapPlaceStatus == null){

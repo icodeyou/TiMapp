@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -165,6 +166,29 @@ public class MyApplication extends Application{
         categories.add(new Category(7, "show", R.drawable.ic_category_show, R.drawable.ic_category_highlight_show));
         categories.add(new Category(8, "party", R.drawable.ic_category_party, R.drawable.ic_category_highlight_party));
         categories.add(new Category(9, "unknown", R.drawable.ic_category_unknown, R.drawable.ic_category_highlight_unknown));
+    }
+
+    public static ImageView setCategoryBackground(ImageView i, int level) {
+        switch (level) {
+            case 0:
+                i.setBackgroundResource(R.drawable.b1);
+                return i;
+            case 1:
+                i.setBackgroundResource(R.drawable.b2);
+                return i;
+            case 2:
+                i.setBackgroundResource(R.drawable.b3);
+                return i;
+            case 3:
+                i.setBackgroundResource(R.drawable.b4);
+                return i;
+            case 4:
+                i.setBackgroundResource(R.drawable.b5);
+                return i;
+            default:
+                i.setBackgroundColor(0);
+                return i;
+        }
     }
 
     public static Category getCategory(int id){

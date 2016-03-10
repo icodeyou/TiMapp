@@ -12,7 +12,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.entities.Category;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -49,11 +48,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         icons.put(category.id, categoryIcon);
 
         if(position==0) {
-            categoryIcon.setImageResource(category.resourceHighlight);
+            categoryIcon.setImageResource(category.resourceWhite);
+            categoryIcon.setBackgroundResource(R.drawable.b4);
             currentCategoryIcon = categoryIcon;
         }
         else {
-            categoryIcon.setImageResource(category.resourceTransparent);
+            categoryIcon.setImageResource(category.resourceBlack);
+            categoryIcon.setBackground(null);
         }
 
         holder.getItemView().setOnClickListener(new View.OnClickListener() {
@@ -69,13 +70,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         //Set image to normal for old selected category
         Category oldCategorySelected = addPlaceActivity.getCategorySelected();
-        int oldCategoryResource = oldCategorySelected.resourceTransparent;
+        int oldCategoryResource = oldCategorySelected.resourceBlack;
         currentCategoryIcon.setImageResource(oldCategoryResource);
+        currentCategoryIcon.setBackground(null);
 
         //Set image to highlight for new selected category
-        int newCategoryResource = newCategory.resourceHighlight;
+        int newCategoryResource = newCategory.resourceWhite;
         ImageView iconNewCategory = getIconFromId(newCategory.id);
         iconNewCategory.setImageResource(newCategoryResource);
+        iconNewCategory.setBackgroundResource(R.drawable.b4);
 
         currentCategoryIcon = iconNewCategory;
 

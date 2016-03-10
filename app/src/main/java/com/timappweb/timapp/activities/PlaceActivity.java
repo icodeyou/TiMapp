@@ -90,6 +90,11 @@ public class PlaceActivity extends BaseActivity {
     //TODO : Update this variable
     private boolean isAllowedToAddPic = true;
 
+    //Listeners
+    private View.OnClickListener tagListener;
+    private View.OnClickListener pictureListener;
+    private View.OnClickListener peopleListener;
+
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -207,14 +212,12 @@ public class PlaceActivity extends BaseActivity {
     //////////////////////////////////////////////////////////////////////////////
 
     private void setClickListeners() {
-        final Activity that = this;
-
         iAmComingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO fine location
                 if (!MyApplication.hasLastLocation()) {
-                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
                     return;
                 }
                 QueryCondition conditions = new QueryCondition();
@@ -223,7 +226,7 @@ public class PlaceActivity extends BaseActivity {
                 conditions.setUserLocation(MyApplication.getLastLocation());
 
                 Call<RestFeedback> call = RestClient.service().placeComing(conditions.toMap());
-                call.enqueue(new RestFeedbackCallback(that) {
+                call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user on place " + placeId);
@@ -238,6 +241,51 @@ public class PlaceActivity extends BaseActivity {
                 });
             }
         });
+
+        tagListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO fine location
+                if (!MyApplication.hasLastLocation()) {
+                    Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                QueryCondition conditions = new QueryCondition();
+                conditions.setPlaceId(placeId);
+                conditions.setAnonymous(false);
+                conditions.setUserLocation(MyApplication.getLastLocation());
+                Call<RestFeedback> call = RestClient.service().placeHere(conditions.toMap());
+                call.enqueue(new RestFeedbackCallback(currentActivity) {
+                    @Override
+                    public void onActionSuccess(RestFeedback feedback) {
+                        Log.d(TAG, "Success register here for user");
+                    }
+
+                    @Override
+                    public void onActionFail(RestFeedback feedback) {
+                        Log.d(TAG, "Fail register here for user");
+                    }
+                });
+
+                IntentsUtils.addPostStepTags(currentActivity, place);
+            }
+        };
+
+        pictureListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //placeActivity.requestForCameraPermission();
+                takePicture();
+            }
+        };
+
+        peopleListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.addPeople(currentActivity);
+            }
+        };
     }
 
     private void setTouchListeners() {
@@ -245,12 +293,12 @@ public class PlaceActivity extends BaseActivity {
         setMyTouchListener(iAmComingButton, iAmComingTv,
                 R.color.border_selected_button, R.color.text_selected_button);
         //Fragment Pictures
-        setMyTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
+        //setMyTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
         setMyTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton(),
                 R.color.border_selected_button, R.color.text_selected_button);
         //Fragment Tags
-        setMyTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
-        setMyTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
+        //setMyTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
+        //setMyTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
         setMyTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton(),
                 R.color.border_selected_button, R.color.text_selected_button);
         //Fragment Posts
@@ -502,4 +550,15 @@ public class PlaceActivity extends BaseActivity {
         return placeId;
     }
 
+    public View.OnClickListener getTagListener() {
+        return tagListener;
+    }
+
+    public View.OnClickListener getPictureListener() {
+        return pictureListener;
+    }
+
+    public View.OnClickListener getPeopleListener() {
+        return peopleListener;
+    }
 }

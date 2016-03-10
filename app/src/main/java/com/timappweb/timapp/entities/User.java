@@ -9,8 +9,10 @@ import java.util.List;
 public class User implements Serializable {
     private static final String TAG = "UserEntity" ;
     public String username;
+    public int age;
     public String password;
     public String email;
+    public int photoId;
     public int count_posts = 0;
     public int count_places = 0;
     public SocialProvider provider;

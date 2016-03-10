@@ -100,36 +100,9 @@ public class PlaceTagsFragment extends Fragment {
     }
 
     private void setListeners() {
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO fine location
-                if (!MyApplication.hasLastLocation()) {
-                    Toast.makeText(getActivity(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                QueryCondition conditions = new QueryCondition();
-                conditions.setPlaceId(placeId);
-                conditions.setAnonymous(false);
-                conditions.setUserLocation(MyApplication.getLastLocation());
-                Call<RestFeedback> call = RestClient.service().placeHere(conditions.toMap());
-                call.enqueue(new RestFeedbackCallback(placeActivity) {
-                    @Override
-                    public void onActionSuccess(RestFeedback feedback) {
-                        Log.d(TAG, "Success register here for user");
-                    }
-
-                    @Override
-                    public void onActionFail(RestFeedback feedback) {
-                        Log.d(TAG, "Fail register here for user");
-                    }
-                });
-
-                IntentsUtils.addPostStepTags(placeActivity, place);
-            }
-        });
+        addButton.setOnClickListener(placeActivity.getTagListener());
+        smallPicButton.setOnClickListener(placeActivity.getPictureListener());
+        smallPeopleButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
     public void updateBtnVisibility() {
