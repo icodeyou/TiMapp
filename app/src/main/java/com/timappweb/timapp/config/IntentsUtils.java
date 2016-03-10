@@ -9,10 +9,12 @@ import android.widget.Toast;
 import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.AddPeopleActivity;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.FilterActivity;
+import com.timappweb.timapp.activities.InviteFriendsActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.PlaceActivity;
@@ -145,6 +147,11 @@ public class IntentsUtils {
         extras.putSerializable("place", place);          // TODO use constant
         intent.putExtras(extras);
         context.startActivity(intent);
+    }
+
+    public static void addPeople(Activity activity) {
+        Intent intent = new Intent(activity, InviteFriendsActivity.class);
+        activity.startActivity(intent);
     }
 
     public static void addPlace(Context context) {

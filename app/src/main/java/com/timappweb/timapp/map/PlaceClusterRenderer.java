@@ -91,7 +91,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         int height = bmp.getHeight();
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
+        // CREATE AddPeopleActivity MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
         // RESIZE THE BIT MAP
         matrix.postScale(scaleWidth, scaleHeight);

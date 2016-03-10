@@ -41,14 +41,14 @@ import retrofit2.Call;
 
 
 /**
- * A login screen that offers login via email/password.
+ * AddPeopleActivity login screen that offers login via email/password.
  */
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
     private static final String TAG = "LoginActivity";
 
     /**
-     * A dummy authentication store containing known user names and passwords.
+     * AddPeopleActivity dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
@@ -234,7 +234,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     Arrays.asList(DUMMY_CREDENTIALS).contains(loginStr)){
                 // Check dummy credential
                 Log.i(TAG, "Login with dummy credential");
-                RestClient.instance().createLoginSession("A", new User(email, ""));
+                RestClient.instance().createLoginSession("AddPeopleActivity", new User(email, ""));
                 IntentsUtils.home(this);
             }
             else{

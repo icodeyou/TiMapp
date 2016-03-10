@@ -14,6 +14,7 @@
     <string name="title_activity_post">Post</string>
     <string name="title_activity_place">Event</string>
     <string name="title_activity_incoming">Incoming</string>
+    <string name="title_activity_invite_friends">Invite friends</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
@@ -109,7 +110,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="searchview_hint_1">One more !</string>
     <string name="loading_tags">Loading tags</string>
     <string name="loading_pictures">Loading pictures</string>
-    <string name="loading_posts">Loading people</string>
+    <string name="loading_posts">Loading persons</string>
     <string name="uploading_tags">Uploading tags</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
@@ -123,7 +124,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
-    <string name="text_share_activity">Your experience will improve as the number of users raises.\nHelp us make this app famous by sharing it as much as possible.</string>
+    <string name="text_share_activity">Your experience will improve as the number of persons raises.\nHelp us make this app famous by sharing it as much as possible.</string>
     <string name="subject_share_activity">Share TiMapp \n with your friends !</string>
     <string name="loading_location">Loading Location</string>
     <string name="or_text_login">Or</string>
@@ -146,7 +147,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_load_posts">We cannot load the posts.\nCheck your internet connection.</string>
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>
-    <string name="slogan">Let people know what\'s going on</string>
+    <string name="slogan">Let persons know what\'s going on</string>
     <string name="coming_button">I\'m Coming</string>
     <string name="on_my_way">On My Way</string>
     <string name="tags_upcoming">Tags upcoming</string>

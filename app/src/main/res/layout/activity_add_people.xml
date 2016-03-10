@@ -10,11 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
+        <com.dpizarro.autolabel.library.AutoLabelUI
+            android:id="@+id/label_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello World"
-            android:gravity="center"/>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <include android:id="@+id/toolbar_transparent"

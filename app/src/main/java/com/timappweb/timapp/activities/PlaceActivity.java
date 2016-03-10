@@ -284,6 +284,7 @@ public class PlaceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(currentActivity, "Add people clicked", Toast.LENGTH_SHORT).show();
+                IntentsUtils.addPeople(currentActivity);
             }
         };
     }
