@@ -10,7 +10,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="button_selecting_margin">2dp</dimen>
     <dimen name="usertags_margin">15dp</dimen>
-
+    <dimen name="margin_top_cardview">5dp</dimen>
+    <dimen name="padding_fragments_place">5dp</dimen>
 
     <dimen name="toolbar">50dp</dimen>
 
@@ -33,6 +34,7 @@
     <dimen name="horizontal_margin_confirm_button">20dp</dimen>
     <dimen name="vertical_margin_confirm_button">10dp</dimen>
     <dimen name="padding_card">5dp</dimen>
+    <dimen name="padding_card_minus_two">3dp</dimen>
 
     <!-- Text dimensions -->
     <dimen name="text_tiny">10dp</dimen>
@@ -65,6 +67,7 @@
     <dimen name="map_icon">30dp</dimen>
     <dimen name="map_icon_padding">1dp</dimen>
     <dimen name="width_pic_card">46dp</dimen>
+    <dimen name="width_checkbox_card">50dp</dimen>
 
 
 </resources>

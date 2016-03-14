@@ -131,7 +131,7 @@ public class UserPlacesAdapter extends RecyclerView.Adapter<UserPlacesAdapter.Pl
             rvPostTags = (RecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
             ivProfilePicture = (CircularImageView) itemView.findViewById(R.id.profile_picture);
 
-            cv.setPadding(2,2,2,2);
+            cv.setPadding(0,5,0,5);
         }
 
         @Override
