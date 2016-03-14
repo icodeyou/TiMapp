@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.AddPeopleActivity;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;

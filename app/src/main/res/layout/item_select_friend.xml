@@ -5,10 +5,11 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_friend_box"
+        android:layout_height="@dimen/height_card"
         card_view:cardUseCompatPadding="true"
         card_view:cardElevation="4dp"
         card_view:cardCornerRadius="2dp"
+        card_view:cardBackgroundColor="@color/background"
         android:id="@+id/cv">
 
         <RelativeLayout
@@ -18,8 +19,9 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background_card"
-                android:padding="@dimen/padding_card">
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/padding_card"
+                android:paddingRight="@dimen/padding_card">
 
                 <ImageView
                     android:layout_width="@dimen/width_pic_card"
@@ -37,7 +39,7 @@
 
                     <com.timappweb.timapp.views.AutoResizeTextView
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
+                        android:layout_height="@dimen/height_name_card"
                         android:id="@+id/person_name"
                         android:maxLines="1"
                         android:textSize="@dimen/text_normal"
@@ -50,7 +52,7 @@
                         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
                         android:id="@+id/rv_horizontal_tags"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="@dimen/height_small_rv_displayed_tags"
                         myattrs:horizontal_tags_text_color="@color/colorAccent"
                         myattrs:horizontal_tags_background_color="@color/background_card"
                         myattrs:horizontal_tags_is_bold="false"
@@ -62,7 +64,7 @@
             <RelativeLayout
                 android:id="@+id/selectedView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_friend_box">
+                android:layout_height="@dimen/height_card">
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -71,7 +73,7 @@
                 <ImageView
                     android:layout_width="@dimen/width_pic_card"
                     android:layout_height="@dimen/width_pic_card"
-                    android:alpha="0.5"
+                    android:alpha="0.7"
                     android:layout_marginStart="@dimen/padding_card"
                     android:layout_marginLeft="@dimen/padding_card"
                     android:layout_centerVertical="true"

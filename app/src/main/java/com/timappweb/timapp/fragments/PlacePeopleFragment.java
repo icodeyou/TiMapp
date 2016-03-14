@@ -4,23 +4,26 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.adapters.PostsAdapter;
+import com.timappweb.timapp.adapters.UserPlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,8 +38,8 @@ public class PlacePeopleFragment extends Fragment {
     private Place place;
     private int placeId;
 
-    private PostsAdapter    postsAdapter;
-    private ListView        lvTags;
+    private UserPlacesAdapter userPlacesAdapter;
+    private RecyclerView peopleRv;
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
@@ -50,6 +53,7 @@ public class PlacePeopleFragment extends Fragment {
 
         initVariables(root);
         setListeners();
+        initRv();
         initAdapter();
         loadPosts();
 
@@ -69,15 +73,15 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void initVariables(View root) {
-        context= getActivity().getApplicationContext();
         placeActivity = (PlaceActivity) getActivity();
+        context= placeActivity.getApplicationContext();
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
 
         //Views
         addButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
-        lvTags = (ListView) root.findViewById(R.id.list_people);
+        peopleRv = (RecyclerView) root.findViewById(R.id.list_people);
         progressView = root.findViewById(R.id.progress_view);
         noPostsView = root.findViewById(R.id.no_posts_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
@@ -87,14 +91,19 @@ public class PlacePeopleFragment extends Fragment {
         addButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
+    private void initRv() {
+        peopleRv.setHasFixedSize(true);
+        peopleRv.setLayoutManager(new LinearLayoutManager(context));
+    }
+
     private void initAdapter() {
-        postsAdapter = new PostsAdapter(context);
-        lvTags.setAdapter(postsAdapter);
-        postsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+        userPlacesAdapter = new UserPlacesAdapter(context);
+        peopleRv.setAdapter(userPlacesAdapter);
+        userPlacesAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                String username = postsAdapter.getUsername(position);
-                IntentsUtils.profile(placeActivity,username);
+                String username = userPlacesAdapter.getPost(position).getUsername();
+                IntentsUtils.profile(placeActivity, username);
             }
         });
     }
@@ -122,13 +131,16 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void notifyPostsLoaded(List<Post> posts) {
-        //add tags to adapter
-        for (Post post : posts) {
-            postsAdapter.add(post);
-        }
         if(posts.isEmpty()) {
             noPostsView.setVisibility(View.VISIBLE);
+            return;
         }
+
+        List<PlaceUserInterface> interfaceList = new ArrayList<>(posts.size());
+        for (Post post : posts) {
+            interfaceList.add(post);
+        }
+        userPlacesAdapter.setData(interfaceList);
     }
 
     public void setMainButtonVisibility(boolean bool) {

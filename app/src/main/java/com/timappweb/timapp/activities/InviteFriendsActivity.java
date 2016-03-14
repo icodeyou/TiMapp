@@ -4,9 +4,12 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 
@@ -14,6 +17,7 @@ import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Friend;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -41,6 +45,18 @@ public class InviteFriendsActivity extends BaseActivity{
         findViews();
         setListeners();
         setFriendsList();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /*@Override

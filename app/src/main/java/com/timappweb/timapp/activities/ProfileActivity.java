@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.PostsAdapter;
 import com.timappweb.timapp.adapters.UserTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Post;
@@ -118,8 +117,8 @@ public class ProfileActivity extends BaseActivity{
     }
 
     private void initLastPostAdapter() {
-        PostsAdapter postsAdapter = new PostsAdapter(this);
-        lastPostListView.setAdapter(postsAdapter);
+        //PostsAdapter postsAdapter = new PostsAdapter(this);
+        //lastPostListView.setAdapter(postsAdapter);
     }
 
     private void setListeners() {
@@ -165,6 +164,7 @@ public class ProfileActivity extends BaseActivity{
                     initUserTagsAdapter();
 
                     // Setting the last post
+                    /*
                     if (mUser.posts != null && mUser.posts.size() > 0) {
                         Post post = mUser.posts.getFirst();
                         post.user = mUser;
@@ -176,7 +176,7 @@ public class ProfileActivity extends BaseActivity{
                     }
                     else{
                         lastPostContainer.setVisibility(View.GONE);
-                    }
+                    }*/
                     // Setting tags
                     if (mUser.tags != null && mUser.tags.size() > 0){
                         Log.v(TAG, "User has a: " + mUser.tags.size() + " tag(s)");
