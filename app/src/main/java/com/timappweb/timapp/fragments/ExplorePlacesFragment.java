@@ -77,11 +77,11 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
     @Override
     public void onTabSelected() {
         Log.d(TAG, "Explore places fragment is now selected");
-        // Updating the list of places
+        /*// Updating the list of places
         ArrayList<HorizontalTagsRecyclerView> rvs = placesAdapter.getListRvTags();
         for (HorizontalTagsRecyclerView rv : rvs) {
             rv.getScrollState();
-        }
+        }*/
         //TODO : Get scroll position for each horizontal RecyclerView
         placesAdapter.clear();
         ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();

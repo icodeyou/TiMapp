@@ -8,11 +8,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.entities.Friend;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +40,7 @@ public class InviteFriendsActivity extends BaseActivity{
 
         findViews();
         setListeners();
-        setRecyclerView();
+        setFriendsList();
     }
 
     /*@Override
@@ -99,13 +103,12 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void findViews() {
-
         mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
         mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     }
 
-    private void setRecyclerView() {
+    private void setFriendsList() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
@@ -125,10 +128,9 @@ public class InviteFriendsActivity extends BaseActivity{
 
         adapter = new SelectFriendsAdapter(mPersonList);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new SelectFriendsAdapter.OnItemClickListener() {
-
+        adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
-            public void onItemClick(View v, int position) {
+            public void onClick(int position) {
                 itemListClicked(position);
             }
         });

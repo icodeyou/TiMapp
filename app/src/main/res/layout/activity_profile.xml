@@ -196,15 +196,33 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2">
+                <ListView
+                    android:id="@+id/listview_usertags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="10dp"/>
+                <FrameLayout
+                    android:id="@+id/layout_tags_profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.2"/>
+            </RelativeLayout>
 
+<!--
             <LinearLayout
-                android:id="@+id/layout_tags_profile"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@color/background">
+                android:background="@color/background"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/tv_tag1"
                     android:layout_width="wrap_content"
@@ -233,7 +251,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/colorAccent"/>
             </LinearLayout>
-
+-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -35,7 +35,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         super(context, R.layout.item_place);
         this.context = context;
         this.isTagsVisible = true;
-        this.listRvPlacetags = new ArrayList<HorizontalTagsRecyclerView>();
+        this.listRvPlacetags = new ArrayList<>();
     }
 
     public PlacesAdapter(Context context, boolean bool) {
@@ -57,13 +57,13 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             view = inflater.inflate(R.layout.item_place, parent, false);
         }
 
-
         // Initialize
         AutoResizeTextView tvLocation = (AutoResizeTextView) view.findViewById(R.id.title_place);
         TextView tvTime = (TextView) view.findViewById(R.id.time_place);
         TextView tvCountPoints = (TextView) view.findViewById(R.id.people_counter_place);
         rvPlaceTags = (HorizontalTagsRecyclerView) view.findViewById(R.id.rv_horizontal_tags);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
+        //TODO : Initialize listRvPlacetags
 
         //Set texts
         tvLocation.setText(place.name);
@@ -83,7 +83,8 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             //Set the adapter for RV
             HorizontalTagsAdapter htAdapter = rvPlaceTags.getAdapter();
             htAdapter.setData(place.tags);
-            rvPlaceTags.setAdapter(htAdapter);
+            // rvPlaceTags.setAdapter(htAdapter); Ligne à supprimer si tout marche correctement
+            htAdapter.notifyDataSetChanged();
 
             //Set LayoutManager for RV
             GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);

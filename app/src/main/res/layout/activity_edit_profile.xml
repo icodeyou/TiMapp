@@ -26,7 +26,9 @@
         android:layout_marginBottom="20dp"
         android:layout_height="50dp"
         myattrs:horizontal_tags_text_color="@color/White"
-        myattrs:horizontal_tags_background_color="@color/colorPrimary" />
+        myattrs:horizontal_tags_background_color="@color/colorPrimary"
+        myattrs:horizontal_tags_is_bold="true"
+        myattrs:horizontal_tags_text_size="@dimen/text_normal"/>
 
     <EditText
         android:id="@+id/edit_text"

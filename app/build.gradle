@@ -47,7 +47,7 @@ dependencies {
     //compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 
     //Needed for Facebook - added by Jack
-    compile 'com.facebook.android:facebook-android-sdk:4.7'
+    //compile 'com.facebook.android:facebook-android-sdk:4.7'
 
     //library AutoLabelUI
     compile 'com.github.davidpizarro:autolabelui:1.0.1'

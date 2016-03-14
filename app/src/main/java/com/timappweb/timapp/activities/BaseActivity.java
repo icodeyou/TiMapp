@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.appevents.AppEventsLogger;
