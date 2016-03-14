@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_fragments_place"
     android:background="@color/background_fragment_place">
 
     <LinearLayout
@@ -34,7 +33,7 @@
                 android:layout_weight="0.1"
                 android:gravity="center"
                 android:textSize="@dimen/text_normal"
-                android:textColor="@color/black"
+                android:textColor="@color/colorAccent"
                 android:text="@string/loading_pictures"/>
             <Space
                 android:layout_width="match_parent"
@@ -83,6 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:padding="@dimen/padding_fragments_place"
             android:listSelector="@android:color/transparent"/>
 
         <!-- Main Add Button (Add pic)-->

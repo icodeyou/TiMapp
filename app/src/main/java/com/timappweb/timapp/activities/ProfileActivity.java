@@ -124,7 +124,7 @@ public class ProfileActivity extends BaseActivity{
     private void setListeners() {
         final Activity activity = this;
 
-        setMyTouchListener(layoutTagsProfile,R.color.colorAccentLight);
+        setMyTouchListener(layoutTagsProfile,R.color.colorSecondary);
         layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

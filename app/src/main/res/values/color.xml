@@ -7,15 +7,14 @@
     <!--<color name="colorAccent">#ADD8E6</color>-->
     <!--<color name="colorAccent">#476e64</color>-->
     <color name="colorAccent">#d3655d</color>
-    <color name="colorAccentLight">#f1e7e6</color>
+    <color name="colorSecondary">#ffefc6</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
     <color name="TEST">#F1E5DE</color>
     <color name="transparent">#00000000</color>
     <color name="background">#fffafa</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
-    <color name="background_fragment_place">#e8e8e8</color>
-    <color name="darker_background">#e7e7e7</color>
+    <color name="background_fragment_place">#e9e9e9</color>
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>
@@ -31,8 +30,8 @@
     <!-- Button -->
     <color name="background_button">@color/colorAccent</color>
     <color name="text_button">@color/background</color>
-    <color name="border_selected_button">@color/colorAccentLight</color>
-    <color name="text_selected_button">@color/colorAccentLight</color>
+    <color name="border_selected_button">@color/colorSecondary</color>
+    <color name="text_selected_button">@color/colorSecondary</color>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

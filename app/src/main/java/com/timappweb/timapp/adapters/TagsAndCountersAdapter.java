@@ -50,21 +50,32 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
             tvCounter.setText(tagCounterString);
         }
 
-        float dimens[] = new float[3];
+        float dimens[] = new float[4];
         //Convert dp into pixels
         float scale = rowView.getResources().getDisplayMetrics().density;
-        dimens[0] = rowView.getResources().getDimension(R.dimen.text_lv1);
-        dimens[1] = rowView.getResources().getDimension(R.dimen.text_lv2);
-        dimens[2] = rowView.getResources().getDimension(R.dimen.text_lv3);
+        dimens[0] = rowView.getResources().getDimension(R.dimen.text_lv_base);
+        dimens[1] = rowView.getResources().getDimension(R.dimen.text_lv1);
+        dimens[2] = rowView.getResources().getDimension(R.dimen.text_lv2);
+        dimens[3] = rowView.getResources().getDimension(R.dimen.text_lv3);
 
         if(position<3) {
-            tvTag.setTextSize(Util.convertPixelsToDp(dimens[position], getContext()));
+            int tagNumber = position + 1;
+            tvTag.setTextSize(Util.convertDpToPixel(dimens[tagNumber], getContext()));
             tvTag.setTypeface(Typeface.DEFAULT_BOLD);
-            tvCounter.setTextSize(Util.convertPixelsToDp(dimens[position], getContext()));
+            tvCounter.setTextSize(Util.convertPixelsToDp(dimens[tagNumber], getContext()));
+            tvCounter.setTypeface(Typeface.DEFAULT_BOLD);
             rowView.setBackgroundResource(R.color.background_list_main_tags);
         }
-        else if(position%2 == 0) {
-            rowView.setBackgroundResource(R.color.background_list_tags);
+        else  {
+            tvTag.setTextSize(Util.convertDpToPixel(dimens[0], getContext()));
+            tvTag.setTypeface(Typeface.DEFAULT);
+            tvCounter.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
+            tvCounter.setTypeface(Typeface.DEFAULT);
+            if(position%2 == 0) {
+                rowView.setBackgroundResource(R.color.background_list_main_tags);
+            } else {
+                rowView.setBackgroundResource(R.color.background_list_tags);
+            }
         }
 
         /*if(position<3) {

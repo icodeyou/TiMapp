@@ -3,20 +3,15 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content" android:paddingTop="10dp" android:paddingBottom="10dp">
 
-    <HorizontalScrollView
+    <com.timappweb.timapp.views.AutoResizeTextView
+        android:id="@+id/tv_tag"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:scrollbars="none">
-        <TextView
-            android:id="@+id/tv_tag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="@dimen/text_lv_base"
-            android:textColor="@color/colorAccent"/>
-    </HorizontalScrollView>
+        android:gravity="center"
+        android:text="#nimportequoienfinnonmaisohhahahaha"
+        android:textSize="@dimen/text_lv_base"
+        android:textColor="@color/colorAccent" />
 
     <TextView
         android:id="@+id/tv_tag_counter"
@@ -25,6 +20,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center_vertical|end"
+        android:text="2"
         android:textStyle="bold"
         android:textSize="@dimen/text_lv_base"
         android:textColor="@color/colorAccent"/>

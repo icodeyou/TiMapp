@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignBottom="@+id/map"
+        android:background="@color/White"
         android:visibility="gone"/>
 
 </RelativeLayout>
