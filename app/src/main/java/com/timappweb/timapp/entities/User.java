@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class User implements Serializable {
+public class User implements Serializable, PlaceUserInterface {
     private static final String TAG = "UserEntity" ;
     public String username;
     public int age;
@@ -64,15 +64,26 @@ public class User implements Serializable {
         return username;
     }
 
+    @Override
+    public String getProfilePictureUrl() {
+        return "https://graph.facebook.com/" + this.provider_uid + "/picture?type=large";
+    }
+
+    @Override
+    public List<Tag> getTags() {
+        return null;
+    }
+
+    @Override
+    public String getPostTime() {
+        return null;
+    }
+
     public void setStatus(boolean status) {
         this.status = status;
     }
 
     public boolean getStatus() {
         return status;
-    }
-
-    public String getProfilePictureUrl() {
-        return "https://graph.facebook.com/" + this.provider_uid + "/picture?type=large";
     }
 }

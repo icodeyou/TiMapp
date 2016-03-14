@@ -6,6 +6,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.util.DisplayMetrics;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by stephane on 9/10/2015.
  */
@@ -27,9 +29,9 @@ public class Util {
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
      *
-     * @param dp AddPeopleActivity value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @param dp NewActivity value in dp (density independent pixels) unit. Which we need to convert into pixels
      * @param context Context to get resources and device specific display metrics
-     * @return AddPeopleActivity float value to represent px equivalent to dp depending on device density
+     * @return NewActivity float value to represent px equivalent to dp depending on device density
      */
     public static float convertDpToPixel(float dp, Context context){
         Resources resources = context.getResources();
@@ -41,9 +43,9 @@ public class Util {
     /**
      * This method converts device specific pixels to density independent pixels.
      *
-     * @param px AddPeopleActivity value in px (pixels) unit. Which we need to convert into db
+     * @param px NewActivity value in px (pixels) unit. Which we need to convert into db
      * @param context Context to get resources and device specific display metrics
-     * @return AddPeopleActivity float value to represent dp equivalent to px value
+     * @return NewActivity float value to represent dp equivalent to px value
      */
     public static float convertPixelsToDp(float px, Context context){
         Resources resources = context.getResources();

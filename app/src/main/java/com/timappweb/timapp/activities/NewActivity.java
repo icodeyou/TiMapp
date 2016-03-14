@@ -7,8 +7,8 @@ import android.util.Log;
 import com.timappweb.timapp.R;
 
 
-public class AddPeopleActivity extends BaseActivity {
-    private String TAG = "AddPeopleActivity";
+public class NewActivity extends BaseActivity {
+    private String TAG = "NewActivity";
 
     // ----------------------------------------------------------------------------------------------
     //OVERRIDE METHODS

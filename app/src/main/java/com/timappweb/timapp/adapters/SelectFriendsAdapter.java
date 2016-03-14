@@ -23,7 +23,6 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
     List<Friend> persons;
     OnItemAdapterClickListener mItemClickListener;
     Context context;
-    private HorizontalTagsAdapter horizontalTagsAdapter;
 
     //Constructor
     public SelectFriendsAdapter(List<Friend> friends) {
@@ -52,7 +51,7 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
         personViewHolder.horizontalTags.setOnTouchListener(mHorizontalTagsTouchListener);
 
         //code with real friends
-        //Picasso.with(context).load(friend.getProfilePictureUrl()).into(personViewHolder.personPhoto);
+        //Picasso.with(context).load(friend.getChangerdenooom()).into(personViewHolder.personPhoto);
 
         setCheckedView(personViewHolder, friend.isSelected);
     }

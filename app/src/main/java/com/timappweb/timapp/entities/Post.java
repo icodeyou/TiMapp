@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Post implements Serializable, MarkerValueInterface {
+public class Post implements Serializable, MarkerValueInterface, PlaceUserInterface {
 
     private static final String TAG = "EntitySpot";
 
@@ -145,6 +145,11 @@ public class Post implements Serializable, MarkerValueInterface {
     }
 
     @Override
+    public String getPostTime() {
+        return getPrettyTimeCreated();
+    }
+
+    @Override
     public int getId() {
         return this.id;
     }
@@ -175,6 +180,12 @@ public class Post implements Serializable, MarkerValueInterface {
                 ? (anonymous ? "Anonymous" : user.username)
                 : "Former user";
     }
+
+    @Override
+    public String getProfilePictureUrl() {
+        return user.getProfilePictureUrl();
+    }
+
     public User getUser() {
         return user;
     }
