@@ -2,6 +2,7 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     private int textColor;
     private int backgroundColor;
+    private boolean isBold;
+    private Float textSize;
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
         this.itemAdapterClickListener = itemAdapterClickListener;
@@ -62,6 +67,13 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     @Override
     public int getItemCount() {
         return data != null ? data.size() : 0;
+    }
+
+    public void setDummyData() {
+        data.add(new Tag("snowboard"));
+        data.add(new Tag("chillmusic"));
+        data.add(new Tag("festival"));
+        notifyDataSetChanged();
     }
 
     public void setData(List<Tag> data) {
@@ -127,6 +139,14 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         this.backgroundColor = backgroundColor;
     }
 
+    public void settextStyle(boolean isBold) {
+        this.isBold = isBold;
+    }
+
+    public void settextSize(Float textSize) {
+        this.textSize = textSize;
+    }
+
     /*
     public ArrayList<String> getStringsFromTags() {
         ArrayList<String> res = new ArrayList<String>();
@@ -153,6 +173,12 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             this.textView = (TextView) view.findViewById(R.id.item_horizontal_tag);
             view.setBackgroundColor(backgroundColor);
             textView.setTextColor(textColor);
+            textView.setTextSize(Util.convertPixelsToDp(textSize,context));
+            if(!isBold) {
+                textView.setTypeface(Typeface.DEFAULT);
+            } else {
+                textView.setTypeface(Typeface.DEFAULT_BOLD);
+            }
         }
     }
 }

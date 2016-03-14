@@ -60,7 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_rv_displayed_tags"
             myattrs:horizontal_tags_text_color="@color/colorAccent"
-            myattrs:horizontal_tags_background_color="@color/background"/>
+            myattrs:horizontal_tags_background_color="@color/background"
+            myattrs:horizontal_tags_is_bold="true"
+            myattrs:horizontal_tags_text_size="@dimen/text_normal"/>
 
         <!-- Separator Bottom -->
         <!-- **********************************************************************-->

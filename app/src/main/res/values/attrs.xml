@@ -3,5 +3,7 @@
     <declare-styleable name="HorizontalTagsRecyclerView">
         <attr name="horizontal_tags_background_color" format="color" />
         <attr name="horizontal_tags_text_color" format="color" />
+        <attr name="horizontal_tags_is_bold" format="boolean" />
+        <attr name="horizontal_tags_text_size" format="dimension" />
     </declare-styleable>
 </resources>

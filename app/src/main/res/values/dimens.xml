@@ -9,6 +9,7 @@
     <dimen name="add_spot_button_margin">1dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="button_selecting_margin">2dp</dimen>
+    <dimen name="usertags_margin">15dp</dimen>
 
 
     <dimen name="toolbar">50dp</dimen>
@@ -22,12 +23,14 @@
     <dimen name="height_rv_displayed_tags">40dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
+    <dimen name="height_friend_box">110dp</dimen>
     <dimen name="ic_place">80dp</dimen>
     <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="height_categories_choose">180dp</dimen>
     <dimen name="width_categories_choose">280dp</dimen>
     <dimen name="horizontal_margin_confirm_button">20dp</dimen>
     <dimen name="vertical_margin_confirm_button">10dp</dimen>
+    <dimen name="padding_card">16dp</dimen>
 
     <!-- Text dimensions -->
     <dimen name="text_tiny">10dp</dimen>
@@ -59,5 +62,7 @@
     <dimen name="tag_padding_vertical">1dp</dimen>
     <dimen name="map_icon">30dp</dimen>
     <dimen name="map_icon_padding">1dp</dimen>
+    <dimen name="width_pic_card">46dp</dimen>
+
 
 </resources>
