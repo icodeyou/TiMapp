@@ -214,58 +214,28 @@
                     android:alpha="0.2"/>
             </RelativeLayout>
 
-<!--
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/profile_last_post_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@color/background"
+                android:layout_weight="1"
                 android:visibility="gone">
-                <TextView
-                    android:id="@+id/tv_tag1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="#snowboard"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_big"
-                    android:textColor="@color/colorAccent"/>
-                <TextView
-                    android:id="@+id/tv_tag2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="#drums"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/text_big"
-                    android:textColor="@color/colorAccent"/>
-                <TextView
-                    android:id="@+id/tv_tag3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="#cinema"
-                    android:textSize="@dimen/text_big"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorAccent"/>
-            </LinearLayout>
--->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingBottom="5dp"
-                android:text="@string/text_last_post"
-                android:textColor="@color/Gray"
-                android:textSize="@dimen/text_normal"/>
-            <ListView
-                android:id="@+id/place_lv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
 
+                <TextView
+                    android:id="@+id/text_last_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/text_last_post"
+                    android:textColor="@color/Gray"
+                    android:textSize="@dimen/text_normal"/>
+                <ListView
+                    android:id="@+id/profile_last_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </RelativeLayout>
         </LinearLayout>
 
         <ImageView

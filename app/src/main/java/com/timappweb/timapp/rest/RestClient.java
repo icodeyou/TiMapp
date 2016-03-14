@@ -8,6 +8,8 @@ import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
+import org.xml.sax.ErrorHandler;
+
 import okhttp3.OkHttpClient;
 //import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -30,6 +32,7 @@ public class RestClient {
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
     private final Application app;
+    private final OkHttpClient httpClient;
 
     // KEY ID
     //public static final String KEY_SESSION_ID = "id";
@@ -64,18 +67,19 @@ public class RestClient {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.addInterceptor(new SessionRequestInterceptor());
 
-
         //HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         //logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClientBuilder.addInterceptor(new LogRequestInterceptor());
         // Executor use to cancel pending request to the server
         // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
         //mExecutorService = Executors.newCachedThreadPool();
+        this.httpClient = httpClientBuilder.build();
         builder = new Retrofit.Builder()
                 //.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
                 .baseUrl(endpoint)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClientBuilder.build());
+                .client(this.httpClient);
+
                 //.setRequestInterceptor(new SessionRequestInterceptor())
                 //.setConverter(new GsonConverter(gson))
                 //.setExecutors(mExecutorService, new MainThreadExecutor());
@@ -130,6 +134,10 @@ public class RestClient {
 
     public void login(String token) {
         LocalPersistenceManager.in().putString(KEY_TOKEN, token);
+    }
+
+    public OkHttpClient getHttpClient() {
+        return httpClient;
     }
 
 /*

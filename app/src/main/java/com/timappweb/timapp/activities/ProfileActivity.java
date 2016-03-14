@@ -7,17 +7,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.adapters.PostsAdapter;
 import com.timappweb.timapp.adapters.UserTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -36,7 +36,7 @@ public class ProfileActivity extends BaseActivity{
     private TextView tvAge;
     private TextView tvCountTags;
     private TextView tvCountPlaces;
-    private ListView lastPlaceListView;
+    private ListView lastPostListView;
     private ListView tagsListView;
     private View loadingView;
     private View mainView;
@@ -45,6 +45,7 @@ public class ProfileActivity extends BaseActivity{
     private ImageView profilePicture;
     private View progressView1;
     private View progressView2;
+    private View lastPostContainer;
 
 
     @Override
@@ -60,7 +61,7 @@ public class ProfileActivity extends BaseActivity{
         tvAge = (TextView) findViewById(R.id.text_age);
         tvCountTags = (TextView) findViewById(R.id.tags_counter);
         tvCountPlaces = (TextView) findViewById(R.id.places_counter);
-        lastPlaceListView = (ListView) findViewById(R.id.place_lv);
+        lastPostListView = (ListView) findViewById(R.id.profile_last_post);
         tagsListView = (ListView) findViewById(R.id.listview_usertags);
         //loadingView = findViewById(R.id.loading_view);
         mainView = findViewById(R.id.main_view);
@@ -69,6 +70,7 @@ public class ProfileActivity extends BaseActivity{
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
         progressView1 = findViewById(R.id.progress_view1);
         progressView2 = findViewById(R.id.progress_view2);
+        lastPostContainer = findViewById(R.id.profile_last_post_container);
 
         initUserTagsAdapter();
         setListeners();
@@ -116,9 +118,8 @@ public class ProfileActivity extends BaseActivity{
     }
 
     private void initLastPostAdapter() {
-        PlacesAdapter placesAdapter = new PlacesAdapter(this);
-        //TODO : find last place
-        lastPlaceListView.setAdapter(placesAdapter);
+        PostsAdapter postsAdapter = new PostsAdapter(this);
+        lastPostListView.setAdapter(postsAdapter);
     }
 
     private void setListeners() {
@@ -166,7 +167,25 @@ public class ProfileActivity extends BaseActivity{
                     // Setting the last post
                     if (mUser.posts != null && mUser.posts.size() > 0) {
                         Post post = mUser.posts.getFirst();
+                        post.user = mUser;
+                        Log.v(TAG, "User has a last post: " + post);
+                        PostsAdapter adapter = (PostsAdapter) lastPostListView.getAdapter();
+                        adapter.add(post);
+                        adapter.notifyDataSetChanged();
+                        lastPostContainer.setVisibility(View.VISIBLE);
                     }
+                    else{
+                        lastPostContainer.setVisibility(View.GONE);
+                    }
+                    // Setting tags
+                    if (mUser.tags != null && mUser.tags.size() > 0){
+                        Log.v(TAG, "User has a: " + mUser.tags.size() + " tag(s)");
+                        UserTagsAdapter adapter = (UserTagsAdapter) tagsListView.getAdapter();
+                        adapter.clear();
+                        adapter.addAll(mUser.tags);
+                        adapter.notifyDataSetChanged();
+                    }
+
                     if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
                         invalidateOptionsMenu();
                     }
@@ -182,10 +201,8 @@ public class ProfileActivity extends BaseActivity{
 
     private void initUserTagsAdapter() {
         UserTagsAdapter userTagsAdapter= new UserTagsAdapter(this);
-        userTagsAdapter.setDummyData();
+        userTagsAdapter.add(new Tag("Define yourself"));
         tagsListView.setAdapter(userTagsAdapter);
-        //tagsListView.setDivider(null);
-
     }
 
     ///////// Generate pre-selected tags here/////////////////////

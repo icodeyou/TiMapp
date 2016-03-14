@@ -35,7 +35,13 @@ public class CacheData {
         //TODO : Remove this line. Is used to initialize mapPlaceStatus to prevent bugs
         //LocalPersistenceManager.writeObject(KEY_MAP_USER_PLACES, null);
 
-        mapPlaceStatus = LocalPersistenceManager.readObject(CacheData.KEY_MAP_USER_PLACES, HashMap.class);
+        try{
+            mapPlaceStatus = LocalPersistenceManager.readObject(CacheData.KEY_MAP_USER_PLACES, HashMap.class);
+        } catch (com.google.gson.JsonSyntaxException ex){
+            // TODO remove oject ?
+            Log.d(TAG, "Cannot read configuration from cache: " + ex.toString());
+        }
+
         if (mapPlaceStatus == null){
             mapPlaceStatus = new HashMap<>();
         }

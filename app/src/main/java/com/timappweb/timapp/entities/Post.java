@@ -128,6 +128,7 @@ public class Post implements Serializable, MarkerValueInterface {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", created=" + created +
+                ", tag_number=" + (tags != null ? tags.size(): 0) +
                 ", tag_string='" + tag_string + '\'' +
                 '}';
     }

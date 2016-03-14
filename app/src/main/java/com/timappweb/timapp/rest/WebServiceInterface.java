@@ -11,7 +11,9 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -63,6 +65,10 @@ public interface WebServiceInterface {
     @POST("users/facebook_login.json")
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
+    @POST("users/edit.json")
+    Call<RestFeedback> editProfile(@Body Map<String, String> user);
+
+
     // ---------------------------------------------------------------------------------------------
     // TAGS
     @GET("Posts/trending_tags.json")
@@ -79,10 +85,14 @@ public interface WebServiceInterface {
     // Pictures
 
     @Multipart
-    @POST("/upload")
-    Call<String> upload(
-            @Part("myfile\"; filename=\"image.png\" ") RequestBody file,
-            @Body Picture picture);
+    @POST("pictures/upload/{placeId}.json")
+    Call<RestFeedback> upload(@Path("placeId") int placeId,
+                              @Part("photo") Picture picture,
+                              @Part("file") MultipartBody.Part file);
+
+    @GET("pictures/place/{id}.json")
+    Call<List<Picture>> viewPicturesForPlace(@Path("id") int id);
+
     // ---------------------------------------------------------------------------------------------
     // Places
 
@@ -153,4 +163,5 @@ public interface WebServiceInterface {
      */
     @POST("PlacesUsers/here.json")
     Call<RestFeedback> placeHere(@Body Map<String, String> conditions);
+
 }

@@ -23,7 +23,17 @@ import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class EditProfileActivity extends BaseActivity{
 
@@ -123,9 +133,23 @@ public class EditProfileActivity extends BaseActivity{
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, String> data = new HashMap<>();
                 currentUser.tags = horizontalTagsAdapter.getData();
-                //TODO Steph : Save tags
-                IntentsUtils.profile(activity);
+                data.put("tag_string", currentUser.getTagsToString());
+                Call<RestFeedback> call = RestClient.service().editProfile(data);
+                call.enqueue(new RestFeedbackCallback() {
+                    @Override
+                    public void onActionSuccess(RestFeedback feedback) {
+                        Toast.makeText(getApplicationContext(), "Your profile has been saved", Toast.LENGTH_LONG).show();
+                        IntentsUtils.profile(activity);
+                    }
+
+                    @Override
+                    public void onActionFail(RestFeedback feedback) {
+                        currentUser.tags = null;
+                        Toast.makeText(getApplicationContext(), feedback.message, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 

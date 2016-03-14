@@ -152,6 +152,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="on_my_way">On My Way</string>
     <string name="tags_upcoming">Tags upcoming</string>
     <string name="after_create_place_clicked">Thanks for sharing</string>
+    <string name="text_no_last_post">Never posted anything</string>
 
 
 </resources>

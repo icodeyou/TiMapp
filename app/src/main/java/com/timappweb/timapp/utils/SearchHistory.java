@@ -149,7 +149,7 @@ public class SearchHistory<T>{
      */
     public static <T> List<T> filterData(List<T> data, String term){
         List<T> results = new LinkedList<>();
-        for (T d: data){
+            for (T d: data){
             if (((SearchableItem)d).matchSearch(term)){
                 results.add(d);
             }

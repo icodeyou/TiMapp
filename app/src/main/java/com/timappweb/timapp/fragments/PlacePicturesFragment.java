@@ -15,7 +15,15 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class PlacePicturesFragment extends Fragment {
@@ -46,7 +54,32 @@ public class PlacePicturesFragment extends Fragment {
 
         placeActivity.notifyFragmentsLoaded();
 
+        this.loadPictures();
+
         return root;
+    }
+
+
+    public void loadPictures(){
+        Log.d(TAG, "Loading places pictures");
+        Call<List<Picture>> call = RestClient.service().viewPicturesForPlace(1);
+
+        call.enqueue(new RestCallback<List<Picture>>(this.getContext()) {
+
+            @Override
+            public void onResponse(Response<List<Picture>> response) {
+                super.onResponse(response);
+
+                if (response.isSuccess()) {
+                    List<Picture> places = response.body();
+                    // TODO JEAN display adpater
+                }
+
+                progressView.setVisibility(View.GONE);
+            }
+
+        });
+
     }
 
 

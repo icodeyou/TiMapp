@@ -5,9 +5,13 @@ package com.timappweb.timapp.entities;
  */
 public class Picture {
 
+    public int id;
     public String photo;
+    public String photo_dir;
+    public int place_id;
+    public int user_id;
 
     public String getUrl(){
-        return "" + this.photo;
+        return this.photo_dir + this.photo;
     }
 }

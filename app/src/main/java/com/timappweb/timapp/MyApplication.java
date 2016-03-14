@@ -11,7 +11,6 @@ import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.Cache.CacheData;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.ServerConfiguration;
@@ -126,7 +125,7 @@ public class MyApplication extends Application{
         initFacebookPermissions();
 
         // Loading cache in memory
-        CacheData.load();
+        com.timappweb.timapp.Cache.CacheData.load();
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProvider.Listener(){

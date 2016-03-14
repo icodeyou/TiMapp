@@ -32,6 +32,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
@@ -45,10 +46,16 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.TimeTaskCallback;
 
+import java.io.File;
 import java.util.List;
 import java.util.Vector;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PlaceActivity extends BaseActivity {
@@ -203,13 +210,55 @@ public class PlaceActivity extends BaseActivity {
             // Get the bitmap in according to the width of the device
             Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), 1000, 1000);
             fragmentPictures.setImage(bitmap);
-            //TODO : Envoyer la photo au serveur à la place de l'action précédente
+
+            this.uploadPicture(photoUri);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     //private methods
     //////////////////////////////////////////////////////////////////////////////
+
+    private void uploadPicture(Uri fileUri) {
+        // create upload service client
+        // use the FileUtils to get the actual file by uri
+        File file = new File(fileUri.getPath());
+
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+
+        Picture picture = new Picture();
+        picture.photo = file.getName();
+
+        // finally, execute the request
+        Call<RestFeedback> call = RestClient.service().upload(this.placeId, picture, body);
+        call.enqueue(new Callback<RestFeedback>() {
+            @Override
+            public void onResponse(Response<RestFeedback> response) {
+                if (response.isSuccess()){
+                    RestFeedback feedback = response.body();
+                    if (feedback.success){
+                        Log.v(TAG, "SUCCESS UPLOAD IMAGE");
+                    }
+                    else{
+                        Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e(TAG, "Upload error:" + t.getMessage());
+            }
+
+        });
+    }
+
 
     private void setClickListeners() {
         iAmComingButton.setOnClickListener(new View.OnClickListener() {
@@ -230,7 +279,7 @@ public class PlaceActivity extends BaseActivity {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user on place " + placeId);
-                        CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
+                        com.timappweb.timapp.Cache.CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
                         updateButtonsVisibility();
                     }
 
