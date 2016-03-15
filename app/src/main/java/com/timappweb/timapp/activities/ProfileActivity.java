@@ -190,8 +190,8 @@ public class ProfileActivity extends BaseActivity{
                     if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
                         invalidateOptionsMenu();
                     }
-
-                    Picasso.with(context).load(mUser.getProfilePictureUrl()).into(profilePicture);
+                    String photoUrl = mUser.getProfilePictureUrl();
+                    Picasso.with(context).load(photoUrl).into(profilePicture);
 
                     //mainView.setVisibility(View.VISIBLE);
                     //loadingView.setVisibility(View.GONE);

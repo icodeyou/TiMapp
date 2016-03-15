@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Picture;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.ArrayList;
@@ -59,10 +61,12 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         notifyDataSetChanged();
     }
 
-    public void setDummyData() {
-        this.data.add(new Picture());
-        this.data.add(new Picture());
-        this.data.add(new Picture());
+    public void addDummyData() {
+        User user = MyApplication.getCurrentUser();
+        this.data.add(new Picture(user));
+        this.data.add(new Picture(user));
+        this.data.add(new Picture(user));
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {

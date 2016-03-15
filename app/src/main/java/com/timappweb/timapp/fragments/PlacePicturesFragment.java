@@ -1,15 +1,14 @@
 package com.timappweb.timapp.fragments;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,8 +17,6 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
-import com.timappweb.timapp.adapters.UserPlacesAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -37,6 +34,8 @@ public class PlacePicturesFragment extends Fragment {
     private static final String TAG = "PlacePicturesFragment";
 
     private PlaceActivity placeActivity;
+    private Context context;
+
     private Place place;
     private int placeId;
 
@@ -56,6 +55,7 @@ public class PlacePicturesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_place_pictures, container, false);
+        context = placeActivity;
 
         initVariables(root);
 
@@ -71,14 +71,13 @@ public class PlacePicturesFragment extends Fragment {
     }
 
     private void initRv() {
-        StaggeredGridLayoutManager layoutManager =
-                new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
+        GridLayoutManager layoutManager =
+                new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, true);
         picturesRv.setLayoutManager(layoutManager);
     }
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(placeActivity);
-        picturesAdapter.setDummyData();
         picturesRv.setAdapter(picturesAdapter);
         picturesAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -102,7 +101,8 @@ public class PlacePicturesFragment extends Fragment {
 
                 if (response.isSuccess()) {
                     List<Picture> pictures = response.body();
-                    picturesAdapter.setData(pictures);
+                    picturesAdapter.addDummyData();
+                    //picturesAdapter.setData(pictures);
                 }
 
                 progressView.setVisibility(View.GONE);

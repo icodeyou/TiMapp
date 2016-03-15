@@ -3,9 +3,6 @@ package com.timappweb.timapp.entities;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.MyApplication;
 
-/**
- * Created by stephane on 2/18/2016.
- */
 public class Picture {
 
     public int id;
@@ -16,7 +13,12 @@ public class Picture {
     public int user_id;
 
     public Picture() {
-        this.url = MyApplication.getCurrentUser().getProfilePictureUrl();
+
+    }
+
+    public Picture(User user) {
+        //this.url = user.getProfilePictureUrl();
+        this.url = "https://graph.facebook.com/448481685342362/picture?type=large";
     }
 
     public String getUrl(){
