@@ -140,7 +140,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Add persons Button on the right-->
+    <!-- Add pictures Button on the right-->
     <!-- **********************************************************************-->
     <LinearLayout
         android:id="@+id/button_add_people"

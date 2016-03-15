@@ -134,10 +134,11 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void viewPlaceFromPublish(Context context, int id) {
+    public static void viewPlaceFromPublish(Context context, Activity activity, int id) {
         Intent intent = new Intent(context, PlaceActivity.class);
         intent.putExtra("place_id", id);
-        context.startActivity(intent);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
     public static void viewPlaceFromMap(Context context, Place place) {

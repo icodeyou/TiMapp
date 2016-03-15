@@ -67,7 +67,7 @@ public class InviteFriendsActivity extends BaseActivity{
             List<Friend> users = savedInstanceState.getParcelableArrayList(KEY_INSTANCE_STATE_PEOPLE);
             if (users != null) {
                 mPersonList = users;
-                adapter.setPersons(users);
+                adapter.setPictures(users);
                 recyclerView.setAdapter(adapter);
             }
         }*//*

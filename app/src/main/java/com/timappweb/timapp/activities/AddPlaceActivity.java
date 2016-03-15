@@ -116,7 +116,7 @@ public class AddPlaceActivity extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
         final CategoryPagerAdapter categoryPagerAdapter = new CategoryPagerAdapter(this);
         viewPager.setAdapter(categoryPagerAdapter);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
         categorySelected = categoriesAdapter.getCategory(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {

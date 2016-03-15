@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -15,8 +17,12 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.adapters.PicturesAdapter;
+import com.timappweb.timapp.adapters.UserPlacesAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -42,6 +48,9 @@ public class PlacePicturesFragment extends Fragment {
     private View                    smallTagsButton;
     private ImageView               pictureTaken;
     private TextView                tvAddButton;
+    private RecyclerView            picturesRv;
+
+    private PicturesAdapter         picturesAdapter;
 
     @Nullable
     @Override
@@ -51,12 +60,33 @@ public class PlacePicturesFragment extends Fragment {
         initVariables(root);
 
         setListeners();
+        initRv();
+        initAdapter();
 
         placeActivity.notifyFragmentsLoaded();
 
         this.loadPictures();
 
         return root;
+    }
+
+    private void initRv() {
+        StaggeredGridLayoutManager layoutManager =
+                new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
+        picturesRv.setLayoutManager(layoutManager);
+    }
+
+    private void initAdapter() {
+        picturesAdapter = new PicturesAdapter(placeActivity);
+        picturesAdapter.setDummyData();
+        picturesRv.setAdapter(picturesAdapter);
+        picturesAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                //TODO : Display picture in another activity, to see it fullscreen
+                //TODO later : It'd be great if then we can scroll pics.. Loading them each time we scroll.
+            }
+        });
     }
 
 
@@ -71,8 +101,8 @@ public class PlacePicturesFragment extends Fragment {
                 super.onResponse(response);
 
                 if (response.isSuccess()) {
-                    List<Picture> places = response.body();
-                    // TODO JEAN display adpater
+                    List<Picture> pictures = response.body();
+                    picturesAdapter.setData(pictures);
                 }
 
                 progressView.setVisibility(View.GONE);
@@ -106,6 +136,7 @@ public class PlacePicturesFragment extends Fragment {
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         pictureTaken = (ImageView) root.findViewById(R.id.picture_taken);
+        picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
     }
 
     private void setListeners() {

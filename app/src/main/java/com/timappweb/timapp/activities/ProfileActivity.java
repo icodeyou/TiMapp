@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -41,7 +42,7 @@ public class ProfileActivity extends BaseActivity{
     private View mainView;
     private View layoutTagsProfile;
     private View noConnectionView;
-    private ImageView profilePicture;
+    private CircularImageView profilePicture;
     private View progressView1;
     private View progressView2;
     private View lastPostContainer;
@@ -66,7 +67,7 @@ public class ProfileActivity extends BaseActivity{
         mainView = findViewById(R.id.main_view);
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
-        profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        profilePicture = (CircularImageView) findViewById(R.id.profile_picture);
         progressView1 = findViewById(R.id.progress_view1);
         progressView2 = findViewById(R.id.progress_view2);
         lastPostContainer = findViewById(R.id.profile_last_post_container);

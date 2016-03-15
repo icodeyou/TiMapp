@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +36,7 @@ public class PublishActivity extends BaseActivity{
 
     private String TAG = "PublishActivity";
     private View progressView;
-    private Context context;
+    private Activity activity;
 
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
@@ -52,7 +53,7 @@ public class PublishActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
+        activity = this;
 
         // Check that we gave the place as an extra parameter
         this.currentPlace = IntentsUtils.extractPlace(getIntent());
@@ -124,7 +125,7 @@ public class PublishActivity extends BaseActivity{
                 setProgressView(true);
                 // Validating user input
                 if (!currentPost.validateForSubmit()) {
-                    Toast.makeText(context, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
+                    Toast.makeText(activity, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
                     return;
                 }
                 Log.d(TAG, "Submitting post: " + currentPost);
@@ -137,7 +138,7 @@ public class PublishActivity extends BaseActivity{
                     currentPost.place_id = currentPlace.id;
                     call = RestClient.service().addPost(currentPost);
                 }
-                call.enqueue(new AddPostCallback(context, currentPost, currentPlace));
+                call.enqueue(new AddPostCallback(activity, currentPost, currentPlace));
             }
         });
     }
@@ -185,7 +186,7 @@ public class PublishActivity extends BaseActivity{
             }
             CacheData.setLastPost(post);
 
-            IntentsUtils.viewPlaceFromPublish(this.context, placeId);
+            IntentsUtils.viewPlaceFromPublish(this.context, activity, placeId);
         }
 
         @Override
