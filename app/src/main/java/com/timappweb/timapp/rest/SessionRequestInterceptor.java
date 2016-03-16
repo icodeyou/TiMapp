@@ -65,7 +65,7 @@ public class SessionRequestInterceptor implements Interceptor
             }
         }
 
-        return chain.proceed(request);
+        return response;
     }
 
 

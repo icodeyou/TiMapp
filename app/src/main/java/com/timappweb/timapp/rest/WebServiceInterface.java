@@ -84,14 +84,12 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     // Pictures
 
-    @Multipart
     @POST("pictures/upload/{placeId}.json")
     Call<RestFeedback> upload(@Path("placeId") int placeId,
-                              @Part("photo") String filename,
-                              @Part("file") RequestBody file);
+                              @Body RequestBody body);
 
     @GET("pictures/place/{id}.json")
-    Call<List<Picture>> viewPicturesForPlace(@Path("id") int id);
+    Call<PaginationResponse<Picture>> viewPicturesForPlace(@Path("id") int id);
 
     // ---------------------------------------------------------------------------------------------
     // Places

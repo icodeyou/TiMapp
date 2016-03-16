@@ -236,7 +236,7 @@ public class PlaceActivity extends BaseActivity {
                 .addFormDataPart("photo", file.getName(),
                         RequestBody.create(fileMimeType, file))
                 .build();*/
-        RequestBody requestFile = RequestBody.create(fileMimeType, file);
+        //RequestBody requestFile = RequestBody.create(fileMimeType, file);
 
         // create RequestBody instance from file
        // RequestBody requestFile =
@@ -249,8 +249,15 @@ public class PlaceActivity extends BaseActivity {
         //Picture picture = new Picture();
         //picture.photo = file.getName();
 
+        RequestBody body = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                //.addFormDataPart("photo", file.getName())
+                .addFormDataPart("photo", file.getName(),
+                        RequestBody.create(fileMimeType, file))
+                .build();
+
         // finally, execute the request
-        Call<RestFeedback> call = RestClient.service().upload(this.placeId, file.getName(), requestFile);
+        Call<RestFeedback> call = RestClient.service().upload(this.placeId, body);
         call.enqueue(new Callback<RestFeedback>() {
             @Override
             public void onResponse(Response<RestFeedback> response) {

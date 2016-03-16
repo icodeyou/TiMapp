@@ -20,6 +20,7 @@ import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -91,18 +92,21 @@ public class PlacePicturesFragment extends Fragment {
 
     public void loadPictures(){
         Log.d(TAG, "Loading places pictures");
-        Call<List<Picture>> call = RestClient.service().viewPicturesForPlace(this.placeId);
+        Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(this.placeId);
 
-        call.enqueue(new RestCallback<List<Picture>>(this.getContext()) {
+        call.enqueue(new RestCallback<PaginationResponse<Picture>>(this.getContext()) {
 
             @Override
-            public void onResponse(Response<List<Picture>> response) {
+            public void onResponse(Response<PaginationResponse<Picture>> response) {
                 super.onResponse(response);
 
                 if (response.isSuccess()) {
-                    List<Picture> pictures = response.body();
+                    PaginationResponse<Picture> paginationData = response.body();
+                    Log.d(TAG, "Loading " + paginationData.total + " picture(s) with base url: " + paginationData.extra.get("base_url"));
                     //picturesAdapter.addDummyData();
-                    picturesAdapter.setData(pictures);
+                    picturesAdapter.setBaseUrl(paginationData.extra.get("base_url"));
+                    picturesAdapter.setData(paginationData.items);
+                    picturesAdapter.notifyDataSetChanged();
                 }
 
                 progressView.setVisibility(View.GONE);

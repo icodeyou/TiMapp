@@ -2,6 +2,7 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     List<Picture> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
+    private String baseUrl = "";
 
     //Constructor
     public PicturesAdapter(Context context) {
@@ -42,8 +44,9 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     @Override
     public void onBindViewHolder(PictureViewHolder pictureViewHolder, int position) {
         Picture picture = data.get(position);
-
-        Picasso.with(context).load(picture.getUrl()).into(pictureViewHolder.ivPicture);
+        String fullUrl = this.baseUrl + picture.getUrl();
+        Log.d(TAG, "Loading picture in adapter: " + fullUrl);
+        Picasso.with(context).load(fullUrl).into(pictureViewHolder.ivPicture);
     }
 
     @Override
@@ -70,6 +73,11 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+
     }
 
     public interface OnItemClickListener {
