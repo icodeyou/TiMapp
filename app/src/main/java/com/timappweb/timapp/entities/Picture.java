@@ -13,6 +13,6 @@ public class Picture {
 
 
     public String getUrl(){
-        return  this.photo_dir + this.photo;
+        return  this.photo_dir + "/" + this.photo;
     }
 }

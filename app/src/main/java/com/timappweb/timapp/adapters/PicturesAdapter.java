@@ -44,7 +44,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     @Override
     public void onBindViewHolder(PictureViewHolder pictureViewHolder, int position) {
         Picture picture = data.get(position);
-        String fullUrl = this.baseUrl + picture.getUrl();
+        String fullUrl = this.baseUrl + "/" + picture.getUrl();
         Log.d(TAG, "Loading picture in adapter: " + fullUrl);
         Picasso.with(context).load(fullUrl).into(pictureViewHolder.ivPicture);
     }
