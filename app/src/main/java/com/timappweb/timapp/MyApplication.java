@@ -125,7 +125,7 @@ public class MyApplication extends Application{
         initFacebookPermissions();
 
         // Loading cache in memory
-        com.timappweb.timapp.Cache.CacheData.load();
+        com.timappweb.timapp.cache.CacheData.load();
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProvider.Listener(){

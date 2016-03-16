@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.Cache.CacheData;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -42,7 +42,6 @@ public class LocateActivity extends BaseActivity{
 
     //Views
     private ListView        listPlaces;
-    private View            placesAndBottomLine;
     private View            noPlaceView;
     private LinearLayout    buttonAddPlace;
     private TextView        textButtonAddPlace;
@@ -72,7 +71,6 @@ public class LocateActivity extends BaseActivity{
 
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
-        placesAndBottomLine = findViewById(R.id.places_and_bottom_line);
         noPlaceView = findViewById(R.id.layout_if_no_place);
         listPlaces = (ListView) findViewById(R.id.list_places);
         buttonAddPlace = (LinearLayout) findViewById(R.id.button_add_spot);
@@ -188,7 +186,7 @@ public class LocateActivity extends BaseActivity{
                     if (places.size() != 0) {
                         placeAdapter.addAll(places);
                         noPlaceView.setVisibility(View.GONE);
-                        placesAndBottomLine.setVisibility(View.VISIBLE);
+                        listPlaces.setVisibility(View.VISIBLE);
                     } else {
                         noPlaceView.setVisibility(View.VISIBLE);
                     }

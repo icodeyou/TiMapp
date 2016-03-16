@@ -22,10 +22,11 @@
     <color name="item_friend_invited">@color/LightCyan</color>
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
-    <color name="color_hint">#5df44336</color>
+    <color name="color_hint">#74bb302e</color>
     <color name="background_list_tags">@color/White</color>
     <color name="background_list_main_tags">#fff5f4</color>
     <color name="usertag_text_color">#de5249</color>
+    <color name="divider_listview">@color/colorSecondary</color>
 
     <!-- Button -->
     <color name="background_button">@color/colorAccent</color>

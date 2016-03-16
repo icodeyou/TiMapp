@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.adapters.UserPlacesAdapter;
+import com.timappweb.timapp.adapters.PlaceUsersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
@@ -23,7 +23,6 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,7 +37,7 @@ public class PlacePeopleFragment extends Fragment {
     private Place place;
     private int placeId;
 
-    private UserPlacesAdapter userPlacesAdapter;
+    private PlaceUsersAdapter placeUsersAdapter;
     private RecyclerView peopleRv;
     private View            progressView;
     private View            noPostsView;
@@ -97,12 +96,12 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void initAdapter() {
-        userPlacesAdapter = new UserPlacesAdapter(context);
-        peopleRv.setAdapter(userPlacesAdapter);
-        userPlacesAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
+        placeUsersAdapter = new PlaceUsersAdapter(context);
+        peopleRv.setAdapter(placeUsersAdapter);
+        placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                String username = userPlacesAdapter.getPost(position).getUsername();
+                String username = placeUsersAdapter.getPost(position).getUsername();
                 IntentsUtils.profile(placeActivity, username);
             }
         });
@@ -140,7 +139,7 @@ public class PlacePeopleFragment extends Fragment {
         for (Post post : posts) {
             interfaceList.add(post);
         }
-        userPlacesAdapter.setData(interfaceList);
+        placeUsersAdapter.setData(interfaceList);
     }
 
     public void setMainButtonVisibility(boolean bool) {

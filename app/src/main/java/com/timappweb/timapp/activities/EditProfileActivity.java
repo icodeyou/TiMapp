@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -17,13 +16,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -33,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 
 public class EditProfileActivity extends BaseActivity{
 
@@ -44,7 +40,7 @@ public class EditProfileActivity extends BaseActivity{
     private HorizontalTagsRecyclerView horizontalTagsRecyclerView;
     private HorizontalTagsAdapter horizontalTagsAdapter;
     private EditText editText;
-    private View skipView;
+    private TextView counterView;
     private View submitView;
     private Button buttonSubmit;
 
@@ -60,7 +56,7 @@ public class EditProfileActivity extends BaseActivity{
 
         horizontalTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.selected_tags_profile);
         editText = (EditText) findViewById(R.id.edit_text);
-        skipView = findViewById(R.id.skip_button);
+        counterView = (TextView) findViewById(R.id.counter_view);
         buttonSubmit = (Button) findViewById(R.id.button_submit);
         submitView = findViewById(R.id.submit_view);
         currentUser = IntentsUtils.extractUser(getIntent());
@@ -160,8 +156,8 @@ public class EditProfileActivity extends BaseActivity{
                 counterTags = counterTags - 2;
                 setViewsAndCounter();
                 editText.setVisibility(View.VISIBLE);
-                skipView.setVisibility(View.VISIBLE);
-                submitView.setVisibility(View.GONE);
+                counterView.setVisibility(View.VISIBLE);
+                submitView.setVisibility(View.INVISIBLE);
                 editText.requestFocus();
                 imm.showSoftInput(editText, 0);
             }
@@ -185,7 +181,7 @@ public class EditProfileActivity extends BaseActivity{
                 break;
             case 3:
                 editText.setVisibility(View.GONE);
-                skipView.setVisibility(View.GONE);
+                counterView.setVisibility(View.GONE);
                 submitView.setVisibility(View.VISIBLE);
                 imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);   //Hide keyboard
                 break;

@@ -19,13 +19,13 @@ import java.util.List;
 
 
 public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.PictureViewHolder> {
-    private static final String TAG = "UserPlacesAdapter";
+    private static final String TAG = "PlaceUsersAdapter";
 
     List<Picture> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
 
-    //Constructorù
+    //Constructor
     public PicturesAdapter(Context context) {
         this.context = context;
     }

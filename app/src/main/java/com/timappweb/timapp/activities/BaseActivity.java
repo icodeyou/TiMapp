@@ -96,19 +96,21 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void setMyTouchListener(View button, final TextView tv, final int resourceTv) {
+    protected void setMyTouchListener(View button, final TextView tv, final int resource) {
         button.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN: {
-                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), resource));
+                        v.setBackgroundResource(resource);
                         v.invalidate();
                         break;
                     }
                     case MotionEvent.ACTION_UP: {
                         tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
+                        v.setBackground(null);
                         v.invalidate();
                         break;
                     }

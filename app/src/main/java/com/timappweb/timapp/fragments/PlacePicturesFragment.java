@@ -72,7 +72,7 @@ public class PlacePicturesFragment extends Fragment {
 
     private void initRv() {
         GridLayoutManager layoutManager =
-                new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, true);
+                new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false);
         picturesRv.setLayoutManager(layoutManager);
     }
 

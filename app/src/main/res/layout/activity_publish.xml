@@ -18,8 +18,9 @@
         <com.timappweb.timapp.views.HorizontalTagsRecyclerView
             xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
             android:id="@+id/rv_selected_tags"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/height_rv_displayed_tags"
+            android:layout_gravity="center"
             myattrs:horizontal_tags_text_color="@color/colorAccent"
             myattrs:horizontal_tags_background_color="@color/background"
             myattrs:horizontal_tags_is_bold="true"
@@ -35,7 +36,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
-            <include layout="@layout/progressbar"
+            <include layout="@layout/progressview"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"/>

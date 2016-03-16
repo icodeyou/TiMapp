@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="91dp"
             android:gravity="center">
-            <include layout="@layout/progressbar"
+            <include layout="@layout/progressview"
                 android:layout_height="50dp"
                 android:layout_width="50dp"/>
         </LinearLayout>
@@ -65,7 +65,7 @@
                     android:id="@+id/text_coming_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_margin="3dp"
+                    android:layout_marginRight="15dp"
                     android:textColor="@color/text_button"
                     android:textAllCaps="false"
                     android:textStyle="bold"
@@ -88,7 +88,7 @@
             android:layout_height="@dimen/height_bottom_button"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@drawable/background_button"
+            android:background="@color/background_fragment_place"
             android:visibility="gone">
             <ImageView
                 android:layout_width="40dp"
@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/button_selecting_margin"
-                android:textColor="@color/text_button"
+                android:textColor="@color/colorAccent"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:text="@string/on_my_way"
@@ -114,7 +114,21 @@
                 android:layout_marginRight="20dp"
                 android:src="@drawable/ic_coming_guy_darkred"/>
         </LinearLayout>
+
+        <!-- Bottom progress view-->
+        <!-- ************************************* -->
+        <LinearLayout
+            android:id="@+id/progressview_bottom_place"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_bottom_button"
+            android:gravity="center"
+            android:visibility="gone">
+            <include layout="@layout/progressview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+        </LinearLayout>
     </LinearLayout>
+
     <!-- Plus button -->
     <!-- ************************************* -->
     <LinearLayout

@@ -179,12 +179,18 @@ public class ProfileActivity extends BaseActivity{
                         lastPostContainer.setVisibility(View.GONE);
                     }*/
                     // Setting tags
-                    if (mUser.tags != null && mUser.tags.size() > 0){
-                        Log.v(TAG, "User has a: " + mUser.tags.size() + " tag(s)");
+                    if (mUser.tags != null) {
                         UserTagsAdapter adapter = (UserTagsAdapter) tagsListView.getAdapter();
-                        adapter.clear();
-                        adapter.addAll(mUser.tags);
-                        adapter.notifyDataSetChanged();
+                        if(mUser.tags.size() > 0){
+                            Log.v(TAG, "User has a: " + mUser.tags.size() + " tag(s)");
+                            adapter.clear();
+                            adapter.addAll(mUser.tags);
+                            adapter.notifyDataSetChanged();
+                        }
+                        else {
+                            adapter.add(new Tag(getString(R.string.define_yourself_tag)));
+                            adapter.notifyDataSetChanged();
+                        }
                     }
 
                     if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
@@ -202,7 +208,6 @@ public class ProfileActivity extends BaseActivity{
 
     private void initUserTagsAdapter() {
         UserTagsAdapter userTagsAdapter= new UserTagsAdapter(this);
-        userTagsAdapter.add(new Tag("Define yourself"));
         tagsListView.setAdapter(userTagsAdapter);
     }
 

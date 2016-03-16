@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:visibility="visible"
         android:layout_marginBottom="@dimen/height_bottom_button">
         <ImageView
             android:layout_width="match_parent"
@@ -26,7 +27,7 @@
             android:gravity="center"
             android:typeface="serif"
             android:text="@string/loading_location"/>
-        <include layout="@layout/progressbar"
+        <include layout="@layout/progressview"
             android:layout_height="50dp"
             android:layout_width="50dp"/>
     </LinearLayout>
@@ -52,21 +53,19 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/places_and_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
         android:layout_below="@+id/toolbar_transparent"
-        android:visibility="gone">
+        android:gravity="center_vertical">
         <ListView
             android:id="@+id/list_places"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:divider="@color/divider_listview"
+            android:dividerHeight="1dp"
+            android:background="@drawable/background_list_places"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <RelativeLayout
