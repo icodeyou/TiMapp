@@ -20,7 +20,9 @@ import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -97,15 +99,15 @@ public class TagActivity extends BaseActivity{
         searchView.requestFocus();
 
         //set hint for searchview
-        final TagActivity thatActivity = this;
+        final OnBasicQueryTagListener onBasicQueryTagListener = new OnThreeQueriesTagListener(this);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                searchView, suggestedTagsView, selectedTagsRV, new SearchTagDataProvider(){
+                searchView, suggestedTagsView, selectedTagsRV, onBasicQueryTagListener,
+                new SearchTagDataProvider() {
             @Override
             public void onLoadEnds() {
-                thatActivity.getProgressBarView().setVisibility(View.GONE);
-            }
-        });
-
+                getProgressBarView().setVisibility(View.GONE);
+            }}
+        );
 
         suggestedTagsRV = searchAndSelectTagManager.getSuggestedTagsRV();
         suggestedTagsRV.addOnTagClickListener(new HashtagView.TagsClickListener() {
@@ -165,12 +167,6 @@ public class TagActivity extends BaseActivity{
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         placesAdapter.add(currentPlace);
         placeListView.setAdapter(placesAdapter);
-    }
-
-    public void addTag(String tag) {
-        selectedTagsRV.getAdapter().tryAddData(tag);
-        selectedTagsRV.scrollToEnd();
-        actionCounter();
     }
 
     public void actionCounter() {
