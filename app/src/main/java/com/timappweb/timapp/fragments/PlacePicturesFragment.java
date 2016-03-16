@@ -91,7 +91,7 @@ public class PlacePicturesFragment extends Fragment {
 
     public void loadPictures(){
         Log.d(TAG, "Loading places pictures");
-        Call<List<Picture>> call = RestClient.service().viewPicturesForPlace(1);
+        Call<List<Picture>> call = RestClient.service().viewPicturesForPlace(this.placeId);
 
         call.enqueue(new RestCallback<List<Picture>>(this.getContext()) {
 
@@ -101,8 +101,8 @@ public class PlacePicturesFragment extends Fragment {
 
                 if (response.isSuccess()) {
                     List<Picture> pictures = response.body();
-                    picturesAdapter.addDummyData();
-                    //picturesAdapter.setData(pictures);
+                    //picturesAdapter.addDummyData();
+                    picturesAdapter.setData(pictures);
                 }
 
                 progressView.setVisibility(View.GONE);

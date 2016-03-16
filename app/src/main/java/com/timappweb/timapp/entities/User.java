@@ -53,7 +53,7 @@ public class User implements Serializable, PlaceUserInterface {
         return "User{" +
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", user_id=" + id +
+                ", id=" + id +
                 ", provider_uid=" + provider +
                 '}';
     }
@@ -75,6 +75,11 @@ public class User implements Serializable, PlaceUserInterface {
     @Override
     public String getPostTime() {
         return null;
+    }
+
+    @Override
+    public User getUser() {
+        return this;
     }
 
     public void setStatus(boolean status) {

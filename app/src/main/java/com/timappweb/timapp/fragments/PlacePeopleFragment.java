@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -102,8 +104,9 @@ public class PlacePeopleFragment extends Fragment {
         userPlacesAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                String username = userPlacesAdapter.getPost(position).getUsername();
-                IntentsUtils.profile(placeActivity, username);
+                User user = userPlacesAdapter.getPost(position).getUser();
+                Log.d(TAG, "Viewing profile user: " + user);
+                IntentsUtils.profile(placeActivity, user);
             }
         });
     }

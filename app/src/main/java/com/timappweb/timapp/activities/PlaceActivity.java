@@ -45,6 +45,7 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.TimeTaskCallback;
+import com.timappweb.timapp.utils.Util;
 
 import java.io.File;
 import java.util.List;
@@ -207,10 +208,6 @@ public class PlaceActivity extends BaseActivity {
 
         if (requestCode == REQUEST_CAMERA) {
             Uri photoUri = data.getData();
-            // Get the bitmap in according to the width of the device
-            Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(photoUri.getPath(), 1000, 1000);
-            fragmentPictures.setImage(bitmap);
-
             this.uploadPicture(photoUri);
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -219,35 +216,56 @@ public class PlaceActivity extends BaseActivity {
     //private methods
     //////////////////////////////////////////////////////////////////////////////
 
-    private void uploadPicture(Uri fileUri) {
+    private void uploadPicture(final Uri fileUri) {
         // create upload service client
-        // use the FileUtils to get the actual file by uri
         File file = new File(fileUri.getPath());
 
+        if (!file.exists()){
+            Log.d(TAG, "Photo does not exists: " + file.getAbsolutePath());
+            return;
+        }
+        MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
+        Log.d(TAG, "Photo '"+ file.getAbsolutePath() + "' has size: " + file.length() + " and type: " + fileMimeType);
+
+        // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
+        /*
+        RequestBody requestFile = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("photo", file.getName())
+                .addFormDataPart("photo", file.getName(),
+                        RequestBody.create(fileMimeType, file))
+                .build();*/
+        RequestBody requestFile = RequestBody.create(fileMimeType, file);
+
         // create RequestBody instance from file
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+       // RequestBody requestFile =
+       //         RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
         // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+        //MultipartBody.Part body =
+        //        MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
 
-        Picture picture = new Picture();
-        picture.photo = file.getName();
+        //Picture picture = new Picture();
+        //picture.photo = file.getName();
 
         // finally, execute the request
-        Call<RestFeedback> call = RestClient.service().upload(this.placeId, picture, body);
+        Call<RestFeedback> call = RestClient.service().upload(this.placeId, file.getName(), requestFile);
         call.enqueue(new Callback<RestFeedback>() {
             @Override
             public void onResponse(Response<RestFeedback> response) {
                 if (response.isSuccess()){
                     RestFeedback feedback = response.body();
+
                     if (feedback.success){
                         Log.v(TAG, "SUCCESS UPLOAD IMAGE");
+                        // Get the bitmap in according to the width of the device
+                        Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
+                        fragmentPictures.setImage(bitmap);
                     }
                     else{
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                     }
+                    Toast.makeText(currentActivity, feedback.message, Toast.LENGTH_LONG).show();
                 }
             }
 

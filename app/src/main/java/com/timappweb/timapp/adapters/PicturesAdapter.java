@@ -19,13 +19,13 @@ import java.util.List;
 
 
 public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.PictureViewHolder> {
-    private static final String TAG = "UserPlacesAdapter";
+    private static final String TAG = "PicturesAdapter";
 
     List<Picture> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
 
-    //Constructorù
+    //Constructor
     public PicturesAdapter(Context context) {
         this.context = context;
     }
@@ -43,7 +43,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     public void onBindViewHolder(PictureViewHolder pictureViewHolder, int position) {
         Picture picture = data.get(position);
 
-        Picasso.with(context).load(picture.url).into(pictureViewHolder.ivPicture);
+        Picasso.with(context).load(picture.getUrl()).into(pictureViewHolder.ivPicture);
     }
 
     @Override
@@ -62,10 +62,9 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     }
 
     public void addDummyData() {
-        User user = MyApplication.getCurrentUser();
-        this.data.add(new Picture(user));
-        this.data.add(new Picture(user));
-        this.data.add(new Picture(user));
+        this.data.add(new Picture());
+        this.data.add(new Picture());
+        this.data.add(new Picture());
         notifyDataSetChanged();
     }
 

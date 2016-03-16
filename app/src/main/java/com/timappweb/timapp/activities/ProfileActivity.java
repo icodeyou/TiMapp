@@ -80,8 +80,9 @@ public class ProfileActivity extends BaseActivity{
         if (userId == -1 && MyApplication.isLoggedIn()){
             userId = MyApplication.getCurrentUser().id;
         }
-        else{
-            Log.e(TAG, "Username should be set to see profile activity.");
+
+        if (userId == -1){
+            Log.e(TAG, "User id should be set to see profile activity.");
             MyApplication.redirectLogin(this);
             return;
         }

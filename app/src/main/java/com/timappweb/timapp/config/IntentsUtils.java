@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.timappweb.timapp.Cache.CacheData;
@@ -30,6 +31,8 @@ import com.timappweb.timapp.entities.User;
 public class IntentsUtils {
 
 
+    private static final String TAG = "IntentUtils";
+
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
@@ -54,11 +57,10 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void profile(Activity activity, String username) {
-        if (!requireLogin(activity))
-            return;
+    public static void profile(Activity activity, User user) {
         Intent intent = new Intent(activity, ProfileActivity.class);
-        intent.putExtra("username", username); // TODO use constant
+        intent.putExtra("user_id", user.id);
+        Log.d(TAG, "Intent to view profile: " + user.id);
         activity.startActivity(intent);
     }
 
@@ -66,6 +68,7 @@ public class IntentsUtils {
     public static void editProfile(Activity activity, User user) {
         if (!requireLogin(activity))
             return;
+
         Intent intent = new Intent(activity, EditProfileActivity.class);
         intent.putExtra("user", user);
         activity.startActivity(intent);
@@ -214,6 +217,7 @@ public class IntentsUtils {
     public static int extractUserId(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
+            Log.e(TAG, "There is no extra");
             return -1;
         }
         return extras.getInt("user_id", -1);

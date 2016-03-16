@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.util.DisplayMetrics;
+import android.webkit.MimeTypeMap;
 
 import com.squareup.picasso.Picasso;
 
@@ -53,4 +54,15 @@ public class Util {
         float dp = px / (metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return dp;
     }
+
+    // url = file path or whatever suitable URL you want.
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
 }

@@ -128,7 +128,8 @@ public class PostActivity extends BaseActivity {
     public void onProfileCLick(View view) {
         Log.d(TAG, "PostActivity.onProfileCLick()");
         if (currentPost.user != null){
-            IntentsUtils.profile(this, currentPost.user.username);
+            Log.d(TAG, "Viewing profile user: " + currentPost.user);
+            IntentsUtils.profile(this, currentPost.user);
         }
     }
 }
