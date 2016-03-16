@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.greenfrvr.hashtagview.HashtagView;
+import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
@@ -23,6 +24,7 @@ public class FilterActivity extends BaseActivity {
     String TAG = "FilterActivity";
     private SearchAndSelectTagManager searchAndSelectTagManager;
     private Activity activity=this;
+    private View progressBarView;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -33,6 +35,8 @@ public class FilterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
+        progressBarView = findViewById(R.id.progress_view);
+
         this.initToolbar(false);
     }
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,6 +45,7 @@ public class FilterActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        final Activity thatActivity = this;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);
 
@@ -48,11 +53,18 @@ public class FilterActivity extends BaseActivity {
 
         //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_add_post));
+        OnBasicQueryTagListener basicQueryTagListener = new OnBasicQueryTagListener();
 
         HashtagView hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         HorizontalTagsRecyclerView selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                searchView, hashtagView, selectedTagsRecyclerView, new SearchTagDataProvider());
+                searchView, hashtagView, selectedTagsRecyclerView, basicQueryTagListener,
+                new SearchTagDataProvider() {
+            @Override
+            public void onLoadEnds() {
+                getProgressBarView().setVisibility(View.GONE);
+            }}
+        );
 
         return true;
     }
@@ -89,6 +101,13 @@ public class FilterActivity extends BaseActivity {
         data.add(new Tag(newData, 0));
         adapter.notifyDataSetChanged();
         return data;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    //GETTER and SETTERS
+
+    public View getProgressBarView() {
+        return progressBarView;
     }
 
 }

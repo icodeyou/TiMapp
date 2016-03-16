@@ -9,7 +9,8 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.listeners.OnQueryTagListener;
+import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
+import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
 import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
@@ -26,16 +27,21 @@ public class SearchAndSelectTagManager {
     private HashtagView suggestedRecyclerView;
     private SearchHistory searchHistory;
     private HorizontalTagsAdapter horizontalAdapter;
+    private OnBasicQueryTagListener queryTagListener;
 
     public SearchAndSelectTagManager(Activity activity,
                                      SearchView searchView,
                                      HashtagView suggestedRecyclerView,
-                                     HorizontalTagsRecyclerView selectedRecyclerView, SearchTagDataProvider searchTagDataProvider) {
+                                     HorizontalTagsRecyclerView selectedRecyclerView,
+                                     OnBasicQueryTagListener queryTagListener,
+                                     SearchTagDataProvider searchTagDataProvider) {
         this.activity = activity;
         this.searchView = searchView;
         this.suggestedRecyclerView = suggestedRecyclerView;
         this.selectedTagsRecyclerView = selectedRecyclerView;
-        this.horizontalAdapter = (HorizontalTagsAdapter) selectedTagsRecyclerView.getAdapter();
+        this.horizontalAdapter = selectedTagsRecyclerView.getAdapter();
+        this.queryTagListener = queryTagListener;
+
         this.init();
         this.setDataProvider(searchTagDataProvider);
         this.loadTags("");
@@ -50,14 +56,13 @@ public class SearchAndSelectTagManager {
 
         final SearchManager searchManager = (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
 
-        OnQueryTagListener queryTagListener = new OnQueryTagListener(this);
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
-        searchView.setOnQueryTextListener(queryTagListener);
-
         this.searchHistory = new SearchHistory<Tag>(
                 MyApplication.getServerConfig().tags_min_search_length,
                 MyApplication.getServerConfig().tags_suggest_limit);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
+        queryTagListener.setSearchAndSelectTagManager(this);
+        searchView.setOnQueryTextListener(queryTagListener);
 
     }
     /**
@@ -77,8 +82,14 @@ public class SearchAndSelectTagManager {
     }
 
     public void setSuggestedData(List<Tag> tags) {
+        //TODO : probleme pour FilterActivity, meme si les tags sont okay.
         suggestedRecyclerView.setData(tags);
         horizontalAdapter.notifyDataSetChanged();
+    }
+
+    public void addTag(String tag) {
+        horizontalAdapter.tryAddData(tag);
+        selectedTagsRecyclerView.scrollToEnd();
     }
 
     // Getters
