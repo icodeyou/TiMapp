@@ -104,7 +104,7 @@
             android:layout_marginLeft="@dimen/button_selecting_margin"
             android:layout_marginRight="@dimen/button_selecting_margin"
             android:layout_marginTop="@dimen/button_selecting_margin"
-            android:background="@drawable/button_add_place"
+            android:background="@drawable/background_top_radius_button"
             android:gravity="center">
             <TextView
                 android:id="@+id/text_button_add_spot"

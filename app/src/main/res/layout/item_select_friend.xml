@@ -9,7 +9,7 @@
         card_view:cardUseCompatPadding="true"
         card_view:cardElevation="4dp"
         card_view:cardCornerRadius="2dp"
-        card_view:cardBackgroundColor="@color/background"
+        card_view:cardBackgroundColor="@color/background_card"
         android:id="@+id/cv">
 
         <RelativeLayout

@@ -347,20 +347,16 @@ public class PlaceActivity extends BaseActivity {
 
     private void setTouchListeners() {
         //PlaceActivity
-        setMyTouchListener(iAmComingButton, iAmComingTv,
-                R.color.border_selected_button, R.color.text_selected_button);
+        setSquareTouchListener(iAmComingButton, iAmComingTv);
         //Fragment Pictures
-        //setMyTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
-        setMyTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton(),
-                R.color.border_selected_button, R.color.text_selected_button);
+        //setSimpleTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
+        setSquareTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton());
         //Fragment Tags
-        //setMyTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
-        //setMyTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
-        setMyTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton(),
-                R.color.border_selected_button, R.color.text_selected_button);
+        //setSimpleTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
+        //setSimpleTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
+        setSquareTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton());
         //Fragment Posts
-        setMyTouchListener(fragmentPosts.getMainButton(), fragmentPosts.getTvMainButton(),
-                R.color.border_selected_button, R.color.text_selected_button);
+        setSquareTouchListener(fragmentPosts.getMainButton(), fragmentPosts.getTvMainButton());
     }
 
     private void initFragments() {

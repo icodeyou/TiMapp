@@ -3,6 +3,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -75,7 +76,7 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(showTitle);
     }
 
-    protected void setMyTouchListener(View button, final int resource) {
+    protected void setSimpleTouchListener(View button, final int resource) {
         button.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -96,15 +97,15 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void setMyTouchListener(View button, final TextView tv, final int resource) {
+    protected void setBackgroundTouchListener(View button, final TextView tv) {
         button.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN: {
-                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), resource));
-                        v.setBackgroundResource(resource);
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
+                        v.setBackgroundResource(R.color.colorSecondary);
                         v.invalidate();
                         break;
                     }
@@ -120,41 +121,16 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void setMyTouchListener(View button, final TextView tv, final int resourceBg, final int resourceTv) {
+    protected void setBackgroundTouchListener(View button, final TextView tv1, final TextView tv2) {
         button.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN: {
-                        v.setBackgroundResource(resourceBg);
-                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
-                        v.invalidate();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        v.setBackground(null);
-                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
-                        v.invalidate();
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
-    }
-
-    protected void setMyTouchListener(View button, final TextView tv1, final TextView tv2,
-                                      final int resourceBg, final int resourceTv) {
-        button.setOnTouchListener( new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        v.setBackgroundResource(resourceBg);
-                        tv1.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
-                        tv2.setTextColor(ContextCompat.getColor(getApplicationContext(), resourceTv));
+                        v.setBackgroundResource(R.color.colorSecondary);
+                        tv1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
+                        tv2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
                         v.invalidate();
                         break;
                     }
@@ -170,6 +146,31 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
     }
+
+    protected void setSquareTouchListener(final View button, final TextView tv) {
+        button.setOnTouchListener( new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.setBackgroundResource(R.drawable.background_button_selected);
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.setBackgroundResource(R.drawable.background_button);
+                        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.text_button));
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+
 
     protected void setSearchview(Menu menu) {
         //Set search item

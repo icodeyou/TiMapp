@@ -121,8 +121,7 @@ public class LocateActivity extends BaseActivity{
                 //buttonAddPlace.setEnabled(false);
             }
         });
-        setMyTouchListener(buttonAddPlace, textButtonAddPlace,
-                R.drawable.button_add_place_selected, R.color.text_selected_button);
+        setBackgroundTouchListener(buttonAddPlace, textButtonAddPlace);
     }
 
     @Override

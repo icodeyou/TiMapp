@@ -116,8 +116,7 @@ public class PublishActivity extends BaseActivity{
     }
 
     public void setListeners() {
-        setMyTouchListener(confirmButton,textButton1,textButton2,
-                R.drawable.border_radius_selectedbuttoncolor, R.color.text_selected_button);
+        setBackgroundTouchListener(confirmButton, textButton1, textButton2);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

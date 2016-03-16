@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -125,7 +124,7 @@ public class ProfileActivity extends BaseActivity{
     private void setListeners() {
         final Activity activity = this;
 
-        setMyTouchListener(layoutTagsProfile,R.color.colorSecondary);
+        setSimpleTouchListener(layoutTagsProfile, R.color.colorSecondary);
         layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
