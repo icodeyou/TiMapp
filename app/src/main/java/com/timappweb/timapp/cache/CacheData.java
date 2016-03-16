@@ -1,4 +1,4 @@
-package com.timappweb.timapp.Cache;
+package com.timappweb.timapp.cache;
 
 import android.util.Log;
 
@@ -32,7 +32,7 @@ public class CacheData {
         lastPlace = LocalPersistenceManager.readObject(CacheData.KEY_LAST_PLACE, Place.class);
         lastPost = LocalPersistenceManager.readObject(CacheData.KEY_LAST_POST, Post.class);
 
-        //TODO : Remove this line. Is used to initialize mapPlaceStatus to prevent bugs
+        //This line is used to initialize mapPlaceStatus
         //LocalPersistenceManager.writeObject(KEY_MAP_USER_PLACES, null);
 
         try{

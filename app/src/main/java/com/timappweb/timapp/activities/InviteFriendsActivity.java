@@ -19,6 +19,7 @@ import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Friend;
+import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
@@ -142,7 +143,8 @@ public class InviteFriendsActivity extends BaseActivity{
 
         photos.recycle();
 
-        adapter = new SelectFriendsAdapter(mPersonList);
+        adapter = new SelectFriendsAdapter(this);
+        adapter.setData(mPersonList);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -150,14 +152,5 @@ public class InviteFriendsActivity extends BaseActivity{
                 itemListClicked(position);
             }
         });
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-        //outState.putParcelableArrayList(KEY_INSTANCE_STATE_PEOPLE,
-        //      (ArrayList<? extends Parcelable>) adapter.getPersons());
-
     }
 }

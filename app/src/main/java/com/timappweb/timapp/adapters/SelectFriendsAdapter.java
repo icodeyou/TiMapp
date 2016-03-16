@@ -20,13 +20,17 @@ import java.util.List;
 
 public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdapter.PersonViewHolder> {
 
-    List<Friend> persons;
+    List<Friend> data;
     OnItemAdapterClickListener mItemClickListener;
     Context context;
 
     //Constructor
+    public SelectFriendsAdapter(Context context) {
+        this.context = context;
+    }
+
     public SelectFriendsAdapter(List<Friend> friends) {
-        this.persons = friends;
+        this.data = friends;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
 
     @Override
     public void onBindViewHolder(PersonViewHolder personViewHolder, int position) {
-        Friend friend = persons.get(position);
+        Friend friend = data.get(position);
         personViewHolder.personName.setText(friend.username);
         personViewHolder.personPhoto.setImageResource(friend.photoId); // for the example
 
@@ -58,18 +62,23 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
 
     public void setItemSelected(int position, boolean isSelected) {
         if (position != -1) {
-            persons.get(position).setSelected(isSelected);
+            data.get(position).setSelected(isSelected);
             notifyDataSetChanged();
         }
     }
 
-    public List<Friend> getPersons(){
-        return persons;
+    public List<Friend> getData(){
+        return data;
+    }
+
+    public void setData(List<Friend> persons) {
+        this.data = persons;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return data.size();
     }
 
     @Override
@@ -79,16 +88,6 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
 
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
-    }
-
-    public void setPersons(List<Friend> persons) {
-        this.persons = persons;
-    }
-
-
-    public interface OnItemClickListener {
-
-        void onItemClick(View view, int position);
     }
 
     public void setCheckedView(PersonViewHolder holder ,boolean isChecked) {

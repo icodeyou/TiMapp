@@ -9,25 +9,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.PlaceUserInterface;
-import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserPlacesAdapter extends RecyclerView.Adapter<UserPlacesAdapter.PlacePostsViewHolder> {
-    private static final String TAG = "UserPlacesAdapter";
+public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.PlacePostsViewHolder> {
+    private static final String TAG = "PlaceUsersAdapter";
 
     List<PlaceUserInterface> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
@@ -35,11 +31,11 @@ public class UserPlacesAdapter extends RecyclerView.Adapter<UserPlacesAdapter.Pl
     private HorizontalTagsAdapter horizontalTagsAdapter;
 
     //Constructor
-    public UserPlacesAdapter(Context context) {
+    public PlaceUsersAdapter(Context context) {
         this.context = context;
     }
 
-    public UserPlacesAdapter(List<PlaceUserInterface> posts) {
+    public PlaceUsersAdapter(List<PlaceUserInterface> posts) {
         this.data = posts;
     }
 

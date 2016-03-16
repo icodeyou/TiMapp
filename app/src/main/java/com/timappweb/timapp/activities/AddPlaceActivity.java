@@ -61,7 +61,7 @@ public class AddPlaceActivity extends BaseActivity {
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
-        createButton = findViewById(R.id.create_place_button);
+        createButton = findViewById(R.id.create_button);
         textCreateButton = (TextView) findViewById(R.id.text_create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
@@ -105,9 +105,11 @@ public class AddPlaceActivity extends BaseActivity {
     private void setProgressView(boolean bool) {
         if(bool) {
             progressView.setVisibility(View.VISIBLE);
+            getSupportActionBar().hide();
         }
         else {
             progressView.setVisibility(View.GONE);
+            getSupportActionBar().show();
         }
     }
 
@@ -213,7 +215,7 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
-        setMyTouchListener(createButton, textCreateButton, R.color.text_selected_button);
+        setSquareTouchListener(createButton, textCreateButton);
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

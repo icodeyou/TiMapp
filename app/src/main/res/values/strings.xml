@@ -38,7 +38,7 @@
     <string name="button_broadcast">broadcast</string>
     <string name="action_map">Map</string>
     <string name="alert_dialog_ok">Ok</string>
-    <string name="error_cannot_get_location">Sorry be we cannot get your location! You disepeared from the digital world. Are you a Ninja !?</string>
+    <string name="error_cannot_get_location">Sorry be we cannot get your location! You disappeared from the digital world. Are you a Ninja !?</string>
     <string name="error_credential_invalid">Invalid credential</string>
     <string name="title_search">Search</string>
 
@@ -101,7 +101,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
     <string name="button_add_place">New Event</string>
-    <string name="hint_place_name">Type the event</string>
+    <string name="hint_place_name">Name the event</string>
     <string name="add_place_button">Create</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
     <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
@@ -145,14 +145,16 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_load_tags">We cannot load the tags.\nCheck your internet connection.</string>
     <string name="cannot_load_pictures">We cannot load the pictures.\nCheck your internet connection.</string>
     <string name="cannot_load_posts">We cannot load the posts.\nCheck your internet connection.</string>
+    <string name="cannot_add_coming_status">Coming Failed. Please Try again later</string>
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>
     <string name="slogan">Let pictures know what\'s going on</string>
-    <string name="coming_button">I\'m Coming</string>
+    <string name="coming_button">Go</string>
     <string name="on_my_way">On My Way</string>
     <string name="tags_upcoming">Tags upcoming</string>
     <string name="after_create_place_clicked">Thanks for sharing</string>
     <string name="text_no_last_post">Never posted anything</string>
+    <string name="define_yourself_tag">DefineYourself</string>
 
 
 </resources>

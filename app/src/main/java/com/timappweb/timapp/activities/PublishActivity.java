@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.timappweb.timapp.Cache.CacheData;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
@@ -116,8 +116,7 @@ public class PublishActivity extends BaseActivity{
     }
 
     public void setListeners() {
-        setMyTouchListener(confirmButton,textButton1,textButton2,
-                R.drawable.border_radius_selectedbuttoncolor, R.color.text_selected_button);
+        setBackgroundTouchListener(confirmButton, textButton1, textButton2);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

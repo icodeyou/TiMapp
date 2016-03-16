@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
-        <include layout="@layout/progressbar"
+        <include layout="@layout/progressview"
             android:layout_height="80dp"
             android:layout_width="80dp"/>
     </LinearLayout>-->
@@ -115,7 +115,7 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:gravity="center">
-                            <include layout="@layout/progressbar"
+                            <include layout="@layout/progressview"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"/>
                         </LinearLayout>
@@ -172,7 +172,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center">
                             <include
-                                layout="@layout/progressbar"
+                                layout="@layout/progressview"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"/>
                         </LinearLayout>

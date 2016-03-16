@@ -15,7 +15,7 @@
         android:background="@color/background_loading_map"
         android:gravity="center_horizontal"
         android:visibility="gone">
-        <include layout="@layout/progressbar"
+        <include layout="@layout/progressview"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
     </LinearLayout>

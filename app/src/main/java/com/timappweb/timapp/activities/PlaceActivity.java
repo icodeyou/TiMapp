@@ -26,7 +26,7 @@ import android.widget.Toast;
 import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.Cache.CacheData;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
@@ -54,7 +54,6 @@ import java.util.Vector;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,6 +101,7 @@ public class PlaceActivity extends BaseActivity {
     private View.OnClickListener tagListener;
     private View.OnClickListener pictureListener;
     private View.OnClickListener peopleListener;
+    private View progressBottom;
 
 
     //Override methods
@@ -126,6 +126,7 @@ public class PlaceActivity extends BaseActivity {
         iAmComingButton = findViewById(R.id.button_coming);
         iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
         onMyWayButton = findViewById(R.id.button_on_my_way);
+        progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         plusButtonView = findViewById(R.id.plus_button_view);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
@@ -282,6 +283,8 @@ public class PlaceActivity extends BaseActivity {
         iAmComingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                iAmComingButton.setVisibility(View.GONE);
+                progressBottom.setVisibility(View.VISIBLE);
                 // TODO fine location
                 if (!MyApplication.hasLastLocation()) {
                     Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
@@ -297,13 +300,18 @@ public class PlaceActivity extends BaseActivity {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user on place " + placeId);
-                        com.timappweb.timapp.Cache.CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
+                        com.timappweb.timapp.cache.CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
+                        progressBottom.setVisibility(View.GONE);
                         updateButtonsVisibility();
                     }
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
                         Log.d(TAG, "Fail register coming for user on place " + placeId);
+                        Toast.makeText(PlaceActivity.this,
+                                getString(R.string.cannot_add_coming_status), Toast.LENGTH_SHORT).show();
+                        iAmComingButton.setVisibility(View.VISIBLE);
+                        progressBottom.setVisibility(View.GONE);
                     }
                 });
             }
@@ -357,20 +365,16 @@ public class PlaceActivity extends BaseActivity {
 
     private void setTouchListeners() {
         //PlaceActivity
-        setMyTouchListener(iAmComingButton, iAmComingTv,
-                R.color.border_selected_button, R.color.text_selected_button);
+        setSquareTouchListener(iAmComingButton, iAmComingTv);
         //Fragment Pictures
-        //setMyTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
-        setMyTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton(),
-                R.color.border_selected_button, R.color.text_selected_button);
+        //setSimpleTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
+        setSquareTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton());
         //Fragment Tags
-        //setMyTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
-        //setMyTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
-        setMyTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton(),
-                R.color.border_selected_button, R.color.text_selected_button);
+        //setSimpleTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
+        //setSimpleTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
+        setSquareTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton());
         //Fragment Posts
-        setMyTouchListener(fragmentPosts.getMainButton(), fragmentPosts.getTvMainButton(),
-                R.color.border_selected_button, R.color.text_selected_button);
+        setSquareTouchListener(fragmentPosts.getMainButton(), fragmentPosts.getTvMainButton());
     }
 
     private void initFragments() {
@@ -541,15 +545,18 @@ public class PlaceActivity extends BaseActivity {
                 fragmentPictures.setSmallTagsButtonVisibility(false);
                 fragmentPosts.setMainButtonVisibility(false);
 
-                //if user hasn't stated he was coming
-                if(CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)) {
-                    iAmComingButton.setVisibility(View.VISIBLE);
-                    onMyWayButton.setVisibility(View.GONE);
+                if( progressBottom.getVisibility()!= View.VISIBLE) {
+                    //if user hasn't stated he was coming
+                    if(CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)) {
+                        iAmComingButton.setVisibility(View.VISIBLE);
+                        onMyWayButton.setVisibility(View.GONE);
+                    }
+                    else {
+                        iAmComingButton.setVisibility(View.GONE);
+                        onMyWayButton.setVisibility(View.VISIBLE);
+                    }
                 }
-                else {
-                    iAmComingButton.setVisibility(View.GONE);
-                    onMyWayButton.setVisibility(View.VISIBLE);
-                }
+
             }
 
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
