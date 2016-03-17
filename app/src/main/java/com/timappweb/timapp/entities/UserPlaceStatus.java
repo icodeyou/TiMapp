@@ -6,5 +6,6 @@ package com.timappweb.timapp.entities;
 public enum UserPlaceStatus {
     COMING,
     HERE,
+    INVITED,
     GONE
 }

@@ -64,7 +64,9 @@ public class PlacePeopleFragment extends Fragment {
         initRv();
         initAdapter();
         loadPosts();
-        loadByStatus(null);
+
+        loadByStatus(UserPlaceStatus.COMING);
+        loadByStatus(UserPlaceStatus.INVITED);
 
         placeActivity.notifyFragmentsLoaded();
 
@@ -142,9 +144,9 @@ public class PlacePeopleFragment extends Fragment {
 
     }
 
-    private void loadByStatus(List<UserPlaceStatus> status){
+    private void loadByStatus(final UserPlaceStatus status){
         Map<String, String> conditions = new HashMap<>();
-        //conditions.put("status", String.valueOf(status));
+        conditions.put("status", String.valueOf(status));
 
         Call<PaginationResponse<UsersPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
         call.enqueue(new RestCallback<PaginationResponse<UsersPlace>>(getContext()) {
@@ -153,8 +155,7 @@ public class PlacePeopleFragment extends Fragment {
                 super.onResponse(response);
                 if (response.isSuccess()) {
                     PaginationResponse<UsersPlace> paginateData = response.body();
-                    progressView.setVisibility(View.GONE);
-                    notifyUsersStatusLoaded(paginateData.items);
+                    notifyUsersStatusLoaded(status, paginateData.items);
                 }
             }
         });
@@ -172,7 +173,7 @@ public class PlacePeopleFragment extends Fragment {
         }
         placeUsersAdapter.setData(interfaceList);
     }
-    private void notifyUsersStatusLoaded(List<UsersPlace> users) {
+    private void notifyUsersStatusLoaded(UserPlaceStatus status, List<UsersPlace> users) {
         // TODO jean
     }
 

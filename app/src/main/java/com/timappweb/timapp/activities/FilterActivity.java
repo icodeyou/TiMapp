@@ -26,6 +26,8 @@ import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
+import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
@@ -83,6 +85,7 @@ public class FilterActivity extends BaseActivity {
 
     public void submit() {
         //TODO : Enregistrer categoriesSelected + les tags dans les preférences
+
         NavUtils.navigateUpFromSameTask(this);
         finish();
     }
