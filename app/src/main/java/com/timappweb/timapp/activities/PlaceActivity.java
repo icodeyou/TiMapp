@@ -32,7 +32,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
@@ -302,7 +301,7 @@ public class PlaceActivity extends BaseActivity {
                 conditions.setAnonymous(false);
                 conditions.setUserLocation(MyApplication.getLastLocation());
 
-                Call<RestFeedback> call = RestClient.service().placeComing(conditions.toMap());
+                Call<RestFeedback> call = RestClient.service().notifyPlaceComing(conditions.toMap());
                 call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
@@ -337,7 +336,7 @@ public class PlaceActivity extends BaseActivity {
                 conditions.setPlaceId(placeId);
                 conditions.setAnonymous(false);
                 conditions.setUserLocation(MyApplication.getLastLocation());
-                Call<RestFeedback> call = RestClient.service().placeHere(conditions.toMap());
+                Call<RestFeedback> call = RestClient.service().notifyPlaceHere(conditions.toMap());
                 call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {

@@ -54,11 +54,11 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
         PlaceUserInterface placeUserInterface = data.get(position);
         RecyclerView rvPostTags = holder.rvPostTags;
 
-        Log.d(TAG, "User: " + placeUserInterface.getUsername());
-        Picasso.with(context).load(placeUserInterface.getProfilePictureUrl()).into(holder.ivProfilePicture);
+        Log.d(TAG, "User: " + placeUserInterface.getUser().getUsername());
+        Picasso.with(context).load(placeUserInterface.getUser().getProfilePictureUrl()).into(holder.ivProfilePicture);
 
         // Get the address, name, time, and comment from Post.
-        String username = placeUserInterface.getUsername();
+        String username = placeUserInterface.getUser().getUsername();
         String time = placeUserInterface.getPostTime();
         List<Tag> tags = placeUserInterface.getTags();
 

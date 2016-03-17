@@ -1,6 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.utils.Util;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -108,9 +109,8 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
         Log.d(TAG, "GMT offset is " + (mGMTOffset / 1000) + " seconds for time zone " + mTimeZone.getDisplayName());
         return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
         */
-        PrettyTime p = new PrettyTime();
         // TODO [TEST] diffent time zone on phone
-        return p.format(new Date(((long) this.created) * 1000));
+        return Util.secondsTimestampToPrettyTime(((long) this.created) * 1000);
     }
 
 
@@ -182,10 +182,6 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
                 : "Former user";
     }
 
-    @Override
-    public String getProfilePictureUrl() {
-        return user.getProfilePictureUrl();
-    }
 
     public User getUser() {
         return user;

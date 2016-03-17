@@ -20,15 +20,22 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.entities.UserPlaceStatus;
+import com.timappweb.timapp.entities.UsersPlace;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.http.QueryMap;
 
 
 public class PlacePeopleFragment extends Fragment {
@@ -57,6 +64,7 @@ public class PlacePeopleFragment extends Fragment {
         initRv();
         initAdapter();
         loadPosts();
+        loadByStatus(null);
 
         placeActivity.notifyFragmentsLoaded();
 
@@ -111,15 +119,15 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void loadPosts() {
-        final PlaceActivity placeActivity = (PlaceActivity) getActivity();
         Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
         call.enqueue(new RestCallback<List<Post>>(getContext()) {
             @Override
             public void onResponse(Response<List<Post>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
+                    List<Post> paginateData = response.body();
                     progressView.setVisibility(View.GONE);
-                    notifyPostsLoaded(response.body());
+                    notifyPostsLoaded(paginateData);
                 }
             }
 
@@ -130,19 +138,42 @@ public class PlacePeopleFragment extends Fragment {
                 noConnectionView.setVisibility(View.VISIBLE);
             }
         });
+
+
     }
 
-    private void notifyPostsLoaded(List<Post> posts) {
-        if(posts.isEmpty()) {
+    private void loadByStatus(List<UserPlaceStatus> status){
+        Map<String, String> conditions = new HashMap<>();
+        //conditions.put("status", String.valueOf(status));
+
+        Call<PaginationResponse<UsersPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
+        call.enqueue(new RestCallback<PaginationResponse<UsersPlace>>(getContext()) {
+            @Override
+            public void onResponse(Response<PaginationResponse<UsersPlace>> response) {
+                super.onResponse(response);
+                if (response.isSuccess()) {
+                    PaginationResponse<UsersPlace> paginateData = response.body();
+                    progressView.setVisibility(View.GONE);
+                    notifyUsersStatusLoaded(paginateData.items);
+                }
+            }
+        });
+    }
+
+    private void notifyPostsLoaded(List<Post> items) {
+        if(items.isEmpty()) {
             noPostsView.setVisibility(View.VISIBLE);
             return;
         }
 
-        List<PlaceUserInterface> interfaceList = new ArrayList<>(posts.size());
-        for (Post post : posts) {
+        List<PlaceUserInterface> interfaceList = new ArrayList<>(items.size());
+        for (PlaceUserInterface post : items) {
             interfaceList.add(post);
         }
         placeUsersAdapter.setData(interfaceList);
+    }
+    private void notifyUsersStatusLoaded(List<UsersPlace> users) {
+        // TODO jean
     }
 
     public void setMainButtonVisibility(boolean bool) {

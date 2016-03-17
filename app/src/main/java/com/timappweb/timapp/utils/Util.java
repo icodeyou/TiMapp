@@ -9,6 +9,10 @@ import android.webkit.MimeTypeMap;
 
 import com.squareup.picasso.Picasso;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.util.Date;
+
 /**
  * Created by stephane on 9/10/2015.
  */
@@ -65,4 +69,8 @@ public class Util {
         return type;
     }
 
+    public static String secondsTimestampToPrettyTime(long created) {
+        PrettyTime p = new PrettyTime();
+        return p.format(new Date(created));
+    }
 }

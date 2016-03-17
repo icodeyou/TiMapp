@@ -62,7 +62,6 @@ public class User implements Serializable, PlaceUserInterface {
         return username;
     }
 
-    @Override
     public String getProfilePictureUrl() {
         return "https://graph.facebook.com/" + this.provider_uid + "/picture?type=large";
     }

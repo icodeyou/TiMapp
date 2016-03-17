@@ -6,6 +6,8 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.entities.UserPlaceStatus;
+import com.timappweb.timapp.entities.UsersPlace;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
@@ -150,16 +152,19 @@ public interface WebServiceInterface {
      *
      */
     @POST("PlacesUsers/coming.json")
-    Call<RestFeedback> placeComing(@Body Map<String, String> conditions);
+    Call<RestFeedback> notifyPlaceComing(@Body Map<String, String> conditions);
     /**
      *
      */
     @POST("PlacesUsers/gone.json")
-    Call<RestFeedback> placeGone(@Body Map<String, String> conditions);
+    Call<RestFeedback> notifyPlaceGone(@Body Map<String, String> conditions);
     /**
      *
      */
     @POST("PlacesUsers/here.json")
-    Call<RestFeedback> placeHere(@Body Map<String, String> conditions);
+    Call<RestFeedback> notifyPlaceHere(@Body Map<String, String> conditions);
+
+    @POST("PlacesUsers/place/{id}.json")
+    Call<PaginationResponse<UsersPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
 
 }
