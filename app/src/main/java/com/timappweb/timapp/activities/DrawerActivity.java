@@ -254,7 +254,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             IntentsUtils.profile(this);
         }
         else if (id == R.id.menu_item_settings) {
-            IntentsUtils.settings(this);
+            //IntentsUtils.settings(this);
+            IntentsUtils.addPeople(this);
         }
         else if (id == R.id.menu_item_login){
             IntentsUtils.login(this);
