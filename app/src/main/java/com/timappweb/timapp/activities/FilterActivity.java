@@ -48,13 +48,11 @@ public class FilterActivity extends BaseActivity {
         final Activity thatActivity = this;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);
-
         setSearchview(menu);
 
         //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_add_post));
         OnBasicQueryTagListener basicQueryTagListener = new OnBasicQueryTagListener();
-
         HashtagView hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         HorizontalTagsRecyclerView selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
