@@ -97,7 +97,7 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void setBackgroundTouchListener(View button, final TextView tv) {
+    protected void setRadiusTouchListener(View button, final TextView tv) {
         button.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -105,7 +105,7 @@ public class BaseActivity extends AppCompatActivity {
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN: {
                         tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
-                        v.setBackgroundResource(R.color.colorSecondary);
+                        v.setBackgroundResource(R.drawable.background_radius_selected);
                         v.invalidate();
                         break;
                     }
@@ -121,14 +121,14 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void setBackgroundTouchListener(View button, final TextView tv1, final TextView tv2) {
+    protected void setRadiusTouchListener(View button, final TextView tv1, final TextView tv2) {
         button.setOnTouchListener( new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
                 switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN: {
-                        v.setBackgroundResource(R.color.colorSecondary);
+                        v.setBackgroundResource(R.drawable.background_radius_selected);
                         tv1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
                         tv2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorSecondary));
                         v.invalidate();
@@ -194,7 +194,6 @@ public class BaseActivity extends AppCompatActivity {
 
         //set searchView
         searchView = (SearchView) searchItem.getActionView();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
         //This doesn't work. There isn't any way to remove the suggestions.
         //searchView.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);

@@ -106,14 +106,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="20dp"
-
                 app:tagTextSize="@dimen/text_normal"
                 app:tagTextGravity="center"
-
                 app:tagBackground="@drawable/tag_background"
-
                 app:dynamicMode="true"
-
                 app:tagEllipsize="marquee"
                 app:tagPaddingBottom="@dimen/tag_padding"
                 app:tagPaddingLeft="@dimen/tag_padding"
@@ -123,7 +119,6 @@
                 app:tagMargin="@dimen/tag_margin"
                 app:tagTextColor="@color/White"
                 />
-
         </ScrollView>
 
         <!-- PLACE -->

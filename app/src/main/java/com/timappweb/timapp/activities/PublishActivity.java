@@ -116,7 +116,7 @@ public class PublishActivity extends BaseActivity{
     }
 
     public void setListeners() {
-        setBackgroundTouchListener(confirmButton, textButton1, textButton2);
+        setRadiusTouchListener(confirmButton, textButton1, textButton2);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

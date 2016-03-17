@@ -19,6 +19,7 @@ public class OnThreeQueriesTagListener extends OnBasicQueryTagListener {
     @Override
     public boolean onQueryTextSubmit(String query) {
         super.onQueryTextSubmit(query);
+        addTag(query);
         tagActivity.actionCounter();
         return true;
     }

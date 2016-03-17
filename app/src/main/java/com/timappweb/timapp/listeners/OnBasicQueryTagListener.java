@@ -1,6 +1,7 @@
 package com.timappweb.timapp.listeners;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.support.v7.widget.SearchView;
@@ -18,8 +19,6 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        manager.addTag(query);
-        manager.getSearchView().setIconified(true);
         return true;
     }
 
@@ -32,12 +31,10 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
                 simulateKeys();
             }
             newText = newText.substring(0, newText.length()-1);
-            onQueryTextSubmit(newText);
+            addTag(newText);
         }
         else {
-            if(manager!=null) {
-                manager.suggestTag(newText);
-            }
+            manager.suggestTag(newText);
         }
         return false;
     }
@@ -51,6 +48,11 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
                 inst.sendKeyDownUpSync(KeyEvent.KEYCODE_DEL);
             }
         }).start();
+    }
+
+    public void addTag(String query) {
+        manager.addTag(query);
+        manager.getSearchView().setIconified(true);
     }
 
     public void setSearchAndSelectTagManager(SearchAndSelectTagManager searchAndSelectTagManager) {

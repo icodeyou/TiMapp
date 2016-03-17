@@ -20,7 +20,7 @@
     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
         android:id="@+id/rv_selected_tags"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/height_rv_displayed_tags"
         android:layout_gravity="center"
         myattrs:horizontal_tags_text_color="@color/colorAccent"
@@ -41,7 +41,7 @@
         android:id="@+id/progress_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:gravity="center"
         android:orientation="horizontal">
         <include layout="@layout/progressview"
@@ -49,12 +49,6 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:layout_width="50dp"/>
-        <TextView
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tags_upcoming"
-            android:textSize="@dimen/text_normal"/>
     </LinearLayout>
 
     <!-- ******************************************************************* -->
@@ -62,20 +56,17 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="3"
+        android:visibility="gone">
         <com.greenfrvr.hashtagview.HashtagView
             android:id="@+id/rv_suggested_tags_filter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="20dp"
-
             app:tagTextSize="@dimen/text_normal"
             app:tagTextGravity="center"
-
             app:tagBackground="@drawable/tag_background"
-
             app:dynamicMode="true"
-
             app:tagEllipsize="marquee"
             app:tagPaddingBottom="@dimen/tag_padding"
             app:tagPaddingLeft="@dimen/tag_padding"
@@ -85,8 +76,36 @@
             app:tagMargin="@dimen/tag_margin"
             app:tagTextColor="@color/White"
             />
-
     </ScrollView>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_categories"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"/>
+
+    <LinearLayout
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_square_button"
+        android:layout_marginBottom="@dimen/margin_square_button"
+        android:background="@drawable/background_button">
+        <TextView
+            android:id="@+id/text_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/text_button"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/search_button"
+            android:gravity="center"
+            android:textSize="@dimen/text_normal"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.AddPlaceCategoriesAdapter;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.adapters.CategoryPagerAdapter;
 import com.timappweb.timapp.entities.Category;
@@ -40,7 +41,7 @@ public class AddPlaceActivity extends BaseActivity {
     //Views
     private EditText groupNameET;
     RecyclerView categoriesRV;
-    CategoriesAdapter categoriesAdapter;
+    AddPlaceCategoriesAdapter categoriesAdapter;
     private Category categorySelected;
     private View createButton;
     private TextView textCreateButton;
@@ -96,7 +97,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void initAdapterAndManager() {
-        categoriesAdapter = new CategoriesAdapter(this);
+        categoriesAdapter = new AddPlaceCategoriesAdapter(this);
         categoriesRV.setAdapter(categoriesAdapter);
         GridLayoutManager manager = new SpanningGridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
         categoriesRV.setLayoutManager(manager);

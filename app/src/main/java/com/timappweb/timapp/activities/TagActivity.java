@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -97,16 +98,21 @@ public class TagActivity extends BaseActivity{
 
         setSearchview(menu);
         searchView.requestFocus();
+        searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
         //set hint for searchview
         final OnBasicQueryTagListener onBasicQueryTagListener = new OnThreeQueriesTagListener(this);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                searchView, suggestedTagsView, selectedTagsRV, onBasicQueryTagListener,
+                searchView,
+                suggestedTagsView,
+                selectedTagsRV,
+                onBasicQueryTagListener,
                 new SearchTagDataProvider() {
-            @Override
-            public void onLoadEnds() {
-                getProgressBarView().setVisibility(View.GONE);
-            }}
+                    @Override
+                    public void onLoadEnds() {
+                        getProgressBarView().setVisibility(View.GONE);
+                    }
+                }
         );
 
         suggestedTagsRV = searchAndSelectTagManager.getSuggestedTagsRV();

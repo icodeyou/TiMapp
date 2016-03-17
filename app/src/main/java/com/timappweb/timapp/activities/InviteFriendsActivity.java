@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,20 +9,16 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Friend;
-import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +32,8 @@ public class InviteFriendsActivity extends BaseActivity{
     private List<Friend> mPersonList;
     private RecyclerView recyclerView;
     private SelectFriendsAdapter adapter;
+    private View inviteButton;
+    private TextView textInviteButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,9 +42,13 @@ public class InviteFriendsActivity extends BaseActivity{
         setContentView(R.layout.activity_invite_friends);
         this.initToolbar(true);
 
+        inviteButton = findViewById(R.id.invite_button);
+        textInviteButton = (TextView) findViewById(R.id.text_invite_button);
+
         findViews();
-        setListeners();
-        setFriendsList();
+        initRv();
+        setRvListeners();
+        initInviteButton();
     }
 
     @Override
@@ -74,58 +77,13 @@ public class InviteFriendsActivity extends BaseActivity{
         }*//*
     }*/
 
-    private void itemListClicked(int position) {
-        Friend person = mPersonList.get(position);
-        boolean isSelected = person.isSelected;
-        boolean success;
-        if (isSelected) {
-            success = mAutoLabel.removeLabel(position);
-        } else {
-            success = mAutoLabel.addLabel(person.getUsername(), position);
-        }
-        if (success) {
-            adapter.setItemSelected(position, !isSelected);
-        }
-    }
-
-    private void setListeners() {
-        mAutoLabel.setOnLabelsCompletedListener(new AutoLabelUI.OnLabelsCompletedListener() {
-            @Override
-            public void onLabelsCompleted() {
-                Snackbar.make(recyclerView, "Completed!", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
-        mAutoLabel.setOnRemoveLabelListener(new AutoLabelUI.OnRemoveLabelListener() {
-            @Override
-            public void onRemoveLabel(View view, int position) {
-                adapter.setItemSelected(position, false);
-            }
-        });
-
-        mAutoLabel.setOnLabelsEmptyListener(new AutoLabelUI.OnLabelsEmptyListener() {
-            @Override
-            public void onLabelsEmpty() {
-                Snackbar.make(recyclerView, "EMPTY!", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
-        mAutoLabel.setOnLabelClickListener(new AutoLabelUI.OnLabelClickListener() {
-            @Override
-            public void onClickLabel(View v) {
-
-            }
-        });
-
-    }
-
     private void findViews() {
         mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
         mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     }
 
-    private void setFriendsList() {
+    private void initRv() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
@@ -152,5 +110,74 @@ public class InviteFriendsActivity extends BaseActivity{
                 itemListClicked(position);
             }
         });
+    }
+
+    private void setRvListeners() {
+        mAutoLabel.setOnLabelsCompletedListener(new AutoLabelUI.OnLabelsCompletedListener() {
+            @Override
+            public void onLabelsCompleted() {
+                Toast.makeText(InviteFriendsActivity.this, R.string.cannot_add_more_friends,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mAutoLabel.setOnRemoveLabelListener(new AutoLabelUI.OnRemoveLabelListener() {
+            @Override
+            public void onRemoveLabel(View view, int position) {
+                adapter.setItemSelected(position, false);
+            }
+        });
+
+        mAutoLabel.setOnLabelsEmptyListener(new AutoLabelUI.OnLabelsEmptyListener() {
+            @Override
+            public void onLabelsEmpty() {
+                updateButtonVisibility();
+            }
+        });
+
+        mAutoLabel.setOnLabelClickListener(new AutoLabelUI.OnLabelClickListener() {
+            @Override
+            public void onClickLabel(View v) {
+
+            }
+        });
+    }
+
+    private void initInviteButton() {
+        final Activity thatActivity = this;
+        setSquareTouchListener(inviteButton, textInviteButton);
+
+        inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavUtils.navigateUpFromSameTask(thatActivity);
+            }
+        });
+
+        updateButtonVisibility();
+
+    }
+
+    private void itemListClicked(int position) {
+        Friend person = mPersonList.get(position);
+        boolean isSelected = person.isSelected;
+        boolean success;
+        if (isSelected) {
+            success = mAutoLabel.removeLabel(position);
+        } else {
+            success = mAutoLabel.addLabel(person.getUsername(), position);
+        }
+        if (success) {
+            updateButtonVisibility();
+            adapter.setItemSelected(position, !isSelected);
+        }
+    }
+
+    private void updateButtonVisibility() {
+        if(mAutoLabel.getLabelsCounter()>0) {
+            inviteButton.setVisibility(View.VISIBLE);
+        } else {
+            inviteButton.setVisibility(View.GONE);
+        }
     }
 }

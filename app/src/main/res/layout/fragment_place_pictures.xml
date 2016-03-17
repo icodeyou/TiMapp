@@ -82,7 +82,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/padding_fragments_place"
             android:listSelector="@android:color/transparent"/>
 
         <!-- Main Add Button (Add pic)-->
