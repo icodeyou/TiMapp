@@ -20,6 +20,7 @@ import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -52,6 +53,8 @@ public class PlacePicturesFragment extends Fragment {
 
     private PicturesAdapter         picturesAdapter;
 
+    private static int NUMBER_OF_COLUMNS =  2;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,8 +75,9 @@ public class PlacePicturesFragment extends Fragment {
     }
 
     private void initRv() {
+        picturesRv.setHasFixedSize(true);
         GridLayoutManager layoutManager =
-                new GridLayoutManager(context, 3, GridLayoutManager.VERTICAL, false);
+                new GridLayoutManager(context, NUMBER_OF_COLUMNS);
         picturesRv.setLayoutManager(layoutManager);
     }
 

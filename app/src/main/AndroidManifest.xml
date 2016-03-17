@@ -82,8 +82,8 @@
             android:name=".activities.FilterActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_filter"
-            android:parentActivityName=".activities.DrawerActivity"
-            android:windowSoftInputMode="stateVisible">
+            android:windowSoftInputMode="adjustNothing"
+            android:parentActivityName=".activities.DrawerActivity">
 
             <!-- Make activity searchable -->
             <intent-filter>

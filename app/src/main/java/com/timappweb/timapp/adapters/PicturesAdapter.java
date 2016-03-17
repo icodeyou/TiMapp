@@ -64,13 +64,6 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         notifyDataSetChanged();
     }
 
-    public void addDummyData() {
-        this.data.add(new Picture());
-        this.data.add(new Picture());
-        this.data.add(new Picture());
-        notifyDataSetChanged();
-    }
-
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
@@ -79,12 +72,6 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         this.baseUrl = baseUrl;
 
     }
-
-    public interface OnItemClickListener {
-
-        void onItemClick(View view, int position);
-    }
-
 
     public class PictureViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {

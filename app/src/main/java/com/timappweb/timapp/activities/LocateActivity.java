@@ -121,7 +121,7 @@ public class LocateActivity extends BaseActivity{
                 //buttonAddPlace.setEnabled(false);
             }
         });
-        setBackgroundTouchListener(buttonAddPlace, textButtonAddPlace);
+        setRadiusTouchListener(buttonAddPlace, textButtonAddPlace);
     }
 
     @Override
