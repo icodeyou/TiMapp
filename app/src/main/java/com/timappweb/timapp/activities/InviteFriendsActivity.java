@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +34,8 @@ public class InviteFriendsActivity extends BaseActivity{
     private View inviteButton;
     private TextView textInviteButton;
 
+    private List<Friend> friendsSelected;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +47,16 @@ public class InviteFriendsActivity extends BaseActivity{
         textInviteButton = (TextView) findViewById(R.id.text_invite_button);
 
         findViews();
+        initSelectedFriends();
         initRv();
         setRvListeners();
         initInviteButton();
+    }
+
+    private void initSelectedFriends() {
+        friendsSelected = new ArrayList<>();
+        //TODO : Get invited users from placeActivity and add them to the list
+
     }
 
     @Override
@@ -62,20 +70,6 @@ public class InviteFriendsActivity extends BaseActivity{
 
         return super.onOptionsItemSelected(item);
     }
-
-    /*@Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        *//*if (savedInstanceState != null) {
-            List<Friend> users = savedInstanceState.getParcelableArrayList(KEY_INSTANCE_STATE_PEOPLE);
-            if (users != null) {
-                mPersonList = users;
-                adapter.setPictures(users);
-                recyclerView.setAdapter(adapter);
-            }
-        }*//*
-    }*/
 
     private void findViews() {
         mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);

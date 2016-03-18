@@ -15,6 +15,7 @@
     <string name="title_activity_place">Event</string>
     <string name="title_activity_incoming">Incoming</string>
     <string name="title_activity_invite_friends">Invite friends</string>
+    <string name="title_activity_list_friends">My friends</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
@@ -50,6 +51,7 @@
     <!-- Nav -->
     <string name="nav_explore">Explore</string>
     <string name="nav_tag_around">Tag around</string>
+    <string name="nav_my_friends">My friends</string>
     <string name="nav_share">Share with your friends</string>
 
 <!-- TODO: Remove or change this placeholder text -->
@@ -164,6 +166,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="after_create_place_clicked">Thanks for sharing</string>
     <string name="text_no_last_post">Never posted anything</string>
     <string name="define_yourself_tag">DefineYourself</string>
+    <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
 
 
 </resources>

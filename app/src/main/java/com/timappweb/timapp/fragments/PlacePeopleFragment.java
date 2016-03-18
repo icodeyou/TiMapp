@@ -29,13 +29,11 @@ import com.timappweb.timapp.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.http.QueryMap;
 
 
 public class PlacePeopleFragment extends Fragment {
@@ -54,6 +52,8 @@ public class PlacePeopleFragment extends Fragment {
     private View            addButton;
     private TextView        tvAddButton;
 
+    private ArrayList<PlaceUserInterface> usersFullList;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,15 +63,15 @@ public class PlacePeopleFragment extends Fragment {
         setListeners();
         initRv();
         initAdapter();
-        loadPosts();
 
-        loadByStatus(UserPlaceStatus.COMING);
-        loadByStatus(UserPlaceStatus.INVITED);
+        load();
 
         placeActivity.notifyFragmentsLoaded();
 
         return root;
     }
+
+
 
     @Override
     public void setMenuVisibility(final boolean visible) {
@@ -88,6 +88,8 @@ public class PlacePeopleFragment extends Fragment {
         context= placeActivity.getApplicationContext();
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
+
+        usersFullList = new ArrayList<>();
 
         //Views
         addButton = root.findViewById(R.id.main_button);
@@ -120,7 +122,13 @@ public class PlacePeopleFragment extends Fragment {
         });
     }
 
-    private void loadPosts() {
+    private void load() {
+        usersFullList.clear();
+        loadPosts();
+    }
+
+
+    private synchronized void loadPosts() {
         Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
         call.enqueue(new RestCallback<List<Post>>(getContext()) {
             @Override
@@ -144,7 +152,7 @@ public class PlacePeopleFragment extends Fragment {
 
     }
 
-    private void loadByStatus(final UserPlaceStatus status){
+    private synchronized void loadByStatus(final UserPlaceStatus status){
         Map<String, String> conditions = new HashMap<>();
         conditions.put("status", String.valueOf(status));
 
@@ -155,26 +163,46 @@ public class PlacePeopleFragment extends Fragment {
                 super.onResponse(response);
                 if (response.isSuccess()) {
                     PaginationResponse<UsersPlace> paginateData = response.body();
-                    notifyUsersStatusLoaded(status, paginateData.items);
+                    if(status==UserPlaceStatus.COMING) {
+                        notifyUsersComingLoaded(paginateData.items);
+                    } else if(status==UserPlaceStatus.INVITED) {
+                        notifyUsersInvitedLoaded(paginateData.items);
+                    }
                 }
             }
         });
     }
 
-    private void notifyPostsLoaded(List<Post> items) {
-        if(items.isEmpty()) {
+    private synchronized void notifyPostsLoaded(List<Post> items) {
+        for (PlaceUserInterface post : items) {
+            usersFullList.add(post);
+        }
+        loadByStatus(UserPlaceStatus.COMING);
+    }
+    private synchronized void notifyUsersComingLoaded(List<UsersPlace> comingUsers) {
+        for (UsersPlace comingUser : comingUsers) {
+            usersFullList.add(comingUser);
+        }
+        loadByStatus(UserPlaceStatus.INVITED);
+        setDataInAdapter();
+    }
+
+    private synchronized void notifyUsersInvitedLoaded(List<UsersPlace> invitedUsers) {
+        for (UsersPlace invitedUser : invitedUsers) {
+            usersFullList.add(invitedUser);
+        }
+    }
+
+    private synchronized void setDataInAdapter() {
+        /*if(items.isEmpty()) {
             noPostsView.setVisibility(View.VISIBLE);
             return;
-        }
-
-        List<PlaceUserInterface> interfaceList = new ArrayList<>(items.size());
-        for (PlaceUserInterface post : items) {
-            interfaceList.add(post);
-        }
-        placeUsersAdapter.setData(interfaceList);
-    }
-    private void notifyUsersStatusLoaded(UserPlaceStatus status, List<UsersPlace> users) {
-        // TODO jean
+        } else {
+            placeUsersAdapter.setData(usersFullList);
+        }*/
+        placeUsersAdapter.setData(usersFullList);
+        Log.i(TAG, context.getString(R.string.log_set_adapter_placepeoplefragment)
+                + usersFullList.size());
     }
 
     public void setMainButtonVisibility(boolean bool) {

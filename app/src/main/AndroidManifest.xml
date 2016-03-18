@@ -179,6 +179,18 @@
                 android:value=".activities.PlaceActivity" />
         </activity>
 
+        <!-- List People ACTIVITY //////////////////////////////////////////////-->
+        <activity
+            android:name=".activities.ListFriendsActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_list_friends"
+            android:parentActivityName=".activities.DrawerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DrawerActivity" />
+        </activity>
+
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.ProfileActivity"

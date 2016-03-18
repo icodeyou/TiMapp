@@ -41,7 +41,7 @@
         android:id="@+id/progress_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
         <include layout="@layout/progressview"
@@ -56,8 +56,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        android:visibility="gone">
+        android:layout_weight="1">
         <com.greenfrvr.hashtagview.HashtagView
             android:id="@+id/rv_suggested_tags_filter"
             android:layout_width="match_parent"
@@ -75,14 +74,14 @@
             app:rowMargin="@dimen/tag_margin"
             app:tagMargin="@dimen/tag_margin"
             app:tagTextColor="@color/White"
+            android:visibility="gone"
             />
     </ScrollView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_categories"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+        android:layout_height="200dp"/>
 
     <LinearLayout
         android:id="@+id/search_button"

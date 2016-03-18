@@ -21,7 +21,6 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
 
     public FilterCategoriesAdapter(Context context) {
         super(context);
-        inflater = LayoutInflater.from(context);
         this.context = context;
     }
 

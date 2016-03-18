@@ -1,6 +1,8 @@
 package com.timappweb.timapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +86,11 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
             ivPicture = (ImageView) itemView.findViewById(R.id.picture);
 
+            //set height picture to prevent padding on view
+            Point size = new Point();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getSize(size);
+            int screenWidth = size.x/2;
+            ivPicture.getLayoutParams().height = screenWidth;
         }
 
         @Override

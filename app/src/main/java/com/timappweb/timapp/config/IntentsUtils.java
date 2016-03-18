@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -134,6 +135,11 @@ public class IntentsUtils {
         if (!requireLogin(context))
             return;
         Intent intent = new Intent(context, LocateActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void listFriends(Context context) {
+        Intent intent = new Intent(context, ListFriendsActivity.class);
         context.startActivity(intent);
     }
 
