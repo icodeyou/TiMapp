@@ -90,14 +90,6 @@ public class User implements Serializable, PlaceUserInterface {
     }
 
     public String getTagsToString() {
-        if (this.tags == null || this.tags.size() == 0){
-            return "";
-        }
-        String res = tags.get(0).getName();
-
-        for (int i = 1; i < tags.size(); i++){
-            res += "," + tags.get(i).name;
-        }
-        return res;
+        return Tag.tagsToString(this.tags);
     }
 }

@@ -15,6 +15,7 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -32,6 +33,7 @@ public class MyApplication extends Application{
     private static final String KEY_LOGIN_TIME = "LoginTime";
 
     private static User currentUser = null;
+    public static SearchFilter searchFilter = new SearchFilter();
 
 
     /**
@@ -140,6 +142,7 @@ public class MyApplication extends Application{
             }
         });
         config.load();
+
     }
 
     private void initFacebookPermissions() {

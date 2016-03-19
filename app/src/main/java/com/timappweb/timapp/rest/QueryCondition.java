@@ -4,6 +4,9 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.entities.SearchFilter;
+import com.timappweb.timapp.entities.Tag;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +17,7 @@ import java.util.Map;
 public class QueryCondition {
 
     private Map<String, String> queryMap = new HashMap<>();
+    private SearchFilter filter;
 
     // TODO remove the getter
     public Map<String, String> toMap() {
@@ -80,5 +84,10 @@ public class QueryCondition {
     public void setUserLocation(Location lastLocation) {
         queryMap.put("latitude", String.valueOf(lastLocation.getLatitude()));
         queryMap.put("longitude", String.valueOf(lastLocation.getLongitude()));
+    }
+
+    public void setFilter(SearchFilter filter) {
+        queryMap.put("filter_tags", Tag.tagsToString(filter.tags));
+        queryMap.put("filter_categories", Category.idsToString(filter.categories));
     }
 }

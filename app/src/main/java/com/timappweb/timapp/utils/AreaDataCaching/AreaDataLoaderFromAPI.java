@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.rest.QueryCondition;
@@ -29,6 +30,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
     private static final String TAG = "AreaDataLoaderFromAPI";
     private Context mContext;
     private ExploreFragment exploreFragment;
+    private SearchFilter filter;
 
     private ClusterManager<Place> mClusterManagerPlaces = null;
     private int requestCounter = 0;
@@ -41,9 +43,10 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
     private AreaRequestHistory areaRequestHistory = null;
 
 
-    public AreaDataLoaderFromAPI(Context context, ExploreFragment fragment) {
+    public AreaDataLoaderFromAPI(Context context, ExploreFragment fragment, SearchFilter filter) {
         this.mContext = context;
         this.exploreFragment = fragment;
+        this.filter = filter;
     }
 
 
@@ -61,6 +64,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
         conditions.setMainTags(true);
+
+        if (filter != null){
+            conditions.setFilter(filter);
+        }
+
         final int requestId = this.requestCounter++;
 
         Call<List<Place>> call = RestClient.service().bestPlaces(conditions.toMap());

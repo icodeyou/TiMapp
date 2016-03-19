@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.io.Serializable;
@@ -73,5 +74,17 @@ public class Tag implements Serializable, SearchHistory.SearchableItem{
     @Override
     public boolean matchSearch(String term) {
         return this.name.startsWith(term);
+    }
+
+    public static String tagsToString(List<Tag> tags){
+        if (tags == null || tags.size() == 0){
+            return "";
+        }
+        String res = tags.get(0).getName();
+
+        for (int i = 1; i < tags.size(); i++){
+            res += "," + tags.get(i).name;
+        }
+        return res;
     }
 }

@@ -14,9 +14,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.greenfrvr.hashtagview.HashtagView;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.FilterCategoriesAdapter;
 import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
@@ -43,6 +45,7 @@ public class FilterActivity extends BaseActivity {
     private FilterCategoriesAdapter categoriesAdapter;
     private List<Category> categoriesSelected;
     private TextView textSearchButton;
+    private HorizontalTagsRecyclerView selectedTagsRecyclerView;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -57,6 +60,7 @@ public class FilterActivity extends BaseActivity {
         categoriesRv = (RecyclerView) findViewById(R.id.rv_categories);
         searchButton = findViewById(R.id.search_button);
         textSearchButton = (TextView) findViewById(R.id.text_search_button);
+        selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
 
         initAdapterAndManager();
         initCategoriesSelected();
@@ -84,12 +88,14 @@ public class FilterActivity extends BaseActivity {
     }
 
     public void submit() {
-        //TODO : Enregistrer categoriesSelected + les tags dans les preférences
-
+        MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
+        MyApplication.searchFilter.tags = selectedTagsRecyclerView.getAdapter().getData();
         NavUtils.navigateUpFromSameTask(this);
         finish();
     }
-////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////
     //// onCreateOptionsMenu
     ////////////////////////////////////////////////////////////////////////////////
 
@@ -107,7 +113,6 @@ public class FilterActivity extends BaseActivity {
         OnFilterQueryTagListener onFilterQueryTagListener = new OnFilterQueryTagListener(this);
         HashtagView hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         hashtagView.setTransformer(new DataTransformTag());
-        HorizontalTagsRecyclerView selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         searchAndSelectTagManager = new SearchAndSelectTagManager(
                 this,
                 searchView,

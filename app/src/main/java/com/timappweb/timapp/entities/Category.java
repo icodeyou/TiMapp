@@ -1,10 +1,11 @@
 package com.timappweb.timapp.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Category implements Serializable{
 
-    public Integer id;
+    public int id;
     public String name;
     public int resourceBlack;
     public int resourceWhite;
@@ -40,4 +41,15 @@ public class Category implements Serializable{
     }
 
 
+    public static String idsToString(List<Category> categories) {
+        if (categories == null || categories.size() == 0){
+            return "";
+        }
+        String res = String.valueOf(categories.get(0).id);
+
+        for (int i = 1; i < categories.size(); i++){
+            res += "," + String.valueOf(categories.get(i).id);
+        }
+        return res;
+    }
 }

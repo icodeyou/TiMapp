@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
@@ -47,7 +48,7 @@ public class ExploreFragment extends Fragment{
         viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
         viewPager.setAdapter(tabsAdapter);
 
-        dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this);
+        dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this, MyApplication.searchFilter);
 
         PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
 

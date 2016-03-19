@@ -205,15 +205,5 @@ public class PublishActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //GETTER and SETTERS
-    public String getTagsToString(){
-        HorizontalTagsAdapter adapter = (HorizontalTagsAdapter) selectedTagsRV.getAdapter();
-        String inputTags = "";
-        List<Tag> selectedTags = adapter.getData();
-
-        for (Tag tag: selectedTags){
-            inputTags += tag.name + ",";
-        }
-        return inputTags;
-    }
 
 }

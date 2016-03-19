@@ -5,6 +5,7 @@ import android.util.Log;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.entities.UsersPlace;
 import com.timappweb.timapp.utils.Util;
@@ -24,7 +25,7 @@ public class CacheData {
     public static HashMap<Integer, UsersPlace> mapPlaceStatus = new HashMap<>();
     private static Place lastPlace = null;
     private static Post lastPost = null;
-
+    private static SearchFilter searchFilter = null;
 
 
     public static void load(){
