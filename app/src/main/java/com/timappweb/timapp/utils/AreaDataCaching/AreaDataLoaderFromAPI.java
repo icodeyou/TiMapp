@@ -67,6 +67,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
         if (filter != null){
             conditions.setFilter(filter);
+            Log.d(TAG, conditions.toString());
         }
 
         final int requestId = this.requestCounter++;

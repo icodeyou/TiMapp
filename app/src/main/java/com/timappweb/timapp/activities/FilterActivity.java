@@ -46,6 +46,7 @@ public class FilterActivity extends BaseActivity {
     private List<Category> categoriesSelected;
     private TextView textSearchButton;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
+    private HashtagView hashtagView;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -111,7 +112,7 @@ public class FilterActivity extends BaseActivity {
         //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_add_post));
         OnFilterQueryTagListener onFilterQueryTagListener = new OnFilterQueryTagListener(this);
-        HashtagView hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
+        hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         hashtagView.setTransformer(new DataTransformTag());
         searchAndSelectTagManager = new SearchAndSelectTagManager(
                 this,
@@ -123,6 +124,7 @@ public class FilterActivity extends BaseActivity {
                     @Override
                     public void onLoadEnds() {
                         getProgressBarView().setVisibility(View.GONE);
+                        hashtagView.setVisibility(View.VISIBLE);
                     }
                 }
         );
@@ -160,7 +162,7 @@ public class FilterActivity extends BaseActivity {
 
     private void initCategoriesSelected() {
         //If nothing is saved in the preferences
-        categoriesSelected = new ArrayList<Category>(categoriesAdapter.getAllCategories());
+        categoriesSelected = new ArrayList<>(categoriesAdapter.getAllCategories());
         //TODO Steph : Récupérer les catégories selectionnées à partir des préférences
     }
 

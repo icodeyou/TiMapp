@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;

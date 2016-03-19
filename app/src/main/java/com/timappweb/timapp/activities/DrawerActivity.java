@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -97,7 +98,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         // -----------------------------------------------------------------------------------------
 
         NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
+        //hide scrollbar in drawer
+        NavigationMenuView navigationMenuView = (NavigationMenuView) nvDrawer.getChildAt(0);
+        if (navigationMenuView != null) {
+            navigationMenuView.setVerticalScrollBarEnabled(false);
+        }
+        //inflate header
+        getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
 
         // -----------------------------------------------------------------------------------------
         setListeners();
@@ -246,6 +253,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
         else if (id == R.id.menu_item_tag_around){
             IntentsUtils.addPostStepLocate(this);
+        }
+        else if (id == R.id.menu_item_my_friends){
+            IntentsUtils.listFriends(this);
         }
         else if (id == R.id.menu_item_share){
             IntentsUtils.share(this);

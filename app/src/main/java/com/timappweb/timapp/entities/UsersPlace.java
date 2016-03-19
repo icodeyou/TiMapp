@@ -1,12 +1,10 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
-/**
- * Created by stephane on 1/29/2016.
- */
 public class UsersPlace implements PlaceUserInterface{
 
     public int place_id;
@@ -14,6 +12,7 @@ public class UsersPlace implements PlaceUserInterface{
     public int user_id;
     public int created;
 
+    @SerializedName("User")
     public User user;
 
     @Override

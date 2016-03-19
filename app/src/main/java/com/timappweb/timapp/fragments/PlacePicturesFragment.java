@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
@@ -24,6 +25,7 @@ import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.views.GridSpacesItemDecoration;
 
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class PlacePicturesFragment extends Fragment {
     }
 
     private void initRv() {
-        picturesRv.setHasFixedSize(true);
+        //picturesRv.setHasFixedSize(true);
         GridLayoutManager layoutManager =
                 new GridLayoutManager(context, NUMBER_OF_COLUMNS);
         picturesRv.setLayoutManager(layoutManager);
