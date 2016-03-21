@@ -136,9 +136,9 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="or_text_login">Or</string>
     <string name="text_create_account_login">Create account</string>
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
-    <string name="hint_et_edit_first_profile">Type a word</string>
-    <string name="hint_et_edit_first_profile2">Another one</string>
-    <string name="hint_et_edit_first_profile3">Last one</string>
+    <string name="text_tags_left_3">3 tags left</string>
+    <string name="text_tags_left_2">2 tags left</string>
+    <string name="text_tags_left_1">1 tag left</string>
     <string name="post_shared">Posts shared</string>
     <string name="places_created">Places created</string>
     <string name="edit_first_profile1">Well done.</string>
@@ -156,6 +156,11 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_add_coming_status">Coming Failed. Please Try again later</string><string name="create_second_post_delay">You\'ve already added a post a moment ago. Please wait before adding a new one!</string>
     <string name="create_second_place_delay">You\'ve already added a place a moment ago. Please wait before adding a new one!</string>
     <string name="cannot_add_more_friends">You can\'t add more than 10 friends</string>
+
+    <!--Headers Place People-->
+    <string name="header_posts">Here</string>
+    <string name="header_coming">Coming</string>
+    <string name="header_invited">Invited</string>
 
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>

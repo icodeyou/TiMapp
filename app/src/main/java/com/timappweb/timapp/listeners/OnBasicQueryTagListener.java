@@ -12,7 +12,7 @@ import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 
 public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
-    private SearchAndSelectTagManager manager;
+    protected SearchAndSelectTagManager manager;
 
     public OnBasicQueryTagListener() {
     }
@@ -52,7 +52,6 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
     public void addTag(String query) {
         manager.addTag(query);
-        manager.getSearchView().setIconified(true);
     }
 
     public void setSearchAndSelectTagManager(SearchAndSelectTagManager searchAndSelectTagManager) {

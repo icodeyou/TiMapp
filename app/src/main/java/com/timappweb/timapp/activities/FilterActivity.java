@@ -47,6 +47,7 @@ public class FilterActivity extends BaseActivity {
     private TextView textSearchButton;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView hashtagView;
+    private View tagScrollView;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -62,10 +63,13 @@ public class FilterActivity extends BaseActivity {
         searchButton = findViewById(R.id.search_button);
         textSearchButton = (TextView) findViewById(R.id.text_search_button);
         selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
+        hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
+        tagScrollView = findViewById(R.id.tags_scrollview);
 
         initAdapterAndManager();
         initCategoriesSelected();
         setListeners();
+        setSelectedTagsViewGone();
 
         this.initToolbar(false);
     }
@@ -84,6 +88,16 @@ public class FilterActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 submit();
+            }
+        });
+
+        hashtagView.addOnTagClickListener(new HashtagView.TagsClickListener() {
+            @Override
+            public void onItemClicked(Object item) {
+                Tag tag = (Tag) item;
+                hashtagView.removeItem(item);
+                searchView.setQuery(tag.name, true);
+                searchView.clearFocus();
             }
         });
     }
@@ -112,7 +126,6 @@ public class FilterActivity extends BaseActivity {
         //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_add_post));
         OnFilterQueryTagListener onFilterQueryTagListener = new OnFilterQueryTagListener(this);
-        hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         hashtagView.setTransformer(new DataTransformTag());
         searchAndSelectTagManager = new SearchAndSelectTagManager(
                 this,
@@ -124,7 +137,7 @@ public class FilterActivity extends BaseActivity {
                     @Override
                     public void onLoadEnds() {
                         getProgressBarView().setVisibility(View.GONE);
-                        hashtagView.setVisibility(View.VISIBLE);
+                        tagScrollView.setVisibility(View.VISIBLE);
                     }
                 }
         );
@@ -155,10 +168,21 @@ public class FilterActivity extends BaseActivity {
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    public void onUpdateClick(View view) {
-        IntentsUtils.home(this);
+    public void setTopRvVisibility() {
+        if(searchAndSelectTagManager.getSelectedTags().size()==0) {
+            setSelectedTagsViewGone();
+        } else {
+            setSelectedTagsViewVisible();
+        }
     }
 
+    private void setSelectedTagsViewGone() {
+        selectedTagsRecyclerView.setVisibility(View.GONE);
+    }
+
+    private void setSelectedTagsViewVisible() {
+        selectedTagsRecyclerView.setVisibility(View.VISIBLE);
+    }
 
     private void initCategoriesSelected() {
         //If nothing is saved in the preferences

@@ -105,7 +105,7 @@
                 android:id="@+id/rv_search_suggested_tags"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/margin_tags"
                 app:tagTextSize="@dimen/text_normal"
                 app:tagTextGravity="center"
                 app:tagBackground="@drawable/tag_background"

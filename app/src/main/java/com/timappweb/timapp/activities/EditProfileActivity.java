@@ -168,15 +168,15 @@ public class EditProfileActivity extends BaseActivity{
         counterTags = counterTags + 1;
         switch (counterTags) {
             case 0:
-                editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile));
+                counterView.setText(getResources().getString(R.string.text_tags_left_3));
                 editText.setText("");
                 break;
             case 1:
-                editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile2));
+                counterView.setText(getResources().getString(R.string.text_tags_left_2));
                 editText.setText("");
                 break;
             case 2:
-                editText.setHint(getResources().getString(R.string.hint_et_edit_first_profile3));
+                counterView.setText(getResources().getString(R.string.text_tags_left_1));
                 editText.setText("");
                 break;
             case 3:
