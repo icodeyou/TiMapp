@@ -43,7 +43,10 @@ public class SessionRequestInterceptor implements Interceptor
                 Log.d(TAG, "Synchronisation OK...");
                 String currentToken = RestClient.instance().getToken(); //get currently stored token
 
-                if(currentToken != null && currentToken.equals(token)) { //compare current token with token that was stored before, if it was not updated - do update
+                if (currentToken == null){
+                    logout();
+                }
+                else if (currentToken.equals(token)) { //compare current token with token that was stored before, if it was not updated - do update
                     int code = refreshToken() / 100; //refresh token
                     Log.d(TAG, "HTTP refreshing token: " + code);
                     if(code != 2) { //if refresh token failed for some reason
