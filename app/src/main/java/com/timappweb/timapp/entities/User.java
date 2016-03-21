@@ -72,7 +72,7 @@ public class User implements Serializable, PlaceUserInterface {
     }
 
     @Override
-    public String getPostTime() {
+    public String getTimeCreated() {
         return null;
     }
 

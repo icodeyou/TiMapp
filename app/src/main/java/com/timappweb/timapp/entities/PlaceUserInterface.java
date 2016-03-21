@@ -10,7 +10,7 @@ public interface PlaceUserInterface {
 
     List<Tag> getTags();
 
-    String getPostTime();
+    String getTimeCreated();
 
     User getUser();
 }
