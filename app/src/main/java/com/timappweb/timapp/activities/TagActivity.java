@@ -98,6 +98,7 @@ public class TagActivity extends BaseActivity{
         setSearchview(menu);
         searchView.requestFocus();
         searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         initListTags();
 
@@ -115,8 +116,6 @@ public class TagActivity extends BaseActivity{
                     }
                 }
         );
-
-        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
 
         //Initialize Query hint in searchview
@@ -187,12 +186,15 @@ public class TagActivity extends BaseActivity{
             case 1:
                 setSelectedTagsViewVisible();
                 searchView.setQueryHint(getResources().getString(R.string.searchview_hint_2));
+                searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                 break;
             case 2:
                 searchView.setQueryHint(getResources().getString(R.string.searchview_hint_1));
+                searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
                 break;
             case 3:
                 currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
+                searchView.clearFocus();
                 IntentsUtils.addPostStepPublish(this, this.currentPlace, currentPost);
             default:
                 break;

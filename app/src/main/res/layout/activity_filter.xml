@@ -9,7 +9,7 @@
     tools:context=".FilterActivity">
 
     <!-- TOOLBAR -->
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar_transparent" android:id="@+id/toolbar_transparent"/>
 
         <!-- Searchview is in Action Bar -->
 
@@ -23,12 +23,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
         android:layout_gravity="center"
         myattrs:horizontal_tags_text_color="@color/colorAccent"
         myattrs:horizontal_tags_background_color="@color/background"
         myattrs:horizontal_tags_is_bold="true"
         myattrs:horizontal_tags_text_size="@dimen/text_normal"/>
+
+    <LinearLayout
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_square_button"
+        android:layout_marginBottom="@dimen/margin_square_button"
+        android:background="@drawable/background_button">
+        <TextView
+            android:id="@+id/text_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/text_button"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:text="@string/search_button"
+            android:gravity="center"
+            android:textSize="@dimen/text_normal"/>
+    </LinearLayout>
 
     <!--<View
         android:id="@+id/bottom_line_hrv"
@@ -88,29 +111,5 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:visibility="gone"/>
-
-    <LinearLayout
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_square_button"
-        android:layout_marginBottom="@dimen/margin_square_button"
-        android:background="@drawable/background_button">
-        <TextView
-            android:id="@+id/text_search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="30dp"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/text_button"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:text="@string/search_button"
-            android:gravity="center"
-            android:textSize="@dimen/text_normal"/>
-    </LinearLayout>
 
 </LinearLayout>

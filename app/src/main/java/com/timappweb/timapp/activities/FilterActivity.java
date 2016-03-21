@@ -6,6 +6,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,18 +19,13 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.FilterCategoriesAdapter;
 import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.entities.SearchFilter;
-import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
-import com.timappweb.timapp.rest.QueryCondition;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
@@ -69,7 +65,7 @@ public class FilterActivity extends BaseActivity {
         initAdapterAndManager();
         initCategoriesSelected();
         setListeners();
-        setSelectedTagsViewGone();
+        setTopRvVisibility();
 
         this.initToolbar(false);
     }
@@ -119,12 +115,14 @@ public class FilterActivity extends BaseActivity {
         final Activity thatActivity = this;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);
+
         setSearchview(menu);
         searchView.clearFocus();
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         //set hint for searchview
-        searchView.setQueryHint(getString(R.string.hint_searchview_add_post));
+        searchView.setQueryHint(getString(R.string.hint_searchview_filter));
         OnFilterQueryTagListener onFilterQueryTagListener = new OnFilterQueryTagListener(this);
         hashtagView.setTransformer(new DataTransformTag());
         searchAndSelectTagManager = new SearchAndSelectTagManager(
@@ -169,19 +167,13 @@ public class FilterActivity extends BaseActivity {
     }
 
     public void setTopRvVisibility() {
-        if(searchAndSelectTagManager.getSelectedTags().size()==0) {
-            setSelectedTagsViewGone();
+        if(selectedTagsRecyclerView.getAdapter().getData().size()==0) {
+            selectedTagsRecyclerView.setVisibility(View.GONE);
+            searchButton.setVisibility(View.GONE);
         } else {
-            setSelectedTagsViewVisible();
+            selectedTagsRecyclerView.setVisibility(View.VISIBLE);
+            searchButton.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void setSelectedTagsViewGone() {
-        selectedTagsRecyclerView.setVisibility(View.GONE);
-    }
-
-    private void setSelectedTagsViewVisible() {
-        selectedTagsRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void initCategoriesSelected() {

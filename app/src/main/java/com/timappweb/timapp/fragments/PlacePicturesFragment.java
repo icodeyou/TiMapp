@@ -45,7 +45,7 @@ public class PlacePicturesFragment extends Fragment {
 
     //Views
     private View                    progressView;
-    private View                    noTagsView;
+    private View                    noPicView;
     private View                    noConnectionView;
     private View                    addButton;
     private View                    smallTagsButton;
@@ -116,6 +116,14 @@ public class PlacePicturesFragment extends Fragment {
                 }
 
                 progressView.setVisibility(View.GONE);
+
+                if (picturesAdapter.getItemCount() == 0) {
+                    noPicView.setVisibility(View.VISIBLE);
+                    picturesRv.setVisibility(View.GONE);
+                } else {
+                    noPicView.setVisibility(View.GONE);
+                    picturesRv.setVisibility(View.VISIBLE);
+                }
             }
 
         });
@@ -143,7 +151,7 @@ public class PlacePicturesFragment extends Fragment {
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallTagsButton = root.findViewById(R.id.button_add_tags);
         progressView = root.findViewById(R.id.progress_view);
-        noTagsView = root.findViewById(R.id.no_tags_view);
+        noPicView = root.findViewById(R.id.no_pictures_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         pictureTaken = (ImageView) root.findViewById(R.id.picture_taken);
         picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);

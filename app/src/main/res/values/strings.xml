@@ -102,7 +102,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_require_login">You must be logged in to perform this action</string>
     <string name="error_unkown">Unkown error occured</string>
     <string name="error_no_internet">\"It is not my fucking fault if you do not have internet right now. Check your goddamn phone\"</string>
-    <string name="hint_searchview_add_post">Type a tag</string>
+    <string name="hint_searchview_filter">Search</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
     <string name="title_activity_locate">Where are you ?</string>
     <string name="title_activity_publish">Check and send</string>
@@ -118,6 +118,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="loading_pictures">Loading pictures</string>
     <string name="loading_posts">Loading people</string>
     <string name="uploading_tags">Uploading tags</string>
+    <string name="no_pic">There isn\'t any picture here yet.</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
     <string name="text_last_post">Last post</string>
@@ -172,6 +173,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="text_no_last_post">Never posted anything</string>
     <string name="define_yourself_tag">DefineYourself</string>
     <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
+    <string name="menu_search_tags">Search tags</string>
 
 
 </resources>

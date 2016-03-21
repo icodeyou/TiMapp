@@ -147,6 +147,7 @@
         <activity
             android:name=".activities.PlaceActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_place"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -219,7 +220,6 @@
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
         <activity
-            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"

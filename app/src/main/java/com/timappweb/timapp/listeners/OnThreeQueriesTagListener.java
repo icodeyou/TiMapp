@@ -27,6 +27,6 @@ public class OnThreeQueriesTagListener extends OnBasicQueryTagListener {
     @Override
     public void addTag(String query) {
         super.addTag(query);
-        manager.getSearchView().setIconified(true);
+        tagActivity.actionCounter();
     }
 }

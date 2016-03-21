@@ -53,7 +53,7 @@
             android:text="@string/cannot_load_posts"/>
     </LinearLayout>
 
-    <!-- No tags yet -->
+    <!-- No people yet -->
     <!-- **********************************************************************-->
     <TextView
         android:id="@+id/no_posts_view"

@@ -18,6 +18,7 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAdapter.MyViewHolder> {
     private String TAG = "HorizontalTagsAdapter";
@@ -95,8 +96,9 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if(newTag.toString().isEmpty()) {
+        else if(newTag.getName().isEmpty()) {
             Toast.makeText(context, R.string.toast_no_tag, Toast.LENGTH_SHORT).show();
+            return false;
         }
         else if (!newTag.isShortEnough()){
             Toast.makeText(context, R.string.toast_tiny_text_size, Toast.LENGTH_LONG).show();
@@ -112,7 +114,6 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             notifyDataSetChanged();
             return true;
         }
-        return false;
     }
 
     public void removeData(int position) {

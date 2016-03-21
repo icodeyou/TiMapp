@@ -62,7 +62,7 @@ public class PlacePeopleFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_place_posts, container, false);
+        View root = inflater.inflate(R.layout.fragment_place_people, container, false);
 
         initVariables(root);
         setListeners();
@@ -90,7 +90,7 @@ public class PlacePeopleFragment extends Fragment {
 
     private void initVariables(View root) {
         placeActivity = (PlaceActivity) getActivity();
-        context= placeActivity.getApplicationContext();
+        context= placeActivity.getBaseContext();
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
 
@@ -153,8 +153,6 @@ public class PlacePeopleFragment extends Fragment {
                 noConnectionView.setVisibility(View.VISIBLE);
             }
         });
-
-
     }
 
     private void loadByStatus(final UserPlaceStatus status){
@@ -176,6 +174,13 @@ public class PlacePeopleFragment extends Fragment {
                         notifyUsersInvitedLoaded(peopleInvited);
                     }
                 }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                progressView.setVisibility(View.GONE);
+                noConnectionView.setVisibility(View.VISIBLE);
             }
         });
     }
