@@ -20,9 +20,10 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.entities.UserPlace;
 import com.timappweb.timapp.entities.UserPlaceStatus;
-import com.timappweb.timapp.entities.UsersPlace;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -51,6 +52,10 @@ public class PlacePeopleFragment extends Fragment {
     private View            noConnectionView;
     private View            addButton;
     private TextView        tvAddButton;
+
+    private List<Post> posts;
+    private List<UserPlace> peopleComing;
+    private List<UserPlace> peopleInvited;
 
     private ArrayList<PlaceUserInterface> usersFullList;
 
@@ -105,17 +110,17 @@ public class PlacePeopleFragment extends Fragment {
     }
 
     private void initRv() {
-        peopleRv.setHasFixedSize(true);
         peopleRv.setLayoutManager(new LinearLayoutManager(context));
     }
 
     private void initAdapter() {
+        //Construct Adapter
         placeUsersAdapter = new PlaceUsersAdapter(context);
-        peopleRv.setAdapter(placeUsersAdapter);
+
         placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                User user = placeUsersAdapter.getPost(position).getUser();
+                User user = placeUsersAdapter.getInterface(position).getUser();
                 Log.d(TAG, "Viewing profile user: " + user);
                 IntentsUtils.profile(placeActivity, user);
             }
@@ -128,16 +133,16 @@ public class PlacePeopleFragment extends Fragment {
     }
 
 
-    private synchronized void loadPosts() {
+    private void loadPosts() {
         Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
         call.enqueue(new RestCallback<List<Post>>(getContext()) {
             @Override
             public void onResponse(Response<List<Post>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    List<Post> paginateData = response.body();
+                    posts = response.body();
                     progressView.setVisibility(View.GONE);
-                    notifyPostsLoaded(paginateData);
+                    notifyPostsLoaded(posts);
                 }
             }
 
@@ -152,56 +157,83 @@ public class PlacePeopleFragment extends Fragment {
 
     }
 
-    private synchronized void loadByStatus(final UserPlaceStatus status){
+    private void loadByStatus(final UserPlaceStatus status){
         Map<String, String> conditions = new HashMap<>();
         conditions.put("status", String.valueOf(status));
 
-        Call<PaginationResponse<UsersPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
-        call.enqueue(new RestCallback<PaginationResponse<UsersPlace>>(getContext()) {
+        Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
+        call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext()) {
             @Override
-            public void onResponse(Response<PaginationResponse<UsersPlace>> response) {
+            public void onResponse(Response<PaginationResponse<UserPlace>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    PaginationResponse<UsersPlace> paginateData = response.body();
-                    if(status==UserPlaceStatus.COMING) {
-                        notifyUsersComingLoaded(paginateData.items);
-                    } else if(status==UserPlaceStatus.INVITED) {
-                        notifyUsersInvitedLoaded(paginateData.items);
+                    PaginationResponse<UserPlace> paginateData = response.body();
+                    if (status == UserPlaceStatus.COMING) {
+                        peopleComing = paginateData.items;
+                        notifyUsersComingLoaded(peopleComing);
+                    } else if (status == UserPlaceStatus.INVITED) {
+                        peopleInvited = paginateData.items;
+                        notifyUsersInvitedLoaded(peopleInvited);
                     }
                 }
             }
         });
     }
 
-    private synchronized void notifyPostsLoaded(List<Post> items) {
-        for (PlaceUserInterface post : items) {
-            usersFullList.add(post);
+    private void notifyPostsLoaded(List<Post> items) {
+        for (Post post : items) {
+            PlaceUserInterface placeUserInterface = post;
+            usersFullList.add(placeUserInterface);
         }
         loadByStatus(UserPlaceStatus.COMING);
     }
-    private synchronized void notifyUsersComingLoaded(List<UsersPlace> comingUsers) {
-        for (UsersPlace comingUser : comingUsers) {
+    private synchronized void notifyUsersComingLoaded(List<UserPlace> comingUsers) {
+        for (UserPlace comingUser : comingUsers) {
             Log.d(TAG, "Coming user: " + comingUser);
             usersFullList.add(comingUser);
         }
         loadByStatus(UserPlaceStatus.INVITED);
-        setDataInAdapter();
+        setAdapter();
     }
 
-    private synchronized void notifyUsersInvitedLoaded(List<UsersPlace> invitedUsers) {
-        for (UsersPlace invitedUser : invitedUsers) {
+    private void notifyUsersInvitedLoaded(List<UserPlace> invitedUsers) {
+        for (UserPlace invitedUser : invitedUsers) {
             usersFullList.add(invitedUser);
         }
     }
 
-    private synchronized void setDataInAdapter() {
-        /*if(items.isEmpty()) {
-            noPostsView.setVisibility(View.VISIBLE);
-            return;
-        } else {
-            placeUsersAdapter.setData(usersFullList);
-        }*/
+    private void setAdapter() {
+        //TODO : if empty ==> no posts view
+        //SET LIST IN ADAPTER
         placeUsersAdapter.setData(usersFullList);
+
+        //This is the code to provide a sectioned list
+        List<SimpleSectionedRecyclerViewAdapter.Section> sections =
+                new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
+
+        //Sections
+        if(posts!=null) {
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0,"Posts"));
+        }
+        if(peopleComing!=null) {
+            int numberPosts = posts==null ? 0 : posts.size();
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(numberPosts,"People coming"));
+        }
+        if(peopleInvited!=null) {
+            int numberPosts = posts==null ? 0 : posts.size();
+            int numberComing = peopleComing==null ? 0 : peopleComing.size();
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(numberPosts+numberComing,"Friends invited"));
+        }
+
+        //Add your adapter to the sectionAdapter
+        SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
+        SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
+                SimpleSectionedRecyclerViewAdapter(context,R.layout.header_place_people,
+                R.id.text_header_place_people,placeUsersAdapter);
+        mSectionedAdapter.setSections(sections.toArray(dummy));
+
+        //Apply this adapter to the RecyclerView
+        peopleRv.setAdapter(mSectionedAdapter);
         Log.i(TAG, context.getString(R.string.log_set_adapter_placepeoplefragment)
                 + usersFullList.size());
     }

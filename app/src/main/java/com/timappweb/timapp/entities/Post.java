@@ -146,7 +146,7 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
     }
 
     @Override
-    public String getPostTime() {
+    public String getTimeCreated() {
         return getPrettyTimeCreated();
     }
 

@@ -6,8 +6,8 @@ import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.SearchFilter;
+import com.timappweb.timapp.entities.UserPlace;
 import com.timappweb.timapp.entities.UserPlaceStatus;
-import com.timappweb.timapp.entities.UsersPlace;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class CacheData {
     private static final String KEY_MAP_USER_PLACES = "cachedata_map_user_places";
     private static final String TAG = "CacheData";
 
-    public static HashMap<Integer, UsersPlace> mapPlaceStatus = new HashMap<>();
+    public static HashMap<Integer, UserPlace> mapPlaceStatus = new HashMap<>();
     private static Place lastPlace = null;
     private static Post lastPost = null;
     private static SearchFilter searchFilter = null;
@@ -62,7 +62,7 @@ public class CacheData {
 
     public static void addUserStatus(int placeId, UserPlaceStatus status){
         // TODO remove old ones
-        UsersPlace userPlace = new UsersPlace();
+        UserPlace userPlace = new UserPlace();
         userPlace.place_id = placeId;
         userPlace.status = status;
         mapPlaceStatus.put(placeId, userPlace);
@@ -80,7 +80,7 @@ public class CacheData {
     // Last place status
     public static boolean isAllowedToAddUserStatus(int placeId, UserPlaceStatus status){
         if (mapPlaceStatus.containsKey(placeId)){
-            UsersPlace placeStatus = mapPlaceStatus.get(placeId);
+            UserPlace placeStatus = mapPlaceStatus.get(placeId);
             // If there is already a user status
             if (placeStatus.status == status){
                 return false;

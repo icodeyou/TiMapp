@@ -5,7 +5,7 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
-public class UsersPlace implements PlaceUserInterface{
+public class UserPlace implements PlaceUserInterface{
 
     public int place_id;
     public UserPlaceStatus status;
@@ -17,7 +17,7 @@ public class UsersPlace implements PlaceUserInterface{
 
     @Override
     public String toString() {
-        return "UsersPlace{" +
+        return "UserPlace{" +
                 "place_id=" + place_id +
                 ", status=" + status +
                 ", user_id=" + user_id + " (" + user + ")" +
@@ -31,8 +31,8 @@ public class UsersPlace implements PlaceUserInterface{
     }
 
     @Override
-    public String getPostTime() {
-        return Util.secondsTimestampToPrettyTime(this.created);
+    public String getTimeCreated() {
+        return Util.secondsTimestampToPrettyTime(((long) this.created) * 1000);
     }
 
     @Override

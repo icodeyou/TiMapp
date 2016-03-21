@@ -6,22 +6,17 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.entities.UserPlaceStatus;
-import com.timappweb.timapp.entities.UsersPlace;
+import com.timappweb.timapp.entities.UserPlace;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -165,6 +160,6 @@ public interface WebServiceInterface {
     Call<RestFeedback> notifyPlaceHere(@Body Map<String, String> conditions);
 
     @POST("PlacesUsers/place/{id}.json")
-    Call<PaginationResponse<UsersPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
+    Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
 
 }
