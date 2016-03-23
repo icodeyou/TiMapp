@@ -40,6 +40,7 @@ public class InviteFriendsActivity extends BaseActivity{
     private List<Profile> allFbFriends;
     private SimpleFacebook mSimpleFacebook;
     private View noFriendsView;
+    private OnFriendsListener onFriendsListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class InviteFriendsActivity extends BaseActivity{
         Log.d(TAG, "Creating InviteFriendsActivity");
         setContentView(R.layout.activity_invite_friends);
         this.initToolbar(true);
+        initOnFriendsLoadedListener();
+        this.getFriends(onFriendsListener);
 
         inviteButton = findViewById(R.id.invite_button);
         textInviteButton = (TextView) findViewById(R.id.text_invite_button);
@@ -59,36 +62,32 @@ public class InviteFriendsActivity extends BaseActivity{
         initInviteButton();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initOnFriendsLoadedListener() {
+        onFriendsListener = new OnFriendsListener() {
+            @Override
+            public void onComplete(List<Profile> friends) {
+                allFbFriends = friends;
+                Log.i("Simple Facebook", "Number of friends = " + friends.size());
+                if(allFbFriends.size()==0) {
+                    noFriendsView.setVisibility(View.VISIBLE);
+                } else {
+                    noFriendsView.setVisibility(View.GONE);
+                    adapter.setData(allFbFriends);
+                }
+            }
+        };
+    }
+
     private void initSelectedFriends() {
         friendsSelected = new ArrayList<>();
         //TODO : Get invited users from placeActivity and add them to the list
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
-        getAllFbFriends();
-        if(allFbFriends.size()==0) {
-            noFriendsView.setVisibility(View.VISIBLE);
-        } else {
-            noFriendsView.setVisibility(View.GONE);
-            adapter.setData(allFbFriends);
-        }
     }
 
     private void findViews() {
@@ -180,32 +179,6 @@ public class InviteFriendsActivity extends BaseActivity{
         } else {
             inviteButton.setVisibility(View.GONE);
         }
-    }
-
-    public List<Profile> getAllFbFriends() {
-        final OnFriendsListener onFriendsListener = new OnFriendsListener() {
-            @Override
-            public void onComplete(List<Profile> friends) {
-                allFbFriends = friends;
-                Log.i(TAG, "Number of friends = " + friends.size());
-            }
-        };
-        PictureAttributes pictureAttributes = Attributes.createPictureAttributes();
-        pictureAttributes.setHeight(150);
-        pictureAttributes.setWidth(150);
-        pictureAttributes.setType(PictureAttributes.PictureType.SQUARE);
-
-        // Set the properties that you want to get
-        Profile.Properties properties = new Profile.Properties.Builder()
-                .add(Profile.Properties.ID)
-                .add(Profile.Properties.FIRST_NAME)
-                .add(Profile.Properties.NAME)
-                .add(Profile.Properties.PICTURE, pictureAttributes)
-                .add(Profile.Properties.INSTALLED)
-                .build();
-
-        mSimpleFacebook.getFriends(properties, onFriendsListener);
-        return allFbFriends;
     }
 
     public List<Profile> getFriendsSelected() {

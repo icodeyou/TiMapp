@@ -37,8 +37,7 @@ public class ExploreFragment extends Fragment{
         return getExploreMapFragment().getHistory();
     }
 
-    // TODO JEan call this method when search filter are added
-    private void reloadMapData(){
+    public void reloadMapData(){
         dataLoader.clear();
         getExploreMapFragment().updateMapData();
     }

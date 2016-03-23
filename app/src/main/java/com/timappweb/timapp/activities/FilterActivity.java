@@ -102,7 +102,6 @@ public class FilterActivity extends BaseActivity {
         MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
         MyApplication.searchFilter.tags = selectedTagsRecyclerView.getAdapter().getData();
         NavUtils.navigateUpFromSameTask(this);
-        finish();
     }
 
 

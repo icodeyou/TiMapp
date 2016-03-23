@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -25,13 +26,23 @@ import android.widget.TextView;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Profile;
+import com.sromku.simple.fb.listeners.OnFriendsListener;
+import com.sromku.simple.fb.utils.Attributes;
+import com.sromku.simple.fb.utils.PictureAttributes;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
+import java.util.List;
+
 public class BaseActivity extends AppCompatActivity {
 
-    protected SearchView searchView;
+    protected SearchView                searchView;
     private MyLocationProvider          locationProvider;
+    private SimpleFacebook              mSimpleFacebook;
+    private boolean                     isFbNeeded;
+    private OnFriendsListener           onFriendsListener;
 
     protected void enableGPS(){
         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -46,6 +57,29 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         locationProvider.requestMultipleUpdates();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isFbNeeded = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isFbNeeded) {
+            mSimpleFacebook = SimpleFacebook.getInstance(this);
+            setAllFbFriends();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(isFbNeeded) {
+            mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -74,6 +108,28 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(showTitle);
+    }
+
+    protected void getFriends(OnFriendsListener onFriendsListener){
+            this.onFriendsListener = onFriendsListener;
+            this.isFbNeeded=true;
+        }
+
+    private void setAllFbFriends() {
+        PictureAttributes pictureAttributes = Attributes.createPictureAttributes();
+        pictureAttributes.setHeight(100);
+        pictureAttributes.setWidth(100);
+        pictureAttributes.setType(PictureAttributes.PictureType.SQUARE);
+
+        // Set the properties that you want to get
+        Profile.Properties properties = new Profile.Properties.Builder()
+                .add(Profile.Properties.ID)
+                .add(Profile.Properties.FIRST_NAME)
+                .add(Profile.Properties.NAME)
+                .add(Profile.Properties.PICTURE, pictureAttributes)
+                .build();
+
+        mSimpleFacebook.getFriends(properties, onFriendsListener);
     }
 
     protected void setSimpleTouchListener(View button, final int resource) {

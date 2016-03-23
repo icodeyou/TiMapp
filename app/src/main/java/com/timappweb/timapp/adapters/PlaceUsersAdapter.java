@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.pkmmte.view.CircularImageView;
+import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.Tag;
@@ -37,7 +38,7 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
     @Override
     public PlacePeopleViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_post, viewGroup, false);
+                .inflate(R.layout.item_userplace, viewGroup, false);
         context = viewGroup.getContext();
 
         PlacePeopleViewHolder placePeopleViewHolder = new PlacePeopleViewHolder(v);
@@ -51,8 +52,10 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
         RecyclerView rvPostTags = holder.rvPostTags;
 
         Log.d(TAG, "User: " + user.getUsername());
-        //test = user.getProfilePictureUrl();
-        //Picasso.with(context).load(user.getProfilePictureUrl()).into(holder.ivProfilePicture);
+        String pic = user.getProfilePictureUrl();
+        if(pic !=null) {
+            Picasso.with(context).load(pic).into(holder.ivProfilePicture);
+        }
 
         String username = user.getUsername();
         holder.tvUsername.setText(username);
@@ -110,7 +113,7 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
         TextView tvUsername;
         TextView tvTime;
         RecyclerView rvPostTags;
-        CircularImageView ivProfilePicture;
+        ImageView ivProfilePicture;
 
         PlacePeopleViewHolder(View itemView) {
             super(itemView);
@@ -121,7 +124,7 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
             tvUsername = (TextView) itemView.findViewById(R.id.tv_username);
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
             rvPostTags = (RecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
-            ivProfilePicture = (CircularImageView) itemView.findViewById(R.id.profile_picture);
+            ivProfilePicture = (ImageView) itemView.findViewById(R.id.profile_picture);
         }
 
         @Override

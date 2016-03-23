@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +10,6 @@ import android.view.View;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnFriendsListener;
-import com.sromku.simple.fb.utils.Attributes;
-import com.sromku.simple.fb.utils.PictureAttributes;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
@@ -30,12 +27,16 @@ public class ListFriendsActivity extends BaseActivity{
     private SimpleFacebook mSimpleFacebook;
     private View noFriendsView;
 
+    private OnFriendsListener onFriendsListener;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Creating ListFriendsActivity");
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
+        initOnFriendsLoadedListener();
+        this.getFriends(onFriendsListener);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_view);
@@ -43,17 +44,20 @@ public class ListFriendsActivity extends BaseActivity{
         initAdapterListFriends();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
-        setAllFbFriends();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
+    private void initOnFriendsLoadedListener() {
+        onFriendsListener = new OnFriendsListener() {
+            @Override
+            public void onComplete(List<Profile> friends) {
+                allFbFriends = friends;
+                Log.i("Simple Facebook", "Number of friends = " + friends.size());
+                if(allFbFriends.size()==0) {
+                    noFriendsView.setVisibility(View.VISIBLE);
+                } else {
+                    noFriendsView.setVisibility(View.GONE);
+                    adapter.setData(allFbFriends);
+                }
+            }
+        };
     }
 
     private void initAdapterListFriends() {
@@ -75,35 +79,5 @@ public class ListFriendsActivity extends BaseActivity{
         Profile friend = allFbFriends.get(position);
         //TODO : redirect on right profile
         IntentsUtils.profile(this, MyApplication.getCurrentUser());
-    }
-
-    public void setAllFbFriends() {
-        final OnFriendsListener onFriendsListener = new OnFriendsListener() {
-            @Override
-            public void onComplete(List<Profile> friends) {
-                allFbFriends = friends;
-                Log.i(TAG, "Number of friends = " + friends.size());
-                if(allFbFriends.size()==0) {
-                    noFriendsView.setVisibility(View.VISIBLE);
-                } else {
-                    noFriendsView.setVisibility(View.GONE);
-                    adapter.setData(allFbFriends);
-                }
-            }
-        };
-        PictureAttributes pictureAttributes = Attributes.createPictureAttributes();
-        pictureAttributes.setHeight(100);
-        pictureAttributes.setWidth(100);
-        pictureAttributes.setType(PictureAttributes.PictureType.SQUARE);
-
-        // Set the properties that you want to get
-        Profile.Properties properties = new Profile.Properties.Builder()
-                .add(Profile.Properties.ID)
-                .add(Profile.Properties.FIRST_NAME)
-                .add(Profile.Properties.NAME)
-                .add(Profile.Properties.PICTURE, pictureAttributes)
-                .build();
-
-        mSimpleFacebook.getFriends(properties, onFriendsListener);
     }
 }

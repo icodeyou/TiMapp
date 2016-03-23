@@ -123,6 +123,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        exploreFragment.reloadMapData();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mSimpleFacebook = SimpleFacebook.getInstance(this);
