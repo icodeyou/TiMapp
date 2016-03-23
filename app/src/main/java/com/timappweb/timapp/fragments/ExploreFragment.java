@@ -37,6 +37,12 @@ public class ExploreFragment extends Fragment{
         return getExploreMapFragment().getHistory();
     }
 
+    // TODO JEan call this method when search filter are added
+    private void reloadMapData(){
+        dataLoader.clear();
+        getExploreMapFragment().updateMapData();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_explore, container, false);

@@ -240,6 +240,29 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         });
     }
 
+    private void initAreaRequestHistory(){
+        history = new AreaRequestHistory(exploreFragment.getDataLoader());
+        history.setAreaRequestItemFactory(new AreaRequestItemFactory() {
+            @Override
+            public AreaRequestItem build() {
+                AreaRequestItem<Place> requestItem = new AreaRequestItem<Place>();
+                requestItem.setListener(new AreaRequestItem.OnDataChangeListener() {
+                    @Override
+                    public void onDataChange() {
+                        Log.d(TAG, "AreaRequestItem.onDataChange(): ");
+                        // Each time data change we reset everything
+                        List<Place> places = history.getInsideBoundsItems(getMapBounds());
+                        mClusterManagerPost.clearItems();
+                        mClusterManagerPost.addItems(places);
+                        mClusterManagerPost.cluster();
+                    }
+                });
+                return requestItem;
+            }
+        });
+    }
+
+
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
@@ -257,27 +280,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             //setUpMapEvents();
             centerMap();
 
-            history = new AreaRequestHistory(exploreFragment.getDataLoader());
-            history.setAreaRequestItemFactory(new AreaRequestItemFactory() {
-                @Override
-                public AreaRequestItem build() {
-                    AreaRequestItem<Place> requestItem = new AreaRequestItem<Place>();
-                    requestItem.setListener(new AreaRequestItem.OnDataChangeListener() {
-                        @Override
-                        public void onDataChange() {
-                            Log.d(TAG, "AreaRequestItem.onDataChange(): ");
-                            // Each time data change we reset everything
-                            List<Place> places = history.getInsideBoundsItems(getMapBounds());
-                            mClusterManagerPost.clearItems();
-                            mClusterManagerPost.addItems(places);
-                            mClusterManagerPost.cluster();
-                        }
-                    });
-                    return requestItem;
-                }
-            });
+            this.initAreaRequestHistory();
             exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
-
             history.resizeArea(getMapBounds());
             this.updateMapData();
 
@@ -307,7 +311,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         return mapBounds;
     }
 
-    private void updateMapData(){
+    public void updateMapData(){
         final LatLngBounds bounds = getMapBounds();
         Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 

@@ -56,6 +56,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
         this.mClusterManagerPlaces = mClusterManagerPost;
     }
 
+    public void clear(){
+        areaRequestHistory.clearAll();
+    }
 
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
