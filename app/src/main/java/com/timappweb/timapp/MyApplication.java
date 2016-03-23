@@ -149,6 +149,7 @@ public class MyApplication extends Application{
         Permission[] permissions = new Permission[] {
                 Permission.USER_PHOTOS,
                 Permission.EMAIL,
+                Permission.USER_FRIENDS,
         };
         SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
                 .setAppId(getResources().getString(R.string.app_id))

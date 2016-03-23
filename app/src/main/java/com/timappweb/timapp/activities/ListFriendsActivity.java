@@ -1,37 +1,34 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
-import android.content.res.TypedArray;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dpizarro.autolabel.library.AutoLabelUI;
+import com.sromku.simple.fb.SimpleFacebook;
+import com.sromku.simple.fb.entities.Profile;
+import com.sromku.simple.fb.listeners.OnFriendsListener;
+import com.sromku.simple.fb.utils.Attributes;
+import com.sromku.simple.fb.utils.PictureAttributes;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
-import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Friend;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ListFriendsActivity extends BaseActivity{
 
     private String TAG = "ListFriendsActivity";
-    private List<Friend> mPersonList;
+    private List<Profile> allFbFriends;
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
+    private SimpleFacebook mSimpleFacebook;
+    private View noFriendsView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,30 +38,30 @@ public class ListFriendsActivity extends BaseActivity{
         this.initToolbar(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        noFriendsView = findViewById(R.id.no_friends_view);
 
-        initRv();
+        initAdapterListFriends();
     }
 
-    private void initRv() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSimpleFacebook = SimpleFacebook.getInstance(this);
+        setAllFbFriends();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        mPersonList = new ArrayList<>();
-
-        //Populate fake list
-        List<String> names = Arrays.asList(getResources().getStringArray(R.array.names));
-        int[] ages = getResources().getIntArray(R.array.ages);
-        TypedArray photos = getResources().obtainTypedArray(R.array.photos);
-
-        for (int i = 0; i < names.size(); i++) {
-            mPersonList.add(new Friend(names.get(i), ages[i], photos.getResourceId(i, -1), false));
-        }
-
-        photos.recycle();
-
         adapter = new FriendsAdapter(this);
-        adapter.setData(mPersonList);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -75,7 +72,38 @@ public class ListFriendsActivity extends BaseActivity{
     }
 
     private void itemListClicked(int position) {
-        User user = mPersonList.get(position);
-        IntentsUtils.profile(this,user);
+        Profile friend = allFbFriends.get(position);
+        //TODO : redirect on right profile
+        IntentsUtils.profile(this, MyApplication.getCurrentUser());
+    }
+
+    public void setAllFbFriends() {
+        final OnFriendsListener onFriendsListener = new OnFriendsListener() {
+            @Override
+            public void onComplete(List<Profile> friends) {
+                allFbFriends = friends;
+                Log.i(TAG, "Number of friends = " + friends.size());
+                if(allFbFriends.size()==0) {
+                    noFriendsView.setVisibility(View.VISIBLE);
+                } else {
+                    noFriendsView.setVisibility(View.GONE);
+                    adapter.setData(allFbFriends);
+                }
+            }
+        };
+        PictureAttributes pictureAttributes = Attributes.createPictureAttributes();
+        pictureAttributes.setHeight(100);
+        pictureAttributes.setWidth(100);
+        pictureAttributes.setType(PictureAttributes.PictureType.SQUARE);
+
+        // Set the properties that you want to get
+        Profile.Properties properties = new Profile.Properties.Builder()
+                .add(Profile.Properties.ID)
+                .add(Profile.Properties.FIRST_NAME)
+                .add(Profile.Properties.NAME)
+                .add(Profile.Properties.PICTURE, pictureAttributes)
+                .build();
+
+        mSimpleFacebook.getFriends(properties, onFriendsListener);
     }
 }
