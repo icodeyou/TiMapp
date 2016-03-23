@@ -222,15 +222,19 @@ public class PlacePeopleFragment extends Fragment {
                     0,getString(R.string.header_posts)));
         }
         if(peopleComing!=null) {
-            int numberPosts = posts==null ? 0 : posts.size();
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
-                    numberPosts,getString(R.string.header_coming)));
+            if(peopleComing.size()!=0) {
+                int numberPosts = posts==null ? 0 : posts.size();
+                sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
+                        numberPosts,getString(R.string.header_coming)));
+            }
         }
         if(peopleInvited!=null) {
-            int numberPosts = posts==null ? 0 : posts.size();
-            int numberComing = peopleComing==null ? 0 : peopleComing.size();
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
-                    numberPosts+numberComing,getString(R.string.header_invited)));
+            if (peopleInvited.size()!=0) {
+                int numberPosts = posts==null ? 0 : posts.size();
+                int numberComing = peopleComing==null ? 0 : peopleComing.size();
+                sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
+                        numberPosts+numberComing,getString(R.string.header_invited)));
+            }
         }
 
         //Add your adapter to the sectionAdapter
