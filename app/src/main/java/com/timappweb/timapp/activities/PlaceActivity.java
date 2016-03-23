@@ -641,4 +641,12 @@ public class PlaceActivity extends BaseActivity {
     public View.OnClickListener getPeopleListener() {
         return peopleListener;
     }
+    
+
+    @Override
+    protected void onDestroy() {
+        // TODO cancel async tasks
+        super.onDestroy();
+    }
+
 }
