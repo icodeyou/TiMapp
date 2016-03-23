@@ -12,7 +12,7 @@ import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 
 public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
-    private SearchAndSelectTagManager manager;
+    protected SearchAndSelectTagManager manager;
 
     public OnBasicQueryTagListener() {
     }

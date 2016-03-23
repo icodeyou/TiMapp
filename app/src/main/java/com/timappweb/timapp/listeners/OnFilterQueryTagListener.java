@@ -18,4 +18,10 @@ public class OnFilterQueryTagListener extends OnBasicQueryTagListener {
         filterActivity.submit();
         return true;
     }
+
+    @Override
+    public void addTag(String query) {
+        super.addTag(query);
+        filterActivity.setTopRvVisibility();
+    }
 }

@@ -14,6 +14,7 @@
     <dimen name="margin_bottom_card">5dp</dimen>
     <dimen name="margin_square_button">10dp</dimen>
     <dimen name="padding_fragments_place">5dp</dimen>
+    <dimen name="margin_tags">10dp</dimen>
 
     <dimen name="toolbar">50dp</dimen>
 

@@ -38,7 +38,6 @@ public class TagActivity extends BaseActivity{
 
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
-    private HashtagView suggestedTagsRV;
     private View progressBarView;
     private ListView placeListView;
     private Place currentPlace = null;
@@ -74,8 +73,8 @@ public class TagActivity extends BaseActivity{
         progressBarView = findViewById(R.id.progress_view);
         placeListView = (ListView) findViewById(R.id.place_lv);
 
-        initAdapterPlace();
 
+        initAdapterPlace();
         initListeners();
 
         setSelectedTagsViewGone();
@@ -99,6 +98,9 @@ public class TagActivity extends BaseActivity{
         setSearchview(menu);
         searchView.requestFocus();
         searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+        initListTags();
 
         //set hint for searchview
         final OnBasicQueryTagListener onBasicQueryTagListener = new OnThreeQueriesTagListener(this);
@@ -115,20 +117,6 @@ public class TagActivity extends BaseActivity{
                 }
         );
 
-        suggestedTagsRV = searchAndSelectTagManager.getSuggestedTagsRV();
-        suggestedTagsRV.addOnTagClickListener(new HashtagView.TagsClickListener() {
-            @Override
-            public void onItemClicked(Object item) {
-                Tag tag = (Tag) item;
-                suggestedTagsRV.removeItem(item);
-                searchView.setQuery(tag.name, true);
-                searchView.clearFocus();
-            }
-        });
-
-        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-
-        suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
 
         //Initialize Query hint in searchview
         actionCounter();
@@ -158,6 +146,20 @@ public class TagActivity extends BaseActivity{
     //----------------------------------------------------------------------------------------------
     //Private methods
 
+    private void initListTags() {
+        suggestedTagsView.addOnTagClickListener(new HashtagView.TagsClickListener() {
+            @Override
+            public void onItemClicked(Object item) {
+                Tag tag = (Tag) item;
+                suggestedTagsView.removeItem(item);
+                searchView.setQuery(tag.name, true);
+                searchView.clearFocus();
+            }
+        });
+
+        suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
+    }
+
     private void initListeners() {
         selectedTagsRV.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -184,12 +186,15 @@ public class TagActivity extends BaseActivity{
             case 1:
                 setSelectedTagsViewVisible();
                 searchView.setQueryHint(getResources().getString(R.string.searchview_hint_2));
+                searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                 break;
             case 2:
                 searchView.setQueryHint(getResources().getString(R.string.searchview_hint_1));
+                searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
                 break;
             case 3:
                 currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
+                searchView.clearFocus();
                 IntentsUtils.addPostStepPublish(this, this.currentPlace, currentPost);
             default:
                 break;
@@ -198,13 +203,13 @@ public class TagActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Public methods
-    public void setSelectedTagsViewGone() {
+    private void setSelectedTagsViewGone() {
         findViewById(R.id.top_line_hrv).setVisibility(View.GONE);
         selectedTagsView.setVisibility(View.GONE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.GONE);
     }
 
-    public void setSelectedTagsViewVisible() {
+    private void setSelectedTagsViewVisible() {
         findViewById(R.id.top_line_hrv).setVisibility(View.VISIBLE);
         selectedTagsView.setVisibility(View.VISIBLE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.VISIBLE);

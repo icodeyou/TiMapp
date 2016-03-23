@@ -43,15 +43,28 @@
 
         <!-- No pictures yet -->
         <!-- **********************************************************************-->
-        <TextView
+        <LinearLayout
             android:id="@+id/no_pictures_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="@dimen/text_normal"
-            android:text="@string/no_tags"
+            android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone">
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_camera"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="50dp"
+                android:textSize="@dimen/text_normal"
+                android:text="@string/no_pic"
+                android:gravity="center"/>
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/no_connection_view"

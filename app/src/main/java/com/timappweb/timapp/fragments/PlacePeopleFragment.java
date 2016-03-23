@@ -62,7 +62,7 @@ public class PlacePeopleFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_place_posts, container, false);
+        View root = inflater.inflate(R.layout.fragment_place_people, container, false);
 
         initVariables(root);
         setListeners();
@@ -90,7 +90,7 @@ public class PlacePeopleFragment extends Fragment {
 
     private void initVariables(View root) {
         placeActivity = (PlaceActivity) getActivity();
-        context= placeActivity.getApplicationContext();
+        context= placeActivity.getBaseContext();
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
 
@@ -153,8 +153,6 @@ public class PlacePeopleFragment extends Fragment {
                 noConnectionView.setVisibility(View.VISIBLE);
             }
         });
-
-
     }
 
     private void loadByStatus(final UserPlaceStatus status){
@@ -176,6 +174,13 @@ public class PlacePeopleFragment extends Fragment {
                         notifyUsersInvitedLoaded(peopleInvited);
                     }
                 }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+                progressView.setVisibility(View.GONE);
+                noConnectionView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -213,16 +218,19 @@ public class PlacePeopleFragment extends Fragment {
 
         //Sections
         if(posts!=null) {
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(0,"Posts"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
+                    0,getString(R.string.header_posts)));
         }
         if(peopleComing!=null) {
             int numberPosts = posts==null ? 0 : posts.size();
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(numberPosts,"People coming"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
+                    numberPosts,getString(R.string.header_coming)));
         }
         if(peopleInvited!=null) {
             int numberPosts = posts==null ? 0 : posts.size();
             int numberComing = peopleComing==null ? 0 : peopleComing.size();
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(numberPosts+numberComing,"Friends invited"));
+            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
+                    numberPosts+numberComing,getString(R.string.header_invited)));
         }
 
         //Add your adapter to the sectionAdapter

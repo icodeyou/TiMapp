@@ -165,6 +165,8 @@ public class PlaceActivity extends BaseActivity {
             case R.id.action_reload:
                 IntentsUtils.reload(this);
                 return true;
+            case android.R.id.home:
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
