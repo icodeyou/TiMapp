@@ -3,6 +3,7 @@ package com.timappweb.timapp.adapters;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
@@ -25,9 +26,14 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
     }
 
     @Override
+    public CategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        filterActivity= (FilterActivity) context;
+        return super.onCreateViewHolder(parent, viewType);
+    }
+
+    @Override
     public void onBindViewHolder(CategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
-        filterActivity= (FilterActivity) context;
         final Category category = categories.get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 

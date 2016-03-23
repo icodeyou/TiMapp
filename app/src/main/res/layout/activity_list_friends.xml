@@ -12,4 +12,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:visibility="visible"/>
+
+    <include layout="@layout/no_friends_layout"
+        android:id="@+id/no_friends_view"
+        android:visibility="gone"/>
+
 </LinearLayout>

@@ -7,6 +7,10 @@
 
     <include layout="@layout/toolbar" />
 
+    <include layout="@layout/no_friends_layout"
+        android:id="@+id/no_friends_view"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
