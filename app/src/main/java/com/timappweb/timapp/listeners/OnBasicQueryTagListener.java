@@ -19,6 +19,7 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        addTag(query);
         return true;
     }
 

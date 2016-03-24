@@ -91,7 +91,6 @@ public class FilterActivity extends BaseActivity {
             @Override
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
-                hashtagView.removeItem(item);
                 searchView.setQuery(tag.name, true);
                 searchView.clearFocus();
             }
@@ -101,6 +100,7 @@ public class FilterActivity extends BaseActivity {
     public void submit() {
         MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
         MyApplication.searchFilter.tags = selectedTagsRecyclerView.getAdapter().getData();
+        //List<Tag> tags = selectedTagsRecyclerView.getAdapter().getData();
         NavUtils.navigateUpFromSameTask(this);
     }
 
