@@ -110,7 +110,6 @@ public class FilterActivity extends BaseActivity {
                 Log.d(TAG, "Clicked on selected item");
                 selectedTagsRecyclerView.getAdapter().removeData(position);
                 setTextButton();
-
             }
         });
     }

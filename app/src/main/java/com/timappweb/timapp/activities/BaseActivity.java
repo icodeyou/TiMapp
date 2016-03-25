@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(gpsOptionsIntent);
     }
 
-    protected void initLocationProvider(LocationListener mLocationListener) {
+    public void initLocationProvider(LocationListener mLocationListener) {
         locationProvider = new MyLocationProvider(this, mLocationListener);
 
         if (!locationProvider.isGPSEnabled()){

@@ -11,10 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -26,8 +28,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.BaseActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.MapTag;
@@ -43,6 +48,7 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.TimeTaskCallback;
+import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +70,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private ListView placesViewer;
     private PlacesAdapter placesAdapter;
     private View progressView;
+    private HorizontalTagsRecyclerView filterTagsRv;
 
     private static HashMap<Marker, Place> mapMarkers;
     private GoogleMap map;
@@ -110,8 +117,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
         //initialize
         mapView = (MapView) root.findViewById(R.id.map);
-        progressView = root.findViewById(R.id.progress_view);
         mapView.onCreate(mapBundle);
+        progressView = root.findViewById(R.id.progress_view);
+        filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
+        //locationButton = (ImageView) root.findViewById(R.id.my_location_button);
         placesViewer = (ListView) root.findViewById(R.id.places_viewer);
         placesAdapter = new PlacesAdapter(getActivity(), false);
         placesViewer.setAdapter(placesAdapter);
@@ -193,6 +202,16 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
 
+    public void initHorizontalTags() {
+        if(isFilterActive()) {
+            filterTagsRv.setVisibility(View.VISIBLE);
+            filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
+        } else {
+            filterTagsRv.setVisibility(View.GONE);
+        }
+    }
+
+
     private void initListeners() {
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -201,6 +220,22 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 IntentsUtils.viewPlaceFromMap(getActivity(), place);
             }
         });
+
+        /*locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!MyApplication.hasLastLocation()) {
+                    Toast.makeText(getContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                //Get and set Location
+                String latitude = String.valueOf(MyApplication.getLastLocation().getLatitude());
+                String longitude = String.valueOf(MyApplication.getLastLocation().getLongitude());
+                LatLng latLng = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
+                gMap.animateCamera(cameraUpdate);
+            }
+        });*/
 
         gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -234,10 +269,24 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             public void onMapReady(GoogleMap googleMap) {
                 Log.d(TAG, "Map is now ready!");
                 gMap = googleMap;
+                updateFilterView();
                 mapBounds = gMap.getProjection().getVisibleRegion().latLngBounds;
                 loadMapData();
             }
         });
+    }
+
+    private void updateFilterView() {
+        //Push button below filter view
+        if(isFilterActive()) {
+            gMap.setPadding(0,200,0,0);
+        } else {
+            gMap.setPadding(0,0,0,0);
+        }
+    }
+
+    private boolean isFilterActive() {
+        return MyApplication.searchFilter.tags.size()!=0;
     }
 
     private void initAreaRequestHistory(){
