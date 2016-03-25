@@ -71,7 +71,7 @@
             android:id="@+id/bottom_line_hrv"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorSecondary"/>
+            android:background="@color/divider_listview"/>
 
         <!-- Progress View -->
         <!-- **********************************************************************-->

@@ -91,7 +91,6 @@ public class FilterActivity extends BaseActivity {
             @Override
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
-                hashtagView.removeItem(item);
                 searchView.setQuery(tag.name, true);
                 searchView.clearFocus();
             }

@@ -26,7 +26,7 @@
     <color name="background_list_tags">@color/White</color>
     <color name="background_list_main_tags">#fff5f4</color>
     <color name="usertag_text_color">#de5249</color>
-    <color name="divider_listview">@color/colorSecondary</color>
+    <color name="divider_listview">@color/colorAccent</color>
 
     <!-- Buttons -->
     <color name="background_button">@color/colorAccent</color>

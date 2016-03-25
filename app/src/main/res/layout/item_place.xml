@@ -115,7 +115,7 @@
             <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                 xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
                 android:id="@+id/rv_horizontal_tags"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_rv_displayed_tags"
                 myattrs:horizontal_tags_text_color="@color/colorAccent"
                 myattrs:horizontal_tags_background_color="@color/background"

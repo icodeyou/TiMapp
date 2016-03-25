@@ -84,6 +84,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
         //add marker to Map
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bmp));
+        markerOptions.anchor(0.5f,0.5f); // set marker centered on its location
     }
 
     /*private Bitmap getResizedBitmap(Bitmap bmp, int newWidth, int newHeight) {

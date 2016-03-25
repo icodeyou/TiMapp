@@ -233,7 +233,6 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
             descriptor = BitmapDescriptorFactory.fromBitmap(this.mIconGenerator.makeIcon(this.getClusterText(cluster)));
             this.mIcons.put(bucket, descriptor);
         }
-
         markerOptions.icon(descriptor);
     }
 
