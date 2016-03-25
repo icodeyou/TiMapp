@@ -36,7 +36,7 @@ public class FilterActivity extends BaseActivity {
     private SearchAndSelectTagManager searchAndSelectTagManager;
     private Activity activity=this;
     private View progressBarView;
-    private RecyclerView categoriesRv;
+    //private RecyclerView categoriesRv;
     private View searchButton;
     private FilterCategoriesAdapter categoriesAdapter;
     //private List<Category> categoriesSelected;
@@ -55,7 +55,7 @@ public class FilterActivity extends BaseActivity {
         setContentView(R.layout.activity_filter);
 
         progressBarView = findViewById(R.id.progress_view);
-        categoriesRv = (RecyclerView) findViewById(R.id.rv_categories);
+        //categoriesRv = (RecyclerView) findViewById(R.id.rv_categories);
         searchButton = findViewById(R.id.search_button);
         textSearchButton = (TextView) findViewById(R.id.text_search_button);
         selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
@@ -70,11 +70,19 @@ public class FilterActivity extends BaseActivity {
         this.initToolbar(false);
     }
 
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "FilterActivity::onResume()");
+        super.onResume();
+        selectedTagsRecyclerView.getAdapter().setData(MyApplication.searchFilter.tags);
+        selectedTagsRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
     private void initAdapterAndManager() {
-        categoriesAdapter = new FilterCategoriesAdapter(this);
-        categoriesRv.setAdapter(categoriesAdapter);
+        //categoriesAdapter = new FilterCategoriesAdapter(this);
+        //categoriesRv.setAdapter(categoriesAdapter);
         GridLayoutManager manager = new SpanningGridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
-        categoriesRv.setLayoutManager(manager);
+        //categoriesRv.setLayoutManager(manager);
     }
 
     private void setListeners() {
@@ -98,7 +106,7 @@ public class FilterActivity extends BaseActivity {
     }
 
     public void submit() {
-        MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
+       // MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
         MyApplication.searchFilter.tags = selectedTagsRecyclerView.getAdapter().getData();
         Log.d(TAG, "Selected tag: " + Tag.tagsToString(MyApplication.searchFilter.tags));
         NavUtils.navigateUpFromSameTask(this);
@@ -111,6 +119,7 @@ public class FilterActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "FilterActivity::onCreateOptionsMenu()");
         final Activity thatActivity = this;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);

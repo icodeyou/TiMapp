@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -10,4 +11,8 @@ public class SearchFilter {
     public List<Tag> tags;
     public List<Category> categories;
 
+    public SearchFilter() {
+        this.tags = new LinkedList<>();
+        this.categories = new LinkedList<>();
+    }
 }
