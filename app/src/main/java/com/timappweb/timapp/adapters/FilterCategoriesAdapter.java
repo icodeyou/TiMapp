@@ -37,8 +37,9 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
         final Category category = categories.get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
-        final List<Category> categoriesSelected = filterActivity.getCategoriesSelected();
+        //final List<Category> categoriesSelected = filterActivity.getCategoriesSelected();
 
+/*
         if(categoriesSelected.contains(category)) {
             categoryIcon.setImageResource(category.resourceWhite);
             categoryIcon.setBackgroundResource(R.drawable.b4);
@@ -46,7 +47,6 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
             categoryIcon.setImageResource(category.resourceBlack);
             categoryIcon.setBackground(null);
         }
-
         holder.getItemView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +58,7 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
                     notifyDataSetChanged();
                 }
             }
-        });
+        });*/
     }
 
 }

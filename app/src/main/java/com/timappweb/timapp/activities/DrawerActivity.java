@@ -125,7 +125,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onRestart() {
         super.onRestart();
-        exploreFragment.reloadMapData();
     }
 
     @Override

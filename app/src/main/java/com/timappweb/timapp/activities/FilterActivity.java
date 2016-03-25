@@ -39,7 +39,7 @@ public class FilterActivity extends BaseActivity {
     private RecyclerView categoriesRv;
     private View searchButton;
     private FilterCategoriesAdapter categoriesAdapter;
-    private List<Category> categoriesSelected;
+    //private List<Category> categoriesSelected;
     private TextView textSearchButton;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView hashtagView;
@@ -63,7 +63,7 @@ public class FilterActivity extends BaseActivity {
         tagScrollView = findViewById(R.id.tags_scrollview);
 
         initAdapterAndManager();
-        initCategoriesSelected();
+        //initCategoriesSelected();
         setListeners();
         setTopRvVisibility();
 
@@ -101,6 +101,7 @@ public class FilterActivity extends BaseActivity {
     public void submit() {
         MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
         MyApplication.searchFilter.tags = selectedTagsRecyclerView.getAdapter().getData();
+        Log.d(TAG, "Selected tag: " + Tag.tagsToString(MyApplication.searchFilter.tags));
         NavUtils.navigateUpFromSameTask(this);
     }
 
@@ -174,16 +175,16 @@ public class FilterActivity extends BaseActivity {
             searchButton.setVisibility(View.VISIBLE);
         }
     }
-
+/*
     private void initCategoriesSelected() {
         //If nothing is saved in the preferences
         categoriesSelected = new ArrayList<>(categoriesAdapter.getAllCategories());
         //TODO Steph : Récupérer les catégories selectionnées à partir des préférences
-    }
+    }*/
 
     //----------------------------------------------------------------------------------------------
     //GETTER and SETTERS
-
+/*
     public void selectCategory(Category category) {
         categoriesSelected.add(category);
     }
@@ -194,7 +195,7 @@ public class FilterActivity extends BaseActivity {
 
     public List<Category> getCategoriesSelected() {
         return categoriesSelected;
-    }
+    }*/
 
     public View getProgressBarView() {
         return progressBarView;
