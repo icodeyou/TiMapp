@@ -262,16 +262,15 @@ public class PlaceActivity extends BaseActivity {
         call.enqueue(new Callback<RestFeedback>() {
             @Override
             public void onResponse(Response<RestFeedback> response) {
-                if (response.isSuccess()){
+                if (response.isSuccess()) {
                     RestFeedback feedback = response.body();
 
-                    if (feedback.success){
+                    if (feedback.success) {
                         Log.v(TAG, "SUCCESS UPLOAD IMAGE");
                         // Get the bitmap in according to the width of the device
                         Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
                         fragmentPictures.setImage(bitmap);
-                    }
-                    else{
+                    } else {
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                     }
                     Toast.makeText(currentActivity, feedback.message, Toast.LENGTH_LONG).show();
@@ -284,6 +283,7 @@ public class PlaceActivity extends BaseActivity {
             }
 
         });
+        asyncCalls.add(call);
     }
 
 
@@ -322,6 +322,7 @@ public class PlaceActivity extends BaseActivity {
                         progressBottom.setVisibility(View.GONE);
                     }
                 });
+
             }
         });
 
@@ -492,8 +493,8 @@ public class PlaceActivity extends BaseActivity {
                 Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
                 IntentsUtils.home(that);
             }
-
         });
+        asyncCalls.add(call);
     }
 
     private void notifyPlaceLoaded() {
@@ -647,7 +648,6 @@ public class PlaceActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        // TODO cancel async tasks
         super.onDestroy();
     }
 

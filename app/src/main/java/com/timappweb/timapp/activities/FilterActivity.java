@@ -76,6 +76,7 @@ public class FilterActivity extends BaseActivity {
         super.onResume();
         selectedTagsRecyclerView.getAdapter().setData(MyApplication.searchFilter.tags);
         selectedTagsRecyclerView.getAdapter().notifyDataSetChanged();
+        setTopRvVisibility();
     }
 
     private void initAdapterAndManager() {
@@ -187,7 +188,6 @@ public class FilterActivity extends BaseActivity {
     private void initCategoriesSelected() {
         //If nothing is saved in the preferences
         categoriesSelected = new ArrayList<>(categoriesAdapter.getAllCategories());
-        //TODO Steph : Récupérer les catégories selectionnées à partir des préférences
     }*/
 
     //----------------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class PlacePeopleFragment extends Fragment {
+public class PlacePeopleFragment extends BaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
     private Context         context;
@@ -153,6 +153,7 @@ public class PlacePeopleFragment extends Fragment {
                 noConnectionView.setVisibility(View.VISIBLE);
             }
         });
+        asynCalls.add(call);
     }
 
     private void loadByStatus(final UserPlaceStatus status){

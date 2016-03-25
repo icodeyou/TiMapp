@@ -28,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class PlaceTagsFragment extends Fragment {
+public class PlaceTagsFragment extends BaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
     private TagsAndCountersAdapter  tagsAndCountersAdapter;
@@ -135,6 +135,7 @@ public class PlaceTagsFragment extends Fragment {
                 noConnectionView.setVisibility(View.VISIBLE);
             }
         });
+        asynCalls.add(call);
     }
 
     private void notifyTagsLoaded(List<Tag> tags) {
@@ -157,6 +158,8 @@ public class PlaceTagsFragment extends Fragment {
             addButton.setVisibility(View.GONE);
         }
     }
+
+
 
     public View getMainButton() {
         return addButton;

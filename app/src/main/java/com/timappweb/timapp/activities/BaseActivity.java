@@ -1,9 +1,5 @@
 package com.timappweb.timapp.activities;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
@@ -12,19 +8,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.entities.Profile;
@@ -36,13 +26,29 @@ import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.List;
 
+import retrofit2.Call;
+
 public class BaseActivity extends AppCompatActivity {
 
+    private static final String TAG     = "BaseActivity";
     protected SearchView                searchView;
     private MyLocationProvider          locationProvider;
     private SimpleFacebook              mSimpleFacebook;
     private boolean                     isFbNeeded;
     private OnFriendsListener           onFriendsListener;
+    protected List<Call> asyncCalls;
+
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "BaseActivity::onDestroy()");
+        if (asyncCalls != null){
+            for (Call call: asyncCalls){
+                call.cancel();
+            }
+        }
+        super.onDestroy();
+    }
 
     protected void enableGPS(){
         Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);

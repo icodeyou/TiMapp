@@ -24,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class ExploreTagsFragment extends Fragment {
+public class ExploreTagsFragment extends BaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
     TagsAndCountersAdapter placesAdapter;
@@ -65,6 +65,7 @@ public class ExploreTagsFragment extends Fragment {
         conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
 
         Call<List<Tag>> call = RestClient.service().trendingTags(conditions.toMap());
+
         call.enqueue(new RestCallback<List<Tag>>(getContext()) {
             @Override
             public void onResponse(Response<List<Tag>> response) {
@@ -77,5 +78,28 @@ public class ExploreTagsFragment extends Fragment {
                 }
             }
         });
+
+        asynCalls.add(call);
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "ExploreTagsFragment::onPause() -> cancelling api calls");
+        super.onPause();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }
