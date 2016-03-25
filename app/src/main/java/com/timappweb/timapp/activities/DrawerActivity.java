@@ -44,6 +44,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     private SimpleFacebook mSimpleFacebook;
     private OnLogoutListener onLogoutListener;
+    private static boolean active;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -125,12 +126,22 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onRestart() {
         super.onRestart();
+        if(exploreFragment!=null) {
+            exploreFragment.reloadMapData();
+        }
+        active = true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mSimpleFacebook = SimpleFacebook.getInstance(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
     }
 
     @Override
@@ -154,6 +165,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             super.onBackPressed();
         }
     }
+
+
 
     /* ============================================================================================*/
     /* Methods */
@@ -217,6 +230,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
 
         return res;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
 

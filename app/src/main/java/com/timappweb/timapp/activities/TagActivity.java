@@ -4,7 +4,6 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -75,7 +74,7 @@ public class TagActivity extends BaseActivity{
 
 
         initAdapterPlace();
-        initListeners();
+        initClickSelectedTag();
 
         setSelectedTagsViewGone();
     }
@@ -163,7 +162,7 @@ public class TagActivity extends BaseActivity{
         suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
     }
 
-    private void initListeners() {
+    private void initClickSelectedTag() {
         selectedTagsRV.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {

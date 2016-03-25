@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 
@@ -38,8 +40,10 @@ public class ExploreFragment extends Fragment{
     }
 
     public void reloadMapData(){
-        dataLoader.clear();
-        getExploreMapFragment().updateMapData();
+        if(getExploreMapFragment()!=null) {
+            dataLoader.clear();
+            getExploreMapFragment().updateMapData();
+        }
     }
 
     @Override
@@ -65,6 +69,11 @@ public class ExploreFragment extends Fragment{
 
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public int getCurrentItem() {

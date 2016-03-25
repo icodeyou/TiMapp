@@ -22,6 +22,7 @@ public class OnFilterQueryTagListener extends OnBasicQueryTagListener {
     @Override
     public void addTag(String query) {
         super.addTag(query);
+        filterActivity.setTextButton();
         filterActivity.setTopRvVisibility();
     }
 }
