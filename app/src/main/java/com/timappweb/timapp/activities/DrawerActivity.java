@@ -125,12 +125,25 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        //Set Filter view above map.
+        exploreFragment.getExploreMapFragment().initHorizontalTags();
+
+        // Reload Data
+        if(exploreFragment!=null) {
+            exploreFragment.reloadMapData();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mSimpleFacebook = SimpleFacebook.getInstance(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -154,6 +167,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             super.onBackPressed();
         }
     }
+
+
 
     /* ============================================================================================*/
     /* Methods */
@@ -218,7 +233,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         return res;
     }
-
 
     public Fragment getExploreFragment() {
         return exploreFragment;

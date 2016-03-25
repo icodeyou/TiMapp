@@ -30,7 +30,7 @@
         myattrs:horizontal_tags_text_size="@dimen/text_normal"/>
 
     <LinearLayout
-        android:id="@+id/search_button"
+        android:id="@+id/save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -38,7 +38,7 @@
         android:layout_marginBottom="@dimen/margin_square_button"
         android:background="@drawable/background_button">
         <TextView
-            android:id="@+id/text_search_button"
+            android:id="@+id/text_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="30dp"
@@ -47,7 +47,7 @@
             android:paddingBottom="10dp"
             android:textColor="@color/text_button"
             android:textStyle="bold"
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:text="@string/search_button"
             android:gravity="center"
             android:textSize="@dimen/text_normal"/>

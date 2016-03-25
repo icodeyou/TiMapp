@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -18,8 +17,8 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.FilterCategoriesAdapter;
-import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
@@ -37,10 +36,10 @@ public class FilterActivity extends BaseActivity {
     private Activity activity=this;
     private View progressBarView;
     //private RecyclerView categoriesRv;
-    private View searchButton;
+    private View saveButton;
     private FilterCategoriesAdapter categoriesAdapter;
     //private List<Category> categoriesSelected;
-    private TextView textSearchButton;
+    private TextView textSaveButton;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView hashtagView;
     private View tagScrollView;
@@ -56,8 +55,8 @@ public class FilterActivity extends BaseActivity {
 
         progressBarView = findViewById(R.id.progress_view);
         //categoriesRv = (RecyclerView) findViewById(R.id.rv_categories);
-        searchButton = findViewById(R.id.search_button);
-        textSearchButton = (TextView) findViewById(R.id.text_search_button);
+        saveButton = findViewById(R.id.save_button);
+        textSaveButton = (TextView) findViewById(R.id.text_save_button);
         selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         tagScrollView = findViewById(R.id.tags_scrollview);
@@ -87,9 +86,9 @@ public class FilterActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        setSquareTouchListener(searchButton, textSearchButton);
+        setSquareTouchListener(saveButton, textSaveButton);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
@@ -104,12 +103,29 @@ public class FilterActivity extends BaseActivity {
                 searchView.clearFocus();
             }
         });
+
+        selectedTagsRecyclerView.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d(TAG, "Clicked on selected item");
+                selectedTagsRecyclerView.getAdapter().removeData(position);
+                setTextButton();
+            }
+        });
     }
 
     public void submit() {
-       // MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
-        MyApplication.searchFilter.tags = selectedTagsRecyclerView.getAdapter().getData();
-        Log.d(TAG, "Selected tag: " + Tag.tagsToString(MyApplication.searchFilter.tags));
+        // MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
+        List<Tag> data = selectedTagsRecyclerView.getAdapter().getData();
+
+        /*MyApplication.searchFilter.tags = new ArrayList<>();
+        for(int i=0; i<data.size();i++) {
+            MyApplication.searchFilter.tags.add(new Tag(""));
+        }
+        Collections.copy(MyApplication.searchFilter.tags, data);*/
+
+        MyApplication.searchFilter.tags = new ArrayList<>(data);
+        Log.d(TAG, "Selected tags: " + Tag.tagsToString(MyApplication.searchFilter.tags));
         NavUtils.navigateUpFromSameTask(this);
     }
 
@@ -177,13 +193,20 @@ public class FilterActivity extends BaseActivity {
 
     public void setTopRvVisibility() {
         if(selectedTagsRecyclerView.getAdapter().getData().size()==0) {
-            selectedTagsRecyclerView.setVisibility(View.GONE);
-            searchButton.setVisibility(View.GONE);
+            saveButton.setVisibility(View.GONE);
         } else {
-            selectedTagsRecyclerView.setVisibility(View.VISIBLE);
-            searchButton.setVisibility(View.VISIBLE);
+            saveButton.setVisibility(View.VISIBLE);
         }
     }
+
+    public void setTextButton() {
+        if(selectedTagsRecyclerView.getAdapter().getData().size()==0) {
+            textSaveButton.setText(R.string.search_button_empty);
+        } else {
+            textSaveButton.setText(R.string.search_button);
+        }
+    }
+
 /*
     private void initCategoriesSelected() {
         //If nothing is saved in the preferences
