@@ -283,7 +283,7 @@ public class PlaceActivity extends BaseActivity {
             }
 
         });
-        asyncCalls.add(call);
+        apiCalls.add(call);
     }
 
 
@@ -494,7 +494,7 @@ public class PlaceActivity extends BaseActivity {
                 IntentsUtils.home(that);
             }
         });
-        asyncCalls.add(call);
+        apiCalls.add(call);
     }
 
     private void notifyPlaceLoaded() {

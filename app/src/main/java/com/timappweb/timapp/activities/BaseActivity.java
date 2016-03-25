@@ -24,6 +24,7 @@ import com.sromku.simple.fb.utils.PictureAttributes;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,16 +37,14 @@ public class BaseActivity extends AppCompatActivity {
     private SimpleFacebook              mSimpleFacebook;
     private boolean                     isFbNeeded;
     private OnFriendsListener           onFriendsListener;
-    protected List<Call> asyncCalls;
+    protected List<Call>                apiCalls = new LinkedList<>();
 
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "BaseActivity::onDestroy()");
-        if (asyncCalls != null){
-            for (Call call: asyncCalls){
-                call.cancel();
-            }
+        for (Call call: apiCalls){
+            call.cancel();
         }
         super.onDestroy();
     }
