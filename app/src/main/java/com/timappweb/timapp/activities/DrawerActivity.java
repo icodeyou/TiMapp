@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.FloatingActionButton;
@@ -127,7 +126,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         super.onRestart();
 
         //Set Filter view above map.
-        exploreFragment.getExploreMapFragment().initHorizontalTags();
+        exploreFragment.getExploreMapFragment().updateFilterView();
 
         // Reload Data
         if(exploreFragment!=null) {
@@ -167,7 +166,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             super.onBackPressed();
         }
     }
-
 
 
     /* ============================================================================================*/
@@ -230,6 +228,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
+
+        MenuItem item = menu.findItem(R.id.action_clear_filter);
+        if(exploreFragment.getExploreMapFragment().isFilterActive()) {
+            item.setVisible(true);
+        } else {
+            item.setVisible(false);
+        }
 
         return res;
     }

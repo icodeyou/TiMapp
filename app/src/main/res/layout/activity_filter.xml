@@ -29,30 +29,6 @@
         myattrs:horizontal_tags_is_bold="true"
         myattrs:horizontal_tags_text_size="@dimen/text_normal"/>
 
-    <LinearLayout
-        android:id="@+id/save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_square_button"
-        android:layout_marginBottom="@dimen/margin_square_button"
-        android:background="@drawable/background_button">
-        <TextView
-            android:id="@+id/text_save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="30dp"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/text_button"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:text="@string/search_button"
-            android:gravity="center"
-            android:textSize="@dimen/text_normal"/>
-    </LinearLayout>
-
     <!--<View
         android:id="@+id/bottom_line_hrv"
         android:layout_width="match_parent"
@@ -105,6 +81,28 @@
             app:tagTextColor="@color/White"
             />
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/background_button">
+        <TextView
+            android:id="@+id/text_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/text_button"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:text="@string/search_button"
+            android:gravity="center"
+            android:textSize="@dimen/text_normal"/>
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_categories"

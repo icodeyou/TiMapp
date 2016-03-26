@@ -82,7 +82,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <!-- Buttons -->
     <string name="button_add_place">New Event</string>
     <string name="add_place_button">Create</string>
-    <string name="search_button">Save</string>
+    <string name="search_button">OK</string>
     <string name="search_button_empty">Clear Filter</string>
     <string name="invite_button">Invite</string>
 

@@ -74,7 +74,6 @@ public class FilterActivity extends BaseActivity {
         Log.d(TAG, "FilterActivity::onResume()");
         super.onResume();
         selectedTagsRecyclerView.getAdapter().setData(MyApplication.searchFilter.tags);
-        selectedTagsRecyclerView.getAdapter().notifyDataSetChanged();
         setTopRvVisibility();
     }
 
@@ -109,7 +108,7 @@ public class FilterActivity extends BaseActivity {
             public void onClick(int position) {
                 Log.d(TAG, "Clicked on selected item");
                 selectedTagsRecyclerView.getAdapter().removeData(position);
-                setTextButton();
+                //setTextButton();
             }
         });
     }

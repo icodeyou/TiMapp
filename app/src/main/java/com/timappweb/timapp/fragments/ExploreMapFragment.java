@@ -71,6 +71,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private PlacesAdapter placesAdapter;
     private View progressView;
     private HorizontalTagsRecyclerView filterTagsRv;
+    private View filterTagsContainer;
 
     private static HashMap<Marker, Place> mapMarkers;
     private GoogleMap map;
@@ -120,6 +121,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mapView.onCreate(mapBundle);
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
+        filterTagsContainer = root.findViewById(R.id.search_tags_container);
         //locationButton = (ImageView) root.findViewById(R.id.my_location_button);
         placesViewer = (ListView) root.findViewById(R.id.places_viewer);
         placesAdapter = new PlacesAdapter(getActivity(), false);
@@ -134,6 +136,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
         this.loadMapIfNeeded();
 
+        updateFilterView();
         initListeners();
 
         return root;
@@ -154,8 +157,15 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
         if (id == R.id.action_filter) {
             IntentsUtils.filter(getActivity());
+            return true;
         }
-        return true;
+        if (id == R.id.action_clear_filter) {
+            MyApplication.searchFilter.tags.clear();
+            updateFilterView();
+            updateMapData();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -202,13 +212,17 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
 
-    public void initHorizontalTags() {
+    public void updateFilterView() {
         if(isFilterActive()) {
-            filterTagsRv.setVisibility(View.VISIBLE);
+            filterTagsContainer.setVisibility(View.VISIBLE);
             filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
+            Log.d(TAG,"Number of tags filtered : " + MyApplication.searchFilter.tags.size());
+            gMap.setPadding(0,120,0,0);
         } else {
-            filterTagsRv.setVisibility(View.GONE);
+            filterTagsContainer.setVisibility(View.GONE);
+            gMap.setPadding(0, 0, 0, 0);
         }
+        getActivity().invalidateOptionsMenu();
     }
 
 
@@ -218,6 +232,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             public void onClick(int position) {
                 Place place = placesAdapter.getItem(position);
                 IntentsUtils.viewPlaceFromMap(getActivity(), place);
+            }
+        });
+
+        filterTagsRv.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                IntentsUtils.filter(getActivity());
             }
         });
 
@@ -269,24 +290,14 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             public void onMapReady(GoogleMap googleMap) {
                 Log.d(TAG, "Map is now ready!");
                 gMap = googleMap;
-                updateFilterView();
                 mapBounds = gMap.getProjection().getVisibleRegion().latLngBounds;
                 loadMapData();
             }
         });
     }
 
-    private void updateFilterView() {
-        //Push button below filter view
-        if(isFilterActive()) {
-            gMap.setPadding(0,200,0,0);
-        } else {
-            gMap.setPadding(0,0,0,0);
-        }
-    }
-
-    private boolean isFilterActive() {
-        return MyApplication.searchFilter.tags.size()!=0;
+    public boolean isFilterActive() {
+        return MyApplication.searchFilter.tags!=null && MyApplication.searchFilter.tags.size()!=0;
     }
 
     private void initAreaRequestHistory(){
