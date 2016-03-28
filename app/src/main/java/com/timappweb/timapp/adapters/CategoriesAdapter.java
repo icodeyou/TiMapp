@@ -19,14 +19,14 @@ import java.util.List;
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder> {
 
     protected LayoutInflater inflater;
-    protected List<Category> categories = Collections.emptyList();
+    //protected List<Category> categories = Collections.emptyList();
     protected HashMap<Integer, ImageView> icons = new HashMap<>();
 
     private Context context;
 
     public CategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        this.categories = MyApplication.categories;
+        //this.categories = MyApplication.getCategories();
         this.context = context;
     }
 
@@ -41,7 +41,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     @Override
     public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
-        final Category category = categories.get(position);
+        final Category category = MyApplication.getCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
         icons.put(category.id, categoryIcon);
     }
@@ -52,16 +52,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     @Override
     public int getItemCount() {
-        return categories != null ? categories.size() : 0;
+        return MyApplication.getCategories().size();
     }
 
     public Category getCategory(int position) {
-        return this.categories.get(position);
+        return MyApplication.getCategories().get(position);
     }
-
-    public List<Category> getAllCategories() {
-        return categories;
-    };
 
     class CategoriesViewHolder extends RecyclerView.ViewHolder {
         ImageView categoryIcon;

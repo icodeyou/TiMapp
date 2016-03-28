@@ -2,9 +2,15 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 /**
  * Created by Jack on 24/02/2016.
@@ -12,6 +18,7 @@ import android.view.ViewGroup;
 public class CategoryPagerAdapter extends PagerAdapter {
 
     private Context mContext;
+    private String TAG = "CategoryPager";
 
     public CategoryPagerAdapter(Context context) {
         mContext = context;
@@ -19,9 +26,15 @@ public class CategoryPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-        CategoryPagerEnum categoryPagerEnum = CategoryPagerEnum.values()[position];
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        ViewGroup layout = (ViewGroup) inflater.inflate(categoryPagerEnum.getLayoutResId(), collection, false);
+        ViewGroup layout = null;
+        try {
+            Category category = MyApplication.getCategoryByIndex(position);
+            layout = (ViewGroup) inflater.inflate(category.getLayoutResId(), collection, false);
+        } catch (IndexOutOfBoundsException e) {
+            layout = (ViewGroup) inflater.inflate(R.layout.category_unknown, collection, false);
+            Log.e(TAG, "Unknown category for pager: " + position);
+        }
         collection.addView(layout);
         return layout;
     }
@@ -33,7 +46,7 @@ public class CategoryPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return CategoryPagerEnum.values().length;
+        return MyApplication.getCategories().size();
     }
 
     @Override
@@ -43,8 +56,13 @@ public class CategoryPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        CategoryPagerEnum categoryPagerEnum = CategoryPagerEnum.values()[position];
-        return mContext.getString(categoryPagerEnum.getTitleResId());
+        try {
+            Category category = MyApplication.getCategoryByIndex(position);
+            return mContext.getResources().getString(category.getTitleResId());
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, "Unknown category at position: " + position);
+            return "Unknown";
+        }
     }
 
 }

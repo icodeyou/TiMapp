@@ -15,6 +15,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.AutoResizeTextView;
@@ -70,13 +71,13 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         tvTime.setText(place.getTime());
         tvCountPoints.setText(String.valueOf(place.getPoints()));
 
-        Category category = MyApplication.getCategory(place.category_id);
-        if (category != null){
+        Category category = null;
+        try {
+            category = MyApplication.getCategoryById(place.category_id);
             categoryIcon.setImageResource(category.resourceWhite);
-            categoryIcon = MyApplication.setCategoryBackground(categoryIcon,place.getLevel());
-        }
-        else{
-            Log.i(TAG,"no category found for id : " + place.category_id );
+            categoryIcon = MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
+        } catch (UnknownCategoryException e) {
+            Log.e(TAG, "no category found for id : " + place.category_id);
         }
 
         if(isTagsVisible) {

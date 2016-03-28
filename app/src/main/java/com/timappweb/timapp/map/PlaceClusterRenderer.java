@@ -3,21 +3,13 @@ package com.timappweb.timapp.map;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.*;
@@ -25,13 +17,10 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
@@ -67,7 +56,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     @Override
     protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
-        categoryImage.setImageResource(place.getResource());
+        categoryImage.setImageResource(place.getIconResource());
         categoryImage = MyApplication.setCategoryBackground(categoryImage,place.getLevel());
 
         categoryImage.setDrawingCacheEnabled(true);
@@ -115,7 +104,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         for (Place p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            Drawable drawable = ContextCompat.getDrawable(context, p.getResource());
+            Drawable drawable = ContextCompat.getDrawable(context, p.getIconResource());
             drawable.setBounds(0, 0, width, height);
             profilePhotos.add(drawable);
         }

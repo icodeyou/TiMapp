@@ -204,6 +204,7 @@ public class ProfileActivity extends BaseActivity{
                 }
             }
         });
+        apiCalls.add(call);
     }
 
     private void initUserTagsAdapter() {

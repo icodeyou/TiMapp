@@ -8,13 +8,10 @@ import com.google.gson.Gson;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.Util;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
-import java.util.List;
 import java.util.Properties;
 
 import retrofit2.Call;

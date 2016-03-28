@@ -2,6 +2,8 @@ package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 
@@ -128,9 +130,13 @@ public class Place implements Serializable, MarkerValueInterface {
         return this.count_posts;
     }
 
-    public int getResource() {
-        int level = this.getLevel();
-        return MyApplication.getCategory(this.category_id).resourceWhite;
+    public int getIconResource() {
+        //int level = this.getLevel();
+        try {
+            return MyApplication.getCategoryById(this.category_id).resourceWhite;
+        } catch (UnknownCategoryException e) {
+            return R.drawable.ic_category_highlight_unknown;
+        }
     }
 
     /**
@@ -140,7 +146,7 @@ public class Place implements Serializable, MarkerValueInterface {
      */
     public boolean isAround(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
-                < MyApplication.getServerConfig().place_max_reachable;
+                < MyApplication.getApplicationRules().place_max_reachable;
     }
 
     public boolean isAround() {
@@ -148,7 +154,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public static boolean isValidName(String name) {
-        return name.trim().length() >= MyApplication.getServerConfig().places_min_name_length;
+        return name.trim().length() >= MyApplication.getApplicationRules().places_min_name_length;
     }
 
     public int getPoints() {
@@ -161,7 +167,7 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     private static int computeLevel(int points) {
-        List<Integer> levels = MyApplication.getServerConfig().places_points_levels;
+        List<Integer> levels = MyApplication.getApplicationRules().places_points_levels;
         int num = 0;
         for (int level: levels){
             if (level >= points){

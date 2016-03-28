@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.entities.Category;
@@ -34,7 +35,7 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
     @Override
     public void onBindViewHolder(CategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
-        final Category category = categories.get(position);
+        final Category category = MyApplication.getCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
         //final List<Category> categoriesSelected = filterActivity.getCategoriesSelected();

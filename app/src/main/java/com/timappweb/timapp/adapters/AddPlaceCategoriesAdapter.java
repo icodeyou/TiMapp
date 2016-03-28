@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.entities.Category;
@@ -25,7 +26,7 @@ public class AddPlaceCategoriesAdapter extends CategoriesAdapter {
     public void onBindViewHolder(CategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
         final AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
-        final Category category = categories.get(position);
+        final Category category = MyApplication.getCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
         if(position==0) {

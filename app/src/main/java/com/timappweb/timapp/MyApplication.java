@@ -17,6 +17,7 @@ import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -107,7 +108,6 @@ public class MyApplication extends Application{
         LocalPersistenceManager.in().commit();
     }
 
-    public static List<Category> categories = new LinkedList<>();
     private static Location lastLocation = null;
     public static ConfigurationProvider config;
 
@@ -115,13 +115,19 @@ public class MyApplication extends Application{
         return config.getServerConfiguration();
     }
 
+    public static ServerConfiguration.Rules getApplicationRules() {
+        return config.getServerConfiguration().rules;
+    }
+
+    public static List<Category> getCategories() {
+        return config.getServerConfiguration().categories;
+    }
+
     @Override
     public void onCreate(){
         super.onCreate();
         LocalPersistenceManager.init(this);
         RestClient.init(this, getResources().getString(R.string.ws_endpoint));
-
-        initCategories();
 
         //*******FACEBOOK******
         initFacebookPermissions();
@@ -133,12 +139,13 @@ public class MyApplication extends Application{
         config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProvider.Listener(){
             @Override
             public void onLoaded() {
-                // TODO Config has been successfully loaded
+                Log.d(TAG, "Server configuration has been loaded!");
+                config.getServerConfiguration().initCategories(getApplicationContext());
             }
 
             @Override
             public void onFail() {
-                // TODO Config cannot be loaded
+                Log.e(TAG, "Error cannot load server configuration");
             }
         });
         config.load();
@@ -159,17 +166,6 @@ public class MyApplication extends Application{
         SimpleFacebook.setConfiguration(configuration);
     }
 
-    public void initCategories(){
-        categories.add(new Category(1, "music", R.drawable.ic_category_music, R.drawable.ic_category_highlight_music));
-        categories.add(new Category(2, "strike", R.drawable.ic_category_strike, R.drawable.ic_category_highlight_strike));
-        categories.add(new Category(3, "streetshow", R.drawable.ic_category_streetshow, R.drawable.ic_category_highlight_streetshow));
-        categories.add(new Category(4, "sport", R.drawable.ic_category_sport, R.drawable.ic_category_highlight_sport));
-        categories.add(new Category(5, "bar", R.drawable.ic_category_bar, R.drawable.ic_category_highlight_bar));
-        categories.add(new Category(6, "nightclub", R.drawable.ic_category_nightclub, R.drawable.ic_category_highlight_nightclub));
-        categories.add(new Category(7, "show", R.drawable.ic_category_show, R.drawable.ic_category_highlight_show));
-        categories.add(new Category(8, "party", R.drawable.ic_category_party, R.drawable.ic_category_highlight_party));
-        categories.add(new Category(9, "unknown", R.drawable.ic_category_unknown, R.drawable.ic_category_highlight_unknown));
-    }
 
     public static ImageView setCategoryBackground(ImageView i, int level) {
         switch (level) {
@@ -194,15 +190,18 @@ public class MyApplication extends Application{
         }
     }
 
-    public static Category getCategory(int id){
-        for (Category c: categories){
+    public static Category getCategoryById(int id) throws UnknownCategoryException {
+        for (Category c: config.getServerConfiguration().categories){
             if (c.id == id){
                 return c;
             }
         }
-        return  null;
+        throw new UnknownCategoryException(id);
     }
 
+    public static Category getCategoryByIndex(int position) {
+        return getCategories().get(position);
+    }
 
     public static void redirectLogin(Context currentContext){
         Intent intent = new Intent(currentContext, LoginActivity.class);
@@ -228,7 +227,7 @@ public class MyApplication extends Application{
      */
     public static boolean hasLastLocation() {
         return lastLocation != null &&
-                (lastLocation.getTime() - System.currentTimeMillis()) < getServerConfig().gps_min_time_delay;
+                (lastLocation.getTime() - System.currentTimeMillis()) < getApplicationRules().gps_min_time_delay;
     }
 
     /**
@@ -236,7 +235,7 @@ public class MyApplication extends Application{
      * @return
      */
     public static boolean hasFineLocation() {
-        return hasFineLocation(getServerConfig().gps_min_accuracy);
+        return hasFineLocation(getApplicationRules().gps_min_accuracy);
     }
 
     public static boolean hasFineLocation(int minAccuracy) {

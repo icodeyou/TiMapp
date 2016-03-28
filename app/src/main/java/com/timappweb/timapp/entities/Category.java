@@ -1,14 +1,21 @@
 package com.timappweb.timapp.entities;
 
+import android.util.Log;
+
+import com.timappweb.timapp.R;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class Category implements Serializable{
 
+    private static final String TAG = "Category";
     public int id;
     public String name;
     public int resourceBlack;
     public int resourceWhite;
+    private int layoutResId;
+
 
     public Category(int id, String name, int resourceBlack, int resourceWhite) {
         this.id = id;
@@ -51,5 +58,25 @@ public class Category implements Serializable{
             res += "," + String.valueOf(categories.get(i).id);
         }
         return res;
+    }
+
+    public int getLayoutResId() {
+        try {
+            return R.layout.class.getField("category_" + this.name).getInt(null);
+        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+        }
+        Log.e(TAG, "Unknown category layout for " + this.name);
+        return R.layout.category_unknown;
+    }
+
+    public int getTitleResId() {
+        try {
+            return R.string.class.getField("category_" + this.name).getInt(null);
+        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+        }
+        Log.e(TAG, "Unknown category title for " + this.name);
+        return R.string.category_unknown;
     }
 }

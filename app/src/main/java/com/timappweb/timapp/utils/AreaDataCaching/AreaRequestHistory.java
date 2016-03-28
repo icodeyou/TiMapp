@@ -11,6 +11,8 @@ import com.timappweb.timapp.utils.IntLatLng;
 import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -250,9 +252,14 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
      * Get only item inside the bounds
      */
     public List<T> getInsideBoundsItems(LatLngBounds bounds){
-        Log.d(TAG, "getInsideBoundsItems(): " + bounds);
+        Log.d(TAG, "AreaRequestHistory::getInsideBoundsItems(): " + bounds);
         LinkedList<T> result = new LinkedList<>();
         AreaIterator areaIterator = this.getAreaIterator(bounds);
+        // TODO Stef: find where bug come from
+        if (areaIterator.size() > 20){ // TODO parameters
+            Log.e(TAG, "Area a size is hudge: " + areaIterator.size() + ". Something looks wrong... \n\t - Bounds are: " + bounds);
+            return Collections.emptyList();
+        }
         IntPoint p;
         while ((p = areaIterator.next()) != null){
             AreaRequestItem<T> request = this.areas.get(p);

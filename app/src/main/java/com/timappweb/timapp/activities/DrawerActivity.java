@@ -230,7 +230,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
 
         MenuItem item = menu.findItem(R.id.action_clear_filter);
-        if(exploreFragment.getExploreMapFragment().isFilterActive()) {
+        if(exploreFragment != null && exploreFragment.getExploreMapFragment().isFilterActive()) {
             item.setVisible(true);
         } else {
             item.setVisible(false);
@@ -239,9 +239,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         return res;
     }
 
-    public Fragment getExploreFragment() {
-        return exploreFragment;
-    }
 
     /* ============================================================================================*/
     /* DRAWER */
