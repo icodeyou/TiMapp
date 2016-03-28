@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.LocalPersistenceManager;
+import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import org.xml.sax.ErrorHandler;
@@ -33,6 +34,8 @@ public class RestClient {
     private static RestClient conn = null;
     private final Application app;
     private final OkHttpClient httpClient;
+    private String _socialProviderToken = null;
+    private SocialProvider _socialProviderType = null;
 
     // KEY ID
     //public static final String KEY_SESSION_ID = "id";
@@ -138,6 +141,15 @@ public class RestClient {
 
     public OkHttpClient getHttpClient() {
         return httpClient;
+    }
+
+    public String getProviderToken() {
+        return _socialProviderToken;
+    }
+
+    public void setSocialProvider(SocialProvider provider, String accessToken) {
+        this._socialProviderType = provider;
+        this._socialProviderToken = accessToken;
     }
 
 /*

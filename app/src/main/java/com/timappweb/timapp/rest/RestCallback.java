@@ -19,6 +19,10 @@ public class RestCallback<T> implements Callback<T> {
         this.context = context;
     }
 
+    public void onResponse200(Response<T> response){
+
+    }
+
     @Override
     public void onResponse(Response<T> response) {
         if (!response.isSuccess()){
@@ -40,12 +44,15 @@ public class RestCallback<T> implements Callback<T> {
             }
             Log.i(TAG, "Get server error: " + userMessage + "(" + response.errorBody() + ")");
         }
+        else{
+            this.onResponse200(response);
+        }
     }
 
     @Override
     public void onFailure(Throwable t) {
         // handle execution failures like no internet connectivity
-        Log.i(TAG, "onFailure: " + t.getMessage());
+        Log.e(TAG, "RestCallback::onFailure() -> " + t.getMessage());
 
         //if(error.isNetworkError()) {
         //    Toast.makeText(this.context, R.string.please_enable_internet, Toast.LENGTH_LONG).show();

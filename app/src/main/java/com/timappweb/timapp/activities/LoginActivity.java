@@ -125,7 +125,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         final OnLoginListener onLoginListener = new OnLoginListener() {
 
             @Override
-            public void onLogin(String accessToken, List<Permission> acceptedPermissions, List<Permission> declinedPermissions) {
+            public void onLogin(final String accessToken, List<Permission> acceptedPermissions, List<Permission> declinedPermissions) {
                 Log.i(TAG, "Logging in");
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
@@ -141,7 +141,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         user.provider = SocialProvider.FACEBOOK;
                         user.id = Integer.parseInt(feedback.data.get("id"));
                         Log.i(TAG, "Session created with session token: " + token);
-                        MyApplication.login(user, token);
+                        MyApplication.login(user, token, accessToken);
                         IntentsUtils.lastActivityBeforeLogin(that);
                     }
 
@@ -405,7 +405,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     String token = (String) response.data.get("token");
                     user.username = response.data.get("username");
                     user.id = Integer.parseInt(response.data.get("id"));
-                    MyApplication.login(user, token);
+                    MyApplication.login(user, token, null);
                     Log.i(TAG, "Session created with session token: " + token);
                     IntentsUtils.lastActivityBeforeLogin(this.activity);
                     return true;

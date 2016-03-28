@@ -16,6 +16,7 @@ import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SearchFilter;
+import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
@@ -99,11 +100,12 @@ public class MyApplication extends Application{
         currentUser = user;
     }
 
-    public static void login(User user, String token){
+    public static void login(User user, String token, String accessToken){
         setCurrentUser(user);
         LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, true);
         LocalPersistenceManager.in().putInt(KEY_LOGIN_TIME, Util.getCurrentTimeSec());
         RestClient.instance().login(token);
+        RestClient.instance().setSocialProvider(SocialProvider.FACEBOOK, accessToken);
 
         LocalPersistenceManager.in().commit();
     }

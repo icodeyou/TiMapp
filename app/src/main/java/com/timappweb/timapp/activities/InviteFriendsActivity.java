@@ -21,10 +21,20 @@ import com.sromku.simple.fb.utils.Attributes;
 import com.sromku.simple.fb.utils.PictureAttributes;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.PaginationResponse;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InviteFriendsActivity extends BaseActivity{
 
@@ -60,6 +70,8 @@ public class InviteFriendsActivity extends BaseActivity{
         initAdapterListFriends();
         setRvListeners();
         initInviteButton();
+
+        this.loadFriends();
     }
 
     @Override
@@ -82,6 +94,23 @@ public class InviteFriendsActivity extends BaseActivity{
                 }
             }
         };
+    }
+
+    private void loadFriends(){
+        Call<PaginationResponse<User>> call = RestClient.service().friends();
+        call.enqueue(new RestCallback<PaginationResponse<User>>(this) {
+            @Override
+            public void onResponse200(Response<PaginationResponse<User>> response) {
+                List<User> users = response.body().items;
+                Log.v(TAG, users.toString());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+        apiCalls.add(call);
     }
 
     private void initSelectedFriends() {

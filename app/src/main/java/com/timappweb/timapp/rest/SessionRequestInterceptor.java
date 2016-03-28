@@ -23,6 +23,7 @@ public class SessionRequestInterceptor implements Interceptor
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
         String token = RestClient.instance().getToken();
+        String providerToken = RestClient.instance().getProviderToken();
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
@@ -30,7 +31,7 @@ public class SessionRequestInterceptor implements Interceptor
                 .method(original.method(), original.body());
 
         if (MyApplication.isLoggedIn()) {
-            setAuthHeader(requestBuilder, token, original.url());
+            setAuthHeader(requestBuilder, token, providerToken, original.url());
         }
 
         Request request = requestBuilder.build();
@@ -61,7 +62,7 @@ public class SessionRequestInterceptor implements Interceptor
 
                 if (RestClient.instance().getToken() != null) { //retry requires new auth token,
                     Log.d(TAG, "retry request after refresh token...");
-                    setAuthHeader(requestBuilder, RestClient.instance().getToken(), original.url()); //set auth token to updated
+                    setAuthHeader(requestBuilder, RestClient.instance().getToken(), providerToken, original.url()); //set auth token to updated
                     request = requestBuilder.build();
                     return chain.proceed(request); //repeat request with new token
                 }
@@ -72,15 +73,19 @@ public class SessionRequestInterceptor implements Interceptor
     }
 
 
-    private void setAuthHeader(Request.Builder builder, String token, HttpUrl url) {
+    private void setAuthHeader(Request.Builder builder, String token, String providerToken, HttpUrl url) {
         Log.d(TAG, "Request interceptor: User is logged in with token " + token);
         HttpUrl newUrl = url.newBuilder()
-            .addQueryParameter("_token", token)
+                .addQueryParameter("_token", token)
             .build();
 
         builder
                 .url(newUrl)
                 .header("Authorization", String.format("Bearer %s", token));
+        if (providerToken != null){
+            builder.header("SocialAccessToken", providerToken);
+        }
+
     }
 
     private int refreshToken() {

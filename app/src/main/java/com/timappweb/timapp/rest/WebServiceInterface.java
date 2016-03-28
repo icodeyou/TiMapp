@@ -62,6 +62,9 @@ public interface WebServiceInterface {
     @POST("users/facebook_login.json")
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
+    @GET("users/friends.json")
+    Call<PaginationResponse<User>> friends();
+
     @POST("users/edit.json")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);
 
