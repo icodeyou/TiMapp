@@ -125,12 +125,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     protected void onRestart() {
         super.onRestart();
 
-        //Set Filter view above map.
-        exploreFragment.getExploreMapFragment().updateFilterView();
-
-        // Reload Data
         if(exploreFragment!=null) {
-            exploreFragment.reloadMapData();
+            exploreFragment.reloadMapData(); //Reload data
+            exploreFragment.getExploreMapFragment().updateFilterView(); //Set Filter view above map.
         }
     }
 
