@@ -215,6 +215,7 @@ public class MyApplication extends Application{
         if (isLoggedIn()){
             LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, false);
             RestClient.instance().logoutUser();
+            MyApplication.currentUser = null;
         }
     }
     public static void setLastLocation(Location l) {

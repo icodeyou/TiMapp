@@ -14,7 +14,9 @@ import org.xml.sax.ErrorHandler;
 import okhttp3.OkHttpClient;
 //import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -117,6 +119,19 @@ public class RestClient {
 
         // Add new Flag to start new Activity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Call<RestFeedback> call = this.service.logout();
+            call.enqueue(new RestFeedbackCallback() {
+                @Override
+                public void onActionSuccess(RestFeedback feedback) {
+                    Log.d(TAG, "User logged out on server side");
+                }
+
+                @Override
+                public void onActionFail(RestFeedback feedback) {
+                    Log.e(TAG, "Cannot logout user on server side...");
+                }
+            });
 
         // Staring Login Activity
         app.startActivity(i);

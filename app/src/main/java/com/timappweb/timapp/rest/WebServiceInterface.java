@@ -68,6 +68,8 @@ public interface WebServiceInterface {
     @POST("users/edit.json")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);
 
+    @GET("Users/logout.json")
+    Call<RestFeedback> logout();
 
     // ---------------------------------------------------------------------------------------------
     // TAGS
