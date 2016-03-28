@@ -58,8 +58,8 @@ public class InviteFriendsActivity extends BaseActivity{
         Log.d(TAG, "Creating InviteFriendsActivity");
         setContentView(R.layout.activity_invite_friends);
         this.initToolbar(true);
-        initOnFriendsLoadedListener();
-        this.getFriends(onFriendsListener);
+        //initOnFriendsLoadedListener();
+        //this.getFriends(onFriendsListener);
 
         inviteButton = findViewById(R.id.invite_button);
         textInviteButton = (TextView) findViewById(R.id.text_invite_button);
@@ -101,8 +101,7 @@ public class InviteFriendsActivity extends BaseActivity{
         call.enqueue(new RestCallback<PaginationResponse<User>>(this) {
             @Override
             public void onResponse200(Response<PaginationResponse<User>> response) {
-                List<User> users = response.body().items;
-                Log.v(TAG, users.toString());
+                onUserLoaded(response.body().items);
             }
 
             @Override
@@ -111,6 +110,10 @@ public class InviteFriendsActivity extends BaseActivity{
             }
         });
         apiCalls.add(call);
+    }
+
+    private void onUserLoaded(List<User> items){
+        // TODO JACK !!!
     }
 
     private void initSelectedFriends() {

@@ -35,7 +35,6 @@ public class BaseActivity extends AppCompatActivity {
     protected SearchView                searchView;
     private MyLocationProvider          locationProvider;
     private SimpleFacebook              mSimpleFacebook;
-    private boolean                     isFbNeeded;
     private OnFriendsListener           onFriendsListener;
     protected List<Call>                apiCalls = new LinkedList<>();
 
@@ -67,13 +66,12 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isFbNeeded = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(isFbNeeded) {
+        if (mSimpleFacebook != null){
             mSimpleFacebook = SimpleFacebook.getInstance(this);
             setAllFbFriends();
         }
@@ -81,9 +79,10 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(isFbNeeded) {
+        if (mSimpleFacebook != null){
             mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -117,7 +116,6 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void getFriends(OnFriendsListener onFriendsListener){
             this.onFriendsListener = onFriendsListener;
-            this.isFbNeeded=true;
         }
 
     private void setAllFbFriends() {

@@ -3,6 +3,7 @@ package com.timappweb.timapp.rest;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
@@ -31,6 +32,22 @@ public interface WebServiceInterface {
 
     @GET("configurations/update.json")
     Call<ServerConfiguration> configuration(@Query("version") int version);
+
+    // ---------------------------------------------------------------------------------------------
+    // Place invites
+
+    @GET("PlacesInvitations/invite/:placeId.json")
+    Call listPosts(@Path("placeId") int placeId);
+
+    @GET("PlacesInvitations/accept/:inviteId.json")
+    Call<RestFeedback> acceptInvite(@Path("inviteId") int inviteId);
+
+    @GET("PlacesInvitations/reject/:inviteId.json")
+    Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
+
+    @GET("PlacesInvitations/mine.json")
+    Call<PaginationResponse<PlacesInvitation>> myInvites();
+
 
     // ---------------------------------------------------------------------------------------------
     // Posts
