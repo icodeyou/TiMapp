@@ -214,6 +214,7 @@ public class MyApplication extends Application{
     public static void logout() {
         if (isLoggedIn()){
             LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, false);
+            LocalPersistenceManager.in().putInt(User.KEY_ID, -1);
             RestClient.instance().logoutUser();
             MyApplication.currentUser = null;
         }
