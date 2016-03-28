@@ -81,7 +81,6 @@ public class LocateActivity extends BaseActivity{
         mResultReceiver = new AddressResultReceiver(new Handler());
 
         setListeners();
-
         initLocationListener();
 
     }
@@ -151,6 +150,7 @@ public class LocateActivity extends BaseActivity{
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.d(TAG, "New location found for locate activity");
                 MyApplication.setLastLocation(location);
                 if (MyApplication.hasFineLocation()){
                     loadPlaces(location);

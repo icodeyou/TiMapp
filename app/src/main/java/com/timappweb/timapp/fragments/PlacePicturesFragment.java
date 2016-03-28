@@ -33,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class PlacePicturesFragment extends BaseFragment {
+public class PlacePicturesFragment extends Fragment {
 
     private static final String TAG = "PlacePicturesFragment";
 
@@ -127,7 +127,6 @@ public class PlacePicturesFragment extends BaseFragment {
             }
 
         });
-        asynCalls.add(call);
 
     }
 
