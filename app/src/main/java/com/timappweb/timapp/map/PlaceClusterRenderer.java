@@ -18,6 +18,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,9 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         categoryImage.layout(0, 0, categoryImage.getMeasuredWidth(), categoryImage.getMeasuredHeight());
         categoryImage.buildDrawingCache(true);
-        Bitmap bmp = Bitmap.createScaledBitmap(categoryImage.getDrawingCache(),100,100,true);
+        int markerSize = Math.round(Util.convertDpToPixel(context.getResources().getDimension(R.dimen.marker), context));
+        Bitmap bmp = Bitmap.createScaledBitmap(categoryImage.getDrawingCache(),
+                markerSize,markerSize,true);
         categoryImage.setDrawingCacheEnabled(false); // clear drawing cache
 
         bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);

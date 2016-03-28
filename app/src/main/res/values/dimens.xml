@@ -6,7 +6,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">5dp</dimen>
     <dimen name="activity_vertical_margin">5dp</dimen>
-    <dimen name="add_spot_button_margin">1dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="button_selecting_margin">2dp</dimen>
     <dimen name="usertags_margin">15dp</dimen>
@@ -26,7 +25,7 @@
     <dimen name="last_post_box">5dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
     <dimen name="height_name_card">30dp</dimen>
-    <dimen name="height_rv_displayed_tags">40dp</dimen>
+    <dimen name="height_rv_displayed_tags">50dp</dimen>
     <dimen name="height_small_rv_displayed_tags">25dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
@@ -41,12 +40,12 @@
     <dimen name="padding_card_minus_two">3dp</dimen>
 
     <!-- Text dimensions -->
-    <dimen name="text_tiny">10sp</dimen>
-    <dimen name="text_small">15sp</dimen>
-    <dimen name="text_normal">20sp</dimen>
-    <dimen name="text_big">30sp</dimen>
-    <dimen name="text_huge">40sp</dimen>
-    <dimen name="text_mountain">70sp</dimen>
+    <dimen name="text_tiny">10dp</dimen>
+    <dimen name="text_small">15dp</dimen>
+    <dimen name="text_normal">20dp</dimen>
+    <dimen name="text_big">30dp</dimen>
+    <dimen name="text_huge">40dp</dimen>
+    <dimen name="text_mountain">70dp</dimen>
     <dimen name="text_lv_base">25dp</dimen>
     <dimen name="text_lv1">30dp</dimen>
     <dimen name="text_lv2">30dp</dimen>
@@ -60,6 +59,8 @@
     <dimen name="logo_normal">30dp</dimen>
     <dimen name="logo_big">45dp</dimen>
 
+    <!-- Map -->
+    <dimen name="marker">20dp</dimen>
 
     <dimen name="tag_padding">10dp</dimen>
     <dimen name="tag_margin">5dp</dimen>
@@ -71,7 +72,7 @@
     <dimen name="map_icon">30dp</dimen>
     <dimen name="map_icon_padding">1dp</dimen>
     <dimen name="width_pic_card">55dp</dimen>
-    <dimen name="width_checkbox_card">50dp</dimen>
+    <dimen name="width_checkbox_card">57dp</dimen>
 
 
 </resources>

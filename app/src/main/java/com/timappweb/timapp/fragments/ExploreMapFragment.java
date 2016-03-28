@@ -277,10 +277,16 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void loadMapIfNeeded() {
-        if (gMap == null){
-            gMap = ((MapView) root.findViewById(R.id.map)).getMap();
-            loadMap();
-            mapMarkers = new HashMap<>();
+        try {
+            if (gMap == null){
+                gMap = ((MapView) root.findViewById(R.id.map)).getMap();
+                loadMap();
+                mapMarkers = new HashMap<>();
+            }
+            gMap.setIndoorEnabled(true);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
