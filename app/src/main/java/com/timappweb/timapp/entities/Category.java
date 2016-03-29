@@ -56,14 +56,14 @@ public class Category implements Serializable{
     public int getIconWhiteResId() {
         if (resourceWhite == -1){
             try {
-                resourceWhite = R.drawable.class.getField("ic_category_" + this.name).getInt(null);
+                resourceWhite = R.drawable.class.getField("ic_category_highlight_" + this.name).getInt(null);
                 Log.v(TAG, "Resource read from field ic_category_" + this.name + ": " + resourceWhite);
             } catch (IllegalAccessException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_unknown;
+                resourceWhite = R.drawable.ic_category_highlight_unknown;
             } catch (NoSuchFieldException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_unknown;
+                resourceWhite = R.drawable.ic_category_highlight_unknown;
             }
         }
         Log.v(TAG, "Getting icon resource: " + resourceWhite);
@@ -73,13 +73,13 @@ public class Category implements Serializable{
     public int getIconBlackResId() {
         if (resourceBlack == -1){
             try {
-                resourceBlack = R.drawable.class.getField("ic_category_highlight_" + this.name).getInt(null);
+                resourceBlack = R.drawable.class.getField("ic_category_" + this.name).getInt(null);
             } catch (IllegalAccessException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_highlight_unknown;
+                resourceBlack = R.drawable.ic_category_unknown;
             } catch (NoSuchFieldException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_highlight_unknown;
+                resourceBlack = R.drawable.ic_category_unknown;
             }
         }
         return resourceBlack;
