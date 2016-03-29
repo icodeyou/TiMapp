@@ -23,15 +23,15 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
+public class PlaceUsersAdapter extends MultipleSectionAdapter<PlaceUserInterface, PlaceUsersAdapter.PlacePeopleViewHolder> {
     private static final String TAG = "PlaceUsersAdapter";
 
-    List<PlaceUserInterface> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
 
     //Constructor
     public PlaceUsersAdapter(Context context) {
+        super();
         this.context = context;
     }
 
@@ -47,7 +47,8 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
 
     @Override
     public void onBindViewHolder(PlacePeopleViewHolder holder, final int position) {
-        PlaceUserInterface placeUserInterface = data.get(position);
+        Log.d(TAG, "::onBindViewHolder() -> " + position);
+        PlaceUserInterface placeUserInterface = this.get(position);
         User user = placeUserInterface.getUser();
         RecyclerView rvPostTags = holder.rvPostTags;
 
@@ -83,27 +84,9 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return data.size();
-    }
 
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
-    }
-    public void addData(List<PlaceUserInterface> placeUserInterfaces) {
-        for (PlaceUserInterface placeUserInterface : placeUserInterfaces) {
-            this.data.add(placeUserInterface);
-        }
-    }
-
-    public void setData(List<PlaceUserInterface> data) {
-        this.data = data;
-        notifyDataSetChanged();
-    }
-
-    public PlaceUserInterface getInterface(int position) {
-        return this.data.get(position);
     }
 
     public class PlacePeopleViewHolder extends RecyclerView.ViewHolder implements

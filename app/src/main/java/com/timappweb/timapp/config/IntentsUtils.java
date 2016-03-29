@@ -169,8 +169,11 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void addPeople(Activity activity) {
+    public static void addPeople(Activity activity, Place place) {
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("place", place);          // TODO use constant
+        intent.putExtras(extras);
         activity.startActivity(intent);
     }
 

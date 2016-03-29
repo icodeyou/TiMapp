@@ -18,6 +18,7 @@ import com.timappweb.timapp.adapters.PlaceUsersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
+import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
@@ -27,6 +28,10 @@ import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+
+import org.jdeferred.Deferred;
+import org.jdeferred.DoneCallback;
+import org.jdeferred.impl.DeferredObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,16 +58,20 @@ public class PlacePeopleFragment extends BaseFragment {
     private View            addButton;
     private TextView        tvAddButton;
 
-    private List<Post> posts;
-    private List<UserPlace> peopleComing;
-    private List<UserPlace> peopleInvited;
+    //private List<Post> posts;
+    //private List<UserPlace> peopleComing;
+    //private List<UserPlace> peopleInvited;
 
-    private ArrayList<PlaceUserInterface> usersFullList;
+   // private ArrayList<PlaceUserInterface> usersFullList;
+    private DeferredObject deferred;
+    private int loadCount = 0;
+    private SimpleSectionedRecyclerViewAdapter mSectionedAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_place_people, container, false);
+
 
         initVariables(root);
         setListeners();
@@ -70,6 +79,7 @@ public class PlacePeopleFragment extends BaseFragment {
         initAdapter();
 
         load();
+
 
         placeActivity.notifyFragmentsLoaded();
 
@@ -94,7 +104,6 @@ public class PlacePeopleFragment extends BaseFragment {
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
 
-        usersFullList = new ArrayList<>();
 
         //Views
         addButton = root.findViewById(R.id.main_button);
@@ -116,20 +125,31 @@ public class PlacePeopleFragment extends BaseFragment {
     private void initAdapter() {
         //Construct Adapter
         placeUsersAdapter = new PlaceUsersAdapter(context);
-
         placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                User user = placeUsersAdapter.getInterface(position).getUser();
-                Log.d(TAG, "Viewing profile user: " + user);
-                IntentsUtils.profile(placeActivity, user);
+                PlaceUserInterface user = placeUsersAdapter.get(position);
+                Log.d(TAG, "Viewing profile user: " + user.getUser());
+                IntentsUtils.profile(placeActivity, user.getUser());
             }
         });
+        placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
+        placeUsersAdapter.create(UserPlaceStatus.COMING.toString(), getResources().getString(R.string.header_coming));
+        placeUsersAdapter.create(UserPlaceStatus.INVITED.toString(), getResources().getString(R.string.header_invited));
+
+        mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
+                context,
+                R.layout.header_place_people,
+                R.id.text_header_place_people,
+                placeUsersAdapter);
+        peopleRv.setAdapter(mSectionedAdapter);
     }
 
     private void load() {
-        usersFullList.clear();
+        placeUsersAdapter.clear();
         loadPosts();
+        loadInvites();
+        loadByStatus(UserPlaceStatus.COMING);
     }
 
 
@@ -140,9 +160,8 @@ public class PlacePeopleFragment extends BaseFragment {
             public void onResponse(Response<List<Post>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    posts = response.body();
                     progressView.setVisibility(View.GONE);
-                    notifyPostsLoaded(posts);
+                    notifyPostsLoaded(response.body());
                 }
             }
 
@@ -152,9 +171,15 @@ public class PlacePeopleFragment extends BaseFragment {
                 progressView.setVisibility(View.GONE);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
+
+            @Override
+            protected void finalize() throws Throwable {
+                super.finalize();
+            }
         });
         asynCalls.add(call);
     }
+
 
     private void loadByStatus(final UserPlaceStatus status){
         Map<String, String> conditions = new HashMap<>();
@@ -166,14 +191,7 @@ public class PlacePeopleFragment extends BaseFragment {
             public void onResponse(Response<PaginationResponse<UserPlace>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    PaginationResponse<UserPlace> paginateData = response.body();
-                    if (status == UserPlaceStatus.COMING) {
-                        peopleComing = paginateData.items;
-                        notifyUsersComingLoaded(peopleComing);
-                    } else if (status == UserPlaceStatus.INVITED) {
-                        peopleInvited = paginateData.items;
-                        notifyUsersInvitedLoaded(peopleInvited);
-                    }
+                    notifyUsersStatusLoaded(status, response.body().items);
                 }
             }
 
@@ -183,81 +201,57 @@ public class PlacePeopleFragment extends BaseFragment {
                 progressView.setVisibility(View.GONE);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
+
+            @Override
+            protected void finalize() throws Throwable {
+                super.finalize();
+            }
         });
     }
 
+    private void loadInvites(){
+        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().invitesSent(placeActivity.getPlaceId());
+        call.enqueue(new RestCallback<PaginationResponse<PlacesInvitation>>(getContext()) {
+
+            @Override
+            public void onResponse200(Response<PaginationResponse<PlacesInvitation>> response) {
+                List<PlacesInvitation> invitations = response.body().items;
+                Log.d(TAG, "Loading " + invitations.size() + " invites sent");
+                notifyUserInvitedLoaded(invitations);
+            }
+
+            @Override
+            protected void finalize() throws Throwable {
+                super.finalize();
+            }
+
+        });
+    }
+
+
+
     private void notifyPostsLoaded(List<Post> items) {
-        for (Post post : items) {
-            PlaceUserInterface placeUserInterface = post;
-            usersFullList.add(placeUserInterface);
-        }
-        loadByStatus(UserPlaceStatus.COMING);
+        placeUsersAdapter.add("post", items);
+        notifyDataChanged();
     }
-    private synchronized void notifyUsersComingLoaded(List<UserPlace> comingUsers) {
-        for (UserPlace comingUser : comingUsers) {
-            Log.d(TAG, "Coming user: " + comingUser);
-            usersFullList.add(comingUser);
-        }
-        loadByStatus(UserPlaceStatus.INVITED);
-        setAdapter();
+    private void notifyUsersStatusLoaded(UserPlaceStatus status, List<UserPlace> items) {
+        placeUsersAdapter.add(status.toString(), items);
+        notifyDataChanged();
+    }
+    private void notifyUserInvitedLoaded(List<PlacesInvitation> items) {
+        Log.d(TAG, "Adding " + items.size() + " invitation(s)");
+        placeUsersAdapter.add(UserPlaceStatus.INVITED.toString(), items);
+        notifyDataChanged();
     }
 
-    private void notifyUsersInvitedLoaded(List<UserPlace> invitedUsers) {
-        for (UserPlace invitedUser : invitedUsers) {
-            usersFullList.add(invitedUser);
-        }
-    }
-
-    private void setAdapter() {
-        //TODO : if empty ==> no posts view
-        //SET LIST IN ADAPTER
-        placeUsersAdapter.setData(usersFullList);
-
-        //This is the code to provide a sectioned list
-        List<SimpleSectionedRecyclerViewAdapter.Section> sections =
-                new ArrayList<SimpleSectionedRecyclerViewAdapter.Section>();
-
-        //Sections
-        if(posts!=null) {
-            sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
-                    0,getString(R.string.header_posts)));
-        }
-        if(peopleComing!=null) {
-            if(peopleComing.size()!=0) {
-                int numberPosts = posts==null ? 0 : posts.size();
-                sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
-                        numberPosts,getString(R.string.header_coming)));
-            }
-        }
-        if(peopleInvited!=null) {
-            if (peopleInvited.size()!=0) {
-                int numberPosts = posts==null ? 0 : posts.size();
-                int numberComing = peopleComing==null ? 0 : peopleComing.size();
-                sections.add(new SimpleSectionedRecyclerViewAdapter.Section(
-                        numberPosts+numberComing,getString(R.string.header_invited)));
-            }
-        }
-
-        //Add your adapter to the sectionAdapter
-        SimpleSectionedRecyclerViewAdapter.Section[] dummy = new SimpleSectionedRecyclerViewAdapter.Section[sections.size()];
-        SimpleSectionedRecyclerViewAdapter mSectionedAdapter = new
-                SimpleSectionedRecyclerViewAdapter(context,R.layout.header_place_people,
-                R.id.text_header_place_people,placeUsersAdapter);
-        mSectionedAdapter.setSections(sections.toArray(dummy));
-
-        //Apply this adapter to the RecyclerView
-        peopleRv.setAdapter(mSectionedAdapter);
-        Log.i(TAG, context.getString(R.string.log_set_adapter_placepeoplefragment)
-                + usersFullList.size());
+    private void notifyDataChanged(){
+        Log.d(TAG, "Adapter size: " + placeUsersAdapter.getItemCount());
+        placeUsersAdapter.notifyDataSetChanged();
+        mSectionedAdapter.setSections(placeUsersAdapter.buildSections());
     }
 
     public void setMainButtonVisibility(boolean bool) {
-        if(bool) {
-            addButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            addButton.setVisibility(View.GONE);
-        }
+        addButton.setVisibility(bool ? View.VISIBLE: View.GONE);
     }
 
     public TextView getTvMainButton() {

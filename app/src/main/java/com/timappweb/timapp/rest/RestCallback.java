@@ -15,6 +15,8 @@ public class RestCallback<T> implements Callback<T> {
     private static final String TAG = "RestError";
     protected Context context = null;
 
+
+
     public RestCallback(Context context){
         this.context = context;
     }

@@ -13,11 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
+import com.google.gson.JsonArray;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnFriendsListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.PaginationResponse;
@@ -45,15 +48,20 @@ public class InviteFriendsActivity extends BaseActivity{
     private SimpleFacebook mSimpleFacebook;
     private View noFriendsView;
     private OnFriendsListener onFriendsListener;
-
+    private Place place;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Creating InviteFriendsActivity");
         setContentView(R.layout.activity_invite_friends);
-        this.initToolbar(true);
 
-        MyApplication.getApplicationRules();
+        place = IntentsUtils.extractPlace(getIntent());
+        if (place == null){
+            IntentsUtils.home(this);
+            finish();
+        }
+
+        this.initToolbar(true);
         findViews();
         initSelectedFriends();
         initAdapterListFriends();
@@ -71,10 +79,12 @@ public class InviteFriendsActivity extends BaseActivity{
 
     private void loadFriends(){
         Call<PaginationResponse<User>> call = RestClient.service().friends();
+        apiCalls.add(call);
         call.enqueue(new RestCallback<PaginationResponse<User>>(this) {
             @Override
             public void onResponse200(Response<PaginationResponse<User>> response) {
                 onUserLoaded(response.body().items);
+
             }
 
             @Override
@@ -82,7 +92,6 @@ public class InviteFriendsActivity extends BaseActivity{
                 super.onFailure(t);
             }
         });
-        apiCalls.add(call);
     }
 
     private void findViews() {
@@ -119,7 +128,7 @@ public class InviteFriendsActivity extends BaseActivity{
         int maxLabels = MyApplication.getApplicationRules().max_invite_per_request;
         //TODO : Replace 20 by maxLabels;
         mAutoLabel.setMaxLabels(20);
-        Log.d(TAG, "Max labels : "+maxLabels);
+        Log.d(TAG, "Max labels : " + maxLabels);
 
         mAutoLabel.setOnLabelsCompletedListener(new AutoLabelUI.OnLabelsCompletedListener() {
             @Override
@@ -153,19 +162,40 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void initInviteButton() {
-        final Activity thatActivity = this;
         setSquareTouchListener(inviteButton, textInviteButton);
 
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Number of friends invited : " + friendsSelected.size());
-                NavUtils.navigateUpFromSameTask(thatActivity);
+                sendInvites();
             }
         });
 
         updateButtonVisibility();
 
+    }
+
+    private void sendInvites(){
+        // Encoding data:
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (User user: friendsSelected){
+            ids.add(user.id);
+        }
+        Call<JsonArray> call = RestClient.service().sendInvite(place.id, ids);
+        call.enqueue(new RestCallback<JsonArray>(this) {
+            @Override
+            public void onResponse200(Response<JsonArray> response) {
+                Toast.makeText(context, "Thanks for inviting your friend!", Toast.LENGTH_LONG).show();
+                onSendInviteSuccess();
+            }
+
+        });
+        this.apiCalls.add(call);
+    }
+
+    private void onSendInviteSuccess(){
+        NavUtils.navigateUpFromSameTask(this);
     }
 
     private void itemListClicked(int position) {
@@ -184,6 +214,7 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void onUserLoaded(List<User> items){
+
         allFbFriends = items;
         if(allFbFriends.size()==0) {
             noFriendsView.setVisibility(View.VISIBLE);

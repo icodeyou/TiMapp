@@ -367,7 +367,7 @@ public class PlaceActivity extends BaseActivity {
         peopleListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPeople(currentActivity);
+                IntentsUtils.addPeople(currentActivity, place);
             }
         };
     }

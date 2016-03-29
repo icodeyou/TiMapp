@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest;
 
+import com.google.gson.JsonArray;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
@@ -10,12 +11,18 @@ import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -35,18 +42,21 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     // Place invites
+    @FormUrlEncoded
+    @POST("PlacesInvitations/invite/{placeId}.json")
+    Call<JsonArray> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Integer> ids);
 
-    @GET("PlacesInvitations/invite/:placeId.json")
-    Call listPosts(@Path("placeId") int placeId);
-
-    @GET("PlacesInvitations/accept/:inviteId.json")
+    @GET("PlacesInvitations/accept/{inviteId}.json")
     Call<RestFeedback> acceptInvite(@Path("inviteId") int inviteId);
 
-    @GET("PlacesInvitations/reject/:inviteId.json")
+    @GET("PlacesInvitations/reject/{inviteId}.json")
     Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
 
-    @GET("PlacesInvitations/mine.json")
-    Call<PaginationResponse<PlacesInvitation>> myInvites();
+    @GET("PlacesInvitations/sent/{placeId}.json")
+    Call<PaginationResponse<PlacesInvitation>> invitesSent(@Path("placeId") int inviteId);
+
+    @GET("PlacesInvitations/received.json")
+    Call<PaginationResponse<PlacesInvitation>> inviteReceived();
 
 
     // ---------------------------------------------------------------------------------------------
