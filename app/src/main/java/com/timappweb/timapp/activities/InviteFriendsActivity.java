@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
@@ -15,10 +14,8 @@ import android.widget.Toast;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnFriendsListener;
-import com.sromku.simple.fb.utils.Attributes;
-import com.sromku.simple.fb.utils.PictureAttributes;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.entities.User;
@@ -26,14 +23,11 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InviteFriendsActivity extends BaseActivity{
@@ -46,8 +40,8 @@ public class InviteFriendsActivity extends BaseActivity{
     private View inviteButton;
     private TextView textInviteButton;
 
-    private List<Profile> friendsSelected;
-    private List<Profile> allFbFriends;
+    private List<User> friendsSelected;
+    private List<User> allFbFriends;
     private SimpleFacebook mSimpleFacebook;
     private View noFriendsView;
     private OnFriendsListener onFriendsListener;
@@ -58,17 +52,12 @@ public class InviteFriendsActivity extends BaseActivity{
         Log.d(TAG, "Creating InviteFriendsActivity");
         setContentView(R.layout.activity_invite_friends);
         this.initToolbar(true);
-        //initOnFriendsLoadedListener();
-        //this.getFriends(onFriendsListener);
 
-        inviteButton = findViewById(R.id.invite_button);
-        textInviteButton = (TextView) findViewById(R.id.text_invite_button);
-        noFriendsView = findViewById(R.id.no_friends_view);
-
+        MyApplication.getApplicationRules();
         findViews();
         initSelectedFriends();
         initAdapterListFriends();
-        setRvListeners();
+        initAutoLabel();
         initInviteButton();
 
         this.loadFriends();
@@ -78,22 +67,6 @@ public class InviteFriendsActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initOnFriendsLoadedListener() {
-        onFriendsListener = new OnFriendsListener() {
-            @Override
-            public void onComplete(List<Profile> friends) {
-                allFbFriends = friends;
-                Log.i("Simple Facebook", "Number of friends = " + friends.size());
-                if(allFbFriends.size()==0) {
-                    noFriendsView.setVisibility(View.VISIBLE);
-                } else {
-                    noFriendsView.setVisibility(View.GONE);
-                    adapter.setData(allFbFriends);
-                }
-            }
-        };
     }
 
     private void loadFriends(){
@@ -112,20 +85,19 @@ public class InviteFriendsActivity extends BaseActivity{
         apiCalls.add(call);
     }
 
-    private void onUserLoaded(List<User> items){
-        // TODO JACK !!!
+    private void findViews() {
+        inviteButton = findViewById(R.id.invite_button);
+        textInviteButton = (TextView) findViewById(R.id.text_invite_button);
+        noFriendsView = findViewById(R.id.no_friends_view);
+        mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
+        mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     }
 
     private void initSelectedFriends() {
         friendsSelected = new ArrayList<>();
         //TODO : Get invited users from placeActivity and add them to the list
 
-    }
-
-    private void findViews() {
-        mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
-        mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
     }
 
     private void initAdapterListFriends() {
@@ -143,7 +115,12 @@ public class InviteFriendsActivity extends BaseActivity{
         });
     }
 
-    private void setRvListeners() {
+    private void initAutoLabel() {
+        int maxLabels = MyApplication.getApplicationRules().max_invite_per_request;
+        //TODO : Replace 20 by maxLabels;
+        mAutoLabel.setMaxLabels(20);
+        Log.d(TAG, "Max labels : "+maxLabels);
+
         mAutoLabel.setOnLabelsCompletedListener(new AutoLabelUI.OnLabelsCompletedListener() {
             @Override
             public void onLabelsCompleted() {
@@ -182,6 +159,7 @@ public class InviteFriendsActivity extends BaseActivity{
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Number of friends invited : " + friendsSelected.size());
                 NavUtils.navigateUpFromSameTask(thatActivity);
             }
         });
@@ -191,17 +169,27 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void itemListClicked(int position) {
-        Profile friend = allFbFriends.get(position);
+        User friend = allFbFriends.get(position);
         boolean success;
         if (friendsSelected.contains(friend)) {
             success = mAutoLabel.removeLabel(position);
         } else {
-            success = mAutoLabel.addLabel(friend.getName(), position);
+            success = mAutoLabel.addLabel(friend.getUsername(), position);
         }
         if (success) {
             updateButtonVisibility();
             friendsSelected.add(friend);
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onUserLoaded(List<User> items){
+        allFbFriends = items;
+        if(allFbFriends.size()==0) {
+            noFriendsView.setVisibility(View.VISIBLE);
+        } else {
+            noFriendsView.setVisibility(View.GONE);
+            adapter.setData(items);
         }
     }
 
@@ -213,7 +201,7 @@ public class InviteFriendsActivity extends BaseActivity{
         }
     }
 
-    public List<Profile> getFriendsSelected() {
+    public List<User> getFriendsSelected() {
         return friendsSelected;
     }
 }

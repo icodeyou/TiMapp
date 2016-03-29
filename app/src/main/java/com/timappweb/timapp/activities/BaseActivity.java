@@ -116,7 +116,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void getFriends(OnFriendsListener onFriendsListener){
             this.onFriendsListener = onFriendsListener;
-        }
+    }
 
     private void setAllFbFriends() {
         PictureAttributes pictureAttributes = Attributes.createPictureAttributes();

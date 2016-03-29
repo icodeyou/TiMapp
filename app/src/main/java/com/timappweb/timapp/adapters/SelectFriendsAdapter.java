@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.sromku.simple.fb.entities.Profile;
 import com.timappweb.timapp.activities.InviteFriendsActivity;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.List;
@@ -32,8 +33,8 @@ public class SelectFriendsAdapter extends FriendsAdapter {
     @Override
     public void onBindViewHolder(FriendViewHolder friendViewHolder, int position) {
         super.onBindViewHolder(friendViewHolder, position);
-        Profile friend = data.get(position);
-        List<Profile> friendsSelected = inviteFriendsActivity.getFriendsSelected();
+        User friend = data.get(position);
+        List<User> friendsSelected = inviteFriendsActivity.getFriendsSelected();
         setCheckedView(friendViewHolder, friendsSelected.contains(friend));
     }
 

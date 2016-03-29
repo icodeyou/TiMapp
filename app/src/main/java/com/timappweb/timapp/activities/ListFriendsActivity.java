@@ -35,29 +35,13 @@ public class ListFriendsActivity extends BaseActivity{
         Log.d(TAG, "Creating ListFriendsActivity");
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
-        initOnFriendsLoadedListener();
-        this.getFriends(onFriendsListener);
+        //initOnFriendsLoadedListener();
+        //this.getFriends(onFriendsListener);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_view);
 
         initAdapterListFriends();
-    }
-
-    private void initOnFriendsLoadedListener() {
-        onFriendsListener = new OnFriendsListener() {
-            @Override
-            public void onComplete(List<Profile> friends) {
-                allFbFriends = friends;
-                Log.i("Simple Facebook", "Number of friends = " + friends.size());
-                if(allFbFriends.size()==0) {
-                    noFriendsView.setVisibility(View.VISIBLE);
-                } else {
-                    noFriendsView.setVisibility(View.GONE);
-                    adapter.setData(allFbFriends);
-                }
-            }
-        };
     }
 
     private void initAdapterListFriends() {

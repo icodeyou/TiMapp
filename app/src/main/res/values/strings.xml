@@ -160,9 +160,9 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_add_more_friends">You can\'t add more than 10 friends</string>
 
     <!--Headers Place People-->
-    <string name="header_posts">Here</string>
-    <string name="header_coming">Coming</string>
-    <string name="header_invited">Invited</string>
+    <string name="header_posts">Posts</string>
+    <string name="header_coming">On their way</string>
+    <string name="header_invited">My friends invited</string>
 
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>

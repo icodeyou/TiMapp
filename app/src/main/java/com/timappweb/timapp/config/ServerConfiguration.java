@@ -59,6 +59,8 @@ public class ServerConfiguration {
 
     public class Rules {
 
+        public int max_invite_per_request = 20;
+
         public Rules() {
             this.places_points_levels = new LinkedList<>();
         }

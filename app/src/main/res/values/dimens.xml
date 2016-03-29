@@ -24,12 +24,9 @@
     <dimen name="half_profile_picture_side">45dp</dimen>
     <dimen name="last_post_box">5dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
-    <dimen name="height_name_card">30dp</dimen>
-    <dimen name="height_rv_displayed_tags">50dp</dimen>
-    <dimen name="height_small_rv_displayed_tags">25dp</dimen>
+    <dimen name="height_name_card">25dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
-    <dimen name="height_card">80dp</dimen>
     <dimen name="ic_place">80dp</dimen>
     <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="height_categories_choose">180dp</dimen>
@@ -60,7 +57,7 @@
     <dimen name="logo_big">45dp</dimen>
 
     <!-- Map -->
-    <dimen name="marker">20dp</dimen>
+    <dimen name="marker">100mm</dimen>
 
     <dimen name="tag_padding">10dp</dimen>
     <dimen name="tag_margin">5dp</dimen>
@@ -71,8 +68,8 @@
     <dimen name="tag_padding_vertical">1dp</dimen>
     <dimen name="map_icon">30dp</dimen>
     <dimen name="map_icon_padding">1dp</dimen>
-    <dimen name="width_pic_card">55dp</dimen>
-    <dimen name="width_checkbox_card">57dp</dimen>
+    <dimen name="width_pic_card">58dp</dimen>
+    <dimen name="width_checkbox_card">62dp</dimen>
 
 
 </resources>

@@ -1,12 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/height_card">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         card_view:cardUseCompatPadding="false"
+        android:layout_marginBottom="5dp"
         card_view:cardElevation="4dp"
         card_view:cardCornerRadius="2dp"
         card_view:cardBackgroundColor="@color/background_card"
@@ -20,8 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/padding_card"
-                android:layout_marginRight="@dimen/padding_card">
+                android:layout_margin="@dimen/padding_card">
 
                 <com.pkmmte.view.CircularImageView
                     android:id="@+id/person_photo"
@@ -34,13 +34,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
 
                     <com.timappweb.timapp.views.AutoResizeTextView
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:layout_margin="4dp"
+                        android:layout_height="@dimen/height_name_card"
                         android:id="@+id/person_name"
                         android:maxLines="1"
                         android:text="Jean Marc"
@@ -53,20 +52,20 @@
                     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
                         android:id="@+id/rv_horizontal_tags"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_small_rv_displayed_tags"
+                        android:layout_gravity="center"
                         myattrs:horizontal_tags_text_color="@color/colorAccent"
                         myattrs:horizontal_tags_background_color="@color/background_card"
                         myattrs:horizontal_tags_is_bold="false"
-                        myattrs:horizontal_tags_text_size="@dimen/text_small" />
+                        myattrs:horizontal_tags_text_size="@dimen/text_tags_user" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/selectedView"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_card"
+                android:layout_height="match_parent"
                 android:visibility="gone">
                 <View
                     android:layout_width="match_parent"
@@ -79,7 +78,6 @@
                     android:alpha="0.7"
                     android:layout_marginStart="@dimen/padding_card_minus_two"
                     android:layout_marginLeft="@dimen/padding_card_minus_two"
-                    android:layout_centerVertical="true"
                     android:src="@drawable/checkboxselected"/>
             </RelativeLayout>
 

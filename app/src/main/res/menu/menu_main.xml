@@ -9,7 +9,7 @@
 
     <item android:id="@+id/action_clear_filter"
         android:title="@string/action_filter"
-        android:icon="@drawable/ic_clock"
+        android:icon="@drawable/trashcan"
         android:orderInCategory="110"
         app:showAsAction="always" />
 
