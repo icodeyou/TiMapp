@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text dimensions -->
+    <dimen name="text_tags_place">@dimen/text_small</dimen>
+
+</resources>

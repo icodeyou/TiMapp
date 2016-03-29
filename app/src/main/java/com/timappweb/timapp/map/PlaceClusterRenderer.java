@@ -3,6 +3,7 @@ package com.timappweb.timapp.map;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -18,7 +19,6 @@ import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,9 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterIconGenerator;
+
+    //Big coef = small icon
+    private static int ICON_SIZE_COEF = 12;
 
     private final int mDimension;
     private final ImageView mImageView;
@@ -50,8 +53,6 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         int padding = (int) context.getResources().getDimension(R.dimen.map_icon_padding);
         mImageView.setPadding(padding, padding, padding, padding);
         mIconGenerator.setContentView(mImageView);
-
-
     }
 
     @Override
@@ -67,9 +68,19 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         categoryImage.layout(0, 0, categoryImage.getMeasuredWidth(), categoryImage.getMeasuredHeight());
         categoryImage.buildDrawingCache(true);
-        int markerSize = Math.round(Util.convertDpToPixel(context.getResources().getDimension(R.dimen.marker), context));
+
+        //set Category Icon Diameter
+        Point size = new Point();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getSize(size);
+        int iconDiameter = size.x/ICON_SIZE_COEF;
+
+        /*float resourceSize = context.getResources().getDimension(R.dimen.marker);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int pixelsSize = Math.round(resourceSize/(metrics.xdpi*(1.0f/25.4f)));
+        */
+
         Bitmap bmp = Bitmap.createScaledBitmap(categoryImage.getDrawingCache(),
-                markerSize,markerSize,true);
+                iconDiameter,iconDiameter,true);
         categoryImage.setDrawingCacheEnabled(false); // clear drawing cache
 
         bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);

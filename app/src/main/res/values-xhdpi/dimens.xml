@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Recycler views -->
+    <dimen name="height_rv_displayed_tags">35dp</dimen>
+    <dimen name="height_small_rv_displayed_tags">24dp</dimen>
+
+    <!-- Text dimensions -->
+    <dimen name="text_tags_place">@dimen/text_normal</dimen>
+    <dimen name="text_tags_user">@dimen/text_small</dimen>
+
+</resources>
