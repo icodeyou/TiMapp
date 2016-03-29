@@ -415,8 +415,7 @@ public class PlaceActivity extends BaseActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i(TAG,"position : " + position);
-                Log.i(TAG,"positionOffsetPixels : " + positionOffsetPixels);
+                Log.v(TAG,"position : " + position + ", positionOffsetPixels : " + positionOffsetPixels);
 
                 //If the user can't add pics nor tags
                 if(!isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {

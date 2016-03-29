@@ -33,7 +33,7 @@ public class PlacesInvitation implements PlaceUserInterface {
 
     @Override
     public String getTimeCreated() {
-        return Util.secondsTimestampToPrettyTime(this.created);
+        return Util.secondsTimestampToPrettyTime(((long) this.created) * 1000);
     }
 
     @Override

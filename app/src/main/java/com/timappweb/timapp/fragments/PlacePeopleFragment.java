@@ -134,8 +134,8 @@ public class PlacePeopleFragment extends BaseFragment {
             }
         });
         placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
-        placeUsersAdapter.create(UserPlaceStatus.COMING.toString(), getResources().getString(R.string.header_coming));
-        placeUsersAdapter.create(UserPlaceStatus.INVITED.toString(), getResources().getString(R.string.header_invited));
+        placeUsersAdapter.create(UserPlaceStatus.COMING, getResources().getString(R.string.header_coming));
+        placeUsersAdapter.create(UserPlaceStatus.INVITED, getResources().getString(R.string.header_invited));
 
         mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
                 context,
@@ -235,12 +235,12 @@ public class PlacePeopleFragment extends BaseFragment {
         notifyDataChanged();
     }
     private void notifyUsersStatusLoaded(UserPlaceStatus status, List<UserPlace> items) {
-        placeUsersAdapter.add(status.toString(), items);
+        placeUsersAdapter.add(status, items);
         notifyDataChanged();
     }
     private void notifyUserInvitedLoaded(List<PlacesInvitation> items) {
         Log.d(TAG, "Adding " + items.size() + " invitation(s)");
-        placeUsersAdapter.add(UserPlaceStatus.INVITED.toString(), items);
+        placeUsersAdapter.add(UserPlaceStatus.INVITED, items);
         notifyDataChanged();
     }
 
