@@ -23,7 +23,7 @@ public class SessionRequestInterceptor implements Interceptor
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
         String token = RestClient.instance().getToken();
-        String providerToken = RestClient.instance().getProviderToken();
+        String providerToken = RestClient.instance().getSocialProviderToken();
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
@@ -77,7 +77,7 @@ public class SessionRequestInterceptor implements Interceptor
         Log.d(TAG, "Request interceptor: User is logged in with token " + token);
         HttpUrl newUrl = url.newBuilder()
                 .addQueryParameter("_token", token)
-            .build();
+                .build();
 
         builder
                 .url(newUrl)

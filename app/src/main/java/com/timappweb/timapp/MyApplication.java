@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.speech.tts.SynthesisCallback;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -12,6 +13,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Category;
@@ -24,8 +26,14 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
+
 import java.util.LinkedList;
 import java.util.List;
+
+import retrofit2.Response;
 
 public class MyApplication extends Application{
 
@@ -33,9 +41,12 @@ public class MyApplication extends Application{
     public static final String KEY_IS_LOGIN = "IsLoggedIn";
     private static final String KEY_CURRENT_USER = "current_user";
     private static final String KEY_LOGIN_TIME = "LoginTime";
+    private static final int TOKEN_CHECK_DELAY = 3600; // Check token every 1 hour
 
     private static User currentUser = null;
     public static SearchFilter searchFilter = new SearchFilter();
+    private static DeferredObject deferred;
+    private int notifyCount = 0;
 
 
     /**
@@ -49,10 +60,18 @@ public class MyApplication extends Application{
         return currentUser != null;
     }
 
-    public static void checkToken(Context context){
+    public void checkToken(){
         int loginTime = LocalPersistenceManager.out().getInt(MyApplication.KEY_LOGIN_TIME, 0);
-        if (Util.isOlderThan(loginTime, 3600)){
-            RestClient.instance().checkToken(new RestFeedbackCallback(context) {
+        if (Util.isOlderThan(loginTime, TOKEN_CHECK_DELAY)){
+            Log.i(TAG, "Token is older that " + TOKEN_CHECK_DELAY);
+            RestClient.instance().checkToken(new RestFeedbackCallback(getApplicationContext()) {
+
+                @Override
+                public void onResponse(Response<RestFeedback> response) {
+                    super.onResponse(response);
+                    notifyLoadingState("User token checked.");
+                }
+
                 @Override
                 public void onActionSuccess(RestFeedback feedback) {
                     Log.i(TAG, "Token is still valid.");
@@ -68,9 +87,22 @@ public class MyApplication extends Application{
                 @Override
                 public void onFailure(Throwable t) {
                     Log.i(TAG, "Server is not available. Login out");
-                    MyApplication.logout();
+                    IntentsUtils.serverError(context);
                 }
             });
+        }
+        else{
+            notifyLoadingState("User token checked.");
+        }
+    }
+
+    private void notifyLoadingState(String s) {
+        notifyCount++;
+        if (deferred.isPending()){
+            deferred.notify(s);
+            if (notifyCount == 2){
+                deferred.resolve(null);
+            }
         }
     }
 
@@ -128,30 +160,24 @@ public class MyApplication extends Application{
     @Override
     public void onCreate(){
         super.onCreate();
+
+        this.deferred = new DeferredObject();
+
         LocalPersistenceManager.init(this);
         RestClient.init(this, getResources().getString(R.string.ws_endpoint));
 
-        //*******FACEBOOK******
+        // facebook
         initFacebookPermissions();
 
         // Loading cache in memory
         com.timappweb.timapp.cache.CacheData.load();
 
         // Load configuration
-        config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProvider.Listener(){
-            @Override
-            public void onLoaded() {
-                Log.d(TAG, "Server configuration has been loaded!");
-                config.getServerConfiguration().initCategories(getApplicationContext());
-            }
-
-            @Override
-            public void onFail() {
-                Log.e(TAG, "Error cannot load server configuration");
-            }
-        });
+        config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProviderListener());
         config.load();
 
+        // Check token
+        checkToken();
     }
 
     private void initFacebookPermissions() {
@@ -250,5 +276,26 @@ public class MyApplication extends Application{
     public static Location getLastLocation() {
         return lastLocation;
     }
+
+    public static Promise ready() {
+        return deferred.promise();
+    }
+
+
+    private class ConfigurationProviderListener implements ConfigurationProvider.Listener {
+        @Override
+        public void onLoaded() {
+            Log.i(TAG, "Server configuration has been loaded!");
+            notifyLoadingState("Server configuration loaded");
+        }
+
+        @Override
+        public void onFail() {
+            Log.e(TAG, "Error cannot load server configuration");
+            deferred.reject(null);
+        }
+    }
+
+
 
 }

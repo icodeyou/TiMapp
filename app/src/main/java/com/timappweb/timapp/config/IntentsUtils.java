@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.timappweb.timapp.activities.ErrorActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
@@ -50,6 +51,14 @@ public class IntentsUtils {
     public static void home(Activity activity) {
         Intent intent = new Intent(activity, DrawerActivity.class);
         activity.startActivity(intent);
+    }
+    public static void serverError(Context context) {
+        Intent intent = new Intent(context, ErrorActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+    public static void error(Context context) {
+        IntentsUtils.serverError(context);
     }
 
     public static void profile(Activity activity){

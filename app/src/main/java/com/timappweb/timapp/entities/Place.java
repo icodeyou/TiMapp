@@ -133,7 +133,7 @@ public class Place implements Serializable, MarkerValueInterface {
     public int getIconResource() {
         //int level = this.getLevel();
         try {
-            return MyApplication.getCategoryById(this.category_id).resourceWhite;
+            return MyApplication.getCategoryById(this.category_id).getIconWhiteResId();
         } catch (UnknownCategoryException e) {
             return R.drawable.ic_category_highlight_unknown;
         }
