@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.sromku.simple.fb.entities.Profile;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendViewHolder> {
 
-    List<Profile> data;
+    List<User> data;
     OnItemAdapterClickListener mItemClickListener;
     Context context;
 
@@ -44,8 +45,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
     @Override
     public void onBindViewHolder(FriendViewHolder friendViewHolder, int position) {
-        Profile friend = data.get(position);
-        friendViewHolder.personName.setText(friend.getName());
+        User friend = data.get(position);
+        friendViewHolder.personName.setText(friend.getUsername());
 
         //Listener Horizontal Scroll View
         HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -53,14 +54,14 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         friendViewHolder.horizontalTags.setOnTouchListener(mHorizontalTagsTouchListener);
 
         //code with real friends
-        Picasso.with(context).load(friend.getPicture()).into(friendViewHolder.personPhoto);
+        Picasso.with(context).load(friend.getProfilePictureUrl()).into(friendViewHolder.personPhoto);
     }
 
-    public List<Profile> getData(){
+    public List<User> getData(){
         return data;
     }
 
-    public void setData(List<Profile> friends) {
+    public void setData(List<User> friends) {
         this.data = friends;
         notifyDataSetChanged();
     }

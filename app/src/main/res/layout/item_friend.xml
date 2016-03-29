@@ -52,8 +52,9 @@
                     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
                         android:id="@+id/rv_horizontal_tags"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_small_rv_displayed_tags"
+                        android:layout_gravity="center"
                         myattrs:horizontal_tags_text_color="@color/colorAccent"
                         myattrs:horizontal_tags_background_color="@color/background_card"
                         myattrs:horizontal_tags_is_bold="false"
@@ -77,7 +78,6 @@
                     android:alpha="0.7"
                     android:layout_marginStart="@dimen/padding_card_minus_two"
                     android:layout_marginLeft="@dimen/padding_card_minus_two"
-                    android:layout_centerVertical="true"
                     android:src="@drawable/checkboxselected"/>
             </RelativeLayout>
 

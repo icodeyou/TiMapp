@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_labels_invitefriends"
             android:layout_marginBottom="@dimen/margin_labels_invitefriends"
-            autolabel:max_labels="5"
             autolabel:show_cross="true"
             autolabel:text_color="@color/colorAccent"
             autolabel:text_size="@dimen/label_title_size"
