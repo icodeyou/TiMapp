@@ -113,7 +113,6 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(showTitle);
     }
-
     protected void getFriends(OnFriendsListener onFriendsListener){
             this.onFriendsListener = onFriendsListener;
         }
@@ -133,27 +132,6 @@ public class BaseActivity extends AppCompatActivity {
                 .build();
 
         mSimpleFacebook.getFriends(properties, onFriendsListener);
-    }
-
-    protected void setSimpleTouchListener(View button, final int resource) {
-        button.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        v.setBackgroundResource(resource);
-                        v.invalidate();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        v.setBackground(null);
-                        v.invalidate();
-                        break;
-                    }
-                }
-                return false;
-            }
-        });
     }
 
     protected void setRadiusTouchListener(View button, final TextView tv) {

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,14 +24,18 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Context context = this;
+        final Activity context = this;
 
         MyApplication.ready()
                 .done(new DoneCallback() {
                     @Override
                     public void onDone(Object result) {
-                        Intent intent = new Intent(context, DrawerActivity.class);
-                        startActivity(intent);
+                        if (MyApplication.isLoggedIn()){
+                            IntentsUtils.home(context);
+                        }
+                        else{
+                            IntentsUtils.login(context);
+                        }
                         finish();
                     }
                 })
@@ -44,6 +49,7 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onFail(Object result) {
                         IntentsUtils.error(context);
+                        finish();
                     }
                 });
     }

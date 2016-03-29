@@ -154,8 +154,6 @@ public class RestClient {
 
     public void login(String token) {
         LocalPersistenceManager.in().putString(KEY_TOKEN, token);
-        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TOKEN, _socialProviderToken);
-        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TYPE, _socialProviderType.toString());
     }
 
     public OkHttpClient getHttpClient() {
@@ -166,6 +164,8 @@ public class RestClient {
     public void setSocialProvider(SocialProvider provider, String accessToken) {
         this._socialProviderType = provider;
         this._socialProviderToken = accessToken;
+        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TOKEN, _socialProviderToken);
+        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TYPE, _socialProviderType.toString());
     }
 
 /*

@@ -23,7 +23,7 @@ public class LogRequestInterceptor  implements Interceptor {
         Request request = chain.request();
 
         long t1 = System.nanoTime();
-        Log.i(TAG, "Sending request " + request.url() + "on " + chain.connection() + " " + request.headers());
+        Log.i(TAG, "Sending request " + request.url() + " on " + chain.connection() + " " + request.headers());
         Log.d(TAG, "REQUEST BODY BEGIN\n" +bodyToString(request)+ "\nREQUEST BODY END");
 
         Response response = chain.proceed(request);
