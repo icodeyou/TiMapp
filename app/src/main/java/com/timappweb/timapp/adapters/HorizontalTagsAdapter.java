@@ -71,7 +71,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     }
 
     public void setDummyData() {
-        data.add(new Tag("snowboard"));
+        data.add(new Tag("plongée"));
         data.add(new Tag("chillmusic"));
         data.add(new Tag("festival"));
         notifyDataSetChanged();
