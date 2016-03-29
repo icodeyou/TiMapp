@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
@@ -26,7 +29,9 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
     private static final String TAG = "PlaceTagsFragment";
     private PlacesAdapter placesAdapter;
     private ExploreFragment exploreFragment;
-    private EachSecondTimerTask eachSecondTimerTask;
+    private DrawerActivity drawerActivity;
+    private TextView newEventButton;
+    //private EachSecondTimerTask eachSecondTimerTask;
 
     @Nullable
     @Override
@@ -34,14 +39,26 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         Log.d(TAG, "onCreateView");
         View root = inflater.inflate(R.layout.fragment_explore_places, container, false);
 
-        //Initialize variables
+        exploreFragment = (ExploreFragment) getParentFragment();
+        drawerActivity = (DrawerActivity) exploreFragment.getActivity();
+
+        //Views
         ListView lvTags = (ListView) root.findViewById(R.id.list_places);
 
+        //ListView and footer
+        View v = getLayoutInflater(savedInstanceState).inflate(R.layout.item_listview_footer,null);
+        lvTags.addFooterView(v);
+        newEventButton = (TextView) v.findViewById(R.id.create_button);
+        newEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.addPlace(drawerActivity);
+            }
+        });
 
-        exploreFragment = (ExploreFragment) getParentFragment();
+        //Adapter
         placesAdapter = new PlacesAdapter(getContext());
         lvTags.setAdapter(placesAdapter);
-
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
@@ -56,13 +73,13 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         super.onResume();
         Log.d(TAG, "onResume");
 
-        eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
+        /*eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
             @Override
             public void update() {
                 placesAdapter.notifyDataSetChanged();
             }
         });
-
+*/
     }
 
     @Override
@@ -70,13 +87,13 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         super.onPause();
         Log.d(TAG, "onPause");
 
-        eachSecondTimerTask.cancel();
+        //eachSecondTimerTask.cancel();
     }
-
 
     @Override
     public void onTabSelected() {
         Log.d(TAG, "Explore places fragment is now selected");
+        //drawerActivity.clearFabPosition();
 
         if(placesAdapter != null) {
             /*// Updating the list of places

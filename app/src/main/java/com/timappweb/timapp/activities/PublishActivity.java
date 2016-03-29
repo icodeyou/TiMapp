@@ -185,7 +185,7 @@ public class PublishActivity extends BaseActivity{
             }
             CacheData.setLastPost(post);
 
-            IntentsUtils.viewPlaceFromPublish(this.context, activity, placeId);
+            IntentsUtils.viewPlaceFromPublish(activity, placeId);
         }
 
         @Override

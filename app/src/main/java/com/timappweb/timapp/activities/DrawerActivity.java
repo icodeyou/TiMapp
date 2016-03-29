@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
@@ -43,6 +44,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     private SimpleFacebook mSimpleFacebook;
     private OnLogoutListener onLogoutListener;
+    private View fabContainer;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -175,6 +177,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     protected void initAddSpotButton() {
         if (addSpotFloatingButton == null){
             addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
+            fabContainer = findViewById(R.id.fab_container);
             final Activity that = this;
             Log.d(TAG, "Init add_spot_button button");
             addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
@@ -295,6 +298,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         else if (id == R.id.menu_item_logout) {
             IntentsUtils.logout(this);
             mSimpleFacebook.logout(onLogoutListener);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -366,8 +370,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
     }
 
-    public void setFabOpacity(float opacity) {
-        addSpotFloatingButton.setAlpha(opacity);
+    public void updateFabPosition(ListView placesViewer) {
+        int padding = placesViewer.getHeight();
+        fabContainer.setPadding(0,0,0,padding);
+    }
+
+    public void clearFabPosition() {
+        fabContainer.setPadding(0,0,0,0);
     }
 
     /////////////////////////////////////////////////////////
