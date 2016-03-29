@@ -39,24 +39,6 @@ public class ServerConfiguration {
                 '}';
     }
 
-    public void initCategories(Context context){
-        Log.d(TAG, "Initializing categories (" + categories.size() + ")");
-        for (Category category: categories){
-            //int idBlack = context.getResources().getIdentifier("ic_category" + category.name, "drawable");
-            try {
-                category.resourceBlack = R.drawable.class.getField("ic_category_" + category.name).getInt(null);
-                category.resourceWhite = R.drawable.class.getField("ic_category_highlight_" + category.name).getInt(null);
-            } catch (IllegalAccessException e) {
-                category.resourceBlack = R.drawable.ic_category_unknown;
-                category.resourceWhite = R.drawable.ic_category_highlight_unknown;
-            } catch (NoSuchFieldException e) {
-                category.resourceBlack = R.drawable.ic_category_unknown;
-                category.resourceWhite = R.drawable.ic_category_highlight_unknown;
-            }
-
-        }
-    }
-
     public class Rules {
 
         public Rules() {

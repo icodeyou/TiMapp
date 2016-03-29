@@ -30,12 +30,12 @@ public class AddPlaceCategoriesAdapter extends CategoriesAdapter {
         final ImageView categoryIcon = holder.categoryIcon;
 
         if(position==0) {
-            categoryIcon.setImageResource(category.resourceWhite);
+            categoryIcon.setImageResource(category.getIconWhiteResId());
             categoryIcon.setBackgroundResource(R.drawable.b4);
             currentCategoryIcon = categoryIcon;
         }
         else {
-            categoryIcon.setImageResource(category.resourceBlack);
+            categoryIcon.setImageResource(category.getIconBlackResId());
             categoryIcon.setBackground(null);
         }
 
@@ -50,12 +50,12 @@ public class AddPlaceCategoriesAdapter extends CategoriesAdapter {
     public void setIconNewCategory(AddPlaceActivity addPlaceActivity, Category newCategory) {
         //Set image to normal for old selected category
         Category oldCategorySelected = addPlaceActivity.getCategorySelected();
-        int oldCategoryResource = oldCategorySelected.resourceBlack;
+        int oldCategoryResource = oldCategorySelected.getIconBlackResId();
         currentCategoryIcon.setImageResource(oldCategoryResource);
         currentCategoryIcon.setBackground(null);
 
         //Set image to highlight for new selected category
-        int newCategoryResource = newCategory.resourceWhite;
+        int newCategoryResource = newCategory.getIconWhiteResId();
         ImageView iconNewCategory = getIconFromId(newCategory.id);
         iconNewCategory.setImageResource(newCategoryResource);
         iconNewCategory.setBackgroundResource(R.drawable.b4);

@@ -12,11 +12,8 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import org.xml.sax.ErrorHandler;
 
 import okhttp3.OkHttpClient;
-//import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -31,6 +28,8 @@ public class RestClient {
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
     public static final String KEY_TOKEN = "token";
+    private static final String SOCIAL_PROVIDER_TOKEN = "social_provider_token";
+    private static final String SOCIAL_PROVIDER_TYPE = "social_provider_type";
 
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
@@ -149,18 +148,20 @@ public class RestClient {
     public String getToken() {
         return LocalPersistenceManager.out().getString(KEY_TOKEN, null);
     }
+    public String getSocialProviderToken() {
+        return LocalPersistenceManager.out().getString(SOCIAL_PROVIDER_TOKEN, null);
+    }
 
     public void login(String token) {
         LocalPersistenceManager.in().putString(KEY_TOKEN, token);
+        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TOKEN, _socialProviderToken);
+        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TYPE, _socialProviderType.toString());
     }
 
     public OkHttpClient getHttpClient() {
         return httpClient;
     }
 
-    public String getProviderToken() {
-        return _socialProviderToken;
-    }
 
     public void setSocialProvider(SocialProvider provider, String accessToken) {
         this._socialProviderType = provider;

@@ -47,6 +47,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id"/>
 
+
+        <!-- SPLACE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -55,6 +57,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.ErrorActivity">
         </activity>
 
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->

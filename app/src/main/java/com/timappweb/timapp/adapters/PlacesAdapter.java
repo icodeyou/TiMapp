@@ -74,7 +74,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         Category category = null;
         try {
             category = MyApplication.getCategoryById(place.category_id);
-            categoryIcon.setImageResource(category.resourceWhite);
+            categoryIcon.setImageResource(category.getIconWhiteResId());
             categoryIcon = MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
@@ -136,4 +136,5 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     public ArrayList<HorizontalTagsRecyclerView> getListRvTags() {
         return listRvPlacetags;
     }
+
 }

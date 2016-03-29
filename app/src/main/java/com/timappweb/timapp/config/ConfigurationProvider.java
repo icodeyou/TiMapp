@@ -45,17 +45,9 @@ public class ConfigurationProvider {
     }
 
 
-    public void store(){
+    public void store() throws IOException {
         properties.setProperty("server_configuration", gson.toJson(serverConfiguration));
-        try {
-            properties.store(new FileOutputStream(filename), null);
-        } catch (FileNotFoundException e) {
-            Log.d(TAG, "FileNotFoundException: " + e.toString());
-            e.printStackTrace();
-        }catch (IOException e) {
-            Log.d(TAG, "IOException: " + e.toString());
-            e.printStackTrace();
-        }
+        properties.store(new FileOutputStream(context.getFilesDir().getPath().toString() + "/" + filename), null);
     }
 
     public void load(){
@@ -122,17 +114,30 @@ public class ConfigurationProvider {
                 if (response.isSuccess() && response.code() == 200){
                     serverConfiguration = response.body();
                     Log.d(TAG, "New server configuration is loaded: " + serverConfiguration);
-                    store();
+
+                    try {
+                        store();
+                        listener.onLoaded();
+                    } catch (FileNotFoundException e) {
+                        // TODO
+                        Log.e(TAG, "FileNotFoundException: " + e.toString());
+                        e.printStackTrace();
+                        listener.onFail();
+                    }catch (IOException e) {
+                        Log.e(TAG, "IOException: " + e.toString());
+                        e.printStackTrace();
+                        listener.onFail();
+                    }
                 }
                 else{
-                    Log.d(TAG, "Cannot update configuration: " + response);
+                    Log.e(TAG, "Cannot update configuration: " + response);
+                    listener.onFail();
                 }
-                listener.onLoaded();
             }
 
             @Override
             public void onFailure(Throwable t) {
-                Log.d(TAG, "onFailure: Cannot update configuration: " + t.getMessage());
+                Log.e(TAG, "onFailure: Cannot update configuration: " + t.getMessage());
                 listener.onFail();
             }
         });
