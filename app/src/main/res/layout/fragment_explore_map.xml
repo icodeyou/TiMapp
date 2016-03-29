@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -49,13 +50,22 @@
             myattrs:horizontal_tags_text_size="@dimen/text_normal" />
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorAccent"
+        android:src="@drawable/plus_button_white"
+        android:layout_above="@+id/places_viewer"/>
+
     <ListView
         android:id="@+id/places_viewer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignBottom="@+id/map"
-        android:background="@color/White"
-        android:visibility="gone"/>
+        android:background="@color/White"/>
+
+
 
 </RelativeLayout>

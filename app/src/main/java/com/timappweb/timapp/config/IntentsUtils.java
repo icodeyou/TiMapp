@@ -154,8 +154,8 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void viewPlaceFromPublish(Context context, Activity activity, int id) {
-        Intent intent = new Intent(context, PlaceActivity.class);
+    public static void viewPlaceFromPublish(Activity activity, int id) {
+        Intent intent = new Intent(activity, PlaceActivity.class);
         intent.putExtra("place_id", id);
         activity.startActivity(intent);
         activity.finish();

@@ -68,7 +68,7 @@ public class User implements Serializable, PlaceUserInterface {
 
     @Override
     public List<Tag> getTags() {
-        return null;
+        return tags;
     }
 
     @Override

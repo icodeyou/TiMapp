@@ -18,6 +18,7 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.listeners.OnItemViewRendered;
 import com.timappweb.timapp.views.AutoResizeTextView;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
@@ -31,6 +32,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     private boolean isTagsVisible;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
+    private OnItemViewRendered itemViewRendered;
 
     public PlacesAdapter(Context context) {
         super(context, R.layout.item_place);
@@ -112,6 +114,10 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
                 new HorizontalTagsTouchListener(getContext(), itemAdapterClickListener, position);
         rvPlaceTags.setOnTouchListener(mHorizontalTagsTouchListener);
 
+        if (itemViewRendered != null){
+            itemViewRendered.onItemAdded();
+        }
+
         //return the view
         return view;
     }
@@ -120,6 +126,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     public void add(Place place) {
         super.add(place);
         super.notifyDataSetChanged();
+
     }
 
     public void generateDummyData() {
@@ -137,4 +144,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         return listRvPlacetags;
     }
 
+    public void setItemViewRendered(OnItemViewRendered itemViewRendered) {
+        this.itemViewRendered = itemViewRendered;
+    }
 }
