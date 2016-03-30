@@ -28,7 +28,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
     private final Context context;
     private HorizontalTagsRecyclerView rvPlaceTags;
-    private ArrayList<HorizontalTagsRecyclerView> listRvPlacetags;
     private boolean isTagsVisible;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
@@ -38,7 +37,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         super(context, R.layout.item_place);
         this.context = context;
         this.isTagsVisible = true;
-        this.listRvPlacetags = new ArrayList<>();
     }
 
     public PlacesAdapter(Context context, boolean bool) {
@@ -97,8 +95,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             rvPlaceTags.setVisibility(View.GONE);
         }
 
-        //listRvPlacetags.add(rvPlaceTags);
-
         //Listener entire view
         if (this.itemAdapterClickListener != null){
             view.setOnClickListener(new View.OnClickListener() {
@@ -138,10 +134,6 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
         this.itemAdapterClickListener = itemAdapterClickListener;
-    }
-
-    public ArrayList<HorizontalTagsRecyclerView> getListRvTags() {
-        return listRvPlacetags;
     }
 
     public void setItemViewRendered(OnItemViewRendered itemViewRendered) {

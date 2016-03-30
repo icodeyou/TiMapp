@@ -7,18 +7,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/main_button"
         android:orientation="vertical">
-        <ImageView
-            android:id="@+id/picture_taken"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
         <!-- Progress view -->
         <!-- **********************************************************************-->
         <LinearLayout
             android:id="@+id/progress_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_height="match_parent"
             android:gravity="bottom"
             android:orientation="vertical">
             <include layout="@layout/progressview"
@@ -46,8 +42,7 @@
         <LinearLayout
             android:id="@+id/no_pictures_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             android:visibility="gone">
@@ -70,7 +65,6 @@
             android:id="@+id/no_connection_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -93,35 +87,65 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/pictures_rv"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:listSelector="@android:color/transparent"/>
+    </LinearLayout>
 
-        <!-- Main Add Button (Add pic)-->
-        <!-- **********************************************************************-->
+    <!-- Main Add Button (Add pic)-->
+    <!-- **********************************************************************-->
+    <LinearLayout
+        android:id="@+id/main_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_bottom_button"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/background_button"
+        android:visibility="gone">
+        <Space
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/text_main_button"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textColor="@color/text_button"
+            android:textAllCaps="false"
+            android:text="@string/button_add_pic"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/text_big"/>
+    </LinearLayout>
+
+    <!-- Uploading view-->
+    <!-- **********************************************************************-->
+    <LinearLayout
+        android:id="@+id/upload_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_button"
+        android:gravity="center"
+        android:visibility="gone">
         <LinearLayout
-            android:id="@+id/main_button"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_bottom_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@drawable/background_button"
-            android:visibility="gone">
-            <Space
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"/>
+            android:background="@drawable/background_uploading"
+            android:alpha="0.7">
+            <include layout="@layout/progressview"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="@dimen/upload_tags_margin"/>
             <TextView
-                android:id="@+id/text_main_button"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:textStyle="bold"
-                android:textColor="@color/text_button"
-                android:textAllCaps="false"
-                android:text="@string/button_add_pic"
-                android:gravity="center_vertical"
-                android:textSize="@dimen/text_big"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/uploading_pic"
+                android:textColor="@color/Black"
+                android:textSize="@dimen/text_normal"/>
         </LinearLayout>
     </LinearLayout>
 

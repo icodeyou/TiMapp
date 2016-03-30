@@ -76,7 +76,7 @@
                     myattrs:horizontal_tags_text_color="@color/colorAccent"
                     myattrs:horizontal_tags_background_color="@color/background_card"
                     myattrs:horizontal_tags_is_bold="false"
-                    myattrs:horizontal_tags_text_size="@dimen/text_tags_user"/>
+                    myattrs:horizontal_tags_text_size="@dimen/text_tags_small"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

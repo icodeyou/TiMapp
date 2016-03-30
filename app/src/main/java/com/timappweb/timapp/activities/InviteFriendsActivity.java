@@ -186,7 +186,7 @@ public class InviteFriendsActivity extends BaseActivity{
         call.enqueue(new RestCallback<JsonArray>(this) {
             @Override
             public void onResponse200(Response<JsonArray> response) {
-                Toast.makeText(context, "Thanks for inviting your friend!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
                 onSendInviteSuccess();
             }
 

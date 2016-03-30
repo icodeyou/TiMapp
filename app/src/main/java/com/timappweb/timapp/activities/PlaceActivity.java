@@ -181,6 +181,7 @@ public class PlaceActivity extends BaseActivity {
         //PlacesAdapter
         placesAdapter = new PlacesAdapter(this, false);
         placeListView.setAdapter(placesAdapter);
+        placeListView.setEnabled(false);
     }
 
     @Override
@@ -219,6 +220,8 @@ public class PlaceActivity extends BaseActivity {
     //////////////////////////////////////////////////////////////////////////////
 
     private void uploadPicture(final Uri fileUri) {
+        fragmentPictures.setUploadVisibility(true);
+
         // create upload service client
         File file = new File(fileUri.getPath());
 
@@ -267,11 +270,15 @@ public class PlaceActivity extends BaseActivity {
 
                     if (feedback.success) {
                         Log.v(TAG, "SUCCESS UPLOAD IMAGE");
+                        fragmentPictures.setUploadVisibility(false);
                         // Get the bitmap in according to the width of the device
                         Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
-                        fragmentPictures.setImage(bitmap);
+                        //fragmentPictures.getPicAdapter().addData(bitmap);
+                        fragmentPictures.loadPictures();
+                        fragmentPictures.getPicturesRv().smoothScrollToPosition(0);
                     } else {
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
+                        fragmentPictures.setUploadVisibility(false);
                     }
                     Toast.makeText(currentActivity, feedback.message, Toast.LENGTH_LONG).show();
                 }
@@ -280,6 +287,7 @@ public class PlaceActivity extends BaseActivity {
             @Override
             public void onFailure(Throwable t) {
                 Log.e(TAG, "Upload error:" + t.getMessage());
+                fragmentPictures.setUploadVisibility(false);
             }
 
         });

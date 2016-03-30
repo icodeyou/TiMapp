@@ -6,12 +6,13 @@
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@drawable/background_footer_list_places">
         <TextView
             android:id="@+id/create_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_square_button"
+            android:layout_margin="30dp"
             android:paddingRight="30dp"
             android:paddingLeft="30dp"
             android:paddingTop="10dp"

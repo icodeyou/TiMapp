@@ -192,8 +192,10 @@ public class FilterActivity extends BaseActivity {
 
     public void setTopRvVisibility() {
         if(selectedTagsRecyclerView.getAdapter().getData().size()==0) {
+            selectedTagsRecyclerView.setVisibility(View.GONE);
             saveButton.setVisibility(View.GONE);
         } else {
+            selectedTagsRecyclerView.setVisibility(View.VISIBLE);
             saveButton.setVisibility(View.VISIBLE);
         }
     }

@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -207,6 +208,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private void initPlaceAdapter() {
         placesAdapter = new PlacesAdapter(getActivity(), false);
         placesViewer.setAdapter(placesAdapter);
+        placesViewer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Place place = placesAdapter.getItem(position);
+                IntentsUtils.viewPlaceFromMap(getActivity(), place);
+            }
+        });
     }
 
     public void setLoaderVisibility(boolean bool) {
@@ -247,13 +255,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
 
     private void initListeners() {
-        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+        /*placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 Place place = placesAdapter.getItem(position);
                 IntentsUtils.viewPlaceFromMap(getActivity(), place);
             }
-        });
+        });*/
 
         filterTagsRv.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -261,22 +269,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 IntentsUtils.filter(getActivity());
             }
         });
-
-        /*locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!MyApplication.hasLastLocation()) {
-                    Toast.makeText(getContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                //Get and set Location
-                String latitude = String.valueOf(MyApplication.getLastLocation().getLatitude());
-                String longitude = String.valueOf(MyApplication.getLastLocation().getLongitude());
-                LatLng latLng = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 18);
-                gMap.animateCamera(cameraUpdate);
-            }
-        });*/
 
         gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

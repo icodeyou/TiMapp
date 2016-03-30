@@ -120,7 +120,7 @@
                 myattrs:horizontal_tags_text_color="@color/colorAccent"
                 myattrs:horizontal_tags_background_color="@color/background"
                 myattrs:horizontal_tags_is_bold="true"
-                myattrs:horizontal_tags_text_size="@dimen/text_tags_place"/>
+                myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
 
         </LinearLayout>
     </LinearLayout>

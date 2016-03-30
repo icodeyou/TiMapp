@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,9 +50,9 @@ public class PlacePicturesFragment extends Fragment {
     private View                    noConnectionView;
     private View                    addButton;
     private View                    smallTagsButton;
-    private ImageView               pictureTaken;
     private TextView                tvAddButton;
     private RecyclerView            picturesRv;
+    private View                    uploadView;
 
     private PicturesAdapter         picturesAdapter;
 
@@ -76,6 +77,38 @@ public class PlacePicturesFragment extends Fragment {
         return root;
     }
 
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (visible) {
+            if(addButton!=null) {
+                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
+            }
+        }
+    }
+
+    private void initVariables(View root) {
+        placeActivity = (PlaceActivity) getActivity();
+        place = placeActivity.getPlace();
+        placeId = placeActivity.getPlaceId();
+
+        //Views
+        addButton = root.findViewById(R.id.main_button);
+        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
+        smallTagsButton = root.findViewById(R.id.button_add_tags);
+        progressView = root.findViewById(R.id.progress_view);
+        noPicView = root.findViewById(R.id.no_pictures_view);
+        noConnectionView = root.findViewById(R.id.no_connection_view);
+        uploadView = root.findViewById(R.id.upload_view);
+        picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
+    }
+
+    private void setListeners() {
+        addButton.setOnClickListener(placeActivity.getPictureListener());
+        smallTagsButton.setOnClickListener(placeActivity.getTagListener());
+    }
+
     private void initRv() {
         //picturesRv.setHasFixedSize(true);
         GridLayoutManager layoutManager =
@@ -95,6 +128,9 @@ public class PlacePicturesFragment extends Fragment {
         });
     }
 
+
+    //Public methods
+    //////////////////////////////////////////////////////////////////////////////
 
     public void loadPictures(){
         Log.d(TAG, "Loading places pictures");
@@ -125,45 +161,8 @@ public class PlacePicturesFragment extends Fragment {
                     picturesRv.setVisibility(View.VISIBLE);
                 }
             }
-
         });
-
     }
-
-
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-        if (visible) {
-            if(addButton!=null) {
-                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
-            }
-        }
-    }
-
-    private void initVariables(View root) {
-        placeActivity = (PlaceActivity) getActivity();
-        place = placeActivity.getPlace();
-        placeId = placeActivity.getPlaceId();
-
-        //Views
-        addButton = root.findViewById(R.id.main_button);
-        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
-        smallTagsButton = root.findViewById(R.id.button_add_tags);
-        progressView = root.findViewById(R.id.progress_view);
-        noPicView = root.findViewById(R.id.no_pictures_view);
-        noConnectionView = root.findViewById(R.id.no_connection_view);
-        pictureTaken = (ImageView) root.findViewById(R.id.picture_taken);
-        picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
-    }
-
-    private void setListeners() {
-        addButton.setOnClickListener(placeActivity.getPictureListener());
-        smallTagsButton.setOnClickListener(placeActivity.getTagListener());
-    }
-
-    //Public methods
-    //////////////////////////////////////////////////////////////////////////////
 
     public void setSmallTagsButtonVisibility(boolean bool) {
         if(bool) {
@@ -195,8 +194,21 @@ public class PlacePicturesFragment extends Fragment {
         return tvAddButton;
     }
 
-    public void setImage(Bitmap bitmap) {
-        pictureTaken.setImageBitmap(bitmap);
+    public PicturesAdapter getPicAdapter(){
+        return picturesAdapter;
+    }
+
+    public RecyclerView getPicturesRv(){
+        return picturesRv;
+    }
+
+    public void setUploadVisibility(Boolean bool) {
+        if(bool) {
+            noPicView.setVisibility(View.GONE);
+            uploadView.setVisibility(View.VISIBLE);
+        } else {
+            uploadView.setVisibility(View.GONE);
+        }
     }
 
 }

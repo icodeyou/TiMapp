@@ -47,7 +47,7 @@
             android:layout_height="@dimen/height_rv_displayed_tags"
             android:layout_gravity="center"
             myattrs:horizontal_tags_text_color="@color/white"
-            myattrs:horizontal_tags_text_size="@dimen/text_normal" />
+            myattrs:horizontal_tags_text_size="@dimen/text_tags" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
@@ -62,9 +62,8 @@
         android:id="@+id/places_viewer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_alignBottom="@+id/map"
-        android:background="@color/White"/>
+        android:background="@color/white"/>
 
 
 

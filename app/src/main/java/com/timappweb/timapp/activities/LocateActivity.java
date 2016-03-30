@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -106,6 +107,23 @@ public class LocateActivity extends BaseActivity{
             }
 
         });
+
+        /*listPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "Click on place adapter");
+                if (!MyApplication.hasFineLocation()) {
+                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                // We know that lastLocation is define because places are loaded only when location is defined
+                Place place = placesAdapter.getItem(position);
+                Post post = new Post();
+                post.longitude = MyApplication.getLastLocation().getLongitude();
+                post.latitude = MyApplication.getLastLocation().getLatitude();
+                IntentsUtils.addPostStepTags(that, place, post);
+            }
+        });*/
 
         listPlaces.setAdapter(placesAdapter);
 

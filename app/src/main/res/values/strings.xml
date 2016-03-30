@@ -67,6 +67,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="toast_no_tag">Please add a tag.</string>
     <string name="toast_tag_one_letter">Your tag should have at least 2 letters.</string>
     <string name="toast_tag_already_chosen">Your tag has already been chosen.</string>
+    <string name="toast_thanks_for_sharing">Thank you for sharing !</string>
 
     <!--ADD PLACE ACTIVITY -->
     <string name="category_music">Music</string>
@@ -166,7 +167,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
 
     <string name="drawer_title1">TiM</string>
     <string name="drawer_title2">App</string>
-    <string name="slogan">Let pictures know what\'s going on</string>
+    <string name="slogan">Find. Enjoy. Share.</string>
     <string name="coming_button">Go</string>
     <string name="on_my_way">On My Way</string>
     <string name="tags_upcoming">Tags upcoming</string>
@@ -175,6 +176,9 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="define_yourself_tag">DefineYourself</string>
     <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
     <string name="menu_search_tags">Search tags</string>
+    <string name="no_events_message1">Nothing here !</string>
+    <string name="no_events_message2">Please swipe left and find some places on the map.</string>
+    <string name="uploading_pic">Uploading picture</string>
 
 
 </resources>
