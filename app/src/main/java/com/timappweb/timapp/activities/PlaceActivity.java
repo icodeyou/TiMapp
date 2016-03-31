@@ -182,7 +182,7 @@ public class PlaceActivity extends BaseActivity {
 
     private void initPlaceAdapters() {
         //PlacesAdapter
-        placesAdapter = new PlacesAdapter(this, false);
+        placesAdapter = new PlacesAdapter(this, false, R.color.colorSecondary);
         placeListView.setAdapter(placesAdapter);
         placeListView.setEnabled(false);
     }

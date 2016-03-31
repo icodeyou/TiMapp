@@ -40,6 +40,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final int COEF_TRANSPARENCY = 30; // opacity equals to 255.
     private final Context context;
     private final HashMap<Place, CountDownTimer> countDownTimers = new HashMap<>();
+    private int colorRes = -1;
     private HorizontalTagsRecyclerView rvPlaceTags;
     private boolean isTagsVisible;
 
@@ -55,10 +56,11 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         this.isTagsVisible = true;
     }
 
-    public PlacesAdapter(Context context, boolean bool) {
+    public PlacesAdapter(Context context, boolean bool, int colorRes) {
         super(context, R.layout.item_place);
         this.context = context;
         this.isTagsVisible = bool;
+        this.colorRes = colorRes;
     }
 
     @Override
@@ -96,7 +98,11 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
 
             //Place background
             ImageView imageView = (ImageView) view.findViewById(R.id.background_place);
-            imageView.setImageResource(category.getImageResId());
+            if(colorRes==-1) {
+                imageView.setImageResource(category.getImageResId());
+            } else {
+                imageView.setImageResource(colorRes);
+            }
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }

@@ -205,7 +205,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void initPlaceAdapter() {
-        placesAdapter = new PlacesAdapter(getActivity(), false);
+        placesAdapter = new PlacesAdapter(getActivity(), false, R.color.white);
         placesViewer.setAdapter(placesAdapter);
         placesViewer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
