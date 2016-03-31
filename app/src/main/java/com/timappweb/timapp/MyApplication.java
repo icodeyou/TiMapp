@@ -60,6 +60,10 @@ public class MyApplication extends Application{
         return currentUser != null;
     }
 
+    public static boolean isCurrentUser(int userId){
+        return MyApplication.isLoggedIn() && MyApplication.getCurrentUser().id == userId;
+    }
+
     public void checkToken(){
         int loginTime = LocalPersistenceManager.out().getInt(MyApplication.KEY_LOGIN_TIME, 0);
         if (Util.isOlderThan(loginTime, TOKEN_CHECK_DELAY)){

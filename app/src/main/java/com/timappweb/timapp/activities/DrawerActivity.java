@@ -228,6 +228,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_profile).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_logout).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_login).setVisible(!isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_item_my_friends).setVisible(isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_item_settings).setVisible(false);
 
         MenuItem item = menu.findItem(R.id.action_clear_filter);
         if(exploreFragment != null) {

@@ -137,7 +137,7 @@ public class ProfileActivity extends BaseActivity{
         }
     }
 
-    private void loadUser(int userId){
+    private void loadUser(final int userId){
         Call<User> call = RestClient.service().profile(userId);
         call.enqueue(new RestCallback<User>(this) {
             @Override
@@ -191,17 +191,15 @@ public class ProfileActivity extends BaseActivity{
                             adapter.notifyDataSetChanged();
                         }
                         else {
-                            if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
-                                adapter.add(new Tag(getString(R.string.define_yourself_tag)));
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                adapter.add(new Tag(getString(R.string.newbie_tag)));
-                                adapter.notifyDataSetChanged();
-                            }
+                            Tag defaultTag = new Tag(getString(MyApplication.isCurrentUser(userId)
+                                    ? R.string.newbie_tag
+                                    : R.string.define_yourself_tag));
+                            adapter.add(defaultTag);
+                            adapter.notifyDataSetChanged();
                         }
                     }
 
-                    if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
+                    if (MyApplication.isCurrentUser(userId)) {
                         invalidateOptionsMenu();
                         setTagsListeners();
                     }
