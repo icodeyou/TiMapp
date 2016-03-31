@@ -507,7 +507,7 @@ public class PlaceActivity extends BaseActivity {
             //if we are in the place
             Boolean isAllowedToCome = !place.isAround() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING);
             iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
-            onMyWayButton.setVisibility(place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE && CacheData.isUserComing(place.id)  ? View.VISIBLE : View.GONE);
+            onMyWayButton.setVisibility(progressView.getVisibility() != View.VISIBLE && place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE && CacheData.isUserComing(place.id)  ? View.VISIBLE : View.GONE);
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
     }
