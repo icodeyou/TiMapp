@@ -73,4 +73,8 @@ public class Util {
         PrettyTime p = new PrettyTime();
         return p.format(new Date(created));
     }
+
+    public static String byteToKB(long size) {
+        return ((double)size / (1000.0*1000)) + "MB";
+    }
 }

@@ -47,8 +47,11 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     @Override
     public void onBindViewHolder(PictureViewHolder pictureViewHolder, int position) {
         Picture picture = data.get(data.size()-position-1);
-        String fullUrl = this.baseUrl + "/" + picture.getUrl();
+        String fullUrl = this.baseUrl + "/" + picture.getPreviewUrl();
         Log.d(TAG, "Loading picture in adapter: " + fullUrl);
+        // TODO update picasso if new release > 2.5.2 to fix this bug
+        // https://github.com/square/picasso/issues/881
+        //Picasso.with(context).load(fullUrl).fit().centerCrop().into(pictureViewHolder.ivPicture);
         Picasso.with(context).load(fullUrl).into(pictureViewHolder.ivPicture);
     }
 

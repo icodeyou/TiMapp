@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,12 +27,14 @@ import android.widget.Toast;
 import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
+import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
@@ -43,10 +46,12 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.EachSecondTimerTask;
+import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.TimeTaskCallback;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -220,78 +225,72 @@ public class PlaceActivity extends BaseActivity {
     //////////////////////////////////////////////////////////////////////////////
 
     private void uploadPicture(final Uri fileUri) {
+        final Context context = this;
         fragmentPictures.setUploadVisibility(true);
 
         // create upload service client
         File file = new File(fileUri.getPath());
 
-        if (!file.exists()){
-            Log.d(TAG, "Photo does not exists: " + file.getAbsolutePath());
-            return;
-        }
-        MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
-        Log.d(TAG, "Photo '"+ file.getAbsolutePath() + "' has size: " + file.length() + " and type: " + fileMimeType);
+        try {
+            // Compress the file
+            Log.d(TAG, "BEFORE COMPRESSION: " +
+                    "Photo '"+ file.getAbsolutePath() + "'" +
+                    " has size: " + Util.byteToKB(file.length()) +
+                    ". Max size: " + Util.byteToKB(MyApplication.getApplicationRules().picture_max_size));
 
-        // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
-        /*
-        RequestBody requestFile = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("photo", file.getName())
-                .addFormDataPart("photo", file.getName(),
-                        RequestBody.create(fileMimeType, file))
-                .build();*/
-        //RequestBody requestFile = RequestBody.create(fileMimeType, file);
+            ServerConfiguration.Rules rules = MyApplication.getApplicationRules();
+            file = PictureUtility.resize(context, file, rules.picture_max_width, rules.picture_max_height);
 
-        // create RequestBody instance from file
-       // RequestBody requestFile =
-       //         RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 
-        // MultipartBody.Part is used to send also the actual file name
-        //MultipartBody.Part body =
-        //        MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+            Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +
+                    " has size: " + Util.byteToKB(file.length()) +
+                    " and type: " + fileMimeType);
 
-        //Picture picture = new Picture();
-        //picture.photo = file.getName();
+            RequestBody body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("photo", file.getName(),
+                            RequestBody.create(fileMimeType, file))
+                    .build();
 
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                //.addFormDataPart("photo", file.getName())
-                .addFormDataPart("photo", file.getName(),
-                        RequestBody.create(fileMimeType, file))
-                .build();
+            // finally, execute the request
+            Call<RestFeedback> call = RestClient.service().upload(this.placeId, body);
+            call.enqueue(new Callback<RestFeedback>() {
+                @Override
+                public void onResponse(Response<RestFeedback> response) {
+                    if (response.isSuccess()) {
+                        RestFeedback feedback = response.body();
 
-        // finally, execute the request
-        Call<RestFeedback> call = RestClient.service().upload(this.placeId, body);
-        call.enqueue(new Callback<RestFeedback>() {
-            @Override
-            public void onResponse(Response<RestFeedback> response) {
-                if (response.isSuccess()) {
-                    RestFeedback feedback = response.body();
-
-                    if (feedback.success) {
-                        Log.v(TAG, "SUCCESS UPLOAD IMAGE");
-                        fragmentPictures.setUploadVisibility(false);
-                        // Get the bitmap in according to the width of the device
-                        Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
-                        //fragmentPictures.getPicAdapter().addData(bitmap);
-                        fragmentPictures.loadPictures();
-                        fragmentPictures.getPicturesRv().smoothScrollToPosition(0);
-                    } else {
-                        Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
-                        fragmentPictures.setUploadVisibility(false);
+                        if (feedback.success) {
+                            Log.v(TAG, "SUCCESS UPLOAD IMAGE");
+                            fragmentPictures.setUploadVisibility(false);
+                            // Get the bitmap in according to the width of the device
+                            Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
+                            //fragmentPictures.getPicAdapter().addData(bitmap);
+                            fragmentPictures.loadPictures();
+                            fragmentPictures.getPicturesRv().smoothScrollToPosition(0);
+                        } else {
+                            Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
+                            fragmentPictures.setUploadVisibility(false);
+                        }
+                        Toast.makeText(currentActivity, feedback.message, Toast.LENGTH_LONG).show();
                     }
-                    Toast.makeText(currentActivity, feedback.message, Toast.LENGTH_LONG).show();
                 }
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e(TAG, "Upload error:" + t.getMessage());
-                fragmentPictures.setUploadVisibility(false);
-            }
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.e(TAG, "Upload error:" + t.getMessage());
+                    fragmentPictures.setUploadVisibility(false);
+                    Toast.makeText(context, "We cannot upload this image", Toast.LENGTH_LONG).show();
+                }
 
-        });
-        apiCalls.add(call);
+            });
+            apiCalls.add(call);
+        } catch (IOException e) {
+            Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
+            e.printStackTrace();
+            return ;
+        }
     }
 
 

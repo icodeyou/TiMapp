@@ -7,6 +7,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.utils.Util;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,6 +43,9 @@ public class ServerConfiguration {
     public class Rules {
 
         public int max_invite_per_request = 20;
+        public int picture_max_size;
+        public int picture_max_width;
+        public int picture_max_height;
 
         public Rules() {
             this.places_points_levels = new LinkedList<>();
