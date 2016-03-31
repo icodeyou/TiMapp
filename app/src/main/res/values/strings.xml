@@ -97,7 +97,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="exemple_comment">Cet endroit est sympa, surtout
         grâce à Lucia qui s’est mise toute nue sur le bar.</string>
     <string name="hashtag">#</string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait ...</string>
     <string name="waiting_for_location">Getting your location</string>
     <string name="action_skip_loggin">Skip</string>
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
@@ -174,11 +174,13 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="after_create_place_clicked">Thanks for sharing</string>
     <string name="text_no_last_post">Never posted anything</string>
     <string name="define_yourself_tag">DefineYourself</string>
+    <string name="newbie_tag">Newbie</string>
     <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
     <string name="menu_search_tags">Search tags</string>
     <string name="no_events_message1">Nothing here !</string>
     <string name="no_events_message2">Please swipe left and find some places on the map.</string>
     <string name="uploading_pic">Uploading picture</string>
+    <string name="counter_over">Over !</string>
 
 
 </resources>

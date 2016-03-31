@@ -234,7 +234,4 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
     }
-
-    //----------------------------------------------------------------------------------------------
-    //Miscellaneous
 }

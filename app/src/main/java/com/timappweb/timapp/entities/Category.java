@@ -16,6 +16,7 @@ public class Category implements Serializable{
     private int resourceBlack = -1;
     private int resourceWhite = -1;
     private int layoutResId = -1;
+    private int imageResId= -1;
 
 
     public String getName() {
@@ -100,6 +101,23 @@ public class Category implements Serializable{
             layoutResId = R.layout.category_unknown;
         }
         return layoutResId;
+    }
+
+
+    public int getImageResId() {
+        if (imageResId != -1){
+            return imageResId;
+        }
+        try {
+            imageResId = R.drawable.class.getField("image_" + this.name).getInt(null);
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "Unknown category layout for " + this.name);
+            imageResId = R.drawable.image_unknown;
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, "Unknown category layout for " + this.name);
+            imageResId = R.drawable.image_unknown;
+        }
+        return imageResId;
     }
 
     public int getTitleResId() {

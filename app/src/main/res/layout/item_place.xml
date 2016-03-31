@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/background_place"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_bar"
+        android:alpha="0.2"
+        android:layout_alignTop="@+id/main_box"
+        android:layout_alignBottom="@id/main_box"
+        android:layout_alignLeft="@id/main_box"
+        android:layout_alignRight="@id/main_box"/>
 
     <LinearLayout
+        android:id="@+id/main_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
+        android:padding="5dp">
+
+<!--        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp">-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="match_parent"
                         android:paddingRight="20dp"
                         android:orientation="horizontal"
@@ -67,22 +82,34 @@
                         <ImageView
                             android:layout_width="@dimen/logo_small"
                             android:layout_height="@dimen/logo_small"
+                            android:layout_marginRight="5dp"
                             android:src="@drawable/ic_hot"/>
-                        <TextView
+                        <cn.iwgang.countdownview.CountdownView
+                            android:id="@+id/people_counter_place"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:padding="2dp"
+                            app:isHideTimeBackground="true"
+                            app:isShowSecond="true"
+                            app:timeTextColor="@color/colorPrimaryDark"
+                            app:timeTextSize="@dimen/text_small"
+                            app:isTimeTextBold="true"
+                            app:suffixTextColor="@color/colorPrimaryDark"/>
+                        <!--<TextView
                             android:id="@+id/people_counter_place"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:layout_marginLeft="5dp"
                             android:singleLine="true"
-                            android:text="878"
                             android:textSize="@dimen/text_small"
                             android:textStyle="bold"
-                            android:textColor="@color/colorPrimaryDark"/>
+                            android:textColor="@color/colorPrimaryDark"
+                            android:visibility="gone"/>-->
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
@@ -118,11 +145,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/height_rv_displayed_tags"
                 myattrs:horizontal_tags_text_color="@color/colorAccent"
-                myattrs:horizontal_tags_background_color="@color/background"
+                myattrs:horizontal_tags_background_color="@color/transparent"
                 myattrs:horizontal_tags_is_bold="true"
                 myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
 
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

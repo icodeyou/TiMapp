@@ -1,8 +1,14 @@
 package com.timappweb.timapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.CountDownTimer;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +30,24 @@ import com.timappweb.timapp.views.AutoResizeTextView;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import cn.iwgang.countdownview.CountdownView;
 
 public class PlacesAdapter extends ArrayAdapter<Place> {
     private static final String TAG = "PlacesAdapter";
+    private static final int COEF_TRANSPARENCY = 30; // opacity equals to 255.
     private final Context context;
+    private final HashMap<Place, CountDownTimer> countDownTimers = new HashMap<>();
     private HorizontalTagsRecyclerView rvPlaceTags;
     private boolean isTagsVisible;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
     private OnItemViewRendered itemViewRendered;
+
+    private static int countDownInterval = 30000;
+    private LayoutInflater inflater;
 
     public PlacesAdapter(Context context) {
         super(context, R.layout.item_place);
@@ -54,7 +69,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         // Get the view from inflater
         View view = convertView;
         if(convertView==null) {
-            LayoutInflater inflater = (LayoutInflater) context
+            inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.item_place, parent, false);
         }
@@ -62,21 +77,26 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         // Initialize
         AutoResizeTextView tvLocation = (AutoResizeTextView) view.findViewById(R.id.title_place);
         TextView tvTime = (TextView) view.findViewById(R.id.time_place);
-        TextView tvCountPoints = (TextView) view.findViewById(R.id.people_counter_place);
+        CountdownView tvCountPoints = (CountdownView ) view.findViewById(R.id.people_counter_place);
         rvPlaceTags = (HorizontalTagsRecyclerView) view.findViewById(R.id.rv_horizontal_tags);
         ImageView categoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
-        //TODO : Initialize listRvPlacetags
+
+        initTimer(place, tvCountPoints);
 
         //Set texts
-        tvLocation.setText(place.name);
         tvTime.setText(place.getTime());
-        tvCountPoints.setText(String.valueOf(place.getPoints()));
+        tvLocation.setText(place.name);
 
         Category category = null;
         try {
+            //Category Icon
             category = MyApplication.getCategoryById(place.category_id);
             categoryIcon.setImageResource(category.getIconWhiteResId());
-            categoryIcon = MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
+            MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
+
+            //Place background
+            ImageView imageView = (ImageView) view.findViewById(R.id.background_place);
+            imageView.setImageResource(category.getImageResId());
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }
@@ -115,17 +135,34 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             itemViewRendered.onItemAdded();
         }
 
-        view.setOnTouchListener(new ColorButtonOnTouchListener());
-
         //return the view
         return view;
+    }
+
+    private void initTimer(Place place, final CountdownView tvCountPoints) {
+        int initialTime = place.getPoints();
+        tvCountPoints.start(1000 * initialTime);
+
+        /*if(countDownTimers.get(place)==null) {
+            int initialTime = place.getPoints();
+            CountDownTimer countDownTimer = new CountDownTimer(initialTime, countDownInterval) {
+
+                public void onTick(long millisUntilFinished) {
+                    tvCountPoints.setText(String.valueOf(millisUntilFinished/1000));
+                }
+
+                public void onFinish() {
+                    tvCountPoints.setText(R.string.counter_over);
+                }
+            }.start();
+            countDownTimers.put(place, countDownTimer);
+        }*/
     }
 
     @Override
     public void add(Place place) {
         super.add(place);
         super.notifyDataSetChanged();
-
     }
 
     public void generateDummyData() {

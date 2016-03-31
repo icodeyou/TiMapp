@@ -91,7 +91,6 @@ public class PlaceActivity extends BaseActivity {
 
     private ShareActionProvider shareActionProvider;
     private PlacesAdapter placesAdapter;
-    private EachSecondTimerTask eachSecondTimerTask = null;
     private int counter = 0;
 
     private LocationListener mLocationListener;
@@ -191,22 +190,10 @@ public class PlaceActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        eachSecondTimerTask.cancel();
     }
     @Override
     protected void onResume() {
         super.onResume();
-
-        eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
-            @Override
-            public void update() {
-                placesAdapter.notifyDataSetChanged();
-                if(loadedFragments>=3) {
-                    updateButtonsVisibility();
-                }
-            }
-        });
     }
 
     @Override

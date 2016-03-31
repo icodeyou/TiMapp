@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/background" />
+        </shape>
+    </item>
+    <item android:left="@dimen/width_border_white_button"
+        android:right="@dimen/width_border_white_button"
+        android:bottom="@dimen/width_border_white_button"
+        android:top="@dimen/width_border_white_button">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorAccent" />
+        </shape>
+    </item>
+</layer-list>

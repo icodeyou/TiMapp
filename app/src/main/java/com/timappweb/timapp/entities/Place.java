@@ -162,6 +162,10 @@ public class Place implements Serializable, MarkerValueInterface {
         return points > 0 ? points : 0;
     }
 
+    public int getCategoryId() {
+        return category_id;
+    }
+
     public int getLevel(){
         return Place.computeLevel(this.getPoints());
     }

@@ -67,6 +67,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 //    private View mLoginFormView;
 
     private SimpleFacebook mSimpleFacebook;
+    private View layoutFb;
+    private View progressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         setContentView(R.layout.activity_login);
         initToolbar(false);
 
+        layoutFb = findViewById(R.id.layout_fb);
+        progressView = findViewById(R.id.progress_view);
 
         /*// Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -127,6 +131,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             @Override
             public void onLogin(final String accessToken, List<Permission> acceptedPermissions, List<Permission> declinedPermissions) {
                 Log.i(TAG, "Logging in");
+                setProgressVisibility(true);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
 
@@ -147,6 +152,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
+                        setProgressVisibility(false);
                         Log.i(TAG, "User attempt to connect with wrong credential: server message: " + feedback.message);
                     }
                 });
@@ -154,16 +160,19 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
             @Override
             public void onCancel() {
+                setProgressVisibility(false);
                 Log.d(TAG, "Facebook connection canceled");
             }
 
             @Override
             public void onFail(String reason) {
+                setProgressVisibility(false);
                 Log.d(TAG, "Facebook connection failed : " + reason);
             }
 
             @Override
             public void onException(Throwable throwable) {
+                setProgressVisibility(false);
                 Log.d(TAG, "Facebook connection.. OnException: " + throwable.getMessage());
             }
 
@@ -172,6 +181,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         loginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                layoutFb.setVisibility(View.GONE);
                 mSimpleFacebook.login(onLoginListener);
             }
         });
@@ -447,6 +457,16 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             mAuthTask = null;
             //showProgress(false);
         }*/
+    }
+
+    private void setProgressVisibility(boolean bool) {
+        if(bool) {
+            progressView.setVisibility(View.VISIBLE);
+            layoutFb.setVisibility(View.GONE);
+        } else {
+            progressView.setVisibility(View.GONE);
+            layoutFb.setVisibility(View.VISIBLE);
+        }
     }
 }
 
