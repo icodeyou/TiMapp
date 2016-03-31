@@ -29,7 +29,7 @@ public class ListFriendsActivity extends BaseActivity{
     private List<User> allFbFriends;
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
-    private SimpleFacebook mSimpleFacebook;
+    //private SimpleFacebook mSimpleFacebook;
     private View noFriendsView;
 
     private OnFriendsListener onFriendsListener;
