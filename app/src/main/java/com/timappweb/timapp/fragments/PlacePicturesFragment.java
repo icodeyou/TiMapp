@@ -16,9 +16,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -81,11 +83,6 @@ public class PlacePicturesFragment extends Fragment {
     @Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
-        if (visible) {
-            if(addButton!=null) {
-                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
-            }
-        }
     }
 
     private void initVariables(View root) {
@@ -211,4 +208,11 @@ public class PlacePicturesFragment extends Fragment {
         }
     }
 
+    public void updateBtnVisibility() {
+        Log.v(TAG, "::updateButtonsVisibility()");
+        // Check if the user can post in this place
+        boolean showButton = place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPicture() && place.isAround();
+        addButton.setVisibility(showButton ? View.VISIBLE : View.GONE);
+        smallTagsButton.setVisibility(!showButton && place != null && place.isAround() ? View.VISIBLE : View.GONE);
+    }
 }

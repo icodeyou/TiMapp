@@ -124,32 +124,4 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Plus button -->
-    <!-- ************************************* -->
-    <LinearLayout
-        android:id="@+id/plus_button_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_bottom_button"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone">
-        <LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/button_selecting_margin"
-            android:layout_gravity="center_vertical"
-            android:gravity="right">
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/ic_plus_red"/>
-        </LinearLayout>
-        <Space
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
 </RelativeLayout>

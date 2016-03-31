@@ -79,12 +79,6 @@ public class PlaceTagsFragment extends BaseFragment {
 
     @Override
     public void setMenuVisibility(final boolean visible) {
-        if (visible) {
-            if(addButton!=null) {
-                boolean test = addButton.getVisibility()==View.VISIBLE;
-                placeActivity.setPlusButtonVisibility(test);
-            }
-        }
         super.setMenuVisibility(visible);
     }
 
@@ -100,22 +94,6 @@ public class PlaceTagsFragment extends BaseFragment {
         smallPeopleButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
-    public void updateBtnVisibility() {
-        Log.d(TAG, "PlaceActivity.updateButtonsVisibility()");
-
-        // Check if the user can post in this place
-        if (place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isAround()){
-            addButton.setVisibility(View.VISIBLE);
-        }
-        else if (place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)){
-            addButton.setVisibility(View.GONE);
-        }
-        else {
-            addButton.setVisibility(View.GONE);
-        }
-    }
-
-
     private void loadTags() {
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
         Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(placeActivity.getPlaceId());
@@ -128,6 +106,7 @@ public class PlaceTagsFragment extends BaseFragment {
                     notifyTagsLoaded(response.body());
                 }
             }
+
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
@@ -150,16 +129,6 @@ public class PlaceTagsFragment extends BaseFragment {
         }
     }
 
-    public void setMainButtonVisibility(boolean bool) {
-        if(bool) {
-            addButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            addButton.setVisibility(View.GONE);
-        }
-    }
-
-
 
     public View getMainButton() {
         return addButton;
@@ -169,30 +138,15 @@ public class PlaceTagsFragment extends BaseFragment {
         return tvAddButton;
     }
 
-    public void setSmallPicButtonVisibility(boolean bool) {
-        if(bool) {
-            smallPicButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            smallPicButton.setVisibility(View.GONE);
-        }
-    }
 
-    public View getSmallPicButton() {
-        return smallPicButton;
-    }
 
-    public void setSmallPeopleButtonVisibility(boolean bool) {
-        if(bool) {
-            smallPeopleButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            smallPeopleButton.setVisibility(View.GONE);
-        }
-    }
-
-    public View getSmallPeopleButton() {
-        return smallPeopleButton;
+    public void updateBtnVisibility() {
+        Log.v(TAG, "::updateButtonsVisibility()");
+        // Check if the user can post in this place
+        boolean showButton = place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isAround();
+        addButton.setVisibility(showButton ? View.VISIBLE : View.GONE);
+        smallPeopleButton.setVisibility(place != null && !showButton && place.isAround() ? View.VISIBLE : View.GONE);
+        smallPicButton.setVisibility(place != null && !showButton && place.isAround() && CacheData.isAllowedToAddPicture() ? View.VISIBLE : View.GONE);
     }
 
 }

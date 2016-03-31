@@ -35,6 +35,7 @@ import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.ServerConfiguration;
+import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
@@ -75,7 +76,6 @@ public class PlaceActivity extends BaseActivity {
     private View        onMyWayButton;
     private TextView    onMyWayTv;
     private View        progressView;
-    private View        plusButtonView;
     private ListView    tagsListView;
     private ListView    placeListView;
 
@@ -132,7 +132,6 @@ public class PlaceActivity extends BaseActivity {
         onMyWayButton = findViewById(R.id.button_on_my_way);
         progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
-        plusButtonView = findViewById(R.id.plus_button_view);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         placeListView = (ListView) findViewById(R.id.place_lv);
         progressView = findViewById(R.id.progress_view);
@@ -269,6 +268,11 @@ public class PlaceActivity extends BaseActivity {
                             //fragmentPictures.getPicAdapter().addData(bitmap);
                             fragmentPictures.loadPictures();
                             fragmentPictures.getPicturesRv().smoothScrollToPosition(0);
+
+                            Picture picture = new Picture();
+                            picture.created = Util.getCurrentTimeSec();
+                            picture.place_id = placeId;
+                            CacheData.setLastPicture(picture);
                         } else {
                             Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                             fragmentPictures.setUploadVisibility(false);
@@ -422,37 +426,7 @@ public class PlaceActivity extends BaseActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.v(TAG,"position : " + position + ", positionOffsetPixels : " + positionOffsetPixels);
-
-                //If the user can't add pics nor tags
-                if(!isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
-                    if (position == 1) {
-                        if(positionOffsetPixels < 700) {
-                            plusButtonView.setVisibility(View.GONE);
-                        } else plusButtonView.setVisibility(View.VISIBLE);
-                    }
-                }
-                //If the user can add pics but not tags
-                else if(isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
-                    if (position == 0) {
-                        if(positionOffsetPixels > 700) {
-                            plusButtonView.setVisibility(View.GONE);
-                        } else plusButtonView.setVisibility(View.VISIBLE);
-                    }
-                    if (position == 1) {
-                        if(positionOffsetPixels < 700) {
-                            plusButtonView.setVisibility(View.GONE);
-                        } else plusButtonView.setVisibility(View.VISIBLE);
-                    }
-                }
-                //If the user can add tags but not pics
-                else if(!isAllowedToAddPic && CacheData.isAllowedToAddPost()) {
-                    if (position == 0) {
-                        if(positionOffsetPixels < 700) {
-                            plusButtonView.setVisibility(View.GONE);
-                        } else plusButtonView.setVisibility(View.VISIBLE);
-                    }
-                }
+                Log.v(TAG, "position : " + position + ", positionOffsetPixels : " + positionOffsetPixels);
             }
 
             @Override
@@ -521,74 +495,22 @@ public class PlaceActivity extends BaseActivity {
      */
     private void updateButtonsVisibility(){
         if(place != null && MyApplication.hasLastLocation()) {
+            if (fragmentPosts != null){
+                fragmentPosts.updateBtnVisibility();
+            }
+            if (fragmentPictures != null){
+                fragmentPictures.updateBtnVisibility();
+            }
+            if (fragmentTags != null){
+                fragmentTags.updateBtnVisibility();
+            }
             //if we are in the place
-            if(place.isAround()) {
-                plusButtonView.setVisibility(View.VISIBLE);
-                iAmComingButton.setVisibility(View.GONE);
-                fragmentPosts.setMainButtonVisibility(true);
-                //if we can post a pic and a post
-                if(isAllowedToAddPic && CacheData.isAllowedToAddPost()) {
-                    setFragmentPicturesButtons(true);
-                    setFragmentTagsButtons(true);
-                }
-                //if we can post tags but NOT a pic
-                else if(!isAllowedToAddPic && CacheData.isAllowedToAddPost()) {
-                        setFragmentPicturesButtons(false);
-                        setFragmentTagsButtons(true);
-                }
-                //if we can post a pic but NOT tags
-                else if(isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
-                    setFragmentPicturesButtons(true);
-                    setFragmentTagsButtons(false);
-                }
-                //if we can't post a pic NOR a tag
-                else if(!isAllowedToAddPic && !CacheData.isAllowedToAddPost()) {
-                    fragmentTags.setMainButtonVisibility(false);
-                    fragmentTags.setSmallPicButtonVisibility(false);
-                    fragmentTags.setSmallPeopleButtonVisibility(true);
-                    fragmentPictures.setMainButtonVisibility(false);
-                    fragmentPictures.setSmallTagsButtonVisibility(false);
-                }
-            }
-            //if we are away from the place
-            else {
-                plusButtonView.setVisibility(View.GONE);
-                fragmentTags.setMainButtonVisibility(false);
-                fragmentTags.setSmallPicButtonVisibility(false);
-                fragmentTags.setSmallPeopleButtonVisibility(false);
-                fragmentPictures.setMainButtonVisibility(false);
-                fragmentPictures.setSmallTagsButtonVisibility(false);
-                fragmentPosts.setMainButtonVisibility(false);
-
-                if( progressBottom.getVisibility()!= View.VISIBLE) {
-                    //if user hasn't stated he was coming
-                    if(CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING)) {
-                        iAmComingButton.setVisibility(View.VISIBLE);
-                        onMyWayButton.setVisibility(View.GONE);
-                    }
-                    else {
-                        iAmComingButton.setVisibility(View.GONE);
-                        onMyWayButton.setVisibility(View.VISIBLE);
-                    }
-                }
-
-            }
-
+            Boolean isAllowedToCome = !place.isAround() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING);
+            iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
+            onMyWayButton.setVisibility(place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE && CacheData.isUserComing(place.id)  ? View.VISIBLE : View.GONE);
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
     }
-
-    private void setFragmentTagsButtons(boolean isAllowedToAddPost) {
-        fragmentTags.setMainButtonVisibility(isAllowedToAddPost);
-        fragmentTags.setSmallPicButtonVisibility(!isAllowedToAddPost);
-        fragmentTags.setSmallPeopleButtonVisibility(!isAllowedToAddPost);
-    }
-
-    private void setFragmentPicturesButtons(boolean isAllowedToAddPic) {
-        fragmentPictures.setMainButtonVisibility(isAllowedToAddPic);
-        fragmentPictures.setSmallTagsButtonVisibility(!isAllowedToAddPic);
-    }
-
 
     private void setDefaultShareIntent() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -600,12 +522,6 @@ public class PlaceActivity extends BaseActivity {
     //Public methods
     //////////////////////////////////////////////////////////////////////////////
 
-    public void setPlusButtonVisibility(boolean bool) {
-        if(bool) {
-            plusButtonView.setVisibility(View.VISIBLE);
-        }
-        else plusButtonView.setVisibility(View.GONE);
-    }
 
     // Check for camera permission in MashMallow
     public void requestForCameraPermission() {

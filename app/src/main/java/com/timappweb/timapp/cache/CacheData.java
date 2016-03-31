@@ -3,6 +3,7 @@ package com.timappweb.timapp.cache;
 import android.util.Log;
 
 import com.timappweb.timapp.config.LocalPersistenceManager;
+import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.SearchFilter;
@@ -21,10 +22,12 @@ public class CacheData {
     private static final String KEY_LAST_POST = "cachedata_lastpost";
     private static final String KEY_MAP_USER_PLACES = "cachedata_map_user_places";
     private static final String TAG = "CacheData";
+    private static final String KEY_LAST_PICTURE = "cachedata_lastpicture";;
 
     public static HashMap<Integer, UserPlace> mapPlaceStatus = new HashMap<>();
     private static Place lastPlace = null;
     private static Post lastPost = null;
+    private static Picture lastPicture = null;
     private static SearchFilter searchFilter = null;
 
 
@@ -59,6 +62,11 @@ public class CacheData {
         LocalPersistenceManager.writeObject(CacheData.KEY_LAST_POST, lastPost);
         Log.d(TAG, "Setting last post: " + lastPost);
     }
+    public static void setLastPicture(Picture picture) {
+        CacheData.lastPicture = picture;
+        LocalPersistenceManager.writeObject(CacheData.KEY_LAST_PICTURE, picture);
+        Log.d(TAG, "Setting last picture: " + picture);
+    }
 
     public static void addUserStatus(int placeId, UserPlaceStatus status){
         // TODO remove old ones
@@ -72,7 +80,7 @@ public class CacheData {
 
     // Last post
     public static boolean isAllowedToAddPlace(){
-        return lastPlace == null || Util.isOlderThan(lastPlace.created, 60 );
+        return lastPlace == null || Util.isOlderThan(lastPlace.created, 60 ); // TODO server config
     }
     public static boolean isAllowedToAddPost(){
         return lastPost == null || Util.isOlderThan(lastPost.created, 60 );
@@ -81,13 +89,22 @@ public class CacheData {
     public static boolean isAllowedToAddUserStatus(int placeId, UserPlaceStatus status){
         if (mapPlaceStatus.containsKey(placeId)){
             UserPlace placeStatus = mapPlaceStatus.get(placeId);
-            // If there is already a user status
-            if (placeStatus.status == status){
-                return false;
-            }
+            return placeStatus.status != status;
         }
         return true;
     }
+    public static boolean isUserComing(int placeId) {
+        if (mapPlaceStatus.containsKey(placeId)){
+            UserPlace placeStatus = mapPlaceStatus.get(placeId);
+            // If there is already a user status
+            return placeStatus.status == UserPlaceStatus.COMING;
+        }
+        return false;
+    }
 
+
+    public static boolean isAllowedToAddPicture() {
+        return lastPicture == null || Util.isOlderThan(lastPicture.created, 60 );
+    }
 
 }

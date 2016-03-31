@@ -6,6 +6,7 @@ import com.timappweb.timapp.MyApplication;
 public class Picture {
 
     public int id;
+    public int created;
     public String photo;
     public String preview;
     public String square;

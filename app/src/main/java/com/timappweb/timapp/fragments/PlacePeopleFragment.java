@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PlaceUsersAdapter;
+import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
@@ -91,11 +93,6 @@ public class PlacePeopleFragment extends BaseFragment {
     @Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
-        if (visible) {
-            if(addButton!=null) {
-                placeActivity.setPlusButtonVisibility(addButton.getVisibility()==View.VISIBLE);
-            }
-        }
     }
 
     private void initVariables(View root) {
@@ -250,8 +247,9 @@ public class PlacePeopleFragment extends BaseFragment {
         mSectionedAdapter.setSections(placeUsersAdapter.buildSections());
     }
 
-    public void setMainButtonVisibility(boolean bool) {
-        addButton.setVisibility(bool ? View.VISIBLE: View.GONE);
+    public void updateBtnVisibility() {
+        boolean showButton = place != null && MyApplication.hasLastLocation() && place.isAround();
+        addButton.setVisibility(showButton ? View.VISIBLE : View.GONE);
     }
 
     public TextView getTvMainButton() {
