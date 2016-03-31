@@ -45,7 +45,6 @@ import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
-import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.utils.TimeTaskCallback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;

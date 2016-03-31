@@ -47,7 +47,6 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id"/>
 
-
         <!-- SPLACE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.SplashActivity"

@@ -73,7 +73,6 @@ public class ProfileActivity extends BaseActivity{
         lastPostContainer = findViewById(R.id.profile_last_post_container);
 
         initUserTagsAdapter();
-        setListeners();
 
         // Get data
         int userId = IntentsUtils.extractUserId(getIntent());
@@ -123,7 +122,7 @@ public class ProfileActivity extends BaseActivity{
         //lastPostListView.setAdapter(postsAdapter);
     }
 
-    private void setListeners() {
+    private void setTagsListeners() {
         final Activity activity = this;
 
         if(mUser.username.equals(MyApplication.getCurrentUser().username)) {
@@ -192,13 +191,19 @@ public class ProfileActivity extends BaseActivity{
                             adapter.notifyDataSetChanged();
                         }
                         else {
-                            adapter.add(new Tag(getString(R.string.define_yourself_tag)));
-                            adapter.notifyDataSetChanged();
+                            if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
+                                adapter.add(new Tag(getString(R.string.define_yourself_tag)));
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                adapter.add(new Tag(getString(R.string.newbie_tag)));
+                                adapter.notifyDataSetChanged();
+                            }
                         }
                     }
 
                     if (mUser.username.equals(MyApplication.getCurrentUser().username)) {
                         invalidateOptionsMenu();
+                        setTagsListeners();
                     }
                     String photoUrl = mUser.getProfilePictureUrl();
                     Picasso.with(context).load(photoUrl).into(profilePicture);
