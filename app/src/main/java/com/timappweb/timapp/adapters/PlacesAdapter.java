@@ -16,6 +16,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.listeners.ColorButtonOnTouchListener;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnItemViewRendered;
@@ -113,6 +114,8 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         if (itemViewRendered != null){
             itemViewRendered.onItemAdded();
         }
+
+        view.setOnTouchListener(new ColorButtonOnTouchListener());
 
         //return the view
         return view;

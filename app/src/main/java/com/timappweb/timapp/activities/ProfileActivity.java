@@ -126,14 +126,16 @@ public class ProfileActivity extends BaseActivity{
     private void setListeners() {
         final Activity activity = this;
 
-        layoutTagsProfile.setOnTouchListener(new ColorButtonOnTouchListener());
+        if(mUser.username.equals(MyApplication.getCurrentUser().username)) {
+            layoutTagsProfile.setOnTouchListener(new ColorButtonOnTouchListener());
 
-        layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.editProfile(activity, mUser);
-            }
-        });
+            layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.editProfile(activity, mUser);
+                }
+            });
+        }
     }
 
     private void loadUser(int userId){
