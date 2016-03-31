@@ -62,6 +62,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
+        // TODO change with a listener instead  (jack code comme un cochon ...)
         final ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
         exploreMapFragment.setLoaderVisibility(true);
 
