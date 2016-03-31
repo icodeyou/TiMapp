@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +22,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.listeners.ColorTopRadiusOnTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
@@ -94,7 +94,7 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Click on place adapter");
-                if (!MyApplication.hasFineLocation()){
+                if (!MyApplication.hasFineLocation()) {
                     Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -138,7 +138,7 @@ public class LocateActivity extends BaseActivity{
                 //buttonAddPlace.setEnabled(false);
             }
         });
-        setRadiusTouchListener(buttonAddPlace, textButtonAddPlace);
+        buttonAddPlace.setOnTouchListener(new ColorTopRadiusOnTouchListener(this, textButtonAddPlace));
     }
 
     @Override

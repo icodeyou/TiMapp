@@ -19,6 +19,7 @@ import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.listeners.ColorPublishButtonRadiusOnTouchListener;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -116,7 +117,9 @@ public class PublishActivity extends BaseActivity{
     }
 
     public void setListeners() {
-        setRadiusTouchListener(confirmButton, textButton1, textButton2);
+
+        confirmButton.setOnTouchListener(
+                new ColorPublishButtonRadiusOnTouchListener(this, textButton1, textButton2));
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

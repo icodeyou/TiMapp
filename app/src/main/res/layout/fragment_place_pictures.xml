@@ -102,18 +102,15 @@
         android:gravity="center"
         android:background="@drawable/background_button"
         android:visibility="gone">
+
         <ImageView
             android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
             android:src="@drawable/ic_plus_red"/>
-        <Space
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
         <TextView
             android:id="@+id/text_main_button"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textStyle="bold"
             android:textColor="@color/text_button"

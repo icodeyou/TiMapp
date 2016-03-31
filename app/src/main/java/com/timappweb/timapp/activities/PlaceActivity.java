@@ -41,6 +41,7 @@ import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
+import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -372,16 +373,19 @@ public class PlaceActivity extends BaseActivity {
 
     private void setTouchListeners() {
         //PlaceActivity
-        setSquareTouchListener(iAmComingButton, iAmComingTv);
+        iAmComingButton.setOnTouchListener(new ColorSquareOnTouchListener(this, iAmComingTv));
         //Fragment Pictures
         //setSimpleTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
-        setSquareTouchListener(fragmentPictures.getMainButton(), fragmentPictures.getTvMainButton());
+        fragmentPictures.getMainButton().setOnTouchListener(
+                new ColorSquareOnTouchListener(this, fragmentPictures.getTvMainButton()));
         //Fragment Tags
         //setSimpleTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
         //setSimpleTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
-        setSquareTouchListener(fragmentTags.getMainButton(), fragmentTags.getTvMainButton());
+        fragmentTags.getMainButton().setOnTouchListener(
+                new ColorSquareOnTouchListener(this, fragmentTags.getTvMainButton()));
         //Fragment Posts
-        setSquareTouchListener(fragmentPosts.getMainButton(), fragmentPosts.getTvMainButton());
+        fragmentPosts.getMainButton().setOnTouchListener(
+                new ColorSquareOnTouchListener(this, fragmentPosts.getTvMainButton()));
     }
 
     private void initFragments() {

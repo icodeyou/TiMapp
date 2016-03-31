@@ -29,6 +29,7 @@ import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.adapters.CategoryPagerAdapter;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
@@ -216,7 +217,7 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
-        setSquareTouchListener(createButton, textCreateButton);
+        createButton.setOnTouchListener(new ColorSquareOnTouchListener(this, textCreateButton));
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override

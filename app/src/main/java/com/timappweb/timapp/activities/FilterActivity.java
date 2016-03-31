@@ -17,6 +17,7 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.FilterCategoriesAdapter;
+import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
@@ -85,7 +86,7 @@ public class FilterActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        setSquareTouchListener(saveButton, textSaveButton);
+        saveButton.setOnTouchListener(new ColorSquareOnTouchListener(this,textSaveButton));
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

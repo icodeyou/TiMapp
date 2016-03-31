@@ -5,14 +5,11 @@ import android.view.View;
 
 import com.timappweb.timapp.R;
 
-/**
- * Created by stephane on 3/29/2016.
- */
-public class ColorButtonOnTouchListener implements View.OnTouchListener {
+public class ColorAllOnTouchListener implements View.OnTouchListener {
 
     private final int color;
 
-    public ColorButtonOnTouchListener() {
+    public ColorAllOnTouchListener() {
         this.color = R.color.colorSecondary;
     }
 

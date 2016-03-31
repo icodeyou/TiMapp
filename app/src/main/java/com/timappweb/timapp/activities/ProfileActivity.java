@@ -18,7 +18,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.listeners.ColorButtonOnTouchListener;
+import com.timappweb.timapp.listeners.ColorAllOnTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -126,7 +126,7 @@ public class ProfileActivity extends BaseActivity{
         final Activity activity = this;
 
         if(mUser.username.equals(MyApplication.getCurrentUser().username)) {
-            layoutTagsProfile.setOnTouchListener(new ColorButtonOnTouchListener());
+            layoutTagsProfile.setOnTouchListener(new ColorAllOnTouchListener());
 
             layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
