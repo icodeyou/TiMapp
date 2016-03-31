@@ -8,20 +8,25 @@ import android.util.Log;
 import android.view.View;
 
 import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Profile;
 import com.sromku.simple.fb.listeners.OnFriendsListener;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.PaginationResponse;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class ListFriendsActivity extends BaseActivity{
 
     private String TAG = "ListFriendsActivity";
-    private List<Profile> allFbFriends;
+    private List<User> allFbFriends;
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
     private SimpleFacebook mSimpleFacebook;
@@ -35,13 +40,12 @@ public class ListFriendsActivity extends BaseActivity{
         Log.d(TAG, "Creating ListFriendsActivity");
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
-        //initOnFriendsLoadedListener();
-        //this.getFriends(onFriendsListener);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_view);
 
         initAdapterListFriends();
+        loadFriends();
     }
 
     private void initAdapterListFriends() {
@@ -54,14 +58,41 @@ public class ListFriendsActivity extends BaseActivity{
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                itemListClicked(position);
+                onItemListClicked(position);
             }
         });
     }
 
-    private void itemListClicked(int position) {
-        Profile friend = allFbFriends.get(position);
-        //TODO : redirect on right profile
-        IntentsUtils.profile(this, MyApplication.getCurrentUser());
+    private void loadFriends(){
+        Call<PaginationResponse<User>> call = RestClient.service().friends();
+        apiCalls.add(call);
+        call.enqueue(new RestCallback<PaginationResponse<User>>(this) {
+            @Override
+            public void onResponse200(Response<PaginationResponse<User>> response) {
+                onUserLoaded(response.body().items);
+
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                super.onFailure(t);
+            }
+        });
+    }
+
+    private void onUserLoaded(List<User> items){
+
+        allFbFriends = items;
+        if(allFbFriends.size()==0) {
+            noFriendsView.setVisibility(View.VISIBLE);
+        } else {
+            noFriendsView.setVisibility(View.GONE);
+            adapter.setData(items);
+        }
+    }
+
+    private void onItemListClicked(int position) {
+        User friend = allFbFriends.get(position);
+        IntentsUtils.profile(this, friend);
     }
 }

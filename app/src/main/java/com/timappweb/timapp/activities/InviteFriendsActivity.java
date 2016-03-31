@@ -67,8 +67,7 @@ public class InviteFriendsActivity extends BaseActivity{
         initAdapterListFriends();
         initAutoLabel();
         initInviteButton();
-
-        this.loadFriends();
+        loadFriends();
     }
 
     @Override
