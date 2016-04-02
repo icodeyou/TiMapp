@@ -33,6 +33,7 @@ public class ListFriendsActivity extends BaseActivity{
     private View noFriendsView;
 
     private OnFriendsListener onFriendsListener;
+    private View progressView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class ListFriendsActivity extends BaseActivity{
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_view);
+        progressView = findViewById(R.id.loading_friends);
 
         initAdapterListFriends();
         loadFriends();
@@ -70,12 +72,12 @@ public class ListFriendsActivity extends BaseActivity{
             @Override
             public void onResponse200(Response<PaginationResponse<User>> response) {
                 onUserLoaded(response.body().items);
-
             }
 
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
+                progressView.setVisibility(View.GONE);
             }
         });
     }
@@ -89,6 +91,7 @@ public class ListFriendsActivity extends BaseActivity{
             noFriendsView.setVisibility(View.GONE);
             adapter.setData(items);
         }
+        progressView.setVisibility(View.GONE);
     }
 
     private void onItemListClicked(int position) {

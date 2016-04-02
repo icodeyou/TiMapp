@@ -22,6 +22,7 @@ import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,9 +37,11 @@ import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.ServerConfiguration;
+import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
@@ -78,6 +81,8 @@ public class PlaceActivity extends BaseActivity {
     private View        progressView;
     private ListView    tagsListView;
     private RecyclerView rvPlace;
+    private View        progressBottom;
+    private View        parentLayout;
 
     //Camera
     private static final int REQUEST_CAMERA = 0;
@@ -86,7 +91,7 @@ public class PlaceActivity extends BaseActivity {
     private int loadedFragments; // Number of fragments
     private PlacePicturesFragment fragmentPictures;
     private PlaceTagsFragment fragmentTags;
-    private PlacePeopleFragment fragmentPosts;
+    private PlacePeopleFragment fragmentPeople;
     private ViewPager pager;
 
     private ShareActionProvider shareActionProvider;
@@ -104,7 +109,6 @@ public class PlaceActivity extends BaseActivity {
     private View.OnClickListener tagListener;
     private View.OnClickListener pictureListener;
     private View.OnClickListener peopleListener;
-    private View progressBottom;
 
 
     //Override methods
@@ -126,6 +130,7 @@ public class PlaceActivity extends BaseActivity {
         initToolbar(true);
 
         //Initialize
+        parentLayout = findViewById(R.id.main_layout_place);
         iAmComingButton = findViewById(R.id.button_coming);
         iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
         onMyWayButton = findViewById(R.id.button_on_my_way);
@@ -164,13 +169,19 @@ public class PlaceActivity extends BaseActivity {
                 setDefaultShareIntent();
                 return true;
             case R.id.action_reload:
-                IntentsUtils.reload(this);
+                reloadPlace();
                 return true;
             case android.R.id.home:
                 finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void reloadPlace() {
+        fragmentPictures.loadPictures();
+        fragmentTags.loadTags();
+        fragmentPeople.load();
     }
 
     @Override
@@ -183,7 +194,7 @@ public class PlaceActivity extends BaseActivity {
         rvPlace.setLayoutManager(new LinearLayoutManager(this));
 
         //PlacesAdapter
-        placesAdapter = new PlacesAdapter(this, false, R.color.colorSecondary);
+        placesAdapter = new PlacesAdapter(this, false, R.color.transparent);
         rvPlace.setAdapter(placesAdapter);
         rvPlace.setEnabled(false);
     }
@@ -384,8 +395,8 @@ public class PlaceActivity extends BaseActivity {
         fragmentTags.getMainButton().setOnTouchListener(
                 new ColorSquareOnTouchListener(this, fragmentTags.getTvMainButton()));
         //Fragment Posts
-        fragmentPosts.getMainButton().setOnTouchListener(
-                new ColorSquareOnTouchListener(this, fragmentPosts.getTvMainButton()));
+        fragmentPeople.getMainButton().setOnTouchListener(
+                new ColorSquareOnTouchListener(this, fragmentPeople.getTvMainButton()));
     }
 
     private void initFragments() {
@@ -394,12 +405,12 @@ public class PlaceActivity extends BaseActivity {
 
         fragmentPictures = (PlacePicturesFragment) Fragment.instantiate(this, PlacePicturesFragment.class.getName());
         fragmentTags = (PlaceTagsFragment) Fragment.instantiate(this, PlaceTagsFragment.class.getName());
-        fragmentPosts = (PlacePeopleFragment) Fragment.instantiate(this, PlacePeopleFragment.class.getName());
+        fragmentPeople = (PlacePeopleFragment) Fragment.instantiate(this, PlacePeopleFragment.class.getName());
 
         // Ajout des Fragments dans la liste
         fragments.add(fragmentPictures);
         fragments.add(fragmentTags);
-        fragments.add(fragmentPosts);
+        fragments.add(fragmentPeople);
 
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
         this.pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), fragments);
@@ -461,6 +472,13 @@ public class PlaceActivity extends BaseActivity {
     public void notifyFragmentsLoaded() {
         loadedFragments = loadedFragments + 1;
         if(loadedFragments>=3) {
+            try {
+                Category category = MyApplication.getCategoryById(place.category_id);
+                ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
+                backgroundImage.setImageResource(category.getBigImageResId());
+            } catch (UnknownCategoryException e) {
+                Log.e(TAG, "no category found for id : " + place.category_id);
+            }
             updateButtonsVisibility();
             setTouchListeners();
         }
@@ -471,8 +489,8 @@ public class PlaceActivity extends BaseActivity {
      */
     public void updateButtonsVisibility(){
         if(place != null && MyApplication.hasLastLocation()) {
-            if (fragmentPosts != null){
-                fragmentPosts.updateBtnVisibility();
+            if (fragmentPeople != null){
+                fragmentPeople.updateBtnVisibility();
             }
             if (fragmentPictures != null){
                 fragmentPictures.updateBtnVisibility();

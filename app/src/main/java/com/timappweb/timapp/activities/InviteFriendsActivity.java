@@ -44,13 +44,14 @@ public class InviteFriendsActivity extends BaseActivity{
     private SelectFriendsAdapter adapter;
     private View inviteButton;
     private TextView textInviteButton;
+    private View noFriendsView;
+    private View progressView;
 
     private List<User> friendsSelected;
     private List<User> allFbFriends;
-    private SimpleFacebook mSimpleFacebook;
-    private View noFriendsView;
     private OnFriendsListener onFriendsListener;
     private Place place;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,12 +86,12 @@ public class InviteFriendsActivity extends BaseActivity{
             @Override
             public void onResponse200(Response<PaginationResponse<User>> response) {
                 onUserLoaded(response.body().items);
-
             }
 
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
+                progressView.setVisibility(View.GONE);
             }
         });
     }
@@ -99,6 +100,7 @@ public class InviteFriendsActivity extends BaseActivity{
         inviteButton = findViewById(R.id.invite_button);
         textInviteButton = (TextView) findViewById(R.id.text_invite_button);
         noFriendsView = findViewById(R.id.no_friends_view);
+        progressView = findViewById(R.id.loading_friends);
         mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
         mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -216,7 +218,6 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void onUserLoaded(List<User> items){
-
         allFbFriends = items;
         if(allFbFriends.size()==0) {
             noFriendsView.setVisibility(View.VISIBLE);
@@ -224,6 +225,7 @@ public class InviteFriendsActivity extends BaseActivity{
             noFriendsView.setVisibility(View.GONE);
             adapter.setData(items);
         }
+        progressView.setVisibility(View.GONE);
     }
 
     private void updateButtonVisibility() {

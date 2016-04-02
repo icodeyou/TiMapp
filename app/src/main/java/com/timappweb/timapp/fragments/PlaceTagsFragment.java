@@ -92,7 +92,7 @@ public class PlaceTagsFragment extends BaseFragment {
         smallPeopleButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
-    private void loadTags() {
+    public void loadTags() {
         final PlaceActivity placeActivity = (PlaceActivity) getActivity();
         Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(placeActivity.getPlaceId());
         call.enqueue(new RestCallback<List<Tag>>(getContext()) {

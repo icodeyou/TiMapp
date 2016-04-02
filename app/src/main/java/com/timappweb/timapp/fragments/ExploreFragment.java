@@ -65,7 +65,7 @@ public class ExploreFragment extends Fragment{
         pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
         pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
         pagerTabStrip.setDrawFullUnderline(true);
-        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(),R.color.white));
+        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
 
 
         return root;

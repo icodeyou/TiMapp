@@ -10,7 +10,7 @@
         android:top="@dimen/width_border_white_button"
         android:left="@dimen/width_border_white_button">
         <shape android:shape="rectangle" >
-            <solid android:color="@color/background" />
+            <solid android:color="@color/white" />
         </shape>
     </item>
 </layer-list>
