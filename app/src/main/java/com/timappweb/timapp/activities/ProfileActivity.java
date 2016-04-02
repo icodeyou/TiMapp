@@ -192,8 +192,8 @@ public class ProfileActivity extends BaseActivity{
                         }
                         else {
                             Tag defaultTag = new Tag(getString(MyApplication.isCurrentUser(userId)
-                                    ? R.string.newbie_tag
-                                    : R.string.define_yourself_tag));
+                                    ? R.string.define_yourself_tag
+                                    : R.string.newbie_tag));
                             adapter.add(defaultTag);
                             adapter.notifyDataSetChanged();
                         }

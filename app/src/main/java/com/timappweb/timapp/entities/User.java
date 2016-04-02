@@ -92,4 +92,8 @@ public class User implements Serializable, PlaceUserInterface {
     public String getTagsToString() {
         return Tag.tagsToString(this.tags);
     }
+
+    public List<Tag> setNewbieTag() {
+        return null;
+    }
 }

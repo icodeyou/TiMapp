@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.sromku.simple.fb.entities.Profile;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -54,7 +55,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
         //Horizontal tags
         HorizontalTagsAdapter horizontalTagsAdapter = friendViewHolder.horizontalTags.getAdapter();
-        horizontalTagsAdapter.setDummyData();
+        List<Tag> tags = friend.tags;
+        if(tags.size() == 0) {
+            horizontalTagsAdapter.add(new Tag(context.getString(R.string.newbie_tag)));
+        } else {
+            horizontalTagsAdapter.setData(tags);
+        }
 
         //User pic
         Picasso.with(context).load(friend.getProfilePictureUrl()).into(friendViewHolder.personPhoto);

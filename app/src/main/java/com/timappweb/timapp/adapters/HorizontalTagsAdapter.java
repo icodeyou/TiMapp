@@ -77,6 +77,11 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         notifyDataSetChanged();
     }
 
+    public void add(Tag tag) {
+        data.add(tag);
+        notifyDataSetChanged();
+    }
+
     public void setData(List<Tag> data) {
         if(data!=null) {
             this.data = new ArrayList<>(data);
