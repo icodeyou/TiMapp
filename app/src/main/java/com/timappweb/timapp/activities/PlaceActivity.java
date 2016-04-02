@@ -467,18 +467,18 @@ public class PlaceActivity extends BaseActivity {
     private void notifyPlaceLoaded() {
         progressView.setVisibility(View.GONE);
         placesAdapter.add(place);
+        try {
+            Category category = MyApplication.getCategoryById(place.category_id);
+            ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
+            backgroundImage.setImageResource(category.getBigImageResId());
+        } catch (UnknownCategoryException e) {
+            Log.e(TAG, "no category found for id : " + place.category_id);
+        }
     }
 
     public void notifyFragmentsLoaded() {
         loadedFragments = loadedFragments + 1;
         if(loadedFragments>=3) {
-            try {
-                Category category = MyApplication.getCategoryById(place.category_id);
-                ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
-                backgroundImage.setImageResource(category.getBigImageResId());
-            } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no category found for id : " + place.category_id);
-            }
             updateButtonsVisibility();
             setTouchListeners();
         }
