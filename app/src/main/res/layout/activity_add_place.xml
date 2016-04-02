@@ -34,7 +34,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_categories"
                 android:layout_width="match_parent"
@@ -49,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_square_button"
-        android:background="@drawable/background_button">
+        android:background="@drawable/background_button_littlesquare_unselected">
         <TextView
             android:id="@+id/text_create_button"
             android:layout_width="wrap_content"

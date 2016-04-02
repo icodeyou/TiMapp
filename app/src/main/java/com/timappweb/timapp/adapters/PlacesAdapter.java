@@ -1,7 +1,6 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,11 +20,10 @@ import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.AutoResizeTextView;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.iwgang.countdownview.CountdownView;
 
 public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "PlacesAdapter";
@@ -54,8 +52,6 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private boolean isPositionFooter(int position) {
-        Log.d(TAG,"Position : "+ position);
-        Log.d(TAG,"Data Size : "+ (data.size()));
         return position == data.size() && footerActive;
     }
 
@@ -122,7 +118,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 //Place background
                 if (colorRes == -1) {
-                    holder.backgroundImage.setImageResource(category.getImageResId());
+                    holder.backgroundImage.setImageResource(category.getSmallImageResId());
                 } else {
                     holder.backgroundImage.setAlpha(1f); // Make background opaque
                     holder.backgroundImage.setImageResource(colorRes);
@@ -155,24 +151,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private void initTimer(Place place, final CountdownView tvCountPoints) {
+    private void initTimer(Place place, final SimpleTimerView tvCountPoints) {
         int initialTime = place.getPoints();
-        tvCountPoints.start(1000 * initialTime);
-
-       /* if(countDownTimers.get(place)==null) {
-            int initialTime = place.getPoints();
-            CountDownTimer countDownTimer = new CountDownTimer(initialTime, countDownInterval) {
-
-                public void onTick(long millisUntilFinished) {
-                    tvCountPoints.setText(String.valueOf(millisUntilFinished/1000));
-                }
-
-                public void onFinish() {
-                    tvCountPoints.setText(R.string.counter_over);
-                }
-            }.start();
-            countDownTimers.put(place, countDownTimer);
-        }*/
+        tvCountPoints.initTimer(initialTime*1000);
     }
 
     public void add(Place place) {
@@ -218,13 +199,13 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         private final HorizontalTagsRecyclerView rvPlaceTags;
         private final ImageView categoryIcon;
         private final ImageView backgroundImage;
-        private final CountdownView tvCountPoints;
+        private final SimpleTimerView tvCountPoints;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             tvLocation = (AutoResizeTextView) itemView.findViewById(R.id.title_place);
-            tvCountPoints = (CountdownView) itemView.findViewById(R.id.places_points);
+            tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.places_points);
             tvTime = (TextView) itemView.findViewById(R.id.time_place);
             rvPlaceTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
             categoryIcon = (ImageView) itemView.findViewById(R.id.image_category_place);

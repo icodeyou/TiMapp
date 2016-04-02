@@ -9,11 +9,17 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="usertags_margin">15dp</dimen>
     <dimen name="margin_labels_invitefriends">5dp</dimen>
-    <dimen name="margin_bottom_card">5dp</dimen>
     <dimen name="padding_fragments_place">5dp</dimen>
     <dimen name="margin_tags">10dp</dimen>
 
     <dimen name="toolbar">50dp</dimen>
+
+    <!-- Cards -->
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="margin_bottom_card">5dp</dimen>
+    <dimen name="height_name_card">25dp</dimen>
+    <dimen name="padding_card">5dp</dimen>
+    <dimen name="padding_card_minus_two">3dp</dimen>
 
     <!--Box dimensions -->
     <dimen name="height_big_header">80dp</dimen>
@@ -23,14 +29,11 @@
     <dimen name="last_post_box">5dp</dimen>
     <dimen name="height_small_rv_displayed_tags">24dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
-    <dimen name="height_name_card">25dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
     <dimen name="ic_place">80dp</dimen>
     <dimen name="height_categories_choose">180dp</dimen>
     <dimen name="width_categories_choose">280dp</dimen>
-    <dimen name="padding_card">5dp</dimen>
-    <dimen name="padding_card_minus_two">3dp</dimen>
 
     <!-- Button dimensions -->
     <dimen name="margin_square_button">10dp</dimen>
@@ -39,6 +42,8 @@
     <dimen name="vertical_margin_confirm_button">10dp</dimen>
     <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="width_border_white_button">4dp</dimen>
+    <dimen name="border_selected_button_littlesquare">5dp</dimen>
+
 
     <!-- Text dimensions -->
     <dimen name="text_tiny">10dp</dimen>

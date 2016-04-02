@@ -136,7 +136,7 @@ public class PlacePeopleFragment extends BaseFragment {
         peopleRv.setAdapter(mSectionedAdapter);
     }
 
-    private void load() {
+    public void load() {
         placeUsersAdapter.clear();
         loadPosts();
         if (MyApplication.isLoggedIn()){
