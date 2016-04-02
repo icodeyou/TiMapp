@@ -54,7 +54,7 @@ public class ExploreFragment extends Fragment{
         tabsAdapter = new TabsAdapter(getChildFragmentManager());
 
         viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
-        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+        //viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
         viewPager.setAdapter(tabsAdapter);
 
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this, MyApplication.searchFilter);
@@ -62,10 +62,10 @@ public class ExploreFragment extends Fragment{
         PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
 
         //hide underline
-        pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorSecondary));
-        pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+        pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
         pagerTabStrip.setDrawFullUnderline(true);
-        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(),R.color.White));
+        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(),R.color.white));
 
 
         return root;
@@ -131,7 +131,7 @@ public class ExploreFragment extends Fragment{
         }
     }
 
-    private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+    /*private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -148,6 +148,6 @@ public class ExploreFragment extends Fragment{
         public void onPageScrollStateChanged(int state) {
             //Log.d(TAG, "onPageScrollStateChanged: " + state);
         }
-    }
+    }*/
 }
 

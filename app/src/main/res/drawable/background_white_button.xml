@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/colorAccent" />
-        </shape>
-    </item>
-    <item android:bottom="@dimen/width_border_white_button"
-        android:right="@dimen/width_border_white_button"
-        android:top="@dimen/width_border_white_button"
-        android:left="@dimen/width_border_white_button">
-        <shape android:shape="rectangle" >
-            <solid android:color="@color/background" />
-        </shape>
-    </item>
-</layer-list>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:drawable="@drawable/background_white_button_selected" /> <!-- pressed -->
+    <item android:drawable="@drawable/background_white_button_unselected" /> <!-- default -->
+</selector>

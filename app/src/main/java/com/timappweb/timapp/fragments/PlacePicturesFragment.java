@@ -1,19 +1,15 @@
 package com.timappweb.timapp.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
@@ -24,13 +20,9 @@ import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.views.GridSpacesItemDecoration;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -50,7 +42,7 @@ public class PlacePicturesFragment extends Fragment {
     private View                    progressView;
     private View                    noPicView;
     private View                    noConnectionView;
-    private View                    addButton;
+    private View mainButton;
     private View                    smallTagsButton;
     private TextView                tvAddButton;
     private RecyclerView            picturesRv;
@@ -91,7 +83,7 @@ public class PlacePicturesFragment extends Fragment {
         placeId = placeActivity.getPlaceId();
 
         //Views
-        addButton = root.findViewById(R.id.main_button);
+        mainButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallTagsButton = root.findViewById(R.id.button_add_tags);
         progressView = root.findViewById(R.id.progress_view);
@@ -102,7 +94,7 @@ public class PlacePicturesFragment extends Fragment {
     }
 
     private void setListeners() {
-        addButton.setOnClickListener(placeActivity.getPictureListener());
+        mainButton.setOnClickListener(placeActivity.getPictureListener());
         smallTagsButton.setOnClickListener(placeActivity.getTagListener());
     }
 
@@ -176,15 +168,15 @@ public class PlacePicturesFragment extends Fragment {
 
     public void setMainButtonVisibility(boolean bool) {
         if(bool) {
-            addButton.setVisibility(View.VISIBLE);
+            mainButton.setVisibility(View.VISIBLE);
         }
         else {
-            addButton.setVisibility(View.GONE);
+            mainButton.setVisibility(View.GONE);
         }
     }
 
     public View getMainButton() {
-        return addButton;
+        return mainButton;
     }
 
     public TextView getTvMainButton() {
@@ -211,8 +203,9 @@ public class PlacePicturesFragment extends Fragment {
     public void updateBtnVisibility() {
         Log.v(TAG, "::updateButtonsVisibility()");
         // Check if the user can post in this place
-        boolean showButton = place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPicture() && place.isAround();
-        addButton.setVisibility(showButton ? View.VISIBLE : View.GONE);
-        smallTagsButton.setVisibility(!showButton && place != null && place.isAround() ? View.VISIBLE : View.GONE);
+        boolean showMainButton = place != null && MyApplication.hasLastLocation()
+                && CacheData.isAllowedToAddPicture() && place.isAround();
+        mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
+        smallTagsButton.setVisibility(!showMainButton && place != null && place.isAround() ? View.VISIBLE : View.GONE);
     }
 }

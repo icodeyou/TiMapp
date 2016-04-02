@@ -207,8 +207,15 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_filter) {
-            IntentsUtils.filter(this);
+        switch (id) {
+            case R.id.action_filter :
+                IntentsUtils.filter(this);
+                break;
+            case R.id.action_clear_filter:
+                MyApplication.searchFilter.tags.clear();
+                exploreFragment.getExploreMapFragment().updateFilterView();
+                exploreFragment.getExploreMapFragment().updateMapData();
+                break;
         }
 
         return super.onOptionsItemSelected(item);

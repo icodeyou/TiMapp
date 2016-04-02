@@ -3,7 +3,6 @@ package com.timappweb.timapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,13 +15,11 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PlaceUsersAdapter;
-import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -31,11 +28,8 @@ import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
-import org.jdeferred.Deferred;
-import org.jdeferred.DoneCallback;
 import org.jdeferred.impl.DeferredObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +51,7 @@ public class PlacePeopleFragment extends BaseFragment {
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
-    private View            addButton;
+    private View            mainButton;
     private TextView        tvAddButton;
 
     //private List<Post> posts;
@@ -103,7 +97,7 @@ public class PlacePeopleFragment extends BaseFragment {
 
 
         //Views
-        addButton = root.findViewById(R.id.main_button);
+        mainButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         peopleRv = (RecyclerView) root.findViewById(R.id.list_people);
         progressView = root.findViewById(R.id.progress_view);
@@ -112,7 +106,7 @@ public class PlacePeopleFragment extends BaseFragment {
     }
 
     private void setListeners() {
-        addButton.setOnClickListener(placeActivity.getPeopleListener());
+        mainButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
     private void initRv() {
@@ -250,8 +244,8 @@ public class PlacePeopleFragment extends BaseFragment {
     }
 
     public void updateBtnVisibility() {
-        boolean showButton = place != null && MyApplication.hasLastLocation() && place.isAround();
-        addButton.setVisibility(showButton ? View.VISIBLE : View.GONE);
+        boolean showMainButton = place != null && MyApplication.hasLastLocation() && place.isAround();
+        mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
     }
 
     public TextView getTvMainButton() {
@@ -259,6 +253,6 @@ public class PlacePeopleFragment extends BaseFragment {
     }
 
     public View getMainButton() {
-        return addButton;
+        return mainButton;
     }
 }

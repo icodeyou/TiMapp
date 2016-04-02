@@ -156,32 +156,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //Clear the menu, to avoid inflating several times the same menu
-        menu.clear();
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.action_filter) {
-            IntentsUtils.filter(getActivity());
-            return true;
-        }
-        if (id == R.id.action_clear_filter) {
-            MyApplication.searchFilter.tags.clear();
-            updateFilterView();
-            updateMapData();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public void onPause() {
         mapView.onPause();
         super.onPause();
@@ -205,7 +179,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void initPlaceAdapter() {
-        placesAdapter = new PlacesAdapter(getActivity(), false, R.color.white);
+        placesAdapter = new PlacesAdapter(getActivity(), false, R.color.colorSecondary);
         placesViewer.setAdapter(placesAdapter);
         placesViewer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

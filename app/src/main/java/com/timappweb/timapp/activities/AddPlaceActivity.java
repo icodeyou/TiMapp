@@ -141,6 +141,7 @@ public class AddPlaceActivity extends BaseActivity {
         Context context = this;
         Log.d(TAG, "Submit place " + place.toString());
         IntentsUtils.addPostStepTags(context, place);
+        setProgressView(false);
         /*
         RestClient.service().addPlace(place, new RestCallback<RestFeedback>(this) {
             @Override

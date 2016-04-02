@@ -103,19 +103,18 @@ public class Category implements Serializable{
         return layoutResId;
     }
 
-
     public int getImageResId() {
         if (imageResId != -1){
             return imageResId;
         }
         try {
-            imageResId = R.drawable.class.getField("image_" + this.name).getInt(null);
+            imageResId = R.drawable.class.getField("image_place_" + this.name).getInt(null);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            imageResId = R.drawable.image_unknown;
+            imageResId = R.drawable.image_place_unknown;
         } catch (NoSuchFieldException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            imageResId = R.drawable.image_unknown;
+            imageResId = R.drawable.image_place_unknown;
         }
         return imageResId;
     }

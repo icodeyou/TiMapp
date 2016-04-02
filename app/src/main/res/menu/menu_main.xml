@@ -11,6 +11,7 @@
         android:title="@string/action_filter"
         android:icon="@drawable/trashcan"
         android:orderInCategory="110"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false"/>
 
 </menu>

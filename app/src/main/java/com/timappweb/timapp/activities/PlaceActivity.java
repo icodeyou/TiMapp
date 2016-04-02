@@ -141,8 +141,6 @@ public class PlaceActivity extends BaseActivity {
         initLocationListener();
         setClickListeners();
 
-
-
         if (place != null){
             placeId = place.id;
             this.notifyPlaceLoaded();
@@ -409,21 +407,6 @@ public class PlaceActivity extends BaseActivity {
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
         pager.setCurrentItem(1);
-
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.v(TAG, "position : " + position + ", positionOffsetPixels : " + positionOffsetPixels);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
     }
 
 
@@ -482,9 +465,9 @@ public class PlaceActivity extends BaseActivity {
     }
 
     /**
-     * Show or hide add post or comming button according to user location
+     * Show or hide add post or coming button according to user location
      */
-    private void updateButtonsVisibility(){
+    public void updateButtonsVisibility(){
         if(place != null && MyApplication.hasLastLocation()) {
             if (fragmentPosts != null){
                 fragmentPosts.updateBtnVisibility();
@@ -498,7 +481,7 @@ public class PlaceActivity extends BaseActivity {
             //if we are in the place
             Boolean isAllowedToCome = !place.isAround() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING);
             iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
-            onMyWayButton.setVisibility(progressView.getVisibility() != View.VISIBLE && place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE && CacheData.isUserComing(place.id)  ? View.VISIBLE : View.GONE);
+            onMyWayButton.setVisibility(place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE && CacheData.isUserComing(place.id)  ? View.VISIBLE : View.GONE);
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
     }

@@ -27,8 +27,8 @@ public class ColorPublishButtonRadiusOnTouchListener implements View.OnTouchList
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
                 v.setBackgroundResource(R.drawable.background_radius_selected);
-                tv.setTextColor(ContextCompat.getColor(context, R.color.colorSecondary));
-                tv2.setTextColor(ContextCompat.getColor(context, R.color.colorSecondary));
+                tv.setTextColor(ContextCompat.getColor(context, R.color.text_selected_button));
+                tv2.setTextColor(ContextCompat.getColor(context, R.color.text_selected_button));
                 v.invalidate();
                 break;
             }

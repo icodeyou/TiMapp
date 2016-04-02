@@ -2,7 +2,6 @@ package com.timappweb.timapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -41,7 +39,7 @@ public class PlaceTagsFragment extends BaseFragment {
     private View                    progressView;
     private View                    noTagsView;
     private View                    noConnectionView;
-    private View                    addButton;
+    private View mainButton;
     private View                    smallPicButton;
     private View                    smallPeopleButton;
     private TextView                tvAddButton;
@@ -56,7 +54,7 @@ public class PlaceTagsFragment extends BaseFragment {
         View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
 
         //Initialize
-        addButton = root.findViewById(R.id.main_button);
+        mainButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallPicButton = root.findViewById(R.id.button_add_pic);
         smallPeopleButton = root.findViewById(R.id.button_add_people);
@@ -89,7 +87,7 @@ public class PlaceTagsFragment extends BaseFragment {
     }
 
     private void setListeners() {
-        addButton.setOnClickListener(placeActivity.getTagListener());
+        mainButton.setOnClickListener(placeActivity.getTagListener());
         smallPicButton.setOnClickListener(placeActivity.getPictureListener());
         smallPeopleButton.setOnClickListener(placeActivity.getPeopleListener());
     }
@@ -131,7 +129,7 @@ public class PlaceTagsFragment extends BaseFragment {
 
 
     public View getMainButton() {
-        return addButton;
+        return mainButton;
     }
 
     public TextView getTvMainButton() {
@@ -143,10 +141,10 @@ public class PlaceTagsFragment extends BaseFragment {
     public void updateBtnVisibility() {
         Log.v(TAG, "::updateButtonsVisibility()");
         // Check if the user can post in this place
-        boolean showButton = place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isAround();
-        addButton.setVisibility(showButton ? View.VISIBLE : View.GONE);
-        smallPeopleButton.setVisibility(place != null && !showButton && place.isAround() ? View.VISIBLE : View.GONE);
-        smallPicButton.setVisibility(place != null && !showButton && place.isAround() && CacheData.isAllowedToAddPicture() ? View.VISIBLE : View.GONE);
+        boolean showMainButton = place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isAround();
+        mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
+        smallPeopleButton.setVisibility(place != null && !showMainButton && place.isAround() ? View.VISIBLE : View.GONE);
+        smallPicButton.setVisibility(place != null && !showMainButton && place.isAround() && CacheData.isAllowedToAddPicture() ? View.VISIBLE : View.GONE);
     }
 
 }

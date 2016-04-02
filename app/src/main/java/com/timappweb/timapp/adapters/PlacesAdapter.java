@@ -93,6 +93,7 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
             if(colorRes==-1) {
                 imageView.setImageResource(category.getImageResId());
             } else {
+                imageView.setAlpha(1f); // Make background opaque
                 imageView.setImageResource(colorRes);
             }
         } catch (UnknownCategoryException e) {

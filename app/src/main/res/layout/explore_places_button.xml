@@ -6,9 +6,9 @@
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@drawable/background_footer_list_places">
-        <TextView
+        android:gravity="center">
+        <!--android:background="@drawable/background_footer_list_places">-->
+        <Button
             android:id="@+id/create_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,6 +20,7 @@
             android:textColor="@color/colorAccent"
             android:text="@string/button_add_place"
             android:gravity="center"
+            android:clickable="true"
             android:textSize="@dimen/text_normal"
             android:background="@drawable/background_white_button"/>
     </LinearLayout>

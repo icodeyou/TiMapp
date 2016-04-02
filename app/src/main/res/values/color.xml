@@ -7,7 +7,8 @@
     <!--<color name="colorAccent">#ADD8E6</color>-->
     <!--<color name="colorAccent">#476e64</color>-->
     <color name="colorAccent">#d3655d</color>
-    <color name="colorSecondary">#ffefc6</color>
+    <!--<color name="colorSecondary">#ffefc6</color>-->
+    <color name="colorSecondary">#f4fbff</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
     <color name="TEST">#F1E5DE</color>
     <color name="transparent">#00000000</color>
@@ -31,8 +32,8 @@
     <!-- Buttons -->
     <color name="background_button">@color/colorAccent</color>
     <color name="text_button">@color/background</color>
-    <color name="border_selected_button">@color/colorSecondary</color>
-    <color name="text_selected_button">@color/colorSecondary</color>
+    <color name="border_selected_button">#ffefc6</color>
+    <color name="text_selected_button">#ffefc6</color>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- COLORS -->
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

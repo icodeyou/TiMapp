@@ -54,6 +54,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
                 IntentsUtils.addPlace(drawerActivity);
             }
         });
+        //newEventButton.setOnTouchListener(new ColorWhiteButtonRadiusOnTouchListener(getContext(), newEventButton));
 
         //Adapter
         placesAdapter = new PlacesAdapter(getContext());
