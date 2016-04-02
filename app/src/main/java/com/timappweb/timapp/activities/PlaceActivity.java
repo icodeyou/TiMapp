@@ -14,6 +14,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -27,7 +29,6 @@ import android.widget.Toast;
 import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
-import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -47,9 +48,7 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.EachSecondTimerTask;
 import com.timappweb.timapp.utils.PictureUtility;
-import com.timappweb.timapp.utils.TimeTaskCallback;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.File;
@@ -78,7 +77,7 @@ public class PlaceActivity extends BaseActivity {
     private TextView    onMyWayTv;
     private View        progressView;
     private ListView    tagsListView;
-    private ListView    placeListView;
+    private RecyclerView rvPlace;
 
     //Camera
     private static final int REQUEST_CAMERA = 0;
@@ -133,7 +132,7 @@ public class PlaceActivity extends BaseActivity {
         progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
-        placeListView = (ListView) findViewById(R.id.place_lv);
+        rvPlace = (RecyclerView) findViewById(R.id.place_lv);
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
@@ -180,10 +179,13 @@ public class PlaceActivity extends BaseActivity {
     }
 
     private void initPlaceAdapters() {
+        //RV
+        rvPlace.setLayoutManager(new LinearLayoutManager(this));
+
         //PlacesAdapter
         placesAdapter = new PlacesAdapter(this, false, R.color.colorSecondary);
-        placeListView.setAdapter(placesAdapter);
-        placeListView.setEnabled(false);
+        rvPlace.setAdapter(placesAdapter);
+        rvPlace.setEnabled(false);
     }
 
     @Override

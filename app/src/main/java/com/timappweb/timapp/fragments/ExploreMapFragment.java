@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,7 +68,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     //Views
     private View root;
-    private ListView placesViewer;
+    private RecyclerView placesViewer;
     private PlacesAdapter placesAdapter;
     private View progressView;
     private HorizontalTagsRecyclerView filterTagsRv;
@@ -124,7 +126,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
-        placesViewer = (ListView) root.findViewById(R.id.places_viewer);
+        placesViewer = (RecyclerView) root.findViewById(R.id.places_viewer);
         addSpotFloatingButton = (FloatingActionButton) root.findViewById(R.id.fab);
 
         setListeners();
@@ -179,15 +181,19 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void initPlaceAdapter() {
-        placesAdapter = new PlacesAdapter(getActivity(), false, R.color.colorSecondary);
-        placesViewer.setAdapter(placesAdapter);
-        placesViewer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //RV
+        placesViewer.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //Adapter
+        placesAdapter = new PlacesAdapter(drawerActivity, false, R.color.colorSecondary);
+        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(int position) {
                 Place place = placesAdapter.getItem(position);
                 IntentsUtils.viewPlaceFromMap(getActivity(), place);
             }
         });
+        placesViewer.setAdapter(placesAdapter);
     }
 
     public void setLoaderVisibility(boolean bool) {
@@ -381,7 +387,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Place place = (Place) markerValue;
-        if(!placesViewer.getAdapter().isEmpty() && placesViewer.getAdapter().getItem(0)==place) {
+        if(placesAdapter.getData().size()!=0 && placesAdapter.getItem(0)==place) {
             IntentsUtils.viewPlaceFromMap(getActivity(), place);
         } else {
             displayPlace(place);

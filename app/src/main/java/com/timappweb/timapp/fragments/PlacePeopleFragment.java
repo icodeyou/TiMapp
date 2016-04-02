@@ -47,7 +47,7 @@ public class PlacePeopleFragment extends BaseFragment {
     private int placeId;
 
     private PlaceUsersAdapter placeUsersAdapter;
-    private RecyclerView peopleRv;
+    private RecyclerView    peopleRv;
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;

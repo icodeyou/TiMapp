@@ -37,7 +37,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     public FriendViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_friend, viewGroup, false);
-        context = viewGroup.getContext();
 
         FriendViewHolder friendViewHolder = new FriendViewHolder(v);
         return friendViewHolder;
@@ -53,7 +52,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
                 new HorizontalTagsTouchListener(context, mItemClickListener, position);
         friendViewHolder.horizontalTags.setOnTouchListener(mHorizontalTagsTouchListener);
 
-        //code with real friends
+        //Horizontal tags
+        HorizontalTagsAdapter horizontalTagsAdapter = friendViewHolder.horizontalTags.getAdapter();
+        horizontalTagsAdapter.setDummyData();
+
+        //User pic
         Picasso.with(context).load(friend.getProfilePictureUrl()).into(friendViewHolder.personPhoto);
     }
 
@@ -97,9 +100,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
             selectedView = itemView.findViewById(R.id.selectedView);
             horizontalTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
-
-            HorizontalTagsAdapter horizontalTagsAdapter = horizontalTags.getAdapter();
-            horizontalTagsAdapter.setDummyData();
 
         }
 

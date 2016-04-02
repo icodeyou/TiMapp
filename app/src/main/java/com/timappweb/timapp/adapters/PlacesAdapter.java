@@ -1,148 +1,165 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.os.CountDownTimer;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.listeners.OnItemViewRendered;
 import com.timappweb.timapp.views.AutoResizeTextView;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.iwgang.countdownview.CountdownView;
 
-public class PlacesAdapter extends ArrayAdapter<Place> {
+public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "PlacesAdapter";
-    private static final int COEF_TRANSPARENCY = 30; // opacity equals to 255.
-    private final Context context;
-    private final HashMap<Place, CountDownTimer> countDownTimers = new HashMap<>();
+    private Context context;
     private int colorRes = -1;
-    private HorizontalTagsRecyclerView rvPlaceTags;
     private boolean isTagsVisible;
+    private boolean footerActive;
+
+    private List<Place> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
-    private OnItemViewRendered itemViewRendered;
 
-    private static int countDownInterval = 30000;
-    private LayoutInflater inflater;
+    private class VIEW_TYPES {
+        public static final int NORMAL = 1;
+        public static final int FOOTER = 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if(isPositionFooter(position))
+            return VIEW_TYPES.FOOTER;
+        else
+            return VIEW_TYPES.NORMAL;
+
+    }
+
+    private boolean isPositionFooter(int position) {
+        Log.d(TAG,"Position : "+ position);
+        Log.d(TAG,"Data Size : "+ (data.size()));
+        return position == data.size() && footerActive;
+    }
 
     public PlacesAdapter(Context context) {
-        super(context, R.layout.item_place);
+        data = new ArrayList<>();
         this.context = context;
+        this.footerActive = false;
         this.isTagsVisible = true;
     }
 
-    public PlacesAdapter(Context context, boolean bool, int colorRes) {
-        super(context, R.layout.item_place);
+    public PlacesAdapter(Context context, boolean footerActive) {
+        data = new ArrayList<>();
         this.context = context;
-        this.isTagsVisible = bool;
+        this.footerActive = footerActive;
+        this.isTagsVisible = true;
+    }
+
+    public PlacesAdapter(Context context, boolean isTagsVisible, int colorRes) {
+        data = new ArrayList<>();
+        this.context = context;
+        this.footerActive = false;
+        this.isTagsVisible = isTagsVisible;
         this.colorRes = colorRes;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        //Log.d(TAG, "Get view for " + position + "/" + this.getCount());
-        final Place place = this.getItem(position);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View v;
 
-        // Get the view from inflater
-        View view = convertView;
-        if(convertView==null) {
-            inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.item_place, parent, false);
+        switch (viewType)
+        {
+            case VIEW_TYPES.NORMAL:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                return new PlacesViewHolder(v);
+            case VIEW_TYPES.FOOTER:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.explore_places_button, viewGroup, false);
+                return new FooterPlacesViewHolder(v);
+            default:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                return new PlacesViewHolder(v);
         }
 
-        // Initialize
-        AutoResizeTextView tvLocation = (AutoResizeTextView) view.findViewById(R.id.title_place);
-        TextView tvTime = (TextView) view.findViewById(R.id.time_place);
-        CountdownView tvCountPoints = (CountdownView ) view.findViewById(R.id.people_counter_place);
-        rvPlaceTags = (HorizontalTagsRecyclerView) view.findViewById(R.id.rv_horizontal_tags);
-        ImageView categoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
 
-        initTimer(place, tvCountPoints);
+    }
 
-        //Set texts
-        tvTime.setText(place.getTime());
-        tvLocation.setText(place.name);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
+        if(baseHolder instanceof PlacesViewHolder) {
+            PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
+            Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
+            final Place place = data.get(position);
 
-        Category category = null;
-        try {
-            //Category Icon
-            category = MyApplication.getCategoryById(place.category_id);
-            categoryIcon.setImageResource(category.getIconWhiteResId());
-            MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
+            //Set texts
+            holder.tvTime.setText(place.getTime());
+            holder.tvLocation.setText(place.name);
+            initTimer(place, holder.tvCountPoints);
 
-            //Place background
-            ImageView imageView = (ImageView) view.findViewById(R.id.background_place);
-            if(colorRes==-1) {
-                imageView.setImageResource(category.getImageResId());
-            } else {
-                imageView.setAlpha(1f); // Make background opaque
-                imageView.setImageResource(colorRes);
-            }
-        } catch (UnknownCategoryException e) {
-            Log.e(TAG, "no category found for id : " + place.category_id);
-        }
+            Category category = null;
+            try {
+                //Category Icon
+                category = MyApplication.getCategoryById(place.category_id);
+                holder.categoryIcon.setImageResource(category.getIconWhiteResId());
+                MyApplication.setCategoryBackground(holder.categoryIcon, place.getLevel());
 
-        if(isTagsVisible) {
-            //Set the adapter for RV
-            HorizontalTagsAdapter htAdapter = rvPlaceTags.getAdapter();
-            htAdapter.setData(place.tags);
-            // rvPlaceTags.setAdapter(htAdapter); Ligne à supprimer si tout marche correctement
-            htAdapter.notifyDataSetChanged();
-
-            //Set LayoutManager for RV
-            GridLayoutManager manager_savedTags = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
-            rvPlaceTags.setLayoutManager(manager_savedTags);
-        }
-        else {
-            rvPlaceTags.setVisibility(View.GONE);
-        }
-
-        //Listener entire view
-        if (this.itemAdapterClickListener != null){
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemAdapterClickListener.onClick(position);
+                //Place background
+                if (colorRes == -1) {
+                    holder.backgroundImage.setImageResource(category.getImageResId());
+                } else {
+                    holder.backgroundImage.setAlpha(1f); // Make background opaque
+                    holder.backgroundImage.setImageResource(colorRes);
                 }
-            });
+            } catch (UnknownCategoryException e) {
+                Log.e(TAG, "no category found for id : " + place.category_id);
+            }
+
+            if (isTagsVisible) {
+                //Set the adapter for RV
+                HorizontalTagsAdapter htAdapter = holder.rvPlaceTags.getAdapter();
+                htAdapter.setData(place.tags);
+            } else {
+                holder.rvPlaceTags.setVisibility(View.GONE);
+            }
+
+            //Listener Horizontal Scroll View
+            HorizontalTagsTouchListener mHorizontalTagsTouchListener =
+                    new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
+            holder.rvPlaceTags.setOnTouchListener(mHorizontalTagsTouchListener);
         }
+    }
 
-        //Listener Horizontal Scroll View
-        HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-                new HorizontalTagsTouchListener(getContext(), itemAdapterClickListener, position);
-        rvPlaceTags.setOnTouchListener(mHorizontalTagsTouchListener);
-
-        if (itemViewRendered != null){
-            itemViewRendered.onItemAdded();
+    @Override
+    public int getItemCount() {
+        if(footerActive) {
+            return data.size()+1;
+        } else {
+            return data.size();
         }
-
-        //return the view
-        return view;
     }
 
     private void initTimer(Place place, final CountdownView tvCountPoints) {
         int initialTime = place.getPoints();
         tvCountPoints.start(1000 * initialTime);
 
-        /*if(countDownTimers.get(place)==null) {
+       /* if(countDownTimers.get(place)==null) {
             int initialTime = place.getPoints();
             CountDownTimer countDownTimer = new CountDownTimer(initialTime, countDownInterval) {
 
@@ -158,11 +175,29 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         }*/
     }
 
-    @Override
     public void add(Place place) {
-        super.add(place);
-        super.notifyDataSetChanged();
+        this.data.add(place);
+        notifyDataSetChanged();
     }
+
+    public void setData(List<Place> places) {
+        this.data = places;
+        notifyDataSetChanged();
+    }
+
+    public List<Place> getData() {
+        return data;
+    }
+
+    public Place getItem(int position) {
+        return data.get(position);
+    }
+
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
+    }
+
 
     public void generateDummyData() {
         Place dummyPlace = Place.createDummy();
@@ -175,7 +210,50 @@ public class PlacesAdapter extends ArrayAdapter<Place> {
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
-    public void setItemViewRendered(OnItemViewRendered itemViewRendered) {
-        this.itemViewRendered = itemViewRendered;
+    public class PlacesViewHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener {
+
+        private final AutoResizeTextView tvLocation;
+        private final TextView tvTime;
+        private final HorizontalTagsRecyclerView rvPlaceTags;
+        private final ImageView categoryIcon;
+        private final ImageView backgroundImage;
+        private final CountdownView tvCountPoints;
+
+        PlacesViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            tvLocation = (AutoResizeTextView) itemView.findViewById(R.id.title_place);
+            tvCountPoints = (CountdownView) itemView.findViewById(R.id.places_points);
+            tvTime = (TextView) itemView.findViewById(R.id.time_place);
+            rvPlaceTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
+            categoryIcon = (ImageView) itemView.findViewById(R.id.image_category_place);
+            backgroundImage = (ImageView) itemView.findViewById(R.id.background_place);
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (itemAdapterClickListener != null) {
+                itemAdapterClickListener.onClick(getAdapterPosition());
+            }
+        }
+    }
+
+    public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
+
+        private final Button newEventButton;
+
+        FooterPlacesViewHolder(View itemView) {
+            super(itemView);
+            newEventButton = (Button) itemView.findViewById(R.id.create_button);
+            newEventButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.addPlace(context);
+                }
+            });
+
+        }
     }
 }

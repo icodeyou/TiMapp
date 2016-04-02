@@ -3,6 +3,8 @@ package com.timappweb.timapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +23,14 @@ import java.util.List;
 
 public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelectedListener{
 
-    private static final String TAG = "PlaceTagsFragment";
+    private static final String TAG = "ExplorePlaceFragment";
     private PlacesAdapter placesAdapter;
     private ExploreFragment exploreFragment;
     private DrawerActivity drawerActivity;
     private TextView newEventButton;
     private View progressView;
     private View noEventsView;
+    private RecyclerView rvPlaces;
     //private EachSecondTimerTask eachSecondTimerTask;
 
     @Nullable
@@ -40,38 +43,9 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         drawerActivity = (DrawerActivity) exploreFragment.getActivity();
 
         //Views
-        ListView lvTags = (ListView) root.findViewById(R.id.list_places);
+        rvPlaces = (RecyclerView) root.findViewById(R.id.list_places);
         progressView = root.findViewById(R.id.loading_view);
         noEventsView = root.findViewById(R.id.no_events_view);
-
-        //ListView and footer
-        View v = getLayoutInflater(savedInstanceState).inflate(R.layout.explore_places_button,null);
-        lvTags.addFooterView(v);
-        newEventButton = (TextView) v.findViewById(R.id.create_button);
-        newEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.addPlace(drawerActivity);
-            }
-        });
-        //newEventButton.setOnTouchListener(new ColorWhiteButtonRadiusOnTouchListener(getContext(), newEventButton));
-
-        //Adapter
-        placesAdapter = new PlacesAdapter(getContext());
-        lvTags.setAdapter(placesAdapter);
-        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                IntentsUtils.viewPlaceFromMap(getContext(), placesAdapter.getItem(position));
-            }
-        });
-        /*lvTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Place place = placesAdapter.getItem(position);
-                IntentsUtils.viewPlaceFromMap(getActivity(), place);
-            }
-        });*/
 
         return root;
     }
@@ -99,18 +73,35 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
 
     @Override
     public void onTabSelected() {
-        Log.d(TAG, "Explore places fragment is now selected");
-
-        if(placesAdapter != null) {
-            placesAdapter.clear();
-            ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-            List<Place> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
-            placesAdapter.addAll(markers);
-            if(placesAdapter.isEmpty()) {
-                noEventsView.setVisibility(View.VISIBLE);
-            } else {
-                noEventsView.setVisibility(View.GONE);
-            }
+        Log.d(TAG, "ExplorePlacesFragment is now selected");
+        if(placesAdapter==null) {
+            Log.d(TAG, "Initializing PlacesAdapter");
+            initPlaceAdapter();
         }
+        Log.d(TAG, "Loading "+placesAdapter.getData().size()+" places in List");
+        placesAdapter.clear();
+        ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
+        List<Place> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
+        placesAdapter.setData(markers);
+        if(placesAdapter.getData().size()==0) {
+            noEventsView.setVisibility(View.VISIBLE);
+        } else {
+            noEventsView.setVisibility(View.GONE);
+        }
+    }
+
+    private void initPlaceAdapter() {
+        //RV
+        rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //Adapter
+        placesAdapter = new PlacesAdapter(getContext(),true);
+        rvPlaces.setAdapter(placesAdapter);
+        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                IntentsUtils.viewPlaceFromMap(getContext(), placesAdapter.getItem(position));
+            }
+        });
     }
 }

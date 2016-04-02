@@ -58,7 +58,7 @@
         android:layout_below="@+id/toolbar_transparent"
         android:layout_above="@+id/button_add_spot"
         android:gravity="center_vertical">
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/list_places"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

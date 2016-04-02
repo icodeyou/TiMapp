@@ -39,7 +39,6 @@ public class PlaceUsersAdapter extends MultipleSectionAdapter<PlaceUserInterface
     public PlacePeopleViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_userplace, viewGroup, false);
-        context = viewGroup.getContext();
 
         PlacePeopleViewHolder placePeopleViewHolder = new PlacePeopleViewHolder(v);
         return placePeopleViewHolder;

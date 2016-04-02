@@ -6,6 +6,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -42,7 +44,7 @@ public class LocateActivity extends BaseActivity{
     private String TAG = "LocateActivity";
 
     //Views
-    private ListView        listPlaces;
+    private RecyclerView    rvPlaces;
     private View            noPlaceView;
     private LinearLayout    buttonAddPlace;
     private TextView        textButtonAddPlace;
@@ -73,7 +75,7 @@ public class LocateActivity extends BaseActivity{
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
         noPlaceView = findViewById(R.id.layout_if_no_place);
-        listPlaces = (ListView) findViewById(R.id.list_places);
+        rvPlaces = (RecyclerView) findViewById(R.id.list_places);
         buttonAddPlace = (LinearLayout) findViewById(R.id.button_add_spot);
         textButtonAddPlace = (TextView) findViewById(R.id.text_button_add_spot);
         noConnectionView = findViewById(R.id.no_connection_view);
@@ -82,13 +84,20 @@ public class LocateActivity extends BaseActivity{
         mResultReceiver = new AddressResultReceiver(new Handler());
 
         setListeners();
+        initAdapterPlaces();
         initLocationListener();
 
     }
 
-    private void setListeners() {
+    private void initAdapterPlaces() {
         final LocateActivity that = this;
+
+        //RV
+        rvPlaces.setLayoutManager(new LinearLayoutManager(this));
+
+        //Adapter
         final PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        rvPlaces.setAdapter(placesAdapter);
 
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -107,25 +116,10 @@ public class LocateActivity extends BaseActivity{
             }
 
         });
+    }
 
-        /*listPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "Click on place adapter");
-                if (!MyApplication.hasFineLocation()) {
-                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                // We know that lastLocation is define because places are loaded only when location is defined
-                Place place = placesAdapter.getItem(position);
-                Post post = new Post();
-                post.longitude = MyApplication.getLastLocation().getLongitude();
-                post.latitude = MyApplication.getLastLocation().getLatitude();
-                IntentsUtils.addPostStepTags(that, place, post);
-            }
-        });*/
-
-        listPlaces.setAdapter(placesAdapter);
+    private void setListeners() {
+        final LocateActivity that = this;
 
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,14 +190,14 @@ public class LocateActivity extends BaseActivity{
                 if (response.isSuccess()){
                     List<Place> places = response.body();
                     Log.d(TAG, "Loading " + places.size() + " viewPlaceFromPublish(s)");
-                    PlacesAdapter placeAdapter = ((PlacesAdapter) listPlaces.getAdapter());
+                    PlacesAdapter placeAdapter = ((PlacesAdapter) rvPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);
                     buttonAddPlace.setVisibility(View.VISIBLE);
                     if (places.size() != 0) {
-                        placeAdapter.addAll(places);
+                        placeAdapter.setData(places);
                         noPlaceView.setVisibility(View.GONE);
-                        listPlaces.setVisibility(View.VISIBLE);
+                        rvPlaces.setVisibility(View.VISIBLE);
                     } else {
                         noPlaceView.setVisibility(View.VISIBLE);
                     }

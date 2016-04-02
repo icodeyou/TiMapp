@@ -3,12 +3,13 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +19,6 @@ import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.ColorPublishButtonRadiusOnTouchListener;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.RestClient;
@@ -27,8 +27,6 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-
-import java.util.List;
 
 import retrofit2.Call;
 
@@ -44,7 +42,7 @@ public class PublishActivity extends BaseActivity{
     private Place currentPlace = null;
     private Post currentPost = null;
     private CheckBox checkBox = null;
-    private ListView placeListView;
+    private RecyclerView rvPlace;
     private LinearLayout confirmButton;
     private TextView textButton1;
     private TextView textButton2;
@@ -71,7 +69,7 @@ public class PublishActivity extends BaseActivity{
         //Initialize variables
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
-        placeListView = (ListView) findViewById(R.id.place_lv);
+        rvPlace = (RecyclerView) findViewById(R.id.place_lv);
         progressView = findViewById(R.id.progress_view);
         confirmButton = (LinearLayout) findViewById(R.id.confirm_button);
         textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
@@ -97,9 +95,13 @@ public class PublishActivity extends BaseActivity{
     //----------------------------------------------------------------------------------------------
     //Private methods
     private void initAdapters() {
+        //RV
+        rvPlace.setLayoutManager(new LinearLayoutManager(this));
+
+        //Adapter
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         placesAdapter.add(currentPlace);
-        placeListView.setAdapter(placesAdapter);
+        rvPlace.setAdapter(placesAdapter);
 
         HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
         selectedTagsAdapter.setData(currentPost.getTags());

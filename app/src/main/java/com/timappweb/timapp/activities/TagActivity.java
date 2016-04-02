@@ -4,6 +4,8 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -11,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
@@ -38,7 +39,7 @@ public class TagActivity extends BaseActivity{
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
     private View progressBarView;
-    private ListView placeListView;
+    private RecyclerView rvPlace;
     private Place currentPlace = null;
 
     // @Bind(R.id.hashtags1)
@@ -70,7 +71,7 @@ public class TagActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressBarView = findViewById(R.id.progress_view);
-        placeListView = (ListView) findViewById(R.id.place_lv);
+        rvPlace = (RecyclerView) findViewById(R.id.place_lv);
 
 
         initAdapterPlace();
@@ -174,9 +175,13 @@ public class TagActivity extends BaseActivity{
     }
 
     private void initAdapterPlace() {
+        //RV
+        rvPlace.setLayoutManager(new LinearLayoutManager(this));
+
+        //Adapter
         PlacesAdapter placesAdapter = new PlacesAdapter(this);
         placesAdapter.add(currentPlace);
-        placeListView.setAdapter(placesAdapter);
+        rvPlace.setAdapter(placesAdapter);
     }
 
     public void actionCounter() {

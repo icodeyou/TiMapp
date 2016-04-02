@@ -54,7 +54,7 @@ public class ExploreFragment extends Fragment{
         tabsAdapter = new TabsAdapter(getChildFragmentManager());
 
         viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
-        //viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
         viewPager.setAdapter(tabsAdapter);
 
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this, MyApplication.searchFilter);
@@ -131,23 +131,23 @@ public class ExploreFragment extends Fragment{
         }
     }
 
-    /*private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+    private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            Log.d(TAG, "onPageScrolled: " + position);
-            ((OnExploreTabSelectedListener)tabsAdapter.getItem(position)).onTabSelected();
+            //Log.d(TAG, "onPageScrolled: " + position);
         }
 
         @Override
         public void onPageSelected(int position) {
-            //Log.d(TAG, "Page is now selected: " + position);
+            Log.d(TAG, "Page is now selected: " + position);
+            ((OnExploreTabSelectedListener)tabsAdapter.getItem(position)).onTabSelected();
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
             //Log.d(TAG, "onPageScrollStateChanged: " + state);
         }
-    }*/
+    }
 }
 
