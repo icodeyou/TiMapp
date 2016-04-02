@@ -27,6 +27,7 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.NotificationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,6 +196,7 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void onSendInviteSuccess(){
+        int notificationId = NotificationFactory.invite(this, MyApplication.getCurrentUser(), this.place);
         NavUtils.navigateUpFromSameTask(this);
     }
 

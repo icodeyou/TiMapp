@@ -90,7 +90,7 @@ public class IntentsUtils {
             return;
         MyApplication.logout();
         Intent intent = new Intent(activity, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
     }
 
@@ -160,13 +160,16 @@ public class IntentsUtils {
         activity.startActivity(intent);
         activity.finish();
     }
-
-    public static void viewPlaceFromMap(Context context, Place place) {
+    public static Intent buildIntentViewPlace(Context context, Place place) {
         Intent intent = new Intent(context, PlaceActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
         intent.putExtras(extras);
-        context.startActivity(intent);
+        return intent;
+    }
+
+    public static void viewPlaceFromMap(Context context, Place place) {
+        context.startActivity(buildIntentViewPlace(context, place));
     }
 
     public static void addPeople(Activity activity, Place place) {
