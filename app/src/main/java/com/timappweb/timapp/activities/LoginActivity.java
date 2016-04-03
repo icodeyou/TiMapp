@@ -33,7 +33,6 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.services.InstanceIDService;
 
 import java.util.ArrayList;
 import java.util.HashMap;

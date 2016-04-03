@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-public class NotificationService extends GcmListenerService {
+public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
 

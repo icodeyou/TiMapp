@@ -28,6 +28,13 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!-- FOR GCM -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission android:name="com.timappweb.timapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.timappweb.timapp.permission.C2D_MESSAGE" />
+
     <!--android:debuggable="true" has been removed -->
     <application
         android:name=".MyApplication"
@@ -88,13 +95,35 @@
             android:exported="false" >
         </service>
 
-        <service android:name=".services.InstanceIDService" android:exported="false">
+        <service android:name=".services.MyInstanceIDListenerService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
             </intent-filter>
         </service>
 
-        <service android:name=".services.NotificationService" android:exported="false">
+        <receiver
+            android:name=".receivers.MyGcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".services.MyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
         </service>
 
         <!-- FILTER ACTIVITY //////////////////////////////////////////////-->

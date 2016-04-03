@@ -21,17 +21,17 @@ import retrofit2.Call;
 /**
  * Created by stephane on 4/3/2016.
  */
-public class InstanceIDService extends InstanceIDListenerService {
+public class MyInstanceIDListenerService extends com.google.android.gms.iid.InstanceIDListenerService {
 
-    private static final String TAG = "InstanceIDService";
+    private static final String TAG = "MyInstanceIDListenerService";
     private final InstanceID iid;
     private ArrayList<TokenItem> tokens;
-    
+
     public void onTokenRefresh() {
         refreshAllTokens();
     }
 
-    public InstanceIDService() {
+    public MyInstanceIDListenerService() {
         this.tokens = new ArrayList<>();
         iid = InstanceID.getInstance(this);
     }
