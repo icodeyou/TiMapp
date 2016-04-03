@@ -20,7 +20,13 @@ public class MyGcmListenerService extends GcmListenerService {
     // [START receive_message]
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
+        super.onMessageReceived(from, data);
+        if (data == null){
+            Log.e(TAG, "ERROR message received is null");
+            return;
+        }
+        Log.v(TAG, "Received bundle: " + data);
+        String message = data.getString("notification");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
@@ -31,11 +37,12 @@ public class MyGcmListenerService extends GcmListenerService {
          *     - Update UI.
          */
 
+
         /**
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
+        //sendNotification(message);
     }
     // [END receive_message]
 

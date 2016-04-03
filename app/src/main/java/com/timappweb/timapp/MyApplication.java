@@ -26,6 +26,9 @@ import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.services.FetchAddressIntentService;
+import com.timappweb.timapp.services.MyGcmListenerService;
+import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.utils.Util;
 
 import org.jdeferred.Deferred;
@@ -290,6 +293,7 @@ public class MyApplication extends Application{
     }
 
     public static void updateGoogleMessagingToken(String token) {
+        Log.i(TAG, "Updating token for GCM: " + token);
         Call<RestFeedback> call = RestClient.service().updateGoogleMessagingToken(token);
         call.enqueue(new RestFeedbackCallback() {
             @Override
@@ -304,20 +308,12 @@ public class MyApplication extends Application{
         });
     }
 
-    public static void updateGoogleMessagingToken(final Context context) {
-        Log.v(TAG, "updateGoogleMessagingToken(context)");
-        new Thread(new Runnable() {
-            public void run() {
-                String token = null;
-                try {
-                    token = InstanceID.getInstance(context).getToken(Constants.GOOGLE_PROJECT_ID, Constants.GOOGLE_MESSAGING_SCOPE);
-                    MyApplication.updateGoogleMessagingToken(token);
-                } catch (IOException e) {
-                    Log.e(TAG, "Cannot get google messaging token");
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    public static void requestGcmToken(Context context) {
+        Log.d(TAG, "Starting IntentService to update user token");
+        Intent intent = new Intent(context, RegistrationIntentService.class);
+        //intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        //intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        context.startService(intent);
     }
 
 

@@ -101,6 +101,12 @@
             </intent-filter>
         </service>
 
+        <service android:name=".services.RegistrationIntentService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
         <receiver
             android:name=".receivers.MyGcmReceiver"
             android:exported="true"
@@ -113,7 +119,7 @@
 
         <service
             android:name=".services.MyGcmListenerService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>

@@ -113,7 +113,7 @@
                         <ImageView
                             android:layout_height="@dimen/logo_small"
                             android:layout_width="@dimen/logo_small"
-                            android:src="@drawable/ic_clock_gray"/>
+                            android:src="@drawable/ic_chineseman"/>
                         <TextView
                             android:id="@+id/time_place"
                             android:layout_width="wrap_content"

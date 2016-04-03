@@ -148,10 +148,12 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         user.provider = SocialProvider.FACEBOOK;
                         user.id = Integer.parseInt(feedback.data.get("id"));
                         user.app_id = InstanceID.getInstance(that).getId();
-                        MyApplication.updateGoogleMessagingToken(that);
+                        //MyApplication.updateGoogleMessagingToken(that);
                         Log.i(TAG, "Trying to login user: " + user);
                         MyApplication.login(user, token, accessToken);
                         IntentsUtils.lastActivityBeforeLogin(that);
+
+                        MyApplication.requestGcmToken(that);
                     }
 
                     @Override
