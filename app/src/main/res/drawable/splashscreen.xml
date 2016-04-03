@@ -7,7 +7,7 @@
     <item >
         <bitmap
             android:gravity="center"
-            android:src="@drawable/logowhite"/>
+            android:src="@drawable/ic_chineseman"/>
     </item>
 
 </layer-list>

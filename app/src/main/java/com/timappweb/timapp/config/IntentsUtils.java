@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.timappweb.timapp.activities.ErrorActivity;
+import com.timappweb.timapp.activities.InvitationsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
@@ -151,6 +152,11 @@ public class IntentsUtils {
 
     public static void listFriends(Context context) {
         Intent intent = new Intent(context, ListFriendsActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void invitations(Context context) {
+        Intent intent = new Intent(context, InvitationsActivity.class);
         context.startActivity(intent);
     }
 

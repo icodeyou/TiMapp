@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/image_bar"
-        android:alpha="0.4"
+        android:alpha="0.2"
         android:layout_alignTop="@+id/main_box"
         android:layout_alignBottom="@id/main_box"
         android:layout_alignLeft="@id/main_box"
@@ -113,7 +113,7 @@
                         <ImageView
                             android:layout_height="@dimen/logo_small"
                             android:layout_width="@dimen/logo_small"
-                            android:src="@drawable/ic_chineseman"/>
+                            android:src="@drawable/ic_clock_gray"/>
                         <TextView
                             android:id="@+id/time_place"
                             android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
     <View
         android:id="@+id/bottom_gradient"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_gradient_view"
+        android:layout_height="10dp"
         android:background="@drawable/top_place_rv"
         android:layout_below="@+id/main_box"/>
 

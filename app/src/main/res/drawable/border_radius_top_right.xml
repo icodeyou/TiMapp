@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true"
         android:drawable="@drawable/border_radius_top_right_selected" /> <!-- pressed -->
-    <item android:drawable="@drawable/border_radius_top_left_unselected" /> <!-- default -->
+    <item android:drawable="@drawable/border_radius_top_right_unselected" /> <!-- default -->
 </selector>

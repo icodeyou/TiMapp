@@ -37,7 +37,7 @@
 
     <!-- Button dimensions -->
     <dimen name="margin_square_button">10dp</dimen>
-    <dimen name="button_selecting_margin">4dp</dimen>
+    <dimen name="button_selecting_margin">3dp</dimen>
     <dimen name="horizontal_margin_confirm_button">20dp</dimen>
     <dimen name="vertical_margin_confirm_button">10dp</dimen>
     <dimen name="height_bottom_button">60dp</dimen>
@@ -80,6 +80,7 @@
     <dimen name="width_checkbox_card">62dp</dimen>
     <dimen name="upload_tags_margin">25dp</dimen>
     <dimen name="height_gradient_view">7dp</dimen>
+    <dimen name="default_progressview">50dp</dimen>
 
 
 </resources>

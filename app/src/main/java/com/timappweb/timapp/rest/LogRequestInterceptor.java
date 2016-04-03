@@ -10,7 +10,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
-import timber.log.Timber;
 
 /**
  * Created by Jack on 28/01/2016.

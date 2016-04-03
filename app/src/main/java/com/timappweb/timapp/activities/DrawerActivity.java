@@ -311,6 +311,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         else if (id == R.id.menu_item_tag_around){
             IntentsUtils.addPostStepLocate(this);
         }
+        else if (id == R.id.menu_item_my_invitations){
+            IntentsUtils.invitations(this);
+        }
         else if (id == R.id.menu_item_my_friends){
             IntentsUtils.listFriends(this);
         }

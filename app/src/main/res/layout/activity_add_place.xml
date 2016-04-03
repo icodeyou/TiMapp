@@ -25,7 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
-            android:inputType="textCapSentences"
             android:textSize="@dimen/text_big"
             android:textColor="@color/colorPrimary"
             android:hint="@string/hint_place_name"

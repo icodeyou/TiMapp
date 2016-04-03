@@ -94,7 +94,9 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void initKeyboard() {
-        groupNameET.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        groupNameET.setInputType(InputType.TYPE_CLASS_TEXT |
+                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD |
+                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 
     private void initAdapterAndManager() {
