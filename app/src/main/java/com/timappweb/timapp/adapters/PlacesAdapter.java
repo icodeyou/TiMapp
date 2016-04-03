@@ -69,6 +69,13 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.isTagsVisible = true;
     }
 
+    public PlacesAdapter(Context context, boolean footerActive, boolean isTagsVisible) {
+        data = new ArrayList<>();
+        this.context = context;
+        this.footerActive = footerActive;
+        this.isTagsVisible = isTagsVisible;
+    }
+
     public PlacesAdapter(Context context, boolean isTagsVisible, int colorRes) {
         data = new ArrayList<>();
         this.context = context;
@@ -118,10 +125,12 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 //Place background
                 if (colorRes == -1) {
-                    holder.backgroundImage.setImageResource(category.getSmallImageResId());
+                    holder.parentLayout.setVisibility(View.VISIBLE);
+                    holder.parentLayout.setImageResource(category.getSmallImageResId());
+                    holder.colorBackground.setBackgroundResource(R.color.background_place);
                 } else {
-                    holder.backgroundImage.setAlpha(1f); // Make background opaque
-                    holder.backgroundImage.setImageResource(colorRes);
+                    holder.parentLayout.setVisibility(View.GONE);
+                    holder.colorBackground.setBackgroundResource(colorRes);
                 }
             } catch (UnknownCategoryException e) {
                 Log.e(TAG, "no category found for id : " + place.category_id);
@@ -194,22 +203,24 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class PlacesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
+        private final View colorBackground;
         private final AutoResizeTextView tvLocation;
         private final TextView tvTime;
         private final HorizontalTagsRecyclerView rvPlaceTags;
         private final ImageView categoryIcon;
-        private final ImageView backgroundImage;
+        private final ImageView parentLayout;
         private final SimpleTimerView tvCountPoints;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            colorBackground = itemView.findViewById(R.id.parent_layout_place);
             tvLocation = (AutoResizeTextView) itemView.findViewById(R.id.title_place);
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.places_points);
             tvTime = (TextView) itemView.findViewById(R.id.time_place);
             rvPlaceTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
             categoryIcon = (ImageView) itemView.findViewById(R.id.image_category_place);
-            backgroundImage = (ImageView) itemView.findViewById(R.id.background_place);
+            parentLayout = (ImageView) itemView.findViewById(R.id.background_place);
 
         }
 

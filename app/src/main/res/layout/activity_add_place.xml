@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AddSpotActivity"
-    android:background="@color/background">
+    android:background="@color/background_place">
 
     <include android:id="@+id/toolbar_layout"
         layout="@layout/toolbar" />
@@ -51,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_square_button"
-        android:background="@drawable/background_button_littlesquare_unselected">
+        android:background="@drawable/background_button_littlesquare">
         <TextView
             android:id="@+id/text_create_button"
             android:layout_width="wrap_content"

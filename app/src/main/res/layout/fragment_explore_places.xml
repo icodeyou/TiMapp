@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
-        android:divider="@color/divider_listview"
-        android:dividerHeight="1dp"/>
+        android:divider="@drawable/top_place_rv"
+        android:dividerHeight="7dp"/>
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -160,6 +161,13 @@ public class PlaceActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.getItem(1).setEnabled(true);
+        return super.onPrepareOptionsMenu(menu);
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -178,12 +186,6 @@ public class PlaceActivity extends BaseActivity {
         }
     }
 
-    private void reloadPlace() {
-        fragmentPictures.loadPictures();
-        fragmentTags.loadTags();
-        fragmentPeople.load();
-    }
-
     @Override
     public void onBackPressed() {
         NavUtils.navigateUpFromSameTask(this);
@@ -196,7 +198,6 @@ public class PlaceActivity extends BaseActivity {
         //PlacesAdapter
         placesAdapter = new PlacesAdapter(this, false, R.color.transparent);
         rvPlace.setAdapter(placesAdapter);
-        rvPlace.setEnabled(false);
     }
 
     @Override
@@ -221,6 +222,16 @@ public class PlaceActivity extends BaseActivity {
 
     //private methods
     //////////////////////////////////////////////////////////////////////////////
+
+    private void reloadPlace() {
+        invalidateOptionsMenu();
+        fragmentTags.setProgressView(true);
+        fragmentPeople.setProgressView(true);
+        fragmentPictures.setProgressView(true);
+        fragmentPictures.loadPictures();
+        fragmentTags.loadTags();
+        fragmentPeople.load();
+    }
 
     private void uploadPicture(final Uri fileUri) {
         final Context context = this;
@@ -479,6 +490,7 @@ public class PlaceActivity extends BaseActivity {
     public void notifyFragmentsLoaded() {
         loadedFragments = loadedFragments + 1;
         if(loadedFragments>=3) {
+            invalidateOptionsMenu();
             updateButtonsVisibility();
             setTouchListeners();
         }

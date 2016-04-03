@@ -7,8 +7,8 @@
     android:gravity="center"
     android:layout_marginTop="10dp"
     android:singleLine="true"
-    android:textColor="@color/DarkGray"
+    android:textColor="@color/white"
     android:text="Test header"
     android:textSize="@dimen/text_normal"
     android:textStyle="bold"
-    android:background="@color/background" />
+    android:background="@color/transparent" />

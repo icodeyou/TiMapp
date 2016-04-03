@@ -164,8 +164,6 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void initInviteButton() {
-        inviteButton.setOnTouchListener(new ColorSquareOnTouchListener(this,textInviteButton));
-
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

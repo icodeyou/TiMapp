@@ -70,15 +70,13 @@
                 android:text="@string/cannot_load_tags"/>
         </LinearLayout>
 
-
         <!-- List View -->
         <!-- **********************************************************************-->
         <ListView
             android:id="@+id/list_tags"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:listSelector="@android:color/transparent"/>
+            android:layout_weight="1"/>
 
         <!-- Add tags Button-->
         <!-- **********************************************************************-->
