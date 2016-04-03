@@ -47,7 +47,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private SimpleFacebook mSimpleFacebook;
     private OnLogoutListener onLogoutListener;
     private View fabContainer;
+
     private boolean backPressedOnce;
+    private static int TIMELAPSE_BEFORE_BACK_EXIT = 2000;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -177,9 +179,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
                     @Override
                     public void run() {
-                        backPressedOnce =false;
+                        backPressedOnce = false;
                     }
-                }, 2000);
+                }, TIMELAPSE_BEFORE_BACK_EXIT);
             }
         }
         else {

@@ -37,12 +37,11 @@
 
     <!-- Button dimensions -->
     <dimen name="margin_square_button">10dp</dimen>
-    <dimen name="button_selecting_margin">2dp</dimen>
+    <dimen name="button_selecting_margin">4dp</dimen>
     <dimen name="horizontal_margin_confirm_button">20dp</dimen>
     <dimen name="vertical_margin_confirm_button">10dp</dimen>
     <dimen name="height_bottom_button">60dp</dimen>
-    <dimen name="width_border_white_button">4dp</dimen>
-    <dimen name="border_selected_button_littlesquare">5dp</dimen>
+    <dimen name="width_border_white">4dp</dimen>
 
 
     <!-- Text dimensions -->

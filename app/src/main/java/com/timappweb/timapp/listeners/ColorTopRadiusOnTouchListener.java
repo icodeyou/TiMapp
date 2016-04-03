@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 
-import org.w3c.dom.Text;
-
 public class ColorTopRadiusOnTouchListener implements View.OnTouchListener {
 
 
@@ -26,7 +24,7 @@ public class ColorTopRadiusOnTouchListener implements View.OnTouchListener {
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
-                tv.setTextColor(ContextCompat.getColor(context, R.color.text_selected_button));
+                tv.setTextColor(ContextCompat.getColor(context, R.color.text_selected_button_secondary));
                 v.setBackgroundResource(R.drawable.background_radius_selected);
                 v.invalidate();
                 break;

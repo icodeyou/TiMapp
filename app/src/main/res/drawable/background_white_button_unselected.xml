@@ -5,10 +5,10 @@
             <solid android:color="@color/colorAccent" />
         </shape>
     </item>
-    <item android:bottom="@dimen/width_border_white_button"
-        android:right="@dimen/width_border_white_button"
-        android:top="@dimen/width_border_white_button"
-        android:left="@dimen/width_border_white_button">
+    <item android:bottom="@dimen/width_border_white"
+        android:right="@dimen/width_border_white"
+        android:top="@dimen/width_border_white"
+        android:left="@dimen/width_border_white">
         <shape android:shape="rectangle" >
             <solid android:color="@color/white" />
         </shape>

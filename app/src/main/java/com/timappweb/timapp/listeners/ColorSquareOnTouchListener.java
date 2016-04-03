@@ -24,7 +24,7 @@ public class ColorSquareOnTouchListener implements View.OnTouchListener {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
                 v.setBackgroundResource(R.drawable.background_button_selected);
-                tv.setTextColor(ContextCompat.getColor(context, R.color.text_selected_button));
+                tv.setTextColor(ContextCompat.getColor(context, R.color.text_selected_button_secondary));
                 v.invalidate();
                 break;
             }
