@@ -35,14 +35,10 @@ public class SelectFriendsAdapter extends FriendsAdapter {
         super.onBindViewHolder(friendViewHolder, position);
         User friend = data.get(position);
         List<User> friendsSelected = inviteFriendsActivity.getFriendsSelected();
-        setCheckedView(friendViewHolder, friendsSelected.contains(friend));
-    }
-
-    public void setCheckedView(FriendViewHolder holder ,boolean isChecked) {
-        if(isChecked) {
-            holder.selectedView.setVisibility(View.VISIBLE);
+        if(friendsSelected.contains(friend)) {
+            friendViewHolder.selectedView.setVisibility(View.VISIBLE);
         } else {
-            holder.selectedView.setVisibility(View.GONE);
+            friendViewHolder.selectedView.setVisibility(View.GONE);
         }
     }
 }

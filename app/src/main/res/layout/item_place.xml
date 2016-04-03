@@ -38,6 +38,7 @@
                 android:layout_height="60dp"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
+                android:alpha="0.7"
                 android:src="@drawable/ic_category_highlight_bar"
                 android:background="@drawable/b2"/>
             <LinearLayout
@@ -90,7 +91,7 @@
                             android:padding="2dp"
                             android:singleLine="true"
                             android:textSize="@dimen/text_small"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/colorPrimary"
                             android:textStyle="bold"/>
                         <!--<TextView
                             android:id="@+id/people_counter_place"
@@ -151,7 +152,7 @@
     <View
         android:id="@+id/bottom_gradient"
         android:layout_width="match_parent"
-        android:layout_height="7dp"
+        android:layout_height="@dimen/height_gradient_view"
         android:background="@drawable/top_place_rv"
         android:layout_below="@+id/main_box"/>
 

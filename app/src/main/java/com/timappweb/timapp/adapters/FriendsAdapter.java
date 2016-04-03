@@ -57,7 +57,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         HorizontalTagsAdapter horizontalTagsAdapter = friendViewHolder.horizontalTags.getAdapter();
         List<Tag> tags = friend.tags;
         if(tags.size() == 0) {
-            horizontalTagsAdapter.add(new Tag(context.getString(R.string.newbie_tag)));
+            List<Tag> newbieList = new ArrayList<>();
+            newbieList.add(new Tag(context.getString(R.string.newbie_tag)));
+            horizontalTagsAdapter.setData(newbieList);
         } else {
             horizontalTagsAdapter.setData(tags);
         }

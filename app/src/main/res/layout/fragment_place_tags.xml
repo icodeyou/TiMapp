@@ -29,7 +29,7 @@
                 android:layout_weight="0.1"
                 android:gravity="center"
                 android:textSize="@dimen/text_normal"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/text_place"
                 android:text="@string/loading_tags"/>
             <Space
                 android:layout_width="match_parent"
@@ -46,6 +46,7 @@
             android:layout_weight="1"
             android:textSize="@dimen/text_normal"
             android:text="@string/no_tags"
+            android:textColor="@color/text_place"
             android:gravity="center"
             android:visibility="gone"/>
 
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_normal"
                 android:gravity="center"
+                android:textColor="@color/text_place"
                 android:text="@string/cannot_load_tags"/>
         </LinearLayout>
 
@@ -86,7 +88,7 @@
             android:layout_height="@dimen/height_bottom_button"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@drawable/background_button"
+            android:background="@drawable/background_button_littlesquare"
             android:visibility="gone">
             <ImageView
                 android:layout_width="40dp"

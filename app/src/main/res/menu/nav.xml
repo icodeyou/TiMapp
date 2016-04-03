@@ -3,10 +3,12 @@
 
     <item android:title="Activity">
         <menu>
-            <item android:id="@+id/menu_item_explore" android:icon="@drawable/ic_location_blue"
+            <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_dialog_map"
                 android:title="@string/nav_explore" />
             <item android:id="@+id/menu_item_tag_around" android:icon="@drawable/ic_plus"
                 android:title="@string/nav_tag_around" />
+            <item android:id="@+id/menu_item_my_invitations" android:icon="@android:drawable/ic_dialog_email"
+                android:title="@string/nav_my_invitations" />
             <item android:id="@+id/menu_item_my_friends" android:icon="@drawable/ic_people"
                 android:title="@string/nav_my_friends" />
             <item android:id="@+id/menu_item_share" android:icon="@drawable/ic_social_share"

@@ -10,6 +10,7 @@ import com.timappweb.timapp.R;
 
 public class SimpleTimerView extends TextView{
     private static int COUNTDOWNINTERVAL = 1000;
+    private CountDownTimer countDownTimer;
 
     public SimpleTimerView(Context context) {
         super(context);
@@ -21,16 +22,18 @@ public class SimpleTimerView extends TextView{
 
     public void initTimer(int initialTime) {
         final TextView currentTextView = this;
-        CountDownTimer countDownTimer = new CountDownTimer(initialTime, COUNTDOWNINTERVAL) {
+        if(countDownTimer==null) {
+            countDownTimer = new CountDownTimer(initialTime, COUNTDOWNINTERVAL) {
 
-            public void onTick(long millisUntilFinished) {
-                currentTextView.setText(String.valueOf(millisUntilFinished / 1000));
-            }
+                public void onTick(long millisUntilFinished) {
+                    currentTextView.setText(String.valueOf(millisUntilFinished / 1000));
+                }
 
-            public void onFinish() {
-                currentTextView.setText(R.string.counter_over);
-            }
-        };
-        countDownTimer.start();
+                public void onFinish() {
+                    currentTextView.setText(R.string.counter_over);
+                }
+            };
+            countDownTimer.start();
+        }
     }
 }

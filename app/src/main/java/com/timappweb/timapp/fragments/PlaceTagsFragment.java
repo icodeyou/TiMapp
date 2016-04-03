@@ -116,6 +116,7 @@ public class PlaceTagsFragment extends BaseFragment {
     }
 
     private void notifyTagsLoaded(List<Tag> tags) {
+        tagsAndCountersAdapter.clear();
         //add tags to adapter
         for (Tag tag : tags) {
             String addedhastag = "#" + tag.getName();

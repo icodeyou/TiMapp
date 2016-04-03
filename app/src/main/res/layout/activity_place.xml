@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar"
         android:scaleType="centerCrop"
-        android:alpha="0.2"/>
+        android:alpha="0.4"/>
 
     <LinearLayout
         android:id="@+id/main_layout_place"
@@ -62,7 +62,7 @@
             android:layout_height="@dimen/height_bottom_button"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@drawable/background_button"
+            android:background="@drawable/background_button_littlesquare"
             android:visibility="gone">
             <TextView
                 android:id="@+id/text_coming_button"

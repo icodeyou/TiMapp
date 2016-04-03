@@ -28,7 +28,7 @@
                 android:layout_weight="0.1"
                 android:gravity="center"
                 android:textSize="@dimen/text_normal"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/text_place"
                 android:text="@string/loading_pictures"/>
             <Space
                 android:layout_width="match_parent"
@@ -55,6 +55,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="50dp"
                 android:textSize="@dimen/text_normal"
+                android:textColor="@color/text_place"
                 android:text="@string/no_pic"
                 android:gravity="center"/>
         </LinearLayout>
@@ -75,8 +76,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_normal"
                 android:gravity="center"
+                android:textColor="@color/text_place"
+                android:textSize="@dimen/text_normal"
                 android:text="@string/cannot_load_pictures"/>
         </LinearLayout>
 
@@ -99,7 +101,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@drawable/background_button"
+        android:background="@drawable/background_button_littlesquare"
         android:visibility="gone">
 
         <ImageView
