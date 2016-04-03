@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.iid.InstanceID;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLoginListener;
@@ -135,7 +136,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 setProgressVisibility(true);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
-                params.put("app_id", InstanceIDService.getId(that));
+                params.put("app_id", InstanceID.getInstance(that).getId());
 
                 Call<RestFeedback> call = RestClient.service().facebookLogin(params);
                 call.enqueue(new RestFeedbackCallback(that) {
@@ -147,8 +148,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         user.provider_uid = feedback.data.get("social_id");
                         user.provider = SocialProvider.FACEBOOK;
                         user.id = Integer.parseInt(feedback.data.get("id"));
-                        user.app_id = InstanceIDService.getId(that);
-                        Log.i(TAG, "Session created with session token: " + token);
+                        user.app_id = InstanceID.getInstance(that).getId();
+                        MyApplication.updateGoogleMessagingToken(that);
+                        Log.i(TAG, "Trying to login user: " + user);
                         MyApplication.login(user, token, accessToken);
                         IntentsUtils.lastActivityBeforeLogin(that);
                     }

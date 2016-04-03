@@ -6,6 +6,7 @@ package com.timappweb.timapp.config;
 public final class Constants {
 
     public static final String GOOGLE_PROJECT_ID = "api-project-826786244567"; // TODO server config
+    public static final String GOOGLE_MESSAGING_SCOPE = "GCM";
 
 
     public static final int SUCCESS_RESULT = 0;

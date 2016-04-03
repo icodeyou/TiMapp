@@ -27,6 +27,7 @@ public class User implements Serializable, PlaceUserInterface {
     public static final String KEY_EMAIL = "user.email";
     public List<Tag> tags;
     public String app_id;
+    public String google_messaging_token;
 
     public User(){
 
@@ -56,6 +57,8 @@ public class User implements Serializable, PlaceUserInterface {
                 ", email='" + email + '\'' +
                 ", id=" + id +
                 ", provider_uid=" + provider +
+                ", app_id=" + app_id +
+                ", google_messaging_token =" + google_messaging_token +
                 '}';
     }
 

@@ -8,11 +8,13 @@ import android.speech.tts.SynthesisCallback;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.android.gms.iid.InstanceID;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.ServerConfiguration;
@@ -30,9 +32,11 @@ import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
 public class MyApplication extends Application{
@@ -283,6 +287,37 @@ public class MyApplication extends Application{
 
     public static Promise ready() {
         return deferred.promise();
+    }
+
+    public static void updateGoogleMessagingToken(String token) {
+        Call<RestFeedback> call = RestClient.service().updateGoogleMessagingToken(token);
+        call.enqueue(new RestFeedbackCallback() {
+            @Override
+            public void onActionSuccess(RestFeedback feedback) {
+                Log.d(TAG, "Update token success");
+            }
+
+            @Override
+            public void onActionFail(RestFeedback feedback) {
+                Log.d(TAG, "Update token fail");
+            }
+        });
+    }
+
+    public static void updateGoogleMessagingToken(final Context context) {
+        Log.v(TAG, "updateGoogleMessagingToken(context)");
+        new Thread(new Runnable() {
+            public void run() {
+                String token = null;
+                try {
+                    token = InstanceID.getInstance(context).getToken(Constants.GOOGLE_PROJECT_ID, Constants.GOOGLE_MESSAGING_SCOPE);
+                    MyApplication.updateGoogleMessagingToken(token);
+                } catch (IOException e) {
+                    Log.e(TAG, "Cannot get google messaging token");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 
