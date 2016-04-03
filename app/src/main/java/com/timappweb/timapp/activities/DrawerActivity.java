@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
@@ -45,6 +47,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private SimpleFacebook mSimpleFacebook;
     private OnLogoutListener onLogoutListener;
     private View fabContainer;
+    private boolean backPressedOnce;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -91,6 +94,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         // !important Init AddButton
         this.initAddSpotButton();
+
+        //init Variables
+        backPressedOnce = false;
 
         if (savedInstanceState == null) {
             changeCurrentFragment(FragmentId.Explore);
@@ -154,11 +160,26 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     public void onBackPressed() {
         if (exploreFragment != null){
             ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-            if (exploreFragment.getCurrentItem()==0 && exploreMapFragment.isPlacesViewerVisible()) {
+            if (exploreFragment.getFragmentSelected() instanceof ExploreMapFragment
+                    && exploreMapFragment.isPlacesViewerVisible()) {
                 exploreMapFragment.hidePlace();
             }
             else{
-                super.onBackPressed();
+                if (backPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+
+                this.backPressedOnce = true;
+                Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        backPressedOnce =false;
+                    }
+                }, 2000);
             }
         }
         else {

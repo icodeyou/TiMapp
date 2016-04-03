@@ -62,13 +62,6 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.isTagsVisible = true;
     }
 
-    public PlacesAdapter(Context context, boolean footerActive) {
-        data = new ArrayList<>();
-        this.context = context;
-        this.footerActive = footerActive;
-        this.isTagsVisible = true;
-    }
-
     public PlacesAdapter(Context context, boolean footerActive, boolean isTagsVisible) {
         data = new ArrayList<>();
         this.context = context;
@@ -140,8 +133,11 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 //Set the adapter for RV
                 HorizontalTagsAdapter htAdapter = holder.rvPlaceTags.getAdapter();
                 htAdapter.setData(place.tags);
+
+                holder.gradientBottomView.setVisibility(View.VISIBLE);
             } else {
                 holder.rvPlaceTags.setVisibility(View.GONE);
+                holder.gradientBottomView.setVisibility(View.GONE);
             }
 
             //Listener Horizontal Scroll View
@@ -210,6 +206,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         private final ImageView categoryIcon;
         private final ImageView parentLayout;
         private final SimpleTimerView tvCountPoints;
+        private final View gradientBottomView;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
@@ -221,6 +218,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             rvPlaceTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
             categoryIcon = (ImageView) itemView.findViewById(R.id.image_category_place);
             parentLayout = (ImageView) itemView.findViewById(R.id.background_place);
+            gradientBottomView = itemView.findViewById(R.id.bottom_gradient);
 
         }
 

@@ -99,7 +99,7 @@ public class PublishActivity extends BaseActivity{
         rvPlace.setLayoutManager(new LinearLayoutManager(this));
 
         //Adapter
-        PlacesAdapter placesAdapter = new PlacesAdapter(this);
+        PlacesAdapter placesAdapter = new PlacesAdapter(this, false, false);
         placesAdapter.add(currentPlace);
         rvPlace.setAdapter(placesAdapter);
 

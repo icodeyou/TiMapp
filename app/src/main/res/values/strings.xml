@@ -182,6 +182,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="uploading_pic">Uploading picture</string>
     <string name="counter_over">Over !</string>
     <string name="loading_friends">Loading friends</string>
+    <string name="define_yourself">Define yourself</string>
 
 
 </resources>
