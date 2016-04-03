@@ -98,6 +98,7 @@ public interface WebServiceInterface {
     @GET("Users/logout.json")
     Call<RestFeedback> logout();
 
+    @FormUrlEncoded
     @POST("Users/update_google_messaging_token.json")
     Call<RestFeedback> updateGoogleMessagingToken(@Field("token") String token);
 
