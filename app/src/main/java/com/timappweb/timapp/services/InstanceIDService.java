@@ -31,9 +31,15 @@ public class InstanceIDService extends InstanceIDListenerService {
         InstanceID.getInstance(context).deleteToken(Constants.GOOGLE_PROJECT_ID, scope);
     }
 
+
+
     public TokenItem create() throws IOException {
         TokenItem tokenItem = new TokenItem();
-        iid.getToken(Constants.GOOGLE_PROJECT_ID, scope);
+        tokenItem.token = iid.getToken(Constants.GOOGLE_PROJECT_ID, scope);
+        tokenItem.scope = scope;
+        tokenItem.authorizedEntity = Constants.GOOGLE_PROJECT_ID;
+        tokenItem.options = new Bundle();
+        this.tokens.add(tokenItem);
         return tokenItem;
     }
 
