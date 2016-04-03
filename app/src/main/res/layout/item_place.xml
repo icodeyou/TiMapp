@@ -123,7 +123,7 @@
                             android:singleLine="true"
                             android:text="5 min"
                             android:textSize="@dimen/text_small"
-                            android:textColor="@color/Gray"/>
+                            android:textColor="@color/VeryLightGray"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -149,10 +149,11 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/bottom_gradient"
         android:layout_width="match_parent"
         android:layout_height="7dp"
         android:background="@drawable/top_place_rv"
-        android:layout_above="@+id/main_box"/>
+        android:layout_below="@+id/main_box"/>
 
 
 </RelativeLayout>

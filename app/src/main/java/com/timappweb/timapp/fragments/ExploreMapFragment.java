@@ -412,7 +412,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     public boolean isPlacesViewerVisible() {
-        return placesViewer.getVisibility()==View.VISIBLE;
+        return placesAdapter.getItemCount()!=0;
     }
 
 

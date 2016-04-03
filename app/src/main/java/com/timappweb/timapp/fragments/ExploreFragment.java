@@ -26,6 +26,7 @@ public class ExploreFragment extends Fragment{
     private TabsAdapter tabsAdapter;
     private ViewPager viewPager;
     private AreaDataLoaderFromAPI dataLoader;
+    private MyOnPageChangeListener onPageChangeListener;
 
     public ExploreMapFragment getExploreMapFragment(){
         return tabsAdapter.getExploreMapFragment();
@@ -54,9 +55,9 @@ public class ExploreFragment extends Fragment{
         tabsAdapter = new TabsAdapter(getChildFragmentManager());
 
         viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
-        viewPager.addOnPageChangeListener(new MyOnPageChangeListener());
+        onPageChangeListener =new MyOnPageChangeListener();
+        viewPager.addOnPageChangeListener(onPageChangeListener);
         viewPager.setAdapter(tabsAdapter);
-
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), this, MyApplication.searchFilter);
 
         PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
@@ -76,8 +77,8 @@ public class ExploreFragment extends Fragment{
         super.onResume();
     }
 
-    public int getCurrentItem() {
-        return viewPager.getCurrentItem();
+    public Fragment getFragmentSelected() {
+        return tabsAdapter.getItem(viewPager.getCurrentItem());
     }
 
     public ViewPager getViewPager() {
