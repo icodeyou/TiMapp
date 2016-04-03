@@ -16,7 +16,8 @@ public class Category implements Serializable{
     private int resourceBlack = -1;
     private int resourceWhite = -1;
     private int layoutResId = -1;
-    private int imageResId= -1;
+    private int smallImageResId = -1;
+    private int bigImageResId= -1;
 
 
     public String getName() {
@@ -104,35 +105,35 @@ public class Category implements Serializable{
     }
 
     public int getBigImageResId() {
-        if (imageResId != -1){
-            return imageResId;
+        if (bigImageResId != -1){
+            return bigImageResId;
         }
         try {
-            imageResId = R.drawable.class.getField("image_" + this.name).getInt(null);
+            bigImageResId = R.drawable.class.getField("image_" + this.name).getInt(null);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            imageResId = R.drawable.image_unknown;
+            bigImageResId = R.drawable.image_unknown;
         } catch (NoSuchFieldException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            imageResId = R.drawable.image_unknown;
+            bigImageResId = R.drawable.image_unknown;
         }
-        return imageResId;
+        return bigImageResId;
     }
 
     public int getSmallImageResId() {
-        if (imageResId != -1){
-            return imageResId;
+        if (smallImageResId != -1){
+            return smallImageResId;
         }
         try {
-            imageResId = R.drawable.class.getField("image_place_" + this.name).getInt(null);
+            smallImageResId = R.drawable.class.getField("image_place_" + this.name).getInt(null);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            imageResId = R.drawable.image_place_unknown;
+            smallImageResId = R.drawable.image_place_unknown;
         } catch (NoSuchFieldException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            imageResId = R.drawable.image_place_unknown;
+            smallImageResId = R.drawable.image_place_unknown;
         }
-        return imageResId;
+        return smallImageResId;
     }
 
     public int getTitleResId() {

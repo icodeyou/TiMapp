@@ -80,6 +80,7 @@
     <dimen name="width_pic_card">58dp</dimen>
     <dimen name="width_checkbox_card">62dp</dimen>
     <dimen name="upload_tags_margin">25dp</dimen>
+    <dimen name="height_gradient_view">7dp</dimen>
 
 
 </resources>

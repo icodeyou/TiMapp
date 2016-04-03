@@ -205,12 +205,13 @@ public class InviteFriendsActivity extends BaseActivity{
         boolean success;
         if (friendsSelected.contains(friend)) {
             success = mAutoLabel.removeLabel(position);
+            friendsSelected.remove(friend);
         } else {
             success = mAutoLabel.addLabel(friend.getUsername(), position);
+            friendsSelected.add(friend);
         }
         if (success) {
-            updateButtonVisibility();
-            friendsSelected.add(friend);
+            updateButtonVisibility();;
             adapter.notifyDataSetChanged();
         }
     }

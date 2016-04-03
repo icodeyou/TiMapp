@@ -86,8 +86,6 @@ public class FilterActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        saveButton.setOnTouchListener(new ColorSquareOnTouchListener(this,textSaveButton));
-
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

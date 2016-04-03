@@ -61,7 +61,6 @@
                         myattrs:horizontal_tags_text_size="@dimen/text_tags_small" />
                 </LinearLayout>
             </LinearLayout>
-
             <RelativeLayout
                 android:id="@+id/selectedView"
                 android:layout_width="match_parent"

@@ -231,6 +231,7 @@ public class PlaceActivity extends BaseActivity {
         fragmentPictures.loadPictures();
         fragmentTags.loadTags();
         fragmentPeople.load();
+        updateButtonsVisibility();
     }
 
     private void uploadPicture(final Uri fileUri) {
@@ -394,7 +395,7 @@ public class PlaceActivity extends BaseActivity {
     }
 
     private void setTouchListeners() {
-        //PlaceActivity
+       /* //PlaceActivity
         iAmComingButton.setOnTouchListener(new ColorSquareOnTouchListener(this, iAmComingTv));
         //Fragment Pictures
         //setSimpleTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
@@ -407,7 +408,7 @@ public class PlaceActivity extends BaseActivity {
                 new ColorSquareOnTouchListener(this, fragmentTags.getTvMainButton()));
         //Fragment Posts
         fragmentPeople.getMainButton().setOnTouchListener(
-                new ColorSquareOnTouchListener(this, fragmentPeople.getTvMainButton()));
+                new ColorSquareOnTouchListener(this, fragmentPeople.getTvMainButton()));*/
     }
 
     private void initFragments() {
@@ -492,7 +493,7 @@ public class PlaceActivity extends BaseActivity {
         if(loadedFragments>=3) {
             invalidateOptionsMenu();
             updateButtonsVisibility();
-            setTouchListeners();
+            //setTouchListeners();
         }
     }
 

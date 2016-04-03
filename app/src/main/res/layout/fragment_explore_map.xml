@@ -67,7 +67,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="7dp"
+        android:layout_height="@dimen/height_gradient_view"
         android:background="@drawable/top_place_map_fragment"
         android:layout_above="@+id/places_viewer" />
 
