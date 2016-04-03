@@ -13,9 +13,10 @@
     <color name="TEST">#F1E5DE</color>
     <color name="transparent">#00000000</color>
     <color name="background">#f6efef</color>
+    <color name="background_semi_transparent">#6ff6efef</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
-    <color name="background_fragment_place">@color/background</color>
+    <color name="background_place">@color/Black</color>
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>
@@ -24,13 +25,13 @@
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
     <color name="color_hint">#74bb302e</color>
-    <color name="background_list_tags">@color/White</color>
-    <color name="background_list_main_tags">#fff5f4</color>
+    <color name="background_list_tags">#64ffffff</color>
+    <color name="background_list_main_tags">#64fff5f4</color>
     <color name="usertag_text_color">#de5249</color>
     <color name="divider_listview">#db9f9b</color>
 
     <!-- Buttons -->
-    <color name="background_button">@color/colorAccent</color>
+    <color name="background_button">@color/colorPrimaryDark</color>
     <color name="text_button">@color/background</color>
     <color name="border_selected_button">#ffefc6</color>
     <color name="text_selected_button">#ffefc6</color>

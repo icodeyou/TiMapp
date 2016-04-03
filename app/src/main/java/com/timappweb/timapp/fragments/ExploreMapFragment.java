@@ -185,7 +185,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         placesViewer.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Adapter
-        placesAdapter = new PlacesAdapter(drawerActivity, false, R.color.colorSecondary);
+        placesAdapter = new PlacesAdapter(drawerActivity, false, false);
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {

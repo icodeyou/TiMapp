@@ -68,7 +68,6 @@ public class PlacePeopleFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_place_people, container, false);
 
-
         initVariables(root);
         setListeners();
         initRv();
@@ -153,7 +152,7 @@ public class PlacePeopleFragment extends BaseFragment {
             public void onResponse(Response<List<Post>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    progressView.setVisibility(View.GONE);
+                    setProgressView(false);
                     notifyPostsLoaded(response.body());
                 }
             }
@@ -161,7 +160,7 @@ public class PlacePeopleFragment extends BaseFragment {
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                progressView.setVisibility(View.GONE);
+                setProgressView(false);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 
@@ -191,7 +190,7 @@ public class PlacePeopleFragment extends BaseFragment {
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                progressView.setVisibility(View.GONE);
+                setProgressView(false);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 
@@ -254,5 +253,15 @@ public class PlacePeopleFragment extends BaseFragment {
 
     public View getMainButton() {
         return mainButton;
+    }
+
+    public void setProgressView(boolean visibility) {
+        if(visibility) {
+            progressView.setVisibility(View.VISIBLE);
+            peopleRv.setVisibility(View.GONE);
+        } else {
+            progressView.setVisibility(View.GONE);
+            peopleRv.setVisibility(View.VISIBLE);
+        }
     }
 }

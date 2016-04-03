@@ -88,6 +88,15 @@
             android:exported="false" >
         </service>
 
+        <service android:name=".services.InstanceIDService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <service android:name=".services.NotificationService" android:exported="false">
+        </service>
+
         <!-- FILTER ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.FilterActivity"

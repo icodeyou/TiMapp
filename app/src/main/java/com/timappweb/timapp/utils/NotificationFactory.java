@@ -29,8 +29,8 @@ public class NotificationFactory {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(place.getIconResource())
-                        .setContentTitle(user.username + " invites you to an event")
-                        .setContentText(place.name);
+                        .setContentTitle(user.username + " invited you!")
+                        .setContentText("Event: " + place.name);
 // Creates an explicit intent for an Activity in your app
         Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, place);
 

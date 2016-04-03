@@ -140,7 +140,7 @@ public class PlacePicturesFragment extends Fragment {
                     picturesAdapter.notifyDataSetChanged();
                 }
 
-                progressView.setVisibility(View.GONE);
+                setProgressView(false);
 
                 if (picturesAdapter.getItemCount() == 0) {
                     noPicView.setVisibility(View.VISIBLE);
@@ -197,6 +197,16 @@ public class PlacePicturesFragment extends Fragment {
             uploadView.setVisibility(View.VISIBLE);
         } else {
             uploadView.setVisibility(View.GONE);
+        }
+    }
+
+    public void setProgressView(boolean visibility) {
+        if(visibility) {
+            progressView.setVisibility(View.VISIBLE);
+            picturesRv.setVisibility(View.GONE);
+        } else {
+            progressView.setVisibility(View.GONE);
+            picturesRv.setVisibility(View.VISIBLE);
         }
     }
 

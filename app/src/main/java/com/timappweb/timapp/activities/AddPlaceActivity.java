@@ -218,8 +218,6 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
-        createButton.setOnTouchListener(new ColorSquareOnTouchListener(this, textCreateButton));
-
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -122,6 +122,10 @@
 
         <!-- PLACE -->
         <!-- **********************************************************************-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="7dp"
+            android:background="@drawable/top_place_map_fragment"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/place_lv"
             android:layout_width="match_parent"

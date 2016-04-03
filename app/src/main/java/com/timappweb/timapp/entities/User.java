@@ -26,6 +26,7 @@ public class User implements Serializable, PlaceUserInterface {
     public static final String KEY_ID = "user.id";
     public static final String KEY_EMAIL = "user.email";
     public List<Tag> tags;
+    public String app_id;
 
     public User(){
 

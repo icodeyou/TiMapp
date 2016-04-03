@@ -48,7 +48,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_square_button"
             android:layout_marginBottom="@dimen/margin_square_button"
-            android:background="@drawable/background_button">
+            android:background="@drawable/background_button_littlesquare">
             <TextView
                 android:id="@+id/text_invite_button"
                 android:layout_width="wrap_content"

@@ -32,6 +32,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.services.InstanceIDService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,6 +135,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 setProgressVisibility(true);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
+                params.put("app_id", InstanceIDService.getId(that));
 
                 Call<RestFeedback> call = RestClient.service().facebookLogin(params);
                 call.enqueue(new RestFeedbackCallback(that) {
@@ -145,6 +147,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         user.provider_uid = feedback.data.get("social_id");
                         user.provider = SocialProvider.FACEBOOK;
                         user.id = Integer.parseInt(feedback.data.get("id"));
+                        user.app_id = InstanceIDService.getId(that);
                         Log.i(TAG, "Session created with session token: " + token);
                         MyApplication.login(user, token, accessToken);
                         IntentsUtils.lastActivityBeforeLogin(that);

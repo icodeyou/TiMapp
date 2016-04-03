@@ -35,7 +35,7 @@ public class PlaceTagsFragment extends BaseFragment {
     private int placeId;
 
     //Views
-    private ListView                lvTags;
+    private ListView                rvTags;
     private View                    progressView;
     private View                    noTagsView;
     private View                    noConnectionView;
@@ -58,7 +58,7 @@ public class PlaceTagsFragment extends BaseFragment {
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallPicButton = root.findViewById(R.id.button_add_pic);
         smallPeopleButton = root.findViewById(R.id.button_add_people);
-        lvTags = (ListView) root.findViewById(R.id.list_tags);
+        rvTags = (ListView) root.findViewById(R.id.list_tags);
         progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
@@ -83,7 +83,7 @@ public class PlaceTagsFragment extends BaseFragment {
     private void initAdapter() {
         ArrayList<Tag> data = new ArrayList<Tag>();
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
-        lvTags.setAdapter(tagsAndCountersAdapter);
+        rvTags.setAdapter(tagsAndCountersAdapter);
     }
 
     private void setListeners() {
@@ -100,7 +100,7 @@ public class PlaceTagsFragment extends BaseFragment {
             public void onResponse(Response<List<Tag>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    progressView.setVisibility(View.GONE);
+                    setProgressView(false);
                     notifyTagsLoaded(response.body());
                 }
             }
@@ -108,7 +108,7 @@ public class PlaceTagsFragment extends BaseFragment {
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                progressView.setVisibility(View.GONE);
+                setProgressView(false);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
         });
@@ -136,6 +136,15 @@ public class PlaceTagsFragment extends BaseFragment {
         return tvAddButton;
     }
 
+    public void setProgressView(boolean visibility) {
+        if(visibility) {
+            progressView.setVisibility(View.VISIBLE);
+            rvTags.setVisibility(View.GONE);
+        } else {
+            progressView.setVisibility(View.GONE);
+            rvTags.setVisibility(View.VISIBLE);
+        }
+    }
 
 
     public void updateBtnVisibility() {
