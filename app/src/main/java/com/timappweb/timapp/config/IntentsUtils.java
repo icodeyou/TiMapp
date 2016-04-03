@@ -155,10 +155,14 @@ public class IntentsUtils {
     }
 
     public static void viewPlaceFromPublish(Activity activity, int id) {
-        Intent intent = new Intent(activity, PlaceActivity.class);
-        intent.putExtra("place_id", id);
+        Intent intent = buildIntentViewPlace(activity, id);
         activity.startActivity(intent);
         activity.finish();
+    }
+    public static Intent buildIntentViewPlace(Context context, int placeId) {
+        Intent intent = new Intent(context, PlaceActivity.class);
+        intent.putExtra("place_id", placeId);
+        return  intent;
     }
     public static Intent buildIntentViewPlace(Context context, Place place) {
         Intent intent = new Intent(context, PlaceActivity.class);

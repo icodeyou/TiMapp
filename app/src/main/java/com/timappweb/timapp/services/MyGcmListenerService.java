@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.timappweb.timapp.utils.NotificationFactory;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -25,11 +29,9 @@ public class MyGcmListenerService extends GcmListenerService {
             Log.e(TAG, "ERROR message received is null");
             return;
         }
-        Log.v(TAG, "Received bundle: " + data);
-        String message = data.getString("notification");
         Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
-
+        Log.d(TAG, "Bundle: " + data);
+        NotificationFactory.invite(getApplicationContext(), data);
         /**
          * Production applications would usually process the message here.
          * Eg: - Syncing with server.
