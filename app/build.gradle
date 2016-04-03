@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
@@ -64,10 +65,12 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile 'com.android.support:design:23.1.1'
     //Update to 8.3.0 when tests are over. 7.8.0 is needed for the emulator.
-    compile 'com.google.android.gms:play-services-ads:7.8.0'
-    compile 'com.google.android.gms:play-services-identity:7.8.0'
-    compile 'com.google.android.gms:play-services-gcm:7.8.0'
-    compile 'com.google.android.gms:play-services-location:7.8.0'
+    //compile 'com.google.android.gms:play-services-ads:8.1.0'
+    //compile 'com.google.android.gms:play-services-identity:8.1.0'
+    //compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    //compile 'com.google.android.gms:play-services-location:8.1.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
+
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.greenfrvr:hashtag-view:1.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -77,4 +80,5 @@ dependencies {
     compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
     compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
     compile 'com.github.iwgang:countdownview:1.2'
+
 }
