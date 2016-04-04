@@ -5,25 +5,29 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.timappweb.timapp.views.AutoResizeTextView
         android:id="@+id/name_invitor"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@drawable/top_radius_invitation"
         android:gravity="center"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
-        android:paddingRight="30dp"
-        android:paddingLeft="30dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
         android:singleLine="true"
+        android:textColor="@color/DarkGray"
         android:textStyle="bold"
         android:textSize="@dimen/text_normal"
-        android:text="Jack Overfield" />
+        android:text="Jack Overfield invited you 20 hours ago" />
 
     <com.timappweb.timapp.views.PlaceView
         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
         android:id="@+id/place_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         myattrs:tags_visible="true"
         myattrs:bottom_shadow="true"
         myattrs:top_shadow="false"/>

@@ -178,7 +178,9 @@ public class AddPlaceActivity extends BaseActivity {
 
     public void setButtonValidation() {
         String textAfterChange = groupNameET.getText().toString();
-
+        Log.d(TAG,"textafterchange : "+textAfterChange);
+        Log.d(TAG,"textafterchange Trim Length: "+textAfterChange.trim().length());
+        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
         if (categorySelected!=null && Place.isValidName(textAfterChange)) {
             createButton.setVisibility(View.VISIBLE);
         } else {

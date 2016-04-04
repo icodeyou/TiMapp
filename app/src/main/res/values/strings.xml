@@ -84,8 +84,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
 
     <!-- Buttons -->
     <string name="button_add_place">New Event</string>
-    <string name="add_place_button">Create</string>
-    <string name="search_button">OK</string>
+    <string name="create_button">Create</string>
+    <string name="search_button">Validate</string>
     <string name="search_button_empty">Clear Filter</string>
     <string name="invite_button">Invite</string>
 
@@ -121,7 +121,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="loading_tags">Loading tags</string>
     <string name="loading_pictures">Loading pictures</string>
     <string name="loading_posts">Loading people</string>
-    <string name="uploading_tags">Uploading China</string>
+    <string name="uploading_tags">Uploading tags</string>
     <string name="no_pic">There isn\'t any picture here yet.</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
@@ -135,8 +135,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
-    <string name="text_share_activity">Your experience will improve as the number of pictures raises.\nHelp us make this app famous by sharing it as much as possible.</string>
-    <string name="subject_share_activity">Share TiMapp \n with your friends !</string>
+    <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the big red button to invite some of your friends.</string>
+    <string name="subject_share_activity">Share TiMapp with your friends !</string>
     <string name="loading_location">Loading Location</string>
     <string name="or_text_login">Or</string>
     <string name="text_create_account_login">Create account</string>

@@ -62,7 +62,7 @@
             android:textColor="@color/text_button"
             android:textStyle="bold"
             android:textAllCaps="true"
-            android:text="@string/add_place_button"
+            android:text="@string/create_button"
             android:gravity="center"
             android:textSize="@dimen/text_normal"/>
     </LinearLayout>

@@ -60,7 +60,7 @@
         android:layout_alignWithParentIfMissing="true"/>
 
     <com.timappweb.timapp.views.PlaceView
-        xmlns:myattrs="http://schemas.android.com/tools"
+        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
         android:id="@+id/place_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

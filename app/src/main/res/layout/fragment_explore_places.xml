@@ -52,9 +52,32 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_places"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:footerDividersEnabled="false"
         android:divider="@drawable/top_place_rv"
         android:dividerHeight="7dp"/>
+
+    <LinearLayout
+        android:id="@+id/new_event_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_bottom_button"
+        android:layout_gravity="center"
+        android:background="@drawable/background_button_littlesquare">
+        <TextView
+            android:id="@+id/text_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/text_button"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:text="@string/button_add_place"
+            android:gravity="center"
+            android:textSize="@dimen/text_big"/>
+    </LinearLayout>
 
 </LinearLayout>

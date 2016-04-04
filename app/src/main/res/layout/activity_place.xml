@@ -42,7 +42,7 @@
             android:id="@+id/place_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            myattrs:tags_visible="true"
+            myattrs:tags_visible="false"
             myattrs:bottom_shadow="false"
             myattrs:top_shadow="false"
             myattrs:background_color="@color/transparent"/>

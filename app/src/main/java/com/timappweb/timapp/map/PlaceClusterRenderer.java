@@ -131,7 +131,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
             if (!profilePhotos.containsKey(p.category_id)){
                 Drawable drawable = null;
                 try {
-                    drawable = ContextCompat.getDrawable(context, p.getCategory().getIconBlackResId());
+                    drawable = ContextCompat.getDrawable(context, p.getCategory().getIconWhiteResId());
                     drawable.setBounds(0, 0, width, height);
                     profilePhotos.put(p.category_id, drawable);
                 } catch (UnknownCategoryException e) {
@@ -146,7 +146,8 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         //int padding = (int) context.getResources().getDimension(R.dimen.map_icon_padding);
         //mClusterImageView.setPadding(padding, padding, padding, padding);
 
-        mClusterIconGenerator.setTextAppearance(R.style.map_cluster_text);
+        //mClusterIconGenerator.setTextAppearance(R.style.map_cluster_text);
+        mClusterIconGenerator.setColor(ContextCompat.getColor(context, R.color.background_cluster));
         Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }

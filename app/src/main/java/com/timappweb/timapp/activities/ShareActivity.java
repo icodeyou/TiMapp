@@ -3,21 +3,20 @@ package com.timappweb.timapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
 
 public class ShareActivity extends BaseActivity {
-    private ImageButton shareButton;
+    private ImageView shareButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_share_activity);
+        setContentView(R.layout.activity_share);
         this.initToolbar(true);
 
-        shareButton = (ImageButton) findViewById(R.id.share_button);
+        shareButton = (ImageView) findViewById(R.id.share_button);
 
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,28 +15,26 @@ import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.PlaceView;
-import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "PlacesAdapter";
     private Context context;
+    private int colorRes = -1;
+    private boolean isTagsVisible;
+    private boolean footerActive;
 
     private List<Place> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
-    public PlacesAdapter(Context context, boolean isTagsVisible) {
+    public FooterRecyclerView(Context context, boolean footerActive, boolean isTagsVisible) {
         data = new ArrayList<>();
         this.context = context;
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_place, parent, false);
-        return new PlacesViewHolder(v);
+        this.footerActive = footerActive;
+        this.isTagsVisible = isTagsVisible;
     }
 
     @Override
@@ -57,8 +55,57 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return data.size();
+        if(footerActive) {
+            return data.size()+1;
+        } else {
+            return data.size();
+        }
     }
+
+    //////////////////////////////////////////////////
+    //Footer
+    ///////////
+
+    private class VIEW_TYPES {
+        public static final int NORMAL = 1;
+        public static final int FOOTER = 2;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View v;
+
+        switch (viewType)
+        {
+            case VIEW_TYPES.NORMAL:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                return new PlacesViewHolder(v);
+            case VIEW_TYPES.FOOTER:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.explore_places_button, viewGroup, false);
+                return new FooterPlacesViewHolder(v);
+            default:
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                return new PlacesViewHolder(v);
+        }
+
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if(isPositionFooter(position))
+            return VIEW_TYPES.FOOTER;
+        else
+            return VIEW_TYPES.NORMAL;
+
+    }
+
+    private boolean isPositionFooter(int position) {
+        return position == data.size() && footerActive;
+    }
+
+    //////////////////////////////////////////////////
 
     public void add(Place place) {
         this.data.add(place);
