@@ -138,7 +138,6 @@ public class PlaceActivity extends BaseActivity {
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
-        initPlaceView();
         initLocationListener();
         setClickListeners();
 
@@ -476,6 +475,8 @@ public class PlaceActivity extends BaseActivity {
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }
+
+        initPlaceView();
     }
 
     public void notifyFragmentsLoaded() {
