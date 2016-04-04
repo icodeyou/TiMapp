@@ -21,6 +21,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,12 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     @Override
     protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
-        categoryImage.setImageResource(place.getIconResource());
+        try {
+            categoryImage.setImageResource(place.getCategory().getIconWhiteResId());
+        } catch (UnknownCategoryException e) {
+            // TODO
+            return;
+        }
         categoryImage = MyApplication.setCategoryBackground(categoryImage,place.getLevel());
 
         categoryImage.setDrawingCacheEnabled(true);
@@ -123,9 +129,15 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
             if (!profilePhotos.containsKey(p.category_id)){
-                Drawable drawable = ContextCompat.getDrawable(context, p.getIconResource());
-                drawable.setBounds(0, 0, width, height);
-                profilePhotos.put(p.category_id, drawable);
+                Drawable drawable = null;
+                try {
+                    drawable = ContextCompat.getDrawable(context, p.getCategory().getIconBlackResId());
+                    drawable.setBounds(0, 0, width, height);
+                    profilePhotos.put(p.category_id, drawable);
+                } catch (UnknownCategoryException e) {
+                    e.printStackTrace();
+                    // TODO
+                }
             }
         }
         MultiDrawable multiDrawable = new MultiDrawable(new ArrayList<Drawable>(profilePhotos.values()));

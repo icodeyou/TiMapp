@@ -130,15 +130,6 @@ public class Place implements Serializable, MarkerValueInterface {
         return this.count_posts;
     }
 
-    public int getIconResource() {
-        //int level = this.getLevel();
-        try {
-            return MyApplication.getCategoryById(this.category_id).getIconBlackResId();
-        } catch (UnknownCategoryException e) {
-            return R.drawable.ic_category_highlight_unknown;
-        }
-    }
-
     /**
      * @param latitude
      * @param longitude
@@ -180,5 +171,9 @@ public class Place implements Serializable, MarkerValueInterface {
             num++;
         }
         return num;
+    }
+
+    public Category getCategory() throws UnknownCategoryException {
+        return MyApplication.getCategoryById(this.category_id);
     }
 }

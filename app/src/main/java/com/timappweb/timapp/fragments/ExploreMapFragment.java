@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -350,7 +351,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(locationProvider.getLastGPSLocation()), 12.0f));
         }
         catch (NoLastLocationException ex){
-            Log.d(TAG, "Cannot center: no last name");
+            Log.e(TAG, "Cannot center: no last name");
         }
     }
 
@@ -403,6 +404,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                     Log.i(TAG, "You clicked on a marker with viewPlaceFromPublish: " + markerValue.getId());
                     showMarkerDetail(markerValue);
                 } else {
+                    Log.e(TAG, "Cannot load this marker");
                     Toast.makeText(getActivity(), "Cannot load this marker", Toast.LENGTH_SHORT).show();
                 }
 
@@ -425,13 +427,27 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Place>() {
             @Override
             public boolean onClusterClick(Cluster<Place> cluster) {
-                Log.d(TAG, "You clicked on a post cluster");
-                gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
-                // Steph, je sais pas pourquoi tu fais des modifications sur cet adapter.
-                // C'est l'adapter qui concerne le "placeViewer" qui au bottom de la page
-                //placesAdapter.clear();
-                //placesAdapter.addAll(cluster.getItems());
-                ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
+
+                // If zoom level is too big, go to list
+                if (currentZoomLevel > gMap.getMaxZoomLevel() - 1){
+                    ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
+                    return true;
+                }
+
+                Log.d(TAG, "You clicked on a cluster");
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                //builder.include(cluster.getPosition());
+                for (Place m : cluster.getItems()) {
+                    builder.include(m.getPosition());
+                }
+                LatLngBounds bounds = builder.build();
+                // TODO jean : adapt padding according to screen
+                int padding = R.dimen.padding_zoom_fit_cluster;
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
+                gMap.animateCamera(cameraUpdate);
+
+                //gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
+                //((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                 return true;
             }
         });

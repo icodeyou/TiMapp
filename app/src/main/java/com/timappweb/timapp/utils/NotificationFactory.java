@@ -14,6 +14,7 @@ import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,15 +55,7 @@ public class NotificationFactory {
         mNotificationManager.notify(mId++, mBuilder.build());
         return mId;
     }
-    /**
-     * Create a notification for a place
-     * @param user
-     * @param place
-     */
-    public static int invite(Context context, User user, Place place){
-        Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, place);
-        return NotificationFactory.build(context, place.getIconResource(), user.username + " invited you!", "Event: " + place.name, resultIntent);
-    }
+
 
 
     public static int invite(Context context, Bundle bundle) {
