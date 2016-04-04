@@ -42,7 +42,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MyApplication extends Application{
+public class MyApplication extends com.activeandroid.app.Application {
 
     private static final String TAG = "MyApplication";
     public static final String KEY_IS_LOGIN = "IsLoggedIn";

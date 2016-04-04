@@ -128,7 +128,7 @@ public class IntentsUtils {
         //TRY TRANSITION ... FAIL
         // Following the documentation, right after starting the activity
         // we override the transition
-        Activity activity  = (Activity) context;
+        UserActivity activity  = (UserActivity) context;
         activity.overridePendingTransition(R.anim.in_from_left, R.anim.in_from_left);*/
     }
 

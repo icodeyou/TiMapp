@@ -111,12 +111,12 @@ public class RestClient {
         LocalPersistenceManager.in().clear();
         LocalPersistenceManager.in().commit();
 
-        // After logout redirect user to Login Activity
+        // After logout redirect user to Login UserActivity
         Intent i = new Intent(app, LoginActivity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        // Add new Flag to start new Activity
+        // Add new Flag to start new UserActivity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Call<RestFeedback> call = this.service.logout();
@@ -132,7 +132,7 @@ public class RestClient {
                 }
             });
 
-        // Staring Login Activity
+        // Staring Login UserActivity
         app.startActivity(i);
     }
 

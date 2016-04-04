@@ -30,6 +30,8 @@ android {
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }
 
@@ -79,5 +81,8 @@ dependencies {
     compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
     compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
     compile 'com.github.iwgang:countdownview:1.2'
+
+
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
 
 }

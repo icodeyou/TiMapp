@@ -530,7 +530,7 @@ public class PlaceActivity extends BaseActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 // Show permission rationale
             } else {
-                // Handle the result in Activity#onRequestPermissionResult(int, String[], int[])
+                // Handle the result in UserActivity#onRequestPermissionResult(int, String[], int[])
                 ActivityCompat.requestPermissions(this, new String[]{permission}, REQUEST_CAMERA);
             }
         } else {

@@ -130,7 +130,7 @@ public class TagActivity extends BaseActivity{
             case R.id.action_validate:
                 String query = searchView.getQuery().toString();
                 if(query.isEmpty()) {
-                    Toast.makeText(this, "Type a tag before submitting", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "ActionTypeName a tag before submitting", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     searchView.setQuery(query, true);
