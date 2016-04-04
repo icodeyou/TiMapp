@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
@@ -29,6 +28,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+import com.timappweb.timapp.views.PlaceView;
 
 import java.util.LinkedList;
 
@@ -39,7 +39,7 @@ public class TagActivity extends BaseActivity{
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
     private View progressBarView;
-    private RecyclerView rvPlace;
+    private PlaceView placeView;
     private Place currentPlace = null;
 
     // @Bind(R.id.hashtags1)
@@ -71,10 +71,10 @@ public class TagActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressBarView = findViewById(R.id.progress_view);
-        rvPlace = (RecyclerView) findViewById(R.id.place_lv);
+        placeView = (PlaceView) findViewById(R.id.place_view);
 
 
-        initAdapterPlace();
+        initPlaceView();
         initClickSelectedTag();
 
         setSelectedTagsViewGone();
@@ -174,14 +174,8 @@ public class TagActivity extends BaseActivity{
         });
     }
 
-    private void initAdapterPlace() {
-        //RV
-        rvPlace.setLayoutManager(new LinearLayoutManager(this));
-
-        //Adapter
-        PlacesAdapter placesAdapter = new PlacesAdapter(this, false, false);
-        placesAdapter.add(currentPlace);
-        rvPlace.setAdapter(placesAdapter);
+    private void initPlaceView() {
+        placeView.setPlace(currentPlace);
     }
 
     public void actionCounter() {

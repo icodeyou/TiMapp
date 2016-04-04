@@ -121,15 +121,14 @@
 
         <!-- PLACE -->
         <!-- **********************************************************************-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_gradient_view"
-            android:background="@drawable/top_place_map_fragment"/>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/place_lv"
+        <com.timappweb.timapp.views.PlaceView
+            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+            android:id="@+id/place_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"/>
+            myattrs:tags_visible="false"
+            myattrs:bottom_shadow="false"
+            myattrs:top_shadow="true"/>
 
     </LinearLayout>
 

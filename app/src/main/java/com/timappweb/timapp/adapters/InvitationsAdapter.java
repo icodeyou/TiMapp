@@ -84,13 +84,13 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         switch (viewType)
         {
             case VIEW_TYPES.NORMAL:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_place, viewGroup, false);
                 return new PlacesViewHolder(v);
             case VIEW_TYPES.FOOTER:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.explore_places_button, viewGroup, false);
                 return new FooterPlacesViewHolder(v);
             default:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_place, viewGroup, false);
                 return new PlacesViewHolder(v);
         }
 

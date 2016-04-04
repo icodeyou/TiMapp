@@ -18,6 +18,7 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
     private int textColor;
     private boolean isBold;
     private Float textSize;
+    private boolean viewInflated = false;
 
     //Constructor
     public HorizontalTagsRecyclerView(Context context) {
@@ -65,6 +66,11 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
         GridLayoutManager manager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
         this.setLayoutManager(manager);
         this.scrollToEnd();
+        this.viewInflated = true;
+    }
+
+    public boolean isViewInflated(){
+        return viewInflated;
     }
 
     public void scrollToEnd(){

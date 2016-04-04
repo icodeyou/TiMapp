@@ -3,7 +3,6 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.listeners.ColorPublishButtonRadiusOnTouchListener;
@@ -27,6 +25,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+import com.timappweb.timapp.views.PlaceView;
 
 import retrofit2.Call;
 
@@ -42,7 +41,7 @@ public class PublishActivity extends BaseActivity{
     private Place currentPlace = null;
     private Post currentPost = null;
     private CheckBox checkBox = null;
-    private RecyclerView rvPlace;
+    private PlaceView placeView;
     private LinearLayout confirmButton;
     private TextView textButton1;
     private TextView textButton2;
@@ -69,12 +68,13 @@ public class PublishActivity extends BaseActivity{
         //Initialize variables
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
-        rvPlace = (RecyclerView) findViewById(R.id.place_lv);
+        placeView = (PlaceView) findViewById(R.id.place_view);
         progressView = findViewById(R.id.progress_view);
         confirmButton = (LinearLayout) findViewById(R.id.confirm_button);
         textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
         textButton2 = (TextView) findViewById(R.id.text_confirm_button2);
 
+        initPlaceView();
         initAdapters();
         setListeners();
         setCheckbox();
@@ -94,15 +94,11 @@ public class PublishActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Private methods
+    private void initPlaceView() {
+        placeView.setPlace(currentPlace);
+    }
+
     private void initAdapters() {
-        //RV
-        rvPlace.setLayoutManager(new LinearLayoutManager(this));
-
-        //Adapter
-        PlacesAdapter placesAdapter = new PlacesAdapter(this, false, false);
-        placesAdapter.add(currentPlace);
-        rvPlace.setAdapter(placesAdapter);
-
         HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
         selectedTagsAdapter.setData(currentPost.getTags());
     }

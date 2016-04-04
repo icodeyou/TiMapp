@@ -45,7 +45,7 @@ public class InvitationsActivity extends BaseActivity{
         noFriendsView = findViewById(R.id.no_friends_view);
         progressView = findViewById(R.id.loading_friends);
 
-        //initAdapterListFriends();
+        initAdapterListFriends();
         //loadFriends();
     }
 
