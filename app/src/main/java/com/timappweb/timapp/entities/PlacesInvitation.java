@@ -45,4 +45,8 @@ public class PlacesInvitation implements PlaceUserInterface {
     public User getUser() {
         return this.user_target;
     }
+
+    public User getUserSource() {
+        return this.user_source;
+    }
 }

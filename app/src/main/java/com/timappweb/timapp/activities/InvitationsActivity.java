@@ -14,9 +14,16 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.PaginationResponse;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InvitationsActivity extends BaseActivity{
 
@@ -59,17 +66,20 @@ public class InvitationsActivity extends BaseActivity{
     }
 
     private void loadInvitations(){
-        //TODO StephyLeFoufy : Load Invitations
 
-        //Dummy
-        List<PlacesInvitation> invitationsLoaded = new ArrayList<>();
-        PlacesInvitation dummyPlace = new PlacesInvitation(Place.createDummy(), User.createDummy());
-        invitationsLoaded.add(dummyPlace);
-        PlacesInvitation dummyPlace2 = new PlacesInvitation(Place.createDummy(), User.createDummy());
-        invitationsLoaded.add(dummyPlace2);
+        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().inviteReceived();
+        call.enqueue(new RestCallback<PaginationResponse<PlacesInvitation>>(this) {
+            @Override
+            public void onResponse200(Response<PaginationResponse<PlacesInvitation>> response) {
+                onInvitationsLoaded(response.body().items);
+            }
 
-        onInvitationsLoaded(invitationsLoaded);
-        progressView.setVisibility(View.GONE);
+            @Override
+            public void onFinish() {
+                progressView.setVisibility(View.GONE);
+            }
+        });
+
     }
 
     private void onInvitationsLoaded(List<PlacesInvitation> items){

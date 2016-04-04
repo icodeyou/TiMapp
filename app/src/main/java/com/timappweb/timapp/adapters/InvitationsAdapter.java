@@ -54,7 +54,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
             final PlacesInvitation placeInvitation = data.get(position);
             
-            holder.invitorName.setText(placeInvitation.getUser().getUsername());
+            holder.invitorName.setText(placeInvitation.getUserSource().getUsername());
             holder.placeView.setPlace(placeInvitation.place);
 
             //OnTagsRvClick : Same event as adapter click.
