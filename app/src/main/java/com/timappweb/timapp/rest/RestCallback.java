@@ -2,7 +2,6 @@ package com.timappweb.timapp.rest;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -24,6 +23,8 @@ public class RestCallback<T> implements Callback<T> {
     public void onResponse200(Response<T> response){
 
     }
+
+
 
     @Override
     public void onResponse(Response<T> response) {
@@ -49,17 +50,15 @@ public class RestCallback<T> implements Callback<T> {
         else{
             this.onResponse200(response);
         }
+        this.onFinish();
     }
 
     @Override
     public void onFailure(Throwable t) {
-        // handle execution failures like no internet connectivity
-        Log.e(TAG, "RestCallback::onFailure() -> " + t.getMessage());
-
-        //if(error.isNetworkError()) {
-        //    Toast.makeText(this.context, R.string.please_enable_internet, Toast.LENGTH_LONG).show();
-        //}
+        Log.e(TAG, "::onFailure() -> " + t.getMessage());
+        this.onFinish();
     }
 
+    public void onFinish(){}
 
 }

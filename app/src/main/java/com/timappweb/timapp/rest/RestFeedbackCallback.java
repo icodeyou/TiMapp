@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.timappweb.timapp.rest.model.RestFeedback;
 
-import bolts.Bolts;
 import retrofit2.Response;
 
 /**
@@ -40,12 +39,12 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
         else {
             this.onResponseFail(response);
         }
-        this.after();
+        this.onFinish();
     }
 
     private void onResponseFail(Response<RestFeedback> response) {
         Log.i(TAG, "Response fail: " + response.code());
-        this.after();
+        this.onFinish();
     }
 
     @Override
@@ -53,5 +52,5 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
         super.onFailure(t);
     }
 
-    public void after(){}
+    public void onFinish(){}
 }
