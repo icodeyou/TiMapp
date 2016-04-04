@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"  android:layout_height="match_parent"
-    tools:context=".PlaceActivity" android:background="@color/background_place">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".PlaceActivity"
+    android:background="@color/background_place">
 
     <ImageView
         android:id="@+id/background_place"
@@ -34,12 +37,15 @@
 
         <!-- PLACE -->
         <!-- ************************************* -->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/place_lv"
+        <com.timappweb.timapp.views.PlaceView
+            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+            android:id="@+id/place_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:scrollbars="none"/>
+            myattrs:tags_visible="true"
+            myattrs:bottom_shadow="false"
+            myattrs:top_shadow="false"
+            myattrs:background_color="@color/transparent"/>
 
         <!--<View
             android:layout_width="match_parent"

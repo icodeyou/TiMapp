@@ -6,4 +6,11 @@
         <attr name="horizontal_tags_is_bold" format="boolean" />
         <attr name="horizontal_tags_text_size" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="PlaceView">
+        <attr name="tags_visible" format="boolean" />
+        <attr name="bottom_shadow" format="boolean" />
+        <attr name="top_shadow" format="boolean" />
+        <attr name="background_color" format="color" />
+    </declare-styleable>
 </resources>

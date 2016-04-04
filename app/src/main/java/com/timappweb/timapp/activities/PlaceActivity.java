@@ -14,13 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -46,7 +43,6 @@ import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
-import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
 import com.timappweb.timapp.rest.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -54,6 +50,7 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.views.PlaceView;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,7 +78,7 @@ public class PlaceActivity extends BaseActivity {
     private TextView    onMyWayTv;
     private View        progressView;
     private ListView    tagsListView;
-    private RecyclerView rvPlace;
+    private PlaceView placeView;
     private View        progressBottom;
     private View        parentLayout;
 
@@ -96,7 +93,6 @@ public class PlaceActivity extends BaseActivity {
     private ViewPager pager;
 
     private ShareActionProvider shareActionProvider;
-    private PlacesAdapter placesAdapter;
     private int counter = 0;
 
     private LocationListener mLocationListener;
@@ -138,11 +134,11 @@ public class PlaceActivity extends BaseActivity {
         progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
-        rvPlace = (RecyclerView) findViewById(R.id.place_lv);
+        placeView = (PlaceView) findViewById(R.id.place_view);
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
-        initPlaceAdapters();
+        initPlaceView();
         initLocationListener();
         setClickListeners();
 
@@ -191,13 +187,8 @@ public class PlaceActivity extends BaseActivity {
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    private void initPlaceAdapters() {
-        //RV
-        rvPlace.setLayoutManager(new LinearLayoutManager(this));
-
-        //PlacesAdapter
-        placesAdapter = new PlacesAdapter(this, false, R.color.transparent);
-        rvPlace.setAdapter(placesAdapter);
+    private void initPlaceView() {
+        placeView.setPlace(place);
     }
 
     @Override
@@ -478,7 +469,6 @@ public class PlaceActivity extends BaseActivity {
 
     private void notifyPlaceLoaded() {
         progressView.setVisibility(View.GONE);
-        placesAdapter.add(place);
         try {
             Category category = MyApplication.getCategoryById(place.category_id);
             ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);

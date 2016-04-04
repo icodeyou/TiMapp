@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xm    l version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.timappweb.timapp">
@@ -239,6 +239,18 @@
             android:name=".activities.ListFriendsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_list_friends"
+            android:parentActivityName=".activities.DrawerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DrawerActivity" />
+        </activity>
+
+        <!-- Invitations ACTIVITY //////////////////////////////////////////////-->
+        <activity
+            android:name=".activities.InvitationsActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_invitations"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

@@ -16,6 +16,7 @@
     <string name="title_activity_incoming">Incoming</string>
     <string name="title_activity_invite_friends">Invite friends</string>
     <string name="title_activity_list_friends">My friends</string>
+    <string name="title_activity_invitations">My invitations</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_my_profile">My Profile</string>
@@ -183,7 +184,9 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="uploading_pic">Uploading picture</string>
     <string name="counter_over">Over !</string>
     <string name="loading_friends">Loading friends</string>
+    <string name="loading_invitations">Loading invitations</string>
     <string name="define_yourself">Define yourself</string>
+    <string name="text_no_invitations">No invitation at the moment</string>
 
 
 </resources>

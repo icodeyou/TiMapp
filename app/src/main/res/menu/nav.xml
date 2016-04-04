@@ -16,7 +16,7 @@
             <!--
             <item android:id="@+id/item_spot" android:icon="@android:drawable/ic_menu_send"
                 android:title="Spot" />
-            <item android:id="@+id/item_place" android:icon="@android:drawable/ic_menu_send"
+            <item android:id="@+id/layout_place" android:icon="@android:drawable/ic_menu_send"
                 android:title="Place" />
                 -->
         </menu>
