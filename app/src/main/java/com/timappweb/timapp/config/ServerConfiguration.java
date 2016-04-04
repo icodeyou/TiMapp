@@ -66,6 +66,7 @@ public class ServerConfiguration {
         public int gps_min_accuracy_add_place = 3500;
         public int gps_min_accuracy = 3500;
         public int places_min_name_length = 3;
+        public int places_max_name_length;
         public int tags_min_search_length = 0;
 
         public String toString(){

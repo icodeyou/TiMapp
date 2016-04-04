@@ -74,7 +74,7 @@
     <dimen name="tag_padding_left">1dp</dimen>
     <dimen name="tag_padding_right">1dp</dimen>
     <dimen name="tag_padding_vertical">1dp</dimen>
-    <dimen name="map_icon">30dp</dimen>
+    <dimen name="map_icon">50dp</dimen>
     <dimen name="map_icon_padding">1dp</dimen>
     <dimen name="width_pic_card">58dp</dimen>
     <dimen name="width_checkbox_card">62dp</dimen>

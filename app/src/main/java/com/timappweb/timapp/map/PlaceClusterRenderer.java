@@ -18,9 +18,12 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
@@ -111,21 +114,27 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     protected void onBeforeClusterRendered(Cluster<Place> cluster, MarkerOptions markerOptions) {
         // Draw multiple people.
         // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-        List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
+        HashMap<Integer, Drawable> profilePhotos = new HashMap<>();
         int width = mDimension;
         int height = mDimension;
+
 
         for (Place p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            Drawable drawable = ContextCompat.getDrawable(context, p.getIconResource());
-            drawable.setBounds(0, 0, width, height);
-            profilePhotos.add(drawable);
+            if (!profilePhotos.containsKey(p.category_id)){
+                Drawable drawable = ContextCompat.getDrawable(context, p.getIconResource());
+                drawable.setBounds(0, 0, width, height);
+                profilePhotos.put(p.category_id, drawable);
+            }
         }
-        MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
+        MultiDrawable multiDrawable = new MultiDrawable(new ArrayList<Drawable>(profilePhotos.values()));
         multiDrawable.setBounds(0, 0, width, height);
-
         mClusterImageView.setImageDrawable(multiDrawable);
+        //int padding = (int) context.getResources().getDimension(R.dimen.map_icon_padding);
+        //mClusterImageView.setPadding(padding, padding, padding, padding);
+
+        mClusterIconGenerator.setTextAppearance(R.style.map_cluster_text);
         Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }

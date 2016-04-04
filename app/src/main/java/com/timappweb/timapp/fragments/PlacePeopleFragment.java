@@ -118,6 +118,7 @@ public class PlacePeopleFragment extends BaseFragment {
         placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
+                Log.v(TAG, "Accessing position: " + position);
                 PlaceUserInterface user = placeUsersAdapter.get(position);
                 Log.d(TAG, "Viewing profile user: " + user.getUser());
                 IntentsUtils.profile(placeActivity, user.getUser());

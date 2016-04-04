@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -62,6 +63,10 @@ public class AddPlaceActivity extends BaseActivity {
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
+        InputFilter[] filters = new InputFilter[1];
+        filters[0] = new InputFilter.LengthFilter(MyApplication.getApplicationRules().places_max_name_length);
+        groupNameET.setFilters(filters);
+
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
         createButton = findViewById(R.id.create_button);
         textCreateButton = (TextView) findViewById(R.id.text_create_button);

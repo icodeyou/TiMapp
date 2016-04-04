@@ -59,7 +59,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
             public void update() {
                 placesAdapter.notifyDataSetChanged();
             }
-        });
+        })
 */
     }
 

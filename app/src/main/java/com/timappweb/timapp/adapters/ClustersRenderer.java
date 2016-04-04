@@ -201,18 +201,28 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
         return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
     }
 
+
+    /**
+     * ????
+     */
+    public static double MIN_DIST_SQUARED = 10000.0D;
+    /**
+     *
+     * @param markers
+     * @param point
+     * @return
+     */
     private static Point findClosestCluster(List<Point> markers, Point point) {
         if(markers != null && !markers.isEmpty()) {
-            double minDistSquared = 10000.0D;
             Point closest = null;
             Iterator i$ = markers.iterator();
 
             while(i$.hasNext()) {
                 Point candidate = (Point)i$.next();
                 double dist = distanceSquared(candidate, point);
-                if(dist < minDistSquared) {
+                if(dist < MIN_DIST_SQUARED) {
                     closest = candidate;
-                    minDistSquared = dist;
+                    MIN_DIST_SQUARED = dist;
                 }
             }
 

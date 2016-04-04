@@ -162,7 +162,14 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         IntPoint northeast = getIntPoint(bounds.northeast);
         IntPoint southwest = getIntPoint(bounds.southwest);
         Log.i(TAG, "Southwest is " + southwest.toString() + "Northeast point is " + northeast.toString() + " (in cache: " + areas.size() + ")");
-        return new AreaIterator(southwest, northeast);
+
+        AreaIterator iterator = new AreaIterator(southwest, northeast);
+        //if (iterator.size() > MAXIMUM_GRID_SIZE_ON_VIEW*MAXIMUM_GRID_SIZE_ON_VIEW){
+        //    Log.e(TAG, "Grid size is bigger that " + MAXIMUM_GRID_SIZE_ON_VIEW*MAXIMUM_GRID_SIZE_ON_VIEW + " ---> resizing area");
+        //    resizeArea(bounds);
+        //    iterator = new AreaIterator(southwest, northeast);
+        //}
+        return iterator;
     }
 
     /**
@@ -259,13 +266,10 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
      * Get only item inside the bounds
      */
     public List<T> getInsideBoundsItems(LatLngBounds bounds){
-        Log.v(TAG, "AreaRequestHistory::getInsideBoundsItems(): " + bounds);
+        Log.d(TAG, "AreaRequestHistory::getInsideBoundsItems(): " + bounds);
         LinkedList<T> result = new LinkedList<>();
-        AreaIterator areaIterator = this.getAreaIterator(bounds);
-        IntPoint p;
-        while ((p = areaIterator.next()) != null){
-            AreaRequestItem<T> request = this.areas.get(p);
-            Log.d(TAG, "getInsideBoundsItems(): " + p);
+        for (AreaRequestItem<T> request:
+             this.areas.values()) {
             if (request != null){
                 for (T marker: request.data){
                     if (bounds.contains(marker.getPosition())){
