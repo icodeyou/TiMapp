@@ -53,7 +53,7 @@ public class PlaceUsersAdapter extends MultipleSectionAdapter<PlaceUserInterface
 
         Log.d(TAG, "User: " + user.getUsername());
         String pic = user.getProfilePictureUrl();
-        if(pic !=null) {
+        if(pic !=null && holder.ivProfilePicture!=null) {
             Picasso.with(context).load(pic).into(holder.ivProfilePicture);
         }
 

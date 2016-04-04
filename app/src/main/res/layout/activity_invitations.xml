@@ -8,6 +8,7 @@
     <include layout="@layout/toolbar" />
 
     <LinearLayout
+        android:id="@+id/no_invitations_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -20,6 +21,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/loading_invitations"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:gravity="center"
@@ -34,13 +36,11 @@
             android:text="@string/loading_invitations"/>
     </LinearLayout>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:visibility="visible"/>
-
 
 </LinearLayout>

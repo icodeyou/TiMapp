@@ -7,20 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.entities.PlacesInvitation;
+import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.views.AutoResizeTextView;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.SimpleTimerView;
+import com.timappweb.timapp.views.PlaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,68 +29,21 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean isTagsVisible;
     private boolean footerActive;
 
-    private List<Place> data;
+    private List<PlacesInvitation> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
-
-    private class VIEW_TYPES {
-        public static final int NORMAL = 1;
-        public static final int FOOTER = 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-
-        if(isPositionFooter(position))
-            return VIEW_TYPES.FOOTER;
-        else
-            return VIEW_TYPES.NORMAL;
-
-    }
-
-    private boolean isPositionFooter(int position) {
-        return position == data.size() && footerActive;
-    }
 
     public InvitationsAdapter(Context context) {
         data = new ArrayList<>();
         this.context = context;
-        this.footerActive = false;
-        this.isTagsVisible = true;
-    }
-
-    public InvitationsAdapter(Context context, boolean footerActive, boolean isTagsVisible) {
-        data = new ArrayList<>();
-        this.context = context;
-        this.footerActive = footerActive;
-        this.isTagsVisible = isTagsVisible;
-    }
-
-    public InvitationsAdapter(Context context, boolean isTagsVisible, int colorRes) {
-        data = new ArrayList<>();
-        this.context = context;
-        this.footerActive = false;
-        this.isTagsVisible = isTagsVisible;
-        this.colorRes = colorRes;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v;
 
-        switch (viewType)
-        {
-            case VIEW_TYPES.NORMAL:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_place, viewGroup, false);
-                return new PlacesViewHolder(v);
-            case VIEW_TYPES.FOOTER:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.explore_places_button, viewGroup, false);
-                return new FooterPlacesViewHolder(v);
-            default:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.layout_place, viewGroup, false);
-                return new PlacesViewHolder(v);
-        }
-
+        v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_invitation, viewGroup, false);
+        return new PlacesViewHolder(v);
 
     }
 
@@ -101,49 +51,16 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
         if(baseHolder instanceof PlacesViewHolder) {
             PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
-            Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
-            final Place place = data.get(position);
+            Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
+            final PlacesInvitation placeInvitation = data.get(position);
+            
+            holder.invitorName.setText(placeInvitation.getUser().getUsername());
+            holder.placeView.setPlace(placeInvitation.place);
 
-            //Set texts
-            holder.tvTime.setText(place.getTime());
-            holder.tvLocation.setText(place.name);
-            initTimer(place, holder.tvCountPoints);
-
-            Category category = null;
-            try {
-                //Category Icon
-                category = MyApplication.getCategoryById(place.category_id);
-                holder.categoryIcon.setImageResource(category.getIconWhiteResId());
-                MyApplication.setCategoryBackground(holder.categoryIcon, place.getLevel());
-
-                //Place background
-                if (colorRes == -1) {
-                    holder.parentLayout.setVisibility(View.VISIBLE);
-                    holder.parentLayout.setImageResource(category.getSmallImageResId());
-                    holder.colorBackground.setBackgroundResource(R.color.background_place);
-                } else {
-                    holder.parentLayout.setVisibility(View.GONE);
-                    holder.colorBackground.setBackgroundResource(colorRes);
-                }
-            } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no category found for id : " + place.category_id);
-            }
-
-            if (isTagsVisible) {
-                //Set the adapter for RV
-                HorizontalTagsAdapter htAdapter = holder.rvPlaceTags.getAdapter();
-                htAdapter.setData(place.tags);
-
-                holder.gradientBottomView.setVisibility(View.VISIBLE);
-            } else {
-                holder.rvPlaceTags.setVisibility(View.GONE);
-                holder.gradientBottomView.setVisibility(View.GONE);
-            }
-
-            //Listener Horizontal Scroll View
+            //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                     new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            holder.rvPlaceTags.setOnTouchListener(mHorizontalTagsTouchListener);
+            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
         }
     }
 
@@ -156,40 +73,27 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private void initTimer(Place place, final SimpleTimerView tvCountPoints) {
-        int initialTime = place.getPoints();
-        tvCountPoints.initTimer(initialTime*1000);
-    }
-
-    public void add(Place place) {
-        this.data.add(place);
+    public void add(PlacesInvitation placesInvitation) {
+        this.data.add(placesInvitation);
         notifyDataSetChanged();
     }
 
-    public void setData(List<Place> places) {
-        this.data = places;
+    public void setData(List<PlacesInvitation> placesInvitations) {
+        this.data = placesInvitations;
         notifyDataSetChanged();
     }
 
-    public List<Place> getData() {
+    public List<PlacesInvitation> getData() {
         return data;
     }
 
-    public Place getItem(int position) {
+    public PlacesInvitation getItem(int position) {
         return data.get(position);
     }
 
     public void clear() {
         data.clear();
         notifyDataSetChanged();
-    }
-
-
-    public void generateDummyData() {
-        Place dummyPlace = Place.createDummy();
-        add(dummyPlace);
-        Place dummyPlace2 = Place.createDummy();
-        add(dummyPlace2);
     }
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
@@ -199,27 +103,16 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class PlacesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        private final View colorBackground;
-        private final AutoResizeTextView tvLocation;
-        private final TextView tvTime;
-        private final HorizontalTagsRecyclerView rvPlaceTags;
-        private final ImageView categoryIcon;
-        private final ImageView parentLayout;
-        private final SimpleTimerView tvCountPoints;
-        private final View gradientBottomView;
+        PlaceView placeView;
+        TextView invitorName;
+        HorizontalTagsRecyclerView horizontalTagsRv;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            colorBackground = itemView.findViewById(R.id.parent_layout_place);
-            tvLocation = (AutoResizeTextView) itemView.findViewById(R.id.title_place);
-            tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.places_points);
-            tvTime = (TextView) itemView.findViewById(R.id.time_place);
-            rvPlaceTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
-            categoryIcon = (ImageView) itemView.findViewById(R.id.image_category_place);
-            parentLayout = (ImageView) itemView.findViewById(R.id.background_place);
-            gradientBottomView = itemView.findViewById(R.id.bottom_gradient);
-
+            placeView = (PlaceView) itemView.findViewById(R.id.place_view);
+            invitorName = (TextView) itemView.findViewById(R.id.name_invitor);
+            horizontalTagsRv = placeView.getRvPlaceTags();
         }
 
         @Override

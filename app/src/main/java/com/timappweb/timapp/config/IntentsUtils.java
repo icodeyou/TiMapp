@@ -178,7 +178,7 @@ public class IntentsUtils {
         return intent;
     }
 
-    public static void viewPlaceFromMap(Context context, Place place) {
+    public static void viewSpecifiedPlace(Context context, Place place) {
         context.startActivity(buildIntentViewPlace(context, place));
     }
 

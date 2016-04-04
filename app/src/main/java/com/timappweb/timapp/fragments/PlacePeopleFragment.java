@@ -75,7 +75,6 @@ public class PlacePeopleFragment extends BaseFragment {
 
         load();
 
-
         placeActivity.notifyFragmentsLoaded();
 
         return root;

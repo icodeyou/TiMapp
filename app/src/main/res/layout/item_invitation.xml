@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/name_invitor"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingRight="30dp"
+        android:paddingLeft="30dp"
+        android:singleLine="true"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_normal"
+        android:text="Jack Overfield" />
+
+    <com.timappweb.timapp.views.PlaceView
+        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+        android:id="@+id/place_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        myattrs:tags_visible="true"
+        myattrs:bottom_shadow="true"
+        myattrs:top_shadow="false"/>
+
+</LinearLayout>

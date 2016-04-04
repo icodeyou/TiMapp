@@ -79,8 +79,8 @@
     <dimen name="width_pic_card">58dp</dimen>
     <dimen name="width_checkbox_card">62dp</dimen>
     <dimen name="upload_tags_margin">25dp</dimen>
-    <dimen name="height_top_gradient_view">12dp</dimen>
-    <dimen name="height_bottom_gradient_view">4dp</dimen>
+    <dimen name="height_top_gradient_view">4dp</dimen>
+    <dimen name="height_bottom_gradient_view">10dp</dimen>
     <dimen name="default_progressview">50dp</dimen>
     <dimen name="padding_zoom_fit_cluster">50dp</dimen>
 

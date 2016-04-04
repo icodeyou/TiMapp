@@ -17,6 +17,11 @@ public class PlacesInvitation implements PlaceUserInterface {
     public int modified;
     public PlacesInvitationStatus status;
 
+    public PlacesInvitation(Place place, User user) {
+        this.place = place;
+        this.user_target = user;
+    }
+
     @SerializedName("place")
     public Place place;
 

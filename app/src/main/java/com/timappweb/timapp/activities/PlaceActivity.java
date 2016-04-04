@@ -138,8 +138,6 @@ public class PlaceActivity extends BaseActivity {
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
-        initLocationListener();
-        setClickListeners();
 
         if (place != null){
             placeId = place.id;
@@ -148,6 +146,9 @@ public class PlaceActivity extends BaseActivity {
         else{
             loadPlace(placeId);
         };
+
+        initLocationListener();
+        setClickListeners();
     }
 
     @Override

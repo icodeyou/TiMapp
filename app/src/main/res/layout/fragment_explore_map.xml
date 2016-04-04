@@ -56,13 +56,13 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/plus_button_white"
-        android:layout_above="@+id/places_viewer"/>
+        android:layout_above="@+id/place_view"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/places_viewer"
+    <com.timappweb.timapp.views.PlaceView
+        android:id="@+id/place_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_alignBottom="@+id/map"/>
+        android:layout_alignBottom="@+id/map"
+        android:visibility="gone"/>
 
 </RelativeLayout>

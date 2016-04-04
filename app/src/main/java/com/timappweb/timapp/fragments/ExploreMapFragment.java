@@ -1,22 +1,14 @@
 package com.timappweb.timapp.fragments;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
@@ -42,15 +34,14 @@ import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.listeners.OnItemViewRendered;
 import com.timappweb.timapp.map.PlaceClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.MyLocationProvider;
-import com.timappweb.timapp.utils.TimeTaskCallback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+import com.timappweb.timapp.views.PlaceView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +60,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     //Views
     private View root;
-    private RecyclerView placesViewer;
+    private PlaceView placeView;
     private PlacesAdapter placesAdapter;
     private View progressView;
     private HorizontalTagsRecyclerView filterTagsRv;
@@ -87,7 +78,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     @Override
     public void onTabSelected() {
         Log.d(TAG, "ExploreMapFragment is now selected");
-        //drawerActivity.updateFabPosition(placesViewer);
+        //drawerActivity.updateFabPosition(placeView);
     }
 
     public AreaRequestHistory getHistory() {
@@ -127,11 +118,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
-        placesViewer = (RecyclerView) root.findViewById(R.id.places_viewer);
+        placeView = (PlaceView) root.findViewById(R.id.place_view);
         addSpotFloatingButton = (FloatingActionButton) root.findViewById(R.id.fab);
 
         setListeners();
-        initPlaceAdapter();
 
 
         if (savedInstanceState == null){
@@ -181,22 +171,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         });*/
     }
 
-    private void initPlaceAdapter() {
-        //RV
-        placesViewer.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //Adapter
-        placesAdapter = new PlacesAdapter(drawerActivity, false, false);
-        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                Place place = placesAdapter.getItem(position);
-                IntentsUtils.viewPlaceFromMap(getActivity(), place);
-            }
-        });
-        placesViewer.setAdapter(placesAdapter);
-    }
-
     public void setLoaderVisibility(boolean bool) {
         if(progressView!=null) {
             if(bool) {
@@ -209,14 +183,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void displayPlace(Place place) {
-        placesAdapter.clear();
-        placesAdapter.add(place);
+        placeView.setPlace(place);
+        placeView.setVisibility(View.VISIBLE);
     }
 
 
     public void hidePlace() {
-        placesAdapter.clear();
-        placesAdapter.notifyDataSetChanged();
+        placeView.setVisibility(View.GONE);
     }
 
 
@@ -239,7 +212,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             @Override
             public void onClick(int position) {
                 Place place = placesAdapter.getItem(position);
-                IntentsUtils.viewPlaceFromMap(getActivity(), place);
+                IntentsUtils.viewSpecifiedPlace(getActivity(), place);
             }
         });*/
 
@@ -389,7 +362,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Place place = (Place) markerValue;
         if(placesAdapter.getData().size()!=0 && placesAdapter.getItem(0)==place) {
-            IntentsUtils.viewPlaceFromMap(getActivity(), place);
+            IntentsUtils.viewSpecifiedPlace(getActivity(), place);
         } else {
             displayPlace(place);
         }

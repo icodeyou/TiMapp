@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
@@ -100,7 +99,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                IntentsUtils.viewPlaceFromMap(getContext(), placesAdapter.getItem(position));
+                IntentsUtils.viewSpecifiedPlace(getContext(), placesAdapter.getItem(position));
             }
         });
     }
