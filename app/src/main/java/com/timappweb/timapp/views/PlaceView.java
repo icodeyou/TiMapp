@@ -34,6 +34,7 @@ public class PlaceView extends RelativeLayout{
     private boolean                     isTagsVisible = false;
     private boolean                     isBottomShadow = false;
     private boolean                     isTopShadow = false;
+    private Place                       place;
 
     public PlaceView(Context context) {
         super(context);
@@ -77,6 +78,8 @@ public class PlaceView extends RelativeLayout{
     }
 
     public void setPlace(Place place) {
+        this.place = place;
+
         //Date
         tvTime.setText(place.getTime());
 
@@ -135,5 +138,9 @@ public class PlaceView extends RelativeLayout{
         } else {
             rvPlaceTags.setVisibility(GONE);
         }
+    }
+
+    public Place getPlace() {
+        return place;
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sromku.simple.fb.actions.GetNotificationsAction;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.cache.CacheData;
@@ -141,9 +142,11 @@ public class PlaceTagsFragment extends BaseFragment {
         if(visibility) {
             progressView.setVisibility(View.VISIBLE);
             rvTags.setVisibility(View.GONE);
+            noConnectionView.setVisibility(View.GONE);
         } else {
             progressView.setVisibility(View.GONE);
             rvTags.setVisibility(View.VISIBLE);
+            noConnectionView.setVisibility(View.GONE);
         }
     }
 

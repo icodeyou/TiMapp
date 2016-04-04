@@ -163,7 +163,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (exploreFragment != null){
             ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
             if (exploreFragment.getFragmentSelected() instanceof ExploreMapFragment
-                    && exploreMapFragment.isPlacesViewerVisible()) {
+                    && exploreMapFragment.isPlaceViewVisible()) {
                 exploreMapFragment.hidePlace();
             }
             else{

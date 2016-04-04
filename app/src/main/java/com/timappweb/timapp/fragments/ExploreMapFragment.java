@@ -61,7 +61,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     //Views
     private View root;
     private PlaceView placeView;
-    private PlacesAdapter placesAdapter;
     private View progressView;
     private HorizontalTagsRecyclerView filterTagsRv;
     private View filterTagsContainer;
@@ -189,7 +188,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
 
     public void hidePlace() {
-        placeView.setVisibility(View.GONE);
+        placeView.setVisibility(View.INVISIBLE);
     }
 
 
@@ -208,13 +207,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
 
     private void initListeners() {
-        /*placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+        placeView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(int position) {
-                Place place = placesAdapter.getItem(position);
+            public void onClick(View v) {
+                Place place = placeView.getPlace();
                 IntentsUtils.viewSpecifiedPlace(getActivity(), place);
             }
-        });*/
+        });
 
         filterTagsRv.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -361,7 +360,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Place place = (Place) markerValue;
-        if(placesAdapter.getData().size()!=0 && placesAdapter.getItem(0)==place) {
+        if(isPlaceViewVisible() && placeView.getPlace()==place) {
             IntentsUtils.viewSpecifiedPlace(getActivity(), place);
         } else {
             displayPlace(place);
@@ -386,8 +385,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         });
     }
 
-    public boolean isPlacesViewerVisible() {
-        return placesAdapter.getItemCount()!=0;
+    public boolean isPlaceViewVisible() {
+        return placeView.getVisibility()==View.VISIBLE;
     }
 
 

@@ -204,9 +204,11 @@ public class PlacePicturesFragment extends Fragment {
         if(visibility) {
             progressView.setVisibility(View.VISIBLE);
             picturesRv.setVisibility(View.GONE);
+            noPicView.setVisibility(View.GONE);
         } else {
             progressView.setVisibility(View.GONE);
             picturesRv.setVisibility(View.VISIBLE);
+            noPicView.setVisibility(View.GONE);
         }
     }
 

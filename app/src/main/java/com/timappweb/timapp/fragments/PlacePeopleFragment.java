@@ -259,9 +259,11 @@ public class PlacePeopleFragment extends BaseFragment {
         if(visibility) {
             progressView.setVisibility(View.VISIBLE);
             peopleRv.setVisibility(View.GONE);
+            noConnectionView.setVisibility(View.GONE);
         } else {
             progressView.setVisibility(View.GONE);
             peopleRv.setVisibility(View.VISIBLE);
+            noConnectionView.setVisibility(View.GONE);
         }
     }
 }
