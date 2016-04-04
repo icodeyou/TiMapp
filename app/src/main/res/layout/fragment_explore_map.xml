@@ -56,8 +56,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/plus_button_white"
-        android:layout_alignParentBottom="true"
-        android:layout_above="@+id/place_view"/>
+        android:layout_above="@+id/place_view"
+        android:layout_alignWithParentIfMissing="true"/>
 
     <com.timappweb.timapp.views.PlaceView
         xmlns:myattrs="http://schemas.android.com/tools"

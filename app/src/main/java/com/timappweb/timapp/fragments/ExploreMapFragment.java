@@ -188,7 +188,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
 
     public void hidePlace() {
-        placeView.setVisibility(View.INVISIBLE);
+        placeView.setVisibility(View.GONE);
     }
 
 
