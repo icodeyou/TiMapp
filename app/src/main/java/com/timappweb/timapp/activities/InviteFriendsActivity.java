@@ -196,7 +196,7 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void onSendInviteSuccess(){
-        int notificationId = NotificationFactory.invite(this, MyApplication.getCurrentUser(), this.place);
+        //int notificationId = NotificationFactory.invite(this, MyApplication.getCurrentUser(), this.place);
         NavUtils.navigateUpFromSameTask(this);
     }
 
