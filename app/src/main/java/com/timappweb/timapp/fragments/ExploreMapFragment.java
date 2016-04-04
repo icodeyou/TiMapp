@@ -422,14 +422,14 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         Log.i(TAG, "Setting up cluster!");
 
         // Initialize the manager with the context and the map.
-        mClusterManagerPost = new ClusterManager<Place>(getActivity(), gMap);
+        mClusterManagerPost = new ClusterManager<>(getActivity(), gMap);
         mClusterManagerPost.setRenderer(new PlaceClusterRenderer(getActivity(), gMap, mClusterManagerPost));
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Place>() {
             @Override
             public boolean onClusterClick(Cluster<Place> cluster) {
 
-                // If zoom level is too big, go to list
-                if (currentZoomLevel > gMap.getMaxZoomLevel() - 1){
+                // If zoom level is too big, go to list (TODO global parameter)
+                if (currentZoomLevel > gMap.getMaxZoomLevel() - 2){
                     ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                     return true;
                 }
@@ -446,6 +446,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
                 gMap.animateCamera(cameraUpdate);
 
+                hidePlace();
                 //gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
                 //((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                 return true;
