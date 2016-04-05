@@ -19,20 +19,23 @@ import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceUsersAdapter extends MultipleSectionAdapter<PlaceUserInterface, PlaceUsersAdapter.PlacePeopleViewHolder> {
+public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
     private static final String TAG = "PlaceUsersAdapter";
 
-    OnItemAdapterClickListener mItemClickListener;
-    Context context;
+    private OnItemAdapterClickListener mItemClickListener;
+    private Context context;
+    private List<PlaceUserInterface> data;
 
     //Constructor
     public PlaceUsersAdapter(Context context) {
         super();
         this.context = context;
+        this.data = new ArrayList<>();
     }
 
     @Override
@@ -47,7 +50,7 @@ public class PlaceUsersAdapter extends MultipleSectionAdapter<PlaceUserInterface
     @Override
     public void onBindViewHolder(PlacePeopleViewHolder holder, final int position) {
         Log.d(TAG, "::onBindViewHolder() -> " + position);
-        PlaceUserInterface placeUserInterface = this.get(position);
+        PlaceUserInterface placeUserInterface = data.get(position);
         User user = placeUserInterface.getUser();
         RecyclerView rvPostTags = holder.rvPostTags;
 
@@ -81,6 +84,32 @@ public class PlaceUsersAdapter extends MultipleSectionAdapter<PlaceUserInterface
             GridLayoutManager manager_savedTags = new GridLayoutManager(context, 1, LinearLayoutManager.HORIZONTAL, false);
             rvPostTags.setLayoutManager(manager_savedTags);
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+    public PlaceUserInterface getData(int position) {
+        return data.get(position);
+    }
+
+    public void addData(PlaceUserInterface placeUserInterface) {
+        data.add(placeUserInterface);
+        notifyDataSetChanged();
+    }
+
+    public void addData(List<PlaceUserInterface> placeUserInterfaces) {
+        for(PlaceUserInterface p : placeUserInterfaces) {
+            data.add(p);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
     }
 
 
