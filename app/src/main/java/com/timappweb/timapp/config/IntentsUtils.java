@@ -143,7 +143,7 @@ public class IntentsUtils {
     public static void addPostStepLocate(Context context) {
         if (!requireLogin(context))
             return;
-        if (!CacheData.isAllowedToAddPlace()){
+        if (!CacheData.isAllowedToAddPost()){
             Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
@@ -194,7 +194,7 @@ public class IntentsUtils {
     public static void addPlace(Context context) {
         if (!requireLogin(context))
             return;
-        if (!CacheData.isAllowedToAddPlace()){
+        if (!CacheData.isAllowedToAddPost()){
             Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }

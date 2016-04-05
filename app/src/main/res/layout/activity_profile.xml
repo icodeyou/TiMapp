@@ -246,7 +246,6 @@
             android:layout_marginTop="45dp"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:scaleType="centerCrop"
             app:border="false"
             app:shadow="false"/>
     </RelativeLayout>

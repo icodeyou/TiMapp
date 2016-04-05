@@ -51,7 +51,13 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         // TODO update picasso if new release > 2.5.2 to fix this bug
         // https://github.com/square/picasso/issues/881
         //Picasso.with(context).load(fullUrl).fit().centerCrop().into(pictureViewHolder.ivPicture);
-        Picasso.with(context).load(fullUrl).into(pictureViewHolder.ivPicture);
+        Picasso.with(context)
+                .load(fullUrl)
+                .centerCrop()
+                .resize(pictureViewHolder.ivPicture.getMeasuredWidth(), pictureViewHolder.ivPicture.getMeasuredHeight())
+                .error(R.drawable.placeholder_profile_error)
+                .placeholder(R.drawable.placeholder_profile)
+                .into(pictureViewHolder.ivPicture);
     }
 
     @Override
