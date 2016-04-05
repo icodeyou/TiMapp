@@ -15,6 +15,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PlaceUsersAdapter;
+import com.timappweb.timapp.adapters.PlaceUsersHeaderAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlaceUserInterface;
@@ -93,7 +94,6 @@ public class PlacePeopleFragment extends BaseFragment {
         place = placeActivity.getPlace();
         placeId = placeActivity.getPlaceId();
 
-
         //Views
         mainButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
@@ -113,26 +113,27 @@ public class PlacePeopleFragment extends BaseFragment {
 
     private void initAdapter() {
         //Construct Adapter
-        placeUsersAdapter = new PlaceUsersAdapter(context);
+        placeUsersAdapter = new PlaceUsersHeaderAdapter(context);
         placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 Log.v(TAG, "Accessing position: " + position);
-                PlaceUserInterface user = placeUsersAdapter.get(position);
+                PlaceUserInterface user = placeUsersAdapter.getData(position);
                 Log.d(TAG, "Viewing profile user: " + user.getUser());
                 IntentsUtils.profile(placeActivity, user.getUser());
             }
         });
-        placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
-        placeUsersAdapter.create(UserPlaceStatus.COMING, getResources().getString(R.string.header_coming));
-        placeUsersAdapter.create(UserPlaceStatus.INVITED, getResources().getString(R.string.header_invited));
+        //placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
+        //placeUsersAdapter.create(UserPlaceStatus.COMING, getResources().getString(R.string.header_coming));
+        //placeUsersAdapter.create(UserPlaceStatus.INVITED, getResources().getString(R.string.header_invited));
 
-        mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
+        /*mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
                 context,
                 R.layout.header_place_people,
                 R.id.text_header_place_people,
-                placeUsersAdapter);
-        peopleRv.setAdapter(mSectionedAdapter);
+                placeUsersAdapter);*/
+
+        peopleRv.setAdapter(placeUsersAdapter);
     }
 
     public void load() {
@@ -223,23 +224,26 @@ public class PlacePeopleFragment extends BaseFragment {
 
 
     private void notifyPostsLoaded(List<Post> items) {
-        placeUsersAdapter.add("post", items);
-        notifyDataChanged();
+        //placeUsersAdapter.add("post", items);
+        //notifyDataChanged();
+        for(PlaceUserInterface p : items) {
+            placeUsersAdapter.addData(p);
+        }
     }
     private void notifyUsersStatusLoaded(UserPlaceStatus status, List<UserPlace> items) {
-        placeUsersAdapter.add(status, items);
-        notifyDataChanged();
+        //placeUsersAdapter.add(status, items);
+        //notifyDataChanged();
+        for(PlaceUserInterface p : items) {
+            placeUsersAdapter.addData(p);
+        }
     }
     private void notifyUserInvitedLoaded(List<PlacesInvitation> items) {
         Log.d(TAG, "Adding " + items.size() + " invitation(s)");
-        placeUsersAdapter.add(UserPlaceStatus.INVITED, items);
-        notifyDataChanged();
-    }
-
-    private void notifyDataChanged(){
-        Log.d(TAG, "Adapter size: " + placeUsersAdapter.getItemCount());
-        placeUsersAdapter.notifyDataSetChanged();
-        mSectionedAdapter.setSections(placeUsersAdapter.buildSections());
+        //placeUsersAdapter.add(UserPlaceStatus.INVITED, items);
+        //notifyDataChanged();
+        for(PlaceUserInterface p : items) {
+            placeUsersAdapter.addData(p);
+        }
     }
 
     public void updateBtnVisibility() {

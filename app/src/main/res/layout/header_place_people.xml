@@ -7,8 +7,30 @@
     android:gravity="center"
     android:layout_marginTop="10dp"
     android:singleLine="true"
-    android:textColor="@color/white"
+    android:textColor="@color/red"
     android:text="Test header"
     android:textSize="@dimen/text_normal"
     android:textStyle="bold"
     android:background="@color/transparent" />
+
+<!--
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/text_header_place_people"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:text="Test header"
+        android:textSize="@dimen/text_normal"
+        android:textStyle="bold"
+        android:background="@color/transparent" />
+</LinearLayout>
+-->
+
