@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:background="@color/background">
 
@@ -18,19 +18,20 @@
     <RelativeLayout
         android:id="@+id/no_events_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:visibility="gone">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:alpha="0.15"
+            android:alpha="0.1"
             android:src="@drawable/desert" />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:padding="10dp"
+            android:layout_height="@dimen/height_big_header"
+            android:gravity="center"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
@@ -52,32 +53,16 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_places"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:footerDividersEnabled="false"
         android:divider="@drawable/top_place_rv"
         android:dividerHeight="7dp"/>
 
-    <LinearLayout
-        android:id="@+id/new_event_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_bottom_button"
-        android:layout_gravity="center"
-        android:background="@drawable/background_button_littlesquare">
-        <TextView
-            android:id="@+id/text_save_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingRight="30dp"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/text_button"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:text="@string/button_add_place"
-            android:gravity="center"
-            android:textSize="@dimen/text_big"/>
-    </LinearLayout>
+    <include layout="@layout/fab_button"
+        android:id="@+id/fab"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -51,7 +51,7 @@
 
     <!-- Nav -->
     <string name="nav_explore">Explore</string>
-    <string name="nav_tag_around">Tag around</string>
+    <string name="nav_tag_around">Add event</string>
     <string name="nav_my_friends">My friends</string>
     <string name="nav_my_invitations">My invitations</string>
     <string name="nav_share">Get more friends</string>

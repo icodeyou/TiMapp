@@ -13,11 +13,13 @@
 
     <TextView
         android:id="@id/text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:background="@drawable/background_cluster_text"
+        android:textColor="@color/text_cluster"
         android:textStyle="bold"
-        android:textSize="35dp"
+        android:textSize="23dp"
         android:text="19"
         android:textAppearance="@style/Bubble.TextAppearance.Light"
         android:paddingLeft="@dimen/map_icon_padding"

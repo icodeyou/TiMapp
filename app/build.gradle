@@ -30,6 +30,7 @@ android {
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -71,7 +72,7 @@ dependencies {
     //compile 'com.google.android.gms:play-services:8.4.0'
 
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
-    compile 'com.github.greenfrvr:hashtag-view:1.2.1'
+    compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.sromku:simple-fb:4.1.1'
     compile 'com.github.boxme:squarecamera:1.1.0'

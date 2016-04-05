@@ -23,7 +23,7 @@
     <LinearLayout
         android:id="@+id/loading_invitations"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/height_big_header"
         android:gravity="center"
         android:orientation="vertical">
         <include layout="@layout/progressview"

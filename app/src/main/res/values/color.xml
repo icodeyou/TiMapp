@@ -30,8 +30,11 @@
     <color name="usertag_text_color">#de5249</color>
     <color name="divider_listview">#db9f9b</color>
     <color name="text_place">#ffffff</color>
-    <color name="background_cluster">#cad5dd</color>
-    <color name="background_cluster_dark">#9fc0d7</color>
+    <color name="background_cluster">#b41e41</color>
+    <color name="background_cluster_transparent">#9eb41e41</color>
+    <color name="text_cluster">@color/white</color>
+    <!--<color name="background_cluster">#d1d1d1</color>
+    <color name="text_cluster">#b41e41</color>-->
 
     <!-- Buttons -->
     <color name="background_top_invitation">#d6d6d6</color>

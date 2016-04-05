@@ -3,7 +3,6 @@ package com.timappweb.timapp.fragments;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
-import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.MarkerValueInterface;
@@ -71,7 +69,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private ExploreFragment exploreFragment;
     private DrawerActivity drawerActivity;
-    private FloatingActionButton addSpotFloatingButton;
+    private View newEventbutton;
     //private EachSecondTimerTask eachSecondTimerTask;
 
     @Override
@@ -118,7 +116,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         placeView = (PlaceView) root.findViewById(R.id.place_view);
-        addSpotFloatingButton = (FloatingActionButton) root.findViewById(R.id.fab);
+        newEventbutton = root.findViewById(R.id.fab);
 
         setListeners();
 
@@ -139,7 +137,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void setListeners() {
         Log.d(TAG, "Init add_spot_button button");
-        addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
+        newEventbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.addPostStepLocate(drawerActivity);

@@ -45,7 +45,8 @@
             myattrs:tags_visible="false"
             myattrs:bottom_shadow="false"
             myattrs:top_shadow="false"
-            myattrs:background_color="@color/transparent"/>
+            myattrs:background_color="@color/transparent"
+            android:visibility="gone"/>
 
         <!--<View
             android:layout_width="match_parent"

@@ -469,6 +469,7 @@ public class PlaceActivity extends BaseActivity {
 
     private void notifyPlaceLoaded() {
         progressView.setVisibility(View.GONE);
+        placeView.setVisibility(View.VISIBLE);
         try {
             Category category = MyApplication.getCategoryById(place.category_id);
             ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);

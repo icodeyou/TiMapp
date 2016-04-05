@@ -178,6 +178,7 @@
         <!-- PUBLISH ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.PublishActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing|stateHidden"
             android:parentActivityName=".activities.TagActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

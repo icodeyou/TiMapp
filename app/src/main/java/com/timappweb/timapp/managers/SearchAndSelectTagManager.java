@@ -81,7 +81,6 @@ public class SearchAndSelectTagManager {
     }
 
     public void setSuggestedData(List<Tag> tags) {
-        //TODO : probleme pour FilterActivity, meme si les tags sont okay.
         suggestedRecyclerView.setData(tags);
         horizontalAdapter.notifyDataSetChanged();
     }

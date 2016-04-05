@@ -211,8 +211,7 @@
                     android:id="@+id/layout_tags_profile"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:alpha="0.7"
-                    android:background="@color/colorSecondary"/>
+                    android:alpha="0.7"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -247,6 +246,7 @@
             android:layout_marginTop="45dp"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
+            android:scaleType="centerCrop"
             app:border="false"
             app:shadow="false"/>
     </RelativeLayout>

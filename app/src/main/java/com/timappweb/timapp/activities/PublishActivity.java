@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,7 +18,9 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.ColorPublishButtonRadiusOnTouchListener;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -26,6 +29,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.PlaceView;
+
+import java.util.List;
 
 import retrofit2.Call;
 
@@ -74,8 +79,10 @@ public class PublishActivity extends BaseActivity{
         textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
         textButton2 = (TextView) findViewById(R.id.text_confirm_button2);
 
+        initButtonAnimation();
         initPlaceView();
         initAdapters();
+        initClickSelectedTag();
         setListeners();
         setCheckbox();
 
@@ -92,8 +99,19 @@ public class PublishActivity extends BaseActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        IntentsUtils.addPostStepTags(this, currentPlace, currentPost);
+    }
+
     //----------------------------------------------------------------------------------------------
     //Private methods
+    private void initButtonAnimation() {
+        AlphaAnimation anim = new AlphaAnimation(0, 1);
+        anim.setDuration(1000);
+        confirmButton.startAnimation(anim);
+    }
+
     private void initPlaceView() {
         placeView.setPlace(currentPlace);
     }
@@ -101,6 +119,20 @@ public class PublishActivity extends BaseActivity{
     private void initAdapters() {
         HorizontalTagsAdapter selectedTagsAdapter = selectedTagsRV.getAdapter();
         selectedTagsAdapter.setData(currentPost.getTags());
+    }
+
+    private void initClickSelectedTag() {
+        final Activity activity = this;
+        selectedTagsRV.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d(TAG, "Clicked on selected item at position : " + position);
+                List<Tag> tagList = currentPost.getTags();
+                tagList.remove(position);
+                currentPost.setTags(tagList);
+                IntentsUtils.addPostStepTags(activity, currentPlace, currentPost);
+            }
+        });
     }
 
     private void setCheckbox() {

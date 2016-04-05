@@ -123,10 +123,6 @@ public class LocateActivity extends BaseActivity{
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!CacheData.isAllowedToAddPlace()) {
-                    Toast.makeText(getApplicationContext(), R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 IntentsUtils.addPlace(that);
                 //buttonAddPlace.setEnabled(false);
             }
