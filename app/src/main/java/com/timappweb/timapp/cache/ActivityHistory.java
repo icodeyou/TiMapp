@@ -2,8 +2,8 @@ package com.timappweb.timapp.cache;
 
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
+import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.database.models.UserActivity;
-import com.timappweb.timapp.database.models.ActionType;
 
 
 /**
@@ -22,34 +22,34 @@ public class ActivityHistory {
         return inst;
     }
 
-    public UserActivity add(ActionType.ActionTypeName type){
+    public UserActivity add(QuotaType.ActionTypeName type){
         UserActivity userActivity = new UserActivity(type);
         userActivity.save();
         return userActivity;
     }
 
-    public UserActivity getLast(ActionType type){
+    public UserActivity getLast(QuotaType type){
         Model res = new Select()
                 .from(UserActivity.class)
-                .where("ActionType = ?", type)
+                .where("QuotaType = ?", type)
                 .orderBy("date_created DESC")
                 .executeSingle();
         return (UserActivity) res;
     }
 
-    public UserActivity getCurrentQuota(ActionType type){
+    public UserActivity getCurrentQuota(QuotaType type){
         Model res = new Select()
                 .from(UserActivity.class)
-                .where("ActionType = ?", type)
+                .where("QuotaType = ?", type)
                 .orderBy("date_created DESC")
                 .executeSingle();
         return (UserActivity) res;
     }
 
-    public boolean checkQuota(ActionType type){
+    public boolean checkQuota(QuotaType type){
         Model res = new Select()
                 .from(UserActivity.class)
-                .where("ActionType = ?", type)
+                .where("QuotaType = ?", type)
                 .orderBy("date_created DESC")
                 .executeSingle();
         return false;

@@ -95,13 +95,38 @@
 
     <LinearLayout
         android:id="@+id/button_add_spot"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_bottom_button"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:background="@drawable/background_button_littlesquare"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/text_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/text_button"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:text="@string/button_add_place"
+            android:gravity="center"
+            android:textSize="@dimen/text_big"/>
+    </LinearLayout>
+
+    <!--TOP RADIUS BUTTON -->
+    <!--<LinearLayout
+        android:id="@+id/button_add_spot"
         android:layout_width="250dp"
         android:layout_height="@dimen/height_bottom_button"
         android:layout_marginTop="@dimen/margin_square_button"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:background="@color/transparent"
-        android:visibility="gone">
+        android:visibility="visible">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -120,7 +145,7 @@
                 android:textSize="@dimen/text_big"
                 android:textColor="@color/text_button"/>
         </LinearLayout>
-    </LinearLayout>
+    </LinearLayout>-->
 
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />

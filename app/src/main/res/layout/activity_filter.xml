@@ -100,7 +100,7 @@
             android:textAllCaps="false"
             android:text="@string/search_button"
             android:gravity="center"
-            android:textSize="@dimen/text_normal"/>
+            android:textSize="@dimen/text_big"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

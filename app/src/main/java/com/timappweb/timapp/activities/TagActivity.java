@@ -1,22 +1,23 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.adapters.DataTransformTag;
-import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -31,6 +32,7 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.PlaceView;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class TagActivity extends BaseActivity{
 
@@ -41,6 +43,7 @@ public class TagActivity extends BaseActivity{
     private View progressBarView;
     private PlaceView placeView;
     private Place currentPlace = null;
+    private View progressEndView;
 
     // @Bind(R.id.hashtags1)
     protected HashtagView suggestedTagsView;
@@ -62,7 +65,7 @@ public class TagActivity extends BaseActivity{
             IntentsUtils.addPostStepLocate(this);
             return;
         }
-        
+
         setContentView(R.layout.activity_tag);
         this.initToolbar(false);
 
@@ -71,23 +74,21 @@ public class TagActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressBarView = findViewById(R.id.progress_view);
+        progressEndView = findViewById(R.id.progress_end);
         placeView = (PlaceView) findViewById(R.id.place_view);
 
-
         initPlaceView();
+        initHorizontalAdapter();
         initClickSelectedTag();
-
-        setSelectedTagsViewGone();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (searchAndSelectTagManager != null){
-            //Clear list of tags in case back button is pressed in PublishActivity
-            searchAndSelectTagManager.resetSelectedTags();
-            actionCounter();
+    private void initHorizontalAdapter() {
+        List<Tag> tagList = currentPost.getTags();
+        int numberTags = tagList.size();
+        if(numberTags == 3) {
+            tagList.remove(numberTags - 1);
         }
+        selectedTagsRV.getAdapter().setData(tagList);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class TagActivity extends BaseActivity{
                     searchView.setQuery(query, true);
                 }
             case R.id.home:
-                //NavUtils.navigateUpFromSameTask(this);//May be necessary To have a colored home button
+                NavUtils.navigateUpFromSameTask(this);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -153,7 +154,8 @@ public class TagActivity extends BaseActivity{
                 Tag tag = (Tag) item;
 
                 //TODO STEPH : Enlever l'item de la liste pour de vrai. Pas pour de faux comme ci dessous. Bah oui. Petit escroc.
-                suggestedTagsView.removeItem(item);
+                boolean success = suggestedTagsView.removeItem(item);
+                Log.d(TAG, "removing item success : "+ success);
 
                 searchView.setQuery(tag.name, true);
                 searchView.clearFocus();
@@ -168,6 +170,8 @@ public class TagActivity extends BaseActivity{
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Clicked on selected item");
+                Tag tag = selectedTagsRV.getAdapter().getData(position);
+                suggestedTagsView.addItem(tag);
                 selectedTagsRV.getAdapter().removeData(position);
                 actionCounter();
             }
@@ -194,9 +198,13 @@ public class TagActivity extends BaseActivity{
                 searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
                 break;
             case 3:
-                currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
                 searchView.clearFocus();
-                IntentsUtils.addPostStepPublish(this, this.currentPlace, currentPost);
+                suggestedTagsView.setVisibility(View.GONE);
+                progressEndView.setVisibility(View.VISIBLE);
+                currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
+                IntentsUtils.addPostStepPublish(this, currentPlace, currentPost);
+                break;
+
             default:
                 break;
         }

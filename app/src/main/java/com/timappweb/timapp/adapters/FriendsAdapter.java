@@ -65,7 +65,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         }
 
         //User pic
-        Picasso.with(context).load(friend.getProfilePictureUrl()).into(friendViewHolder.personPhoto);
+        Picasso.with(context)
+                .load(friend.getProfilePictureUrl())
+                .centerCrop()
+                .resize(friendViewHolder.personPhoto.getMeasuredWidth(), friendViewHolder.personPhoto.getMeasuredHeight())
+                .error(R.drawable.placeholder_profile_error)
+                .placeholder(R.drawable.placeholder_profile)
+                .into(friendViewHolder.personPhoto);
     }
 
     public List<User> getData(){

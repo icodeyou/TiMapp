@@ -53,8 +53,11 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
             Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
             final PlacesInvitation placeInvitation = data.get(position);
-            
-            holder.invitorName.setText(placeInvitation.getUserSource().getUsername());
+
+            String username = placeInvitation.getUserSource().getUsername();
+            String prettyTimeInvitation = placeInvitation.getTimeCreated();
+            String topText = username + " invited you " + prettyTimeInvitation;
+            holder.invitorName.setText(topText);
             holder.placeView.setPlace(placeInvitation.place);
 
             //OnTagsRvClick : Same event as adapter click.

@@ -3,13 +3,13 @@ package com.timappweb.timapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
@@ -26,7 +26,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
     private PlacesAdapter placesAdapter;
     private ExploreFragment exploreFragment;
     private DrawerActivity drawerActivity;
-    private TextView newEventButton;
+    private View newEventButton;
     private View progressView;
     private View noEventsView;
     private RecyclerView rvPlaces;
@@ -45,6 +45,13 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         rvPlaces = (RecyclerView) root.findViewById(R.id.list_places);
         progressView = root.findViewById(R.id.loading_view);
         noEventsView = root.findViewById(R.id.no_events_view);
+        newEventButton = root.findViewById(R.id.fab);
+        newEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.addPostStepLocate(getContext());
+            }
+        });
 
         return root;
     }
@@ -94,7 +101,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Adapter
-        placesAdapter = new PlacesAdapter(getContext(),true, true);
+        placesAdapter = new PlacesAdapter(getContext(), true);
         rvPlaces.setAdapter(placesAdapter);
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override

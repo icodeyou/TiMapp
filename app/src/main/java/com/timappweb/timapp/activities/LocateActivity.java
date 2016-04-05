@@ -46,7 +46,7 @@ public class LocateActivity extends BaseActivity{
     //Views
     private RecyclerView    rvPlaces;
     private View            noPlaceView;
-    private LinearLayout    buttonAddPlace;
+    private View            buttonAddPlace;
     private TextView        textButtonAddPlace;
     private View            noConnectionView;
 
@@ -76,8 +76,7 @@ public class LocateActivity extends BaseActivity{
         progressView = findViewById(R.id.progress_view);
         noPlaceView = findViewById(R.id.layout_if_no_place);
         rvPlaces = (RecyclerView) findViewById(R.id.list_places);
-        buttonAddPlace = (LinearLayout) findViewById(R.id.button_add_spot);
-        textButtonAddPlace = (TextView) findViewById(R.id.text_button_add_spot);
+        buttonAddPlace = findViewById(R.id.button_add_spot);
         noConnectionView = findViewById(R.id.no_connection_view);
 
         // Init variables
@@ -96,7 +95,7 @@ public class LocateActivity extends BaseActivity{
         rvPlaces.setLayoutManager(new LinearLayoutManager(this));
 
         //Adapter
-        final PlacesAdapter placesAdapter = new PlacesAdapter(this, false, true);
+        final PlacesAdapter placesAdapter = new PlacesAdapter(this, true);
         rvPlaces.setAdapter(placesAdapter);
 
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
@@ -124,15 +123,11 @@ public class LocateActivity extends BaseActivity{
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!CacheData.isAllowedToAddPlace()) {
-                    Toast.makeText(getApplicationContext(), R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 IntentsUtils.addPlace(that);
                 //buttonAddPlace.setEnabled(false);
             }
         });
-        buttonAddPlace.setOnTouchListener(new ColorTopRadiusOnTouchListener(this, textButtonAddPlace));
+        //buttonAddPlace.setOnTouchListener(new ColorTopRadiusOnTouchListener(this, textButtonAddPlace));
     }
 
     @Override

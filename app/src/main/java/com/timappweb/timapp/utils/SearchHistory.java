@@ -45,13 +45,15 @@ public class SearchHistory<T>{
 
         // Data are in cache and fetch is done
         if (this.hasTerm(term) && !this.data.get(term).pending){
-            this.provider.onSearchComplete(term, this.data.get(term).getData());
+            //TODO Steph : J'ai mis cette ligne en comment, pour pas que la liste de tags complète soit rechargée à chaque fois qu'on enlève un tag
+            //this.provider.onSearchComplete(term, this.data.get(term).getData());
         }
         else if (!this.hasTerm(term)){
             // Data are not in cache, try searching for a sub term
             SearchHistory.Item subHistory = this.getTermOrSubTerm(term);
             if (subHistory != null){
-                this.provider.onSearchComplete(term, subHistory.getFilteredData(term));
+                //TODO Steph : J'ai mis cette ligne en comment, pour pas que la liste de tags complète soit rechargée à chaque fois qu'on enlève un tag
+                //this.provider.onSearchComplete(term, subHistory.getFilteredData(term));
                 if (subHistory.isComplete()){
                     return ;
                 }

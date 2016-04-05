@@ -15,17 +15,17 @@ public class UserActivity extends Model {
     public int created;
 
 
-    @Column(name = "ActionType")
-    public ActionType type;
+    @Column(name = "QuotaType")
+    public QuotaType type;
 
 
     public UserActivity() {
         super();
     }
 
-    public UserActivity(ActionType.ActionTypeName type) {
+    public UserActivity(QuotaType.ActionTypeName type) {
         super();
-        this.type = ActionType.getByName(type);
+        this.type = QuotaType.getByName(type);
         this.created = Util.getCurrentTimeSec();
     }
 }

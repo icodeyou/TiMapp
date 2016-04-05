@@ -204,7 +204,13 @@ public class ProfileActivity extends BaseActivity{
                         setTagsListeners();
                     }
                     String photoUrl = mUser.getProfilePictureUrl();
-                    Picasso.with(context).load(photoUrl).into(profilePicture);
+                    Picasso.with(context)
+                            .load(photoUrl)
+                            .centerCrop()
+                            .resize(profilePicture.getMeasuredWidth(), profilePicture.getMeasuredHeight())
+                            .error(R.drawable.placeholder_profile_error)
+                            .placeholder(R.drawable.placeholder_profile)
+                            .into(profilePicture);
 
                     //mainView.setVisibility(View.VISIBLE);
                     //loadingView.setVisibility(View.GONE);

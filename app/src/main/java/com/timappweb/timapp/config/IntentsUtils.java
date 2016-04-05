@@ -114,10 +114,7 @@ public class IntentsUtils {
     public static void addPostStepTags(Context context, Place place, Post post) {
         if (!requireLogin(context))
             return;
-        if (!CacheData.isAllowedToAddPost()){
-            Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG);
-            return;
-        }
+
         Intent intent = new Intent(context, TagActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
@@ -146,6 +143,10 @@ public class IntentsUtils {
     public static void addPostStepLocate(Context context) {
         if (!requireLogin(context))
             return;
+        if (!CacheData.isAllowedToAddPost()){
+            Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
         Intent intent = new Intent(context, LocateActivity.class);
         context.startActivity(intent);
     }
@@ -193,8 +194,8 @@ public class IntentsUtils {
     public static void addPlace(Context context) {
         if (!requireLogin(context))
             return;
-        if (!CacheData.isAllowedToAddPlace()){
-            Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG);
+        if (!CacheData.isAllowedToAddPost()){
+            Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = new Intent(context, AddPlaceActivity.class);
@@ -259,6 +260,10 @@ public class IntentsUtils {
     public static void addPostStepTags(Context context, Place place) {
         if (!requireLogin(context))
             return;
+        if (!CacheData.isAllowedToAddPost()){
+            Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
         Post post = new Post();
         post.latitude = MyApplication.getLastLocation().getLatitude();
         post.longitude = MyApplication.getLastLocation().getLongitude();

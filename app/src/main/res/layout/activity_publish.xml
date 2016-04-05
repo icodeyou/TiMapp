@@ -22,7 +22,7 @@
             android:layout_height="@dimen/height_rv_displayed_tags"
             android:layout_gravity="center"
             myattrs:horizontal_tags_text_color="@color/colorAccent"
-            myattrs:horizontal_tags_background_color="@color/background"
+            myattrs:horizontal_tags_background_color="@color/transparent"
             myattrs:horizontal_tags_is_bold="true"
             myattrs:horizontal_tags_text_size="@dimen/text_normal"/>
 
@@ -47,11 +47,6 @@
                 android:textSize="@dimen/text_huge"
                 android:textColor="@color/colorAccent"
                 android:text="@string/uploading_tags" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_chineseman"/>
         </LinearLayout>
 
         <!-- Confirm button -->

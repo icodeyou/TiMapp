@@ -7,10 +7,16 @@ import com.activeandroid.Model;
  */
 public class User extends Model{
 
+    @Column(name = "Id", index = true)
     public int id;
 
-    public int last_login;
+    @Column(name = "Username", index = true)
+    public String username;
 
+    @Column(name = "Token")
     public String token;
+
+    @Column(name = "SocialToken")
+    public String social_token;
 
 }
