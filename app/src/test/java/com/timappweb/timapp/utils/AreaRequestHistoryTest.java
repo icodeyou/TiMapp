@@ -3,10 +3,14 @@ package com.timappweb.timapp.utils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaIterator;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.LinkedList;
@@ -18,6 +22,27 @@ import static org.junit.Assert.assertNotEquals;
  * Created by stephane on 9/17/2015.
  */
 public class AreaRequestHistoryTest {
+
+    private AreaRequestHistory history;
+
+    private void initHistory(){
+        this.history = new AreaRequestHistory(new AreaDataLoaderInterface() {
+            @Override
+            public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
+                // TODO
+            }
+        });
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        initHistory();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+    }
 
     @Test
     public void testPoint(){
@@ -31,7 +56,6 @@ public class AreaRequestHistoryTest {
     @Test
     public void testGetID() throws Exception {
         LatLngBounds bounds = new LatLngBounds(new LatLng(12, 13), new LatLng(16, 20));
-        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
         IntLatLng center = history.getCenter();
 
 
@@ -69,7 +93,6 @@ public class AreaRequestHistoryTest {
     @Test
     public void testBountToPointToBound() throws Exception {
         LatLngBounds bounds = new LatLngBounds(new LatLng(-1.213, 2.33247), new LatLng(-1.210, 2.53247));
-        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
 
         for (int y = -10; y <= 10; y++){
             IntPoint p = new IntPoint(y,0);
@@ -90,7 +113,6 @@ public class AreaRequestHistoryTest {
     @Test
     public void hasInCache() throws Exception {
         LatLngBounds bounds = new LatLngBounds(new LatLng(-1, 3), new LatLng(2, 7));
-        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
 
         LinkedList<Post> data = new LinkedList<>();
         IntPoint p1 = new IntPoint(2, 4);
@@ -105,7 +127,6 @@ public class AreaRequestHistoryTest {
     public void testAreaIterator(){
         IntLatLng center = new IntLatLng(0, 0);
         LatLngBounds bounds = new LatLngBounds(new LatLng(0, 0), new LatLng(30, 40));
-        AreaRequestHistory history = new AreaRequestHistory(bounds, null);
 
         IntPoint northeast = history.getIntPoint(new IntLatLng(center.latitude+1, center.longitude+1));
         IntPoint southwest = history.getIntPoint(center);

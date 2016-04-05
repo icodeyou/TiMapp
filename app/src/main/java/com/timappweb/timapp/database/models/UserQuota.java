@@ -1,9 +1,13 @@
 package com.timappweb.timapp.database.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.query.Select;
+
 /**
  * Created by stephane on 4/5/2016.
  */
-public class UserQuota extends Model{
+public class UserQuota extends Model {
 
     @Column(name = "Type", index = true)
     public QuotaType type;

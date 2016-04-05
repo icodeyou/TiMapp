@@ -1,4 +1,4 @@
-<?xm    l version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.timappweb.timapp">
@@ -70,7 +70,7 @@
             android:value="@string/app_id"/>
 
         <!-- SPLACE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -78,22 +78,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </userActivity>
+        </activity>
 
-        <userActivity
+        <activity
             android:name=".activities.ErrorActivity">
-        </userActivity>
+        </activity>
 
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+
+        <activity
             android:name=".activities.DrawerActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">
-        </userActivity>
+        </activity>
 
         <!-- LOGIN ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_login"
@@ -102,17 +103,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <service
             android:name=".services.FetchAddressIntentService"
             android:exported="false" >
-        </service>
-
-        <service android:name=".services.MyInstanceIDListenerService" android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
         </service>
 
         <service android:name=".services.RegistrationIntentService" android:exported="false">
@@ -131,6 +126,12 @@
             </intent-filter>
         </receiver>
 
+        <!--
+        <service android:name=".services.MyInstanceIDListenerService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>-->
         <service
             android:name=".services.MyGcmListenerService"
             android:exported="false">
@@ -147,13 +148,13 @@
         </service>
 
         <!-- FILTER ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.FilterActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_filter"
             android:parentActivityName=".activities.DrawerActivity">
 
-            <!-- Make userActivity searchable -->
+            <!-- Make activity searchable -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -161,180 +162,180 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- LOCATE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity android:name=".activities.LocateActivity"
+        <activity android:name=".activities.LocateActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.DrawerActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- TAG ACTIVITY //////////////////////////////////////////////-->
-        <userActivity android:name=".activities.TagActivity"
+        <activity android:name=".activities.TagActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.LocateActivity"
             android:windowSoftInputMode="adjustNothing|stateHidden" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LocateActivity" />
-        </userActivity>
+        </activity>
 
         <!-- PUBLISH ACTIVITY //////////////////////////////////////////////-->
-        <userActivity android:name=".activities.PublishActivity"
+        <activity android:name=".activities.PublishActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing|stateHidden"
             android:parentActivityName=".activities.TagActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.TagActivity" />
-        </userActivity>
+        </activity>
 
         <!-- POST ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.PostActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_post"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- PLACE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.PlaceActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:label="@string/title_activity_place"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- CAMERA ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name="com.desmond.squarecamera.CameraActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_place"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- Add People ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.InviteFriendsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_invite_friends"
             android:parentActivityName=".activities.PlaceActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.PlaceActivity" />
-        </userActivity>
+        </activity>
 
         <!-- List People ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.ListFriendsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_list_friends"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- Invitations ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.InvitationsActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_invitations"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:name=".activities.EditProfileActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_edit_profile"
             android:windowSoftInputMode="adjustNothing|stateVisible"
             android:parentActivityName=".activities.ProfileActivity"
             android:theme="@style/EditProfileTheme">
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ProfileActivity" />
-        </userActivity>
+        </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
-        <userActivity
+        <activity
             android:screenOrientation="portrait"
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- ADDPLACE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity android:name=".activities.AddPlaceActivity"
+        <activity android:name=".activities.AddPlaceActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
             android:parentActivityName=".activities.ProfileActivity">
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ProfileActivity" />
-        </userActivity>
+        </activity>
 
         <!-- SHARE ACTIVITY //////////////////////////////////////////////-->
-        <userActivity android:name=".activities.ShareActivity"
+        <activity android:name=".activities.ShareActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_share_app"
             android:parentActivityName=".activities.DrawerActivity">
-            <!-- Parent userActivity meta-data to support 4.0 and lower -->
+            <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.DrawerActivity" />
-        </userActivity>
+        </activity>
 
         <!-- FACEBOOK ACTIVITY //////////////////////////////////////////////-->
-        <userActivity android:name="com.facebook.FacebookActivity"
+        <activity android:name="com.facebook.FacebookActivity"
             android:screenOrientation="portrait"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"

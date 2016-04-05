@@ -22,7 +22,7 @@ public class ActivityHistory {
         return inst;
     }
 
-    public UserActivity add(QuotaType.ActionTypeName type){
+    public UserActivity add(String type){
         UserActivity userActivity = new UserActivity(type);
         userActivity.save();
         return userActivity;

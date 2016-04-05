@@ -9,7 +9,7 @@ import com.timappweb.timapp.utils.Util;
  * Created by stephane on 4/4/2016.
  */
 @Table(name = "activities")
-public class UserActivity extends Model {
+public class UserActivity extends  Model{
 
     @Column(name = "DateCreated", index = true)
     public int created;
@@ -23,9 +23,9 @@ public class UserActivity extends Model {
         super();
     }
 
-    public UserActivity(QuotaType.ActionTypeName type) {
+    public UserActivity(String type) {
         super();
-        this.type = QuotaType.getByName(type);
+        this.type = QuotaType.getByType(type);
         this.created = Util.getCurrentTimeSec();
     }
 }
