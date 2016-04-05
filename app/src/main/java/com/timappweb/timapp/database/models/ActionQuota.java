@@ -5,9 +5,24 @@ package com.timappweb.timapp.database.models;
  */
 public class ActionQuota {
 
+    public User user;
     public ActionType actionType;
 
-    public int starts;
-    public int ends;
-    public int count;
+    public int last_action;
+    public int min_delay;
+
+    public int total_day;
+    public int quota_day;
+
+    public int total_week;
+    public int quota_week;
+
+    public int total_month;
+    public int quota_month;
+
+    public int total_year;
+    public int quota_year;
+
+    public int total_overall;
+    public int quota_overall;
 }
