@@ -53,8 +53,6 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         //Picasso.with(context).load(fullUrl).fit().centerCrop().into(pictureViewHolder.ivPicture);
         Picasso.with(context)
                 .load(fullUrl)
-                .centerCrop()
-                .resize(pictureViewHolder.ivPicture.getMeasuredWidth(), pictureViewHolder.ivPicture.getMeasuredHeight())
                 .error(R.drawable.placeholder_profile_error)
                 .placeholder(R.drawable.placeholder_profile)
                 .into(pictureViewHolder.ivPicture);

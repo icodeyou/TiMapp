@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,16 +49,43 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
     }
 
     @Override
-    public void onBindViewHolder(PlacePeopleViewHolder holder, final int position) {
+    public void onBindViewHolder(final PlacePeopleViewHolder holder, final int position) {
         Log.d(TAG, "::onBindViewHolder() -> " + position);
         PlaceUserInterface placeUserInterface = data.get(position);
         User user = placeUserInterface.getUser();
         RecyclerView rvPostTags = holder.rvPostTags;
 
         Log.d(TAG, "User: " + user.getUsername());
-        String pic = user.getProfilePictureUrl();
+        final String pic = user.getProfilePictureUrl();
         if(pic !=null && holder.ivProfilePicture!=null) {
-            Picasso.with(context).load(pic).into(holder.ivProfilePicture);
+            /*holder.ivProfilePicture.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        // Wait until layout to call Picasso
+                        @Override
+                        public void onGlobalLayout() {
+                            // Ensure we call this only once
+                            holder.ivProfilePicture.getViewTreeObserver()
+                                    .removeOnGlobalLayoutListener(this);
+
+
+                            Picasso.with(context)
+                                    .load(pic)
+                                    .centerCrop()
+                                    .resize(0, holder.ivProfilePicture.getMeasuredHeight())
+                                    .error(R.drawable.placeholder_profile_error)
+                                    .placeholder(R.drawable.placeholder_profile)
+                                    .into(holder.ivProfilePicture);
+                        }
+                    });*/
+            
+            Picasso.with(context)
+                    .load(pic)
+                    .centerCrop()
+                    .resize((int) context.getResources().getDimension(R.dimen.width_pic_card),
+                            (int) context.getResources().getDimension(R.dimen.width_pic_card))
+                    //.error(R.drawable.placeholder_profile_error)
+                    .placeholder(R.drawable.placeholder_profile)
+                    .into(holder.ivProfilePicture);
         }
 
         String username = user.getUsername();

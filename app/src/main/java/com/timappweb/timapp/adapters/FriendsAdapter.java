@@ -68,8 +68,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         Picasso.with(context)
                 .load(friend.getProfilePictureUrl())
                 .centerCrop()
-                .resize(friendViewHolder.personPhoto.getMeasuredWidth(), friendViewHolder.personPhoto.getMeasuredHeight())
-                .error(R.drawable.placeholder_profile_error)
+                .resize((int) context.getResources().getDimension(R.dimen.width_pic_card),
+                        (int) context.getResources().getDimension(R.dimen.width_pic_card))
+                        //.error(R.drawable.placeholder_profile_error)
                 .placeholder(R.drawable.placeholder_profile)
                 .into(friendViewHolder.personPhoto);
     }
