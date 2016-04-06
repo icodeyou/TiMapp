@@ -395,7 +395,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         private final Activity activity;
 
-        /*UserLoginTask(Activity act, String email, String password) {
+        /*UserLoginTask(UserActivity act, String email, String password) {
             mEmail = email;
             mPassword = password;
             this.activity = act;

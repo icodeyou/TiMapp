@@ -35,13 +35,13 @@ public class NotificationFactory {
                         .setContentTitle(title)
                         .setContentText(text);
 // The stack builder object will contain an artificial back stack for the
-// started Activity.
-// This ensures that navigating backward from the Activity leads out of
+// started UserActivity.
+// This ensures that navigating backward from the UserActivity leads out of
 // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(PlaceActivity.class);
-// Adds the Intent that starts the Activity to the top of the stack
+// Adds the Intent that starts the UserActivity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
@@ -60,8 +60,7 @@ public class NotificationFactory {
 
     public static int invite(Context context, Bundle bundle) {
             Bundle notification = bundle.getBundle("notification");
-            Bundle data = bundle.getBundle("data");
-            if (notification == null || data == null){
+            if (notification == null){
                 Log.e(TAG, "Received a null notification");
                 return -1;
             }
@@ -69,8 +68,11 @@ public class NotificationFactory {
             String body = notification.getString("body");
             String title = notification.getString("title");
             String icon = notification.getString("icon");
+            int placeId = bundle.getInt("place_id");
+            int userId = bundle.getInt("user_id");
 
-            int placeId = data.getInt("place_id");
+            // TODO icon
+
             Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
             return NotificationFactory.build(context, R.drawable.ic_category_bar, title, body, resultIntent);
     }

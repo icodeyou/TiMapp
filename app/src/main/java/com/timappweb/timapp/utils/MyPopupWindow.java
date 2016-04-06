@@ -16,9 +16,9 @@ import com.timappweb.timapp.R;
 public class MyPopupWindow {
 
     /*private static final String TAG = "PopupWindow";
-    private Activity activity;
+    private UserActivity activity;
 
-    MyPopupWindow(Activity act){
+    MyPopupWindow(UserActivity act){
         this.activity = act;
     }
 

@@ -16,7 +16,8 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
-import com.timappweb.timapp.cache.CacheData;
+import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -215,8 +216,9 @@ public class PlacePicturesFragment extends Fragment {
     public void updateBtnVisibility() {
         Log.v(TAG, "::updateButtonsVisibility()");
         // Check if the user can post in this place
+        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.PICTURE);
         boolean showMainButton = place != null && MyApplication.hasLastLocation()
-                && CacheData.isAllowedToAddPicture() && place.isAround();
+                && isAllowedToAddPic && place.isAround();
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
         smallTagsButton.setVisibility(!showMainButton && place != null && place.isAround() ? View.VISIBLE : View.GONE);
     }

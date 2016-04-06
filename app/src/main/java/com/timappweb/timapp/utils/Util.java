@@ -26,6 +26,12 @@ public class Util {
         return (int)(System.currentTimeMillis() / 1000);
     }
 
+    /**
+     *
+     * @param created seconds
+     * @param old seconds
+     * @return
+     */
     public static boolean isOlderThan(int created, int old) {
         return (getCurrentTimeSec()-created) > old;
     }

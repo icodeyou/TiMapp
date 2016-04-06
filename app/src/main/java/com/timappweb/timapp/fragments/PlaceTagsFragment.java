@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.sromku.simple.fb.actions.GetNotificationsAction;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
+import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.RestCallback;
@@ -150,14 +150,15 @@ public class PlaceTagsFragment extends BaseFragment {
         }
     }
 
-
     public void updateBtnVisibility() {
         Log.v(TAG, "::updateButtonsVisibility()");
         // Check if the user can post in this place
-        boolean showMainButton = place != null && MyApplication.hasLastLocation() && CacheData.isAllowedToAddPost() && place.isAround();
+        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.PICTURE);
+        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.POST);
+        boolean showMainButton = place != null && MyApplication.hasLastLocation() && isAllowedToAddPost && place.isAround();
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
         smallPeopleButton.setVisibility(place != null && !showMainButton && place.isAround() ? View.VISIBLE : View.GONE);
-        smallPicButton.setVisibility(place != null && !showMainButton && place.isAround() && CacheData.isAllowedToAddPicture() ? View.VISIBLE : View.GONE);
+        smallPicButton.setVisibility(place != null && !showMainButton && place.isAround() && isAllowedToAddPic ? View.VISIBLE : View.GONE);
     }
 
 }

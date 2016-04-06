@@ -28,13 +28,14 @@ import android.widget.Toast;
 import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
-import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.ServerConfiguration;
+import com.timappweb.timapp.database.models.PlaceStatus;
+import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
@@ -274,7 +275,7 @@ public class PlaceActivity extends BaseActivity {
                             Picture picture = new Picture();
                             picture.created = Util.getCurrentTimeSec();
                             picture.place_id = placeId;
-                            CacheData.setLastPicture(picture);
+                            QuotaManager.instance().add(QuotaType.PICTURE);
                         } else {
                             Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                             fragmentPictures.setUploadVisibility(false);
@@ -321,7 +322,8 @@ public class PlaceActivity extends BaseActivity {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user on place " + placeId);
-                        com.timappweb.timapp.cache.CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
+                        QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
+//                        com.timappweb.timapp.cache.CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
                         progressBottom.setVisibility(View.GONE);
                         updateButtonsVisibility();
                     }
@@ -505,9 +507,12 @@ public class PlaceActivity extends BaseActivity {
                 fragmentTags.updateBtnVisibility();
             }
             //if we are in the place
-            Boolean isAllowedToCome = !place.isAround() && CacheData.isAllowedToAddUserStatus(place.id, UserPlaceStatus.COMING);
+            boolean isUserComing = PlaceStatus.hasStatus(placeId, UserPlaceStatus.COMING);
+            boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
+            Boolean isAllowedToCome = !place.isAround() && isAllowedToAddComing;
             iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
-            onMyWayButton.setVisibility(place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE && CacheData.isUserComing(place.id)  ? View.VISIBLE : View.GONE);
+            onMyWayButton.setVisibility(place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE
+                    && isUserComing ? View.VISIBLE : View.GONE);
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
     }
@@ -531,7 +536,7 @@ public class PlaceActivity extends BaseActivity {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 // Show permission rationale
             } else {
-                // Handle the result in Activity#onRequestPermissionResult(int, String[], int[])
+                // Handle the result in UserActivity#onRequestPermissionResult(int, String[], int[])
                 ActivityCompat.requestPermissions(this, new String[]{permission}, REQUEST_CAMERA);
             }
         } else {

@@ -3,7 +3,6 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,9 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.timappweb.timapp.cache.CacheData;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -214,9 +214,11 @@ public class PublishActivity extends BaseActivity{
             if (place.isNew()){
                 place.id = placeId;
                 place.created = Util.getCurrentTimeSec();
-                CacheData.setLastPlace(place);
+                QuotaManager.instance().add(QuotaType.PLACE);
             }
-            CacheData.setLastPost(post);
+            //QuotaManager.instance().add(QuotaType.ActionTypeName.CREATE_PLACE);
+            //CacheData.setLastPost(post);
+            QuotaManager.instance().add(QuotaType.POST);
 
             IntentsUtils.viewPlaceFromPublish(activity, placeId);
         }

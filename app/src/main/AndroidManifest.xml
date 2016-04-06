@@ -1,8 +1,11 @@
-<?xm    l version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.timappweb.timapp">
 
+    <!--
+    PERMISSIONS
+     -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -28,7 +31,9 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!-- FOR GCM -->
+    <!--
+     FOR GCM
+    -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission android:name="com.timappweb.timapp.permission.C2D_MESSAGE"
@@ -45,6 +50,18 @@
         android:largeHeap="true"
         tools:replace="android:theme">
 
+
+        <!-- DATABASE CONFIGURATION -->
+        <!-- pre populate db -->
+        <meta-data android:name="AA_DB_NAME" android:value="prepop.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+        <!--
+        // TODO for production set models to speed up launch
+        <meta-data  android:name="AA_MODELS"
+            android:value="com.timappweb.timapp.database.models.UserActivity" />-->
+
+
+        <!-- GMS -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -71,6 +88,7 @@
         </activity>
 
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
+
         <activity
             android:name=".activities.DrawerActivity"
             android:label="@string/app_name"
@@ -95,12 +113,6 @@
             android:exported="false" >
         </service>
 
-        <service android:name=".services.MyInstanceIDListenerService" android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
-        </service>
-
         <service android:name=".services.RegistrationIntentService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
@@ -117,6 +129,12 @@
             </intent-filter>
         </receiver>
 
+        <!--
+        <service android:name=".services.MyInstanceIDListenerService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>-->
         <service
             android:name=".services.MyGcmListenerService"
             android:exported="false">

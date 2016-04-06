@@ -37,7 +37,7 @@
         <!-- insert fragment here -->
 
         <!-- This PreferenceScreen tag sends the user to a completely different
-             activity, switching out of the current preferences UI. -->
+             userActivity, switching out of the current preferences UI. -->
         <PreferenceScreen
             android:title="Title preferencescreen2"
             android:summary="summary preferencescreen2">
