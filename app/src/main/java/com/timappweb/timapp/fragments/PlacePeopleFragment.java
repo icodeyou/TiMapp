@@ -29,6 +29,8 @@ import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.views.DividerDecoration;
+import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.jdeferred.impl.DeferredObject;
 
@@ -45,8 +47,10 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private static final String TAG = "PlaceTagsFragment";
     private Context         context;
     private PlaceActivity placeActivity;
+    private Place place;
+    private int placeId;
 
-    private PlaceUsersAdapter placeUsersAdapter;
+    private PlaceUsersHeaderAdapter placeUsersAdapter;
     private RecyclerView    peopleRv;
     private View            progressView;
     private View            noPostsView;
@@ -69,9 +73,9 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         View root = inflater.inflate(R.layout.fragment_place_people, container, false);
 
         initVariables(root);
-        setListeners();
-        initRv();
         initAdapter();
+        initRv();
+        setListeners();
         loadData();
         updateBtnVisibility();
 
@@ -98,13 +102,21 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         noConnectionView = root.findViewById(R.id.no_connection_view);
     }
 
+    private void initRv() {
+        peopleRv.setLayoutManager(new LinearLayoutManager(context));
+
+        // Add the sticky headers decoration
+        final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(placeUsersAdapter);
+        peopleRv.addItemDecoration(headersDecor);
+
+        //TODO : Determine how the class DividerDecoration is usefull, and decide if we use it or not
+        //peopleRv.addItemDecoration(new DividerDecoration(placeActivity));
+    }
+
     private void setListeners() {
         mainButton.setOnClickListener(placeActivity.getPeopleListener());
     }
 
-    private void initRv() {
-        peopleRv.setLayoutManager(new LinearLayoutManager(context));
-    }
 
     private void initAdapter() {
         //Construct Adapter

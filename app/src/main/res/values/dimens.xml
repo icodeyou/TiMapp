@@ -45,6 +45,7 @@
 
 
     <!-- Text dimensions -->
+    <dimen name="default_horizontal_padding">20dp</dimen>
     <dimen name="text_tiny">10dp</dimen>
     <dimen name="text_small">15dp</dimen>
     <dimen name="text_normal">20dp</dimen>

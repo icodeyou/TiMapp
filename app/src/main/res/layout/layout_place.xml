@@ -86,7 +86,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="match_parent"
-                            android:paddingRight="20dp"
+                            android:paddingRight="@dimen/default_horizontal_padding"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
                             <ImageView

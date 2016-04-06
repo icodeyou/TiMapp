@@ -16,8 +16,11 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.PlaceUserInterface;
+import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.entities.UserPlace;
+import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
@@ -25,27 +28,34 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
+public abstract class PlaceUsersAdapter
+        extends RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
     private static final String TAG = "PlaceUsersAdapter";
 
     private OnItemAdapterClickListener mItemClickListener;
-    private Context context;
-    private List<PlaceUserInterface> data;
+    protected Context context;
+    protected List<PlaceUserInterface> data;
 
     //Constructor
     public PlaceUsersAdapter(Context context) {
-        super();
+        setHasStableIds(true);
         this.context = context;
         this.data = new ArrayList<>();
     }
 
+    public class VIEW_TYPES {
+        public static final int UNDEFINED = 0;
+        public static final int HERE = 1;
+        public static final int COMING = 2;
+        public static final int INVITED = 3;
+    }
+
     @Override
-    public PlacePeopleViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public PlacePeopleViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_userplace, viewGroup, false);
 
-        PlacePeopleViewHolder placePeopleViewHolder = new PlacePeopleViewHolder(v);
-        return placePeopleViewHolder;
+        return new PlacePeopleViewHolder(v);
     }
 
     @Override
@@ -77,13 +87,13 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
                                     .into(holder.ivProfilePicture);
                         }
                     });*/
-            
+
             Picasso.with(context)
                     .load(pic)
                     .centerCrop()
                     .resize((int) context.getResources().getDimension(R.dimen.width_pic_card),
                             (int) context.getResources().getDimension(R.dimen.width_pic_card))
-                    //.error(R.drawable.placeholder_profile_error)
+                            //.error(R.drawable.placeholder_profile_error)
                     .placeholder(R.drawable.placeholder_profile)
                     .into(holder.ivProfilePicture);
         }
@@ -119,6 +129,12 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
         return data.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        PlaceUserInterface placeUserInterface = data.get(position);
+        return placeUserInterface.getViewType();
+    }
+
     public PlaceUserInterface getData(int position) {
         return data.get(position);
     }
@@ -129,9 +145,7 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
     }
 
     public void addData(List<PlaceUserInterface> placeUserInterfaces) {
-        for(PlaceUserInterface p : placeUserInterfaces) {
-            data.add(p);
-        }
+        data.addAll(placeUserInterfaces);
         notifyDataSetChanged();
     }
 
@@ -144,6 +158,7 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
+
 
     public class PlacePeopleViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
@@ -173,4 +188,6 @@ public class PlaceUsersAdapter extends RecyclerView.Adapter<PlaceUsersAdapter.Pl
             }
         }
     }
+
+
 }

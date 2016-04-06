@@ -75,6 +75,7 @@
         <!-- SPLACE ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -90,6 +91,7 @@
 
         <activity
             android:name=".activities.DrawerActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize">

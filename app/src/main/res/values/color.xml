@@ -30,6 +30,7 @@
     <color name="usertag_text_color">#de5249</color>
     <color name="divider_listview">#db9f9b</color>
     <color name="text_place">#ffffff</color>
+    <color name="background_header_place_people">#80000000</color>
     <color name="background_cluster">#b41e41</color>
     <color name="background_cluster_transparent">#9eb41e41</color>
     <color name="text_cluster">@color/white</color>

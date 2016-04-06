@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import com.timappweb.timapp.adapters.PlaceUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;
@@ -83,6 +84,11 @@ public class User implements Serializable, PlaceUserInterface {
     @Override
     public User getUser() {
         return this;
+    }
+
+    @Override
+    public int getViewType() {
+        return PlaceUsersAdapter.VIEW_TYPES.UNDEFINED;
     }
 
     public void setStatus(boolean status) {

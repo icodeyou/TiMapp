@@ -104,8 +104,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="@dimen/default_horizontal_padding"
+                android:paddingRight="@dimen/default_horizontal_padding"
                 android:gravity="center"
                 android:textColor="@color/White"
                 android:text="@string/edit_first_profile2"/>

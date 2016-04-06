@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="@dimen/default_horizontal_padding"
             android:src="@drawable/ic_phone_connection"/>
         <TextView
             android:layout_width="wrap_content"
@@ -95,8 +95,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="@dimen/default_horizontal_padding"
+                        android:layout_marginRight="@dimen/default_horizontal_padding"
                         android:orientation="horizontal">
                         <LinearLayout
                             android:layout_weight="1"
@@ -151,8 +151,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="@dimen/default_horizontal_padding"
+                        android:layout_marginRight="@dimen/default_horizontal_padding"
                         android:orientation="horizontal">
                         <LinearLayout
                             android:layout_weight="1"
@@ -225,7 +225,7 @@
                     android:id="@+id/text_last_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="20dp"
+                    android:paddingLeft="@dimen/default_horizontal_padding"
                     android:paddingBottom="5dp"
                     android:text="@string/text_last_post"
                     android:textColor="@color/Gray"
@@ -244,8 +244,8 @@
             android:layout_width="@dimen/profile_picture_side"
             android:layout_height="@dimen/profile_picture_side"
             android:layout_marginTop="45dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="@dimen/default_horizontal_padding"
+            android:layout_marginStart="@dimen/default_horizontal_padding"
             app:border="false"
             app:shadow="false"/>
     </RelativeLayout>

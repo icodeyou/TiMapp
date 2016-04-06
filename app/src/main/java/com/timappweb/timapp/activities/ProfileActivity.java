@@ -208,7 +208,6 @@ public class ProfileActivity extends BaseActivity{
                             .load(photoUrl)
                             .centerCrop()
                             .resize(profilePicture.getMeasuredWidth(), profilePicture.getMeasuredHeight())
-                            .error(R.drawable.placeholder_profile_error)
                             .placeholder(R.drawable.placeholder_profile)
                             .into(profilePicture);
 

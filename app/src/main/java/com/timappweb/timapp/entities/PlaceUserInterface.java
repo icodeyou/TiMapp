@@ -13,4 +13,6 @@ public interface PlaceUserInterface {
     String getTimeCreated();
 
     User getUser();
+
+    int getViewType();
 }

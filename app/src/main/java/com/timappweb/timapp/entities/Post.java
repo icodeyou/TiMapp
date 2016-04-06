@@ -1,6 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.adapters.PlaceUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
 import org.ocpsoft.prettytime.PrettyTime;
@@ -185,6 +186,11 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
 
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public int getViewType() {
+        return PlaceUsersAdapter.VIEW_TYPES.HERE;
     }
 
     public boolean hasTagsLoaded() {

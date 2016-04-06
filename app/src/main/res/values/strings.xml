@@ -137,7 +137,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="share_message_subject">TiMapp</string>
     <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the big red button to invite some of your friends.</string>
     <string name="subject_share_activity">Share TiMapp with your friends !</string>
-    <string name="loading_location">Loading Location</string>
+    <string name="checking_around">Please wait while we load the places that already exist here</string>
     <string name="or_text_login">Or</string>
     <string name="text_create_account_login">Create account</string>
     <string name="welcome_to_timapp">Welcome to TiMapp</string>

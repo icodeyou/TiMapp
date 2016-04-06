@@ -21,12 +21,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="@dimen/text_huge"
+            android:padding="@dimen/default_horizontal_padding"
+            android:textSize="@dimen/text_normal"
             android:gravity="center"
             android:typeface="serif"
-            android:text="@string/loading_location"/>
+            android:text="@string/checking_around"/>
         <include layout="@layout/progressview"
             android:layout_height="50dp"
             android:layout_width="50dp"/>

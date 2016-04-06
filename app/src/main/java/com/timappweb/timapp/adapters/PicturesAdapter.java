@@ -44,24 +44,16 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     }
 
     @Override
-    public void onBindViewHolder(PictureViewHolder pictureViewHolder, int position) {
+    public void onBindViewHolder(PictureViewHolder holder, int position) {
         Picture picture = data.get(data.size()-position-1);
         String fullUrl = this.baseUrl + "/" + picture.getPreviewUrl();
         Log.d(TAG, "Loading picture in adapter: " + fullUrl);
-        // TODO update picasso if new release > 2.5.2 to fix this bug
-        // https://github.com/square/picasso/issues/881
-        //Picasso.with(context).load(fullUrl).fit().centerCrop().into(pictureViewHolder.ivPicture);
 
-        //int width = pictureViewHolder.ivPicture.getMeasuredWidth();
-        //int height = pictureViewHolder.ivPicture.getMeasuredHeight();
-        //
-
-        // TODO JACK WTF : RESIZE BUG si le view holder est 0x0 en taill
         Picasso.with(context)
                 .load(fullUrl)
-                .error(R.drawable.placeholder_profile_error)
+                .resize(0,holder.ivPicture.getLayoutParams().height)
                 .placeholder(R.drawable.placeholder_profile)
-                .into(pictureViewHolder.ivPicture);
+                .into(holder.ivPicture);
     }
 
     @Override
