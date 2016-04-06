@@ -68,8 +68,8 @@ public class NotificationFactory {
             String body = notification.getString("body");
             String title = notification.getString("title");
             String icon = notification.getString("icon");
-            int placeId = bundle.getInt("place_id");
-            int userId = bundle.getInt("user_id");
+            int placeId = Integer.valueOf(bundle.getString("place_id"));
+            //int userId = bundle.getInt("user_id");
 
             // TODO icon
 

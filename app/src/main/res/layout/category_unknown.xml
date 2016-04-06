@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:alpha="0.08"
-        android:src="@drawable/image_unknown"/>
+        android:src="@drawable/image_else"/>
     <com.timappweb.timapp.views.AutoResizeTextView
         android:id="@+id/category_name"
         android:layout_width="wrap_content"

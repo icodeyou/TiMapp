@@ -62,10 +62,10 @@ public class Category implements Serializable{
                 Log.v(TAG, "Resource read from field ic_category_" + this.name + ": " + resourceWhite);
             } catch (IllegalAccessException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_highlight_unknown;
+                resourceWhite = R.drawable.ic_category_highlight_else;
             } catch (NoSuchFieldException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_highlight_unknown;
+                resourceWhite = R.drawable.ic_category_highlight_else;
             }
         }
         Log.v(TAG, "Getting icon resource: " + resourceWhite);
@@ -78,10 +78,10 @@ public class Category implements Serializable{
                 resourceBlack = R.drawable.class.getField("ic_category_" + this.name).getInt(null);
             } catch (IllegalAccessException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_unknown;
+                resourceBlack = R.drawable.ic_category_else;
             } catch (NoSuchFieldException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_unknown;
+                resourceBlack = R.drawable.ic_category_else;
             }
         }
         return resourceBlack;
@@ -112,10 +112,10 @@ public class Category implements Serializable{
             bigImageResId = R.drawable.class.getField("image_" + this.name).getInt(null);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            bigImageResId = R.drawable.image_unknown;
+            bigImageResId = R.drawable.image_else;
         } catch (NoSuchFieldException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            bigImageResId = R.drawable.image_unknown;
+            bigImageResId = R.drawable.image_else;
         }
         return bigImageResId;
     }
@@ -128,10 +128,10 @@ public class Category implements Serializable{
             smallImageResId = R.drawable.class.getField("image_place_" + this.name).getInt(null);
         } catch (IllegalAccessException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            smallImageResId = R.drawable.image_place_unknown;
+            smallImageResId = R.drawable.image_place_else;
         } catch (NoSuchFieldException e) {
             Log.e(TAG, "Unknown category layout for " + this.name);
-            smallImageResId = R.drawable.image_place_unknown;
+            smallImageResId = R.drawable.image_place_else;
         }
         return smallImageResId;
     }

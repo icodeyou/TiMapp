@@ -507,6 +507,7 @@ public class PlaceActivity extends BaseActivity {
             if (fragmentTags != null){
                 fragmentTags.updateBtnVisibility();
             }
+
             //if we are in the place
             boolean isUserComing = PlaceStatus.hasStatus(placeId, UserPlaceStatus.COMING);
             boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
