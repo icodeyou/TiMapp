@@ -2,6 +2,7 @@ package com.timappweb.timapp.database.models;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.utils.Util;
@@ -9,6 +10,7 @@ import com.timappweb.timapp.utils.Util;
 /**
  * Created by stephane on 4/5/2016.
  */
+@Table(name = "PlaceStatus")
 public class PlaceStatus extends Model {
 
     @Column(name = "PlaceId", index = true)
@@ -32,11 +34,17 @@ public class PlaceStatus extends Model {
 
     public static boolean hasStatus(int place_id, UserPlaceStatus status) {
         PlaceStatus placeStatus = new Select()
-                .from(QuotaType.class)
+                .from(PlaceStatus.class)
                 .where("Status = ?", status)
                 .where("PlaceId = ?", place_id)
                 // .where("PlaceId = ?", place_id) TODO set created limit
                 .executeSingle();
         return placeStatus != null;
+    }
+
+    public static PlaceStatus addStatus(int place_id, UserPlaceStatus status){
+        PlaceStatus placeStatus = new PlaceStatus(place_id, status);
+        placeStatus.save();
+        return placeStatus;
     }
 }

@@ -31,6 +31,7 @@ import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
+import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.ServerConfiguration;
@@ -322,8 +323,8 @@ public class PlaceActivity extends BaseActivity {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user on place " + placeId);
-                        QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
-//                        com.timappweb.timapp.cache.CacheData.addUserStatus(placeId, UserPlaceStatus.COMING);
+                        PlaceStatusManager.add(placeId, UserPlaceStatus.COMING);
+
                         progressBottom.setVisibility(View.GONE);
                         updateButtonsVisibility();
                     }

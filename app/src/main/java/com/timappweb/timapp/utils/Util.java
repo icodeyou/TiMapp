@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -75,12 +76,18 @@ public class Util {
         return type;
     }
 
-    public static String secondsTimestampToPrettyTime(long created) {
+    public static String secondsTimestampToPrettyTime(int created) {
         PrettyTime p = new PrettyTime();
-        return p.format(new Date(created));
+        return p.format(new Date((long)created * 1000));
     }
 
     public static String byteToKB(long size) {
         return ((double)size / (1000.0*1000)) + "MB";
+    }
+
+    public static boolean isSameDate(Calendar A, Calendar B, int type){
+        A.set(type, 0);
+        B.set(type, 0);
+        return A.getTimeInMillis() == B.getTimeInMillis();
     }
 }

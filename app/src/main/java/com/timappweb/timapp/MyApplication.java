@@ -46,6 +46,9 @@ import retrofit2.Response;
 
 public class MyApplication extends com.activeandroid.app.Application {
 
+
+    private static final String DB_NAME = "prepop.db";
+
     private static final String TAG = "MyApplication";
     public static final String KEY_IS_LOGIN = "IsLoggedIn";
     private static final String KEY_CURRENT_USER = "current_user";
@@ -186,6 +189,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         //com.timappweb.timapp.cache.CacheData.load();
 
         // INIT DB
+       //getApplicationContext().deleteDatabase(DB_NAME);
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProviderListener());

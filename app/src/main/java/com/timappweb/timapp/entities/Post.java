@@ -110,7 +110,7 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
         return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
         */
         // TODO [TEST] diffent time zone on phone
-        return Util.secondsTimestampToPrettyTime(((long) this.created) * 1000);
+        return Util.secondsTimestampToPrettyTime(this.created);
     }
 
 

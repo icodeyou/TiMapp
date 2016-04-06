@@ -11,6 +11,8 @@ import com.timappweb.timapp.database.models.UserActivity;
 import com.timappweb.timapp.database.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
 
+import java.util.List;
+
 
 /**
  * Created by stephane on 4/4/2016.
@@ -35,7 +37,8 @@ public class QuotaManager {
         UserActivity userActivity = new UserActivity(type);
         userActivity.save();
 
-        UserQuota.increment(MyApplication.getCurrentUser().id, QuotaType.getByType(type));
+        UserQuota userQuota = UserQuota.increment(MyApplication.getCurrentUser().id, QuotaType.getByType(type));
+        Log.d(TAG, "Updated user quota: " + userQuota);
 
         return userActivity;
     }
@@ -56,6 +59,9 @@ public class QuotaManager {
     public boolean checkQuota(String typeString){
         QuotaType type = QuotaType.getByType(typeString);
         UserQuota userQuota = UserQuota.get(MyApplication.getCurrentUser().id, type);
+
+        Log.d(TAG, "CHECKING QUOTA : " + userQuota);
+
         return userQuota.hasValidQuotas();
     }
 
@@ -64,7 +70,11 @@ public class QuotaManager {
     }
 
     private void init(){
-        initDummyQuota();
+        List<QuotaType> quotas = new Select().from(QuotaType.class).execute();
+        if (quotas.size() == 0){
+            initDummyQuota();
+        }
+        Log.d(TAG, "Loaded quotas: " + quotas.toString());
     }
 
     private void initDummyQuota(){

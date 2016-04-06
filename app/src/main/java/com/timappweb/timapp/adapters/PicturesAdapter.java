@@ -51,10 +51,16 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         // TODO update picasso if new release > 2.5.2 to fix this bug
         // https://github.com/square/picasso/issues/881
         //Picasso.with(context).load(fullUrl).fit().centerCrop().into(pictureViewHolder.ivPicture);
+
+        //int width = pictureViewHolder.ivPicture.getMeasuredWidth();
+        //int height = pictureViewHolder.ivPicture.getMeasuredHeight();
+        //
+
+        // TODO JACK WTF : RESIZE BUG si le view holder est 0x0 en taill
         Picasso.with(context)
                 .load(fullUrl)
-                .centerCrop()
-                .resize(pictureViewHolder.ivPicture.getMeasuredWidth(), pictureViewHolder.ivPicture.getMeasuredHeight())
+                //.centerCrop()
+                //.resize(width, height)
                 .error(R.drawable.placeholder_profile_error)
                 .placeholder(R.drawable.placeholder_profile)
                 .into(pictureViewHolder.ivPicture);

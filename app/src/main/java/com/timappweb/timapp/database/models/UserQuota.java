@@ -1,41 +1,51 @@
 package com.timappweb.timapp.database.models;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import com.timappweb.timapp.utils.Util;
 
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Created by stephane on 4/5/2016.
  */
+@Table(name = "UserQuotas")
 public class UserQuota extends Model {
 
-    @Column(name = "Type", index = true)
+    private static final String TAG = "UserQuota";
+
+    @Column(name = "Type", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public QuotaType type;
 
-    @Column(name = "UserId", index = true)
+    @Column(name = "UserId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public int user_id;
 
     @Column(name = "LastActivity")
     public int last_activity;
 
-    @Column(name = "MaxPerMinute")
+    @Column(name = "QuotaMinute")
     public int quota_minute;
 
-    @Column(name = "MaxPerHour")
+    @Column(name = "QuotaHour")
     public int quota_hour;
 
-    @Column(name = "MaxPerDay")
+    @Column(name = "QuotaDay")
     public int quota_day;
 
-    @Column(name = "MaxPerMonth")
+    @Column(name = "QuotaMonth")
     public int quota_month;
 
-    @Column(name = "MaxPerYear")
+    @Column(name = "QuotaYear")
     public int quota_year;
 
-    @Column(name = "MaxOverall")
+    @Column(name = "QuotaOverall")
     public int quota_overall;
 
     public UserQuota() {
@@ -55,38 +65,137 @@ public class UserQuota extends Model {
         this.quota_overall = 0;
     }
 
+    public static List<UserQuota> all(){
+        return new Select().from(UserQuota.class)
+                .execute();
+    }
+
     public static UserQuota get(int user_id, QuotaType type){
-        UserQuota userQuota = (UserQuota) new Select()
+        UserQuota userQuota = new Select()
                 .from(UserQuota.class)
                 .where("UserId = ?", user_id)
-                .where("Type = ?", type)
-                .execute();
+                .where("Type = ?", type.getId())
+                .executeSingle();
         if (userQuota == null){
+            Log.i(TAG, "Cannot find user quota for user_id=" + user_id + " and type=" + type.type);
+            Log.d(TAG, "Current quotas are: " + UserQuota.all());
             userQuota = new UserQuota(user_id, type);
             userQuota.save();
         }
         return userQuota;
     }
 
+/*
+    public static UserQuota get(int user_id, int type_id){
+        UserQuota userQuota = new Select()
+                .from(UserQuota.class)
+                .where("UserId = ?", user_id)
+                .where("Type = ?", type_id)
+                .executeSingle();
+        if (userQuota == null){
+            Log.i(TAG, "Cannot find user quota for user_id=" + user_id + " and type=" + type_id);
+            Log.d(TAG, "Current quotas are: " + UserQuota.all());
+            userQuota = new UserQuota(user_id, type_id);
+            userQuota.save();
+        }
+        return userQuota;
+    }*/
+
     public boolean hasValidQuotas() {
-        return Util.isOlderThan(this.last_activity, this.type.min_delay)
-                && this.quota_minute < this.type.quota_minute
-                && this.quota_hour < this.type.quota_hour
-                && this.quota_month < this.type.quota_month
-                && this.quota_year < this.type.quota_year
-                && this.quota_overall < this.type.quota_overall;
+        this.resetQuotas();
+
+        return  (this.type.min_delay == 0 || Util.isOlderThan(this.last_activity, this.type.min_delay))
+                && (this.quota_minute == 0 || this.quota_minute < this.type.quota_minute)
+                && (this.quota_hour == 0 || this.quota_hour < this.type.quota_hour)
+                && (this.quota_day == 0 || this.quota_day < this.type.quota_day)
+                && (this.quota_month == 0 || this.quota_month < this.type.quota_month)
+                && (this.quota_year == 0 || this.quota_year < this.type.quota_year)
+                && (this.quota_overall == 0 || this.quota_overall < this.type.quota_overall);
     }
 
-    public static void increment(int id, QuotaType type) {
-        Update stmt = new Update(UserQuota.class);
-        stmt.set("quota_minute = quota_minute + 1" +
-                " AND quota_hour = quota_hour + 1" +
-                " AND quota_month = quota_month + 1" +
-                " AND quota_year = quota_year + 1" +
-                " AND quota_overall = quota_overall + 1" +
-                " AND last_activity = ? ", Util.getCurrentTimeSec())
-                .where("UserId = ? " , id)
-                .where("Type = ? " , id)
-                .execute();
+    public void setMinActivityReason(){
+
+    }
+
+    public String setReason(){
+        return "Invalod ";
+    }
+
+    public static UserQuota increment(int id, QuotaType type) {
+        UserQuota userQuota = UserQuota.get(id, type);
+        userQuota.increment();
+        userQuota.save();
+        return userQuota;
+    }
+
+    public void increment() {
+        this.quota_minute += 1;
+        this.quota_hour += 1;
+        this.quota_day += 1;
+        this.quota_month += 1;
+        this.quota_year += 1;
+        this.quota_overall += 1;
+        this.last_activity = Util.getCurrentTimeSec();
+    }
+
+    public void resetQuotas(){
+        if (last_activity == 0){
+            return;
+        }
+        Calendar currentDate = Calendar.getInstance(); // locale-specific
+        currentDate.setTimeInMillis(Util.getCurrentTimeSec() * 1000);
+        currentDate.set(Calendar.MILLISECOND, 0);
+
+        Calendar lastActivity =  Calendar.getInstance();
+        lastActivity.setTimeInMillis(this.last_activity * 1000);
+        lastActivity.set(Calendar.MILLISECOND, 0);
+
+        Log.v(TAG, "Resetting quotas: ");
+        if (Util.isSameDate(lastActivity, currentDate, Calendar.SECOND)){
+            Log.v(TAG, "    -> Nothing to do");
+            return ;
+        }
+        Log.v(TAG, "    -> new minute");
+        this.quota_minute = 0;
+
+        if (Util.isSameDate(lastActivity, currentDate, Calendar.MINUTE)){
+            return ;
+        }
+        Log.v(TAG, "    -> new hour");
+        this.quota_hour = 0;
+
+        if (Util.isSameDate(lastActivity, currentDate, Calendar.HOUR_OF_DAY)){
+            return ;
+        }
+        Log.v(TAG, "    -> new day");
+        this.quota_day = 0;
+
+        if (Util.isSameDate(lastActivity, currentDate, Calendar.DAY_OF_MONTH)){
+            return ;
+        }
+        this.quota_month = 0;
+        Log.v(TAG, "    -> new month");
+
+        if (Util.isSameDate(lastActivity, currentDate, Calendar.DAY_OF_YEAR)){
+            return ;
+        }
+        this.quota_year = 0;
+        Log.v(TAG, "    -> new year");
+    }
+
+
+    @Override
+    public String toString() {
+        return "UserQuota{" +
+                "name=" + type.type +
+                ", user_id=" + user_id +
+                ", last_activity=" + last_activity + "("+Util.secondsTimestampToPrettyTime(last_activity)+")" +
+                ", quota_minute=" + quota_minute +
+                ", quota_hour=" + quota_hour +
+                ", quota_day=" + quota_day +
+                ", quota_month=" + quota_month +
+                ", quota_year=" + quota_year +
+                ", quota_overall=" + quota_overall +
+                '}';
     }
 }

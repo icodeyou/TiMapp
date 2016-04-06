@@ -2,11 +2,14 @@ package com.timappweb.timapp.database.models;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.timappweb.timapp.exceptions.BadConfigurationError;
 
 /**
  * Created by stephane on 4/4/2016.
  */
+@Table(name = "QuotaTypes")
 public class QuotaType extends Model{
 
     public static final String PLACE = "places";
@@ -55,9 +58,27 @@ public class QuotaType extends Model{
     }
 
     public static QuotaType getByType(String type) {
-        return new Select()
+        QuotaType quotaType = new Select()
                 .from(QuotaType.class)
                 .where("Type = ?", type)
                 .executeSingle();
+        if (quotaType == null){
+            throw new BadConfigurationError();
+        }
+        return quotaType;
+    }
+
+    @Override
+    public String toString() {
+        return "QuotaType{" +
+                "type='" + type + '\'' +
+                ", min_delay=" + min_delay +
+                ", quota_minute=" + quota_minute +
+                ", quota_hour=" + quota_hour +
+                ", quota_day=" + quota_day +
+                ", quota_month=" + quota_month +
+                ", quota_year=" + quota_year +
+                ", quota_overall=" + quota_overall +
+                '}';
     }
 }
