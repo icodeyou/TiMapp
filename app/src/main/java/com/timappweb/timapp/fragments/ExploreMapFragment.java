@@ -31,6 +31,7 @@ import com.timappweb.timapp.entities.MapTag;
 import com.timappweb.timapp.entities.MarkerValueInterface;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
+import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.PlaceClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
@@ -44,7 +45,7 @@ import com.timappweb.timapp.views.PlaceView;
 import java.util.HashMap;
 import java.util.List;
 
-public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener{
+public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener {
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
     private static LatLngBounds mapBounds;
@@ -159,13 +160,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         super.onResume();
         Log.d(TAG, "ExploreMapFragment.onResume()");
         this.loadMapIfNeeded();
-
-        /*eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
-            @Override
-            public void update() {
-                placesAdapter.notifyDataSetChanged();
-            }
-        });*/
     }
 
     public void setLoaderVisibility(boolean bool) {

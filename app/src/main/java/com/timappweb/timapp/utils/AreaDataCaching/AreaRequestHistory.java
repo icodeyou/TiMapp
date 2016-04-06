@@ -5,14 +5,11 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.entities.MarkerValueInterface;
-import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.IntLatLng;
 import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;

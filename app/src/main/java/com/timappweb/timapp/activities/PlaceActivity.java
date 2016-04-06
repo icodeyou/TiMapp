@@ -38,14 +38,15 @@ import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.database.models.PlaceStatus;
 import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.fragments.PlaceBaseFragment;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
-import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.ApiCallFactory;
+import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -56,7 +57,6 @@ import com.timappweb.timapp.views.PlaceView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Vector;
 
 import okhttp3.MediaType;
@@ -88,7 +88,6 @@ public class PlaceActivity extends BaseActivity {
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
 
-    private int loadedFragments; // Number of fragments
     private PlacePicturesFragment fragmentPictures;
     private PlaceTagsFragment fragmentTags;
     private PlacePeopleFragment fragmentPeople;
@@ -101,13 +100,12 @@ public class PlaceActivity extends BaseActivity {
     private GestureDetector gestureDetector;
     private View.OnTouchListener gestureListener;
 
-    //TODO : Update this variable
-    private boolean isAllowedToAddPic = true;
 
     //Listeners
     private View.OnClickListener tagListener;
     private View.OnClickListener pictureListener;
     private View.OnClickListener peopleListener;
+    private Vector<PlaceBaseFragment> childFragments;
 
 
     //Override methods
@@ -123,7 +121,7 @@ public class PlaceActivity extends BaseActivity {
             IntentsUtils.home(this);
             return;
         }
-        loadedFragments = 0;
+
 
         setContentView(R.layout.activity_place);
         initToolbar(true);
@@ -175,7 +173,7 @@ public class PlaceActivity extends BaseActivity {
                 setDefaultShareIntent();
                 return true;
             case R.id.action_reload:
-                reloadPlace();
+                reloadData();
                 return true;
             case android.R.id.home:
                 finish();
@@ -189,9 +187,6 @@ public class PlaceActivity extends BaseActivity {
         NavUtils.navigateUpFromSameTask(this);
     }
 
-    private void initPlaceView() {
-        placeView.setPlace(place);
-    }
 
     @Override
     protected void onPause() {
@@ -208,97 +203,21 @@ public class PlaceActivity extends BaseActivity {
 
         if (requestCode == REQUEST_CAMERA) {
             Uri photoUri = data.getData();
-            this.uploadPicture(photoUri);
+            fragmentPictures.uploadPicture(photoUri);
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     //private methods
     //////////////////////////////////////////////////////////////////////////////
 
-    private void reloadPlace() {
+    private void reloadData() {
         invalidateOptionsMenu();
-        fragmentTags.setProgressView(true);
-        fragmentPeople.setProgressView(true);
-        fragmentPictures.setProgressView(true);
-        fragmentPictures.loadPictures();
-        fragmentTags.loadTags();
-        fragmentPeople.load();
-        updateButtonsVisibility();
-    }
-
-    private void uploadPicture(final Uri fileUri) {
-        final Context context = this;
-        fragmentPictures.setUploadVisibility(true);
-
-        // create upload service client
-        File file = new File(fileUri.getPath());
-
-        try {
-            // Compress the file
-            Log.d(TAG, "BEFORE COMPRESSION: " +
-                    "Photo '"+ file.getAbsolutePath() + "'" +
-                    " has size: " + Util.byteToKB(file.length()) +
-                    ". Max size: " + Util.byteToKB(MyApplication.getApplicationRules().picture_max_size));
-
-            ServerConfiguration.Rules rules = MyApplication.getApplicationRules();
-            file = PictureUtility.resize(context, file, rules.picture_max_width, rules.picture_max_height);
-
-            MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
-
-            Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +
-                    " has size: " + Util.byteToKB(file.length()) +
-                    " and type: " + fileMimeType);
-
-            RequestBody body = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("photo", file.getName(),
-                            RequestBody.create(fileMimeType, file))
-                    .build();
-
-            // finally, execute the request
-            Call<RestFeedback> call = RestClient.service().upload(this.placeId, body);
-            call.enqueue(new Callback<RestFeedback>() {
-                @Override
-                public void onResponse(Response<RestFeedback> response) {
-                    if (response.isSuccess()) {
-                        RestFeedback feedback = response.body();
-
-                        if (feedback.success) {
-                            Log.v(TAG, "SUCCESS UPLOAD IMAGE");
-                            fragmentPictures.setUploadVisibility(false);
-                            // Get the bitmap in according to the width of the device
-                            Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
-                            //fragmentPictures.getPicAdapter().addData(bitmap);
-                            fragmentPictures.loadPictures();
-                            fragmentPictures.getPicturesRv().smoothScrollToPosition(0);
-
-                            Picture picture = new Picture();
-                            picture.created = Util.getCurrentTimeSec();
-                            picture.place_id = placeId;
-                            QuotaManager.instance().add(QuotaType.PICTURE);
-                        } else {
-                            Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
-                            fragmentPictures.setUploadVisibility(false);
-                        }
-                        Toast.makeText(currentActivity, feedback.message, Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.e(TAG, "Upload error:" + t.getMessage());
-                    fragmentPictures.setUploadVisibility(false);
-                    Toast.makeText(context, "We cannot upload this image", Toast.LENGTH_LONG).show();
-                }
-
-            });
-            apiCalls.add(call);
-        } catch (IOException e) {
-            Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
-            e.printStackTrace();
-            return ;
+        for (PlaceBaseFragment fragment: childFragments){
+            fragment.loadData();
         }
+        updateBtnVisibility();
     }
 
 
@@ -326,7 +245,7 @@ public class PlaceActivity extends BaseActivity {
                         PlaceStatusManager.add(placeId, UserPlaceStatus.COMING);
 
                         progressBottom.setVisibility(View.GONE);
-                        updateButtonsVisibility();
+                        updateBtnVisibility();
                     }
 
                     @Override
@@ -388,44 +307,43 @@ public class PlaceActivity extends BaseActivity {
         };
     }
 
-    private void setTouchListeners() {
-       /* //PlaceActivity
-        iAmComingButton.setOnTouchListener(new ColorSquareOnTouchListener(this, iAmComingTv));
-        //Fragment Pictures
-        //setSimpleTouchListener(fragmentPictures.getSmallTagsButton(),R.drawable.border_radius_top_left_selected);
-        fragmentPictures.getMainButton().setOnTouchListener(
-                new ColorSquareOnTouchListener(this, fragmentPictures.getTvMainButton()));
-        //Fragment Tags
-        //setSimpleTouchListener(fragmentTags.getSmallPicButton(),R.drawable.border_radius_top_right_selected);
-        //setSimpleTouchListener(fragmentTags.getSmallPeopleButton(),R.drawable.border_radius_top_left_selected);
-        fragmentTags.getMainButton().setOnTouchListener(
-                new ColorSquareOnTouchListener(this, fragmentTags.getTvMainButton()));
-        //Fragment Posts
-        fragmentPeople.getMainButton().setOnTouchListener(
-                new ColorSquareOnTouchListener(this, fragmentPeople.getTvMainButton()));*/
-    }
 
     private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
-        List fragments = new Vector();
+        childFragments = new Vector();
 
         fragmentPictures = (PlacePicturesFragment) Fragment.instantiate(this, PlacePicturesFragment.class.getName());
         fragmentTags = (PlaceTagsFragment) Fragment.instantiate(this, PlaceTagsFragment.class.getName());
         fragmentPeople = (PlacePeopleFragment) Fragment.instantiate(this, PlacePeopleFragment.class.getName());
 
         // Ajout des Fragments dans la liste
-        fragments.add(fragmentPictures);
-        fragments.add(fragmentTags);
-        fragments.add(fragmentPeople);
+        childFragments.add(fragmentPictures);
+        childFragments.add(fragmentTags);
+        childFragments.add(fragmentPeople);
 
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
-        this.pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), fragments);
-
+        this.pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), childFragments);
         pager = (ViewPager) super.findViewById(R.id.place_viewpager);
         pager.setOffscreenPageLimit(2);
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
         pager.setCurrentItem(1);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                updateBtnVisibility();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -435,7 +353,7 @@ public class PlaceActivity extends BaseActivity {
             public void onLocationChanged(Location location) {
                 MyApplication.setLastLocation(location);
                 if (MyApplication.hasFineLocation()){
-                    updateButtonsVisibility();
+                    updateBtnVisibility();
                 }
             }
         };
@@ -451,8 +369,7 @@ public class PlaceActivity extends BaseActivity {
             public void onResponse(Response<Place> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    Place p = response.body();
-                    place = p;
+                    place = response.body();
                     notifyPlaceLoaded();
                 } else {
                     Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
@@ -480,32 +397,22 @@ public class PlaceActivity extends BaseActivity {
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }
+        placeView.setPlace(place);
 
-        initPlaceView();
+        updateBtnVisibility();
     }
 
-    public void notifyFragmentsLoaded() {
-        loadedFragments = loadedFragments + 1;
-        if(loadedFragments>=3) {
-            invalidateOptionsMenu();
-            updateButtonsVisibility();
-            //setTouchListeners();
-        }
-    }
 
     /**
      * Show or hide add post or coming button according to user location
      */
-    public void updateButtonsVisibility(){
+    public void updateBtnVisibility(){
         if(place != null && MyApplication.hasLastLocation()) {
-            if (fragmentPeople != null){
-                fragmentPeople.updateBtnVisibility();
-            }
-            if (fragmentPictures != null){
-                fragmentPictures.updateBtnVisibility();
-            }
-            if (fragmentTags != null){
-                fragmentTags.updateBtnVisibility();
+
+            for (PlaceBaseFragment fragment: childFragments){
+                if (fragment.isVisible()){
+                    fragment.updateBtnVisibility();
+                }
             }
 
             //if we are in the place
@@ -580,4 +487,7 @@ public class PlaceActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    public boolean isUserAround() {
+        return this.place != null && this.place.isAround();
+    }
 }

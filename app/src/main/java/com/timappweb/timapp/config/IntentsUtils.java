@@ -283,7 +283,7 @@ public class IntentsUtils {
         if (extras == null){
             return -1;
         }
-        return Integer.valueOf(extras.getString("place_id", "-1"));
+        return extras.getInt("place_id", Integer.valueOf(extras.getString("place_id", "-1"))); // usefull for notifications
     }
 
 }

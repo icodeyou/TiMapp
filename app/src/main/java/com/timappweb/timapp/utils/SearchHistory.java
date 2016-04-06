@@ -138,7 +138,7 @@ public class SearchHistory<T>{
      01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.utils.SearchHistory.filterData(SearchHistory.java:135)
      01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.utils.SearchHistory$Item.getFilteredData(SearchHistory.java:179)
      01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.utils.SearchHistory.search(SearchHistory.java:54)
-     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.managers.SearchAndSelectTagManager.loadTags(SearchAndSelectTagManager.java:113)
+     01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.managers.SearchAndSelectTagManager.loadData(SearchAndSelectTagManager.java:113)
      01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.managers.SearchAndSelectTagManager.suggestTag(SearchAndSelectTagManager.java:109)
      01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at com.timappweb.timapp.listeners.OnBasicQueryTagListener.onQueryTextChange(OnBasicQueryTagListener.java:37)
      01-31 16:33:05.019 26505-26505/com.timappweb.timapp E/AndroidRuntime:     at android.support.v7.widget.SearchView.onTextChanged(SearchView.java:1148)

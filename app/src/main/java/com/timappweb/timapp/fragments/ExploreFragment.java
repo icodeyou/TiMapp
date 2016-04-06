@@ -1,6 +1,5 @@
 package com.timappweb.timapp.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,8 +14,8 @@ import android.view.ViewGroup;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 
@@ -62,12 +61,12 @@ public class ExploreFragment extends Fragment{
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), MyApplication.searchFilter);
         dataLoader.setLoadingListener(new LoadingListener() {
             @Override
-            public void onStart() {
+            public void onLoadStart() {
                 if (getExploreMapFragment() != null) getExploreMapFragment().setLoaderVisibility(true);
             }
 
             @Override
-            public void onEnd() {
+            public void onLoadEnd() {
                 if (getExploreMapFragment() != null) getExploreMapFragment().setLoaderVisibility(false);
             }
         });

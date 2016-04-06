@@ -10,19 +10,15 @@ import android.view.View;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.PaginationResponse;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InvitationsActivity extends BaseActivity{

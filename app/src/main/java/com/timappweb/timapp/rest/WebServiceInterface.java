@@ -9,14 +9,11 @@ import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;

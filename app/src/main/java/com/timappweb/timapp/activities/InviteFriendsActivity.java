@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.google.gson.JsonArray;
-import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnFriendsListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -22,12 +20,10 @@ import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.PaginationResponse;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.utils.NotificationFactory;
 
 import java.util.ArrayList;
 import java.util.List;

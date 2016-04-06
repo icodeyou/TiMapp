@@ -1,11 +1,7 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import com.timappweb.timapp.entities.MarkerValueInterface;
-import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.IntPoint;
-
-import java.util.List;
 
 /**
  * Created by stephane on 12/9/2015.

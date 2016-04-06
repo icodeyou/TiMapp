@@ -25,7 +25,8 @@ import com.timappweb.timapp.entities.UserPlace;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
-import com.timappweb.timapp.rest.PaginationResponse;
+import com.timappweb.timapp.rest.ApiCallFactory;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -39,13 +40,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class PlacePeopleFragment extends BaseFragment {
+public class PlacePeopleFragment extends PlaceBaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
     private Context         context;
     private PlaceActivity placeActivity;
-    private Place place;
-    private int placeId;
 
     private PlaceUsersAdapter placeUsersAdapter;
     private RecyclerView    peopleRv;
@@ -73,10 +72,8 @@ public class PlacePeopleFragment extends BaseFragment {
         setListeners();
         initRv();
         initAdapter();
-
-        load();
-
-        placeActivity.notifyFragmentsLoaded();
+        loadData();
+        updateBtnVisibility();
 
         return root;
     }
@@ -91,8 +88,6 @@ public class PlacePeopleFragment extends BaseFragment {
     private void initVariables(View root) {
         placeActivity = (PlaceActivity) getActivity();
         context= placeActivity.getBaseContext();
-        place = placeActivity.getPlace();
-        placeId = placeActivity.getPlaceId();
 
         //Views
         mainButton = root.findViewById(R.id.main_button);
@@ -136,7 +131,7 @@ public class PlacePeopleFragment extends BaseFragment {
         peopleRv.setAdapter(placeUsersAdapter);
     }
 
-    public void load() {
+    public void loadData() {
         placeUsersAdapter.clear();
         loadPosts();
         if (MyApplication.isLoggedIn()){
@@ -148,12 +143,11 @@ public class PlacePeopleFragment extends BaseFragment {
 
     private void loadPosts() {
         Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
-        call.enqueue(new RestCallback<List<Post>>(getContext()) {
+        RestCallback callback = new RestCallback<List<Post>>(getContext()) {
             @Override
             public void onResponse(Response<List<Post>> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    setProgressView(false);
                     notifyPostsLoaded(response.body());
                 }
             }
@@ -161,7 +155,6 @@ public class PlacePeopleFragment extends BaseFragment {
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                setProgressView(false);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 
@@ -169,8 +162,8 @@ public class PlacePeopleFragment extends BaseFragment {
             protected void finalize() throws Throwable {
                 super.finalize();
             }
-        });
-        asynCalls.add(call);
+        };
+        asynCalls.add(ApiCallFactory.build(call, callback, this));
     }
 
 
@@ -179,7 +172,7 @@ public class PlacePeopleFragment extends BaseFragment {
         conditions.put("status", String.valueOf(status));
 
         Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
-        call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext()) {
+        call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext(), this) {
             @Override
             public void onResponse(Response<PaginationResponse<UserPlace>> response) {
                 super.onResponse(response);
@@ -191,7 +184,6 @@ public class PlacePeopleFragment extends BaseFragment {
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                setProgressView(false);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 
@@ -219,6 +211,7 @@ public class PlacePeopleFragment extends BaseFragment {
             }
 
         });
+        asynCalls.add(call);
     }
 
 
@@ -247,16 +240,7 @@ public class PlacePeopleFragment extends BaseFragment {
     }
 
     public void updateBtnVisibility() {
-        boolean showMainButton = place != null && MyApplication.hasLastLocation() && place.isAround();
-        mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-    }
-
-    public TextView getTvMainButton() {
-        return tvAddButton;
-    }
-
-    public View getMainButton() {
-        return mainButton;
+        mainButton.setVisibility(placeActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressView(boolean visibility) {

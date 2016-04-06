@@ -5,7 +5,7 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 
 /**
- * Created by Jack on 28/01/2016.
+ * TODO REMOVE
  */
 public class PostAndPlaceRequest {
 

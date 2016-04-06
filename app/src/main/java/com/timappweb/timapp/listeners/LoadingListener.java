@@ -5,8 +5,8 @@ package com.timappweb.timapp.listeners;
  */
 public interface LoadingListener {
 
-    public void onStart();
+    public void onLoadStart();
 
-    public void onEnd();
+    public void onLoadEnd();
 
 }

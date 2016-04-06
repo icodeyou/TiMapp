@@ -1,5 +1,7 @@
 package com.timappweb.timapp.entities;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -141,7 +143,9 @@ public class Place implements Serializable, MarkerValueInterface {
     }
 
     public boolean isAround() {
-        return this.isAround(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude());
+        Location lastLocation = MyApplication.getLastLocation();
+        if (lastLocation == null) return false;
+        return this.isAround(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
 
     public static boolean isValidName(String name) {

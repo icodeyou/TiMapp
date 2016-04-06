@@ -3,7 +3,6 @@ package com.timappweb.timapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,11 +15,12 @@ import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.PlacesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.List;
 
-public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelectedListener{
+public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelectedListener {
 
     private static final String TAG = "ExplorePlaceFragment";
     private PlacesAdapter placesAdapter;

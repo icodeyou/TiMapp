@@ -5,26 +5,29 @@ import android.util.Log;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.listeners.LoadingListener;
 
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
 public class RestCallback<T> implements Callback<T> {
+
     private static final String TAG = "RestError";
+
+    protected LoadingListener listener = null;
     protected Context context = null;
-
-
 
     public RestCallback(Context context){
         this.context = context;
     }
 
-    public void onResponse200(Response<T> response){
-
+    public RestCallback(Context context, LoadingListener listener){
+        this.context = context;
+        this.listener = listener;
     }
 
-
+    public void onResponse200(Response<T> response){}
 
     @Override
     public void onResponse(Response<T> response) {
@@ -59,6 +62,10 @@ public class RestCallback<T> implements Callback<T> {
         this.onFinish();
     }
 
-    public void onFinish(){}
+    public void onFinish(){
+        if (this.listener != null){
+            listener.onLoadEnd();
+        }
+    }
 
 }

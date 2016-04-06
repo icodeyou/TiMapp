@@ -2,17 +2,13 @@ package com.timappweb.timapp.utils.AreaDataCaching;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.SearchFilter;
-import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.listeners.LoadingListener;
-import com.timappweb.timapp.rest.QueryCondition;
+import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntPoint;
@@ -80,19 +76,19 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
         final int itemRequestId = request.setPendingCall(call);
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
 
-        if (loadingListener!=null) loadingListener.onStart();
+        if (loadingListener!=null) loadingListener.onLoadStart();
         call.enqueue(new RestCallback<List<Place>>(mContext) {
 
             @Override
             public void onFailure(Throwable t) {
-                if (loadingListener!=null) loadingListener.onEnd();
+                if (loadingListener!=null) loadingListener.onLoadEnd();
                 super.onFailure(t);
             }
 
             @Override
             public void onResponse(Response<List<Place>> response) {
                 super.onResponse(response);
-                if (loadingListener!= null) loadingListener.onEnd();
+                if (loadingListener!= null) loadingListener.onLoadEnd();
 
                 if (request.isOutdated(itemRequestId)) {
                     Log.d(TAG, "Outdated request " + request.currentRequestId + " > " + itemRequestId + " . Do not load tags");
