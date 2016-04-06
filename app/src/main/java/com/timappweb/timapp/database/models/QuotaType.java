@@ -13,6 +13,7 @@ public class QuotaType extends Model{
     public static final String PICTURE = "pictures";
     public static final String POST = "posts";
     public static final String FRIENDS = "places_invitations";
+    public static final String NOTIFY_COMING = "places_users";
 
     @Column(name = "Type", index = true)
     public String type;
@@ -21,25 +22,36 @@ public class QuotaType extends Model{
     public int min_delay;
 
     @Column(name = "TotalMinute")
-    public int total_minute;
+    public int quota_minute;
 
     @Column(name = "TotalHour")
-    public int total_hour;
+    public int quota_hour;
 
     @Column(name = "TotalDay")
-    public int total_day;
+    public int quota_day;
 
     @Column(name = "TotalMonth")
-    public int total_month;
+    public int quota_month;
 
     @Column(name = "TotalYear")
-    public int total_year;
+    public int quota_year;
 
     @Column(name = "TotalOverall")
-    public int total_overall;
+    public int quota_overall;
 
     public QuotaType() {
         super();
+    }
+
+    public QuotaType(String type, int min_delay, int quota_minute, int quota_hour, int quota_day, int quota_month, int quota_year, int quota_overall) {
+        this.type = type;
+        this.min_delay = min_delay;
+        this.quota_minute = quota_minute;
+        this.quota_hour = quota_hour;
+        this.quota_day = quota_day;
+        this.quota_month = quota_month;
+        this.quota_year = quota_year;
+        this.quota_overall = quota_overall;
     }
 
     public static QuotaType getByType(String type) {

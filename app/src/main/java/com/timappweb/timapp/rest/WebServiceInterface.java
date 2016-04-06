@@ -198,4 +198,8 @@ public interface WebServiceInterface {
     @POST("PlacesUsers/place/{id}.json")
     Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
 
+    // ---------------------------------------------------------------------------------------------
+    // Quotas
+    @GET("quota-types.json")
+    Call<List<Place>> quotaTypes();
 }

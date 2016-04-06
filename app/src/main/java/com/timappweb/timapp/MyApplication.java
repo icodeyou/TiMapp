@@ -17,7 +17,9 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.LocalPersistenceManager;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.ServerConfiguration;
+import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.SocialProvider;
@@ -181,7 +183,9 @@ public class MyApplication extends com.activeandroid.app.Application {
         initFacebookPermissions();
 
         // Loading cache in memory
-        com.timappweb.timapp.cache.CacheData.load();
+        //com.timappweb.timapp.cache.CacheData.load();
+
+        // INIT DB
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProviderListener());
