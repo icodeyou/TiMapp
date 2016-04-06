@@ -33,6 +33,8 @@ import com.timappweb.timapp.services.MyGcmListenerService;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.utils.Util;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -190,6 +192,8 @@ public class MyApplication extends com.activeandroid.app.Application {
 
         // INIT DB
        //getApplicationContext().deleteDatabase(DB_NAME);
+        JodaTimeAndroid.init(this);
+        QuotaManager.init(getApplicationContext());
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProviderListener());

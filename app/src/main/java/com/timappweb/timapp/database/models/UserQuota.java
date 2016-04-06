@@ -20,6 +20,7 @@ import java.util.Locale;
 public class UserQuota extends Model {
 
     private static final String TAG = "UserQuota";
+    public String _quota_error_reason;
 
     @Column(name = "Type", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public QuotaType type;
@@ -104,22 +105,38 @@ public class UserQuota extends Model {
     public boolean hasValidQuotas() {
         this.resetQuotas();
 
-        return  (this.type.min_delay == 0 || Util.isOlderThan(this.last_activity, this.type.min_delay))
-                && (this.quota_minute == 0 || this.quota_minute < this.type.quota_minute)
-                && (this.quota_hour == 0 || this.quota_hour < this.type.quota_hour)
-                && (this.quota_day == 0 || this.quota_day < this.type.quota_day)
-                && (this.quota_month == 0 || this.quota_month < this.type.quota_month)
-                && (this.quota_year == 0 || this.quota_year < this.type.quota_year)
-                && (this.quota_overall == 0 || this.quota_overall < this.type.quota_overall);
+        if (this.type.min_delay != 0 && Util.delayFromNow(this.last_activity) < this.type.min_delay){
+            setMinDelayReason();
+            return false;
+        }
+
+        return  _checkQuota(this.quota_minute, this.type.quota_minute, "minute")
+                && _checkQuota(this.quota_hour, this.type.quota_hour, "hour")
+                && _checkQuota(this.quota_day, this.type.quota_day, "day")
+                && _checkQuota(this.quota_month, this.type.quota_month, "month")
+                && _checkQuota(this.quota_year, this.type.quota_year, "year")
+                && _checkQuota(this.quota_overall, this.type.quota_overall, "life");
     }
 
-    public void setMinActivityReason(){
-
+    public void setMinDelayReason(){
+        int mustWaitSeconds = this.type.min_delay - Util.delayFromNow(this.last_activity);
+        this._quota_error_reason = "You must wait " + Util.secondsDurationToPrettyTime(mustWaitSeconds) + " before posting again";
     }
 
-    public String setReason(){
-        return "Invalod ";
+
+    public boolean _checkQuota(int current, int limit, String period){
+        if (limit > 0 && current >= limit){
+            this._quota_error_reason = "You are limited at " + limit + " per " + period;
+            return false;
+        }
+
+        return true;
     }
+
+    public String getQuotaErrorReason(){
+        return this._quota_error_reason;
+    }
+
 
     public static UserQuota increment(int id, QuotaType type) {
         UserQuota userQuota = UserQuota.get(id, type);

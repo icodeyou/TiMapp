@@ -1,6 +1,8 @@
 package com.timappweb.timapp.config;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
@@ -21,14 +23,18 @@ public class QuotaManager {
 
     private static final String TAG = "QuotaManager";
     private static QuotaManager inst = null;
+    private final Context context;
 
-    private QuotaManager(){};
+    private QuotaManager(Context context){
+        this.context = context;
+    };
+
+    public static void init(Context context){
+            inst = new QuotaManager(context);
+            inst.init();
+    }
 
     public static QuotaManager instance(){
-        if (inst == null){
-            inst = new QuotaManager();
-            inst.init();
-        }
         return inst;
     }
 
@@ -57,12 +63,20 @@ public class QuotaManager {
     }
 
     public boolean checkQuota(String typeString){
+        return checkQuota(typeString, false);
+    }
+
+    public boolean checkQuota(String typeString, boolean showMessage){
         QuotaType type = QuotaType.getByType(typeString);
         UserQuota userQuota = UserQuota.get(MyApplication.getCurrentUser().id, type);
 
         Log.d(TAG, "CHECKING QUOTA : " + userQuota);
 
-        return userQuota.hasValidQuotas();
+        boolean validQuota = userQuota.hasValidQuotas();
+        if (showMessage && !validQuota){
+            Toast.makeText(context, userQuota.getQuotaErrorReason(), Toast.LENGTH_LONG).show();
+        }
+        return validQuota;
     }
 
     public void clearOldActivities(){

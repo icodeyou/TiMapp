@@ -143,8 +143,8 @@ public class IntentsUtils {
     public static void addPostStepLocate(Context context) {
         if (!requireLogin(context))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.POST)){
-            Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+        if (!QuotaManager.instance().checkQuota(QuotaType.POST, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = new Intent(context, LocateActivity.class);
@@ -194,8 +194,8 @@ public class IntentsUtils {
     public static void addPlace(Context context) {
         if (!requireLogin(context))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.PLACE)){
-            Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+        if (!QuotaManager.instance().checkQuota(QuotaType.PLACE, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
         Intent intent = new Intent(context, AddPlaceActivity.class);
@@ -260,8 +260,8 @@ public class IntentsUtils {
     public static void addPostStepTags(Context context, Place place) {
         if (!requireLogin(context))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.POST)){
-            Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG).show();
+        if (!QuotaManager.instance().checkQuota(QuotaType.POST, true)){
+            //Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG).show();
             return;
         }
         Post post = new Post();

@@ -9,6 +9,10 @@ import android.webkit.MimeTypeMap;
 
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.Period;
+import org.joda.time.Seconds;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Calendar;
@@ -19,6 +23,8 @@ import java.util.Date;
  */
 public class Util {
 
+    private static PeriodFormatter _daysHoursMinutesFormater = null;
+
     public static String print(Location location) {
         return location.getLongitude()+"-"+location.getLatitude()+ " (Accuracy"+location.getAccuracy()+")";
     }
@@ -28,15 +34,18 @@ public class Util {
     }
 
     /**
-     *
-     * @param created seconds
-     * @param old seconds
+     * True if date is at least duration old
+     * @param date seconds
+     * @param duration seconds
      * @return
      */
-    public static boolean isOlderThan(int created, int old) {
-        return (getCurrentTimeSec()-created) > old;
+    public static boolean isOlderThan(int date, int duration) {
+        return (getCurrentTimeSec()-date) > duration;
     }
 
+    public static int delayFromNow(int date) {
+        return Util.getCurrentTimeSec() - date;
+    }
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
@@ -78,7 +87,25 @@ public class Util {
 
     public static String secondsTimestampToPrettyTime(int created) {
         PrettyTime p = new PrettyTime();
-        return p.format(new Date((long)created * 1000));
+        return p.format(new Date((long) created * 1000));
+    }
+    public static String secondsDurationToPrettyTime(int duration) {
+        // TODO define
+        if (_daysHoursMinutesFormater == null){
+            _daysHoursMinutesFormater = new PeriodFormatterBuilder()
+                    .appendDays()
+                    .appendSuffix(" day", " days")
+                    .appendSeparator(" and ")
+                    .appendMinutes()
+                    .appendSuffix(" min", " mins")
+                    .appendSeparator(" and ")
+                            //.appendSeconds()
+                            //.appendSuffix(" sec", " secs")
+                    .toFormatter();
+        }
+        Period period =  new Period(duration * 1000);
+        //System.out.println(daysHoursMinutes.print(period));
+        return _daysHoursMinutesFormater.print(period.normalizedStandard());
     }
 
     public static String byteToKB(long size) {
@@ -90,4 +117,5 @@ public class Util {
         B.set(type, 0);
         return A.getTimeInMillis() == B.getTimeInMillis();
     }
+
 }

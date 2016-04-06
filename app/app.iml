@@ -98,6 +98,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.sromku/simple-fb/4.1.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.timehop.stickyheadersrecyclerview/library/0.4.3/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.0.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/net.danlew/android.joda/2.9.3/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/org.jdeferred/jdeferred-android-aar/1.2.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
@@ -121,7 +122,9 @@
     <orderEntry type="library" exported="" name="rxandroid-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="design-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-ads-8.3.0" level="project" />
+    <orderEntry type="library" exported="" name="android.joda-2.9.3" level="project" />
     <orderEntry type="library" exported="" name="autolabelui-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="joda-time-2.9.3-no-tzdb" level="project" />
     <orderEntry type="library" exported="" name="retrofit-2.0.0-beta3" level="project" />
     <orderEntry type="library" exported="" name="converter-gson-2.0.0-beta3" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
