@@ -21,7 +21,7 @@ public class PlaceUsersHeaderAdapter extends PlaceUsersAdapter implements Sticky
 
     @Override
     public long getHeaderId(int position) {
-        return 0;
+        return 1;
     }
 
     @Override

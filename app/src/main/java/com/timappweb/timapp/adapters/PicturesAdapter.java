@@ -59,8 +59,6 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         // TODO JACK WTF : RESIZE BUG si le view holder est 0x0 en taill
         Picasso.with(context)
                 .load(fullUrl)
-                //.centerCrop()
-                //.resize(width, height)
                 .error(R.drawable.placeholder_profile_error)
                 .placeholder(R.drawable.placeholder_profile)
                 .into(pictureViewHolder.ivPicture);
