@@ -1,7 +1,6 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -163,7 +162,7 @@ public abstract class PlaceUsersAdapter
     public class PlacePeopleViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        CardView cv;
+        View cv;
         TextView tvUsername;
         TextView tvTime;
         RecyclerView rvPostTags;
@@ -174,7 +173,7 @@ public abstract class PlaceUsersAdapter
             itemView.setOnClickListener(this);
 
             // Get text views from item_post.xml
-            cv = (CardView) itemView.findViewById(R.id.cv);
+            cv = itemView.findViewById(R.id.cv);
             tvUsername = (TextView) itemView.findViewById(R.id.tv_username);
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
             rvPostTags = (RecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
