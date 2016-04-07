@@ -192,6 +192,20 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         // create upload service client
         File file = new File(fileUri.getPath());
 
+        LoadingListener pictureLoadListener = new LoadingListener() {
+            @Override
+            public void onLoadStart() {
+                setUploadVisibility(true);
+                updateBtnVisibility();
+            }
+
+            @Override
+            public void onLoadEnd() {
+                setUploadVisibility(false);
+                updateBtnVisibility();
+            }
+        };
+
         try {
             // Compress the file
             Log.d(TAG, "BEFORE COMPRESSION: " +
@@ -216,7 +230,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
             // finally, execute the request
             Call<RestFeedback> call = RestClient.service().upload(placeActivity.getPlaceId(), body);
-            RestCallback callback = new RestCallback<RestFeedback>(placeActivity) {
+            RestCallback callback = new RestCallback<RestFeedback>(placeActivity, pictureLoadListener) {
                 @Override
                 public void onResponse(Response<RestFeedback> response) {
                     if (response.isSuccess()) {
@@ -243,19 +257,9 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                 }
 
             };
-            asynCalls.add(ApiCallFactory.build(call, callback, new LoadingListener() {
-                @Override
-                public void onLoadStart() {
-                    setUploadVisibility(true);
-                    updateBtnVisibility();
-                }
 
-                @Override
-                public void onLoadEnd() {
-                    setUploadVisibility(false);
-                    updateBtnVisibility();
-                }
-            }));
+
+            asynCalls.add(ApiCallFactory.build(call, callback, pictureLoadListener));
 
         } catch (IOException e) {
             Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
