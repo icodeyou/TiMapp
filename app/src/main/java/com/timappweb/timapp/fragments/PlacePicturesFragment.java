@@ -273,10 +273,11 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         Log.v(TAG, "::updateBtnVisibility()");
         // Check if the user can post in this place
         boolean isUserAround = placeActivity.isUserAround();
+        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.POST);
         boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.PICTURE) && uploadView.getVisibility() != View.VISIBLE;
         boolean showMainButton = isUserAround && isAllowedToAddPic;
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        smallTagsButton.setVisibility(!showMainButton && isUserAround ? View.VISIBLE : View.GONE);
+        smallTagsButton.setVisibility(!showMainButton && isUserAround && isAllowedToAddPost ? View.VISIBLE : View.GONE);
     }
 
 
