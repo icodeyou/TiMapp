@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.speech.tts.SynthesisCallback;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -61,6 +62,12 @@ public class MyApplication extends com.activeandroid.app.Application {
     public static SearchFilter searchFilter = new SearchFilter();
     private static DeferredObject deferred;
     private int notifyCount = 0;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
 
     /**
