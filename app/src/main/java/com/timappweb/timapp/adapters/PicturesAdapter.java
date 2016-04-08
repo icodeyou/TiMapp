@@ -112,8 +112,8 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             //set height picture to prevent padding on view
             Point size = new Point();
             ((Activity) context).getWindowManager().getDefaultDisplay().getSize(size);
-            int halfScreenWidth = size.x/2;
-            ivPicture.getLayoutParams().height = halfScreenWidth;
+            int screenWidth = size.x;
+            ivPicture.getLayoutParams().height = screenWidth;
         }
 
         @Override
