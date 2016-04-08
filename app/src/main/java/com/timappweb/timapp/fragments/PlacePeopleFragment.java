@@ -143,10 +143,11 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     public void loadData() {
         placeUsersAdapter.clear();
         loadPosts();
+        loadByStatus(UserPlaceStatus.COMING);
+
         if (MyApplication.isLoggedIn()){
             loadInvites();
         }
-        loadByStatus(UserPlaceStatus.COMING);
     }
 
 

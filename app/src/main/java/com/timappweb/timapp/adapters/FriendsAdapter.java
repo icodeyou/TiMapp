@@ -1,7 +1,6 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,7 +100,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
     public class FriendViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        CardView cv;
+        View cv;
         TextView personName;
         ImageView personPhoto;
         View selectedView;
@@ -110,7 +109,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         FriendViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            cv = (CardView) itemView.findViewById(R.id.cv);
+            cv = itemView.findViewById(R.id.cv);
             personName = (TextView) itemView.findViewById(R.id.person_name);
             personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
             selectedView = itemView.findViewById(R.id.selectedView);

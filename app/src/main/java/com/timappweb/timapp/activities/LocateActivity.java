@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -167,6 +168,7 @@ public class LocateActivity extends BaseActivity{
 
 
     private void loadPlaces(Location location){
+        final Activity activity = this;
         Log.d(TAG, "Loading places with location: " + Util.print(location));
         QueryCondition conditions = new QueryCondition();
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
@@ -190,7 +192,7 @@ public class LocateActivity extends BaseActivity{
                         noPlaceView.setVisibility(View.GONE);
                         rvPlaces.setVisibility(View.VISIBLE);
                     } else {
-                        noPlaceView.setVisibility(View.VISIBLE);
+                        IntentsUtils.addPlace(activity);
                     }
                     placeAdapter.notifyDataSetChanged();
                 }
