@@ -144,9 +144,10 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         boolean isUserAround = placeActivity.isUserAround();
         boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.PICTURE);
         boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.POST);
+        boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.FRIENDS);
         boolean showMainButton = isUserAround && isAllowedToAddPost;
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        smallPeopleButton.setVisibility(isUserAround && !showMainButton ? View.VISIBLE : View.GONE);
+        smallPeopleButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);
         smallPicButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPic ? View.VISIBLE : View.GONE);
     }
 

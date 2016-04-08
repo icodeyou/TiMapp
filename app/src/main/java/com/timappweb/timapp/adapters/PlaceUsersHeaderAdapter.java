@@ -64,4 +64,5 @@ public class PlaceUsersHeaderAdapter extends PlaceUsersAdapter
                 textView.setText("Invited");
         }
     }
+
 }

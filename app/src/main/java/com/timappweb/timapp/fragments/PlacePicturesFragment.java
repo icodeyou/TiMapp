@@ -232,22 +232,20 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
             Call<RestFeedback> call = RestClient.service().upload(placeActivity.getPlaceId(), body);
             RestCallback callback = new RestCallback<RestFeedback>(placeActivity, pictureLoadListener) {
                 @Override
-                public void onResponse(Response<RestFeedback> response) {
-                    if (response.isSuccess()) {
-                        RestFeedback feedback = response.body();
+                public void onResponse200(Response<RestFeedback> response) {
+                    RestFeedback feedback = response.body();
 
-                        if (feedback.success) {
-                            Log.v(TAG, "SUCCESS UPLOAD IMAGE");
-                            // Get the bitmap in according to the width of the device
-                            Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
-                            getPicturesRv().smoothScrollToPosition(0);
-                            QuotaManager.instance().add(QuotaType.PICTURE);
-                            loadData();
-                        } else {
-                            Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
-                        }
-                        Toast.makeText(placeActivity, feedback.message, Toast.LENGTH_LONG).show();
+                    if (feedback.success) {
+                        Log.v(TAG, "SUCCESS UPLOAD IMAGE");
+                        // Get the bitmap in according to the width of the device
+                        Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
+                        getPicturesRv().smoothScrollToPosition(0);
+                        QuotaManager.instance().add(QuotaType.PICTURE);
+                        loadData();
+                    } else {
+                        Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                     }
+                    Toast.makeText(placeActivity, feedback.message, Toast.LENGTH_LONG).show();
                 }
 
                 @Override

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PlaceUsersAdapter
-        extends RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
+        extends  RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
     private static final String TAG = "PlaceUsersAdapter";
 
     private OnItemAdapterClickListener mItemClickListener;
@@ -42,6 +42,14 @@ public abstract class PlaceUsersAdapter
         this.context = context;
         this.data = new ArrayList<>();
     }
+
+    public void addData(List<? extends PlaceUserInterface> items) {
+        for(PlaceUserInterface item : items) {
+            this.data.add(item);
+        }
+        this.notifyDataSetChanged();
+    }
+
 
     public class VIEW_TYPES {
         public static final int UNDEFINED = 0;
@@ -139,15 +147,6 @@ public abstract class PlaceUsersAdapter
         return data.get(position);
     }
 
-    public void addData(PlaceUserInterface placeUserInterface) {
-        data.add(placeUserInterface);
-        notifyDataSetChanged();
-    }
-
-    public void addData(List<PlaceUserInterface> placeUserInterfaces) {
-        data.addAll(placeUserInterfaces);
-        notifyDataSetChanged();
-    }
 
     public void clear() {
         data.clear();

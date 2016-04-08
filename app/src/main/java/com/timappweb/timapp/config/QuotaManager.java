@@ -67,6 +67,9 @@ public class QuotaManager {
     }
 
     public boolean checkQuota(String typeString, boolean showMessage){
+        if (!MyApplication.isLoggedIn()){
+            return false;
+        }
         QuotaType type = QuotaType.getByType(typeString);
         UserQuota userQuota = UserQuota.get(MyApplication.getCurrentUser().id, type);
 

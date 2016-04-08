@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.adapters.PlaceUsersAdapter;
 import com.timappweb.timapp.adapters.PlaceUsersHeaderAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
@@ -29,7 +28,6 @@ import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.views.DividerDecoration;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.jdeferred.impl.DeferredObject;
@@ -76,7 +74,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         initAdapter();
         initRv();
         setListeners();
-        loadData();
         updateBtnVisibility();
 
         return root;
@@ -157,11 +154,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
         RestCallback callback = new RestCallback<List<Post>>(getContext()) {
             @Override
-            public void onResponse(Response<List<Post>> response) {
-                super.onResponse(response);
-                if (response.isSuccess()) {
-                    notifyPostsLoaded(response.body());
-                }
+            public void onResponse200(Response<List<Post>> response) {
+                placeUsersAdapter.addData(response.body());
             }
 
             @Override
@@ -186,11 +180,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
         call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext(), this) {
             @Override
-            public void onResponse(Response<PaginationResponse<UserPlace>> response) {
-                super.onResponse(response);
-                if (response.isSuccess()) {
-                    notifyUsersStatusLoaded(status, response.body().items);
-                }
+            public void onResponse200(Response<PaginationResponse<UserPlace>> response) {
+                placeUsersAdapter.addData(response.body().items);
             }
 
             @Override
@@ -199,10 +190,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
-            }
         });
     }
 
@@ -214,12 +201,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             public void onResponse200(Response<PaginationResponse<PlacesInvitation>> response) {
                 List<PlacesInvitation> invitations = response.body().items;
                 Log.d(TAG, "Loading " + invitations.size() + " invites sent");
-                notifyUserInvitedLoaded(invitations);
-            }
-
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
+                placeUsersAdapter.addData(invitations);
             }
 
         });
@@ -227,32 +209,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
 
-
-    private void notifyPostsLoaded(List<Post> items) {
-        //placeUsersAdapter.add("post", items);
-        //notifyDataChanged();
-        for(PlaceUserInterface p : items) {
-            placeUsersAdapter.addData(p);
-        }
-    }
-    private void notifyUsersStatusLoaded(UserPlaceStatus status, List<UserPlace> items) {
-        //placeUsersAdapter.add(status, items);
-        //notifyDataChanged();
-        for(PlaceUserInterface p : items) {
-            placeUsersAdapter.addData(p);
-        }
-    }
-    private void notifyUserInvitedLoaded(List<PlacesInvitation> items) {
-        Log.d(TAG, "Adding " + items.size() + " invitation(s)");
-        //placeUsersAdapter.add(UserPlaceStatus.INVITED, items);
-        //notifyDataChanged();
-        for(PlaceUserInterface p : items) {
-            placeUsersAdapter.addData(p);
-        }
-    }
-
     public void updateBtnVisibility() {
-        mainButton.setVisibility(placeActivity.isUserAround() ? View.VISIBLE : View.GONE);
+        mainButton.setVisibility(MyApplication.isLoggedIn() && placeActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressView(boolean visibility) {
@@ -265,5 +223,13 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             peopleRv.setVisibility(View.VISIBLE);
             noConnectionView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        Log.v(TAG, "onResume()");
+        super.onResume();
+        placeUsersAdapter.clear();
+        loadData();
     }
 }
