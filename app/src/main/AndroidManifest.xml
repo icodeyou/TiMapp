@@ -236,6 +236,20 @@
 
         </activity>
 
+        <!-- PLACE ACTIVITY //////////////////////////////////////////////-->
+        <activity
+            android:name=".activities.PlaceViewPagerActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:label="@string/title_activity_place"
+            android:parentActivityName=".activities.PlaceActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.PlaceActivity" />
+
+        </activity>
+
         <!-- CAMERA ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name="com.desmond.squarecamera.CameraActivity"

@@ -3,20 +3,18 @@ package com.timappweb.timapp.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-import com.timappweb.timapp.MyApplication;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Picture;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +42,26 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     }
 
     @Override
-    public void onBindViewHolder(PictureViewHolder holder, int position) {
+    public void onBindViewHolder(PictureViewHolder holder, final int position) {
         Picture picture = data.get(data.size()-position-1);
-        String fullUrl = this.baseUrl + "/" + picture.getPreviewUrl();
+        final String fullUrl = this.baseUrl + "/" + picture.getPreviewUrl();
         Log.d(TAG, "Loading picture in adapter: " + fullUrl);
 
-        Picasso.with(context)
-                .load(fullUrl)
-                .resize(0,holder.ivPicture.getLayoutParams().height)
-                .placeholder(R.drawable.placeholder_profile)
-                .into(holder.ivPicture);
+        final String[] uris = new String[data.size()];
+        int i = 0;
+        for (Picture p: data){
+            uris[i++] = this.baseUrl + "/" + p.getUrl();
+        }
+        final Uri uri = Uri.parse(fullUrl);
+        holder.ivPicture.setImageURI(uri);
+        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity mActivity = (Activity) context;
+                IntentsUtils.viewPicture(mActivity, position, uris);
+
+            }
+        });
     }
 
     @Override
@@ -62,8 +70,14 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+    public void onViewRecycled(PictureViewHolder holder) {
+        if (holder.ivPicture.getController() != null) {
+            holder.ivPicture.getController().onDetach();
+        }
+        if (holder.ivPicture.getTopLevelDrawable() != null) {
+            holder.ivPicture.getTopLevelDrawable().setCallback(null);
+//                ((BitmapDrawable) holder.mImageView.getTopLevelDrawable()).getBitmap().recycle();
+        }
     }
 
     public void setData(List<Picture> pictures) {
@@ -87,13 +101,13 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
     public class PictureViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
-        ImageView ivPicture;
+        SimpleDraweeView ivPicture;
 
         PictureViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            ivPicture = (ImageView) itemView.findViewById(R.id.picture);
+            ivPicture = (SimpleDraweeView) itemView.findViewById(R.id.picture);
 
             //set height picture to prevent padding on view
             Point size = new Point();

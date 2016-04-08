@@ -3,15 +3,14 @@ package com.timappweb.timapp.config;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.timappweb.timapp.activities.ErrorActivity;
 import com.timappweb.timapp.activities.InvitationsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
@@ -26,6 +25,7 @@ import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
+import com.timappweb.timapp.activities.PlaceViewPagerActivity;
 import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
@@ -191,6 +191,13 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
+    public static void viewPicture(Activity activity, int position, String[] data) {
+        Intent intent = new Intent(activity, PlaceViewPagerActivity.class);
+        intent.putExtra("position", position);
+        intent.putExtra("pictures", data);
+        activity.startActivity(intent);
+    }
+
     public static void addPlace(Context context) {
         if (!requireLogin(context))
             return;
@@ -232,6 +239,16 @@ public class IntentsUtils {
         }
         return (Place) extras.getSerializable("place");
     }
+
+    public static String[] extractPicture(Intent intent) {
+        Bundle extras = intent.getExtras();
+        //TODO Steph : remove condition :
+        if (extras == null){
+            return null;
+        }
+        return extras.getStringArray("pictures");
+    }
+
     public static Post extractPost(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){

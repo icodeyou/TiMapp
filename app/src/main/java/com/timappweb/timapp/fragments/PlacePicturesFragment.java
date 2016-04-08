@@ -1,6 +1,7 @@
 package com.timappweb.timapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,7 +56,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     private View                    progressView;
     private View                    noPicView;
     private View                    noConnectionView;
-    private View mainButton;
+    private View                    mainButton;
     private View                    smallTagsButton;
     private TextView                tvAddButton;
     private RecyclerView            picturesRv;
@@ -63,7 +64,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
     private PicturesAdapter         picturesAdapter;
 
-    private static int NUMBER_OF_COLUMNS =  2;
+    private static int NUMBER_OF_COLUMNS =  1;
 
     @Nullable
     @Override
@@ -119,13 +120,6 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(placeActivity);
         picturesRv.setAdapter(picturesAdapter);
-        picturesAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                //TODO : Display picture in another activity, to see it fullscreen
-                //TODO later : It'd be great if then we can scroll pics.. Loading them each time we scroll.
-            }
-        });
     }
 
 

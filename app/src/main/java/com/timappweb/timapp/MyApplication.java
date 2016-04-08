@@ -9,6 +9,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.iid.InstanceID;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
@@ -32,6 +33,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.services.MyGcmListenerService;
 import com.timappweb.timapp.services.RegistrationIntentService;
+import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.Util;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -185,6 +187,8 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     public void onCreate(){
         super.onCreate();
+
+        Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
 
         this.deferred = new DeferredObject();
 
