@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,13 +12,19 @@ import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.views.MyHackyViewPager;
 
-import uk.co.senab.photoview.PhotoView;
+import me.relex.photodraweeview.PhotoDraweeView;
+
 
 public class PlaceViewPagerActivity extends FragmentActivity {
 
@@ -62,15 +69,26 @@ public class PlaceViewPagerActivity extends FragmentActivity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            SimpleDraweeView photoView = new SimpleDraweeView(container.getContext());
-
-            Uri uri = Uri.parse(IMAGES[position]);
-            photoView.setImageURI(uri);
+            final PhotoDraweeView photoDraweeView = new PhotoDraweeView(container.getContext());
+            PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+            controller.setUri(Uri.parse(IMAGES[position]));
+            controller.setOldController(photoDraweeView.getController());
+            controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+                @Override
+                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                    super.onFinalImageSet(id, imageInfo, animatable);
+                    if (imageInfo == null) {
+                        return;
+                    }
+                    photoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+                }
+            });
+            photoDraweeView.setController(controller.build());
 
             // Now just add PhotoView to ViewPager and return it
-            container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.addView(photoDraweeView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-            return photoView;
+            return photoDraweeView;
         }
 
         @Override

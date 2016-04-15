@@ -144,6 +144,8 @@ public class TagActivity extends BaseActivity{
     }
 
 
+
+
     //----------------------------------------------------------------------------------------------
     //Private methods
 
@@ -153,7 +155,6 @@ public class TagActivity extends BaseActivity{
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
 
-                //TODO STEPH : Enlever l'item de la liste pour de vrai. Pas pour de faux comme ci dessous. Bah oui. Petit escroc.
                 boolean success = suggestedTagsView.removeItem(item);
                 Log.d(TAG, "removing item success : "+ success);
 
