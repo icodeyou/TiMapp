@@ -1,9 +1,9 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +15,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +23,9 @@ import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddPlaceCategoriesAdapter;
-import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.adapters.CategoryPagerAdapter;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
@@ -49,6 +44,7 @@ public class AddPlaceActivity extends BaseActivity {
     private TextView textCreateButton;
     private View progressView;
     private TextView nameCategoryTV;
+    private View noPostView;
 
     private ViewPager viewPager;
 
@@ -72,6 +68,7 @@ public class AddPlaceActivity extends BaseActivity {
         textCreateButton = (TextView) findViewById(R.id.text_create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
+        noPostView = findViewById(R.id.spot_added_view);
 
         initKeyboard();
         setListeners();
@@ -213,6 +210,14 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void setListeners() {
+        final Activity activity = this;
+        noPostView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.pinSpot(activity);
+            }
+        });
+
         groupNameET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

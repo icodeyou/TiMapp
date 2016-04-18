@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.MyApplication;
@@ -42,7 +44,7 @@ public class ProfileActivity extends BaseActivity{
     private View mainView;
     private View layoutTagsProfile;
     private View noConnectionView;
-    private CircularImageView profilePicture;
+    private SimpleDraweeView profilePicture;
     private View progressView1;
     private View progressView2;
     private View lastPostContainer;
@@ -67,7 +69,7 @@ public class ProfileActivity extends BaseActivity{
         mainView = findViewById(R.id.main_view);
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
-        profilePicture = (CircularImageView) findViewById(R.id.profile_picture);
+        profilePicture = (SimpleDraweeView) findViewById(R.id.profile_picture);
         progressView1 = findViewById(R.id.progress_view1);
         progressView2 = findViewById(R.id.progress_view2);
         lastPostContainer = findViewById(R.id.profile_last_post_container);
@@ -204,12 +206,8 @@ public class ProfileActivity extends BaseActivity{
                         setTagsListeners();
                     }
                     String photoUrl = mUser.getProfilePictureUrl();
-                    Picasso.with(context)
-                            .load(photoUrl)
-                            .centerCrop()
-                            .resize(profilePicture.getMeasuredWidth(), profilePicture.getMeasuredHeight())
-                            .placeholder(R.drawable.placeholder_profile)
-                            .into(profilePicture);
+                    Uri uri = Uri.parse(photoUrl);
+                    profilePicture.setImageURI(uri);
 
                     //mainView.setVisibility(View.VISIBLE);
                     //loadingView.setVisibility(View.GONE);

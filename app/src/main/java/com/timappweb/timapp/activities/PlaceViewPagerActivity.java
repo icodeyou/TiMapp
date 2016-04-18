@@ -3,21 +3,16 @@ package com.timappweb.timapp.activities;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -100,13 +95,6 @@ public class PlaceViewPagerActivity extends FragmentActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
-        /*@Override
-        public Fragment getItem(int position) {
-            ArchiveViewPagerFragment fragment = new ArchiveViewPagerFragment();
-            fragment.setAsset(IMAGES[position]);
-            return fragment;
-        }*/
 
         @Override
         public int getCount() {

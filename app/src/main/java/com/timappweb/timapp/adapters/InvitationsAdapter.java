@@ -11,9 +11,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -123,23 +121,6 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (itemAdapterClickListener != null) {
                 itemAdapterClickListener.onClick(getAdapterPosition());
             }
-        }
-    }
-
-    public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
-
-        private final Button newEventButton;
-
-        FooterPlacesViewHolder(View itemView) {
-            super(itemView);
-            newEventButton = (Button) itemView.findViewById(R.id.create_button);
-            newEventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.addPlace(context);
-                }
-            });
-
         }
     }
 }

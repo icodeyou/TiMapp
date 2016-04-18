@@ -15,7 +15,6 @@ import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.PlaceView;
-import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +115,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
+    /*public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
 
         private final Button newEventButton;
 
@@ -131,5 +130,5 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             });
 
         }
-    }
+    }*/
 }

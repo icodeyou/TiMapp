@@ -8,12 +8,12 @@
         android:scaleType="centerCrop"
         android:alpha="0.2"
         android:src="@drawable/image_nightclub"/>
-    <com.timappweb.timapp.views.AutoResizeTextView
+    <TextView
         android:id="@+id/category_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/height_pin_post_box"
         android:maxLines="1"
-        android:padding="@dimen/text_category_padding"
         android:inputType="textCapWords"
         android:layout_centerInParent="true"
         android:text="@string/category_nightclub"

@@ -121,7 +121,6 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 IntentsUtils.addPlace(that);
-                //buttonAddPlace.setEnabled(false);
             }
         });
         //buttonAddPlace.setOnTouchListener(new ColorTopRadiusOnTouchListener(this, textButtonAddPlace));
@@ -186,15 +185,15 @@ public class LocateActivity extends BaseActivity{
                     PlacesAdapter placeAdapter = ((PlacesAdapter) rvPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);
-                    buttonAddPlace.setVisibility(View.VISIBLE);
                     if (places.size() != 0) {
                         placeAdapter.setData(places);
                         noPlaceView.setVisibility(View.GONE);
                         rvPlaces.setVisibility(View.VISIBLE);
+                        buttonAddPlace.setVisibility(View.VISIBLE);
+                        placeAdapter.notifyDataSetChanged();
                     } else {
                         IntentsUtils.addPlace(activity);
                     }
-                    placeAdapter.notifyDataSetChanged();
                 }
             }
 

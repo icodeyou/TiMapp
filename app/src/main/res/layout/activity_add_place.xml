@@ -20,10 +20,64 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_below="@+id/toolbar_layout">
+
+        <include
+            android:id="@+id/spot_added_view"
+            layout="@layout/layout_pin_spot"
+            android:visibility = "visible" />
+
+        <RelativeLayout
+            android:id="@+id/no_spot_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/pin_post_linear_layout"
+                android:background="@color/Black"
+                android:alpha="0.8"/>
+            <LinearLayout
+                android:id="@+id/pin_post_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp">
+                <ImageView
+                    android:id="@+id/unlock_icon"
+                    android:layout_width="@dimen/icon_default"
+                    android:layout_height="@dimen/icon_default"
+                    android:src="@drawable/locked"
+                    android:padding="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="bottom"
+                    android:text="Bar ObouDuPont"
+                    android:textColor="@color/White"
+                    android:textSize="@dimen/text_big"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <com.timappweb.timapp.views.SpotView
+            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+            android:id="@+id/spot_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            myattrs:tags_visible="true"
+            myattrs:bottom_shadow="true"
+            myattrs:top_shadow="false"
+            android:visibility="gone"/>
         <EditText
             android:id="@+id/place_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:imeOptions="actionDone"
             android:textSize="@dimen/text_big"
             android:textColor="@color/colorPrimary"

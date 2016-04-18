@@ -13,6 +13,8 @@
     <color name="TEST">#F1E5DE</color>
     <color name="transparent">#00000000</color>
     <color name="background">#f6efef</color>
+    <color name="backgroundLightlyDark2">#f4e8e8</color>
+    <color name="backgroundLightlyDark">#e3dbdb</color>
     <color name="background_semi_transparent">#6ff6efef</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>

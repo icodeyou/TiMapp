@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.activities.ErrorActivity;
 import com.timappweb.timapp.activities.InvitationsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
@@ -206,6 +207,17 @@ public class IntentsUtils {
             return;
         }
         Intent intent = new Intent(context, AddPlaceActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void pinSpot(Context context) {
+        if (!requireLogin(context))
+            return;
+        if (!QuotaManager.instance().checkQuota(QuotaType.PLACE, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent intent = new Intent(context, AddSpotActivity.class);
         context.startActivity(intent);
     }
     /**
