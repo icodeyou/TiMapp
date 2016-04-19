@@ -17,7 +17,7 @@ import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
-import com.timappweb.timapp.adapters.FilterCategoriesAdapter;
+import com.timappweb.timapp.adapters.FilterPlaceCategoriesAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
@@ -37,7 +37,7 @@ public class FilterActivity extends BaseActivity {
     private View progressBarView;
     //private RecyclerView categoriesRv;
     private View saveButton;
-    private FilterCategoriesAdapter categoriesAdapter;
+    private FilterPlaceCategoriesAdapter categoriesAdapter;
     //private List<Category> categoriesSelected;
     private TextView textSaveButton;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
@@ -78,7 +78,7 @@ public class FilterActivity extends BaseActivity {
     }
 
     private void initAdapterAndManager() {
-        //categoriesAdapter = new FilterCategoriesAdapter(this);
+        //categoriesAdapter = new FilterPlaceCategoriesAdapter(this);
         //categoriesRv.setAdapter(categoriesAdapter);
         GridLayoutManager manager = new SpanningGridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
         //categoriesRv.setLayoutManager(manager);

@@ -189,7 +189,10 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="text_no_invitations">No invitation at the moment</string>
     <string name="title_add_spot">Where are you ?</string>
     <string name="title_add_event">What is it ?</string>
-    <string name="pin_a_spot">No place attached</string>
+    <string name="no_place_attach">No place attached</string>
+    <string name="add_spot">Add a place</string>
+    <string name="where_are_you">Where are you ?</string>
+    <string name="hint_new_spot">Or type a new place here</string>
 
 
 </resources>

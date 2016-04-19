@@ -25,7 +25,6 @@ import com.timappweb.timapp.rest.RestClient;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
 public class ProfileActivity extends BaseActivity{
 
     String TAG = "ProfileActivity";

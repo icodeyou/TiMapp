@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/pin_post_linear_layout"
         android:background="@color/Black"
-        android:alpha="0.1"/>
+        android:alpha="0.3"/>
     <LinearLayout
         android:id="@+id/pin_post_linear_layout"
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
             android:gravity="center"
-            android:text="@string/pin_a_spot"
+            android:text="@string/no_place_attach"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/text_normal"/>
     </LinearLayout>

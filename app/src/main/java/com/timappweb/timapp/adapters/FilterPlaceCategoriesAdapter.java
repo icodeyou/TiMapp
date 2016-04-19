@@ -9,7 +9,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.entities.Category;
 
-public class FilterCategoriesAdapter extends CategoriesAdapter {
+public class FilterPlaceCategoriesAdapter extends PlaceCategoriesAdapter {
 
     protected LayoutInflater inflater;
 
@@ -17,7 +17,7 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
 
     private FilterActivity filterActivity;
 
-    public FilterCategoriesAdapter(Context context) {
+    public FilterPlaceCategoriesAdapter(Context context) {
         super(context);
         this.context = context;
     }
@@ -29,7 +29,7 @@ public class FilterCategoriesAdapter extends CategoriesAdapter {
     }
 
     @Override
-    public void onBindViewHolder(CategoriesAdapter.CategoriesViewHolder holder, final int position) {
+    public void onBindViewHolder(PlaceCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
         final Category category = MyApplication.getCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;

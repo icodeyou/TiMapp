@@ -7,38 +7,41 @@
         android:id="@+id/toolbar_layout"
         layout="@layout/toolbar" />
 
-    <include layout="@layout/layout_pin_spot" />
-
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/text_whereareyou"/>
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:typeface="serif"
+        android:text="@string/where_are_you"
+        android:textSize="@dimen/text_huge"
+        android:gravity="center"/>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ScrollView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1">
-                <FrameLayout
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/spots_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <com.timappweb.timapp.views.SpotView
-                        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-                        android:id="@+id/spot_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        myattrs:tags_visible="true"
-                        myattrs:bottom_shadow="true"
-                        myattrs:top_shadow="true"/>
-                </FrameLayout>
-            </ScrollView>
+                    android:layout_centerInParent="true"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/spot_categories_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:alpha="0.9"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,7 +52,7 @@
                 <EditText
                     android:id="@+id/edittext"
                     android:gravity="center"
-                    android:hint="Or type a new place here"
+                    android:hint="@string/hint_new_spot"
                     android:textColorHint="@color/color_hint"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -60,11 +63,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:src="@drawable/add_type_place"/>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-
-
 
 </LinearLayout>

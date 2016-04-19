@@ -10,7 +10,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.entities.Category;
 
-public class AddPlaceCategoriesAdapter extends CategoriesAdapter {
+public class AddPlaceCategoriesAdapter extends PlaceCategoriesAdapter {
 
     protected LayoutInflater inflater;
 
@@ -23,7 +23,7 @@ public class AddPlaceCategoriesAdapter extends CategoriesAdapter {
     }
 
     @Override
-    public void onBindViewHolder(CategoriesAdapter.CategoriesViewHolder holder, final int position) {
+    public void onBindViewHolder(PlaceCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
         final AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
         final Category category = MyApplication.getCategories().get(position);

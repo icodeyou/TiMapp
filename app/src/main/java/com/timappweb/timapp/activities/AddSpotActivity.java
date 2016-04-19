@@ -2,10 +2,15 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
+import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.listeners.LoadingListener;
@@ -24,6 +29,8 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
     private SpotView spotView;
     private ImageView showCategoriesButton;
+    private RecyclerView spotCategoriesRv;
+    private RecyclerView spotsRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +44,24 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         spotView = (SpotView) findViewById(R.id.spot_view);
         spotView.getRvSpotTags().getAdapter().setDummyData();
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
+        spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
+        spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
 
+        initAdapters();
         setListeners();
 
         loadData();
+    }
+
+    private void initAdapters() {
+        final Activity activity = this;
+        //RV
+        spotCategoriesRv.setLayoutManager(new GridLayoutManager(this, 4));
+        spotsRv.setLayoutManager(new LinearLayoutManager(this));
+
+        //Adapter
+        spotCategoriesRv.setAdapter(new SpotCategoriesAdapter(this));
+        spotsRv.setAdapter(new SpotsAdapter(this));
     }
 
     private void setListeners() {
@@ -55,7 +76,12 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         showCategoriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCategories();
+                if(spotCategoriesRv.getVisibility()==View.GONE) {
+                    showCategories();
+                }
+                else {
+                    hideCategories();
+                }
             }
         });
     }
@@ -75,11 +101,11 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     }
 
     private void showCategories() {
-
+        spotCategoriesRv.setVisibility(View.VISIBLE);
     }
 
     private void hideCategories() {
-
+        spotCategoriesRv.setVisibility(View.GONE);
     }
 
     @Override

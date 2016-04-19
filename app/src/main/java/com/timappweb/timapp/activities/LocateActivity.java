@@ -92,7 +92,7 @@ public class LocateActivity extends BaseActivity{
         rvPlaces.setLayoutManager(new LinearLayoutManager(this));
 
         //Adapter
-        final PlacesAdapter placesAdapter = new PlacesAdapter(this, true);
+        final PlacesAdapter placesAdapter = new PlacesAdapter(this);
         rvPlaces.setAdapter(placesAdapter);
 
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
