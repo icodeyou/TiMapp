@@ -6,6 +6,7 @@ import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
@@ -36,6 +37,11 @@ public interface WebServiceInterface {
 
     @GET("configurations/update.json")
     Call<ServerConfiguration> configuration(@Query("version") int version);
+
+    // ---------------------------------------------------------------------------------------------
+    // Place invites
+    @GET("spots/reachable")
+    Call<List<Spot>> spotReachable(@QueryMap Map<String, String> conditions);
 
     // ---------------------------------------------------------------------------------------------
     // Place invites

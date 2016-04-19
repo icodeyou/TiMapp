@@ -7,9 +7,20 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.rest.ApiCallFactory;
+import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.views.SpotView;
 
-public class AddSpotActivity extends BaseActivity{
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
     private SpotView spotView;
     private ImageView showCategoriesButton;
@@ -28,6 +39,8 @@ public class AddSpotActivity extends BaseActivity{
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
 
         setListeners();
+
+        loadData();
     }
 
     private void setListeners() {
@@ -47,6 +60,20 @@ public class AddSpotActivity extends BaseActivity{
         });
     }
 
+    public void loadData(){
+        Map<String, String> conditions = null;
+        Call call = RestClient.service().spotReachable(conditions);
+        ApiCallFactory.build(call, new RestCallback<List<Spot>>(this){
+
+            @Override
+            public void onResponse200(Response<List<Spot>> response) {
+                List<Spot> spots = response.body();
+                // TODO JACK: add data in adapter HERE!
+            }
+
+        }, this);
+    }
+
     private void showCategories() {
 
     }
@@ -55,4 +82,13 @@ public class AddSpotActivity extends BaseActivity{
 
     }
 
+    @Override
+    public void onLoadStart() {
+        // TODO JACK
+    }
+
+    @Override
+    public void onLoadEnd() {
+        // TODO JACK
+    }
 }
