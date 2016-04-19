@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sromku.simple.fb.entities.Profile;
 import com.timappweb.timapp.activities.InviteFriendsActivity;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;

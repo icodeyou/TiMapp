@@ -2,16 +2,12 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.entities.Category;
-
-import java.util.List;
 
 public class FilterCategoriesAdapter extends CategoriesAdapter {
 

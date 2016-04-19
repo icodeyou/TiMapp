@@ -1,7 +1,6 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -18,7 +16,6 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAdapter.MyViewHolder> {
     private String TAG = "HorizontalTagsAdapter";

@@ -13,6 +13,7 @@
     <color name="TEST">#F1E5DE</color>
     <color name="transparent">#00000000</color>
     <color name="background">#f6efef</color>
+    <color name="background_secondary">#eff4f6</color>
     <color name="backgroundLightlyDark2">#f4e8e8</color>
     <color name="backgroundLightlyDark">#e3dbdb</color>
     <color name="background_semi_transparent">#6ff6efef</color>
@@ -36,6 +37,8 @@
     <color name="background_cluster">#b41e41</color>
     <color name="background_cluster_transparent">#9eb41e41</color>
     <color name="text_cluster">@color/white</color>
+    <color name="default_spot_color">#229edc</color>
+    <color name="text_secondary">#18719d</color>
     <!--<color name="background_cluster">#d1d1d1</color>
     <color name="text_cluster">#b41e41</color>-->
 
@@ -46,9 +49,10 @@
     <color name="background_selected_button">@color/colorAccent</color>
     <color name="background_selected_button_secondary">#ffefc6</color>
     <color name="text_selected_button_secondary">#ffefc6</color>
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- COLORS -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- COLORS -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <color name="white">#FFFFFF</color>
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>

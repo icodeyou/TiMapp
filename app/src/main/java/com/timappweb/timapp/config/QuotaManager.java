@@ -11,7 +11,6 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.database.models.UserActivity;
 import com.timappweb.timapp.database.models.UserQuota;
-import com.timappweb.timapp.rest.RestClient;
 
 import java.util.List;
 

@@ -15,15 +15,14 @@ import android.widget.TextView;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.FilterCategoriesAdapter;
-import com.timappweb.timapp.listeners.ColorSquareOnTouchListener;
+import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
-import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;

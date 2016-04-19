@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.views.PlaceView;
 import com.timappweb.timapp.views.SpotView;
 
 public class AddSpotActivity extends BaseActivity{

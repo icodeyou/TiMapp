@@ -25,4 +25,5 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:elevation="@dimen/card_elevation"
+    fresco:actualImageScaleType="centerCrop"
     fresco:placeholderImage="@drawable/placeholder_default" />

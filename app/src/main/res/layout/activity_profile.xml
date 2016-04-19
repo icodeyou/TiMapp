@@ -246,6 +246,8 @@
             android:layout_marginTop="45dp"
             android:layout_marginLeft="@dimen/default_horizontal_padding"
             android:layout_marginStart="@dimen/default_horizontal_padding"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/placeholder_profile"
             fresco:roundAsCircle="true"/>
     </RelativeLayout>
 </LinearLayout>

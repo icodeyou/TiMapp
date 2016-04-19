@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 /**
  * Created by Jack on 24/02/2016.

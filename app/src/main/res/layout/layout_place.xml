@@ -9,7 +9,7 @@
         android:id="@+id/top_gradient"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_gradient_view"
-        android:background="@drawable/top_place_map_fragment" />
+        android:background="@drawable/top_layout_place" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -165,7 +165,7 @@
         android:id="@+id/bottom_gradient"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_gradient_view"
-        android:background="@drawable/top_place_rv"
+        android:background="@drawable/bottom_layout_place"
         android:layout_below="@+id/main_box"/>
 
 

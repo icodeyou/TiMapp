@@ -1,10 +1,8 @@
 package com.timappweb.timapp.entities;
 
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Tag implements Serializable, SearchHistory.SearchableItem{

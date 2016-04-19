@@ -7,11 +7,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Place;
 
 public class SpotView extends LinearLayout{
     private final static String TAG = "SpotView";
@@ -51,7 +49,7 @@ public class SpotView extends LinearLayout{
     }
 
     private void init() {
-        inflate(getContext(), R.layout.layout_spot, this);
+        inflate(getContext(), R.layout.item_spot, this);
 
         colorBackground = findViewById(R.id.parent_layout_spot);
         tvLocation = (AutoResizeTextView) findViewById(R.id.title_spot);

@@ -24,8 +24,8 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 //import android.support.design.widget.FloatingActionButton;
 

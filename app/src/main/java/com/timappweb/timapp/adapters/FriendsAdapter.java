@@ -1,15 +1,14 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-import com.sromku.simple.fb.entities.Profile;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
@@ -64,14 +63,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         }
 
         //User pic
-        Picasso.with(context)
-                .load(friend.getProfilePictureUrl())
-                .centerCrop()
-                .resize((int) context.getResources().getDimension(R.dimen.width_pic_card),
-                        (int) context.getResources().getDimension(R.dimen.width_pic_card))
-                        //.error(R.drawable.placeholder_profile_error)
-                .placeholder(R.drawable.placeholder_profile)
-                .into(friendViewHolder.personPhoto);
+        Uri uri = Uri.parse(friend.getProfilePictureUrl());
+        friendViewHolder.personPhoto.setImageURI(uri);
     }
 
     public List<User> getData(){
@@ -102,7 +95,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
         View cv;
         TextView personName;
-        ImageView personPhoto;
+        SimpleDraweeView personPhoto;
         View selectedView;
         HorizontalTagsRecyclerView horizontalTags;
 
@@ -111,7 +104,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             itemView.setOnClickListener(this);
             cv = itemView.findViewById(R.id.cv);
             personName = (TextView) itemView.findViewById(R.id.person_name);
-            personPhoto = (ImageView) itemView.findViewById(R.id.person_photo);
+            personPhoto = (SimpleDraweeView) itemView.findViewById(R.id.person_photo);
             selectedView = itemView.findViewById(R.id.selectedView);
             horizontalTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
 

@@ -2,10 +2,8 @@ package com.timappweb.timapp.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,15 +24,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
-import com.desmond.squarecamera.ImageUtility;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.database.models.PlaceStatus;
 import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Category;
@@ -42,28 +38,19 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.PlaceBaseFragment;
-import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
+import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
-import com.timappweb.timapp.rest.ApiCallFactory;
-import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.PictureUtility;
-import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.PlaceView;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PlaceActivity extends BaseActivity {

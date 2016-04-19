@@ -10,7 +10,6 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_add_spot">Post</string>
     <string name="title_activity_post">Post</string>
     <string name="title_activity_place">Event</string>
     <string name="title_activity_incoming">Incoming</string>
@@ -22,6 +21,7 @@
     <string name="title_activity_my_profile">My Profile</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_add_event">Add event</string>
+    <string name="title_activity_add_spot">Attach a place</string>
     <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
 

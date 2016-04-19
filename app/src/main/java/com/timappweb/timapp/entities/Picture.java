@@ -1,8 +1,5 @@
 package com.timappweb.timapp.entities;
 
-import com.squareup.picasso.Picasso;
-import com.timappweb.timapp.MyApplication;
-
 public class Picture {
 
     public int id;

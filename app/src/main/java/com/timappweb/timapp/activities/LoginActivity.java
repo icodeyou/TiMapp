@@ -27,12 +27,12 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.config.IntentsUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

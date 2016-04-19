@@ -1,6 +1,5 @@
 package com.timappweb.timapp.entities;
 
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**

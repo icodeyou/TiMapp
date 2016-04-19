@@ -24,10 +24,10 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddPlaceCategoriesAdapter;
 import com.timappweb.timapp.adapters.CategoryPagerAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 
 

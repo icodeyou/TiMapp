@@ -1,13 +1,8 @@
 package com.timappweb.timapp.config;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.utils.Util;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 

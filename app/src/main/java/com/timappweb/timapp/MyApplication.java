@@ -1,27 +1,22 @@
 package com.timappweb.timapp;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.speech.tts.SynthesisCallback;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.google.android.gms.iid.InstanceID;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.ServerConfiguration;
-import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.SocialProvider;
@@ -30,20 +25,15 @@ import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.services.FetchAddressIntentService;
-import com.timappweb.timapp.services.MyGcmListenerService;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.Util;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -68,7 +58,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
+        //MultiDex.install(this);
     }
 
 

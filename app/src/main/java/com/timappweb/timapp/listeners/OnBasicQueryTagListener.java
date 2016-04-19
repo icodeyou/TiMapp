@@ -1,13 +1,9 @@
 package com.timappweb.timapp.listeners;
 
-import android.app.Activity;
-import android.app.DownloadManager;
 import android.app.Instrumentation;
-import android.content.Context;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
 
-import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 
 public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {

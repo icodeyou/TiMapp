@@ -4,13 +4,11 @@ package com.timappweb.timapp.managers;
  * Created by Jack on 10/01/2016.
  */
 
+import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
-
-        import android.content.Context;
-        import android.support.v7.widget.GridLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.util.AttributeSet;
-        import android.view.ViewGroup;
+import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.view.ViewGroup;
 
 public class SpanningGridLayoutManager extends GridLayoutManager {
 

@@ -1,26 +1,14 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.views.AutoResizeTextView;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
 

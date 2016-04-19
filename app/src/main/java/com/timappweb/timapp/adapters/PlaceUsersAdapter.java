@@ -1,6 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,21 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.PlaceUserInterface;
-import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.entities.UserPlace;
-import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,14 +90,8 @@ public abstract class PlaceUsersAdapter
                         }
                     });*/
 
-            Picasso.with(context)
-                    .load(pic)
-                    .centerCrop()
-                    .resize((int) context.getResources().getDimension(R.dimen.width_pic_card),
-                            (int) context.getResources().getDimension(R.dimen.width_pic_card))
-                            //.error(R.drawable.placeholder_profile_error)
-                    .placeholder(R.drawable.placeholder_profile)
-                    .into(holder.ivProfilePicture);
+            Uri uri = Uri.parse(pic);
+            holder.ivProfilePicture.setImageURI(uri);
         }
 
         String username = user.getUsername();
@@ -165,7 +154,7 @@ public abstract class PlaceUsersAdapter
         TextView tvUsername;
         TextView tvTime;
         RecyclerView rvPostTags;
-        ImageView ivProfilePicture;
+        SimpleDraweeView ivProfilePicture;
 
         PlacePeopleViewHolder(View itemView) {
             super(itemView);
@@ -176,7 +165,7 @@ public abstract class PlaceUsersAdapter
             tvUsername = (TextView) itemView.findViewById(R.id.tv_username);
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
             rvPostTags = (RecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
-            ivProfilePicture = (ImageView) itemView.findViewById(R.id.profile_picture);
+            ivProfilePicture = (SimpleDraweeView) itemView.findViewById(R.id.profile_picture);
         }
 
         @Override

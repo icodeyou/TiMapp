@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,10 +20,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 /**
  * Created by stephane on 8/22/2015.

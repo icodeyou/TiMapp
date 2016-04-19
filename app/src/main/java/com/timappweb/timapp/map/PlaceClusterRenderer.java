@@ -13,19 +13,16 @@ import android.widget.ImageView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.*;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 

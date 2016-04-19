@@ -1,9 +1,5 @@
 package com.timappweb.timapp.adapters;
 
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.SuperscriptSpan;
-
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.entities.Tag;
 

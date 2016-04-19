@@ -1,6 +1,5 @@
 package com.timappweb.timapp.managers;
 
-import android.app.Activity;
 import android.util.Log;
 
 import com.timappweb.timapp.entities.Tag;

@@ -5,19 +5,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by stephane on 4/2/2016.

@@ -9,8 +9,6 @@ import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
-import org.xml.sax.ErrorHandler;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;

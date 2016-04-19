@@ -1,7 +1,6 @@
 package com.timappweb.timapp.entities;
 
 import com.timappweb.timapp.adapters.PlaceUsersAdapter;
-import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;
 import java.util.LinkedList;

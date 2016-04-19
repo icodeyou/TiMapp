@@ -1,23 +1,22 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v4.app.NavUtils;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -25,8 +24,6 @@ import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
-import com.timappweb.timapp.R;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.PlaceView;

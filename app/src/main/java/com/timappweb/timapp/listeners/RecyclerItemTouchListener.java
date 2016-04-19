@@ -1,18 +1,10 @@
 package com.timappweb.timapp.listeners;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 
 
 public class RecyclerItemTouchListener implements RecyclerView.OnItemTouchListener {

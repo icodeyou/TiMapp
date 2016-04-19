@@ -6,12 +6,10 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.activeandroid.query.Update;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by stephane on 4/5/2016.

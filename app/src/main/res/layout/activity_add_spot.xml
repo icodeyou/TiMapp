@@ -12,40 +12,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.timappweb.timapp.views.AutoResizeTextView
-            android:id="@+id/title_add_spot"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|center_horizontal"
-            android:padding="10dp"
-            android:maxLines="1"
-            android:textSize="100dp"
-            android:textColor="@color/backgroundLightlyDark"
-            android:text="@string/title_add_spot"/>
+            android:layout_height="wrap_content"
+            android:src="@drawable/text_whereareyou"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:orientation="vertical">
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.timappweb.timapp.views.SpotView
-                    xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-                    android:id="@+id/spot_view"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    myattrs:tags_visible="true"
-                    myattrs:bottom_shadow="true"
-                    myattrs:top_shadow="true"/>
+                    android:layout_gravity="center">
+                    <com.timappweb.timapp.views.SpotView
+                        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+                        android:id="@+id/spot_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        myattrs:tags_visible="true"
+                        myattrs:bottom_shadow="true"
+                        myattrs:top_shadow="true"/>
+                </FrameLayout>
             </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp">
                 <EditText
                     android:id="@+id/edittext"
                     android:gravity="center"

@@ -1,24 +1,11 @@
 package com.timappweb.timapp.services;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.google.android.gms.iid.InstanceIDListenerService;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.config.Constants;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import retrofit2.Call;
 
 /**
  * Created by stephane on 4/3/2016.

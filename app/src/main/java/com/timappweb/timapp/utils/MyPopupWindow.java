@@ -1,15 +1,5 @@
 package com.timappweb.timapp.utils;
 
-import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.PopupWindow;
-
-import com.timappweb.timapp.R;
-
 /**
  * Created by stephane on 8/30/2015.
  */

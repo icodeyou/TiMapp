@@ -1,7 +1,6 @@
 package com.timappweb.timapp.listeners;
 
 import com.timappweb.timapp.activities.FilterActivity;
-import com.timappweb.timapp.activities.TagActivity;
 
 public class OnFilterQueryTagListener extends OnBasicQueryTagListener {
 

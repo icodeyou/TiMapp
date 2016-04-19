@@ -1,7 +1,6 @@
 package com.timappweb.timapp.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,13 +23,11 @@ import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Picture;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.LoadingListener;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
-import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;

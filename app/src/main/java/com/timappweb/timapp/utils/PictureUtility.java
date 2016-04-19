@@ -2,18 +2,11 @@ package com.timappweb.timapp.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import com.timappweb.timapp.entities.Picture;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,10 +18,16 @@ public class PictureUtility {
     
     public static File resize(Context context, File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
 
-        Picasso.with(context).load(f)
+        int width = 50, height = 50;
+
+        // http://frescolib.org/docs/resizing-rotating.html
+
+        /*Picasso.with(context).load(f)
                 .resize(imageMaxWidth, imageMaxHeight)
                 .onlyScaleDown()
-                .into(getTarget(f.getAbsolutePath()));
+                .into(getTarget(f.getAbsolutePath()));*/
+
+
         return f;
         /*
         FileInputStream fis = new FileInputStream(f);
@@ -99,7 +98,7 @@ public class PictureUtility {
     }
 
     //target to save
-    private static Target getTarget(final String url){
+   /* private static Target getTarget(final String url){
         Target target = new Target(){
 
             @Override
@@ -135,5 +134,5 @@ public class PictureUtility {
             }
         };
         return target;
-    }
+    }*/
 }

@@ -7,9 +7,6 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.timappweb.timapp.utils.NotificationFactory;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";

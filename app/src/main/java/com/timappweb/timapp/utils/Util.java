@@ -3,14 +3,10 @@ package com.timappweb.timapp.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.location.Location;
-import android.location.LocationListener;
 import android.util.DisplayMetrics;
 import android.webkit.MimeTypeMap;
 
-import com.squareup.picasso.Picasso;
-
 import org.joda.time.Period;
-import org.joda.time.Seconds;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.ocpsoft.prettytime.PrettyTime;

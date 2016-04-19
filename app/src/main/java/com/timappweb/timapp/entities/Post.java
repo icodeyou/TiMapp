@@ -4,11 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.adapters.PlaceUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
-import org.ocpsoft.prettytime.PrettyTime;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Post implements Serializable, MarkerValueInterface, PlaceUserInterface {
