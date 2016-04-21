@@ -112,7 +112,7 @@ public class FilterActivity extends BaseActivity {
     }
 
     public void submit() {
-        // MyApplication.searchFilter.categories = categoriesAdapter.getAllCategories();
+        // MyApplication.searchFilter.eventCategories = categoriesAdapter.getAllCategories();
         List<Tag> data = selectedTagsRecyclerView.getAdapter().getData();
 
         /*MyApplication.searchFilter.tags = new ArrayList<>();

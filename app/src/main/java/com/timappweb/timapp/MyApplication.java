@@ -3,7 +3,6 @@ package com.timappweb.timapp;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.support.multidex.MultiDex;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -171,7 +170,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static List<Category> getCategories() {
-        return config.getServerConfiguration().categories;
+        return config.getServerConfiguration().eventCategories;
     }
 
     @Override
@@ -243,7 +242,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static Category getCategoryById(int id) throws UnknownCategoryException {
-        for (Category c: config.getServerConfiguration().categories){
+        for (Category c: config.getServerConfiguration().eventCategories){
             if (c.id == id){
                 return c;
             }
