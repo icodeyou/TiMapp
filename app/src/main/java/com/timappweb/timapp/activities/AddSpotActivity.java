@@ -17,6 +17,7 @@ import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.views.SpotView;
 
 import java.util.List;
@@ -89,11 +90,11 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     public void loadData(){
         Map<String, String> conditions = null;
         Call call = RestClient.service().spotReachable(conditions);
-        ApiCallFactory.build(call, new RestCallback<List<Spot>>(this){
+        ApiCallFactory.build(call, new RestCallback<PaginationResponse<Spot>>(this){
 
             @Override
-            public void onResponse200(Response<List<Spot>> response) {
-                List<Spot> spots = response.body();
+            public void onResponse200(Response<PaginationResponse<Spot>> response) {
+                List<Spot> spots = response.body().items;
                 // TODO JACK: add data in adapter HERE!
             }
 

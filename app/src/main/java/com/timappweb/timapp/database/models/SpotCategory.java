@@ -15,7 +15,7 @@ public class SpotCategory extends Model {
 
     @Column(name = "Created")
     public int created;
-git 
+
     @Column(name = "Name")
     public String name;
 
