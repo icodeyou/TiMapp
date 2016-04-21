@@ -26,7 +26,7 @@ public class AddPlaceCategoriesAdapter extends PlaceCategoriesAdapter {
     public void onBindViewHolder(PlaceCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
         final AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
-        final Category category = MyApplication.getCategories().get(position);
+        final Category category = MyApplication.getEventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
         if(position==0) {

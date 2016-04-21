@@ -45,7 +45,7 @@ public class PlaceCategoryPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return MyApplication.getCategories().size();
+        return MyApplication.getEventCategories().size();
     }
 
     @Override

@@ -13,7 +13,9 @@ import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.entities.SpotCategory;
 import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -32,6 +34,9 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     private RecyclerView spotCategoriesRv;
     private RecyclerView spotsRv;
     private SpotsAdapter spotsAdapter;
+
+    private SpotCategory categorySelected;
+    private SpotCategoriesAdapter spotCategoriesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +60,27 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     private void initAdapters() {
         final Activity activity = this;
         //RV
-        spotCategoriesRv.setLayoutManager(new GridLayoutManager(this, 4));
+        spotCategoriesRv.setLayoutManager(new GridLayoutManager(this, 3));
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
 
         //Adapter
-        spotCategoriesRv.setAdapter(new SpotCategoriesAdapter(this));
+        spotCategoriesAdapter = new SpotCategoriesAdapter(this);
+        spotCategoriesRv.setAdapter(spotCategoriesAdapter);
+        spotCategoriesAdapter.add(SpotCategory.createDummy());
+
         spotsAdapter = new SpotsAdapter(this);
         spotsRv.setAdapter(spotsAdapter);
     }
 
     private void setListeners() {
         final Activity activity = this;
+
+        spotCategoriesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                categorySelected = spotCategoriesAdapter.getCategory(position);
+            }
+        });
 
         showCategoriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +97,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     public void loadData(){
         Map<String, String> conditions = null;
         Call call = RestClient.service().spotReachable(conditions);
-        ApiCallFactory.build(call, new RestCallback<PaginationResponse<Spot>>(this){
+        ApiCallFactory.build(call, new RestCallback<PaginationResponse<Spot>>(this) {
 
             @Override
             public void onResponse200(Response<PaginationResponse<Spot>> response) {
@@ -101,5 +116,9 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     @Override
     public void onLoadEnd() {
         // TODO JACK
+    }
+
+    public SpotCategory getCategorySelected() {
+        return categorySelected;
     }
 }
