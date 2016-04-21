@@ -41,10 +41,10 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     @GET("spots/reachable")
-    Call<List<Spot>> spotReachable(@QueryMap Map<String, String> conditions);
+    Call<PaginationResponse<Spot>> spotReachable(@QueryMap Map<String, String> conditions);
 
     @GET("spots")
-    Call<List<SpotCategory>> spotCategories();
+    Call<PaginationResponse<SpotCategory>> spots();
 
     // ---------------------------------------------------------------------------------------------
     // Place invites

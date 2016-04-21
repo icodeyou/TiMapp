@@ -1,6 +1,8 @@
 package com.timappweb.timapp.config;
 
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.entities.SpotCategory;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
@@ -15,14 +17,20 @@ public class ServerConfiguration {
     public int updated = 0;
     public int version = 0;
     public int update_configuration_delay = 3600;
-    public LinkedList<Category> categories;
+
+    @SerializedName("event_categories")
+    public LinkedList<Category> eventCategories;
+
+    @SerializedName("spot_categories")
+    public LinkedList<SpotCategory> spotCategories;
 
     public Rules rules;
 
     public ServerConfiguration() {
         this.updated = Util.getCurrentTimeSec();
-        this.categories = new LinkedList<>();
         this.rules = new Rules();
+        this.spotCategories = new LinkedList<>();
+        this.eventCategories = new LinkedList<>();
     }
 
     @Override
@@ -31,7 +39,7 @@ public class ServerConfiguration {
                 "updated=" + updated +
                 ", version=" + version +
                 ", rules= " + rules.toString() +
-                ", categories= " + categories.toString() +
+                ", eventCategories= " + eventCategories.toString() +
                 '}';
     }
 

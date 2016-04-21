@@ -16,14 +16,14 @@ import java.util.HashMap;
 public class PlaceCategoriesAdapter extends RecyclerView.Adapter<PlaceCategoriesAdapter.CategoriesViewHolder> {
 
     protected LayoutInflater inflater;
-    //protected List<Category> categories = Collections.emptyList();
+    //protected List<Category> eventCategories = Collections.emptyList();
     protected HashMap<Integer, ImageView> icons = new HashMap<>();
 
     private Context context;
 
     public PlaceCategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        //this.categories = MyApplication.getCategories();
+        //this.eventCategories = MyApplication.getCategories();
         this.context = context;
     }
 
