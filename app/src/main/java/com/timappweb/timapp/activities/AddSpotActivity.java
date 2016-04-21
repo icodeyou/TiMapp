@@ -82,7 +82,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     public void loadData(){
         Map<String, String> conditions = null;
         Call call = RestClient.service().spotReachable(conditions);
-        ApiCallFactory.build(call, new RestCallback<List<Spot>>(this) {
         ApiCallFactory.build(call, new RestCallback<PaginationResponse<Spot>>(this){
 
             @Override
