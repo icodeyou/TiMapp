@@ -23,7 +23,7 @@ import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddPlaceCategoriesAdapter;
-import com.timappweb.timapp.adapters.CategoryPagerAdapter;
+import com.timappweb.timapp.adapters.PlaceCategoryPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
@@ -122,8 +122,8 @@ public class AddPlaceActivity extends BaseActivity {
     private void initViewPager() {
         final AddPlaceActivity that = this;
         viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
-        final CategoryPagerAdapter categoryPagerAdapter = new CategoryPagerAdapter(this);
-        viewPager.setAdapter(categoryPagerAdapter);
+        final PlaceCategoryPagerAdapter placeCategoryPagerAdapter = new PlaceCategoryPagerAdapter(this);
+        viewPager.setAdapter(placeCategoryPagerAdapter);
         viewPager.setOffscreenPageLimit(1);
         categorySelected = categoriesAdapter.getCategory(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

@@ -101,7 +101,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Adapter
-        placesAdapter = new PlacesAdapter(getContext(), true);
+        placesAdapter = new PlacesAdapter(getContext());
         rvPlaces.setAdapter(placesAdapter);
         placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override

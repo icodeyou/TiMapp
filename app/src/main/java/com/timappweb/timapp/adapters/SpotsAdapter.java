@@ -12,27 +12,27 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.SpotView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "PlacesAdapter";
+public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "SpotsAdapter";
     private Context context;
 
     private List<Place> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
-    public PlacesAdapter(Context context) {
+    public SpotsAdapter(Context context) {
         data = new ArrayList<>();
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_place, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_spot, parent, false);
         return new PlacesViewHolder(v);
     }
 
@@ -43,7 +43,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Place place = data.get(position);
 
-            holder.placeView.setPlace(place);
+            holder.spotView.setSpot(place);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -80,14 +80,6 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-
-    public void generateDummyData() {
-        Place dummyPlace = Place.createDummy();
-        add(dummyPlace);
-        Place dummyPlace2 = Place.createDummy();
-        add(dummyPlace2);
-    }
-
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
@@ -95,14 +87,14 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class PlacesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        PlaceView placeView;
+        SpotView spotView;
         HorizontalTagsRecyclerView horizontalTagsRv;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            placeView = (PlaceView) itemView.findViewById(R.id.place_view);
-            horizontalTagsRv = placeView.getRvPlaceTags();
+            spotView = (SpotView) itemView.findViewById(R.id.spot_view);
+            horizontalTagsRv = spotView.getRvSpotTags();
         }
 
         @Override
@@ -112,21 +104,4 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         }
     }
-
-    /*public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
-
-        private final Button newEventButton;
-
-        FooterPlacesViewHolder(View itemView) {
-            super(itemView);
-            newEventButton = (Button) itemView.findViewById(R.id.create_button);
-            newEventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.addPlace(context);
-                }
-            });
-
-        }
-    }*/
 }

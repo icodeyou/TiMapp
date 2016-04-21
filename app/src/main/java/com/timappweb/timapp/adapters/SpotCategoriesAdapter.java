@@ -17,15 +17,15 @@ import com.timappweb.timapp.views.PlaceView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "PlacesAdapter";
+public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "SpotCategoriesAdapter";
     private Context context;
 
     private List<Place> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
-    public PlacesAdapter(Context context) {
+    public SpotCategoriesAdapter(Context context) {
         data = new ArrayList<>();
         this.context = context;
     }
@@ -80,14 +80,6 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-
-    public void generateDummyData() {
-        Place dummyPlace = Place.createDummy();
-        add(dummyPlace);
-        Place dummyPlace2 = Place.createDummy();
-        add(dummyPlace2);
-    }
-
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
@@ -112,21 +104,4 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         }
     }
-
-    /*public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
-
-        private final Button newEventButton;
-
-        FooterPlacesViewHolder(View itemView) {
-            super(itemView);
-            newEventButton = (Button) itemView.findViewById(R.id.create_button);
-            newEventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.addPlace(context);
-                }
-            });
-
-        }
-    }*/
 }

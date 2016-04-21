@@ -17,7 +17,7 @@
     <!-- Cards -->
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="margin_bottom_card">5dp</dimen>
-    <dimen name="height_name_card">25dp</dimen>
+    <dimen name="height_name_card">30dp</dimen>
     <dimen name="padding_card">5dp</dimen>
     <dimen name="padding_card_minus_two">3dp</dimen>
 
