@@ -31,6 +31,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     private ImageView showCategoriesButton;
     private RecyclerView spotCategoriesRv;
     private RecyclerView spotsRv;
+    private SpotsAdapter spotsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,8 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
         //Adapter
         spotCategoriesRv.setAdapter(new SpotCategoriesAdapter(this));
-        SpotsAdapter spotsAdapter = new SpotsAdapter(this);
+        spotsAdapter = new SpotsAdapter(this);
         spotsRv.setAdapter(spotsAdapter);
-        spotsAdapter.add(Spot.createDummy());
     }
 
     private void setListeners() {
@@ -82,13 +82,12 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     public void loadData(){
         Map<String, String> conditions = null;
         Call call = RestClient.service().spotReachable(conditions);
-        ApiCallFactory.build(call, new RestCallback<List<Spot>>(this) {
         ApiCallFactory.build(call, new RestCallback<PaginationResponse<Spot>>(this){
 
             @Override
             public void onResponse200(Response<PaginationResponse<Spot>> response) {
                 List<Spot> spots = response.body().items;
-                // TODO JACK: add data in adapter HERE!
+                spotsAdapter.setData(spots);
             }
 
         }, this);
