@@ -6,14 +6,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.SpotView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +36,12 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot, parent, false);
-        return new PlacesViewHolder(v);
+        return new SpotViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
-        if(baseHolder instanceof PlacesViewHolder) {
-            PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
+            SpotViewHolder holder = (SpotViewHolder) baseHolder;
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Spot spot = data.get(position);
 
@@ -50,7 +51,6 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                     new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
             holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
-        }
     }
 
     @Override
@@ -85,13 +85,14 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
-    public class PlacesViewHolder extends RecyclerView.ViewHolder implements
+    public class SpotViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
+
 
         SpotView spotView;
         HorizontalTagsRecyclerView horizontalTagsRv;
 
-        PlacesViewHolder(View itemView) {
+        SpotViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             spotView = (SpotView) itemView.findViewById(R.id.spot_view);

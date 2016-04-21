@@ -95,5 +95,7 @@ public class SpotView extends LinearLayout{
 
         HorizontalTagsAdapter htAdapter = rvSpotTags.getAdapter();
         htAdapter.setData(spot.tags);
+
+
     }
 }
