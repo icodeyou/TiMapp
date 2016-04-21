@@ -88,5 +88,6 @@
     <dimen name="padding_zoom_fit_cluster">50dp</dimen>
     <dimen name="icon_default">40dp</dimen>
     <dimen name="height_pin_post_box">50dp</dimen>
+    <dimen name="icon_spot">60dp</dimen>
 
 </resources>

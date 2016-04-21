@@ -1,11 +1,16 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.timappweb.timapp.R;
@@ -32,12 +37,14 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
     private ImageView showCategoriesButton;
     private View createPlaceButton;
+    private EditText etCustomPlace;
     private RecyclerView spotCategoriesRv;
     private RecyclerView spotsRv;
     private SpotsAdapter spotsAdapter;
 
     private SpotCategory categorySelected;
     private SpotCategoriesAdapter spotCategoriesAdapter;
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +54,16 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         //Toolbar
         this.initToolbar(true);
 
+        //Keyboard
+        imm = (InputMethodManager) this
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
         //Initialize
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
+        createPlaceButton = findViewById(R.id.create_place_button);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
-        createPlaceButton = findViewById(R.id.create_place_button);
+        etCustomPlace = (EditText) findViewById(R.id.edittext);
 
         initAdapters();
         setListeners();
@@ -84,15 +96,39 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
             }
         });
 
+        etCustomPlace.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setButtonValidation();
+            }
+        });
+
+        etCustomPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!imm.isAcceptingText()) {
+                    spotCategoriesRv.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         spotCategoriesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                if(categorySelected == spotCategoriesAdapter.getCategory(position)) {
+                if (categorySelected == spotCategoriesAdapter.getCategory(position)) {
                     categorySelected = null;
-                    createPlaceButton.setVisibility(View.GONE);
+                    setButtonValidation();
                 } else {
                     categorySelected = spotCategoriesAdapter.getCategory(position);
-                    createPlaceButton.setVisibility(View.VISIBLE);
+                    setButtonValidation();
                 }
                 spotCategoriesAdapter.notifyDataSetChanged();
             }
@@ -104,17 +140,21 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
                 if (spotCategoriesRv.getVisibility() == View.GONE) {
                     spotCategoriesRv.setVisibility(View.VISIBLE);
                 } else {
-                    hideCategories();
+                    spotCategoriesRv.setVisibility(View.GONE);
                 }
             }
         });
     }
 
-    private void hideCategories() {
-        spotCategoriesRv.setVisibility(View.GONE);
-        createPlaceButton.setVisibility(View.GONE);
-        categorySelected = null;
-        spotCategoriesAdapter.notifyDataSetChanged();
+    private void setButtonValidation() {
+        //TODO : Get rules from server configuration
+        if(etCustomPlace.length()>=2 && getCategorySelected()!=null) {
+            createPlaceButton.setVisibility(View.VISIBLE);
+            showCategoriesButton.setVisibility(View.GONE);
+        } else {
+            createPlaceButton.setVisibility(View.GONE);
+            showCategoriesButton.setVisibility(View.VISIBLE);
+        }
     }
 
     public void loadData(){
@@ -134,9 +174,10 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     @Override
     public void onBackPressed() {
         if(spotCategoriesRv.getVisibility()==View.VISIBLE) {
-            hideCategories();
+            spotCategoriesRv.setVisibility(View.GONE);
+        } else {
+            super.onBackPressed();
         }
-        super.onBackPressed();
     }
 
     @Override

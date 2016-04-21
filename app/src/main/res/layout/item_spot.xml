@@ -4,6 +4,6 @@
     android:id="@+id/spot_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    myattrs:tags_visible="true"
+    myattrs:tags_visible="false"
     myattrs:bottom_shadow="true"
     myattrs:top_shadow="true" />

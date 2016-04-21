@@ -34,43 +34,37 @@
 
             <ImageView
                 android:id="@+id/image_category_spot"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/icon_spot"
+                android:layout_height="@dimen/icon_spot"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
-                android:alpha="0.1"
                 android:src="@drawable/ic_category_highlight_nightclub"
                 android:background="@drawable/b_spot"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:layout_gravity="center_vertical">
 
-                <LinearLayout
+                <com.timappweb.timapp.views.AutoResizeTextView
+                    android:id="@+id/title_spot"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-                    <com.timappweb.timapp.views.AutoResizeTextView
-                        android:id="@+id/title_spot"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_title_spot_card"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:maxLines="2"
-                        android:gravity="center_vertical|left"
-                        android:textStyle="bold"
-                        android:text="NightyForever"
-                        android:textSize="@dimen/title_event_card"
-                        android:textColor="@color/text_secondary" />
-                </LinearLayout>
+                    android:layout_height="@dimen/height_title_spot_card"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:maxLines="2"
+                    android:gravity="center_vertical|start"
+                    android:textStyle="bold"
+                    android:text="NightyForever"
+                    android:textSize="@dimen/title_event_card"
+                    android:textColor="@color/text_secondary" />
 
                 <LinearLayout
                     android:id="@+id/horizontal_tags_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="visible">
 
                     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
@@ -80,8 +74,7 @@
                         myattrs:horizontal_tags_text_color="@color/default_spot_color"
                         myattrs:horizontal_tags_background_color="@color/transparent"
                         myattrs:horizontal_tags_is_bold="true"
-                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
-
+                        myattrs:horizontal_tags_text_size="@dimen/text_tags" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
