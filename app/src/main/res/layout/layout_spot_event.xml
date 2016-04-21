@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/top_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_top_gradient_view"
+        android:background="@drawable/top_layout_place" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/parent_layout_place"
+        android:background="@color/background_place">
+        <ImageView
+            android:id="@+id/background_place"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_music"
+            android:alpha="0.2"
+            android:layout_alignTop="@+id/main_box"
+            android:layout_alignBottom="@id/main_box"
+            android:layout_alignLeft="@id/main_box"
+            android:layout_alignRight="@id/main_box"/>
+
+        <LinearLayout
+            android:id="@+id/main_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignBottom="@+id/top_layout"
+                    android:background="@color/colorSecondary"
+                    android:alpha="0.6"/>
+                <LinearLayout
+                    android:id="@+id/top_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_category_highlight_music"
+                        android:background="@drawable/b_spot"
+                        android:layout_margin="5dp"/>
+                    <com.timappweb.timapp.views.AutoResizeTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="@dimen/text_normal"
+                        android:text="Concert de Pop-Rock"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.timappweb.timapp.views.AutoResizeTextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:id="@+id/person_name"
+                        android:maxLines="1"
+                        android:text="Soirée déguisée"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_normal"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:singleLine="true"
+                        android:ellipsize="end"/>
+                    <LinearLayout
+                        android:id="@+id/layout_points"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp">
+                        <ImageView
+                            android:id="@+id/ic_flame"
+                            android:layout_width="@dimen/logo_small"
+                            android:layout_height="@dimen/logo_small"
+                            android:layout_marginRight="5dp"
+                            android:src="@drawable/ic_hot_white"/>
+                        <com.timappweb.timapp.views.SimpleTimerView
+                            android:id="@+id/places_points"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:layout_toRightOf="@+id/ic_flame"
+                            android:padding="2dp"
+                            android:singleLine="true"
+                            android:text="3650"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/height_rv_displayed_tags" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical|right">
+                        <ImageView
+                            android:layout_height="@dimen/logo_small"
+                            android:layout_width="@dimen/logo_small"
+                            android:src="@drawable/ic_clock_gray"/>
+                        <TextView
+                            android:id="@+id/time_place"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center"
+                            android:singleLine="true"
+                            android:text="5 min ago"
+                            android:textSize="@dimen/text_small"
+                            android:textColor="@color/VeryLightGray"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottom_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_bottom_gradient_view"
+        android:background="@drawable/bottom_layout_place"
+        android:layout_below="@+id/main_box"/>
+
+
+</LinearLayout>

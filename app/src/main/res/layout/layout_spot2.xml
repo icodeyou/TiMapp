@@ -12,16 +12,6 @@
         android:layout_height="@dimen/height_top_gradient_view"
         android:background="@drawable/top_layout_spot" />
 
-    <RelativeLayout
-        android:id="@+id/parent_layout_spot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.6"
-            android:layout_alignBottom="@+id/horizontal_linear_layout"
-            android:background="@color/colorSecondary" />
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
             android:layout_width="match_parent"
@@ -30,7 +20,8 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/colorSecondary">
 
             <ImageView
                 android:id="@+id/image_category_spot"
@@ -38,7 +29,7 @@
                 android:layout_height="60dp"
                 android:layout_marginRight="15dp"
                 android:layout_gravity="center"
-                android:alpha="0.1"
+                android:alpha="0.7"
                 android:src="@drawable/ic_category_highlight_nightclub"
                 android:background="@drawable/b_spot"/>
             <LinearLayout
@@ -55,14 +46,15 @@
                     <com.timappweb.timapp.views.AutoResizeTextView
                         android:id="@+id/title_spot"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_title_spot_card"
+                        android:layout_height="@dimen/height_name_card"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
-                        android:maxLines="2"
+                        android:ellipsize="none"
+                        android:maxLines="1"
                         android:gravity="center_vertical|left"
                         android:textStyle="bold"
-                        android:text="NightyForever"
-                        android:textSize="@dimen/title_event_card"
+                        android:text="Club Never Stop The Music"
+                        android:textSize="@dimen/text_big"
                         android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
@@ -85,7 +77,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
     <View
         android:id="@+id/bottom_gradient"

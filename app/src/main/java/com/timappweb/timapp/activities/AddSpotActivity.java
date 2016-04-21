@@ -17,7 +17,6 @@ import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.views.SpotView;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import retrofit2.Response;
 
 public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
-    private SpotView spotView;
     private ImageView showCategoriesButton;
     private RecyclerView spotCategoriesRv;
     private RecyclerView spotsRv;
@@ -41,8 +39,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         this.initToolbar(true);
 
         //Initialize
-        spotView = (SpotView) findViewById(R.id.spot_view);
-        spotView.getRvSpotTags().getAdapter().setDummyData();
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
@@ -61,26 +57,21 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
         //Adapter
         spotCategoriesRv.setAdapter(new SpotCategoriesAdapter(this));
-        spotsRv.setAdapter(new SpotsAdapter(this));
+        SpotsAdapter spotsAdapter = new SpotsAdapter(this);
+        spotsRv.setAdapter(spotsAdapter);
+        spotsAdapter.add(Spot.createDummy());
     }
 
     private void setListeners() {
         final Activity activity = this;
-        spotView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.addPlace(activity);
-            }
-        });
 
         showCategoriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(spotCategoriesRv.getVisibility()==View.GONE) {
-                    showCategories();
-                }
-                else {
-                    hideCategories();
+                if (spotCategoriesRv.getVisibility() == View.GONE) {
+                    spotCategoriesRv.setVisibility(View.VISIBLE);
+                } else {
+                    spotCategoriesRv.setVisibility(View.GONE);
                 }
             }
         });
@@ -89,7 +80,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     public void loadData(){
         Map<String, String> conditions = null;
         Call call = RestClient.service().spotReachable(conditions);
-        ApiCallFactory.build(call, new RestCallback<List<Spot>>(this){
+        ApiCallFactory.build(call, new RestCallback<List<Spot>>(this) {
 
             @Override
             public void onResponse200(Response<List<Spot>> response) {
@@ -98,14 +89,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
             }
 
         }, this);
-    }
-
-    private void showCategories() {
-        spotCategoriesRv.setVisibility(View.VISIBLE);
-    }
-
-    private void hideCategories() {
-        spotCategoriesRv.setVisibility(View.GONE);
     }
 
     @Override

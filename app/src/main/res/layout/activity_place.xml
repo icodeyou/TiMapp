@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/toolbar"
         android:scaleType="centerCrop"
-        android:alpha="0.6"/>
+        android:alpha="0.2"/>
 
     <LinearLayout
         android:id="@+id/main_layout_place"

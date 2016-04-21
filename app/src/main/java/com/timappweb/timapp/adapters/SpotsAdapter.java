@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -21,7 +22,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private static final String TAG = "SpotsAdapter";
     private Context context;
 
-    private List<Place> data;
+    private List<Spot> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
@@ -32,7 +33,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_spot, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot, parent, false);
         return new PlacesViewHolder(v);
     }
 
@@ -41,9 +42,9 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if(baseHolder instanceof PlacesViewHolder) {
             PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
-            final Place place = data.get(position);
+            final Spot spot = data.get(position);
 
-            holder.spotView.setSpot(place);
+            holder.spotView.setSpot(spot);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -57,21 +58,21 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return data.size();
     }
 
-    public void add(Place place) {
-        this.data.add(place);
+    public void add(Spot spot) {
+        this.data.add(spot);
         notifyDataSetChanged();
     }
 
-    public void setData(List<Place> places) {
-        this.data = places;
+    public void setData(List<Spot> spots) {
+        this.data = spots;
         notifyDataSetChanged();
     }
 
-    public List<Place> getData() {
+    public List<Spot> getData() {
         return data;
     }
 
-    public Place getItem(int position) {
+    public Spot getItem(int position) {
         return data.get(position);
     }
 

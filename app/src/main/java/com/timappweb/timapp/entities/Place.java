@@ -21,8 +21,8 @@ public class Place implements Serializable, MarkerValueInterface {
     private static final String TAG = "PlaceEntity" ;
     public int id = -1;
     public String name;
-    public double latitude;
     public int created;
+    public double latitude;
     public double longitude;
     public int count_posts;
     public int category_id;

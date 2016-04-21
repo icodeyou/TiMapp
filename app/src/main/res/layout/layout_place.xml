@@ -66,15 +66,14 @@
                         <com.timappweb.timapp.views.AutoResizeTextView
                             android:id="@+id/title_place"
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="@dimen/height_title_spot_card"
                             android:layout_marginStart="5dp"
                             android:layout_marginLeft="5dp"
-                            android:ellipsize="none"
                             android:maxLines="2"
                             android:gravity="center_vertical|left"
                             android:textStyle="bold"
                             android:text="Club Never Stop The Music"
-                            android:textSize="@dimen/text_big"
+                            android:textSize="@dimen/title_event_card"
                             android:textColor="@color/White" />
                     </LinearLayout>
 

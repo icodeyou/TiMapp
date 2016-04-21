@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Spot;
 
 public class SpotView extends LinearLayout{
     private final static String TAG = "SpotView";
@@ -89,7 +90,7 @@ public class SpotView extends LinearLayout{
         }
     }
 
-    public void setSpot(Place spot) {
+    public void setSpot(Spot spot) {
         //TODO : set spot
 
         HorizontalTagsAdapter htAdapter = rvSpotTags.getAdapter();

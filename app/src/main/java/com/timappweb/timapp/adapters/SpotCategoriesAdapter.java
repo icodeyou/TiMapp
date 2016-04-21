@@ -32,7 +32,7 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_place, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot_category, parent, false);
         return new PlacesViewHolder(v);
     }
 
