@@ -31,6 +31,7 @@ import retrofit2.Response;
 public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
     private ImageView showCategoriesButton;
+    private View createPlaceButton;
     private RecyclerView spotCategoriesRv;
     private RecyclerView spotsRv;
     private SpotsAdapter spotsAdapter;
@@ -50,6 +51,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
+        createPlaceButton = findViewById(R.id.create_place_button);
 
         initAdapters();
         setListeners();
@@ -75,10 +77,24 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     private void setListeners() {
         final Activity activity = this;
 
+        createPlaceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO : get back to AddPlaceActivity
+            }
+        });
+
         spotCategoriesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                categorySelected = spotCategoriesAdapter.getCategory(position);
+                if(categorySelected == spotCategoriesAdapter.getCategory(position)) {
+                    categorySelected = null;
+                    createPlaceButton.setVisibility(View.GONE);
+                } else {
+                    categorySelected = spotCategoriesAdapter.getCategory(position);
+                    createPlaceButton.setVisibility(View.VISIBLE);
+                }
+                spotCategoriesAdapter.notifyDataSetChanged();
             }
         });
 
@@ -88,10 +104,17 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
                 if (spotCategoriesRv.getVisibility() == View.GONE) {
                     spotCategoriesRv.setVisibility(View.VISIBLE);
                 } else {
-                    spotCategoriesRv.setVisibility(View.GONE);
+                    hideCategories();
                 }
             }
         });
+    }
+
+    private void hideCategories() {
+        spotCategoriesRv.setVisibility(View.GONE);
+        createPlaceButton.setVisibility(View.GONE);
+        categorySelected = null;
+        spotCategoriesAdapter.notifyDataSetChanged();
     }
 
     public void loadData(){
@@ -106,6 +129,14 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
             }
 
         }, this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(spotCategoriesRv.getVisibility()==View.VISIBLE) {
+            hideCategories();
+        }
+        super.onBackPressed();
     }
 
     @Override

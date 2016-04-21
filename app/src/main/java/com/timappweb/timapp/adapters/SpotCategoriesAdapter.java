@@ -53,9 +53,11 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         //holder.icCategory.setImageResource(spotCategory.resource);
 
         if(addSpotActivity.getCategorySelected() != null && addSpotActivity.getCategorySelected()==spotCategory) {
-            holder.itemView.setBackgroundResource(R.color.colorSecondary);
+            holder.itemView.setBackgroundResource(R.color.colorPrimaryDark);
+            holder.selectedView.setVisibility(View.VISIBLE);
         } else {
             holder.itemView.setBackground(null);
+            holder.selectedView.setVisibility(View.GONE);
         }
     }
 
@@ -91,12 +93,14 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         TextView tvCategory;
         ImageView icCategory;
+        View selectedView;
 
         SpotCategoriesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             tvCategory = (TextView) itemView.findViewById(R.id.text);
             icCategory = (ImageView) itemView.findViewById(R.id.icon);
+            selectedView = itemView.findViewById(R.id.icon_selected);
         }
 
         @Override
