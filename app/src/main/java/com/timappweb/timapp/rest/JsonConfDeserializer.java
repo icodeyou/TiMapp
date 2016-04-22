@@ -33,6 +33,7 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
 
         String objectType = object.get("type").getAsString();
         JsonElement data = object.get("data");
+        Log.d(TAG, "Data type is: " + objectType);
         Type objectClass;
         switch (objectType){
             case "rules":
@@ -47,6 +48,7 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
             default:
                 throw new JsonParseException("Invalid object type: " + objectType);
         }
+        conf.type = objectType;
         conf.data = new Gson().fromJson(data, objectClass);
 
         // Deserialize it. You use a new instance of Gson to avoid infinite recursion

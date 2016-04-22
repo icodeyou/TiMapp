@@ -9,6 +9,8 @@ import com.timappweb.timapp.utils.Util;
 
 
 public class SyncConfig<DataType>{
+
+    @SerializedName("lastSync")
     protected long lastSync;
 
     @SerializedName("version")
@@ -16,6 +18,9 @@ public class SyncConfig<DataType>{
 
     @SerializedName("data")
     public DataType data;
+
+    @SerializedName("type")
+    public String type;
 
     public SyncConfig() {
         this.version = 0;
@@ -27,8 +32,9 @@ public class SyncConfig<DataType>{
     public String toString() {
         return "SyncConfig{" +
                 "version=" + version +
+                ", type=" + type +
                 ", data=" + data +
-                "lastSync=" + lastSync + " ("+ Util.delayFromNow((int) (lastSync / 1000))+" seconds ago)" +
+                ", lastSync=" + lastSync + " ("+ Util.delayFromNow((int) (lastSync / 1000))+" seconds ago)" +
                 '}';
     }
 }
