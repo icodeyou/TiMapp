@@ -21,7 +21,7 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SpotCategoriesAdapter extends RecyclerView.Adapter<SpotCategoriesAdapter.SpotCategoriesViewHolder> {
     private static final String TAG = "SpotCategoriesAdapter";
     private final AddSpotActivity addSpotActivity;
     private Context context;
@@ -37,14 +37,13 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SpotCategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot_category, parent, false);
         return new SpotCategoriesViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        SpotCategoriesViewHolder holder = (SpotCategoriesViewHolder) viewHolder;
+    public void onBindViewHolder(SpotCategoriesViewHolder holder, int position) {
         Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
 
         final SpotCategory spotCategory = MyApplication.getSpotCategories().get(position);

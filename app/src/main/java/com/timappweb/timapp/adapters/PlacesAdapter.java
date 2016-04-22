@@ -17,7 +17,7 @@ import com.timappweb.timapp.views.PlaceView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder> {
     private static final String TAG = "PlacesAdapter";
     private Context context;
 
@@ -31,25 +31,24 @@ public class PlacesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PlacesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_place, parent, false);
         return new PlacesViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
-        if(baseHolder instanceof PlacesViewHolder) {
-            PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
-            Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
-            final Place place = data.get(position);
+    public void onBindViewHolder(PlacesViewHolder baseHolder, int position) {
+        //if(baseHolder instanceof PlacesViewHolder)
+        //PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
+        Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
+        final Place place = data.get(position);
 
-            holder.placeView.setPlace(place);
+        baseHolder.placeView.setPlace(place);
 
-            //OnTagsRvClick : Same event as adapter click.
-            HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-                    new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
-        }
+        //OnTagsRvClick : Same event as adapter click.
+        HorizontalTagsTouchListener mHorizontalTagsTouchListener =
+                new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
+        baseHolder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
     }
 
     @Override

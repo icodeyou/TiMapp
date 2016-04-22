@@ -20,7 +20,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHolder> {
     private static final String TAG = "SpotsAdapter";
     private Context context;
 
@@ -34,18 +34,20 @@ public class SpotsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot, parent, false);
         return new SpotViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
-            SpotViewHolder holder = (SpotViewHolder) baseHolder;
+    public void onBindViewHolder(SpotViewHolder holder, int position) {
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Spot spot = data.get(position);
 
             holder.spotView.setSpot(spot);
+
+            //TODO : Make sure the condition is right
+            holder.spotView.setTagsVisible(spot.tags==null || spot.tags.size()==0);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
