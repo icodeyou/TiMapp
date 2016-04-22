@@ -40,7 +40,8 @@ public class SyncConfigManager<DataType> {
     }
 
     public SyncConfigManager(int configId, RemotePersistenceManager remote, LocalPersistenceManager local) {
-        this.dataWrapper = new SyncConfig();
+        Log.d(TAG, "Initialize config id " + configId);
+        this.dataWrapper = null;
         this.lastSync = 0;
         this.minRemoteSyncDelay = MIN_REMOTE_SYNC_DELAY;
         this.configId = configId;
@@ -50,11 +51,16 @@ public class SyncConfigManager<DataType> {
     }
 
     public void sync() throws RemotePersistenceManager.CannotLoadException {
-        Log.d(TAG, "Check last sync: " + (this.lastSync == 0 ? "NEVER" : this.lastSync - System.currentTimeMillis()));
+        Log.d(TAG, this.configId + "] Check last sync: "
+                + (this.lastSync == 0 ? "NEVER" : this.lastSync - System.currentTimeMillis())
+                + " Current version: " + (this.dataWrapper != null ? this.dataWrapper : "NONE") );
         if (    this.dataWrapper == null
                 || this.dataWrapper.version == 0
-                || (this.lastSync - System.currentTimeMillis()) > this.minRemoteSyncDelay){
+                || (System.currentTimeMillis() - this.lastSync) > this.minRemoteSyncDelay){
             this.remoteSync();
+        }
+        else{
+            Log.d(TAG, this.configId + "] config up to date! ");
         }
     }
 
@@ -63,7 +69,7 @@ public class SyncConfigManager<DataType> {
         SyncConfig config = this.remote.load(version);
         if (config.data != null){
             this.dataWrapper = config;
-            Log.d(TAG, "Updating configuration, version is now " + this.dataWrapper.version);
+            Log.d(TAG, this.configId + "] Updating configuration, version is now " + this.dataWrapper.version);
             this.lastSync = System.currentTimeMillis();
             this.saveLocal();
             if (this.listener != null){
@@ -86,7 +92,7 @@ public class SyncConfigManager<DataType> {
 
     private void localSync() {
         this.dataWrapper = this.local.load();
-        Log.d(TAG, "Loading configuration from local: " + (this.dataWrapper != null ? "version " + this.dataWrapper.version : "NONE"));
+        Log.d(TAG, this.configId + "] Loading configuration from local: " + (this.dataWrapper != null ? "version " + this.dataWrapper.version : "NONE"));
     }
 
     public SyncConfigManager<DataType> setRemoteManager(RemotePersistenceManager remote){
@@ -114,6 +120,14 @@ public class SyncConfigManager<DataType> {
         public SyncConfig() {
             this.version = 0;
             this.data = null;
+        }
+
+        @Override
+        public String toString() {
+            return "SyncConfig{" +
+                    "version=" + version +
+                    ", data=" + data +
+                    '}';
         }
     }
 }

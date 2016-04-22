@@ -34,6 +34,9 @@ public class RESTRemoteSync implements RemotePersistenceManager {
             if (response.isSuccess()){
                 return (SyncConfigManager.SyncConfig) response.body();
             }
+            else{
+                return null;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

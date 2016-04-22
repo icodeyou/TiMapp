@@ -41,9 +41,11 @@ public class ConfigurationProvider {
     public List<Category> eventCategories(){
         return this.eventCatagoriesManager.getData();
     }
+
     public List<SpotCategory> spotCategories(){
         return this.spotCatagoriesManager.getData();
     }
+
     public Rules rules(){
         return this.rulesManager.getData();
     }
@@ -62,6 +64,7 @@ public class ConfigurationProvider {
     }
 
     public AsyncTask<Integer, Integer, Boolean> load() {
+        Log.d(TAG, "Start sync configuration from server...");
         AsyncTask<Integer, Integer, Boolean> loadTask = new AsyncTask<Integer, Integer, Boolean>() {
             @Override
             protected Boolean doInBackground(Integer... params) {
@@ -110,16 +113,14 @@ public class ConfigurationProvider {
     }
 
     public class Rules {
+        public Rules() {
+            this.places_points_levels = new LinkedList<>();
+        }
 
         public int max_invite_per_request = 20;
         public int picture_max_size;
         public int picture_max_width;
         public int picture_max_height;
-
-        public Rules() {
-            this.places_points_levels = new LinkedList<>();
-        }
-
         public List<Integer> places_points_levels;
         public int place_max_reachable = 500;
         public int tags_suggest_limit = 40;
