@@ -1,5 +1,7 @@
 package com.timappweb.timapp.serversync;
 
+import android.util.Log;
+
 import com.timappweb.timapp.rest.services.ConfigInterface;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import retrofit2.Response;
  */
 public class RESTRemoteSync implements RemotePersistenceManager {
 
+    private static final String TAG = "RESTRemoteSync";
     private final ConfigInterface service;
     private final String path;
 
@@ -27,14 +30,16 @@ public class RESTRemoteSync implements RemotePersistenceManager {
     }
 
     @Override
-    public SyncConfigManager.SyncConfig load(int currentVersion) throws CannotLoadException {
+    public SyncConfig load(int currentVersion) throws CannotLoadException {
         Call call = service.get(this.path, currentVersion);
         try {
             Response response = call.execute();
             if (response.isSuccess()){
-                return (SyncConfigManager.SyncConfig) response.body();
+                return (SyncConfig) response.body();
             }
             else{
+                // TODO
+                Log.e(TAG, "API call failed: " + response.code());
                 return null;
             }
         } catch (IOException e) {

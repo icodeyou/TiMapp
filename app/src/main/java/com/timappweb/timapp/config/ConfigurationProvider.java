@@ -47,20 +47,33 @@ public class ConfigurationProvider {
     }
 
     public Rules rules(){
-        return this.rulesManager.getData();
+        try {
+            return this.rulesManager.getData();
+        }
+        catch (Exception ex){
+            throw new InvalidConfigurationException();
+        }
     }
 
     public ConfigurationProvider(Context context, Listener listener) {
         this.context = context;
         this.sharedPref = context.getSharedPreferences(PREF_NAME, SHARED_PREF_PRIVATE_MODE);
         this.listener = listener;
+
+        this.init();
     }
 
-    public SyncConfigManager buildConfManager(int id, String path){
+    private <T> SyncConfigManager buildConfManager(int id, String path, Class<T> dataClass){
         return new SyncConfigManager<>(
                 id,
                 new RESTRemoteSync(path, RestClient.instance().createService(ConfigInterface.class)),
-                new SharedPrefSync("config_" + id, sharedPref));
+                new SharedPrefSync("config_" + id, sharedPref, dataClass));
+    }
+
+    private void init(){
+        eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories", List.class);
+        spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories", List.class);
+        rulesManager = buildConfManager(CONFIG_ID_RULES, "rules", Rules.class);
     }
 
     public AsyncTask<Integer, Integer, Boolean> load() {
@@ -69,13 +82,8 @@ public class ConfigurationProvider {
             @Override
             protected Boolean doInBackground(Integer... params) {
                 try {
-                    eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
                     eventCatagoriesManager.sync();
-
-                    spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
                     spotCatagoriesManager.sync();
-
-                    rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
                     rulesManager.sync();
                 } catch (RemotePersistenceManager.CannotLoadException e) {
                     e.printStackTrace();
@@ -98,6 +106,12 @@ public class ConfigurationProvider {
         return loadTask.execute();
     }
 
+    public void clear() {
+        eventCatagoriesManager.clear();
+        spotCatagoriesManager.clear();
+        rulesManager.clear();
+    }
+
     public interface Listener{
         void onLoaded();
         void onFail();
@@ -111,6 +125,7 @@ public class ConfigurationProvider {
                 ", spot categories= " + spotCatagoriesManager.toString() +
                 '}';
     }
+
 
     public class Rules {
         public Rules() {
@@ -158,6 +173,13 @@ public class ConfigurationProvider {
                     ", places_min_name_length=" + places_min_name_length +
                     ", tags_min_search_length=" + tags_min_search_length +
                     '}';
+        }
+    }
+
+    private class InvalidConfigurationException extends Error {
+
+        public InvalidConfigurationException() {
+            // TODO flush error
         }
     }
 }

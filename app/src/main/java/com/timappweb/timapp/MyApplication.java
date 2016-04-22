@@ -196,6 +196,7 @@ public class MyApplication extends com.activeandroid.app.Application {
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), new ConfigurationProviderListener());
+        config.clear();
         config.load();
 
         // Check token

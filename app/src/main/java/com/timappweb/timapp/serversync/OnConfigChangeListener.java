@@ -5,5 +5,5 @@ package com.timappweb.timapp.serversync;
  */
 public interface OnConfigChangeListener {
 
-    public void onSyncChanged(int configId, SyncConfigManager.SyncConfig dataWrapper);
+    public void onSyncChanged(int configId, SyncConfig dataWrapper);
 }

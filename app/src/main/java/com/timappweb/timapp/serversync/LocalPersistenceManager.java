@@ -5,7 +5,8 @@ package com.timappweb.timapp.serversync;
  */
 public interface LocalPersistenceManager {
 
-    public void write(SyncConfigManager.SyncConfig data);
-    public SyncConfigManager.SyncConfig load();
+    public void write(SyncConfig data);
+    public SyncConfig load();
 
+    void clear();
 }

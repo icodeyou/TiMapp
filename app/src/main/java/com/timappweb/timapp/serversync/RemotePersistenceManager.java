@@ -10,7 +10,7 @@ import retrofit2.Callback;
 public interface RemotePersistenceManager {
 
     public int version();
-    public SyncConfigManager.SyncConfig load(int currentVersion) throws CannotLoadException;
+    public SyncConfig load(int currentVersion) throws CannotLoadException;
 
 
     class CannotLoadException extends Exception {
