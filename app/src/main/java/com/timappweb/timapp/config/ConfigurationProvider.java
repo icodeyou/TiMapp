@@ -51,6 +51,7 @@ public class ConfigurationProvider {
             return this.rulesManager.getData();
         }
         catch (Exception ex){
+            ex.printStackTrace();
             throw new InvalidConfigurationException();
         }
     }
@@ -176,7 +177,7 @@ public class ConfigurationProvider {
         }
     }
 
-    private class InvalidConfigurationException extends Error {
+    public class InvalidConfigurationException extends Error {
 
         public InvalidConfigurationException() {
             // TODO flush error

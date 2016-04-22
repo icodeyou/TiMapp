@@ -18,7 +18,7 @@ public class SharedPrefSync implements LocalPersistenceManager {
         this.pref = pref;
         this.key = key;
         this.gson = new GsonBuilder()
-                        .registerTypeAdapter(dataClass, new JsonConfDeserializer())
+                        .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
                         .create();
     }
 

@@ -18,7 +18,6 @@ public class SyncConfigManager<DataType> {
 
     // ---------------------------------------------------------------------------------------------
     protected SyncConfig dataWrapper;
-    protected long lastSync;
     protected long minRemoteSyncDelay;
 
     // -------------------
@@ -33,7 +32,6 @@ public class SyncConfigManager<DataType> {
 
     public SyncConfigManager(int configId) {
         this.dataWrapper = new SyncConfig();
-        this.lastSync = 0;
         this.minRemoteSyncDelay = MIN_REMOTE_SYNC_DELAY;
         this.configId = configId;
         this.listener = null;
@@ -42,7 +40,6 @@ public class SyncConfigManager<DataType> {
     public SyncConfigManager(int configId, RemotePersistenceManager remote, LocalPersistenceManager local) {
         Log.d(TAG, "Initialize config id " + configId);
         this.dataWrapper = null;
-        this.lastSync = 0;
         this.minRemoteSyncDelay = MIN_REMOTE_SYNC_DELAY;
         this.configId = configId;
         this.listener = null;
@@ -51,12 +48,11 @@ public class SyncConfigManager<DataType> {
     }
 
     public void sync() throws RemotePersistenceManager.CannotLoadException {
-        Log.d(TAG, this.configId + "] Check last sync: "
-                + (this.lastSync == 0 ? "NEVER" : this.lastSync - System.currentTimeMillis())
+        Log.d(TAG, this.configId + "] Check last sync: " + (this.dataWrapper != null ? this.dataWrapper.lastSync : "NONE")
                 + " Current version: " + (this.dataWrapper != null ? this.dataWrapper : "NONE"));
         if (    this.dataWrapper == null
                 || this.dataWrapper.version == 0
-                || (System.currentTimeMillis() - this.lastSync) > this.minRemoteSyncDelay){
+                || (System.currentTimeMillis() - this.dataWrapper.lastSync) > this.minRemoteSyncDelay){
             this.remoteSync();
         }
         else{
@@ -69,8 +65,8 @@ public class SyncConfigManager<DataType> {
         SyncConfig config = this.remote.load(version);
         if (config.data != null){
             this.dataWrapper = config;
+            this.dataWrapper.lastSync = System.currentTimeMillis();;
             Log.d(TAG, this.configId + "] Updating configuration, version is now " + this.dataWrapper.version);
-            this.lastSync = System.currentTimeMillis();
             this.saveLocal();
             if (this.listener != null){
                 this.listener.onSyncChanged(configId, dataWrapper);
@@ -112,7 +108,6 @@ public class SyncConfigManager<DataType> {
     public String toString() {
         return "SyncConfigManager{" +
                 "version=" + (dataWrapper != null ? dataWrapper.version : "NULL") +
-                "lastSync=" + lastSync + " ("+ Util.delayFromNow((int)(lastSync/1000))+" seconds ago)" +
                 ", minRemoteSyncDelay=" + minRemoteSyncDelay +
                 '}';
     }
