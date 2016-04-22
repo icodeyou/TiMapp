@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.timappweb.timapp.rest.JsonConfDeserializer;
 
 /**
  * Created by stephane on 4/21/2016.

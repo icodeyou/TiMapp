@@ -1,4 +1,4 @@
-package com.timappweb.timapp.serversync;
+package com.timappweb.timapp.rest;
 
 import android.util.Log;
 
@@ -9,14 +9,13 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SpotCategory;
-
-import org.json.JSONObject;
-
-import java.util.LinkedList;
-import java.util.List;
+import com.timappweb.timapp.serversync.SyncConfig;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 
 public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
@@ -33,19 +32,22 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
         conf.version = object.get("version").getAsInt();
 
         String objectType = object.get("type").getAsString();
+        JsonElement data = object.get("data");
+        Type objectClass;
         switch (objectType){
             case "rules":
-                conf.data = new Gson().fromJson(object.get("data"), ConfigurationProvider.Rules.class);
+                objectClass = ConfigurationProvider.Rules.class;
                 break;
             case "spot_categories":
-                conf.data = new Gson().fromJson(object.get("data"), SpotCategory[].class);
+                objectClass = new TypeToken<ArrayList<SpotCategory>>() {}.getType();
                 break;
             case "event_categories":
-                conf.data = new Gson().fromJson(object.get("data"), Category[].class);
+                objectClass = new TypeToken<ArrayList<Category>>() {}.getType();
                 break;
             default:
                 throw new JsonParseException("Invalid object type: " + objectType);
         }
+        conf.data = new Gson().fromJson(data, objectClass);
 
         // Deserialize it. You use a new instance of Gson to avoid infinite recursion
         // to this deserializer

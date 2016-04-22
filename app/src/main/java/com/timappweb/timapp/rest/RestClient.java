@@ -7,15 +7,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
-import com.timappweb.timapp.serversync.JsonConfDeserializer;
 import com.timappweb.timapp.serversync.SyncConfig;
-
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
