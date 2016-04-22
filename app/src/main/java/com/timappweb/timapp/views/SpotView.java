@@ -26,6 +26,7 @@ public class SpotView extends LinearLayout{
     private boolean                     isTagsVisible = false;
     private boolean                     isBottomShadow = false;
     private boolean                     isTopShadow = false;
+    private AutoResizeTextView          tvName;
 
     public SpotView(Context context) {
         super(context);
@@ -52,6 +53,8 @@ public class SpotView extends LinearLayout{
         gradientBottomView = findViewById(R.id.bottom_gradient);
         gradientTopView = findViewById(R.id.top_gradient);
         rvSpotTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
+
+        tvName = (AutoResizeTextView) findViewById(R.id.title_spot);
 
         setBottomShadow(isBottomShadow);
         setTopShadow(isTopShadow);
@@ -96,6 +99,7 @@ public class SpotView extends LinearLayout{
         HorizontalTagsAdapter htAdapter = rvSpotTags.getAdapter();
         htAdapter.setData(spot.tags);
 
+        tvName.setText(spot.name);
 
     }
 }

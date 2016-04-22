@@ -19,8 +19,8 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.database.models.QuotaType;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.listeners.LoadingListener;
@@ -204,7 +204,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                     " has size: " + Util.byteToKB(file.length()) +
                     ". Max size: " + Util.byteToKB(MyApplication.getApplicationRules().picture_max_size));
 
-            ServerConfiguration.Rules rules = MyApplication.getApplicationRules();
+            ConfigurationProvider.Rules rules = MyApplication.getApplicationRules();
             file = PictureUtility.resize(context, file, rules.picture_max_width, rules.picture_max_height);
 
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));

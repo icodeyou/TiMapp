@@ -19,6 +19,7 @@ import java.util.List;
 public class Place implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
+    private Spot spot;
     public int id = -1;
     public String name;
     public int created;
@@ -55,6 +56,15 @@ public class Place implements Serializable, MarkerValueInterface {
         this.name = name;
         this.category_id = category.id;
         this.created = Util.getCurrentTimeSec();
+    }
+
+    public Place(Location lastLocation, String name, Category category, Spot spot) {
+        this.loaded_time = Util.getCurrentTimeSec();
+        this.latitude = lastLocation.getLatitude();
+        this.longitude = lastLocation.getLongitude();
+        this.name = name;
+        this.category_id = category.id;
+        this.spot = spot;
     }
 
     public void addPost(Post post){
@@ -124,6 +134,7 @@ public class Place implements Serializable, MarkerValueInterface {
                 ", created=" + created +
                 ", longitude=" + longitude +
                 ", category_id=" + category_id +
+                ", spot=" + (spot != null ? spot : "No spot") +
                 '}';
     }
 

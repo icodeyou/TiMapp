@@ -1,150 +1,162 @@
 package com.timappweb.timapp.config;
 
 import android.content.Context;
-import android.content.res.AssetManager;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
+import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.entities.SpotCategory;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.rest.services.ConfigInterface;
+import com.timappweb.timapp.serversync.RESTRemoteSync;
+import com.timappweb.timapp.serversync.RemotePersistenceManager;
+import com.timappweb.timapp.serversync.SharedPrefSync;
+import com.timappweb.timapp.serversync.SyncConfigManager;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by stephane on 1/24/2016.
  */
 public class ConfigurationProvider {
 
-    private static final String TAG = "AssetsPropertyReader";
+    private static final String TAG = "ConfigurationProvider";
+    private static final String PREF_NAME = "com.timapp.pref";
 
-    private final String filename;
-    private final Gson gson;
-    private Context context;
-    private static Properties properties;
-    private ServerConfiguration serverConfiguration = null;
-    private Listener listener;
+    private static final int CONFIG_ID_RULES = 1;
+    private static final int CONFIG_ID_EVENT_CATEGORIES= 2;
+    private static final int CONFIG_ID_SPOT_CATEGORIES = 3;
 
-    public ConfigurationProvider(Context context, String filename, Listener listener) {
-        this.gson = new Gson();
+    private final SharedPreferences sharedPref;
+    private final Context context;
+    private final Listener listener;
+    private SyncConfigManager<List<Category>> eventCatagoriesManager;
+    private SyncConfigManager<List<SpotCategory>> spotCatagoriesManager;
+    private SyncConfigManager<Rules> rulesManager;
+
+    int SHARED_PREF_PRIVATE_MODE = 0;
+
+    public List<Category> eventCategories(){
+        return this.eventCatagoriesManager.getData();
+    }
+    public List<SpotCategory> spotCategories(){
+        return this.spotCatagoriesManager.getData();
+    }
+    public Rules rules(){
+        return this.rulesManager.getData();
+    }
+
+    public ConfigurationProvider(Context context, Listener listener) {
         this.context = context;
-        this.properties = new Properties();
-        this.filename = filename;
+        this.sharedPref = context.getSharedPreferences(PREF_NAME, SHARED_PREF_PRIVATE_MODE);
         this.listener = listener;
     }
 
-    public ServerConfiguration getServerConfiguration(){
-        return serverConfiguration;
+    public SyncConfigManager buildConfManager(int id, String path){
+        return new SyncConfigManager<>(
+                id,
+                new RESTRemoteSync(path, RestClient.instance().createService(ConfigInterface.class)),
+                new SharedPrefSync("config_" + id, sharedPref));
     }
 
-
-    public void store() throws IOException {
-        properties.setProperty("server_configuration", gson.toJson(serverConfiguration));
-        properties.store(new FileOutputStream(context.getFilesDir().getPath().toString() + "/" + filename), null);
-    }
-
-    public void load(){
-        try {
-            AssetManager assetManager = context.getAssets();
-            InputStream inputStream = assetManager.open(filename);
-            properties.load(inputStream);
-
-            String config = properties.getProperty("server_configuration");
-            serverConfiguration = gson.fromJson(config, ServerConfiguration.class);
-            updateServerConfiguration();
-
-        } catch (IOException e) {
-            Log.e(TAG, e.toString());
-        }
-    }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setInt(String name, int value){
-        properties.setProperty(name, String.valueOf(value));
-    }
-
-    public int getInt(String name){
-        return this.getInt(name, 0);
-    }
-    public int getInt(String name, int defaultValue){
-        try{
-            return Integer.parseInt(properties.getProperty(name));
-        }
-        catch (NumberFormatException ex){
-            return defaultValue;
-        }
-    }
-
-    public double getDouble(String name){
-        return this.getDouble(name, 0.0);
-    }
-    public double getDouble(String name, double defaultValue){
-        try{
-            return Double.parseDouble(properties.getProperty(name));
-        }
-        catch (NumberFormatException ex){
-            return defaultValue;
-        }
-    }
-
-    public void updateServerConfiguration() {
-        if (serverConfiguration != null && !Util.isOlderThan(serverConfiguration.update_configuration_delay, serverConfiguration.updated)){
-            Log.d(TAG, "Server configuration is up to date. Last update: " + (Util.getCurrentTimeSec() - serverConfiguration.updated) + " seconds ago.");
-            this.listener.onLoaded();
-            return;
-        }
-        if (serverConfiguration == null){
-            serverConfiguration = new ServerConfiguration();
-        }
-        Call<ServerConfiguration> updateConfigCall = RestClient.service().configuration(serverConfiguration != null ? serverConfiguration.version : 0);
-
-        updateConfigCall.enqueue(new Callback<ServerConfiguration>() {
+    public AsyncTask<Integer, Integer, Boolean> load() {
+        AsyncTask<Integer, Integer, Boolean> loadTask = new AsyncTask<Integer, Integer, Boolean>() {
             @Override
-            public void onResponse(Response<ServerConfiguration> response) {
-                if (response.isSuccess() && response.code() == 200){
-                    serverConfiguration = response.body();
-                    Log.d(TAG, "New server configuration is loaded: " + serverConfiguration);
+            protected Boolean doInBackground(Integer... params) {
+                try {
+                    eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
+                    eventCatagoriesManager.sync();
 
-                    try {
-                        store();
-                        listener.onLoaded();
-                    } catch (FileNotFoundException e) {
-                        // TODO
-                        Log.e(TAG, "FileNotFoundException: " + e.toString());
-                        e.printStackTrace();
-                        listener.onFail();
-                    }catch (IOException e) {
-                        Log.e(TAG, "IOException: " + e.toString());
-                        e.printStackTrace();
-                        listener.onFail();
-                    }
+                    spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
+                    spotCatagoriesManager.sync();
+
+                    rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
+                    rulesManager.sync();
+                } catch (RemotePersistenceManager.CannotLoadException e) {
+                    e.printStackTrace();
+                    return false;
                 }
-                else{
-                    Log.e(TAG, "Cannot update configuration: " + response);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean success) {
+                super.onPostExecute(success);
+                if (!success){
                     listener.onFail();
                 }
+                else{
+                    listener.onLoaded();
+                }
             }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e(TAG, "onFailure: Cannot update configuration: " + t.getMessage());
-                listener.onFail();
-            }
-        });
+        };
+        return loadTask.execute();
     }
 
     public interface Listener{
         void onLoaded();
         void onFail();
+    }
+
+    @Override
+    public String toString() {
+        return "ServerConfiguration{" +
+                ", rules=" + rulesManager +
+                ", event categories= " + eventCatagoriesManager.toString() +
+                ", spot categories= " + spotCatagoriesManager.toString() +
+                '}';
+    }
+
+    public class Rules {
+
+        public int max_invite_per_request = 20;
+        public int picture_max_size;
+        public int picture_max_width;
+        public int picture_max_height;
+
+        public Rules() {
+            this.places_points_levels = new LinkedList<>();
+        }
+
+        public List<Integer> places_points_levels;
+        public int place_max_reachable = 500;
+        public int tags_suggest_limit = 40;
+        public int places_populars_limit = 20;
+        public int places_min_delay_add = 60;
+        public int places_users_min_delay_add  = 60;
+        public int posts_min_tag_number = 3;
+        public int posts_max_tags_number = 3;
+        public int tags_min_name_length = 2;
+        public int tags_max_name_length = 30;
+        public String tags_name_regex = "";
+        public int gps_min_time_delay = 60000;
+        public int gps_min_accuracy_add_place = 3500;
+        public int gps_min_accuracy = 3500;
+        public int places_min_name_length = 3;
+        public int places_max_name_length;
+        public int tags_min_search_length = 0;
+
+        public String toString(){
+            return "Rules{" +
+                    ", places_points_levels=" + places_points_levels +
+                    ", place_max_reachable=" + place_max_reachable +
+                    ", tags_suggest_limit=" + tags_suggest_limit +
+                    ", places_populars_limit=" + places_populars_limit +
+                    ", places_min_delay_add=" + places_min_delay_add +
+                    ", places_users_min_delay_add=" + places_users_min_delay_add +
+                    ", posts_min_tag_number=" + posts_min_tag_number +
+                    ", posts_max_tags_number=" + posts_max_tags_number +
+                    ", tags_min_name_length=" + tags_min_name_length +
+                    ", tags_max_name_length=" + tags_max_name_length +
+                    ", tags_name_regex='" + tags_name_regex + '\'' +
+                    ", gps_min_time_delay=" + gps_min_time_delay +
+                    ", gps_min_accuracy_add_place=" + gps_min_accuracy_add_place +
+                    ", gps_min_accuracy=" + gps_min_accuracy +
+                    ", places_min_name_length=" + places_min_name_length +
+                    ", tags_min_search_length=" + tags_min_search_length +
+                    '}';
+        }
     }
 }

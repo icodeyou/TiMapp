@@ -20,6 +20,7 @@ import java.util.Date;
 public class Util {
 
     private static PeriodFormatter _daysHoursMinutesFormater = null;
+    private static long currentTimeMilli;
 
     public static String print(Location location) {
         return location.getLongitude()+"-"+location.getLatitude()+ " (Accuracy"+location.getAccuracy()+")";
@@ -38,6 +39,7 @@ public class Util {
     public static boolean isOlderThan(int date, int duration) {
         return (getCurrentTimeSec()-date) > duration;
     }
+
 
     public static int delayFromNow(int date) {
         return Util.getCurrentTimeSec() - date;

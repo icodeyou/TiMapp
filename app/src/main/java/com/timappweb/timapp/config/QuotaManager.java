@@ -94,6 +94,7 @@ public class QuotaManager {
     }
 
     private void initDummyQuota(){
+        // TODO remove
         new Delete().from(QuotaType.class).execute();
         (new QuotaType(QuotaType.PICTURE, 600, 0, 0, 0, 0, 0, 0)).save();
         (new QuotaType(QuotaType.POST, 600, 0, 0 , 0, 0, 0, 0)).save();

@@ -1,10 +1,13 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -14,6 +17,7 @@ import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -28,15 +32,18 @@ import retrofit2.Response;
 
 public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
+    private static final String TAG = "AddSpotActivity";
     private ImageView showCategoriesButton;
     private RecyclerView spotCategoriesRv;
     private RecyclerView spotsRv;
     private SpotsAdapter spotsAdapter;
+    private AddSpotActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_spot);
+        activity = this;
 
         //Toolbar
         this.initToolbar(true);
@@ -50,10 +57,10 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         setListeners();
 
         loadData();
+
     }
 
     private void initAdapters() {
-        final Activity activity = this;
         //RV
         spotCategoriesRv.setLayoutManager(new GridLayoutManager(this, 4));
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
@@ -65,8 +72,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     }
 
     private void setListeners() {
-        final Activity activity = this;
-
         showCategoriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +80,19 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
                 } else {
                     spotCategoriesRv.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        spotsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                Spot spot = spotsAdapter.getItem(position);
+                Log.d(TAG, "Spot choosed: " + spot);
+                Intent intent = new Intent(activity, AddPlaceActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("spot", spot);
+                intent.putExtras(bundle);
+                NavUtils.navigateUpTo(activity, intent);
             }
         });
     }

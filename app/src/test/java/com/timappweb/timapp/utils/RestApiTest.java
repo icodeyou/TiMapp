@@ -2,10 +2,8 @@ package com.timappweb.timapp.utils;
 
 
 import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.WebServiceInterface;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.services.WebServiceInterface;
 
 import org.junit.Test;
 

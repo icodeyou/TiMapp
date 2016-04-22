@@ -1,7 +1,7 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -27,6 +27,7 @@ import com.timappweb.timapp.adapters.PlaceCategoryPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.utils.Util;
 
@@ -45,8 +46,11 @@ public class AddPlaceActivity extends BaseActivity {
     private View progressView;
     private TextView nameCategoryTV;
     private View noPostView;
-
     private ViewPager viewPager;
+
+    // Data
+    private Spot spot = null;
+    private AddPlaceActivity context;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -54,7 +58,10 @@ public class AddPlaceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_place);
+        context = this;
+
         this.initToolbar(true);
+        this.extractBundle(savedInstanceState);
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -78,6 +85,32 @@ public class AddPlaceActivity extends BaseActivity {
         setButtonValidation();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
+
+    private void extractBundle(Bundle bundle){
+        if (bundle != null){
+            spot = (Spot) bundle.getSerializable("spot");
+            if (spot != null){
+                Log.v(TAG, "Spot is selected: " + spot);
+                // TODO JACK now you have the spot --> show in place view
+            }
+        }
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == IntentsUtils.ACTIVITY_RESULT_PICK_SPOT) {
+            if(resultCode == RESULT_OK){
+                extractBundle(data.getExtras());
+            }
+        }
+    }
 
     //----------------------------------------------------------------------------------------------
     //Private methods
@@ -120,7 +153,6 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void initViewPager() {
-        final AddPlaceActivity that = this;
         viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
         final PlaceCategoryPagerAdapter placeCategoryPagerAdapter = new PlaceCategoryPagerAdapter(this);
         viewPager.setAdapter(placeCategoryPagerAdapter);
@@ -135,14 +167,13 @@ public class AddPlaceActivity extends BaseActivity {
 
             public void onPageSelected(int position) {
                 Category newCategory = categoriesAdapter.getCategory(position);
-                categoriesAdapter.setIconNewCategory(that, newCategory);
+                categoriesAdapter.setIconNewCategory(context, newCategory);
                 categorySelected = newCategory;
             }
         });
     }
 
     private void submitPlace(final Place place){
-        Context context = this;
         Log.d(TAG, "Submit place " + place.toString());
         IntentsUtils.addPostStepTags(context, place);
         setProgressView(false);
@@ -210,11 +241,10 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        final Activity activity = this;
         noPostView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.pinSpot(activity);
+                IntentsUtils.pinSpot(context);
             }
         });
 
@@ -237,7 +267,7 @@ public class AddPlaceActivity extends BaseActivity {
             public void onClick(View v) {
                 if (MyApplication.hasFineLocation(MyApplication.getApplicationRules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
-                    final Place place = new Place(MyApplication.getLastLocation().getLatitude(), MyApplication.getLastLocation().getLongitude(), groupNameET.getText().toString(), categorySelected);
+                    final Place place = new Place(MyApplication.getLastLocation(), groupNameET.getText().toString(), categorySelected, context.spot);
                     submitPlace(place);
                 } else if (MyApplication.hasLastLocation()){
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();

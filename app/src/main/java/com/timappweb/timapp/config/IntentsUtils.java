@@ -33,8 +33,9 @@ import com.timappweb.timapp.entities.User;
 
 public class IntentsUtils {
 
-
     private static final String TAG = "IntentUtils";
+
+    public static final int ACTIVITY_RESULT_PICK_SPOT = 1;
 
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
@@ -209,15 +210,15 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void pinSpot(Context context) {
-        if (!requireLogin(context))
+    public static void pinSpot(Activity activity) {
+        if (!requireLogin(activity))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.PLACE, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
-        Intent intent = new Intent(context, AddSpotActivity.class);
-        context.startActivity(intent);
+        Intent intent = new Intent(activity, AddSpotActivity.class);
+        activity.startActivityForResult(intent, ACTIVITY_RESULT_PICK_SPOT);
     }
     /**
      * Redirect to the last activity we attempt to go

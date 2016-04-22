@@ -21,7 +21,7 @@ public class PlaceView extends RelativeLayout{
     private final static String TAG = "PlaceView";
 
     private View                        colorBackground;
-    private AutoResizeTextView          tvLocation;
+    private AutoResizeTextView tvName;
     private TextView                    tvTime;
     private HorizontalTagsRecyclerView  rvPlaceTags;
     private ImageView                   categoryIcon;
@@ -59,7 +59,7 @@ public class PlaceView extends RelativeLayout{
         inflate(getContext(), R.layout.layout_place, this);
 
         colorBackground = findViewById(R.id.parent_layout_place);
-        tvLocation = (AutoResizeTextView) findViewById(R.id.title_place);
+        tvName = (AutoResizeTextView) findViewById(R.id.title_place);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.places_points);
         tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
@@ -84,7 +84,7 @@ public class PlaceView extends RelativeLayout{
         tvTime.setText(place.getTime());
 
         //Title
-        tvLocation.setText(place.name);
+        tvName.setText(place.name);
 
         //Category
         Category category = null;

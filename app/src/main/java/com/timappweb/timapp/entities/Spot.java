@@ -1,9 +1,10 @@
 package com.timappweb.timapp.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spot {
+public class Spot implements Serializable {
 
     public int id;
     public String name;
@@ -30,5 +31,13 @@ public class Spot {
         dummyTags.add(Tag.createDummy());
         dummyTags.add(Tag.createDummy());
         return new Spot("DummySpot", dummyTags);
+    }
+
+    @Override
+    public String toString() {
+        return "Spot{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                '}';
     }
 }

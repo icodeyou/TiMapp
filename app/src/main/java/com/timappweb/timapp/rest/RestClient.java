@@ -8,6 +8,7 @@ import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.services.WebServiceInterface;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -33,6 +34,7 @@ public class RestClient {
     private static RestClient conn = null;
     private final Application app;
     private final OkHttpClient httpClient;
+    private final String baseUrl;
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
 
@@ -47,6 +49,7 @@ public class RestClient {
         return conn.getService();
     }
 
+
     public static void init(Application app, String ep){
         conn = new RestClient(app, ep);
     }
@@ -55,46 +58,35 @@ public class RestClient {
 
     private static Retrofit.Builder builder = null;
 
-    protected RestClient(Application app, String endpoint){
+    protected RestClient(Application app, String baseUrl){
         this.app = app;
+        this.baseUrl = baseUrl;
 
-        Log.i(TAG, "Initializing server connection at " + endpoint);
-        /*
-        Gson gson = new GsonBuilder()
-                .setDateFormat(SQL_DATE_FORMAT)
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .registerTypeAdapter(Date.class, new DateTypeAdapter())
-                .create();*/
-
+        Log.i(TAG, "Initializing server connection at " + baseUrl);
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.addInterceptor(new SessionRequestInterceptor());
-
-        //HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        //logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClientBuilder.addInterceptor(new LogRequestInterceptor());
-        // Executor use to cancel pending request to the server
-        // http://stackoverflow.com/questions/18131382/using-squares-retrofit-client-is-it-possible-to-cancel-an-in-progress-request
-        //mExecutorService = Executors.newCachedThreadPool();
         this.httpClient = httpClientBuilder.build();
+
         builder = new Retrofit.Builder()
-                //.setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.BASIC)
-                .baseUrl(endpoint)
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(this.httpClient);
-
-                //.setRequestInterceptor(new SessionRequestInterceptor())
-                //.setConverter(new GsonConverter(gson))
-                //.setExecutors(mExecutorService, new MainThreadExecutor());
-
 
         this.createService();
         Log.i(TAG, "Create connection with web service done!");
 
     }
 
+
     public void createService(){
         this.service =  builder.build().create(WebServiceInterface.class);
     }
+
+    public <T> T createService(Class<T> service){
+        return builder.build().create(service);
+    }
+
 
 
     public WebServiceInterface getService(){
@@ -134,6 +126,10 @@ public class RestClient {
         app.startActivity(i);
     }
 
+    public OkHttpClient getHttpClient() {
+        return httpClient;
+    }
+
     /**
      * Check login on the server side thanks to the token
      */
@@ -154,11 +150,6 @@ public class RestClient {
         LocalPersistenceManager.in().putString(KEY_TOKEN, token);
     }
 
-    public OkHttpClient getHttpClient() {
-        return httpClient;
-    }
-
-
     public void setSocialProvider(SocialProvider provider, String accessToken) {
         this._socialProviderType = provider;
         this._socialProviderToken = accessToken;
@@ -166,11 +157,6 @@ public class RestClient {
         LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TYPE, _socialProviderType.toString());
     }
 
-/*
-    public static void stopPendingRequest() {
-        List<Runnable> pendingAndOngoing = mExecutorService.shutdownNow();
-        Log.d(TAG, "Stopping " + pendingAndOngoing.size() + " request(s) to the server");
-    }
-    */
+
 }
 

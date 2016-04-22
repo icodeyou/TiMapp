@@ -3,6 +3,7 @@ package com.timappweb.timapp;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -15,7 +16,6 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.config.ServerConfiguration;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.SocialProvider;
@@ -24,6 +24,7 @@ import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.serversync.RemotePersistenceManager;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.Util;
@@ -161,16 +162,12 @@ public class MyApplication extends com.activeandroid.app.Application {
     private static Location lastLocation = null;
     public static ConfigurationProvider config;
 
-    public static ServerConfiguration getServerConfig() {
-        return config.getServerConfiguration();
-    }
-
-    public static ServerConfiguration.Rules getApplicationRules() {
-        return config.getServerConfiguration().rules;
+    public static ConfigurationProvider.Rules getApplicationRules() {
+        return config.rules();
     }
 
     public static List<Category> getCategories() {
-        return config.getServerConfiguration().eventCategories;
+        return config.eventCategories();
     }
 
     @Override
@@ -187,16 +184,13 @@ public class MyApplication extends com.activeandroid.app.Application {
         // facebook
         initFacebookPermissions();
 
-        // Loading cache in memory
-        //com.timappweb.timapp.cache.CacheData.load();
-
         // INIT DB
-       //getApplicationContext().deleteDatabase(DB_NAME);
+       //getApplicationContext().deleteDatabase(DB_NAME);d
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext());
 
         // Load configuration
-        config = new ConfigurationProvider(getApplicationContext(), "configuration.properties", new ConfigurationProviderListener());
+        config = new ConfigurationProvider(getApplicationContext(), new ConfigurationProviderListener());
         config.load();
 
         // Check token
@@ -242,7 +236,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static Category getCategoryById(int id) throws UnknownCategoryException {
-        for (Category c: config.getServerConfiguration().eventCategories){
+        for (Category c: config.eventCategories()){
             if (c.id == id){
                 return c;
             }
