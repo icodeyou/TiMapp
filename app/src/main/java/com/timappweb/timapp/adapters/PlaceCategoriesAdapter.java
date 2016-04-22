@@ -23,7 +23,7 @@ public class PlaceCategoriesAdapter extends RecyclerView.Adapter<PlaceCategories
 
     public PlaceCategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
-        //this.eventCategories = MyApplication.getCategories();
+        //this.eventCategories = MyApplication.getEventCategories();
         this.context = context;
     }
 
@@ -38,7 +38,7 @@ public class PlaceCategoriesAdapter extends RecyclerView.Adapter<PlaceCategories
 
     @Override
     public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
-        final Category category = MyApplication.getCategories().get(position);
+        final Category category = MyApplication.getEventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
         icons.put(category.id, categoryIcon);
     }
@@ -49,11 +49,11 @@ public class PlaceCategoriesAdapter extends RecyclerView.Adapter<PlaceCategories
 
     @Override
     public int getItemCount() {
-        return MyApplication.getCategories().size();
+        return MyApplication.getEventCategories().size();
     }
 
     public Category getCategory(int position) {
-        return MyApplication.getCategories().get(position);
+        return MyApplication.getEventCategories().get(position);
     }
 
     class CategoriesViewHolder extends RecyclerView.ViewHolder {

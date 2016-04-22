@@ -85,6 +85,11 @@ public class LocateActivity extends BaseActivity{
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void initAdapterPlaces() {
         final LocateActivity that = this;
 

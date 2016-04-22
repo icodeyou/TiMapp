@@ -65,7 +65,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_margin="@dimen/button_selecting_margin"
-                android:background="@drawable/border_radius_buttoncolor"
+                android:background="@drawable/border_big_radius_buttoncolor"
                 android:gravity="center">
                 <com.timappweb.timapp.views.AutoResizeTextView
                     android:id="@+id/text_confirm_button1"

@@ -7,10 +7,18 @@
         <attr name="horizontal_tags_text_size" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="PlaceView">
+    <!-- parent styleable -->
+    <declare-styleable name="CardView">
         <attr name="tags_visible" format="boolean" />
         <attr name="bottom_shadow" format="boolean" />
         <attr name="top_shadow" format="boolean" />
         <attr name="background_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="PlaceView" parent="CardView">
+    </declare-styleable>
+
+    <declare-styleable name="SpotView" parent="CardView">
+        <attr name="background_alpha" format="float" />
     </declare-styleable>
 </resources>

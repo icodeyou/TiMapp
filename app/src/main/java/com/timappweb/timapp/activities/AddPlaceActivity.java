@@ -45,7 +45,7 @@ public class AddPlaceActivity extends BaseActivity {
     private TextView textCreateButton;
     private View progressView;
     private TextView nameCategoryTV;
-    private View noPostView;
+    private View noSpotAttachedView;
     private ViewPager viewPager;
 
     // Data
@@ -75,7 +75,7 @@ public class AddPlaceActivity extends BaseActivity {
         textCreateButton = (TextView) findViewById(R.id.text_create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
-        noPostView = findViewById(R.id.spot_added_view);
+        noSpotAttachedView = findViewById(R.id.no_spot_view);
 
         initKeyboard();
         setListeners();
@@ -241,7 +241,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        noPostView.setOnClickListener(new View.OnClickListener() {
+        noSpotAttachedView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.pinSpot(context);

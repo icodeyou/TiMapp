@@ -6,73 +6,76 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
+import com.timappweb.timapp.activities.AddPlaceActivity;
+import com.timappweb.timapp.activities.AddSpotActivity;
+import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.entities.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SpotCategoriesAdapter extends RecyclerView.Adapter<SpotCategoriesAdapter.SpotCategoriesViewHolder> {
     private static final String TAG = "SpotCategoriesAdapter";
+    private final AddSpotActivity addSpotActivity;
     private Context context;
 
-    private List<Place> data;
-
+    private List<SpotCategory> data;
+    private ImageView currentCategoryIcon;
     private OnItemAdapterClickListener itemAdapterClickListener;
 
     public SpotCategoriesAdapter(Context context) {
-        data = new ArrayList<>();
+        this.data = new ArrayList<>();
         this.context = context;
+        this.addSpotActivity = (AddSpotActivity) context;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SpotCategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot_category, parent, false);
-        return new PlacesViewHolder(v);
+        return new SpotCategoriesViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
-        if(baseHolder instanceof PlacesViewHolder) {
-            PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
-            Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
-            final Place place = data.get(position);
+    public void onBindViewHolder(SpotCategoriesViewHolder holder, int position) {
+        Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
 
-            holder.placeView.setPlace(place);
+        final SpotCategory spotCategory = MyApplication.getSpotCategories().get(position);
 
-            //OnTagsRvClick : Same event as adapter click.
-            HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-                    new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
+        holder.tvCategory.setText(spotCategory.name);
+        //holder.icCategory.setImageResource(spotCategory.resource);
+
+        if(addSpotActivity.getCategorySelected() != null && addSpotActivity.getCategorySelected()==spotCategory) {
+            holder.itemView.setBackgroundResource(R.color.colorPrimaryDark);
+            holder.selectedView.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemView.setBackground(null);
+            holder.selectedView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return MyApplication.getSpotCategories().size();
     }
 
-    public void add(Place place) {
-        this.data.add(place);
+    public List<SpotCategory> getData() {
+        return MyApplication.getSpotCategories();
+    }
+
+    public SpotCategory getCategory(int position) {
+        return MyApplication.getSpotCategories().get(position);
+    }
+
+    public void add(SpotCategory spotCategory) {
+        this.data.add(spotCategory);
         notifyDataSetChanged();
-    }
-
-    public void setData(List<Place> places) {
-        this.data = places;
-        notifyDataSetChanged();
-    }
-
-    public List<Place> getData() {
-        return data;
-    }
-
-    public Place getItem(int position) {
-        return data.get(position);
     }
 
     public void clear() {
@@ -84,17 +87,19 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
-    public class PlacesViewHolder extends RecyclerView.ViewHolder implements
+    public class SpotCategoriesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        PlaceView placeView;
-        HorizontalTagsRecyclerView horizontalTagsRv;
+        TextView tvCategory;
+        ImageView icCategory;
+        View selectedView;
 
-        PlacesViewHolder(View itemView) {
+        SpotCategoriesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            placeView = (PlaceView) itemView.findViewById(R.id.place_view);
-            horizontalTagsRv = placeView.getRvPlaceTags();
+            tvCategory = (TextView) itemView.findViewById(R.id.text);
+            icCategory = (ImageView) itemView.findViewById(R.id.icon);
+            selectedView = itemView.findViewById(R.id.icon_selected);
         }
 
         @Override

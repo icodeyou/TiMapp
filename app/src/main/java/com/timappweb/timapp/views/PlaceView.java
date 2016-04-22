@@ -18,10 +18,11 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 public class PlaceView extends RelativeLayout{
-    private final static String TAG = "PlaceView";
+
+    private final static String         TAG = "PlaceView";
 
     private View                        colorBackground;
-    private AutoResizeTextView tvName;
+    private AutoResizeTextView          tvName;
     private TextView                    tvTime;
     private HorizontalTagsRecyclerView  rvPlaceTags;
     private ImageView                   categoryIcon;
@@ -46,10 +47,10 @@ public class PlaceView extends RelativeLayout{
 
         //Get attributes in XML
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PlaceView, 0, 0);
-        isTagsVisible = ta.getBoolean(R.styleable.PlaceView_tags_visible, false);
-        isBottomShadow = ta.getBoolean(R.styleable.PlaceView_bottom_shadow, false);
-        isTopShadow = ta.getBoolean(R.styleable.PlaceView_top_shadow, false);
-        colorRes = ta.getColor(R.styleable.PlaceView_background_color, -1);
+        isTagsVisible = ta.getBoolean(R.styleable.CardView_tags_visible, false);
+        isBottomShadow = ta.getBoolean(R.styleable.CardView_bottom_shadow, false);
+        isTopShadow = ta.getBoolean(R.styleable.CardView_top_shadow, false);
+        colorRes = ta.getColor(R.styleable.CardView_background_color, -1);
         ta.recycle();
 
         this.init();

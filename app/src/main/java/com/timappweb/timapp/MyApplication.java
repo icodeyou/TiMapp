@@ -19,6 +19,7 @@ import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.SocialProvider;
+import com.timappweb.timapp.entities.SpotCategory;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
@@ -166,8 +167,12 @@ public class MyApplication extends com.activeandroid.app.Application {
         return config.rules();
     }
 
-    public static List<Category> getCategories() {
+    public static List<Category> getEventCategories() {
         return config.eventCategories();
+    }
+
+    public static List<SpotCategory> getSpotCategories() {
+        return config.spotCategories();
     }
 
     @Override
@@ -245,7 +250,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static Category getCategoryByIndex(int position) {
-        return getCategories().get(position);
+        return getEventCategories().get(position);
     }
 
     public static void redirectLogin(Context currentContext){

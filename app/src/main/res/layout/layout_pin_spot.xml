@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/pin_post_linear_layout"
-        android:background="@color/Black"
+        android:background="@color/colorPrimaryVeryDark"
         android:alpha="0.3"/>
     <LinearLayout
         android:id="@+id/pin_post_linear_layout"
@@ -21,7 +21,7 @@
             android:id="@+id/unlock_icon"
             android:layout_width="@dimen/icon_default"
             android:layout_height="@dimen/icon_default"
-            android:src="@drawable/unlocked" />
+            android:src="@drawable/ic_chineseman" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
