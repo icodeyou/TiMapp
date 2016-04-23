@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.sync.SyncAdapter;
 
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;
@@ -28,12 +29,16 @@ public class SplashActivity extends BaseActivity {
                 .done(new DoneCallback() {
                     @Override
                     public void onDone(Object result) {
+
+                        SyncAdapter.syncImmediately(context);
+
                         if (MyApplication.isLoggedIn()){
                             IntentsUtils.home(context);
                         }
                         else{
                             IntentsUtils.login(context);
                         }
+
                         finish();
                     }
                 })

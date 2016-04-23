@@ -1,12 +1,6 @@
-package com.timappweb.timapp.serversync;
+package com.timappweb.timapp.configsync;
 
-import android.content.Context;
 import android.util.Log;
-
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.utils.Util;
-
-import retrofit2.Response;
 
 /**
  * Created by stephane on 4/21/2016.
@@ -17,7 +11,7 @@ public class SyncConfigManager<DataType> {
     private static final String TAG = "SyncConfigManager";
 
     // ---------------------------------------------------------------------------------------------
-    protected SyncConfig dataWrapper;
+    protected SyncConfig<DataType> dataWrapper;
     protected long minRemoteSyncDelay;
 
     // -------------------
@@ -27,7 +21,7 @@ public class SyncConfigManager<DataType> {
     protected OnConfigChangeListener listener;
 
     public DataType getData(){
-        return (DataType) this.dataWrapper.data;
+        return this.dataWrapper.data;
     }
 
     public SyncConfigManager(int configId) {
@@ -57,6 +51,7 @@ public class SyncConfigManager<DataType> {
         }
         else{
             Log.d(TAG, this.configId + "] config up to date! ");
+            Log.v(TAG, this.configId + "] dataWrapper=" + this.dataWrapper);
         }
     }
 
@@ -86,13 +81,18 @@ public class SyncConfigManager<DataType> {
 
     public SyncConfigManager<DataType> setLocalManager(LocalPersistenceManager local){
         this.local = local;
-        this.localSync();
+        //this.loadLocalConf();
         return this;
     }
 
-    private void localSync() {
+    private void loadLocalConf() {
         this.dataWrapper = this.local.load();
+        if (this.dataWrapper != null && this.dataWrapper.data == null){
+            Log.e(TAG, "Error there is no data for the version " + this.dataWrapper.version);
+            this.dataWrapper = null;
+        }
         Log.d(TAG, this.configId + "] Loading configuration from local: " + (this.dataWrapper != null ? "version " + this.dataWrapper.version : "NONE"));
+        Log.v(TAG, this.configId + "] " + (this.dataWrapper != null ? "version " + this.dataWrapper : "NONE"));
     }
 
     public SyncConfigManager<DataType> setRemoteManager(RemotePersistenceManager remote){
@@ -114,7 +114,11 @@ public class SyncConfigManager<DataType> {
 
     public void clear() {
         Log.d(TAG, this.configId + "] clearing local data");
+        this.dataWrapper = null;
         this.local.clear();
     }
 
+    public SyncConfig getDataWrapper() {
+        return dataWrapper;
+    }
 }

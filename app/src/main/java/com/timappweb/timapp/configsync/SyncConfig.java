@@ -1,4 +1,4 @@
-package com.timappweb.timapp.serversync;
+package com.timappweb.timapp.configsync;
 
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.utils.Util;

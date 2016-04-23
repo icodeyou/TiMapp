@@ -1,9 +1,12 @@
 package com.timappweb.timapp;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -25,8 +28,8 @@ import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.serversync.RemotePersistenceManager;
 import com.timappweb.timapp.services.RegistrationIntentService;
+import com.timappweb.timapp.sync.SyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.Util;
 
@@ -50,6 +53,14 @@ public class MyApplication extends com.activeandroid.app.Application {
     private static final String KEY_CURRENT_USER = "current_user";
     private static final String KEY_LOGIN_TIME = "LoginTime";
     private static final int TOKEN_CHECK_DELAY = 3600; // Check token every 1 hour
+
+
+    public static final String AUTHORITY = "com.timappweb.timapp.sync";
+    // Account
+    // Sync interval constants
+    public static final long SECONDS_PER_MINUTE = 60L;
+    public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
+    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
 
     private static User currentUser = null;
     public static SearchFilter searchFilter = new SearchFilter();
@@ -194,14 +205,19 @@ public class MyApplication extends com.activeandroid.app.Application {
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext());
 
+        SyncAdapter.initializeSyncAdapter(this);
+
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), new ConfigurationProviderListener());
-        config.clear();
+        //config.clear();
         config.load();
+
+
 
         // Check token
         checkToken();
     }
+
 
     private void initFacebookPermissions() {
         Permission[] permissions = new Permission[] {

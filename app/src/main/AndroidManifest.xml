@@ -10,6 +10,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera2" />
@@ -58,7 +63,36 @@
         <!--
         // TODO for production set models to speed up launch
         <meta-data  android:name="AA_MODELS"
-            android:value="com.timappweb.timapp.database.models.UserActivity" />-->
+            android:value="com.timappweb.timapp.data.models.UserActivity" />-->
+
+
+        <!-- SYNC ADAPTERS ===================================================================== -->
+        <!-- SyncAdapter's dummy authentication service -->
+        <service android:name=".sync.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <!-- This service implements our SyncAdapter. It needs to be exported, so that the system
+        sync framework can access it. -->
+        <service android:name=".sync.SyncService"
+            android:exported="true"
+            android:enabled="true" >
+            <!-- This intent filter is required. It allows the system to launch our sync service
+            as needed. -->
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <!-- This points to a required XML file which describes our SyncAdapter. -->
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+
+        <!-- END SYNC ADAPTERS ===================================================================== -->
 
 
         <!-- GMS -->

@@ -1,4 +1,4 @@
-package com.timappweb.timapp.database.models;
+package com.timappweb.timapp.data.models;
 
 import android.util.Log;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * Created by stephane on 4/5/2016.
  */
 @Table(name = "UserQuotas")
-public class UserQuota extends Model {
+public class UserQuota extends BaseModel {
 
     private static final String TAG = "UserQuota";
     public String _quota_error_reason;

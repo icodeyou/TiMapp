@@ -13,7 +13,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.database.models.QuotaType;
+import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;

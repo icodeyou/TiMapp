@@ -1,4 +1,4 @@
-package com.timappweb.timapp.database.models;
+package com.timappweb.timapp.data.models;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -11,7 +11,7 @@ import com.timappweb.timapp.utils.Util;
  * Created by stephane on 4/5/2016.
  */
 @Table(name = "PlaceStatus")
-public class PlaceStatus extends Model {
+public class PlaceStatus extends BaseModel {
 
     @Column(name = "PlaceId", index = true)
     public int place_id;

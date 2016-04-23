@@ -39,16 +39,4 @@ public class LocalPersistenceManager {
         return instance.pref;
     }
 
-    public static void writeObject(String key, Object obj) {
-        Gson gson = new Gson();
-        String json = gson.toJson(obj); // myObject - instance of MyObject
-        in().putString(key, json);
-        in().commit();
-    }
-
-    public static <T> T readObject(String key, Class<T> classOfT) {
-        Gson gson = new Gson();
-        String json = out().getString(key, "");
-        return gson.fromJson(json, classOfT);
-    }
 }

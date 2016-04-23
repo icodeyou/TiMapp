@@ -3,7 +3,6 @@ package com.timappweb.timapp.rest;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -13,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SpotCategory;
-import com.timappweb.timapp.serversync.SyncConfig;
+import com.timappweb.timapp.configsync.SyncConfig;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -26,14 +25,14 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
     @Override
     public SyncConfig deserialize(JsonElement jsonElement, java.lang.reflect.Type type,
                          JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        Log.d(TAG, "Parsing json element: " + type);
         JsonObject object = jsonElement.getAsJsonObject();
-        SyncConfig conf = new SyncConfig();
-        conf.version = object.get("version").getAsInt();
 
+        SyncConfig conf = new SyncConfig();
         String objectType = object.get("type").getAsString();
         JsonElement data = object.get("data");
-        Log.d(TAG, "Data type is: " + objectType);
+        conf.version = object.get("version").getAsInt();
+        Log.d(TAG, "Parsing json element: " + type + ", data type is: " + objectType);
+        Log.v(TAG, "JSON: " + object);
         Type objectClass;
         switch (objectType){
             case "rules":
@@ -49,7 +48,7 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
                 throw new JsonParseException("Invalid object type: " + objectType);
         }
         conf.type = objectType;
-        conf.data = new Gson().fromJson(data, objectClass);
+        conf.data = data != null && !data.isJsonNull() ? new Gson().fromJson(data, objectClass) : null;
 
         // Deserialize it. You use a new instance of Gson to avoid infinite recursion
         // to this deserializer

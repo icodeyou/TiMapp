@@ -8,9 +8,9 @@ import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.database.models.QuotaType;
-import com.timappweb.timapp.database.models.UserActivity;
-import com.timappweb.timapp.database.models.UserQuota;
+import com.timappweb.timapp.data.models.QuotaType;
+import com.timappweb.timapp.data.models.UserActivity;
+import com.timappweb.timapp.data.models.UserQuota;
 
 import java.util.List;
 
@@ -46,10 +46,6 @@ public class QuotaManager {
         Log.d(TAG, "Updated user quota: " + userQuota);
 
         return userActivity;
-    }
-
-    public void incrementQuota(){
-
     }
 
     public UserActivity getLastActivity(QuotaType type){

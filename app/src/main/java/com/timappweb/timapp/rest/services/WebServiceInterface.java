@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonArray;
+import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
@@ -25,7 +26,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -200,6 +200,6 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     // Quotas
-    @GET("quota-types.json")
-    Call<List<Place>> quotaTypes();
+    @GET("quota-types")
+    Call<List<QuotaType>> quotaTypes();
 }

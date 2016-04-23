@@ -195,4 +195,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="hint_new_spot">Or type a new place here</string>
 
 
+    <string name="sync_account_type">timapp.timappweb.com</string>
+    <string name="content_authority">com.timappweb.timapp.app</string>
+
+
 </resources>

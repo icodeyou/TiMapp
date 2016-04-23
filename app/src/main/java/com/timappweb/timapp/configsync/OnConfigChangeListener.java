@@ -1,4 +1,4 @@
-package com.timappweb.timapp.serversync;
+package com.timappweb.timapp.configsync;
 
 /**
  * Created by stephane on 4/21/2016.

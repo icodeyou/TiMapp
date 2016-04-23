@@ -26,7 +26,7 @@ import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
-import com.timappweb.timapp.database.models.QuotaType;
+import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.User;

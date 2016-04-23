@@ -1,6 +1,6 @@
 package com.timappweb.timapp.rest.services;
 
-import com.timappweb.timapp.serversync.SyncConfig;
+import com.timappweb.timapp.configsync.SyncConfig;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

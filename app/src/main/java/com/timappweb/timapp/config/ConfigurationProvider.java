@@ -9,10 +9,10 @@ import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.SpotCategory;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.services.ConfigInterface;
-import com.timappweb.timapp.serversync.RESTRemoteSync;
-import com.timappweb.timapp.serversync.RemotePersistenceManager;
-import com.timappweb.timapp.serversync.SharedPrefSync;
-import com.timappweb.timapp.serversync.SyncConfigManager;
+import com.timappweb.timapp.configsync.RESTRemoteSync;
+import com.timappweb.timapp.configsync.RemotePersistenceManager;
+import com.timappweb.timapp.configsync.SharedPrefSync;
+import com.timappweb.timapp.configsync.SyncConfigManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,9 +48,12 @@ public class ConfigurationProvider {
 
     public Rules rules(){
         try {
+            Log.d(TAG, this.rulesManager.getDataWrapper().data.toString());
             return this.rulesManager.getData();
         }
         catch (Exception ex){
+            Log.d(TAG, this.rulesManager.getDataWrapper().toString());
+            this.rulesManager.clear();
             ex.printStackTrace();
             throw new InvalidConfigurationException();
         }
@@ -64,17 +67,17 @@ public class ConfigurationProvider {
         this.init();
     }
 
-    private <T> SyncConfigManager buildConfManager(int id, String path, Class<T> dataClass){
-        return new SyncConfigManager<>(
+    private SyncConfigManager buildConfManager(int id, String path){
+        return new SyncConfigManager(
                 id,
                 new RESTRemoteSync(path, RestClient.instance().createService(ConfigInterface.class)),
-                new SharedPrefSync("config_" + id, sharedPref, dataClass));
+                new SharedPrefSync("config_" + id, sharedPref));
     }
 
     private void init(){
-        eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories", List.class);
-        spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories", List.class);
-        rulesManager = buildConfManager(CONFIG_ID_RULES, "rules", Rules.class);
+        eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
+        spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
+        rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
     }
 
     public AsyncTask<Integer, Integer, Boolean> load() {

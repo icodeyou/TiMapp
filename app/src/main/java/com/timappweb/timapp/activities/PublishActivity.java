@@ -16,7 +16,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.database.models.QuotaType;
+import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;

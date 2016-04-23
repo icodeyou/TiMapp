@@ -1,4 +1,4 @@
-package com.timappweb.timapp.database.models;
+package com.timappweb.timapp.data.models;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -10,7 +10,7 @@ import com.timappweb.timapp.exceptions.BadConfigurationError;
  * Created by stephane on 4/4/2016.
  */
 @Table(name = "QuotaTypes")
-public class QuotaType extends Model{
+public class QuotaType extends BaseModel{
 
     public static final String PLACE = "places";
     public static final String PICTURE = "pictures";
@@ -75,10 +75,36 @@ public class QuotaType extends Model{
                 ", min_delay=" + min_delay +
                 ", quota_minute=" + quota_minute +
                 ", quota_hour=" + quota_hour +
-                ", quota_day=" + quota_day +
-                ", quota_month=" + quota_month +
-                ", quota_year=" + quota_year +
-                ", quota_overall=" + quota_overall +
+                //", quota_day=" + quota_day +
+                //", quota_month=" + quota_month +
+                //", quota_year=" + quota_year +
+                //", quota_overall=" + quota_overall +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        QuotaType quotaType = (QuotaType) o;
+
+        if (min_delay != quotaType.min_delay) return false;
+        if (quota_minute != quotaType.quota_minute) return false;
+        if (quota_hour != quotaType.quota_hour) return false;
+        if (quota_day != quotaType.quota_day) return false;
+        if (quota_month != quotaType.quota_month) return false;
+        if (quota_year != quotaType.quota_year) return false;
+        if (quota_overall != quotaType.quota_overall) return false;
+        return type.equals(quotaType.type);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + type.hashCode();
+        return result;
     }
 }

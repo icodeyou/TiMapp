@@ -1,10 +1,11 @@
-package com.timappweb.timapp.serversync;
+package com.timappweb.timapp.configsync;
 
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.timappweb.timapp.rest.JsonConfDeserializer;
+import com.timappweb.timapp.rest.RestClient;
 
 /**
  * Created by stephane on 4/21/2016.
@@ -15,12 +16,11 @@ public class SharedPrefSync implements LocalPersistenceManager {
     public SharedPreferences pref;
     private String key;
 
-    public <T> SharedPrefSync(String key, SharedPreferences pref, Class<T> dataClass) {
+    public <T> SharedPrefSync(String key, SharedPreferences pref) {
         this.pref = pref;
         this.key = key;
-        this.gson = new GsonBuilder()
-                        .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
-                        .create();
+        // TODO move as a parameter
+        this.gson = RestClient.instance().getGson();
     }
 
     @Override

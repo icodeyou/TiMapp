@@ -1,4 +1,4 @@
-package com.timappweb.timapp.serversync;
+package com.timappweb.timapp.configsync;
 
 import android.util.Log;
 

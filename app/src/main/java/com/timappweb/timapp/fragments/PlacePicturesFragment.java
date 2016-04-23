@@ -21,7 +21,7 @@ import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.database.models.QuotaType;
+import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;

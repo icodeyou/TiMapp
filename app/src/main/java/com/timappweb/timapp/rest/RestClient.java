@@ -11,7 +11,7 @@ import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.entities.SocialProvider;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
-import com.timappweb.timapp.serversync.SyncConfig;
+import com.timappweb.timapp.configsync.SyncConfig;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -38,6 +38,7 @@ public class RestClient {
     private final Application app;
     private final OkHttpClient httpClient;
     private final String baseUrl;
+    private final Gson gson;
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
 
@@ -71,19 +72,24 @@ public class RestClient {
         httpClientBuilder.addInterceptor(new LogRequestInterceptor());
         this.httpClient = httpClientBuilder.build();
 
-        Gson gson =  new GsonBuilder()
+        this.gson =  new GsonBuilder()
                 .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
                 .create();
+
         builder = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(this.httpClient);
+
 
         this.createService();
         Log.i(TAG, "Create connection with web service done!");
 
     }
 
+    public Gson getGson(){
+        return this.gson;
+    }
 
     public void createService(){
         this.service =  builder.build().create(WebServiceInterface.class);

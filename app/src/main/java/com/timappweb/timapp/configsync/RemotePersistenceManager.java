@@ -1,8 +1,4 @@
-package com.timappweb.timapp.serversync;
-
-import com.timappweb.timapp.rest.RestCallback;
-
-import retrofit2.Callback;
+package com.timappweb.timapp.configsync;
 
 /**
  * Created by stephane on 4/21/2016.
