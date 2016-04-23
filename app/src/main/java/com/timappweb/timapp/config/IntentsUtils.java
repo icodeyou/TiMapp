@@ -162,10 +162,9 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void viewPlaceFromPublish(Activity activity, int id) {
-        Intent intent = buildIntentViewPlace(activity, id);
-        activity.startActivity(intent);
-        activity.finish();
+    public static void viewPlaceFromPublish(Context context, int id) {
+        Intent intent = buildIntentViewPlace(context, id);
+        context.startActivity(intent);
     }
     public static Intent buildIntentViewPlace(Context context, int placeId) {
         Intent intent = new Intent(context, PlaceActivity.class);

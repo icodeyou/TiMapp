@@ -3,6 +3,7 @@ package com.timappweb.timapp.entities;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
@@ -19,19 +20,22 @@ import java.util.List;
 public class Place implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
-    private Spot spot;
-    public int id = -1;
-    public String name;
-    public int created;
-    public double latitude;
-    public double longitude;
-    public int count_posts;
-    public int category_id;
-    public int points;
-    public int loaded_time = -1;
-    public List<Tag> tags;
 
-    public ArrayList<Post> posts;
+    public int id = -1;
+
+    @SerializedName("spot")
+    private Spot            spot;
+    public int              spot_id;
+    public String           name;
+    public int              created;
+    public double           latitude;
+    public double           longitude;
+    public int              count_posts;
+    public int              category_id;
+    public int              points;
+    public int              loaded_time = -1;
+    public List<Tag>        tags;
+    public ArrayList<Post>  posts;
 
     public Place(){
         this.loaded_time = Util.getCurrentTimeSec();
@@ -64,7 +68,10 @@ public class Place implements Serializable, MarkerValueInterface {
         this.longitude = lastLocation.getLongitude();
         this.name = name;
         this.category_id = category.id;
-        this.spot = spot;
+        if (spot != null){
+            this.spot = spot;
+            this.spot_id = spot.id;
+        }
     }
 
     public void addPost(Post post){

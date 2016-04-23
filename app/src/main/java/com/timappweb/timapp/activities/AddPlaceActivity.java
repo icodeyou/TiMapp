@@ -29,8 +29,13 @@ import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SpotView;
+
+import retrofit2.Call;
 
 
 public class AddPlaceActivity extends BaseActivity {
@@ -185,34 +190,33 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void submitPlace(final Place place){
+        /*
         Log.d(TAG, "Submit place " + place.toString());
         IntentsUtils.addPostStepTags(context, place);
         setProgressView(false);
-        /*
-        RestClient.service().addPlace(place, new RestCallback<RestFeedback>(this) {
+        */
+
+        Call call = RestClient.service().addPlace(place);
+        call.enqueue(new RestFeedbackCallback(this) {
+
             @Override
-            public void success(RestFeedback restFeedback, Response response) {
-                if (restFeedback.success) {
-                    Log.d(TAG, "Place has been saved: " + place);
-                    Post post = new Post();
-                    post.latitude = MyApplication.getLastLocation().getLatitude();
-                    post.longitude = MyApplication.getLastLocation().getLongitude();
-                    place.id = Integer.parseInt(restFeedback.data.get("id"));
-                    IntentsUtils.addPostStepTags(this.context, place, post);
-                } else {
-                    Log.d(TAG, "Cannot save viewPlaceFromPublish: " + place);
-                    Toast.makeText(context, "We cannot save your place right now. Please try again later", Toast.LENGTH_LONG).show();
-                    setProgressView(false);
-                }
+            public void onActionSuccess(RestFeedback feedback) {
+                place.id = Integer.parseInt(feedback.data.get("place_id")); // TODO handle exception if invalid int
+                Log.i(TAG, "User created the event with id: " + place.id);
+                IntentsUtils.viewPlaceFromPublish(context, place.id);
+                setProgressView(false);
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                super.failure(error);
+            public void onFinish() {
                 setProgressView(false);
             }
+
+            @Override
+            public void onActionFail(RestFeedback feedback) {
+                Toast.makeText(context, feedback.message, Toast.LENGTH_LONG).show();
+            }
         });
-        */
     }
 
     public void setButtonValidation() {

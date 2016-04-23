@@ -105,6 +105,7 @@ public class PlaceActivity extends BaseActivity {
         this.place = IntentsUtils.extractPlace(getIntent());
         placeId = IntentsUtils.extractPlaceId(getIntent());
         if (place == null && placeId <= 0){
+            Log.e(TAG, "Trying to view an invalid place --> redirect to home");
             IntentsUtils.home(this);
             return;
         }

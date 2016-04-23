@@ -7,3 +7,4 @@
 /captures
 /app/src/debug/res/values/google_maps_api.xml
 /app/app.iml
+*.iml
