@@ -12,14 +12,14 @@ import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
-public class PlaceUsersHeaderAdapter extends PlaceUsersAdapter
+public class EventUsersHeaderAdapter extends EventUsersAdapter
         implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = "PlaceUsersAdapter";
+    private static final String TAG = "EventUsersAdapter";
 
     private OnItemAdapterClickListener mItemClickListener;
 
-    public PlaceUsersHeaderAdapter(Context context) {
+    public EventUsersHeaderAdapter(Context context) {
         super(context);
         this.context = context;
     }

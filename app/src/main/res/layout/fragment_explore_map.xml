@@ -54,17 +54,19 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_above="@+id/place_view"
+        android:layout_above="@+id/event_view"
         android:layout_alignWithParentIfMissing="true"
         android:layout_margin="@dimen/fab_margin" />
 
-    <com.timappweb.timapp.views.PlaceView
-        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-        android:id="@+id/place_view"
+    <com.timappweb.timapp.views.EventView
+        xmlns:myattrs="http://schemas.android.com/tools"
+        android:id="@+id/event_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/map"
         android:visibility="gone"
+        myattrs:is_padding="false"
+        app:bottom_shadow="false"
         myattrs:top_shadow="true"/>
 
 </RelativeLayout>

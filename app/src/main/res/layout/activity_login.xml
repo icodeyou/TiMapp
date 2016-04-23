@@ -119,7 +119,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_location_white"/>-->
-                <com.timappweb.timapp.views.AutoResizeTextView
+                <me.grantland.widget.AutofitTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"

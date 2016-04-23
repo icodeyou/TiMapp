@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical">
-                    <com.timappweb.timapp.views.AutoResizeTextView
+                    <me.grantland.widget.AutofitTextView
                         android:id="@+id/tv_username"
                         android:layout_weight="1"
                         android:layout_width="0dp"

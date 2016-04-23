@@ -1,7 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.adapters.PlaceUsersAdapter;
+import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -44,13 +44,13 @@ public class UserPlace implements PlaceUserInterface{
     @Override
     public int getViewType() {
         if(status==UserPlaceStatus.HERE) {
-            return PlaceUsersAdapter.VIEW_TYPES.HERE;
+            return EventUsersAdapter.VIEW_TYPES.HERE;
         } else if(status==UserPlaceStatus.COMING){
-            return PlaceUsersAdapter.VIEW_TYPES.COMING;
+            return EventUsersAdapter.VIEW_TYPES.COMING;
         } else if(status==UserPlaceStatus.INVITED){
-            return PlaceUsersAdapter.VIEW_TYPES.INVITED;
+            return EventUsersAdapter.VIEW_TYPES.INVITED;
         } else {
-            return PlaceUsersAdapter.VIEW_TYPES.UNDEFINED;
+            return EventUsersAdapter.VIEW_TYPES.UNDEFINED;
         }
     }
 }

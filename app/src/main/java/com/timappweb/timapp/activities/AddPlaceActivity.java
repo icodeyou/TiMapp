@@ -22,31 +22,33 @@ import android.widget.Toast;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.AddPlaceCategoriesAdapter;
-import com.timappweb.timapp.adapters.PlaceCategoryPagerAdapter;
+import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
+import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.views.SpotView;
 
 
 public class AddPlaceActivity extends BaseActivity {
-    private String TAG = "PublishActivity";
+    private String TAG = "AddPlaceActivity";
     private InputMethodManager imm;
 
     //Views
     private EditText groupNameET;
     RecyclerView categoriesRV;
-    AddPlaceCategoriesAdapter categoriesAdapter;
+    AddEventCategoriesAdapter categoriesAdapter;
     private Category categorySelected;
     private View createButton;
     private TextView textCreateButton;
     private View progressView;
     private TextView nameCategoryTV;
-    private View noSpotAttachedView;
+    private View pinView;
     private ViewPager viewPager;
+    private SpotView spotView;
 
     // Data
     private Spot spot = null;
@@ -75,7 +77,8 @@ public class AddPlaceActivity extends BaseActivity {
         textCreateButton = (TextView) findViewById(R.id.text_create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
-        noSpotAttachedView = findViewById(R.id.no_spot_view);
+        pinView = findViewById(R.id.no_spot_view);
+        spotView = (SpotView) findViewById(R.id.spot_view);
 
         initKeyboard();
         setListeners();
@@ -96,9 +99,16 @@ public class AddPlaceActivity extends BaseActivity {
         if (bundle != null){
             spot = (Spot) bundle.getSerializable("spot");
             if (spot != null){
+                //TODO Jack
                 Log.v(TAG, "Spot is selected: " + spot);
-                // TODO JACK now you have the spot --> show in place view
+                spotView.setSpot(spot);
+                spotView.setVisibility(View.VISIBLE);
+                pinView.setVisibility(View.GONE);
+            } else {
+                Log.d(TAG, "spot is null");
             }
+        } else {
+            Log.d(TAG, "bundle is null");
         }
     }
 
@@ -107,6 +117,7 @@ public class AddPlaceActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IntentsUtils.ACTIVITY_RESULT_PICK_SPOT) {
             if(resultCode == RESULT_OK){
+                Log.d(TAG, "extracting bundle");
                 extractBundle(data.getExtras());
             }
         }
@@ -135,7 +146,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void initAdapterAndManager() {
-        categoriesAdapter = new AddPlaceCategoriesAdapter(this);
+        categoriesAdapter = new AddEventCategoriesAdapter(this);
         categoriesRV.setAdapter(categoriesAdapter);
         GridLayoutManager manager = new SpanningGridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
         categoriesRV.setLayoutManager(manager);
@@ -154,8 +165,8 @@ public class AddPlaceActivity extends BaseActivity {
 
     private void initViewPager() {
         viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
-        final PlaceCategoryPagerAdapter placeCategoryPagerAdapter = new PlaceCategoryPagerAdapter(this);
-        viewPager.setAdapter(placeCategoryPagerAdapter);
+        final EventCategoryPagerAdapter eventCategoryPagerAdapter = new EventCategoryPagerAdapter(this);
+        viewPager.setAdapter(eventCategoryPagerAdapter);
         viewPager.setOffscreenPageLimit(1);
         categorySelected = categoriesAdapter.getCategory(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -241,7 +252,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        noSpotAttachedView.setOnClickListener(new View.OnClickListener() {
+        pinView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.pinSpot(context);

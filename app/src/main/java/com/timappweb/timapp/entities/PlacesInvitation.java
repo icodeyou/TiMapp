@@ -1,7 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.adapters.PlaceUsersAdapter;
+import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class PlacesInvitation implements PlaceUserInterface {
 
     @Override
     public int getViewType() {
-        return PlaceUsersAdapter.VIEW_TYPES.INVITED;
+        return EventUsersAdapter.VIEW_TYPES.INVITED;
     }
 
     public User getUserSource() {

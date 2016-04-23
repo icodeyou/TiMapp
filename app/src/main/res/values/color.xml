@@ -19,7 +19,9 @@
     <color name="background_semi_transparent">#6ff6efef</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
-    <color name="background_place">#c5000000</color>
+    <color name="background_place">#b7000000</color>
+    <color name="background_spot">#2b3778</color>
+    <color name="background_spot_transparent">#c62b3778</color>
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>

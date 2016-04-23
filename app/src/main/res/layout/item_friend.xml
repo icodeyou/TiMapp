@@ -37,7 +37,7 @@
                     android:orientation="vertical"
                     android:gravity="center_vertical">
 
-                    <com.timappweb.timapp.views.AutoResizeTextView
+                    <me.grantland.widget.AutofitTextView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/height_name_card"
                         android:id="@+id/person_name"

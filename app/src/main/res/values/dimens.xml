@@ -90,5 +90,6 @@
     <dimen name="height_pin_post_box">50dp</dimen>
     <dimen name="icon_spot">60dp</dimen>
     <dimen name="little_icon_spot">40dp</dimen>
+    <dimen name="margin_right_image_category_spot">5dp</dimen>
 
 </resources>

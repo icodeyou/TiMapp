@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
-import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
@@ -20,10 +20,10 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.List;
 
-public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelectedListener {
+public class ExploreEventsFragment extends Fragment implements OnExploreTabSelectedListener {
 
     private static final String TAG = "ExplorePlaceFragment";
-    private PlacesAdapter placesAdapter;
+    private EventsAdapter eventsAdapter;
     private ExploreFragment exploreFragment;
     private DrawerActivity drawerActivity;
     private View newEventButton;
@@ -63,7 +63,7 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         /*eachSecondTimerTask = EachSecondTimerTask.add(new TimeTaskCallback() {
             @Override
             public void update() {
-                placesAdapter.notifyDataSetChanged();
+                eventsAdapter.notifyDataSetChanged();
             }
         })
 */
@@ -79,17 +79,17 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
 
     @Override
     public void onTabSelected() {
-        Log.d(TAG, "ExplorePlacesFragment is now selected");
-        if(placesAdapter==null) {
-            Log.d(TAG, "Initializing PlacesAdapter");
+        Log.d(TAG, "ExploreEventsFragment is now selected");
+        if(eventsAdapter ==null) {
+            Log.d(TAG, "Initializing EventsAdapter");
             initPlaceAdapter();
         }
-        Log.d(TAG, "Loading "+placesAdapter.getData().size()+" places in List");
-        placesAdapter.clear();
+        Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");
+        eventsAdapter.clear();
         ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
         List<Place> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
-        placesAdapter.setData(markers);
-        if(placesAdapter.getData().size()==0) {
+        eventsAdapter.setData(markers);
+        if(eventsAdapter.getData().size()==0) {
             noEventsView.setVisibility(View.VISIBLE);
         } else {
             noEventsView.setVisibility(View.GONE);
@@ -101,12 +101,12 @@ public class ExplorePlacesFragment extends Fragment implements OnExploreTabSelec
         rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Adapter
-        placesAdapter = new PlacesAdapter(getContext());
-        rvPlaces.setAdapter(placesAdapter);
-        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+        eventsAdapter = new EventsAdapter(getContext());
+        rvPlaces.setAdapter(eventsAdapter);
+        eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                IntentsUtils.viewSpecifiedPlace(getContext(), placesAdapter.getItem(position));
+                IntentsUtils.viewSpecifiedPlace(getContext(), eventsAdapter.getItem(position));
             }
         });
     }

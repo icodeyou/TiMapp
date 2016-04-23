@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,54 +18,57 @@ import com.timappweb.timapp.entities.Category;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
-public class PlaceView extends RelativeLayout{
+import me.grantland.widget.AutofitTextView;
 
-    private final static String         TAG = "PlaceView";
+public class EventView extends RelativeLayout{
+    private final static String TAG = "EventView";
 
-    private View                        colorBackground;
-    private AutoResizeTextView          tvName;
+    private AutofitTextView             tvName;
     private TextView                    tvTime;
     private HorizontalTagsRecyclerView  rvPlaceTags;
     private ImageView                   categoryIcon;
-    private ImageView                   parentLayout;
+    private ImageView                   backgroundImage;
     private SimpleTimerView             tvCountPoints;
     private View                        gradientBottomView;
     private View                        gradientTopView;
+    private RelativeLayout              mainBox;
 
     private int                         colorRes = -1;
     private boolean                     isTagsVisible = false;
     private boolean                     isBottomShadow = false;
     private boolean                     isTopShadow = false;
+    private boolean                     isPadding;
     private Place                       place;
 
-    public PlaceView(Context context) {
+    public EventView(Context context) {
         super(context);
         this.init();
     }
 
-    public PlaceView(Context context, AttributeSet attrs) {
+    public EventView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         //Get attributes in XML
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PlaceView, 0, 0);
-        isTagsVisible = ta.getBoolean(R.styleable.CardView_tags_visible, false);
-        isBottomShadow = ta.getBoolean(R.styleable.CardView_bottom_shadow, false);
-        isTopShadow = ta.getBoolean(R.styleable.CardView_top_shadow, false);
-        colorRes = ta.getColor(R.styleable.CardView_background_color, -1);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EventView, 0, 0);
+        isTagsVisible = ta.getBoolean(R.styleable.EventView_tags_visible, false);
+        isBottomShadow = ta.getBoolean(R.styleable.EventView_bottom_shadow, false);
+        isTopShadow = ta.getBoolean(R.styleable.EventView_top_shadow, false);
+        colorRes = ta.getColor(R.styleable.EventView_background_color, -1);
+        isPadding = ta.getBoolean(R.styleable.EventView_is_padding, false);
         ta.recycle();
 
         this.init();
     }
 
     private void init() {
-        inflate(getContext(), R.layout.layout_place, this);
+        inflate(getContext(), R.layout.layout_event, this);
 
-        colorBackground = findViewById(R.id.parent_layout_place);
-        tvName = (AutoResizeTextView) findViewById(R.id.title_place);
+        mainBox = (RelativeLayout) findViewById(R.id.main_box_relative);
+        tvName = (AutofitTextView) findViewById(R.id.title_event);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.places_points);
         tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
-        parentLayout = (ImageView) findViewById(R.id.background_place);
+        backgroundImage = (ImageView) findViewById(R.id.background_image_event);
         gradientBottomView = findViewById(R.id.bottom_gradient);
         gradientTopView = findViewById(R.id.top_gradient);
         rvPlaceTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
@@ -72,6 +76,7 @@ public class PlaceView extends RelativeLayout{
         setBottomShadow(isBottomShadow);
         setTopShadow(isTopShadow);
         setTagsVisible(isTagsVisible);
+        initPadding(isPadding);
     }
 
     public HorizontalTagsRecyclerView getRvPlaceTags() {
@@ -89,23 +94,22 @@ public class PlaceView extends RelativeLayout{
 
         //Category
         Category category = null;
-        try {
-            //Category Icon
-            category = MyApplication.getCategoryById(place.category_id);
-            categoryIcon.setImageResource(category.getIconWhiteResId());
-            MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
+        if(colorRes != -1) {
+            Log.d(TAG,"Setting custom color");
+            backgroundImage.setBackgroundResource(colorRes);
+        } else {
+            try {
+                Log.d(TAG,"Setting event Background");
+                //Category Icon
+                category = MyApplication.getCategoryById(place.category_id);
+                categoryIcon.setImageResource(category.getIconWhiteResId());
+                MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
 
-            //Place background
-            if (colorRes == -1) {
-                parentLayout.setVisibility(View.VISIBLE);
-                parentLayout.setImageResource(category.getSmallImageResId());
-                colorBackground.setBackgroundResource(R.color.background_place);
-            } else {
-                parentLayout.setVisibility(View.GONE);
-                colorBackground.setBackgroundResource(colorRes);
+                //Place background
+                backgroundImage.setImageResource(category.getBigImageResId());
+            } catch (UnknownCategoryException e) {
+                Log.e(TAG, "no category found for id : " + place.category_id);
             }
-        } catch (UnknownCategoryException e) {
-            Log.e(TAG, "no category found for id : " + place.category_id);
         }
 
         //Adapter
@@ -138,6 +142,13 @@ public class PlaceView extends RelativeLayout{
             rvPlaceTags.setVisibility(VISIBLE);
         } else {
             rvPlaceTags.setVisibility(GONE);
+        }
+    }
+
+    public void initPadding(boolean isPadding) {
+        if(!isPadding) {
+            Log.d(TAG,"Removing padding");
+            mainBox.setPadding(0,0,0,0);
         }
     }
 

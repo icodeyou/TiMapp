@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
@@ -66,7 +67,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
         //Initialize
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
-        createPlaceButton = findViewById(R.id.create_place_button);
+        createPlaceButton = findViewById(R.id.create_spot_button);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
         etCustomPlace = (EditText) findViewById(R.id.edittext);
@@ -117,6 +118,16 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
                 setButtonValidation();
             }
         });
+        etCustomPlace.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Toast.makeText(getApplicationContext(), "got the focus", Toast.LENGTH_LONG).show();
+                    spotsRv.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
 
         etCustomPlace.setOnClickListener(new View.OnClickListener() {
             @Override

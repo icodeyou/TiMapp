@@ -44,16 +44,11 @@
                 android:text="Create Place"/>
         </LinearLayout>-->
 
-        <RelativeLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/spots_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/spots_rv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -65,39 +60,50 @@
         android:alpha="0.9"
         android:visibility="gone"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/custom_place_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="5dp">
-        <EditText
-            android:id="@+id/edittext"
-            android:gravity="center"
-            android:hint="@string/hint_new_spot"
-            android:textColorHint="@color/color_hint"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:id="@+id/button_show_categories_spot"
-            android:layout_gravity="center"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/add_type_place"/>
-        <ImageView
-            android:id="@+id/create_place_button"
-            android:layout_gravity="center"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:src="@drawable/ic_chineseman"
-            android:visibility="gone"/>
-    </LinearLayout>
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:alpha="0.5"/>
+
+        <LinearLayout
+            android:id="@+id/horizontal_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:padding="5dp">
+            <EditText
+                android:id="@+id/edittext"
+                android:gravity="center"
+                android:hint="@string/hint_new_spot"
+                android:textColorHint="@color/color_hint"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/button_show_categories_spot"
+                android:layout_gravity="center"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/add_type_place"/>
+            <ImageView
+                android:id="@+id/create_spot_button"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ok_button"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

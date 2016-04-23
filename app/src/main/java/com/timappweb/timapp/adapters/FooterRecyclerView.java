@@ -14,13 +14,13 @@ import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "PlacesAdapter";
+    private static final String TAG = "EventsAdapter";
     private Context context;
     private int colorRes = -1;
     private boolean isTagsVisible;
@@ -44,7 +44,7 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Place place = data.get(position);
 
-            holder.placeView.setPlace(place);
+            holder.eventView.setPlace(place);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -78,13 +78,13 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
         switch (viewType)
         {
             case VIEW_TYPES.NORMAL:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_event, viewGroup, false);
                 return new PlacesViewHolder(v);
             case VIEW_TYPES.FOOTER:
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.explore_places_button, viewGroup, false);
                 return new FooterPlacesViewHolder(v);
             default:
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_place, viewGroup, false);
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_event, viewGroup, false);
                 return new PlacesViewHolder(v);
         }
 
@@ -145,14 +145,14 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class PlacesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        PlaceView placeView;
+        EventView eventView;
         HorizontalTagsRecyclerView horizontalTagsRv;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            placeView = (PlaceView) itemView.findViewById(R.id.place_view);
-            horizontalTagsRv = placeView.getRvPlaceTags();
+            eventView = (EventView) itemView.findViewById(R.id.event_view);
+            horizontalTagsRv = eventView.getRvPlaceTags();
         }
 
         @Override

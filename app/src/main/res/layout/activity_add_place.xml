@@ -27,6 +27,31 @@
             android:visibility = "visible" />
 
         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <com.timappweb.timapp.views.SpotView
+                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/spot_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/icon"
+                android:layout_toStartOf="@+id/icon"
+                myattrs:background="@color/background_spot_transparent"/>
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/icon_default"
+                android:layout_height="@dimen/icon_default"
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/delete"/>
+        </RelativeLayout>
+
+
+        <!--<RelativeLayout
             android:id="@+id/spot_added_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +88,8 @@
                     android:textColor="@color/White"
                     android:textSize="@dimen/text_big"/>
             </LinearLayout>
-        </RelativeLayout>
+        </RelativeLayout>-->
+
         <EditText
             android:id="@+id/place_name_edit_text"
             android:layout_width="match_parent"

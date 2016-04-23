@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_below="@+id/toolbar_transparent"
-        android:layout_above="@+id/place_view">
+        android:layout_above="@+id/event_view">
 
         <!-- TITLE -->
         <!-- **********************************************************************-->
@@ -132,9 +132,9 @@
 
     <!-- PLACE -->
     <!-- **********************************************************************-->
-    <com.timappweb.timapp.views.PlaceView
+    <com.timappweb.timapp.views.EventView
         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-        android:id="@+id/place_view"
+        android:id="@+id/event_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

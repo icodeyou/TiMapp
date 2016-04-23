@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
-import com.timappweb.timapp.adapters.PlaceUsersHeaderAdapter;
+import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
 import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
@@ -48,7 +48,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private Place place;
     private int placeId;
 
-    private PlaceUsersHeaderAdapter placeUsersAdapter;
+    private EventUsersHeaderAdapter placeUsersAdapter;
     private RecyclerView    peopleRv;
     private View            progressView;
     private View            noPostsView;
@@ -117,7 +117,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
     private void initAdapter() {
         //Construct Adapter
-        placeUsersAdapter = new PlaceUsersHeaderAdapter(context);
+        placeUsersAdapter = new EventUsersHeaderAdapter(context);
         placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {

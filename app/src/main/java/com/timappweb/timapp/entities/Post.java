@@ -1,7 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.timappweb.timapp.adapters.PlaceUsersAdapter;
+import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;
@@ -187,7 +187,7 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
 
     @Override
     public int getViewType() {
-        return PlaceUsersAdapter.VIEW_TYPES.HERE;
+        return EventUsersAdapter.VIEW_TYPES.HERE;
     }
 
     public boolean hasTagsLoaded() {

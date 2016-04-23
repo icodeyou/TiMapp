@@ -10,20 +10,20 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.entities.Category;
 
-public class AddPlaceCategoriesAdapter extends PlaceCategoriesAdapter {
+public class AddEventCategoriesAdapter extends EventCategoriesAdapter {
 
     protected LayoutInflater inflater;
 
     private Context context;
     private ImageView currentCategoryIcon;
 
-    public AddPlaceCategoriesAdapter(Context context) {
+    public AddEventCategoriesAdapter(Context context) {
         super(context);
         this.context = context;
     }
 
     @Override
-    public void onBindViewHolder(PlaceCategoriesAdapter.CategoriesViewHolder holder, final int position) {
+    public void onBindViewHolder(EventCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
         final AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
         final Category category = MyApplication.getEventCategories().get(position);

@@ -5,4 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     myattrs:bottom_shadow="true"
-    myattrs:top_shadow="true" />
+    myattrs:top_shadow="true"
+    myattrs:tags_visible="false"
+    myattrs:gravity_center="false" />

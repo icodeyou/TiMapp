@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.PlacesAdapter;
+import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.entities.Place;
@@ -97,10 +97,10 @@ public class LocateActivity extends BaseActivity{
         rvPlaces.setLayoutManager(new LinearLayoutManager(this));
 
         //Adapter
-        final PlacesAdapter placesAdapter = new PlacesAdapter(this);
-        rvPlaces.setAdapter(placesAdapter);
+        final EventsAdapter eventsAdapter = new EventsAdapter(this);
+        rvPlaces.setAdapter(eventsAdapter);
 
-        placesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+        eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Click on place adapter");
@@ -109,7 +109,7 @@ public class LocateActivity extends BaseActivity{
                     return;
                 }
                 // We know that lastLocation is define because places are loaded only when location is defined
-                Place place = placesAdapter.getItem(position);
+                Place place = eventsAdapter.getItem(position);
                 Post post = new Post();
                 post.longitude = MyApplication.getLastLocation().getLongitude();
                 post.latitude = MyApplication.getLastLocation().getLatitude();
@@ -125,6 +125,7 @@ public class LocateActivity extends BaseActivity{
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 IntentsUtils.addPlace(that);
             }
         });
@@ -187,7 +188,7 @@ public class LocateActivity extends BaseActivity{
                 if (response.isSuccess()){
                     List<Place> places = response.body();
                     Log.d(TAG, "Loading " + places.size() + " viewPlaceFromPublish(s)");
-                    PlacesAdapter placeAdapter = ((PlacesAdapter) rvPlaces.getAdapter());
+                    EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);
                     if (places.size() != 0) {

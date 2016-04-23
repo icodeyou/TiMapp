@@ -13,7 +13,7 @@ import com.timappweb.timapp.entities.Category;
 
 import java.util.HashMap;
 
-public class PlaceCategoriesAdapter extends RecyclerView.Adapter<PlaceCategoriesAdapter.CategoriesViewHolder> {
+public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategoriesAdapter.CategoriesViewHolder> {
 
     protected LayoutInflater inflater;
     //protected List<Category> eventCategories = Collections.emptyList();
@@ -21,7 +21,7 @@ public class PlaceCategoriesAdapter extends RecyclerView.Adapter<PlaceCategories
 
     private Context context;
 
-    public PlaceCategoriesAdapter(Context context) {
+    public EventCategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         //this.eventCategories = MyApplication.getEventCategories();
         this.context = context;

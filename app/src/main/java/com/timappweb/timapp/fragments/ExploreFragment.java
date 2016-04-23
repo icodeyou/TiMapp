@@ -100,7 +100,7 @@ public class ExploreFragment extends Fragment{
     public static class TabsAdapter extends FragmentPagerAdapter {
 
         private ExploreMapFragment exploreMapFragment;
-        private ExplorePlacesFragment explorePlacesFragment;
+        private ExploreEventsFragment exploreEventsFragment;
 
         public TabsAdapter(FragmentManager fm) {
             super(fm);
@@ -128,8 +128,8 @@ public class ExploreFragment extends Fragment{
                 if (exploreMapFragment == null) exploreMapFragment = new ExploreMapFragment();
                 return exploreMapFragment;
             } else {
-                if (explorePlacesFragment == null) explorePlacesFragment = new ExplorePlacesFragment();
-                return explorePlacesFragment;
+                if (exploreEventsFragment == null) exploreEventsFragment = new ExploreEventsFragment();
+                return exploreEventsFragment;
             }
         }
 

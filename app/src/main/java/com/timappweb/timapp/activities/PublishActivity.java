@@ -28,7 +28,7 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class PublishActivity extends BaseActivity{
     private Place currentPlace = null;
     private Post currentPost = null;
     private CheckBox checkBox = null;
-    private PlaceView placeView;
+    private EventView eventView;
     private LinearLayout confirmButton;
     private TextView textButton1;
     private TextView textButton2;
@@ -73,7 +73,7 @@ public class PublishActivity extends BaseActivity{
         //Initialize variables
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
-        placeView = (PlaceView) findViewById(R.id.place_view);
+        eventView = (EventView) findViewById(R.id.event_view);
         progressView = findViewById(R.id.progress_view);
         confirmButton = (LinearLayout) findViewById(R.id.confirm_button);
         textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
@@ -113,7 +113,7 @@ public class PublishActivity extends BaseActivity{
     }
 
     private void initPlaceView() {
-        placeView.setPlace(currentPlace);
+        eventView.setPlace(currentPlace);
     }
 
     private void initAdapters() {

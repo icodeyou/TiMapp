@@ -13,13 +13,13 @@ import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "PlacesAdapter";
+    private static final String TAG = "EventsAdapter";
     private Context context;
     private int colorRes = -1;
     private boolean isTagsVisible;
@@ -54,7 +54,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             String prettyTimeInvitation = placeInvitation.getTimeCreated();
             String topText = username + " invited you " + prettyTimeInvitation;
             holder.invitorName.setText(topText);
-            holder.placeView.setPlace(placeInvitation.place);
+            holder.eventView.setPlace(placeInvitation.place);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -102,16 +102,16 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class PlacesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        PlaceView placeView;
+        EventView eventView;
         TextView invitorName;
         HorizontalTagsRecyclerView horizontalTagsRv;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            placeView = (PlaceView) itemView.findViewById(R.id.place_view);
+            eventView = (EventView) itemView.findViewById(R.id.event_view);
             invitorName = (TextView) itemView.findViewById(R.id.name_invitor);
-            horizontalTagsRv = placeView.getRvPlaceTags();
+            horizontalTagsRv = eventView.getRvPlaceTags();
         }
 
         @Override

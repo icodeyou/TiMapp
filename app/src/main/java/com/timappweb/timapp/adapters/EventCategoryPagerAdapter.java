@@ -14,12 +14,12 @@ import com.timappweb.timapp.entities.Category;
 /**
  * Created by Jack on 24/02/2016.
  */
-public class PlaceCategoryPagerAdapter extends PagerAdapter {
+public class EventCategoryPagerAdapter extends PagerAdapter {
 
     private Context mContext;
     private String TAG = "CategoryPager";
 
-    public PlaceCategoryPagerAdapter(Context context) {
+    public EventCategoryPagerAdapter(Context context) {
         mContext = context;
     }
 

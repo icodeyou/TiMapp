@@ -26,7 +26,7 @@ import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class TagActivity extends BaseActivity{
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
     private View progressBarView;
-    private PlaceView placeView;
+    private EventView eventView;
     private Place currentPlace = null;
     private View progressEndView;
 
@@ -72,7 +72,7 @@ public class TagActivity extends BaseActivity{
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressBarView = findViewById(R.id.progress_view);
         progressEndView = findViewById(R.id.progress_end);
-        placeView = (PlaceView) findViewById(R.id.place_view);
+        eventView = (EventView) findViewById(R.id.event_view);
 
         initPlaceView();
         initHorizontalAdapter();
@@ -177,7 +177,7 @@ public class TagActivity extends BaseActivity{
     }
 
     private void initPlaceView() {
-        placeView.setPlace(currentPlace);
+        eventView.setPlace(currentPlace);
     }
 
     public void actionCounter() {

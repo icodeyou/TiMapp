@@ -16,13 +16,6 @@
         android:id="@+id/parent_layout_spot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        <View
-            android:id="@+id/background_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="1"
-            android:layout_alignBottom="@+id/horizontal_linear_layout"
-            android:background="@color/colorSecondary" />
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
             android:layout_width="match_parent"
@@ -31,50 +24,49 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            android:background="#2b3778"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/big_image_category_spot"
                 android:layout_width="@dimen/icon_spot"
                 android:layout_height="@dimen/icon_spot"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="@dimen/margin_right_image_category_spot"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_category_highlight_nightclub"
-                android:background="@drawable/b_spot"/>
+                android:src="@drawable/ic_category_highlight_nightclub"/>
             <ImageView
                 android:id="@+id/small_image_category_spot"
                 android:layout_width="@dimen/little_icon_spot"
                 android:layout_height="@dimen/little_icon_spot"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="@dimen/margin_right_image_category_spot"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_category_highlight_nightclub"
-                android:background="@drawable/b_spot"
                 android:visibility="gone"/>
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical">
 
-                <com.timappweb.timapp.views.AutoResizeTextView
+                <me.grantland.widget.AutofitTextView
                     android:id="@+id/title_spot"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_title_spot_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
-                    android:maxLines="2"
-                    android:gravity="center_vertical|start"
+                    android:maxLines="1"
+                    android:gravity="center"
                     android:textStyle="bold"
-                    android:text="NightyForever"
+                    android:text="The place where everything began"
                     android:textSize="@dimen/title_event_card"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/colorSecondary" />
 
                 <LinearLayout
                     android:id="@+id/horizontal_tags_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"

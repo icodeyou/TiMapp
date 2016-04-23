@@ -78,15 +78,23 @@ dependencies {
     compile 'com.github.boxme:squarecamera:1.1.0'
     compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
     compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
-    compile 'com.github.iwgang:countdownview:1.2'
+    compile 'me.grantland:autofittextview:0.2.+'
 
     //compile 'com.pkmmte.view:circularimageview:1.1'
     //compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.9.0'
+    compile ('com.facebook.fresco:fresco:0.9.0'){
+        exclude module: 'bolts-android'
+        exclude module: 'support-v4'
+    }
     compile 'com.github.ongakuer:PhotoDraweeView:a14f105'
 
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
 
     compile 'net.danlew:android.joda:2.9.3'
 
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
 }

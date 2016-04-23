@@ -30,7 +30,7 @@
             autolabel:show_cross="true"
             autolabel:text_color="@color/colorAccent"
             autolabel:text_size="@dimen/label_title_size"
-            autolabel:icon_cross="@drawable/delete_people"
+            autolabel:icon_cross="@drawable/delete"
             autolabel:label_background_res="@color/colorSecondary"
             autolabel:label_clickable="true"/>
 

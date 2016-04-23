@@ -22,16 +22,16 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PlaceUsersAdapter
-        extends  RecyclerView.Adapter<PlaceUsersAdapter.PlacePeopleViewHolder> {
-    private static final String TAG = "PlaceUsersAdapter";
+public abstract class EventUsersAdapter
+        extends  RecyclerView.Adapter<EventUsersAdapter.PlacePeopleViewHolder> {
+    private static final String TAG = "EventUsersAdapter";
 
     private OnItemAdapterClickListener mItemClickListener;
     protected Context context;
     protected List<PlaceUserInterface> data;
 
     //Constructor
-    public PlaceUsersAdapter(Context context) {
+    public EventUsersAdapter(Context context) {
         setHasStableIds(true);
         this.context = context;
         this.data = new ArrayList<>();

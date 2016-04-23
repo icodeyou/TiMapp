@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Define here attributes that are going to be called more than once-->
+    <attr name="tags_visible" format="boolean" />
+    <attr name="bottom_shadow" format="boolean" />
+    <attr name="top_shadow" format="boolean" />
+    <attr name="background_color" format="color" />
+
     <declare-styleable name="HorizontalTagsRecyclerView">
         <attr name="horizontal_tags_background_color" format="color" />
         <attr name="horizontal_tags_text_color" format="color" />
@@ -8,17 +14,29 @@
     </declare-styleable>
 
     <!-- parent styleable -->
-    <declare-styleable name="CardView">
+    <!--<declare-styleable name="CardView">
         <attr name="tags_visible" format="boolean" />
         <attr name="bottom_shadow" format="boolean" />
         <attr name="top_shadow" format="boolean" />
         <attr name="background_color" format="color" />
+    </declare-styleable>-->
+
+
+    <declare-styleable name="EventView">
+        <attr name="tags_visible" />
+        <attr name="bottom_shadow" />
+        <attr name="top_shadow" />
+        <attr name="background_color" />
+
+        <attr name="is_padding" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="PlaceView" parent="CardView">
-    </declare-styleable>
+    <declare-styleable name="SpotView">
+        <attr name="tags_visible" />
+        <attr name="bottom_shadow" />
+        <attr name="top_shadow" />
+        <attr name="background_color" />
 
-    <declare-styleable name="SpotView" parent="CardView">
-        <attr name="background_alpha" format="float" />
+        <attr name="gravity_center" format="boolean" />
     </declare-styleable>
 </resources>

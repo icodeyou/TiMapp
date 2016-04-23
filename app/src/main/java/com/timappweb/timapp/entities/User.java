@@ -1,6 +1,6 @@
 package com.timappweb.timapp.entities;
 
-import com.timappweb.timapp.adapters.PlaceUsersAdapter;
+import com.timappweb.timapp.adapters.EventUsersAdapter;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -87,7 +87,7 @@ public class User implements Serializable, PlaceUserInterface {
 
     @Override
     public int getViewType() {
-        return PlaceUsersAdapter.VIEW_TYPES.UNDEFINED;
+        return EventUsersAdapter.VIEW_TYPES.UNDEFINED;
     }
 
     public void setStatus(boolean status) {

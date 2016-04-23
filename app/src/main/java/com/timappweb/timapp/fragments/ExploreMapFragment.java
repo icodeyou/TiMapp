@@ -40,7 +40,7 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +59,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     //Views
     private View root;
-    private PlaceView placeView;
+    private EventView eventView;
     private View progressView;
     private HorizontalTagsRecyclerView filterTagsRv;
     private View filterTagsContainer;
@@ -116,7 +116,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
-        placeView = (PlaceView) root.findViewById(R.id.place_view);
+        eventView = (EventView) root.findViewById(R.id.event_view);
         newEventbutton = root.findViewById(R.id.fab);
 
         setListeners();
@@ -174,13 +174,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void displayPlace(Place place) {
-        placeView.setPlace(place);
-        placeView.setVisibility(View.VISIBLE);
+        eventView.setPlace(place);
+        eventView.setVisibility(View.VISIBLE);
     }
 
 
     public void hidePlace() {
-        placeView.setVisibility(View.GONE);
+        eventView.setVisibility(View.GONE);
     }
 
 
@@ -199,10 +199,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
 
     private void initListeners() {
-        placeView.setOnClickListener(new View.OnClickListener() {
+        eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Place place = placeView.getPlace();
+                Place place = eventView.getPlace();
                 IntentsUtils.viewSpecifiedPlace(getActivity(), place);
             }
         });
@@ -352,7 +352,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Place place = (Place) markerValue;
-        if(isPlaceViewVisible() && placeView.getPlace()==place) {
+        if(isPlaceViewVisible() && eventView.getPlace()==place) {
             IntentsUtils.viewSpecifiedPlace(getActivity(), place);
         } else {
             displayPlace(place);
@@ -378,7 +378,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     public boolean isPlaceViewVisible() {
-        return placeView.getVisibility()==View.VISIBLE;
+        return eventView.getVisibility()==View.VISIBLE;
     }
 
 

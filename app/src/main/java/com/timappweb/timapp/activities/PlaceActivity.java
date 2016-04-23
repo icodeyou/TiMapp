@@ -46,7 +46,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.views.PlaceView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.Vector;
 
@@ -67,7 +67,7 @@ public class PlaceActivity extends BaseActivity {
     private TextView    onMyWayTv;
     private View        progressView;
     private ListView    tagsListView;
-    private PlaceView placeView;
+    private EventView eventView;
     private View        progressBottom;
     private View        parentLayout;
 
@@ -121,7 +121,7 @@ public class PlaceActivity extends BaseActivity {
         progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
-        placeView = (PlaceView) findViewById(R.id.place_view);
+        eventView = (EventView) findViewById(R.id.event_view);
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
@@ -376,7 +376,7 @@ public class PlaceActivity extends BaseActivity {
 
     private void notifyPlaceLoaded() {
         progressView.setVisibility(View.GONE);
-        placeView.setVisibility(View.VISIBLE);
+        eventView.setVisibility(View.VISIBLE);
         try {
             Category category = MyApplication.getCategoryById(place.category_id);
             ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
@@ -384,7 +384,7 @@ public class PlaceActivity extends BaseActivity {
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }
-        placeView.setPlace(place);
+        eventView.setPlace(place);
 
         updateBtnVisibility();
     }
