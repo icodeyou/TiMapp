@@ -172,12 +172,15 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     }
 
     private void onSubmit(Spot spot){
-        Log.d(TAG, "Spot choosed: " + spot);
+        Log.d(TAG, "Spot chose: " + spot);
         Intent intent = new Intent(activity, AddPlaceActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("spot", spot);
         intent.putExtras(bundle);
-        NavUtils.navigateUpTo(activity, intent);
+
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+        //NavUtils.navigateUpTo(activity, intent);
     }
 
     private void setButtonValidation() {
