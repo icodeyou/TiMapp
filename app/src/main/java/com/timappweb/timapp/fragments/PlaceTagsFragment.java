@@ -13,7 +13,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.data.models.QuotaType;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
@@ -139,9 +139,9 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         Log.v(TAG, "::updateBtnVisibility()");
         // Check if the user can post in this place
         boolean isUserAround = placeActivity.isUserAround();
-        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.PICTURE);
-        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.POST);
-        boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.FRIENDS);
+        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE);
+        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
+        boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND);
         boolean showMainButton = isUserAround && isAllowedToAddPost;
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
         smallPeopleButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);

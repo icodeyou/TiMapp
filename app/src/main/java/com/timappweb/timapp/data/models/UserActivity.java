@@ -9,23 +9,22 @@ import com.timappweb.timapp.utils.Util;
  * Created by stephane on 4/4/2016.
  */
 @Table(name = "activities")
-public class UserActivity extends  BaseModel{
+public class UserActivity extends  Model{
 
     @Column(name = "DateCreated", index = true)
     public int created;
 
-
-    @Column(name = "QuotaType")
-    public QuotaType type;
+    @Column(name = "QuotaTypeId")
+    public int type;
 
 
     public UserActivity() {
         super();
     }
 
-    public UserActivity(String type) {
+    public UserActivity(int quotaTypeId) {
         super();
-        this.type = QuotaType.getByType(type);
+        this.type = quotaTypeId;
         this.created = Util.getCurrentTimeSec();
     }
 }

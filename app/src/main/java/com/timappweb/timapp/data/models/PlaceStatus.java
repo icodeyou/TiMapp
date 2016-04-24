@@ -1,6 +1,5 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
@@ -11,7 +10,7 @@ import com.timappweb.timapp.utils.Util;
  * Created by stephane on 4/5/2016.
  */
 @Table(name = "PlaceStatus")
-public class PlaceStatus extends BaseModel {
+public class PlaceStatus extends SyncBaseModel {
 
     @Column(name = "PlaceId", index = true)
     public int place_id;
@@ -47,4 +46,19 @@ public class PlaceStatus extends BaseModel {
         placeStatus.save();
         return placeStatus;
     }
+
+
+    public long getSyncKey(){
+        return this.getId();
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        if (!(model instanceof PlaceStatus)) return false;
+        PlaceStatus that = (PlaceStatus) model;
+
+        if (status != that.status) return false;
+        return place_id != that.place_id;
+    }
+
 }

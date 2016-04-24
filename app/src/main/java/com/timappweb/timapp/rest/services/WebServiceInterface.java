@@ -1,13 +1,14 @@
 package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonArray;
-import com.timappweb.timapp.data.models.QuotaType;
+import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.entities.SpotCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
@@ -24,7 +25,6 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
@@ -206,6 +206,14 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     // Quotas
-    @GET("quota-types")
-    Call<List<QuotaType>> quotaTypes();
+    @GET("activity-quota/user-quotas")
+    Call<List<UserQuota>> userQuotas();
+
+    // ---------------------------------------------------------------------------------------------
+    // Categories
+    @GET("spot-categories")
+    Call<List<SpotCategory>> spotCategories();
+
+    @GET("categories")
+    Call<List<EventCategory>> eventCategories();
 }

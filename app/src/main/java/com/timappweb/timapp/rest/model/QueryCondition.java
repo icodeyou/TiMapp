@@ -1,11 +1,10 @@
 package com.timappweb.timapp.rest.model;
 
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.Tag;
 
@@ -89,6 +88,6 @@ public class QueryCondition {
 
     public void setFilter(SearchFilter filter) {
         queryMap.put("filter_tags", Tag.tagsToString(filter.tags));
-        queryMap.put("filter_categories", Category.idsToString(filter.categories));
+        queryMap.put("filter_categories", EventCategory.idsToString(filter.categories));
     }
 }

@@ -30,7 +30,6 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onDone(Object result) {
 
-                        SyncAdapter.syncImmediately(context);
 
                         if (MyApplication.isLoggedIn()){
                             IntentsUtils.home(context);

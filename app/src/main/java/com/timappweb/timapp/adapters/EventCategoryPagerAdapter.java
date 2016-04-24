@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 
 /**
  * Created by Jack on 24/02/2016.
@@ -28,8 +28,8 @@ public class EventCategoryPagerAdapter extends PagerAdapter {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         ViewGroup layout = null;
         try {
-            Category category = MyApplication.getCategoryByIndex(position);
-            layout = (ViewGroup) inflater.inflate(category.getLayoutResId(), collection, false);
+            EventCategory eventCategory = MyApplication.getCategoryByIndex(position);
+            layout = (ViewGroup) inflater.inflate(eventCategory.getLayoutResId(), collection, false);
         } catch (IndexOutOfBoundsException e) {
             layout = (ViewGroup) inflater.inflate(R.layout.category_unknown, collection, false);
             Log.e(TAG, "Unknown category for pager: " + position);
@@ -56,8 +56,8 @@ public class EventCategoryPagerAdapter extends PagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         try {
-            Category category = MyApplication.getCategoryByIndex(position);
-            return mContext.getResources().getString(category.getTitleResId());
+            EventCategory eventCategory = MyApplication.getCategoryByIndex(position);
+            return mContext.getResources().getString(eventCategory.getTitleResId());
         } catch (IndexOutOfBoundsException e) {
             Log.e(TAG, "Unknown category at position: " + position);
             return "Unknown";

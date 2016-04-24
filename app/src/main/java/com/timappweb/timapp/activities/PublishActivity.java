@@ -16,7 +16,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.data.models.QuotaType;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Tag;
@@ -214,11 +214,11 @@ public class PublishActivity extends BaseActivity{
             if (place.isNew()){
                 place.id = placeId;
                 place.created = Util.getCurrentTimeSec();
-                QuotaManager.instance().add(QuotaType.PLACE);
+                QuotaManager.instance().add(QuotaType.PLACES);
             }
             //QuotaManager.instance().add(QuotaType.ActionTypeName.CREATE_PLACE);
             //CacheData.setLastPost(post);
-            QuotaManager.instance().add(QuotaType.POST);
+            QuotaManager.instance().add(QuotaType.ADD_POST);
 
             IntentsUtils.viewPlaceFromPublish(activity, placeId);
         }

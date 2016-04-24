@@ -75,7 +75,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         categoryImage.layout(0, 0, categoryImage.getMeasuredWidth(), categoryImage.getMeasuredHeight());
         categoryImage.buildDrawingCache(true);
 
-        //set Category Icon Diameter
+        //set EventCategory Icon Diameter
         Point size = new Point();
         ((Activity) context).getWindowManager().getDefaultDisplay().getSize(size);
         int iconDiameter = size.x/ICON_SIZE_COEF;

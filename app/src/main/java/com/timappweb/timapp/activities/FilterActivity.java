@@ -38,7 +38,7 @@ public class FilterActivity extends BaseActivity {
     //private RecyclerView categoriesRv;
     private View saveButton;
     private FilterEventCategoriesAdapter categoriesAdapter;
-    //private List<Category> categoriesSelected;
+    //private List<EventCategory> categoriesSelected;
     private TextView textSaveButton;
     private HorizontalTagsRecyclerView selectedTagsRecyclerView;
     private HashtagView hashtagView;
@@ -215,15 +215,15 @@ public class FilterActivity extends BaseActivity {
     //----------------------------------------------------------------------------------------------
     //GETTER and SETTERS
 /*
-    public void selectCategory(Category category) {
+    public void selectCategory(EventCategory category) {
         categoriesSelected.add(category);
     }
 
-    public void unselectCategory(Category category) {
+    public void unselectCategory(EventCategory category) {
         categoriesSelected.remove(category);
     }
 
-    public List<Category> getCategoriesSelected() {
+    public List<EventCategory> getCategoriesSelected() {
         return categoriesSelected;
     }*/
 

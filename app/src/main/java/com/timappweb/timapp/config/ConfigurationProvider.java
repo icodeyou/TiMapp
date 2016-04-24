@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.entities.SpotCategory;
+import com.activeandroid.query.Select;
+import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.services.ConfigInterface;
 import com.timappweb.timapp.configsync.RESTRemoteSync;
@@ -24,6 +25,7 @@ public class ConfigurationProvider {
 
     private static final String TAG = "ConfigurationProvider";
     private static final String PREF_NAME = "com.timapp.pref";
+    int SHARED_PREF_PRIVATE_MODE = 0;
 
     private static final int CONFIG_ID_RULES = 1;
     private static final int CONFIG_ID_EVENT_CATEGORIES= 2;
@@ -32,18 +34,26 @@ public class ConfigurationProvider {
     private final SharedPreferences sharedPref;
     private final Context context;
     private final Listener listener;
-    private SyncConfigManager<List<Category>> eventCatagoriesManager;
-    private SyncConfigManager<List<SpotCategory>> spotCatagoriesManager;
+   // private SyncConfigManager<List<EventCategory>> eventCatagoriesManager;
+    //private SyncConfigManager<List<SpotCategory>> spotCatagoriesManager;
     private SyncConfigManager<Rules> rulesManager;
 
-    int SHARED_PREF_PRIVATE_MODE = 0;
 
-    public List<Category> eventCategories(){
-        return this.eventCatagoriesManager.getData();
+    private static List<EventCategory> eventCategories = null;
+    private static List<SpotCategory> spotCategories = null;
+
+    public List<EventCategory> eventCategories(){
+        if (eventCategories == null){
+            eventCategories = new Select().from(EventCategory.class).orderBy("Position ASC").execute();
+        }
+        return eventCategories;
     }
 
     public List<SpotCategory> spotCategories(){
-        return this.spotCatagoriesManager.getData();
+        if (spotCategories == null){
+            spotCategories = new Select().from(SpotCategory.class).orderBy("Position ASC").execute();
+        }
+        return spotCategories;
     }
 
     public Rules rules(){
@@ -75,8 +85,8 @@ public class ConfigurationProvider {
     }
 
     private void init(){
-        eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
-        spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
+        //eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
+        //spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
         rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
     }
 
@@ -86,8 +96,8 @@ public class ConfigurationProvider {
             @Override
             protected Boolean doInBackground(Integer... params) {
                 try {
-                    eventCatagoriesManager.sync();
-                    spotCatagoriesManager.sync();
+                    //eventCatagoriesManager.sync();
+                    //spotCatagoriesManager.sync();
                     rulesManager.sync();
                 } catch (RemotePersistenceManager.CannotLoadException e) {
                     e.printStackTrace();
@@ -111,8 +121,8 @@ public class ConfigurationProvider {
     }
 
     public void clear() {
-        eventCatagoriesManager.clear();
-        spotCatagoriesManager.clear();
+        //eventCatagoriesManager.clear();
+        //spotCatagoriesManager.clear();
         rulesManager.clear();
     }
 
@@ -125,8 +135,8 @@ public class ConfigurationProvider {
     public String toString() {
         return "ServerConfiguration{" +
                 ", rules=" + rulesManager +
-                ", event categories= " + eventCatagoriesManager.toString() +
-                ", spot categories= " + spotCatagoriesManager.toString() +
+                //", event categories= " + eventCatagoriesManager.toString() +
+                //", spot categories= " + spotCatagoriesManager.toString() +
                 '}';
     }
 

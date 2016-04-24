@@ -21,7 +21,7 @@ import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.data.models.QuotaType;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
@@ -231,7 +231,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                         // Get the bitmap in according to the width of the device
                         Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
                         getPicturesRv().smoothScrollToPosition(0);
-                        QuotaManager.instance().add(QuotaType.PICTURE);
+                        QuotaManager.instance().add(QuotaType.ADD_PICTURE);
                         loadData();
                     } else {
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
@@ -262,8 +262,8 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         Log.v(TAG, "::updateBtnVisibility()");
         // Check if the user can post in this place
         boolean isUserAround = placeActivity.isUserAround();
-        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.POST);
-        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.PICTURE) && uploadView.getVisibility() != View.VISIBLE;
+        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
+        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE) && uploadView.getVisibility() != View.VISIBLE;
         boolean showMainButton = isUserAround && isAllowedToAddPic;
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
         smallTagsButton.setVisibility(!showMainButton && isUserAround && isAllowedToAddPost ? View.VISIBLE : View.GONE);

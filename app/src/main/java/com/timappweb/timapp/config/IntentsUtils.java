@@ -26,7 +26,6 @@ import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
-import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.User;
@@ -144,7 +143,7 @@ public class IntentsUtils {
     public static void addPostStepLocate(Context context) {
         if (!requireLogin(context))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.POST, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_POST, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
@@ -201,7 +200,7 @@ public class IntentsUtils {
     public static void addPlace(Context context) {
         if (!requireLogin(context))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.PLACE, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
@@ -212,7 +211,7 @@ public class IntentsUtils {
     public static void pinSpot(Activity activity) {
         if (!requireLogin(activity))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.PLACE, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
@@ -288,7 +287,7 @@ public class IntentsUtils {
     public static void addPostStepTags(Context context, Place place) {
         if (!requireLogin(context))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.POST, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_POST, true)){
             //Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG).show();
             return;
         }

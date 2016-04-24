@@ -8,6 +8,7 @@
      -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -58,7 +59,7 @@
 
         <!-- DATABASE CONFIGURATION -->
         <!-- pre populate db -->
-        <meta-data android:name="AA_DB_NAME" android:value="prepop.db" />
+        <meta-data android:name="AA_DB_NAME" android:value="timappdb" />
         <meta-data android:name="AA_DB_VERSION" android:value="4" />
         <!--
         // TODO for production set models to speed up launch
@@ -91,6 +92,12 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
+        <provider
+            android:authorities="@string/content_authority"
+            android:name=".data.contentproviders.QuotaTypeContentProvider"
+            android:exported="false"
+            android:syncable="true" />
 
         <!-- END SYNC ADAPTERS ===================================================================== -->
 

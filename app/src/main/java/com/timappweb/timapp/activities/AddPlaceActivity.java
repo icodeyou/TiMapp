@@ -25,7 +25,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Spot;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
@@ -46,7 +46,7 @@ public class AddPlaceActivity extends BaseActivity {
     private EditText groupNameET;
     RecyclerView categoriesRV;
     AddEventCategoriesAdapter categoriesAdapter;
-    private Category categorySelected;
+    private EventCategory eventCategorySelected;
     private View createButton;
     private TextView textCreateButton;
     private View progressView;
@@ -173,7 +173,7 @@ public class AddPlaceActivity extends BaseActivity {
         final EventCategoryPagerAdapter eventCategoryPagerAdapter = new EventCategoryPagerAdapter(this);
         viewPager.setAdapter(eventCategoryPagerAdapter);
         viewPager.setOffscreenPageLimit(1);
-        categorySelected = categoriesAdapter.getCategory(0);
+        eventCategorySelected = categoriesAdapter.getCategory(0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {
             }
@@ -182,9 +182,9 @@ public class AddPlaceActivity extends BaseActivity {
             }
 
             public void onPageSelected(int position) {
-                Category newCategory = categoriesAdapter.getCategory(position);
-                categoriesAdapter.setIconNewCategory(context, newCategory);
-                categorySelected = newCategory;
+                EventCategory newEventCategory = categoriesAdapter.getCategory(position);
+                categoriesAdapter.setIconNewCategory(context, newEventCategory);
+                eventCategorySelected = newEventCategory;
             }
         });
     }
@@ -224,7 +224,7 @@ public class AddPlaceActivity extends BaseActivity {
         Log.d(TAG,"textafterchange : "+textAfterChange);
         Log.d(TAG,"textafterchange Trim Length: "+textAfterChange.trim().length());
         Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
-        if (categorySelected!=null && Place.isValidName(textAfterChange)) {
+        if (eventCategorySelected !=null && Place.isValidName(textAfterChange)) {
             createButton.setVisibility(View.VISIBLE);
         } else {
             createButton.setVisibility(View.GONE);
@@ -247,12 +247,12 @@ public class AddPlaceActivity extends BaseActivity {
     //----------------------------------------------------------------------------------------------
     //GETTER and SETTERS
 
-    public void setCategory(Category category) {
-        categorySelected = category;
+    public void setCategory(EventCategory eventCategory) {
+        eventCategorySelected = eventCategory;
     }
 
-    public Category getCategorySelected() {
-        return categorySelected;
+    public EventCategory getEventCategorySelected() {
+        return eventCategorySelected;
     }
 
     private void setListeners() {
@@ -282,7 +282,7 @@ public class AddPlaceActivity extends BaseActivity {
             public void onClick(View v) {
                 if (MyApplication.hasFineLocation(MyApplication.getApplicationRules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
-                    final Place place = new Place(MyApplication.getLastLocation(), groupNameET.getText().toString(), categorySelected, context.spot);
+                    final Place place = new Place(MyApplication.getLastLocation(), groupNameET.getText().toString(), eventCategorySelected, context.spot);
                     submitPlace(place);
                 } else if (MyApplication.hasLastLocation()){
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();

@@ -5,6 +5,7 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
@@ -53,21 +54,21 @@ public class Place implements Serializable, MarkerValueInterface {
 
     }
 
-    public Place(double lat, double lng, String name, Category category) {
+    public Place(double lat, double lng, String name, EventCategory eventCategory) {
         this.loaded_time = Util.getCurrentTimeSec();
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
-        this.category_id = category.id;
+        this.category_id = eventCategory.id;
         this.created = Util.getCurrentTimeSec();
     }
 
-    public Place(Location lastLocation, String name, Category category, Spot spot) {
+    public Place(Location lastLocation, String name, EventCategory eventCategory, Spot spot) {
         this.loaded_time = Util.getCurrentTimeSec();
         this.latitude = lastLocation.getLatitude();
         this.longitude = lastLocation.getLongitude();
         this.name = name;
-        this.category_id = category.id;
+        this.category_id = eventCategory.id;
         if (spot != null){
             this.spot = spot;
             this.spot_id = spot.id;
@@ -194,7 +195,7 @@ public class Place implements Serializable, MarkerValueInterface {
         return num;
     }
 
-    public Category getCategory() throws UnknownCategoryException {
+    public EventCategory getCategory() throws UnknownCategoryException {
         return MyApplication.getCategoryById(this.category_id);
     }
 }

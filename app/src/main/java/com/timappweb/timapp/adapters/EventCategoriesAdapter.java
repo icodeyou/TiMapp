@@ -9,14 +9,14 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 
 import java.util.HashMap;
 
 public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategoriesAdapter.CategoriesViewHolder> {
 
     protected LayoutInflater inflater;
-    //protected List<Category> eventCategories = Collections.emptyList();
+    //protected List<EventCategory> eventCategories = Collections.emptyList();
     protected HashMap<Integer, ImageView> icons = new HashMap<>();
 
     private Context context;
@@ -38,9 +38,9 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
     @Override
     public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
-        final Category category = MyApplication.getEventCategories().get(position);
+        final EventCategory eventCategory = MyApplication.getEventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
-        icons.put(category.id, categoryIcon);
+        icons.put(eventCategory.id, categoryIcon);
     }
 
     public ImageView getIconFromId(int categoryId) {
@@ -52,7 +52,7 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
         return MyApplication.getEventCategories().size();
     }
 
-    public Category getCategory(int position) {
+    public EventCategory getCategory(int position) {
         return MyApplication.getEventCategories().get(position);
     }
 

@@ -1,12 +1,8 @@
 package com.timappweb.timapp;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -19,10 +15,10 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.SearchFilter;
 import com.timappweb.timapp.entities.SocialProvider;
-import com.timappweb.timapp.entities.SpotCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
@@ -178,7 +174,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         return config.rules();
     }
 
-    public static List<Category> getEventCategories() {
+    public static List<EventCategory> getEventCategories() {
         return config.eventCategories();
     }
 
@@ -189,6 +185,8 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     public void onCreate(){
         super.onCreate();
+
+        //this.deleteDatabase("timappdb");
 
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
 
@@ -206,12 +204,12 @@ public class MyApplication extends com.activeandroid.app.Application {
         QuotaManager.init(getApplicationContext());
 
         SyncAdapter.initializeSyncAdapter(this);
+        SyncAdapter.syncImmediately(this);
 
         // Load configuration
         config = new ConfigurationProvider(getApplicationContext(), new ConfigurationProviderListener());
         //config.clear();
         config.load();
-
 
 
         // Check token
@@ -257,8 +255,8 @@ public class MyApplication extends com.activeandroid.app.Application {
         }
     }
 
-    public static Category getCategoryById(int id) throws UnknownCategoryException {
-        for (Category c: config.eventCategories()){
+    public static EventCategory getCategoryById(int id) throws UnknownCategoryException {
+        for (EventCategory c: config.eventCategories()){
             if (c.id == id){
                 return c;
             }
@@ -266,7 +264,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         throw new UnknownCategoryException(id);
     }
 
-    public static Category getCategoryByIndex(int position) {
+    public static EventCategory getCategoryByIndex(int position) {
         return getEventCategories().get(position);
     }
 

@@ -31,9 +31,9 @@ import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.PlaceStatus;
-import com.timappweb.timapp.data.models.QuotaType;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
@@ -379,9 +379,9 @@ public class PlaceActivity extends BaseActivity {
         progressView.setVisibility(View.GONE);
         eventView.setVisibility(View.VISIBLE);
         try {
-            Category category = MyApplication.getCategoryById(place.category_id);
+            EventCategory eventCategory = MyApplication.getCategoryById(place.category_id);
             ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
-            backgroundImage.setImageResource(category.getBigImageResId());
+            backgroundImage.setImageResource(eventCategory.getBigImageResId());
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }

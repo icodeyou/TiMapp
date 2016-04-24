@@ -1,5 +1,7 @@
 package com.timappweb.timapp.entities;
 
+import com.timappweb.timapp.data.models.EventCategory;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import java.util.List;
 public class SearchFilter {
 
     public List<Tag> tags;
-    public List<Category> categories;
+    public List<EventCategory> categories;
 
     public SearchFilter() {
         this.tags = new LinkedList<>();

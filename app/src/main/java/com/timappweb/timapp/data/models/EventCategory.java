@@ -1,17 +1,28 @@
-package com.timappweb.timapp.entities;
+package com.timappweb.timapp.data.models;
 
 import android.util.Log;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.timappweb.timapp.R;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Category implements Serializable{
+@Table(name = "EventCategory")
+public class EventCategory extends SyncBaseModel implements Serializable{
 
-    private static final String TAG = "Category";
+    private static final String TAG = "EventCategory";
+
+    @Column(name = "SyncId")
     public int id;
+
+    @Column(name = "Name")
     public String name;
+
+    @Column(name = "Position")
+    public int position;
+
 
     private int resourceBlack = -1;
     private int resourceWhite = -1;
@@ -28,23 +39,8 @@ public class Category implements Serializable{
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        Category category = (Category) o;
-
-        return name.equals(category.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-
-    public static String idsToString(List<Category> categories) {
+    public static String idsToString(List<EventCategory> categories) {
         if (categories == null || categories.size() == 0){
             return "";
         }
@@ -144,5 +140,49 @@ public class Category implements Serializable{
         }
         Log.e(TAG, "Unknown category title for " + this.name);
         return R.string.category_unknown;
+    }
+
+    @Override
+    public long getSyncKey() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        if (!(model instanceof EventCategory)) return false;
+        EventCategory that = (EventCategory) model;
+
+        if (position != that.position) return false;
+        return name.equals(that.name);
+    }
+
+    @Override
+    public String toString() {
+        return "EventCategory{" +
+                "position=" + position +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EventCategory)) return false;
+        if (!super.equals(o)) return false;
+
+        EventCategory that = (EventCategory) o;
+
+        if (id != that.id) return false;
+        if (position != that.position) return false;
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id;
+        return result;
     }
 }

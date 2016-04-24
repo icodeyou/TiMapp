@@ -11,11 +11,8 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
-import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.entities.SpotCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.ArrayList;

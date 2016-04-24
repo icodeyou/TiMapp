@@ -7,14 +7,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
@@ -92,23 +91,23 @@ public class EventView extends RelativeLayout{
         //Title
         tvName.setText(place.name);
 
-        //Category
-        Category category = null;
+        //EventCategory
+        EventCategory eventCategory = null;
         if(colorRes != -1) {
             Log.d(TAG,"Setting custom color");
             backgroundImage.setBackgroundResource(colorRes);
         } else {
             try {
                 Log.d(TAG,"Setting event Background");
-                //Category Icon
-                category = MyApplication.getCategoryById(place.category_id);
-                categoryIcon.setImageResource(category.getIconWhiteResId());
+                //EventCategory Icon
+                eventCategory = MyApplication.getCategoryById(place.category_id);
+                categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
                 MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
 
                 //Place background
-                backgroundImage.setImageResource(category.getBigImageResId());
+                backgroundImage.setImageResource(eventCategory.getBigImageResId());
             } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no category found for id : " + place.category_id);
+                Log.e(TAG, "no eventCategory found for id : " + place.category_id);
             }
         }
 

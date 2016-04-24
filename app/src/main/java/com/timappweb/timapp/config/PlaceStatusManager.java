@@ -1,7 +1,6 @@
 package com.timappweb.timapp.config;
 
 import com.timappweb.timapp.data.models.PlaceStatus;
-import com.timappweb.timapp.data.models.QuotaType;
 import com.timappweb.timapp.entities.UserPlaceStatus;
 
 /**

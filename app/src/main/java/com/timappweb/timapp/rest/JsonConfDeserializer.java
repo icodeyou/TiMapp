@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.entities.Category;
-import com.timappweb.timapp.entities.SpotCategory;
+import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.configsync.SyncConfig;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
                 objectClass = new TypeToken<ArrayList<SpotCategory>>() {}.getType();
                 break;
             case "event_categories":
-                objectClass = new TypeToken<ArrayList<Category>>() {}.getType();
+                objectClass = new TypeToken<ArrayList<EventCategory>>() {}.getType();
                 break;
             default:
                 throw new JsonParseException("Invalid object type: " + objectType);

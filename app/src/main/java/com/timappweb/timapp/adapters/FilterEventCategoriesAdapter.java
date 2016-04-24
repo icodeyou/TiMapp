@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.FilterActivity;
-import com.timappweb.timapp.entities.Category;
+import com.timappweb.timapp.data.models.EventCategory;
 
 public class FilterEventCategoriesAdapter extends EventCategoriesAdapter {
 
@@ -31,27 +31,27 @@ public class FilterEventCategoriesAdapter extends EventCategoriesAdapter {
     @Override
     public void onBindViewHolder(EventCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
-        final Category category = MyApplication.getEventCategories().get(position);
+        final EventCategory eventCategory = MyApplication.getEventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
-        //final List<Category> categoriesSelected = filterActivity.getCategoriesSelected();
+        //final List<EventCategory> categoriesSelected = filterActivity.getCategoriesSelected();
 
 /*
-        if(categoriesSelected.contains(category)) {
-            categoryIcon.setImageResource(category.resourceWhite);
+        if(categoriesSelected.contains(eventCategory)) {
+            categoryIcon.setImageResource(eventCategory.resourceWhite);
             categoryIcon.setBackgroundResource(R.drawable.b4);
         } else {
-            categoryIcon.setImageResource(category.resourceBlack);
+            categoryIcon.setImageResource(eventCategory.resourceBlack);
             categoryIcon.setBackground(null);
         }
         holder.getItemView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(categoriesSelected.contains(category)) {
-                    filterActivity.unselectCategory(category);
+                if(categoriesSelected.contains(eventCategory)) {
+                    filterActivity.unselectCategory(eventCategory);
                     notifyDataSetChanged();
                 } else {
-                    filterActivity.selectCategory(category);
+                    filterActivity.selectCategory(eventCategory);
                     notifyDataSetChanged();
                 }
             }
