@@ -191,6 +191,17 @@
                         myattrs:horizontal_tags_is_bold="true"
                         myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
                 </LinearLayout>
+
+                <!-- Description -->
+                <!-- **********************************************************************-->
+                <TextView
+                    android:id="@+id/description_event"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:textAlignment="inherit"
+                    android:text="Equitis Romani autem esse filium criminis loco poni ab accusatoribus neque his iudicantibus oportuit neque defendentibus nobis. Nam quod de pietate dixistis, est quidem ista nostra existimatio, sed iudicium certe parentis."
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <View

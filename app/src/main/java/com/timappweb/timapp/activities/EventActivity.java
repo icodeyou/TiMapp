@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -111,10 +114,16 @@ public class EventActivity extends BaseActivity {
             return;
         }
 
+        //Set status bar blue
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorSecondaryDark));
+        }
 
         setContentView(R.layout.activity_event);
-        Color color = new Color();
-        initToolbar(false, color);
+        int colorRes = ContextCompat.getColor(this, R.color.white);
+        initToolbar(false, colorRes);
 
         //Initialize
         parentLayout = findViewById(R.id.main_layout_place);

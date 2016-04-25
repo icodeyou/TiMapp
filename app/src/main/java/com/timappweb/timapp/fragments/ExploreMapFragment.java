@@ -324,6 +324,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     public void updateMapData(){
+        //TODO Steph : This function doesn't update data when we click "clear filter" on Toolbar
         final LatLngBounds bounds = getMapBounds();
         Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 

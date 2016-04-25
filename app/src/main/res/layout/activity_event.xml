@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".PlaceActivity"
     android:background="@color/background_event">
 
@@ -11,7 +10,6 @@
         android:id="@+id/background_place"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar"
         android:scaleType="centerCrop"
         android:alpha="0.2"/>
 

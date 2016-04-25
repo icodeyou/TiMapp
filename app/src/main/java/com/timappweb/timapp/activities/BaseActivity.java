@@ -116,10 +116,10 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(showTitle);
     }
 
-    protected void initToolbar(boolean showTitle, Color arrowColor) {
+    protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
         final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
-        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }
 

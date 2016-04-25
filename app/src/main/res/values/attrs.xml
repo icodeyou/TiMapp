@@ -30,6 +30,7 @@
         <attr name="is_spot" format="boolean" />
         <attr name="color_spot" format="boolean" />
         <attr name="color_event" format="boolean" />
+        <attr name="is_description" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="SpotView">
