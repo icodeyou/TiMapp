@@ -10,14 +10,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
+import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
     private TagsAndCountersAdapter  tagsAndCountersAdapter;
-    private PlaceActivity placeActivity;
+    private EventActivity eventActivity;
 
     //Views
     private ListView                rvTags;
@@ -41,14 +43,16 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     private View                    smallPicButton;
     private View                    smallPeopleButton;
     private TextView                tvAddButton;
+    private EventView               eventView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        placeActivity = (PlaceActivity) getActivity();
+        eventActivity = (EventActivity) getActivity();
         View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
 
         //Initialize
+        eventView = (EventView) root.findViewById(R.id.event_view);
         mainButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallPicButton = root.findViewById(R.id.button_add_pic);
@@ -61,6 +65,9 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         initAdapter();
         setListeners();
         loadData();
+
+        Place event = eventActivity.getEvent();
+        setEvent(event);
 
 
         updateBtnVisibility();
@@ -76,6 +83,13 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         super.setMenuVisibility(visible);
     }
 
+    public void setEvent(Place event) {
+        if(event!=null && eventView!=null) {
+            eventView.setEvent(event);
+            eventView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initAdapter() {
         ArrayList<Tag> data = new ArrayList<Tag>();
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
@@ -83,14 +97,14 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     }
 
     private void setListeners() {
-        mainButton.setOnClickListener(placeActivity.getTagListener());
-        smallPicButton.setOnClickListener(placeActivity.getPictureListener());
-        smallPeopleButton.setOnClickListener(placeActivity.getPeopleListener());
+        mainButton.setOnClickListener(eventActivity.getTagListener());
+        smallPicButton.setOnClickListener(eventActivity.getPictureListener());
+        smallPeopleButton.setOnClickListener(eventActivity.getPeopleListener());
     }
 
     public void loadData() {
-        final PlaceActivity placeActivity = (PlaceActivity) getActivity();
-        Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(placeActivity.getPlaceId());
+        final EventActivity eventActivity = (EventActivity) getActivity();
+        Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(eventActivity.getPlaceId());
         RestCallback callback = new RestCallback<List<Tag>>(getContext(), this) {
             @Override
             public void onResponse(Response<List<Tag>> response) {
@@ -109,7 +123,6 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
 
         asynCalls.add(ApiCallFactory.build(call, callback, this));
     }
-
     private void notifyTagsLoaded(List<Tag> tags) {
         tagsAndCountersAdapter.clear();
         //add tags to adapter
@@ -138,7 +151,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     public void updateBtnVisibility() {
         Log.v(TAG, "::updateBtnVisibility()");
         // Check if the user can post in this place
-        boolean isUserAround = placeActivity.isUserAround();
+        boolean isUserAround = eventActivity.isUserAround();
         boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE);
         boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
         boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND);

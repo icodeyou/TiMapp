@@ -8,6 +8,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.timappweb.timapp.views.EventView
+            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+            android:id="@+id/event_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            myattrs:tags_visible="false"
+            myattrs:bottom_shadow="true"
+            myattrs:top_shadow="false"
+            myattrs:is_spot="false"
+            myattrs:color_spot="@color/background_spot_very_transparent"
+            myattrs:color_event="@color/background_event"
+            android:visibility="gone"/>
+
         <!-- Progress view -->
         <!-- **********************************************************************-->
         <LinearLayout
@@ -36,6 +49,16 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.45"/>
         </LinearLayout>
+
+        <!-- Description -->
+        <!-- **********************************************************************-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:textAlignment="inherit"
+            android:text="Equitis Romani autem esse filium criminis loco poni ab accusatoribus neque his iudicantibus oportuit neque defendentibus nobis. Nam quod de pietate dixistis, est quidem ista nostra existimatio, sed iudicium certe parentis."
+            android:textColor="@color/white"/>
 
         <!-- No tags yet -->
         <!-- **********************************************************************-->

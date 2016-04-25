@@ -18,6 +18,7 @@
 
     <style name="EditProfileTheme" parent="AppTheme">
         <item name="android:textColorSecondary">@color/White</item>
+        <!--<item name="android:homeAsUpIndicator">@drawable/back_arrow</item>-->
     </style>
 
     <style name="iconMapTagText">

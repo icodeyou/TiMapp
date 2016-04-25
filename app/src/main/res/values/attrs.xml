@@ -37,6 +37,7 @@
         <attr name="bottom_shadow" />
         <attr name="top_shadow" />
 
+        <attr name="toolbar_mode"  format="boolean"/>
         <attr name="edit_mode"  format="boolean"/>
         <attr name="background_color"  format="boolean"/>
         <attr name="gravity_center" format="boolean" />

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,10 +54,10 @@ import java.util.Vector;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class PlaceActivity extends BaseActivity {
-    private String TAG = "PlaceActivity";
+public class EventActivity extends BaseActivity {
+    private String TAG = "EventActivity";
     private MyPagerAdapter pagerAdapter;
-    private Place place;
+    private Place event;
     private int placeId;
     private Activity currentActivity;
 
@@ -67,7 +68,7 @@ public class PlaceActivity extends BaseActivity {
     private TextView    onMyWayTv;
     private View        progressView;
     private ListView    tagsListView;
-    private EventView eventView;
+    private EventView   eventView;
     private View        progressBottom;
     private View        parentLayout;
 
@@ -102,17 +103,18 @@ public class PlaceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         currentActivity = this;
 
-        this.place = IntentsUtils.extractPlace(getIntent());
+        this.event = IntentsUtils.extractPlace(getIntent());
         placeId = IntentsUtils.extractPlaceId(getIntent());
-        if (place == null && placeId <= 0){
-            Log.e(TAG, "Trying to view an invalid place --> redirect to home");
+        if (event == null && placeId <= 0){
+            Log.e(TAG, "Trying to view an invalid event --> redirect to home");
             IntentsUtils.home(this);
             return;
         }
 
 
         setContentView(R.layout.activity_event);
-        initToolbar(true);
+        Color color = new Color();
+        initToolbar(false, color);
 
         //Initialize
         parentLayout = findViewById(R.id.main_layout_place);
@@ -122,14 +124,13 @@ public class PlaceActivity extends BaseActivity {
         progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
-        eventView = (EventView) findViewById(R.id.event_view);
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
 
-        if (place != null){
-            placeId = place.id;
-            this.notifyPlaceLoaded();
+        if (event != null){
+            placeId = event.id;
+            this.notifyEventLoaded();
         }
         else{
             loadPlace(placeId);
@@ -229,7 +230,7 @@ public class PlaceActivity extends BaseActivity {
                 call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
-                        Log.d(TAG, "Success register coming for user on place " + placeId);
+                        Log.d(TAG, "Success register coming for user on event " + placeId);
                         PlaceStatusManager.add(placeId, UserPlaceStatus.COMING);
 
                         progressBottom.setVisibility(View.GONE);
@@ -238,8 +239,8 @@ public class PlaceActivity extends BaseActivity {
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
-                        Log.d(TAG, "Fail register coming for user on place " + placeId);
-                        Toast.makeText(PlaceActivity.this,
+                        Log.d(TAG, "Fail register coming for user on event " + placeId);
+                        Toast.makeText(EventActivity.this,
                                 getString(R.string.cannot_add_coming_status), Toast.LENGTH_SHORT).show();
                         iAmComingButton.setVisibility(View.VISIBLE);
                         progressBottom.setVisibility(View.GONE);
@@ -275,7 +276,7 @@ public class PlaceActivity extends BaseActivity {
                     }
                 });
 
-                IntentsUtils.addPostStepTags(currentActivity, place);
+                IntentsUtils.addPostStepTags(currentActivity, event);
             }
         };
 
@@ -290,7 +291,7 @@ public class PlaceActivity extends BaseActivity {
         peopleListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPeople(currentActivity, place);
+                IntentsUtils.addPeople(currentActivity, event);
             }
         };
     }
@@ -350,15 +351,15 @@ public class PlaceActivity extends BaseActivity {
 
 
     private void loadPlace(int placeId) {
-        final PlaceActivity that = this;
+        final EventActivity that = this;
         Call<Place> call = RestClient.service().viewPlace(placeId);
         call.enqueue(new RestCallback<Place>(this) {
             @Override
             public void onResponse(Response<Place> response) {
                 super.onResponse(response);
                 if (response.isSuccess()) {
-                    place = response.body();
-                    notifyPlaceLoaded();
+                    event = response.body();
+                    notifyEventLoaded();
                 } else {
                     Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
                     IntentsUtils.home(that);
@@ -375,18 +376,16 @@ public class PlaceActivity extends BaseActivity {
         apiCalls.add(call);
     }
 
-    private void notifyPlaceLoaded() {
+    private void notifyEventLoaded() {
         progressView.setVisibility(View.GONE);
-        eventView.setVisibility(View.VISIBLE);
         try {
-            EventCategory eventCategory = MyApplication.getCategoryById(place.category_id);
+            EventCategory eventCategory = MyApplication.getCategoryById(event.category_id);
             ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
             backgroundImage.setImageResource(eventCategory.getBigImageResId());
         } catch (UnknownCategoryException e) {
-            Log.e(TAG, "no category found for id : " + place.category_id);
+            Log.e(TAG, "no category found for id : " + event.category_id);
         }
-        eventView.setEvent(place);
-
+        fragmentTags.setEvent(event);
         updateBtnVisibility();
     }
 
@@ -395,7 +394,7 @@ public class PlaceActivity extends BaseActivity {
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if(place != null && MyApplication.hasLastLocation()) {
+        if(event != null && MyApplication.hasLastLocation()) {
 
             for (PlaceBaseFragment fragment: childFragments){
                 if (fragment.isVisible()){
@@ -403,12 +402,12 @@ public class PlaceActivity extends BaseActivity {
                 }
             }
 
-            //if we are in the place
+            //if we are in the event
             boolean isUserComing = PlaceStatus.hasStatus(placeId, UserPlaceStatus.COMING);
             boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
-            Boolean isAllowedToCome = !place.isAround() && isAllowedToAddComing;
+            Boolean isAllowedToCome = !event.isAround() && isAllowedToAddComing;
             iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
-            onMyWayButton.setVisibility(place != null && !place.isAround() && progressView.getVisibility() != View.VISIBLE
+            onMyWayButton.setVisibility(event != null && !event.isAround() && progressView.getVisibility() != View.VISIBLE
                     && isUserComing ? View.VISIBLE : View.GONE);
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
@@ -449,8 +448,8 @@ public class PlaceActivity extends BaseActivity {
         startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
-    public Place getPlace() {
-        return place;
+    public Place getEvent() {
+        return event;
     }
 
     public int getPlaceId() {
@@ -476,6 +475,6 @@ public class PlaceActivity extends BaseActivity {
     }
 
     public boolean isUserAround() {
-        return this.place != null && this.place.isAround();
+        return this.event != null && this.event.isAround();
     }
 }
