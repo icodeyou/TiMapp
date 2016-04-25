@@ -136,6 +136,15 @@ public class EventView extends RelativeLayout{
         //Adapter
         rvEventTags.getAdapter().setData(event.tags);
 
+        // Spot view
+        if (event.spot != null){
+            spotView.setSpot(event.spot);
+            this.setSpotVisible(true);
+        }
+        else{
+            this.setSpotVisible(false);
+        }
+
         //Counter
         int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime * 1000);

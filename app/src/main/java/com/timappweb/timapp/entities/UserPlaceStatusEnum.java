@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by stephane on 1/29/2016.
  */
-public enum UserPlaceStatus {
+public enum UserPlaceStatusEnum {
     @SerializedName("coming")
     COMING,
     @SerializedName("here")

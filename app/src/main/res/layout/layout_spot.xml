@@ -106,7 +106,7 @@
                 android:layout_height="30dp"
                 android:padding="3dp"
                 android:layout_gravity="center"
-                android:src="@drawable/trashcan_white"/>
+                android:src="@drawable/ic_chineseman"/>
         </LinearLayout>
     </RelativeLayout>
 

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.io.Serializable;
@@ -7,11 +8,21 @@ import java.util.List;
 
 public class Tag implements Serializable, SearchHistory.SearchableItem{
 
-    public Integer id;
-    public String name;
-    public int count_ref;
     public static final int MINLENGTH = 2;
     public static final int MAXLENGTH = 30;
+
+    // =============================================================================================
+
+    @Expose
+    public Integer id;
+
+    @Expose
+    public String name;
+
+    @Expose(serialize = true, deserialize = false)
+    public int count_ref;
+
+    // =============================================================================================
 
     public Tag(String name, int count_ref)  {
         this.name = name;

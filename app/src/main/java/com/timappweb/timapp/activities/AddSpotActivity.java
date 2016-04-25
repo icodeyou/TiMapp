@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
@@ -192,8 +194,14 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     }
 
     public void loadData(){
-        Map<String, String> conditions = null;
-        Call call = RestClient.service().spotReachable(conditions);
+        Location location = MyApplication.getLastLocation();
+        if (location == null){
+            // TODO wait for location
+            Log.e(TAG, "User does not have a location");
+            return;
+        }
+        Call call = RestClient.service().spotReachable(location.getLatitude(), location.getLongitude());
+
         ApiCallFactory.build(call, new RestCallback<PaginationResponse<Spot>>(this) {
 
             @Override

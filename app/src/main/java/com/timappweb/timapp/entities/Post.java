@@ -1,6 +1,7 @@
 package com.timappweb.timapp.entities;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.utils.Util;
 
@@ -12,15 +13,34 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
 
     private static final String TAG = "EntitySpot";
 
+    @Expose
     public int id;
+
+    @Expose
     public User user;
+
+    @Expose
     public double latitude;
+
+    @Expose
     public double longitude;
+
+    @Expose
     public int place_id;
+
+    @Expose
     public int created;
-    public String tag_string;
+
+    @Expose
     public String comment;
+
+    @Expose
     public boolean anonymous;
+
+    @Expose(deserialize = false, serialize = true)
+    public String tag_string;
+
+    @Expose
     private List<Tag> tags;
 
     public String country;

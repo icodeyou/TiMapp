@@ -3,6 +3,7 @@ package com.timappweb.timapp.entities;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -25,17 +26,44 @@ public class Place implements Serializable, MarkerValueInterface {
     public int id = -1;
 
     @SerializedName("spot")
-    private Spot            spot;
+    @Expose
+    public Spot             spot;
+
+    @Expose
     public int              spot_id;
+
+    @Expose
     public String           name;
+
+    @Expose
+    public String           description;
+
+    @Expose
     public int              created;
+
+    @Expose
     public double           latitude;
+
+
+    @Expose
     public double           longitude;
+
+    @Expose(serialize = false, deserialize = true)
     public int              count_posts;
+
+    @Expose
     public int              category_id;
+
+    @Expose(serialize = false, deserialize = true)
     public int              points;
+
+    @Expose(serialize = false, deserialize = false)
     public int              loaded_time = -1;
+
+    @Expose(serialize = false, deserialize = true)
     public List<Tag>        tags;
+
+    @Expose(serialize = false, deserialize = true)
     public ArrayList<Post>  posts;
 
     public Place(){

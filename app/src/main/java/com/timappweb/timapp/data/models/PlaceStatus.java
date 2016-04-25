@@ -3,7 +3,8 @@ package com.timappweb.timapp.data.models;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.entities.UserPlaceStatus;
+import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.utils.Util;
 
 /**
@@ -12,26 +13,29 @@ import com.timappweb.timapp.utils.Util;
 @Table(name = "PlaceStatus")
 public class PlaceStatus extends SyncBaseModel {
 
+    @Expose
     @Column(name = "PlaceId", index = true)
     public int place_id;
 
+    @Expose
     @Column(name = "Created")
     public int created;
 
+    @Expose
     @Column(name = "Status")
-    public UserPlaceStatus status;
+    public UserPlaceStatusEnum status;
 
     public PlaceStatus() {
         super();
     }
 
-    public PlaceStatus(int place_id, UserPlaceStatus status) {
+    public PlaceStatus(int place_id, UserPlaceStatusEnum status) {
         this.place_id = place_id;
         this.status = status;
         this.created = Util.getCurrentTimeSec();
     }
 
-    public static boolean hasStatus(int place_id, UserPlaceStatus status) {
+    public static boolean hasStatus(int place_id, UserPlaceStatusEnum status) {
         PlaceStatus placeStatus = new Select()
                 .from(PlaceStatus.class)
                 .where("Status = ?", status)
@@ -41,7 +45,7 @@ public class PlaceStatus extends SyncBaseModel {
         return placeStatus != null;
     }
 
-    public static PlaceStatus addStatus(int place_id, UserPlaceStatus status){
+    public static PlaceStatus addStatus(int place_id, UserPlaceStatusEnum status){
         PlaceStatus placeStatus = new PlaceStatus(place_id, status);
         placeStatus.save();
         return placeStatus;

@@ -73,6 +73,7 @@ public class RestClient {
         this.httpClient = httpClientBuilder.build();
 
         this.gson =  new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
                 .create();
 

@@ -59,6 +59,7 @@ public class RestCallback<T> implements Callback<T> {
     @Override
     public void onFailure(Throwable t) {
         Log.e(TAG, "::onFailure() -> " + t.getMessage());
+        t.printStackTrace();
         this.onFinish();
     }
 

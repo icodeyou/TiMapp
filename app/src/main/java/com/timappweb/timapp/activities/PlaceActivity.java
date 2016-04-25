@@ -35,7 +35,7 @@ import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.UserPlaceStatus;
+import com.timappweb.timapp.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.PlaceBaseFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
@@ -230,7 +230,7 @@ public class PlaceActivity extends BaseActivity {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Log.d(TAG, "Success register coming for user on place " + placeId);
-                        PlaceStatusManager.add(placeId, UserPlaceStatus.COMING);
+                        PlaceStatusManager.add(placeId, UserPlaceStatusEnum.COMING);
 
                         progressBottom.setVisibility(View.GONE);
                         updateBtnVisibility();
@@ -404,7 +404,7 @@ public class PlaceActivity extends BaseActivity {
             }
 
             //if we are in the place
-            boolean isUserComing = PlaceStatus.hasStatus(placeId, UserPlaceStatus.COMING);
+            boolean isUserComing = PlaceStatus.hasStatus(placeId, UserPlaceStatusEnum.COMING);
             boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
             Boolean isAllowedToCome = !place.isAround() && isAllowedToAddComing;
             iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);

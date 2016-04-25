@@ -1,5 +1,7 @@
 package com.timappweb.timapp.rest.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,9 +10,16 @@ import java.util.List;
  */
 public class PaginationResponse<T> {
 
+    @Expose
     public int total;
+
+    @Expose
     public int perPage;
+
+    @Expose
     public List<T> items;
+
+    @Expose
     public HashMap<String,String> extra;
 
 }

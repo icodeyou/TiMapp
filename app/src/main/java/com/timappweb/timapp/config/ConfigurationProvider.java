@@ -6,14 +6,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.services.ConfigInterface;
 import com.timappweb.timapp.configsync.RESTRemoteSync;
 import com.timappweb.timapp.configsync.RemotePersistenceManager;
 import com.timappweb.timapp.configsync.SharedPrefSync;
 import com.timappweb.timapp.configsync.SyncConfigManager;
+import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.services.ConfigInterface;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,16 +57,16 @@ public class ConfigurationProvider {
     }
 
     public Rules rules(){
-        try {
-            Log.d(TAG, this.rulesManager.getDataWrapper().data.toString());
+        //try {
+           // Log.d(TAG, this.rulesManager.getDataWrapper().data.toString());
             return this.rulesManager.getData();
-        }
-        catch (Exception ex){
-            Log.d(TAG, this.rulesManager.getDataWrapper().toString());
-            this.rulesManager.clear();
-            ex.printStackTrace();
-            throw new InvalidConfigurationException();
-        }
+       // }
+        //catch (Exception ex){
+    //    Log.d(TAG, this.rulesManager.getDataWrapper().toString());
+    //       this.rulesManager.clear();
+    //      ex.printStackTrace();
+    //      throw new InvalidConfigurationException();
+      //  }
     }
 
     public ConfigurationProvider(Context context, Listener listener) {
