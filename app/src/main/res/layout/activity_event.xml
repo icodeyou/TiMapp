@@ -38,7 +38,7 @@
         <!-- ************************************* -->
         <!--<com.timappweb.timapp.views.SpotView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"> />-->
+            android:layout_height="wrap_content"/>-->
         <com.timappweb.timapp.views.EventView
             xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
             android:id="@+id/event_view"
