@@ -54,7 +54,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             String prettyTimeInvitation = placeInvitation.getTimeCreated();
             String topText = username + " invited you " + prettyTimeInvitation;
             holder.invitorName.setText(topText);
-            holder.eventView.setPlace(placeInvitation.place);
+            holder.eventView.setEvent(placeInvitation.place);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -111,7 +111,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.setOnClickListener(this);
             eventView = (EventView) itemView.findViewById(R.id.event_view);
             invitorName = (TextView) itemView.findViewById(R.id.name_invitor);
-            horizontalTagsRv = eventView.getRvPlaceTags();
+            horizontalTagsRv = eventView.getRvEventTags();
         }
 
         @Override

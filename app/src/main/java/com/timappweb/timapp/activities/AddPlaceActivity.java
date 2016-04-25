@@ -28,6 +28,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.listeners.OnSpotClickListener;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -64,7 +65,7 @@ public class AddPlaceActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_place);
+        setContentView(R.layout.activity_add_event);
         context = this;
 
         this.initToolbar(true);
@@ -83,6 +84,7 @@ public class AddPlaceActivity extends BaseActivity {
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         pinView = findViewById(R.id.no_spot_view);
+        //pinnedSpot = findViewById(R.id.pinned_spot);
         spotView = (SpotView) findViewById(R.id.spot_view);
 
         initKeyboard();
@@ -97,8 +99,6 @@ public class AddPlaceActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
     }
-
-
 
     private void extractBundle(Bundle bundle){
         if (bundle != null){
@@ -265,7 +265,8 @@ public class AddPlaceActivity extends BaseActivity {
 
         groupNameET.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -284,12 +285,26 @@ public class AddPlaceActivity extends BaseActivity {
                     setProgressView(true);
                     final Place place = new Place(MyApplication.getLastLocation(), groupNameET.getText().toString(), eventCategorySelected, context.spot);
                     submitPlace(place);
-                } else if (MyApplication.hasLastLocation()){
+                } else if (MyApplication.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Click on add place before having a user location");
                     Toast.makeText(getBaseContext(), "Please wait we are getting your location...", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        spotView.setOnSpotClickListener(new OnSpotClickListener() {
+            @Override
+            public void onEditClick() {
+                IntentsUtils.pinSpot(context);
+            }
+
+            @Override
+            public void onRemoveClick() {
+                spot = null;
+                spotView.setVisibility(View.GONE);
+                pinView.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -26,29 +26,15 @@
             layout="@layout/layout_pin_spot"
             android:visibility = "visible" />
 
-        <RelativeLayout
+        <com.timappweb.timapp.views.SpotView
+            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spot_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-            <com.timappweb.timapp.views.SpotView
-                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/spot_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/icon"
-                android:layout_toStartOf="@+id/icon"
-                myattrs:background="@color/background_spot_transparent"/>
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/icon_default"
-                android:layout_height="@dimen/icon_default"
-                android:layout_margin="5dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:src="@drawable/delete"/>
-        </RelativeLayout>
+            myattrs:edit_mode="true"
+            myattrs:bottom_shadow="true"
+            myattrs:background_color="@color/background_spot_transparent"
+            android:visibility="gone"/>
 
 
         <!--<RelativeLayout

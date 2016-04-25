@@ -177,7 +177,7 @@ public class TagActivity extends BaseActivity{
     }
 
     private void initPlaceView() {
-        eventView.setPlace(currentPlace);
+        eventView.setEvent(currentPlace);
     }
 
     public void actionCounter() {

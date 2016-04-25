@@ -15,16 +15,18 @@
     <RelativeLayout
         android:id="@+id/parent_layout_spot"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="#2b3778" >
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/edit_view"
+            android:layout_toStartOf="@+id/edit_view"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:background="#2b3778"
             android:orientation="horizontal">
 
             <ImageView
@@ -43,7 +45,7 @@
                 android:src="@drawable/ic_category_highlight_nightclub"
                 android:visibility="gone"/>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical">
@@ -57,12 +59,11 @@
                     android:maxLines="1"
                     android:gravity="center"
                     android:textStyle="bold"
-                    android:text="The place where everything began"
+                    android:text="Terrain de Foot "
                     android:textSize="@dimen/title_event_card"
                     android:textColor="@color/colorSecondary" />
 
                 <LinearLayout
-                    android:id="@+id/horizontal_tags_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -79,6 +80,33 @@
                         myattrs:horizontal_tags_text_size="@dimen/text_tags" />
                 </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/edit_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/horizontal_linear_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
+            <ImageView
+                android:id="@+id/ic_edit"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_edit"/>
+            <ImageView
+                android:id="@+id/ic_remove"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="3dp"
+                android:layout_gravity="center"
+                android:src="@drawable/trashcan_white"/>
         </LinearLayout>
     </RelativeLayout>
 

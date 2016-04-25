@@ -9,7 +9,9 @@
         xmlns:myattrs="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        myattrs:is_padding="true"
+        myattrs:is_padding="false"
+        myattrs:bottom_shadow="true"
+        myattrs:top_shadow="false"
         myattrs:tags_visible="true"/>
 
 </LinearLayout>

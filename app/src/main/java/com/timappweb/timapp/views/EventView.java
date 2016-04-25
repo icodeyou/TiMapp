@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,22 +23,31 @@ import me.grantland.widget.AutofitTextView;
 public class EventView extends RelativeLayout{
     private final static String TAG = "EventView";
 
+    private Place event;
+
+    private View                        tagsView;
     private AutofitTextView             tvName;
     private TextView                    tvTime;
-    private HorizontalTagsRecyclerView  rvPlaceTags;
+    private HorizontalTagsRecyclerView  rvEventTags;
     private ImageView                   categoryIcon;
     private ImageView                   backgroundImage;
     private SimpleTimerView             tvCountPoints;
-    private View                        gradientBottomView;
+    private View                        gradientBottomViewIfPadding;
     private View                        gradientTopView;
     private RelativeLayout              mainBox;
+    private SpotView                    spotView;
+    private View                        gradientBottomView;
+    private LinearLayout                mainLayoutEvent;
+    private View                        separator;
 
-    private int                         colorRes = -1;
-    private boolean                     isTagsVisible = false;
-    private boolean                     isBottomShadow = false;
-    private boolean                     isTopShadow = false;
+    private int                         colorSpot;
+    private int                         colorEvent;
+    private boolean                     isTagsVisible;
+    private boolean                     isBottomShadow;
+    private boolean                     isTopShadow;
     private boolean                     isPadding;
-    private Place                       place;
+    private boolean                     isSpot;
+
 
     public EventView(Context context) {
         super(context);
@@ -52,8 +62,10 @@ public class EventView extends RelativeLayout{
         isTagsVisible = ta.getBoolean(R.styleable.EventView_tags_visible, false);
         isBottomShadow = ta.getBoolean(R.styleable.EventView_bottom_shadow, false);
         isTopShadow = ta.getBoolean(R.styleable.EventView_top_shadow, false);
-        colorRes = ta.getColor(R.styleable.EventView_background_color, -1);
+        colorSpot = ta.getColor(R.styleable.EventView_color_spot, -1);
+        colorEvent = ta.getColor(R.styleable.EventView_color_event, -1);
         isPadding = ta.getBoolean(R.styleable.EventView_is_padding, false);
+        isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
         ta.recycle();
 
         this.init();
@@ -63,61 +75,80 @@ public class EventView extends RelativeLayout{
         inflate(getContext(), R.layout.layout_event, this);
 
         mainBox = (RelativeLayout) findViewById(R.id.main_box_relative);
+        mainLayoutEvent = (LinearLayout) findViewById(R.id.main_layout_event);
+        spotView = (SpotView) findViewById(R.id.spot_view);
         tvName = (AutofitTextView) findViewById(R.id.title_event);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.places_points);
         tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
-        gradientBottomView = findViewById(R.id.bottom_gradient);
-        gradientTopView = findViewById(R.id.top_gradient);
-        rvPlaceTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
+        gradientBottomView = findViewById(R.id.bottom_gradient_event);
+        gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
+        gradientTopView = findViewById(R.id.topview);
+        rvEventTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
+        tagsView = findViewById(R.id.horizontal_tags_view);
+        separator = findViewById(R.id.separator);
 
+        setSpotVisible(isSpot);
+        setTagsVisible(isTagsVisible);
         setBottomShadow(isBottomShadow);
         setTopShadow(isTopShadow);
-        setTagsVisible(isTagsVisible);
         initPadding(isPadding);
     }
 
-    public HorizontalTagsRecyclerView getRvPlaceTags() {
-        return rvPlaceTags;
+    public HorizontalTagsRecyclerView getRvEventTags() {
+        return rvEventTags;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setEvent(Place event) {
+        this.event = event;
 
         //Date
-        tvTime.setText(place.getTime());
+        tvTime.setText(event.getTime());
 
         //Title
-        tvName.setText(place.name);
+        tvName.setText(event.name);
 
         //EventCategory
         EventCategory eventCategory = null;
-        if(colorRes != -1) {
+        if(colorEvent != -1) {
             Log.d(TAG,"Setting custom color");
-            backgroundImage.setBackgroundResource(colorRes);
+            backgroundImage.setImageResource(0);
+            mainLayoutEvent.setBackgroundColor(colorEvent);
+            if (colorSpot != -1) {
+                spotView.setColor(colorSpot);
+            }
         } else {
             try {
                 Log.d(TAG,"Setting event Background");
                 //EventCategory Icon
-                eventCategory = MyApplication.getCategoryById(place.category_id);
+                eventCategory = MyApplication.getCategoryById(event.category_id);
                 categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
-                MyApplication.setCategoryBackground(categoryIcon, place.getLevel());
+                MyApplication.setCategoryBackground(categoryIcon, event.getLevel());
 
                 //Place background
                 backgroundImage.setImageResource(eventCategory.getBigImageResId());
             } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no eventCategory found for id : " + place.category_id);
+                Log.e(TAG, "no eventCategory found for id : " + event.category_id);
             }
         }
 
         //Adapter
-        HorizontalTagsAdapter htAdapter = rvPlaceTags.getAdapter();
-        htAdapter.setData(place.tags);
+        rvEventTags.getAdapter().setData(event.tags);
 
         //Counter
-        int initialTime = place.getPoints();
+        int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime * 1000);
+    }
+
+
+    public void setSpotVisible(boolean isSpot) {
+        if(isSpot) {
+            spotView.setVisibility(VISIBLE);
+        } else {
+            spotView.setVisibility(GONE);
+            separator.setVisibility(GONE);
+        }
     }
 
     public void setBottomShadow(boolean isVisible) {
@@ -137,21 +168,22 @@ public class EventView extends RelativeLayout{
     }
 
     public void setTagsVisible(boolean tagsVisibility) {
-        if(tagsVisibility) {
-            rvPlaceTags.setVisibility(VISIBLE);
+        if(tagsVisibility && rvEventTags.getAdapter().getData().size()!=0) {
+            tagsView.setVisibility(VISIBLE);
         } else {
-            rvPlaceTags.setVisibility(GONE);
+            tagsView.setVisibility(GONE);
         }
     }
 
     public void initPadding(boolean isPadding) {
-        if(!isPadding) {
-            Log.d(TAG,"Removing padding");
-            mainBox.setPadding(0,0,0,0);
+        if (!isPadding) {
+            Log.d(TAG, "Removing padding");
+            mainBox.setPadding(0, 0, 0, 0);
+            gradientBottomViewIfPadding.setVisibility(GONE);
         }
     }
 
-    public Place getPlace() {
-        return place;
+    public Place getEvent() {
+        return event;
     }
 }

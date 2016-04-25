@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <View
-        android:id="@+id/top_gradient"
+        android:id="@+id/topview"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_gradient_view"
         android:background="@drawable/top_layout_place"/>
@@ -13,54 +14,77 @@
     <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
     <ImageView
         android:id="@+id/background_image_event"
+        android:layout_below="@+id/topview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/top_gradient"
         android:layout_alignBottom="@+id/main_box_relative"
         android:scaleType="centerCrop"
         android:src="@drawable/image_party"/>
 
     <RelativeLayout
         android:id="@+id/main_box_relative"
+        android:layout_below="@id/topview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="20dp">
         <LinearLayout
             android:id="@+id/main_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ___________________________ SPOT _______________________________________________-->
-            <com.timappweb.timapp.views.SpotView
-                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                myattrs:tags_visible="false"
-                myattrs:bottom_shadow="false"
-                myattrs:gravity_center="true"
-                myattrs:background_color="@color/background_spot_transparent"/>
+                android:layout_height="wrap_content">
+                <!-- ___________________________ SPOT _______________________________________________-->
+                <com.timappweb.timapp.views.SpotView
+                    android:id="@+id/spot_view"
+                    xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    myattrs:tags_visible="false"
+                    myattrs:bottom_shadow="false"
+                    myattrs:gravity_center="true"
+                    myattrs:background_color="@color/background_spot_transparent"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_bottom_gradient_view"
-                android:background="@drawable/separator_event" />
+                <View
+                    android:id="@+id/separator"
+                    android:layout_alignBottom="@+id/spot_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_top_gradient_view"
+                    android:background="@drawable/separator_event" />
+            </RelativeLayout>
+
 
             <!-- ___________________________ EVENT _______________________________________________-->
             <LinearLayout
+                android:id="@+id/main_layout_event"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/background_place"
-                android:padding="10dp">
+                android:background="@color/background_event"
+                android:padding="15dp">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image_category_place"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_gravity="center"
+                        android:alpha="0.8"
+                        android:src="@drawable/ic_category_highlight_party"
+                        android:background="@drawable/b3"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/image_category_place"
-                        android:layout_toStartOf="@+id/image_category_place"
+                        android:layout_toRightOf="@+id/image_category_place"
+                        android:layout_toEndOf="@+id/image_category_place"
                         android:orientation="vertical"
                         android:gravity="center_vertical">
 
@@ -74,8 +98,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_marginBottom="5dp"
+                                android:layout_marginRight="@dimen/little_icon_spot"
+                                android:layout_marginEnd="@dimen/little_icon_spot"
                                 android:maxLines="2"
-                                android:gravity="center_vertical|left"
+                                android:gravity="center"
                                 android:textStyle="bold"
                                 android:text="Club Okicool"
                                 android:textSize="@dimen/title_event_card"
@@ -132,26 +158,29 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                    <ImageView
-                        android:id="@+id/image_category_place"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_gravity="center"
-                        android:alpha="0.8"
-                        android:src="@drawable/ic_category_highlight_party"
-                        android:background="@drawable/b3"/>
                 </RelativeLayout>
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:id="@+id/horizontal_tags_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center">
 
+                    <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+                        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+                        android:id="@+id/rv_horizontal_tags2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        myattrs:horizontal_tags_text_color="@color/white"
+                        myattrs:horizontal_tags_background_color="@color/LightGreen"
+                        myattrs:horizontal_tags_is_bold="true"
+                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
+
+                </LinearLayout>-->
+                <LinearLayout
+                    android:id="@+id/horizontal_tags_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                     <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                         xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
                         android:id="@+id/rv_horizontal_tags"
@@ -161,16 +190,22 @@
                         myattrs:horizontal_tags_background_color="@color/transparent"
                         myattrs:horizontal_tags_is_bold="true"
                         myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
-
                 </LinearLayout>
             </LinearLayout>
 
             <View
-                android:id="@+id/bottom_gradient"
+                android:id="@+id/bottom_gradient_if_padding"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_bottom_gradient_view"
                 android:background="@drawable/bottom_layout_place" />
         </LinearLayout>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/bottom_gradient_event"
+        android:layout_below="@+id/background_image_event"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_bottom_gradient_view"
+        android:background="@drawable/bottom_layout_place" />
 
 </RelativeLayout>

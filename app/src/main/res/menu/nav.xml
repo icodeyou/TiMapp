@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Activity">
+    <item android:title="@string/menu_title_community">
         <menu>
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_dialog_map"
                 android:title="@string/nav_explore" />
@@ -22,7 +22,7 @@
         </menu>
     </item>
 
-    <item android:title="Account">
+    <item android:title="@string/menu_title_account">
         <menu>
             <item android:id="@+id/menu_item_profile" android:icon="@drawable/ic_profile"
                 android:title="@string/nav_profile" />

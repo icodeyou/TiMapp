@@ -44,7 +44,7 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Place place = data.get(position);
 
-            holder.eventView.setPlace(place);
+            holder.eventView.setEvent(place);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -152,7 +152,7 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             itemView.setOnClickListener(this);
             eventView = (EventView) itemView.findViewById(R.id.event_view);
-            horizontalTagsRv = eventView.getRvPlaceTags();
+            horizontalTagsRv = eventView.getRvEventTags();
         }
 
         @Override

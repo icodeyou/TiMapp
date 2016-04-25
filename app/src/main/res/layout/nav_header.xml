@@ -10,7 +10,8 @@
         android:layout_height="33dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_nav_clock"/>
+        android:src="@drawable/ic_nav_clock"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"

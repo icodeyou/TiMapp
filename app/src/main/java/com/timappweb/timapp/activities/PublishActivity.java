@@ -113,7 +113,7 @@ public class PublishActivity extends BaseActivity{
     }
 
     private void initPlaceView() {
-        eventView.setPlace(currentPlace);
+        eventView.setEvent(currentPlace);
     }
 
     private void initAdapters() {

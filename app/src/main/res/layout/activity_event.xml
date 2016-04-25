@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlaceActivity"
-    android:background="@color/background_place">
+    android:background="@color/background_event">
 
     <ImageView
         android:id="@+id/background_place"
@@ -36,6 +36,9 @@
 
         <!-- PLACE -->
         <!-- ************************************* -->
+        <!--<com.timappweb.timapp.views.SpotView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"> />-->
         <com.timappweb.timapp.views.EventView
             xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
             android:id="@+id/event_view"
@@ -44,8 +47,9 @@
             myattrs:tags_visible="false"
             myattrs:bottom_shadow="false"
             myattrs:top_shadow="false"
-            myattrs:background_color="@color/transparent"
-            android:visibility="gone"/>
+            myattrs:color_spot="@color/background_spot_very_transparent"
+            myattrs:color_event="@color/background_event"
+            android:visibility="visible"/>
 
         <!--<View
             android:layout_width="match_parent"

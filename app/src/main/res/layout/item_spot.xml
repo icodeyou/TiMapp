@@ -7,4 +7,5 @@
     myattrs:bottom_shadow="true"
     myattrs:top_shadow="true"
     myattrs:tags_visible="false"
-    myattrs:gravity_center="false" />
+    myattrs:gravity_center="false"
+    myattrs:background_color="@color/background_spot"/>

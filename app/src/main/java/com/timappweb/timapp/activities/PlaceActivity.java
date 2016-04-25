@@ -111,7 +111,7 @@ public class PlaceActivity extends BaseActivity {
         }
 
 
-        setContentView(R.layout.activity_place);
+        setContentView(R.layout.activity_event);
         initToolbar(true);
 
         //Initialize
@@ -385,7 +385,7 @@ public class PlaceActivity extends BaseActivity {
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + place.category_id);
         }
-        eventView.setPlace(place);
+        eventView.setEvent(place);
 
         updateBtnVisibility();
     }

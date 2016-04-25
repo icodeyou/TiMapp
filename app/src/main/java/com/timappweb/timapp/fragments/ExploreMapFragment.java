@@ -174,7 +174,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void displayPlace(Place place) {
-        eventView.setPlace(place);
+        eventView.setEvent(place);
         eventView.setVisibility(View.VISIBLE);
     }
 
@@ -202,7 +202,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Place place = eventView.getPlace();
+                Place place = eventView.getEvent();
                 IntentsUtils.viewSpecifiedPlace(getActivity(), place);
             }
         });
@@ -352,7 +352,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Place place = (Place) markerValue;
-        if(isPlaceViewVisible() && eventView.getPlace()==place) {
+        if(isPlaceViewVisible() && eventView.getEvent()==place) {
             IntentsUtils.viewSpecifiedPlace(getActivity(), place);
         } else {
             displayPlace(place);

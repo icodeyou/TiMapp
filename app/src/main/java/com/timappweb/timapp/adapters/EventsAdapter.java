@@ -43,7 +43,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
         final Place place = data.get(position);
 
-        viewHolder.eventView.setPlace(place);
+        viewHolder.eventView.setEvent(place);
 
         //OnTagsRvClick : Same event as adapter click.
         HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -93,7 +93,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             super(itemView);
             itemView.setOnClickListener(this);
             eventView = (EventView) itemView.findViewById(R.id.event_view);
-            horizontalTagsRv = eventView.getRvPlaceTags();
+            horizontalTagsRv = eventView.getRvEventTags();
         }
 
         @Override

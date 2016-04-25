@@ -59,14 +59,14 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
 
         if(position<3) {
             int tagNumber = position + 1;
-            tvTag.setTextSize(Util.convertDpToPixel(dimens[tagNumber], getContext()));
+            tvTag.setTextSize(Util.convertPixelsToDp(dimens[tagNumber], getContext()));
             tvTag.setTypeface(Typeface.DEFAULT_BOLD);
             tvCounter.setTextSize(Util.convertPixelsToDp(dimens[tagNumber], getContext()));
             tvCounter.setTypeface(Typeface.DEFAULT_BOLD);
             rowView.setBackgroundResource(R.color.background_list_main_tags);
         }
         else  {
-            tvTag.setTextSize(Util.convertDpToPixel(dimens[0], getContext()));
+            tvTag.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
             tvTag.setTypeface(Typeface.DEFAULT);
             tvCounter.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
             tvCounter.setTypeface(Typeface.DEFAULT);

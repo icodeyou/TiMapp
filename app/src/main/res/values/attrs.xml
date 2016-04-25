@@ -4,7 +4,6 @@
     <attr name="tags_visible" format="boolean" />
     <attr name="bottom_shadow" format="boolean" />
     <attr name="top_shadow" format="boolean" />
-    <attr name="background_color" format="color" />
 
     <declare-styleable name="HorizontalTagsRecyclerView">
         <attr name="horizontal_tags_background_color" format="color" />
@@ -26,17 +25,20 @@
         <attr name="tags_visible" />
         <attr name="bottom_shadow" />
         <attr name="top_shadow" />
-        <attr name="background_color" />
 
         <attr name="is_padding" format="boolean" />
+        <attr name="is_spot" format="boolean" />
+        <attr name="color_spot" format="boolean" />
+        <attr name="color_event" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="SpotView">
         <attr name="tags_visible" />
         <attr name="bottom_shadow" />
         <attr name="top_shadow" />
-        <attr name="background_color" />
 
+        <attr name="edit_mode"  format="boolean"/>
+        <attr name="background_color"  format="boolean"/>
         <attr name="gravity_center" format="boolean" />
     </declare-styleable>
 </resources>
