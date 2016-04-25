@@ -12,13 +12,13 @@ import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.ErrorActivity;
+import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.InvitationsActivity;
 import com.timappweb.timapp.activities.InviteFriendsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.activities.PlaceActivity;
 import com.timappweb.timapp.activities.PlaceViewPagerActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
@@ -166,12 +166,12 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
     public static Intent buildIntentViewPlace(Context context, int placeId) {
-        Intent intent = new Intent(context, PlaceActivity.class);
+        Intent intent = new Intent(context, EventActivity.class);
         intent.putExtra("place_id", placeId);
         return  intent;
     }
     public static Intent buildIntentViewPlace(Context context, Place place) {
-        Intent intent = new Intent(context, PlaceActivity.class);
+        Intent intent = new Intent(context, EventActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
         intent.putExtras(extras);

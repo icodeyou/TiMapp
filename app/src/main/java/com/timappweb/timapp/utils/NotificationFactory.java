@@ -10,7 +10,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 
 /**
@@ -34,7 +34,7 @@ public class NotificationFactory {
 // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(PlaceActivity.class);
+        stackBuilder.addParentStack(EventActivity.class);
 // Adds the Intent that starts the UserActivity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =

@@ -63,31 +63,20 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
             tvTag.setTypeface(Typeface.DEFAULT_BOLD);
             tvCounter.setTextSize(Util.convertPixelsToDp(dimens[tagNumber], getContext()));
             tvCounter.setTypeface(Typeface.DEFAULT_BOLD);
-            rowView.setBackgroundResource(R.color.background_list_main_tags);
+            //rowView.setBackgroundResource(R.color.background_list_main_tags);
         }
         else  {
             tvTag.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
             tvTag.setTypeface(Typeface.DEFAULT);
             tvCounter.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
             tvCounter.setTypeface(Typeface.DEFAULT);
-            if(position%2 == 0) {
+            /*if(position%2 == 0) {
                 rowView.setBackgroundResource(R.color.background_list_main_tags);
             } else {
                 rowView.setBackgroundResource(R.color.background_list_tags);
-            }
+            }*/
         }
 
-        /*if(position<3) {
-            float oldSize = tvTag.getTextSize();
-            float newSize;
-            switch (position) {
-                case 0:
-                    newSize = oldSize+1;
-            }
-            tvTag.getTextSize()
-        }*/
-
-        // return rowView
         return rowView;
     }
 

@@ -10,17 +10,33 @@
         android:id="@+id/background_place"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar"
         android:scaleType="centerCrop"
         android:alpha="0.2"/>
 
+
+    <!-- TOOLBAR -->
+    <RelativeLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.timappweb.timapp.views.SpotView
+            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spot_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            myattrs:bottom_shadow="false"
+            myattrs:toolbar_mode="true"
+            myattrs:background_color="@color/background_activity_event" />
+        <include android:id="@+id/toolbar_transparent"
+            layout="@layout/toolbar_transparent" />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/main_layout_place"
+        android:layout_below="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <!-- TOOLBAR -->
-        <include layout="@layout/toolbar"/>
 
         <!-- Progress view -->
         <!-- **********************************************************************-->
@@ -33,28 +49,6 @@
                 android:layout_height="50dp"
                 android:layout_width="50dp"/>
         </LinearLayout>
-
-        <!-- PLACE -->
-        <!-- ************************************* -->
-        <!--<com.timappweb.timapp.views.SpotView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"> />-->
-        <com.timappweb.timapp.views.EventView
-            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-            android:id="@+id/event_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            myattrs:tags_visible="false"
-            myattrs:bottom_shadow="false"
-            myattrs:top_shadow="false"
-            myattrs:color_spot="@color/background_spot_very_transparent"
-            myattrs:color_event="@color/background_event"
-            android:visibility="visible"/>
-
-        <!--<View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimary"/>-->
 
         <!-- Fragments -->
         <!-- ************************************* -->
@@ -139,5 +133,13 @@
                 android:layout_height="40dp"/>
         </LinearLayout>
     </LinearLayout>
+
+    <!-- Separator-->
+    <!-- ************************************* -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/toolbar_layout"
+        android:background="@drawable/separator_toolbar_event_activity" />
 
 </RelativeLayout>

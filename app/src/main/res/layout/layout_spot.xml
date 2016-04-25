@@ -21,13 +21,19 @@
             android:id="@+id/horizontal_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/edit_view"
-            android:layout_toStartOf="@+id/edit_view"
+            android:layout_toLeftOf="@+id/action_view"
+            android:layout_toStartOf="@+id/action_view"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:orientation="horizontal">
+            
+            <Space
+                android:id="@+id/margin_left_toolbar_mode"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/big_image_category_spot"
@@ -45,7 +51,8 @@
                 android:src="@drawable/ic_category_highlight_nightclub"
                 android:visibility="gone"/>
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/parent_textviews"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical">
@@ -57,9 +64,9 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:maxLines="1"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:textStyle="bold"
-                    android:text="Terrain de Foot "
+                    android:text="Vertigo"
                     android:textSize="@dimen/title_event_card"
                     android:textColor="@color/colorSecondary" />
 
@@ -82,7 +89,7 @@
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
-            android:id="@+id/edit_view"
+            android:id="@+id/action_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/horizontal_linear_layout"
@@ -92,6 +99,11 @@
             android:paddingEnd="10dp"
             android:orientation="horizontal"
             android:visibility="visible">
+            <Space
+                android:id="@+id/margin_right_toolbar_mode"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
             <ImageView
                 android:id="@+id/ic_edit"
                 android:layout_width="30dp"
@@ -99,14 +111,16 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_edit"/>
+                android:src="@drawable/ic_edit"
+                android:visibility="gone"/>
             <ImageView
                 android:id="@+id/ic_remove"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:padding="3dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_chineseman"/>
+                android:src="@drawable/trashcan_white"
+                android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
 

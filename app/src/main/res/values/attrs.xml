@@ -30,6 +30,7 @@
         <attr name="is_spot" format="boolean" />
         <attr name="color_spot" format="boolean" />
         <attr name="color_event" format="boolean" />
+        <attr name="is_description" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="SpotView">
@@ -37,6 +38,7 @@
         <attr name="bottom_shadow" />
         <attr name="top_shadow" />
 
+        <attr name="toolbar_mode"  format="boolean"/>
         <attr name="edit_mode"  format="boolean"/>
         <attr name="background_color"  format="boolean"/>
         <attr name="gravity_center" format="boolean" />

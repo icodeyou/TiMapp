@@ -39,6 +39,7 @@ public class EventView extends RelativeLayout{
     private View                        gradientBottomView;
     private LinearLayout                mainLayoutEvent;
     private View                        separator;
+    private View                        descriptionTv;
 
     private int                         colorSpot;
     private int                         colorEvent;
@@ -47,6 +48,7 @@ public class EventView extends RelativeLayout{
     private boolean                     isTopShadow;
     private boolean                     isPadding;
     private boolean                     isSpot;
+    private boolean                     isDescription;
 
 
     public EventView(Context context) {
@@ -66,6 +68,7 @@ public class EventView extends RelativeLayout{
         colorEvent = ta.getColor(R.styleable.EventView_color_event, -1);
         isPadding = ta.getBoolean(R.styleable.EventView_is_padding, false);
         isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
+        isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
         ta.recycle();
 
         this.init();
@@ -88,7 +91,9 @@ public class EventView extends RelativeLayout{
         rvEventTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
         tagsView = findViewById(R.id.horizontal_tags_view);
         separator = findViewById(R.id.separator);
+        descriptionTv = findViewById(R.id.description_event);
 
+        setDescriptionTv(isDescription);
         setSpotVisible(isSpot);
         setTagsVisible(isTagsVisible);
         setBottomShadow(isBottomShadow);
@@ -194,5 +199,21 @@ public class EventView extends RelativeLayout{
 
     public Place getEvent() {
         return event;
+    }
+
+    public void setDescriptionTv(boolean isDescription) {
+        if(isDescription) {
+            descriptionTv.setVisibility(VISIBLE);
+        } else {
+            descriptionTv.setVisibility(GONE);
+        }
+    }
+
+    public View getDescriptionTv() {
+        return descriptionTv;
+    }
+
+    public void setDescriptionTv(View descriptionTv) {
+        this.descriptionTv = descriptionTv;
     }
 }

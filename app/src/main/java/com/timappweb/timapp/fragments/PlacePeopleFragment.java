@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
 import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -44,7 +44,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
     private Context         context;
-    private PlaceActivity placeActivity;
+    private EventActivity eventActivity;
     private Place place;
     private int placeId;
 
@@ -87,8 +87,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
     private void initVariables(View root) {
-        placeActivity = (PlaceActivity) getActivity();
-        context= placeActivity.getBaseContext();
+        eventActivity = (EventActivity) getActivity();
+        context= eventActivity.getBaseContext();
 
         //Views
         mainButton = root.findViewById(R.id.main_button);
@@ -107,11 +107,11 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         peopleRv.addItemDecoration(headersDecor);
 
         //TODO : Determine how the class DividerDecoration is usefull, and decide if we use it or not
-        //peopleRv.addItemDecoration(new DividerDecoration(placeActivity));
+        //peopleRv.addItemDecoration(new DividerDecoration(eventActivity));
     }
 
     private void setListeners() {
-        mainButton.setOnClickListener(placeActivity.getPeopleListener());
+        mainButton.setOnClickListener(eventActivity.getPeopleListener());
     }
 
 
@@ -124,7 +124,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
                 Log.v(TAG, "Accessing position: " + position);
                 PlaceUserInterface user = placeUsersAdapter.getData(position);
                 Log.d(TAG, "Viewing profile user: " + user.getUser());
-                IntentsUtils.profile(placeActivity, user.getUser());
+                IntentsUtils.profile(eventActivity, user.getUser());
             }
         });
         //placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
@@ -152,7 +152,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
 
     private void loadPosts() {
-        Call<List<Post>> call = RestClient.service().viewPostsForPlace(placeActivity.getPlaceId());
+        Call<List<Post>> call = RestClient.service().viewPostsForPlace(eventActivity.getPlaceId());
         RestCallback callback = new RestCallback<List<Post>>(getContext()) {
             @Override
             public void onResponse200(Response<List<Post>> response) {
@@ -178,7 +178,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         Map<String, String> conditions = new HashMap<>();
         conditions.put("status", String.valueOf(status));
 
-        Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(placeActivity.getPlaceId(), conditions);
+        Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(eventActivity.getPlaceId(), conditions);
         call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext(), this) {
             @Override
             public void onResponse200(Response<PaginationResponse<UserPlace>> response) {
@@ -195,7 +195,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
     private void loadInvites(){
-        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().invitesSent(placeActivity.getPlaceId());
+        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().invitesSent(eventActivity.getPlaceId());
         call.enqueue(new RestCallback<PaginationResponse<PlacesInvitation>>(getContext()) {
 
             @Override
@@ -211,7 +211,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
 
     public void updateBtnVisibility() {
-        mainButton.setVisibility(MyApplication.isLoggedIn() && placeActivity.isUserAround() ? View.VISIBLE : View.GONE);
+        mainButton.setVisibility(MyApplication.isLoggedIn() && eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressView(boolean visibility) {

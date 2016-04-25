@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.desmond.squarecamera.ImageUtility;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.PlaceActivity;
+import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
@@ -46,7 +46,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
     private static final String TAG = "PlacePicturesFragment";
 
-    private PlaceActivity placeActivity;
+    private EventActivity eventActivity;
     private Context context;
 
     //Views
@@ -67,7 +67,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_place_pictures, container, false);
-        context = placeActivity;
+        context = eventActivity;
 
         initVariables(root);
 
@@ -89,7 +89,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     }
 
     private void initVariables(View root) {
-        placeActivity = (PlaceActivity) getActivity();
+        eventActivity = (EventActivity) getActivity();
 
         //Views
         mainButton = root.findViewById(R.id.main_button);
@@ -103,8 +103,8 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     }
 
     private void setListeners() {
-        mainButton.setOnClickListener(placeActivity.getPictureListener());
-        smallTagsButton.setOnClickListener(placeActivity.getTagListener());
+        mainButton.setOnClickListener(eventActivity.getPictureListener());
+        smallTagsButton.setOnClickListener(eventActivity.getTagListener());
     }
 
     private void initRv() {
@@ -115,7 +115,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     }
 
     private void initAdapter() {
-        picturesAdapter = new PicturesAdapter(placeActivity);
+        picturesAdapter = new PicturesAdapter(eventActivity);
         picturesRv.setAdapter(picturesAdapter);
     }
 
@@ -125,7 +125,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
     public void loadData(){
         Log.d(TAG, "Loading places pictures");
-        Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(placeActivity.getPlaceId());
+        Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(eventActivity.getPlaceId());
         RestCallback callback = new RestCallback<PaginationResponse<Picture>>(this.getContext(), this) {
             @Override
             public void onResponse(Response<PaginationResponse<Picture>> response) {
@@ -220,8 +220,8 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                     .build();
 
             // finally, execute the request
-            Call<RestFeedback> call = RestClient.service().upload(placeActivity.getPlaceId(), body);
-            RestCallback callback = new RestCallback<RestFeedback>(placeActivity, pictureLoadListener) {
+            Call<RestFeedback> call = RestClient.service().upload(eventActivity.getPlaceId(), body);
+            RestCallback callback = new RestCallback<RestFeedback>(eventActivity, pictureLoadListener) {
                 @Override
                 public void onResponse200(Response<RestFeedback> response) {
                     RestFeedback feedback = response.body();
@@ -236,7 +236,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                     } else {
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                     }
-                    Toast.makeText(placeActivity, feedback.message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(eventActivity, feedback.message, Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -261,7 +261,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     public void updateBtnVisibility() {
         Log.v(TAG, "::updateBtnVisibility()");
         // Check if the user can post in this place
-        boolean isUserAround = placeActivity.isUserAround();
+        boolean isUserAround = eventActivity.isUserAround();
         boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
         boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE) && uploadView.getVisibility() != View.VISIBLE;
         boolean showMainButton = isUserAround && isAllowedToAddPic;
