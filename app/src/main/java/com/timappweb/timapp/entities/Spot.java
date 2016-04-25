@@ -1,5 +1,7 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.SpotCategory;
 
 import java.io.Serializable;
@@ -8,16 +10,41 @@ import java.util.List;
 
 public class Spot implements Serializable {
 
+    @Expose
+    @SerializedName("id")
     public int id;
+
+    @Expose
+    @SerializedName("name")
     public String name;
-    public List<Tag> tags;
+
+    @Expose
+    @SerializedName("description")
     public String description;
-    public int created;
+
+    @Expose
+    @SerializedName("latitude")
     public double latitude;
+
+    @Expose
+    @SerializedName("longitude")
     public double longitude;
-    public int count_posts;
+
+    @Expose
+    @SerializedName("spot_category_id")
     public int category_id;
+
+    @Expose(deserialize = true, serialize = false)
+    public int created;
+
+    @Expose(deserialize = true, serialize = false)
+    public List<Tag> tags;
+
+    @SerializedName("spot_category")
+    @Expose(deserialize = true, serialize = false)
     public SpotCategory category;
+
+    // =============================================================================================
 
     public Spot(String name) {
         this.name = name;
@@ -31,6 +58,9 @@ public class Spot implements Serializable {
     public Spot(String name, SpotCategory category) {
         this.name = name;
         this.category = category;
+        if (category != null){
+            this.category_id = category.id;
+        }
     }
 
     public static Spot createDummy() {
@@ -46,6 +76,7 @@ public class Spot implements Serializable {
         return "Spot{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
+                ", category_id=" + category_id +
                 '}';
     }
 }

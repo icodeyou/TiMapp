@@ -2,6 +2,8 @@ package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
@@ -11,14 +13,22 @@ import java.io.Serializable;
 @Table(name = "SpotCategory")
 public class SpotCategory extends SyncBaseModel implements Serializable {
 
+    @Expose
+    @SerializedName("id")
     @Column(name = "SyncId")
-    public long id;
+    public int id;
 
+    @Expose
+    @SerializedName("name")
     @Column(name = "Name")
     public String name;
 
+    @Expose
+    @SerializedName("position")
     @Column(name = "Position")
     public int position;
+
+    // =============================================================================================
 
     public SpotCategory() {
         super();
@@ -29,9 +39,8 @@ public class SpotCategory extends SyncBaseModel implements Serializable {
         this.name = name;
     }
 
-    public long getSyncKey(){
-        return this.id;
-    }
+    // =============================================================================================
+    // SyncBaseModel overides
 
     @Override
     public boolean isSync(SyncBaseModel model) {
@@ -41,6 +50,13 @@ public class SpotCategory extends SyncBaseModel implements Serializable {
         if (position != that.position) return false;
         return name.equals(that.name);
     }
+
+    @Override
+    public long getSyncKey(){
+        return this.id;
+    }
+
+    // =============================================================================================
 
     public static SpotCategory createDummy() {
         return new SpotCategory("DummyCategory");

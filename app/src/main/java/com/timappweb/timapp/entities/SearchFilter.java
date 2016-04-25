@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.data.models.EventCategory;
 
 import java.util.LinkedList;
@@ -10,7 +11,10 @@ import java.util.List;
  */
 public class SearchFilter {
 
+    @Expose
     public List<Tag> tags;
+
+    @Expose
     public List<EventCategory> categories;
 
     public SearchFilter() {

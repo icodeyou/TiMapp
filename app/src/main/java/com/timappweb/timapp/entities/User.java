@@ -1,5 +1,6 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
 
 import java.io.Serializable;
@@ -8,25 +9,47 @@ import java.util.List;
 
 public class User implements Serializable, PlaceUserInterface {
     private static final String TAG = "UserEntity" ;
-
-    public int id = -1;
-    public String username;
-    public int age;
-    public String password;
-    public String email;
-    public int photoId;
-    public int count_posts = 0;
-    public int count_places = 0;
-    public SocialProvider provider;
-    public String provider_uid;
-    private boolean status = false;
-    public LinkedList<Post> posts;
-
     public static final String KEY_NAME = "user.name";
     public static final String KEY_ID = "user.id";
     public static final String KEY_EMAIL = "user.email";
+
+    @Expose
+    public int id = -1;
+
+    @Expose
+    public String username;
+
+    @Expose(serialize = true, deserialize = false)
+    public String password;
+
+    @Expose
+    public String email;
+
+    @Expose(serialize = false, deserialize = true)
+    public int count_posts = 0;
+
+    @Expose(serialize = false, deserialize = true)
+    public int count_places = 0;
+
+    @Expose
+    public SocialProvider provider;
+
+    @Expose
+    public String provider_uid;
+
+    @Expose(serialize = false, deserialize = true)
+    private boolean status = false;
+
+    @Expose(serialize = false, deserialize = true)
+    public LinkedList<Post> posts;
+
+    @Expose(serialize = false, deserialize = true)
     public List<Tag> tags;
+
+    @Expose(serialize = false, deserialize = true)
     public String app_id;
+
+    @Expose(serialize = false, deserialize = true)
     public String google_messaging_token;
 
     public User(){

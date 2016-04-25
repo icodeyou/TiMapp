@@ -1,14 +1,31 @@
 package com.timappweb.timapp.entities;
 
+import com.google.gson.annotations.Expose;
+
 public class Picture {
 
+    @Expose
     public int id;
+
+    @Expose
     public int created;
+
+    @Expose
     public String photo;
+
+    @Expose
     public String preview;
+
+    @Expose
     public String square;
+
+    @Expose
     public String photo_dir;
+
+    @Expose
     public int place_id;
+
+    @Expose
     public int user_id;
 
 

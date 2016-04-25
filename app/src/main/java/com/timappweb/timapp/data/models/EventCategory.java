@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.R;
 
 import java.io.Serializable;
@@ -14,12 +15,15 @@ public class EventCategory extends SyncBaseModel implements Serializable{
 
     private static final String TAG = "EventCategory";
 
+    @Expose
     @Column(name = "SyncId")
     public int id;
 
+    @Expose
     @Column(name = "Name")
     public String name;
 
+    @Expose
     @Column(name = "Position")
     public int position;
 

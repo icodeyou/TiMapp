@@ -104,7 +104,6 @@ public class AddPlaceActivity extends BaseActivity {
         if (bundle != null){
             spot = (Spot) bundle.getSerializable("spot");
             if (spot != null){
-                //TODO Jack
                 Log.v(TAG, "Spot is selected: " + spot);
                 spotView.setSpot(spot);
                 spotView.setVisibility(View.VISIBLE);
@@ -190,12 +189,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void submitPlace(final Place place){
-        /*
         Log.d(TAG, "Submit place " + place.toString());
-        IntentsUtils.addPostStepTags(context, place);
-        setProgressView(false);
-        */
-
         Call call = RestClient.service().addPlace(place);
         call.enqueue(new RestFeedbackCallback(this) {
 
@@ -283,7 +277,8 @@ public class AddPlaceActivity extends BaseActivity {
             public void onClick(View v) {
                 if (MyApplication.hasFineLocation(MyApplication.getApplicationRules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
-                    final Place place = new Place(MyApplication.getLastLocation(), groupNameET.getText().toString(), eventCategorySelected, context.spot);
+                    final Place place = new Place(MyApplication.getLastLocation(),
+                            groupNameET.getText().toString(), eventCategorySelected, context.spot);
                     submitPlace(place);
                 } else if (MyApplication.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();

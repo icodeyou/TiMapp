@@ -2,13 +2,13 @@ package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonArray;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.entities.Picture;
 import com.timappweb.timapp.entities.Place;
 import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.entities.Tag;
 import com.timappweb.timapp.entities.User;
 import com.timappweb.timapp.entities.UserPlace;
@@ -27,6 +27,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -36,7 +37,7 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     @GET("spots/reachable")
-    Call<PaginationResponse<Spot>> spotReachable(@QueryMap Map<String, String> conditions);
+    Call<PaginationResponse<Spot>> spotReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
 
     @GET("spots")
     Call<PaginationResponse<SpotCategory>> spots();
@@ -216,4 +217,5 @@ public interface WebServiceInterface {
 
     @GET("categories")
     Call<List<EventCategory>> eventCategories();
+
 }

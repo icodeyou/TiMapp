@@ -22,7 +22,7 @@ import com.timappweb.timapp.entities.PlaceUserInterface;
 import com.timappweb.timapp.entities.PlacesInvitation;
 import com.timappweb.timapp.entities.Post;
 import com.timappweb.timapp.entities.UserPlace;
-import com.timappweb.timapp.entities.UserPlaceStatus;
+import com.timappweb.timapp.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
@@ -128,8 +128,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             }
         });
         //placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
-        //placeUsersAdapter.create(UserPlaceStatus.COMING, getResources().getString(R.string.header_coming));
-        //placeUsersAdapter.create(UserPlaceStatus.INVITED, getResources().getString(R.string.header_invited));
+        //placeUsersAdapter.create(UserPlaceStatusEnum.COMING, getResources().getString(R.string.header_coming));
+        //placeUsersAdapter.create(UserPlaceStatusEnum.INVITED, getResources().getString(R.string.header_invited));
 
         /*mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
                 context,
@@ -143,7 +143,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     public void loadData() {
         placeUsersAdapter.clear();
         loadPosts();
-        loadByStatus(UserPlaceStatus.COMING);
+        loadByStatus(UserPlaceStatusEnum.COMING);
 
         if (MyApplication.isLoggedIn()){
             loadInvites();
@@ -174,7 +174,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
 
-    private void loadByStatus(final UserPlaceStatus status){
+    private void loadByStatus(final UserPlaceStatusEnum status){
         Map<String, String> conditions = new HashMap<>();
         conditions.put("status", String.valueOf(status));
 

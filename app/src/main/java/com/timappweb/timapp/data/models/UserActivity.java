@@ -3,6 +3,7 @@ package com.timappweb.timapp.data.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.utils.Util;
 
 /**
@@ -11,9 +12,11 @@ import com.timappweb.timapp.utils.Util;
 @Table(name = "activities")
 public class UserActivity extends  Model{
 
+    @Expose
     @Column(name = "DateCreated", index = true)
     public int created;
 
+    @Expose
     @Column(name = "QuotaTypeId")
     public int type;
 

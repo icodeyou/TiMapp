@@ -5,6 +5,7 @@ import android.util.Log;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.Calendar;
@@ -19,40 +20,67 @@ public class UserQuota extends SyncBaseModel {
     private static final String TAG = "UserQuota";
     public String _quota_error_reason;
 
+    @Expose
     @Column(name = "QuotaTypeId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public int type_id;
 
+    @Expose
     @Column(name = "UserId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public int user_id;
 
+    @Expose
     @Column(name = "MinDelay")
     public long min_delay;
+
+    @Expose
     @Column(name = "QuotaMinute")
     public int quota_minute;
+
+    @Expose
     @Column(name = "QuotaHour")
     public int quota_hour;
+
+    @Expose
     @Column(name = "QuotaDay")
     public int quota_day;
+
+    @Expose
     @Column(name = "QuotaMonth")
     public int quota_month;
+
+    @Expose
     @Column(name = "QuotaYear")
     public int quota_year;
+
+    @Expose
     @Column(name = "QuotaOverall")
     public int quota_overall;
 
-
+    @Expose
     @Column(name = "LastActivity")
     public long last_activity;
+
+    @Expose
     @Column(name = "CountMinute")
     public int count_minute;
+
+    @Expose
     @Column(name = "CountHour")
     public int count_hour;
+
+    @Expose
     @Column(name = "CountDay")
     public int count_day;
+
+    @Expose
     @Column(name = "CountMonth")
     public int count_month;
+
+    @Expose
     @Column(name = "CountYear")
     public int count_year;
+
+    @Expose
     @Column(name = "CountOverall")
     public int count_overall;
 
@@ -141,7 +169,7 @@ public class UserQuota extends SyncBaseModel {
             return;
         }
         Calendar currentDate = Calendar.getInstance(); // locale-specific
-        currentDate.setTimeInMillis(Util.getCurrentTimeSec() * 1000);
+        currentDate.setTimeInMillis(System.currentTimeMillis());
         currentDate.set(Calendar.MILLISECOND, 0);
 
         Calendar lastActivity =  Calendar.getInstance();
@@ -184,22 +212,15 @@ public class UserQuota extends SyncBaseModel {
     @Override
     public String toString() {
         return "UserQuota{" +
-                "type_id=" + type_id +
-                ", user_id=" + user_id +
-                ", min_delay=" + min_delay +
-                ", quota_minute=" + quota_minute +
-                ", quota_hour=" + quota_hour +
-                ", quota_day=" + quota_day +
-                ", quota_month=" + quota_month +
-                ", quota_year=" + quota_year +
-                ", quota_overall=" + quota_overall +
-                ", last_activity=" + last_activity +
-                ", count_minute=" + count_minute +
-                ", count_hour=" + count_hour +
-                ", count_day=" + count_day +
-                ", count_month=" + count_month +
-                ", count_year=" + count_year +
-                ", count_overall=" + count_overall +
+                " type=" + type_id +
+                ", user=" + user_id +
+                ", last_activity=" + last_activity + "/" + min_delay + " ("+ Util.delayFromNow((int)last_activity)+" sec)" +
+                ", minute=" + count_minute + "/" + quota_minute +
+                ", hour=" + count_hour + "/" + quota_hour +
+                ", day=" + count_day + "/" + quota_day +
+                ", month=" + count_month + "/" + quota_month +
+                ", year=" + count_year + "/" + quota_year +
+                ", overall=" + count_overall + "/" + quota_overall +
                 '}';
     }
 
