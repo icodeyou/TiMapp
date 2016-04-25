@@ -46,6 +46,8 @@
     <color name="text_secondary">#18719d</color>
     <!--<color name="background_cluster">#d1d1d1</color>
     <color name="text_cluster">#b41e41</color>-->
+    <color name="background_add_event_checked">#648e8e8e</color>
+    <color name="background_add_event_unchecked">#64ffffff</color>
 
     <!-- Buttons -->
     <color name="background_top_invitation">#d6d6d6</color>

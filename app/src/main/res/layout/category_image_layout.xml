@@ -3,22 +3,25 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
+        android:id="@+id/category_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:alpha="0.3"
-        android:src="@drawable/image_music"/>
+        android:alpha="0.2"
+        android:src="@drawable/image_bar"/>
     <TextView
         android:id="@+id/category_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/height_pin_post_box"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="90dp"
+        android:padding="5dp"
         android:maxLines="1"
         android:inputType="textCapWords"
-        android:layout_centerInParent="true"
-        android:text="@string/category_music"
-        android:textSize="@dimen/text_category"
+        android:text="bar"
         android:textStyle="bold"
+        android:textSize="@dimen/text_normal"
         android:textColor="@color/colorPrimary"
-        android:alpha="0.2"/>
+        android:alpha="0.8"/>
 </RelativeLayout>
