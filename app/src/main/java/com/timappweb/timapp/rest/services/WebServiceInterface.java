@@ -1,17 +1,18 @@
 package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonArray;
+import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.UserQuota;
-import com.timappweb.timapp.entities.Picture;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.PlacesInvitation;
-import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.Spot;
-import com.timappweb.timapp.entities.Tag;
-import com.timappweb.timapp.entities.User;
-import com.timappweb.timapp.entities.UserPlace;
+import com.timappweb.timapp.data.entities.Picture;
+import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.entities.PlacesInvitation;
+import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.entities.UserPlace;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -218,4 +219,6 @@ public interface WebServiceInterface {
     @GET("categories")
     Call<List<EventCategory>> eventCategories();
 
+    @GET("configurations/application-rules")
+    Call<ApplicationRules> applicationRules();
 }

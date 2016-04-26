@@ -1,8 +1,8 @@
 package com.timappweb.timapp.rest;
 
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Post;
 
 /**
  * TODO REMOVE

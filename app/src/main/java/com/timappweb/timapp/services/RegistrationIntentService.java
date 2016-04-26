@@ -29,7 +29,7 @@ public class RegistrationIntentService extends IntentService{
             Log.v(TAG, "::onHandleIntent()");
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            MyApplication.updateGoogleMessagingToken(token);
+            MyApplication.updateGoogleMessagingToken(getApplicationContext(), token);
         } catch (IOException e) {
             Log.e(TAG, "Cannot get a new GCM token");
             e.printStackTrace();

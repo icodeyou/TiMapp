@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.SearchFilter;
+import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.model.QueryCondition;

@@ -37,7 +37,7 @@ import com.google.maps.android.geometry.Point;
 import com.google.maps.android.projection.SphericalMercatorProjection;
 import com.google.maps.android.ui.IconGenerator;
 import com.google.maps.android.ui.SquareTextView;
-import com.timappweb.timapp.entities.MapTag;
+import com.timappweb.timapp.data.entities.MapTag;
 
 import java.util.ArrayList;
 import java.util.Collections;

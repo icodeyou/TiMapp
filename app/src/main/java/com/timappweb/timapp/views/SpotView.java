@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.entities.Spot;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.listeners.OnSpotClickListener;
 
 import me.grantland.widget.AutofitTextView;

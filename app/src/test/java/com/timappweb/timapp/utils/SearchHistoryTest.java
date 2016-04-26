@@ -1,6 +1,6 @@
 package com.timappweb.timapp.utils;
 
-import com.timappweb.timapp.entities.Tag;
+import com.timappweb.timapp.data.entities.Tag;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

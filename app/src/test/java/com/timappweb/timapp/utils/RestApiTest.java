@@ -1,7 +1,7 @@
 package com.timappweb.timapp.utils;
 
 
-import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
 

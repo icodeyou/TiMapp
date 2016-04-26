@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.maps.android.MarkerManager;
-import com.timappweb.timapp.entities.Post;
+import com.timappweb.timapp.data.models.Post;
 
 /**
  * Created by stephane on 9/12/2015.

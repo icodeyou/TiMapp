@@ -1,8 +1,9 @@
-package com.timappweb.timapp.entities;
+package com.timappweb.timapp.data.entities;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;

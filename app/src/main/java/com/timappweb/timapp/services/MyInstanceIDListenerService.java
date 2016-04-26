@@ -32,7 +32,7 @@ public class MyInstanceIDListenerService extends com.google.android.gms.iid.Inst
             try {
                 String token = iid.getToken(getString(R.string.gcm_defaultSenderId),
                         GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-                MyApplication.updateGoogleMessagingToken(token);
+                MyApplication.updateGoogleMessagingToken(getApplicationContext(), token);
             } catch (IOException e) {
                 e.printStackTrace();
             }

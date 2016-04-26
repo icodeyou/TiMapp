@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -35,7 +35,7 @@ import retrofit2.Call;
 public class EditProfileActivity extends BaseActivity{
 
     String TAG = "EditProfileActivity";
-    private Activity activity = this;
+    private Activity context = this;
     private InputMethodManager imm;
 
     private HorizontalTagsRecyclerView horizontalTagsRecyclerView;
@@ -137,11 +137,11 @@ public class EditProfileActivity extends BaseActivity{
                 currentUser.tags = horizontalTagsAdapter.getData();
                 data.put("tag_string", currentUser.getTagsToString());
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
-                call.enqueue(new RestFeedbackCallback() {
+                call.enqueue(new RestFeedbackCallback(context) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
                         Toast.makeText(getApplicationContext(), "Your profile has been saved", Toast.LENGTH_LONG).show();
-                        IntentsUtils.profile(activity);
+                        IntentsUtils.profile(context);
                     }
 
                     @Override

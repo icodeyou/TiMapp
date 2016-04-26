@@ -4,7 +4,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.utils.Util;
 
 /**

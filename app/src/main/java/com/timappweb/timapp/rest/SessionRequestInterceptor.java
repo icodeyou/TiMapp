@@ -22,8 +22,8 @@ public class SessionRequestInterceptor implements Interceptor
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
-        String token = RestClient.instance().getToken();
-        String providerToken = RestClient.instance().getSocialProviderToken();
+        String token = MyApplication.auth.getToken();
+        String providerToken = MyApplication.auth.getSocialProviderToken();
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
@@ -42,7 +42,7 @@ public class SessionRequestInterceptor implements Interceptor
             Log.d(TAG, "Trying to refresh token... Waiting for synchronisation...");
             synchronized (RestClient.instance().getHttpClient()) { //perform all 401 in sync blocks, to avoid multiply token updates
                 Log.d(TAG, "Synchronisation OK...");
-                String currentToken = RestClient.instance().getToken(); //get currently stored token
+                String currentToken = MyApplication.auth.getToken(); //get currently stored token
 
                 if (currentToken == null){
                     logout();
@@ -60,9 +60,9 @@ public class SessionRequestInterceptor implements Interceptor
                     }
                 }
 
-                if (RestClient.instance().getToken() != null) { //retry requires new auth token,
+                if (MyApplication.auth.getToken() != null) { //retry requires new auth token,
                     Log.d(TAG, "retry request after refresh token...");
-                    setAuthHeader(requestBuilder, RestClient.instance().getToken(), providerToken, original.url()); //set auth token to updated
+                    setAuthHeader(requestBuilder, MyApplication.auth.getToken(), providerToken, original.url()); //set auth token to updated
                     request = requestBuilder.build();
                     return chain.proceed(request); //repeat request with new token
                 }

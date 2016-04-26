@@ -7,8 +7,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.config.LocalPersistenceManager;
-import com.timappweb.timapp.entities.SocialProvider;
+import com.timappweb.timapp.config.AuthProvider;
+import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
 import com.timappweb.timapp.configsync.SyncConfig;
@@ -29,9 +29,7 @@ public class RestClient {
 
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
-    public static final String KEY_TOKEN = "token";
-    private static final String SOCIAL_PROVIDER_TOKEN = "social_provider_token";
-    private static final String SOCIAL_PROVIDER_TYPE = "social_provider_type";
+
 
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
@@ -39,8 +37,10 @@ public class RestClient {
     private final OkHttpClient httpClient;
     private final String baseUrl;
     private final Gson gson;
+    private final AuthProvider authProvider;
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
+
 
     // KEY ID
     //public static final String KEY_SESSION_ID = "id";
@@ -54,17 +54,18 @@ public class RestClient {
     }
 
 
-    public static void init(Application app, String ep){
-        conn = new RestClient(app, ep);
+    public static void init(Application app, String ep, AuthProvider authProvider){
+        conn = new RestClient(app, ep, authProvider);
     }
 
     protected WebServiceInterface service;
 
     private static Retrofit.Builder builder = null;
 
-    protected RestClient(Application app, String baseUrl){
+    protected RestClient(Application app, String baseUrl, AuthProvider authProvider){
         this.app = app;
         this.baseUrl = baseUrl;
+        this.authProvider = authProvider;
 
         Log.i(TAG, "Initializing server connection at " + baseUrl);
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
@@ -111,8 +112,7 @@ public class RestClient {
      * */
     public void logoutUser(){
         // Clearing all data from Shared Preferences
-        LocalPersistenceManager.in().clear();
-        LocalPersistenceManager.in().commit();
+        this.authProvider.logout();
 
         // After logout redirect user to Login UserActivity
         Intent i = new Intent(app, LoginActivity.class);
@@ -123,7 +123,7 @@ public class RestClient {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         Call<RestFeedback> call = this.service.logout();
-            call.enqueue(new RestFeedbackCallback() {
+            call.enqueue(new RestFeedbackCallback(app.getApplicationContext()) {
                 @Override
                 public void onActionSuccess(RestFeedback feedback) {
                     Log.d(TAG, "User logged out on server side");
@@ -150,24 +150,6 @@ public class RestClient {
         Log.i(TAG, "Checking user token...");
         Call<RestFeedback> call = this.service.checkToken();
         call.enqueue(callback);
-    }
-
-    public String getToken() {
-        return LocalPersistenceManager.out().getString(KEY_TOKEN, null);
-    }
-    public String getSocialProviderToken() {
-        return LocalPersistenceManager.out().getString(SOCIAL_PROVIDER_TOKEN, null);
-    }
-
-    public void login(String token) {
-        LocalPersistenceManager.in().putString(KEY_TOKEN, token);
-    }
-
-    public void setSocialProvider(SocialProvider provider, String accessToken) {
-        this._socialProviderType = provider;
-        this._socialProviderToken = accessToken;
-        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TOKEN, _socialProviderToken);
-        LocalPersistenceManager.in().putString(SOCIAL_PROVIDER_TYPE, _socialProviderType.toString());
     }
 
 

@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.timappweb.timapp.activities.InviteFriendsActivity;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.List;

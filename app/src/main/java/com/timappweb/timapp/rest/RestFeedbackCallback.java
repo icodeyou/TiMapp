@@ -17,9 +17,6 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
     public RestFeedbackCallback(Context context) {
         super(context);
     }
-    public RestFeedbackCallback() {
-        super(null);
-    }
 
     public abstract void onActionSuccess(RestFeedback feedback);
     public abstract void onActionFail(RestFeedback feedback);

@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.configsync.SyncConfig;
@@ -36,7 +37,7 @@ public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
         Type objectClass;
         switch (objectType){
             case "rules":
-                objectClass = ConfigurationProvider.Rules.class;
+                objectClass = ApplicationRules.class;
                 break;
             case "spot_categories":
                 objectClass = new TypeToken<ArrayList<SpotCategory>>() {}.getType();

@@ -17,9 +17,10 @@ import com.sromku.simple.fb.listeners.OnFriendsListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -124,7 +125,7 @@ public class InviteFriendsActivity extends BaseActivity{
     }
 
     private void initAutoLabel() {
-        int maxLabels = MyApplication.getApplicationRules().max_invite_per_request;
+        int maxLabels = ConfigurationProvider.rules().max_invite_per_request;
         //TODO : Replace 20 by maxLabels;
         mAutoLabel.setMaxLabels(20);
         Log.d(TAG, "Max labels : " + maxLabels);

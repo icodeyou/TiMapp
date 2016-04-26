@@ -35,16 +35,21 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.services.ConfigInterface;
+import com.timappweb.timapp.utils.KeyValueStorage;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.Key;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -130,9 +135,21 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
         this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
         this.performModelSync(EventCategory.class,  RestClient.service().eventCategories(), syncResult);
+
+        this.syncApplicationRules();
         // TODO add user invites
 
         Log.i(TAG, "Network synchronization complete");
+    }
+
+    private void syncApplicationRules() {
+        try {
+            ApplicationRules rules = RestClient.service().applicationRules().execute().body();
+            ConfigurationProvider.setApplicationRules(rules);
+        } catch (IOException e) {
+            Log.e(TAG, "Cannot load application rules: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public static void performModelSync(Class<? extends SyncBaseModel> classType, Call call, SyncResult syncResult){

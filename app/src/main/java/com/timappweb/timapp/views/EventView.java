@@ -13,9 +13,8 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import me.grantland.widget.AutofitTextView;

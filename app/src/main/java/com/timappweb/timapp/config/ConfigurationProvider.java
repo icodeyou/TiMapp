@@ -10,10 +10,12 @@ import com.timappweb.timapp.configsync.RESTRemoteSync;
 import com.timappweb.timapp.configsync.RemotePersistenceManager;
 import com.timappweb.timapp.configsync.SharedPrefSync;
 import com.timappweb.timapp.configsync.SyncConfigManager;
+import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.services.ConfigInterface;
+import com.timappweb.timapp.utils.KeyValueStorage;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,51 +26,64 @@ import java.util.List;
 public class ConfigurationProvider {
 
     private static final String TAG = "ConfigurationProvider";
-    private static final String PREF_NAME = "com.timapp.pref";
-    int SHARED_PREF_PRIVATE_MODE = 0;
+    private static final String KEY_APPLICATION_RULE = "application_rules";
 
     private static final int CONFIG_ID_RULES = 1;
-    private static final int CONFIG_ID_EVENT_CATEGORIES= 2;
-    private static final int CONFIG_ID_SPOT_CATEGORIES = 3;
 
-    private final SharedPreferences sharedPref;
-    private final Context context;
-    private final Listener listener;
-   // private SyncConfigManager<List<EventCategory>> eventCatagoriesManager;
-    //private SyncConfigManager<List<SpotCategory>> spotCatagoriesManager;
-    private SyncConfigManager<Rules> rulesManager;
-
-
+    private static OnConfigurationLoadedListener listener;
+    private static ApplicationRules applicationRules;
     private static List<EventCategory> eventCategories = null;
     private static List<SpotCategory> spotCategories = null;
 
-    public List<EventCategory> eventCategories(){
+    public static List<EventCategory> eventCategories(){
         if (eventCategories == null){
             eventCategories = new Select().from(EventCategory.class).orderBy("Position ASC").execute();
         }
         return eventCategories;
     }
 
-    public List<SpotCategory> spotCategories(){
+    public static List<SpotCategory> spotCategories(){
         if (spotCategories == null){
             spotCategories = new Select().from(SpotCategory.class).orderBy("Position ASC").execute();
         }
         return spotCategories;
     }
 
-    public Rules rules(){
-        //try {
-           // Log.d(TAG, this.rulesManager.getDataWrapper().data.toString());
-            return this.rulesManager.getData();
-       // }
-        //catch (Exception ex){
-    //    Log.d(TAG, this.rulesManager.getDataWrapper().toString());
-    //       this.rulesManager.clear();
-    //      ex.printStackTrace();
-    //      throw new InvalidConfigurationException();
-      //  }
+    public static ApplicationRules rules(){
+        if (applicationRules == null){
+            applicationRules = KeyValueStorage.instance.get(KEY_APPLICATION_RULE, ApplicationRules.class);
+            if (applicationRules == null){
+                throw new IncompleteConfigurationException("Missing application rules");
+            }
+        }
+        return applicationRules;
     }
 
+    public static void init(OnConfigurationLoadedListener listener){
+        ConfigurationProvider.listener = listener;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static boolean hasFullConfiguration(){
+        try{
+            rules();
+            return true;
+        }
+        catch (IncompleteConfigurationException ex){
+            return false;
+        }
+    }
+
+    public static void setApplicationRules(ApplicationRules applicationRules) {
+        ConfigurationProvider.applicationRules = applicationRules;
+        KeyValueStorage.instance.set(KEY_APPLICATION_RULE, applicationRules);
+        listener.onLoaded(KEY_APPLICATION_RULE);
+    }
+
+    /*
     public ConfigurationProvider(Context context, Listener listener) {
         this.context = context;
         this.sharedPref = context.getSharedPreferences(PREF_NAME, SHARED_PREF_PRIVATE_MODE);
@@ -87,7 +102,7 @@ public class ConfigurationProvider {
     private void init(){
         //eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
         //spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
-        rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
+        //rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
     }
 
     public AsyncTask<Integer, Integer, Boolean> load() {
@@ -98,7 +113,7 @@ public class ConfigurationProvider {
                 try {
                     //eventCatagoriesManager.sync();
                     //spotCatagoriesManager.sync();
-                    rulesManager.sync();
+                    //rulesManager.sync();
                 } catch (RemotePersistenceManager.CannotLoadException e) {
                     e.printStackTrace();
                     return false;
@@ -139,61 +154,15 @@ public class ConfigurationProvider {
                 //", spot categories= " + spotCatagoriesManager.toString() +
                 '}';
     }
-
-
-    public class Rules {
-        public Rules() {
-            this.places_points_levels = new LinkedList<>();
-        }
-
-        public int max_invite_per_request = 20;
-        public int picture_max_size;
-        public int picture_max_width;
-        public int picture_max_height;
-        public List<Integer> places_points_levels;
-        public int place_max_reachable = 500;
-        public int tags_suggest_limit = 40;
-        public int places_populars_limit = 20;
-        public int places_min_delay_add = 60;
-        public int places_users_min_delay_add  = 60;
-        public int posts_min_tag_number = 3;
-        public int posts_max_tags_number = 3;
-        public int tags_min_name_length = 2;
-        public int tags_max_name_length = 30;
-        public String tags_name_regex = "";
-        public int gps_min_time_delay = 60000;
-        public int gps_min_accuracy_add_place = 3500;
-        public int gps_min_accuracy = 3500;
-        public int places_min_name_length = 3;
-        public int places_max_name_length;
-        public int tags_min_search_length = 0;
-
-        public String toString(){
-            return "Rules{" +
-                    ", places_points_levels=" + places_points_levels +
-                    ", place_max_reachable=" + place_max_reachable +
-                    ", tags_suggest_limit=" + tags_suggest_limit +
-                    ", places_populars_limit=" + places_populars_limit +
-                    ", places_min_delay_add=" + places_min_delay_add +
-                    ", places_users_min_delay_add=" + places_users_min_delay_add +
-                    ", posts_min_tag_number=" + posts_min_tag_number +
-                    ", posts_max_tags_number=" + posts_max_tags_number +
-                    ", tags_min_name_length=" + tags_min_name_length +
-                    ", tags_max_name_length=" + tags_max_name_length +
-                    ", tags_name_regex='" + tags_name_regex + '\'' +
-                    ", gps_min_time_delay=" + gps_min_time_delay +
-                    ", gps_min_accuracy_add_place=" + gps_min_accuracy_add_place +
-                    ", gps_min_accuracy=" + gps_min_accuracy +
-                    ", places_min_name_length=" + places_min_name_length +
-                    ", tags_min_search_length=" + tags_min_search_length +
-                    '}';
+*/
+    private static class IncompleteConfigurationException extends Error {
+        public IncompleteConfigurationException(String s) {
+            super(s);
         }
     }
 
-    public class InvalidConfigurationException extends Error {
-
-        public InvalidConfigurationException() {
-            // TODO flush error
-        }
+    public interface OnConfigurationLoadedListener{
+        void onLoaded(String key);
+        void onFail(String key);
     }
 }

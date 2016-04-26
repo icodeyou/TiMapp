@@ -26,9 +26,9 @@ import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
-import com.timappweb.timapp.entities.Place;
-import com.timappweb.timapp.entities.Post;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.entities.User;
 
 public class IntentsUtils {
 
@@ -62,11 +62,11 @@ public class IntentsUtils {
         IntentsUtils.serverError(context);
     }
 
-    public static void profile(Activity activity){
-        if (!requireLogin(activity))
+    public static void profile(Context context){
+        if (!requireLogin(context))
             return;
-        Intent intent = new Intent(activity, ProfileActivity.class);
-        activity.startActivity(intent);
+        Intent intent = new Intent(context, ProfileActivity.class);
+        context.startActivity(intent);
     }
 
     public static void profile(Activity activity, User user) {

@@ -28,8 +28,8 @@ import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.entities.SocialProvider;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -151,9 +151,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         //MyApplication.updateGoogleMessagingToken(that);
                         Log.i(TAG, "Trying to login user: " + user);
                         MyApplication.login(user, token, accessToken);
-                        IntentsUtils.lastActivityBeforeLogin(that);
-
                         MyApplication.requestGcmToken(that);
+                        IntentsUtils.lastActivityBeforeLogin(that);
                     }
 
                     @Override

@@ -11,15 +11,16 @@ import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
+import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.LocalPersistenceManager;
 import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.entities.SearchFilter;
-import com.timappweb.timapp.entities.SocialProvider;
+import com.timappweb.timapp.data.entities.SearchFilter;
+import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.entities.User;
+import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -27,6 +28,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.SyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
+import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -40,28 +42,16 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class MyApplication extends com.activeandroid.app.Application {
-
-
     private static final String DB_NAME = "prepop.db";
-
     private static final String TAG = "MyApplication";
-    public static final String KEY_IS_LOGIN = "IsLoggedIn";
-    private static final String KEY_CURRENT_USER = "current_user";
-    private static final String KEY_LOGIN_TIME = "LoginTime";
     private static final int TOKEN_CHECK_DELAY = 3600; // Check token every 1 hour
-
-
-    public static final String AUTHORITY = "com.timappweb.timapp.sync";
-    // Account
-    // Sync interval constants
-    public static final long SECONDS_PER_MINUTE = 60L;
-    public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
-    public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
 
     private static User currentUser = null;
     public static SearchFilter searchFilter = new SearchFilter();
     private static DeferredObject deferred;
     private int notifyCount = 0;
+
+    public static AuthProvider auth;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -86,43 +76,25 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public void checkToken(){
-        int loginTime = LocalPersistenceManager.out().getInt(MyApplication.KEY_LOGIN_TIME, 0);
-        if (Util.isOlderThan(loginTime, TOKEN_CHECK_DELAY)){
-            Log.i(TAG, "Token is older that " + TOKEN_CHECK_DELAY);
-            RestClient.instance().checkToken(new RestFeedbackCallback(getApplicationContext()) {
+        auth.checkToken(this, new AuthProvider.OnTokenListener() {
+            @Override
+            public void onTokenValid() {
+                Log.i(TAG, "Token is still valid.");
+                notifyLoadingState("Token is still valid");
+            }
 
-                @Override
-                public void onResponse(Response<RestFeedback> response) {
-                    super.onResponse(response);
-                    notifyLoadingState("User token checked.");
-                }
+            @Override
+            public void onTokenOutdated() {
+                Log.i(TAG, "Token is not valid anymore. Login out");
+                notifyLoadingState("User token is not valid");
+            }
+        });
 
-                @Override
-                public void onActionSuccess(RestFeedback feedback) {
-                    Log.i(TAG, "Token is still valid.");
-                    LocalPersistenceManager.in().putInt(KEY_LOGIN_TIME, Util.getCurrentTimeSec());
-                }
-
-                @Override
-                public void onActionFail(RestFeedback feedback) {
-                    Log.i(TAG, "Token is not valid anymore. Login out");
-                    MyApplication.logout();
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Log.i(TAG, "Server is not available. Login out");
-                    IntentsUtils.serverError(context);
-                }
-            });
-        }
-        else{
-            notifyLoadingState("User token checked.");
-        }
     }
 
     private void notifyLoadingState(String s) {
         notifyCount++;
+        Log.i(TAG, "Notify loading state " + notifyCount + "/2 : " + s);
         if (deferred.isPending()){
             deferred.notify(s);
             if (notifyCount == 2){
@@ -132,47 +104,15 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static User getCurrentUser(){
-        if (currentUser != null){
-            return currentUser;
-        }
-        else {
-            int userId = LocalPersistenceManager.out().getInt(User.KEY_ID, -1);
-            if (userId == -1){
-                return null;
-            }
-            currentUser = new User();
-            currentUser.id = userId;
-            currentUser.email = LocalPersistenceManager.out().getString(User.KEY_EMAIL, null);
-            currentUser.username = LocalPersistenceManager.out().getString(User.KEY_NAME, null);
-            Log.d(TAG, "Loading user form pref: " + currentUser);
-            return currentUser;
-        }
-    }
-
-    public static void setCurrentUser(User user){
-        Log.d(TAG, "Writing user form pref: " + user);
-        LocalPersistenceManager.in().putInt(User.KEY_ID, user.id);
-        LocalPersistenceManager.in().putString(User.KEY_NAME, user.username);
-        LocalPersistenceManager.in().putString(User.KEY_EMAIL, user.email);
-        currentUser = user;
+        return auth.getCurrentUser();
     }
 
     public static void login(User user, String token, String accessToken){
-        setCurrentUser(user);
-        LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, true);
-        LocalPersistenceManager.in().putInt(KEY_LOGIN_TIME, Util.getCurrentTimeSec());
-        RestClient.instance().login(token);
-        RestClient.instance().setSocialProvider(SocialProvider.FACEBOOK, accessToken);
-
-        LocalPersistenceManager.in().commit();
+        auth.login(user, token, accessToken);
     }
 
     private static Location lastLocation = null;
     public static ConfigurationProvider config;
-
-    public static ConfigurationProvider.Rules getApplicationRules() {
-        return config.rules();
-    }
 
     public static List<EventCategory> getEventCategories() {
         return config.eventCategories();
@@ -187,32 +127,40 @@ public class MyApplication extends com.activeandroid.app.Application {
         super.onCreate();
 
         //this.deleteDatabase("timappdb");
-
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
-
         this.deferred = new DeferredObject();
-
-        LocalPersistenceManager.init(this);
-        RestClient.init(this, getResources().getString(R.string.ws_endpoint));
+        MyApplication.auth = new AuthProvider();
+        RestClient.init(this, getResources().getString(R.string.ws_endpoint), MyApplication.auth);
+        KeyValueStorage.init(this, RestClient.instance().getGson());
 
         // facebook
+        // TODO move from here
         initFacebookPermissions();
 
-        // INIT DB
-       //getApplicationContext().deleteDatabase(DB_NAME);d
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext());
 
         SyncAdapter.initializeSyncAdapter(this);
-        SyncAdapter.syncImmediately(this);
 
-        // Load configuration
-        config = new ConfigurationProvider(getApplicationContext(), new ConfigurationProviderListener());
-        //config.clear();
-        config.load();
+        ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
+            @Override
+            public void onLoaded(String key) {
+                notifyLoadingState("Server configuration loaded");
+            }
 
+            @Override
+            public void onFail(String key) {
+                // TODO
+            }
+        });
+        // If first start we need to wait for configuration from the server
+        if (ConfigurationProvider.hasFullConfiguration()){
+            notifyLoadingState("Server configuration loaded");
+        }
+        else{
+            SyncAdapter.syncImmediately(this);
+        }
 
-        // Check token
         checkToken();
     }
 
@@ -276,8 +224,7 @@ public class MyApplication extends com.activeandroid.app.Application {
 
     public static void logout() {
         if (isLoggedIn()){
-            LocalPersistenceManager.in().putBoolean(KEY_IS_LOGIN, false);
-            LocalPersistenceManager.in().putInt(User.KEY_ID, -1);
+            auth.logout();
             RestClient.instance().logoutUser();
             MyApplication.currentUser = null;
         }
@@ -294,7 +241,7 @@ public class MyApplication extends com.activeandroid.app.Application {
      */
     public static boolean hasLastLocation() {
         return lastLocation != null &&
-                (lastLocation.getTime() - System.currentTimeMillis()) < getApplicationRules().gps_min_time_delay;
+                (lastLocation.getTime() - System.currentTimeMillis()) < ConfigurationProvider.rules().gps_min_time_delay;
     }
 
     /**
@@ -302,7 +249,7 @@ public class MyApplication extends com.activeandroid.app.Application {
      * @return
      */
     public static boolean hasFineLocation() {
-        return hasFineLocation(getApplicationRules().gps_min_accuracy);
+        return hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy);
     }
 
     public static boolean hasFineLocation(int minAccuracy) {
@@ -318,10 +265,10 @@ public class MyApplication extends com.activeandroid.app.Application {
         return deferred.promise();
     }
 
-    public static void updateGoogleMessagingToken(String token) {
+    public static void updateGoogleMessagingToken(Context context, String token) {
         Log.i(TAG, "Updating token for GCM: " + token);
         Call<RestFeedback> call = RestClient.service().updateGoogleMessagingToken(token);
-        call.enqueue(new RestFeedbackCallback() {
+        call.enqueue(new RestFeedbackCallback(context) {
             @Override
             public void onActionSuccess(RestFeedback feedback) {
                 Log.d(TAG, "Update token success");
@@ -341,25 +288,5 @@ public class MyApplication extends com.activeandroid.app.Application {
         //intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
         context.startService(intent);
     }
-
-
-    private class ConfigurationProviderListener implements ConfigurationProvider.Listener {
-        @Override
-        public void onLoaded() {
-            Log.i(TAG, "Server configuration has been loaded!");
-            notifyLoadingState("Server configuration loaded");
-        }
-
-        @Override
-        public void onFail() {
-            Log.e(TAG, "Error cannot load server configuration");
-            deferred.reject(null);
-        }
-    }
-
-
-
-
-
 
 }

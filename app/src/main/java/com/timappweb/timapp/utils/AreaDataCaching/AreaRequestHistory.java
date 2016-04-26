@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.entities.MarkerValueInterface;
+import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.IntLatLng;
 import com.timappweb.timapp.utils.IntLatLngBounds;

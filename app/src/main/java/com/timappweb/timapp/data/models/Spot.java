@@ -1,39 +1,49 @@
-package com.timappweb.timapp.entities;
+package com.timappweb.timapp.data.models;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.data.entities.Tag;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(name = "Spot")
 public class Spot implements Serializable {
 
+    @Column(name = "SyncId")
     @Expose
     @SerializedName("id")
     public int id;
 
+    @Column(name = "Name")
     @Expose
     @SerializedName("name")
     public String name;
 
+    @Column(name = "Description")
     @Expose
     @SerializedName("description")
     public String description;
 
+    @Column(name = "Latitude")
     @Expose
     @SerializedName("latitude")
     public double latitude;
 
+    @Column(name = "Longitude")
     @Expose
     @SerializedName("longitude")
     public double longitude;
 
+    @Column(name = "CategoryId")
     @Expose
     @SerializedName("spot_category_id")
     public int category_id;
 
+    @Column(name = "Created")
     @Expose(deserialize = true, serialize = false)
     public int created;
 

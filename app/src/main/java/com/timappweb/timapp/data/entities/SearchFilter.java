@@ -1,4 +1,4 @@
-package com.timappweb.timapp.entities;
+package com.timappweb.timapp.data.entities;
 
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.data.models.EventCategory;

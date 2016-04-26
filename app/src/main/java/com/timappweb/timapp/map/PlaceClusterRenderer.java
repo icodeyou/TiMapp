@@ -18,7 +18,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.entities.Place;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.util.ArrayList;

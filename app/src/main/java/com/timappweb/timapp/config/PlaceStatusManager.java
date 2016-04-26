@@ -1,7 +1,7 @@
 package com.timappweb.timapp.config;
 
 import com.timappweb.timapp.data.models.PlaceStatus;
-import com.timappweb.timapp.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 
 /**
  * Created by stephane on 4/6/2016.

@@ -1,4 +1,4 @@
-package com.timappweb.timapp.entities;
+package com.timappweb.timapp.data.entities;
 
 import java.util.List;
 
