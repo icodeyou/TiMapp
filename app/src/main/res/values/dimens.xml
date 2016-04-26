@@ -91,5 +91,7 @@
     <dimen name="icon_spot">60dp</dimen>
     <dimen name="little_icon_spot">40dp</dimen>
     <dimen name="margin_right_image_category_spot">5dp</dimen>
+    <dimen name="width_category_title">150dp</dimen>
+    <dimen name="icon_add_event">40dp</dimen>
 
 </resources>

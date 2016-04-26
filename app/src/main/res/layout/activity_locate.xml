@@ -146,7 +146,15 @@
         </LinearLayout>
     </LinearLayout>-->
 
-    <include android:id="@+id/toolbar_transparent"
-        layout="@layout/toolbar_transparent" />
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar_transparent"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:theme="@style/AppTheme.TransparentPopupOverlay" />
+
+    <!--<include
+        layout="@layout/toolbar_transparent" />-->
 
 </RelativeLayout>

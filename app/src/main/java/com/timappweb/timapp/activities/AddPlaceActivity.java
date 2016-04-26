@@ -49,13 +49,12 @@ public class AddPlaceActivity extends BaseActivity {
     AddEventCategoriesAdapter categoriesAdapter;
     private EventCategory eventCategorySelected;
     private View createButton;
-    private TextView textCreateButton;
     private View progressView;
     private TextView nameCategoryTV;
     private View pinView;
     private ViewPager viewPager;
     private SpotView spotView;
-
+    private View buttonsView;
     // Data
     private Spot spot = null;
     private AddPlaceActivity context;
@@ -73,14 +72,14 @@ public class AddPlaceActivity extends BaseActivity {
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        groupNameET = (EditText) findViewById(R.id.place_name_edit_text);
+        groupNameET = (EditText) findViewById(R.id.event_name);
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(MyApplication.getApplicationRules().places_max_name_length);
         groupNameET.setFilters(filters);
 
+        buttonsView = findViewById(R.id.buttons);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
         createButton = findViewById(R.id.create_button);
-        textCreateButton = (TextView) findViewById(R.id.text_create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         pinView = findViewById(R.id.no_spot_view);
@@ -219,9 +218,9 @@ public class AddPlaceActivity extends BaseActivity {
         Log.d(TAG,"textafterchange Trim Length: "+textAfterChange.trim().length());
         Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
         if (eventCategorySelected !=null && Place.isValidName(textAfterChange)) {
-            createButton.setVisibility(View.VISIBLE);
+            buttonsView.setVisibility(View.VISIBLE);
         } else {
-            createButton.setVisibility(View.GONE);
+            buttonsView.setVisibility(View.GONE);
         }
     }
 

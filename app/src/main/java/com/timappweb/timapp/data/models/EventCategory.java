@@ -87,23 +87,6 @@ public class EventCategory extends SyncBaseModel implements Serializable{
         return resourceBlack;
     }
 
-
-    public int getLayoutResId() {
-        if (layoutResId != -1){
-            return layoutResId;
-        }
-        try {
-            layoutResId = R.layout.class.getField("category_" + this.name).getInt(null);
-        } catch (IllegalAccessException e) {
-            Log.e(TAG, "Unknown category layout for " + this.name);
-            layoutResId = R.layout.category_unknown;
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "Unknown category layout for " + this.name);
-            layoutResId = R.layout.category_unknown;
-        }
-        return layoutResId;
-    }
-
     public int getBigImageResId() {
         if (bigImageResId != -1){
             return bigImageResId;
