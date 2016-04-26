@@ -23,6 +23,7 @@ public class Place implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
 
+    @Expose
     public int id = -1;
 
     @SerializedName("spot")

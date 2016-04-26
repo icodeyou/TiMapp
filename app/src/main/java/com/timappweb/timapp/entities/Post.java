@@ -142,6 +142,7 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
     public String toString() {
         return "Post{" +
                 "id=" + id +
+                ", place_id=" + place_id +
                 ", user=" + user +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +

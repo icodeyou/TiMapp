@@ -155,6 +155,7 @@ public class PublishActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 setProgressView(true);
+                currentPost.place_id = currentPlace.id;
                 // Validating user input
                 if (!currentPost.validateForSubmit()) {
                     Toast.makeText(activity, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
@@ -162,14 +163,7 @@ public class PublishActivity extends BaseActivity{
                 }
                 Log.d(TAG, "Submitting post: " + currentPost);
 
-                Call<RestFeedback> call = null;
-                if (currentPlace.isNew()){
-                    call = RestClient.service().addPost(new PostAndPlaceRequest(currentPost, currentPlace));
-                }
-                else{
-                    currentPost.place_id = currentPlace.id;
-                    call = RestClient.service().addPost(currentPost);
-                }
+                Call<RestFeedback> call = RestClient.service().addPost(currentPost);
                 call.enqueue(new AddPostCallback(activity, currentPost, currentPlace));
             }
         });
