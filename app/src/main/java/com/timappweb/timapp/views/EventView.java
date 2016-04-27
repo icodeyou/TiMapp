@@ -3,6 +3,7 @@ package com.timappweb.timapp.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +38,7 @@ public class EventView extends RelativeLayout{
     private View                        gradientTopView;
     private RelativeLayout              mainBox;
     private SpotView                    spotView;
+    private View                        titleLayout;
     private View                        gradientBottomView;
     private LinearLayout                mainLayoutEvent;
     private View                        marginToolbarRight;
@@ -52,7 +54,8 @@ public class EventView extends RelativeLayout{
     private boolean                     isPadding;
     private boolean                     isSpot;
     private boolean                     isDescription;
-    private boolean toolbarMode;
+    private boolean                     toolbarMode;
+    private boolean                     belowToolbar;
 
 
     public EventView(Context context) {
@@ -74,6 +77,7 @@ public class EventView extends RelativeLayout{
         isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
         isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
         toolbarMode = ta.getBoolean(R.styleable.EventView_toolbar_mode, false);
+        belowToolbar = ta.getBoolean(R.styleable.EventView_below_toolbar, false);
         ta.recycle();
 
         this.init();
@@ -87,6 +91,7 @@ public class EventView extends RelativeLayout{
         marginToolbarRight = findViewById(R.id.margin_right_toolbar);
         marginToolbarLeft = findViewById(R.id.margin_left_toolbar);
         spotView = (SpotView) findViewById(R.id.spot_view);
+        titleLayout = findViewById(R.id.text_relative_layout);
         tvName = (AutofitTextView) findViewById(R.id.title_event);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.places_points);
         tvTime = (TextView) findViewById(R.id.time_place);
@@ -110,6 +115,7 @@ public class EventView extends RelativeLayout{
         setBottomShadow(isBottomShadow);
         setTopShadow(isTopShadow);
         setToolbarView(toolbarMode);
+        setBelowToolbarView(belowToolbar);
     }
 
     public HorizontalTagsRecyclerView getRvEventTags() {
@@ -229,6 +235,13 @@ public class EventView extends RelativeLayout{
             categoryIcon.setVisibility(VISIBLE);
             smallCategoryIcon.setVisibility(GONE);
             pointsLayout.setVisibility(VISIBLE);
+        }
+    }
+
+    private void setBelowToolbarView(boolean belowToolbar) {
+        if(belowToolbar) {
+            titleLayout.setVisibility(GONE);
+            categoryIcon.setVisibility(GONE);
         }
     }
 

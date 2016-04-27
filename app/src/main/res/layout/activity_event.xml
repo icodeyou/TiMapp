@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        android:src="@drawable/image_bar"
         android:alpha="0.2"/>
 
 
@@ -36,7 +37,7 @@
             myattrs:toolbar_mode="true"
             myattrs:bottom_shadow="false"
             myattrs:top_shadow="false"
-            myattrs:color_event="@color/background_event" />
+            myattrs:color_event="@color/background_half_black" />
         <include android:id="@+id/toolbar_transparent"
             layout="@layout/toolbar_transparent" />
     </RelativeLayout>

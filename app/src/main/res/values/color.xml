@@ -21,6 +21,7 @@
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
     <color name="background_event">#b7000000</color>
+    <color name="background_half_black">#80000000</color>
     <color name="background_spot">@color/colorSecondaryDark</color>
     <color name="background_spot_transparent">#ac2b3778</color>
     <color name="background_spot_very_transparent">#602e468a</color>
@@ -38,7 +39,7 @@
     <color name="usertag_text_color">#de5249</color>
     <color name="divider_listview">#db9f9b</color>
     <color name="text_place">#ffffff</color>
-    <color name="background_header_place_people">@color/background_event</color>
+    <color name="background_header_place_people">@color/background_half_black</color>
     <color name="background_cluster">#b41e41</color>
     <color name="background_cluster_transparent">#9eb41e41</color>
     <color name="text_cluster">@color/white</color>

@@ -94,12 +94,11 @@
                         <ImageView
                             android:id="@+id/image_small_category_place"
                             android:layout_width="@dimen/little_icon_spot"
-                            android:layout_height="@dimen/little_icon_spot"
+                            android:layout_height="match_parent"
                             android:layout_toRightOf="@id/margin_left_toolbar"
                             android:layout_toEndOf="@id/margin_left_toolbar"
-                            android:layout_gravity="center"
                             android:src="@drawable/ic_category_highlight_party"
-                            android:visibility="gone"/>
+                            android:visibility="visible"/>
                         <!--<HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -129,7 +128,6 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:ellipsize="end"
-                            android:layout_marginBottom="5dp"
                             android:maxLines="1"
                             android:layout_gravity="center"
                             android:textStyle="bold"
@@ -151,6 +149,7 @@
                         android:layout_height="40dp"
                         android:layout_below="@+id/text_relative_layout"
                         android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
                         android:layout_marginLeft="20dp"
                         android:gravity="center"
                         android:layout_gravity="center">
