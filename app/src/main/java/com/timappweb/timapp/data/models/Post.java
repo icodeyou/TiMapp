@@ -1,5 +1,6 @@
 package com.timappweb.timapp.data.models;
 
+import com.activeandroid.Model;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
@@ -13,7 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Post implements Serializable, MarkerValueInterface, PlaceUserInterface {
+public class Post extends Model implements Serializable, MarkerValueInterface, PlaceUserInterface {
 
     private static final String TAG = "EntitySpot";
 
@@ -173,8 +174,9 @@ public class Post implements Serializable, MarkerValueInterface, PlaceUserInterf
         return getPrettyTimeCreated();
     }
 
+
     @Override
-    public int getId() {
+    public int getMarkerId() {
         return this.id;
     }
 

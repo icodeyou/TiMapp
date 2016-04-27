@@ -366,7 +366,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             public boolean onMarkerClick(Marker marker) {
                 MarkerValueInterface markerValue = mapMarkers.get(marker);
                 if (markerValue != null) {
-                    Log.i(TAG, "You clicked on a marker with viewPlaceFromPublish: " + markerValue.getId());
+                    Log.i(TAG, "You clicked on a marker with viewPlaceFromPublish: " + markerValue.getMarkerId());
                     showMarkerDetail(markerValue);
                 } else {
                     Log.e(TAG, "Cannot load this marker");

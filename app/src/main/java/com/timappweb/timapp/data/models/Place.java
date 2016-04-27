@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Table(name = "Place")
-public class Place implements Serializable, MarkerValueInterface {
+public class Place extends SyncBaseModel implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
 
@@ -152,10 +152,6 @@ public class Place implements Serializable, MarkerValueInterface {
         return new LatLng(this.latitude, this.longitude);
     }
 
-    @Override
-    public int getId() {
-        return this.id;
-    }
 
     public String getTime() {
         if (this.posts != null && posts.size() > 0){
@@ -239,4 +235,67 @@ public class Place implements Serializable, MarkerValueInterface {
     public EventCategory getCategory() throws UnknownCategoryException {
         return MyApplication.getCategoryById(this.category_id);
     }
+
+
+    @Override
+    public int getMarkerId() {
+        return this.id;
+    }
+
+    // =============================================================================================
+
+    @Override
+    public long getSyncKey() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel o) {
+        if (o == null) return false;
+        Place place = (Place) o;
+
+        if (spot_id != place.spot_id) return false;
+        if (created != place.created) return false;
+        if (Double.compare(place.latitude, latitude) != 0) return false;
+        if (Double.compare(place.longitude, longitude) != 0) return false;
+        if (count_posts != place.count_posts) return false;
+        if (category_id != place.category_id) return false;
+        if (points != place.points) return false;
+        if (!name.equals(place.name)) return false;
+        return !(description != null ? !description.equals(place.description) : place.description != null);
+    }
+
+
+
+    // =============================================================================================
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Place place = (Place) o;
+
+        if (id != place.id) return false;
+        if (spot_id != place.spot_id) return false;
+        if (created != place.created) return false;
+        if (Double.compare(place.latitude, latitude) != 0) return false;
+        if (Double.compare(place.longitude, longitude) != 0) return false;
+        if (count_posts != place.count_posts) return false;
+        if (category_id != place.category_id) return false;
+        if (points != place.points) return false;
+        if (spot != null ? !spot.equals(place.spot) : place.spot != null) return false;
+        if (!name.equals(place.name)) return false;
+        return !(description != null ? !description.equals(place.description) : place.description != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + id;
+        return result;
+    }
+
 }

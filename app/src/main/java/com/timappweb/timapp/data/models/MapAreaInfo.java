@@ -22,8 +22,8 @@ public class MapAreaInfo extends Model {
 
     private static final String TAG = "MapAreaInfo";
 
-    private static final int MAP_AREA = 1;
-    private static final int AROUND_USER = 2;
+    public static final int MAP_EVENT = 1;
+    public static final int AROUND_USER = 2;
 
     /**
      * Area bounds
@@ -115,15 +115,7 @@ public class MapAreaInfo extends Model {
      * @return true if data are in cache
      */
     public static boolean isInCache(LatLngBounds bounds, int type, long timeago){
-        String whereClause = "DataType = " + type
-                        + " AND " + areaContains(bounds);
-        if (timeago > 0){
-            whereClause += " AND " + oldCondition(timeago);
-        }
-        From query = new Select()
-                .from(MapAreaInfo.class)
-                .where(whereClause);
-        return query.exists();
+        return findArea(bounds, type, timeago).exists();
     }
 
     public static boolean isInCache(LatLngBounds bounds, int type){
@@ -172,5 +164,19 @@ public class MapAreaInfo extends Model {
 
     public LatLngBounds getBounds() {
         return new LatLngBounds(new LatLng(this.SW_latitude, this.SW_longitude), new LatLng(this.NE_latitude, this.NE_latitude));
+    }
+
+    public static From findArea(LatLngBounds bounds, int type, long timeago) {
+        String whereClause = "DataType = " + type
+                + " AND " + areaContains(bounds);
+        if (timeago > 0){
+            whereClause += " AND " + oldCondition(timeago);
+        }
+        return new Select()
+                .from(MapAreaInfo.class)
+                .where(whereClause);
+    }
+    public static From findArea(LatLngBounds bounds, int type) {
+        return findArea(bounds, type, 0);
     }
 }

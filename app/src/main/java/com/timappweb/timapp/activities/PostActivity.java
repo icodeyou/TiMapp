@@ -68,7 +68,7 @@ public class PostActivity extends BaseActivity {
     }
 
     private void loadTagsForPost() {
-        Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentPost.getId());
+        Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentPost.getMarkerId());
         call.enqueue(new RestCallback<List<Tag>>(this) {
             @Override
             public void onFailure(Throwable t) {
@@ -88,7 +88,7 @@ public class PostActivity extends BaseActivity {
     }
 
     private void loadPost(int postId) {
-        Call<Post> call = RestClient.service().viewPost(currentPost.getId());
+        Call<Post> call = RestClient.service().viewPost(currentPost.getMarkerId());
         call.enqueue(new RestCallback<Post>(this) {
             @Override
             public void onFailure(Throwable t) {

@@ -7,6 +7,5 @@ import com.google.maps.android.clustering.ClusterItem;
  */
 public interface MarkerValueInterface extends ClusterItem {
 
-    public int getId();
-
+    int getMarkerId();
 }

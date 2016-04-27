@@ -68,41 +68,20 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize, allowParallelSyncs);
     }
 
-    public static void performModelSync(Class<? extends SyncBaseModel> classType, Call call, SyncResult syncResult){
+    public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, From localQuery, SyncResult syncResult){
         try {
-            Log.d(TAG, "Synchronise type: " + classType);
-            Response<List<? extends SyncBaseModel>> response = call.execute();
+            Response<List<? extends SyncBaseModel>> response = remoteQuery.execute();
             if (response.isSuccess()){
-                updateLocalDatabase(classType, response.body(), syncResult);
+                List<? extends SyncBaseModel> localEntries = localQuery.execute();
+                updateLocalDatabase(classType, response.body(), localEntries, syncResult);
             }
             else {
                 // TODO handle this case globally ???
                 Log.e(TAG, "Cannot synchronise, api response invalid: " + response.code());
             }
-        }
-        catch (MalformedURLException e) {
-            Log.wtf(TAG, "Feed URL is malformed", e);
-            syncResult.stats.numParseExceptions++;
-            return;
         } catch (IOException e) {
             Log.e(TAG, "Error reading from network: " + e.toString());
             syncResult.stats.numIoExceptions++;
-            return;
-        } catch (XmlPullParserException e) {
-            Log.e(TAG, "Error parsing feed: " + e.toString());
-            syncResult.stats.numParseExceptions++;
-            return;
-        } catch (ParseException e) {
-            Log.e(TAG, "Error parsing feed: " + e.toString());
-            syncResult.stats.numParseExceptions++;
-            return;
-        } catch (RemoteException e) {
-            Log.e(TAG, "Error updating database: " + e.toString());
-            syncResult.databaseError = true;
-            return;
-        } catch (OperationApplicationException e) {
-            Log.e(TAG, "Error updating database: " + e.toString());
-            syncResult.databaseError = true;
             return;
         }
     }
@@ -128,30 +107,15 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
      * (At this point, incoming database only contains missing items.)<br/>
      * 3. For any items remaining in incoming list, ADD to database.
      */
-    public static void updateLocalDatabase(Class<? extends SyncBaseModel> classType,
+    public void updateLocalDatabase(Class<? extends SyncBaseModel> classType,
                                            final List<? extends SyncBaseModel> remoteEntries,
-                                           final SyncResult syncResult)
-            throws IOException, XmlPullParserException, RemoteException,
-            OperationApplicationException, ParseException {
-
-        Log.i(TAG, "Found " + remoteEntries.size() + " remote entrie(s)");
-        if (remoteEntries.size() == 0){
-            Log.i(TAG, "No data returned by web service => removing all local entries");
-            new Delete().from(classType).execute();
-            return;
-        }
-
+                                           final List<? extends SyncBaseModel> localEntries,
+                                           final SyncResult syncResult) {
         // Build hash table of incoming entries
         HashMap<Long, SyncBaseModel> entryMap = new HashMap();
         for (SyncBaseModel m : remoteEntries) {
             entryMap.put(m.getSyncKey(), m);
         }
-        // Get list of all items
-        Log.i(TAG, "Fetching local entries for merge");
-
-        // TODO use content provider:
-        From query = new Select().from(classType);
-        List<? extends SyncBaseModel> localEntries = query.execute();
 
         Log.i(TAG, "Found " + localEntries.size() + " local entries. Computing merge solution...");
         try

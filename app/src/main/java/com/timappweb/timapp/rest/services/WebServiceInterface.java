@@ -185,6 +185,15 @@ public interface WebServiceInterface {
     @GET("Places/reachable.json")
     Call<List<Place>> placeReachable(@QueryMap Map<String, String> conditions);
 
+    /**
+     *
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    @GET("Places/reachable.json")
+    Call<List<Place>> placeReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
+
     // ---------------------------------------------------------------------------------------------
     // PlacesUsers
     /**

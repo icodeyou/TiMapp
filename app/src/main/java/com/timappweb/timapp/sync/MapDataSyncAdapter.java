@@ -17,75 +17,61 @@
 package com.timappweb.timapp.sync;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.OperationApplicationException;
-import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.os.Build;
+import android.location.Location;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
+import com.activeandroid.Model;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.R;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.MapAreaInfo;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
-
-import org.xmlpull.v1.XmlPullParserException;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Define a sync adapter for the app.
  *
- * <p>This class is instantiated in {@link SyncService}, which also binds ConfigSyncAdapter to the system.
- * ConfigSyncAdapter should only be initialized in SyncService, never anywhere else.
+ * <p>This class is instantiated in {@link SyncService}, which also binds MapDataSyncAdapter to the system.
+ * MapDataSyncAdapter should only be initialized in SyncService, never anywhere else.
  *
  * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
  * SyncService.
  */
-public class ConfigSyncAdapter extends AbstractSyncAdapter {
+public class MapDataSyncAdapter extends AbstractSyncAdapter {
 
-    public static final String TAG = "ConfigSyncAdapter";
+    public static final String TAG = "MapDataAdapter";
 
-    /**
-     * Content resolver, for performing database operations.
-     */
-    private final ContentResolver mContentResolver;
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
-    public ConfigSyncAdapter(Context context, boolean autoInitialize) {
+    public MapDataSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        mContentResolver = context.getContentResolver();
     }
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
-    public ConfigSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public MapDataSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        mContentResolver = context.getContentResolver();
     }
 
     /**
@@ -107,43 +93,26 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "--------------- Beginning network synchronization -----------------------------");
-        this.syncApplicationRules();
-        this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
-        this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
-        this.performModelSync(EventCategory.class, RestClient.service().eventCategories(), syncResult);
+
+        if (MyApplication.hasFineLocation()){
+            Location location = MyApplication.getLastLocation();
+            // TODO
+            From localQuery = MapAreaInfo.findArea(null, MapAreaInfo.AROUND_USER);
+            this.performModelSync(  Place.class,
+                                RestClient.service().placeReachable(location.getLatitude(), location.getLongitude()),
+                                localQuery,
+                                syncResult);
+        }
         Log.i(TAG, "--------------- Network synchronization complete -------------------------------");
     }
 
-    public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult){
-        From localQuery = new Select().from(classType);
-        super.performModelSync(classType, remoteQuery, localQuery, syncResult);
-    }
 
-    @Override
-    public void updateLocalDatabase(Class<? extends SyncBaseModel> classType,
-                                    List<? extends SyncBaseModel> remoteEntries,
-                                    List<? extends SyncBaseModel> localEntries,
-                                    SyncResult syncResult) {
-        Log.i(TAG, "Found " + remoteEntries.size() + " remote entrie(s)");
-        if (remoteEntries.size() == 0){
-            Log.i(TAG, "No data returned by web service => removing all local entries");
-            new Delete().from(classType).execute();
-            return;
+    private void performMapDataSync(LatLngBounds bounds, PaginationResponse<? extends SyncBaseModel> response){
+        MapAreaInfo.addNewArea(bounds, MapAreaInfo.MAP_EVENT, response.total, response.items.size());
+        for (SyncBaseModel model: response.items){
+
         }
-        super.updateLocalDatabase(classType, remoteEntries, localEntries, syncResult);
+
     }
-
-    private void syncApplicationRules() {
-        try {
-            Log.i(TAG, "Sync application rules...");
-            ApplicationRules rules = RestClient.service().applicationRules().execute().body();
-            ConfigurationProvider.setApplicationRules(rules);
-        } catch (IOException e) {
-            Log.e(TAG, "Cannot load application rules: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-
 
 }
