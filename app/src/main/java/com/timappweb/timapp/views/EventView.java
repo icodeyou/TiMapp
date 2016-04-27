@@ -29,6 +29,8 @@ public class EventView extends RelativeLayout{
     private TextView                    tvTime;
     private HorizontalTagsRecyclerView  rvEventTags;
     private ImageView                   categoryIcon;
+    private ImageView                   smallCategoryIcon;
+    private View                        pointsLayout;
     private ImageView                   backgroundImage;
     private SimpleTimerView             tvCountPoints;
     private View                        gradientBottomViewIfPadding;
@@ -37,8 +39,10 @@ public class EventView extends RelativeLayout{
     private SpotView                    spotView;
     private View                        gradientBottomView;
     private LinearLayout                mainLayoutEvent;
+    private View                        marginToolbarRight;
+    private View                        marginToolbarLeft;
     private View                        separator;
-    private View                        descriptionTv;
+    private View                        descriptionView;
 
     private int                         colorSpot;
     private int                         colorEvent;
@@ -48,6 +52,7 @@ public class EventView extends RelativeLayout{
     private boolean                     isPadding;
     private boolean                     isSpot;
     private boolean                     isDescription;
+    private boolean toolbarMode;
 
 
     public EventView(Context context) {
@@ -68,6 +73,7 @@ public class EventView extends RelativeLayout{
         isPadding = ta.getBoolean(R.styleable.EventView_is_padding, false);
         isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
         isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
+        toolbarMode = ta.getBoolean(R.styleable.EventView_toolbar_mode, false);
         ta.recycle();
 
         this.init();
@@ -78,11 +84,15 @@ public class EventView extends RelativeLayout{
 
         mainBox = (RelativeLayout) findViewById(R.id.main_box_relative);
         mainLayoutEvent = (LinearLayout) findViewById(R.id.main_layout_event);
+        marginToolbarRight = findViewById(R.id.margin_right_toolbar);
+        marginToolbarLeft = findViewById(R.id.margin_left_toolbar);
         spotView = (SpotView) findViewById(R.id.spot_view);
         tvName = (AutofitTextView) findViewById(R.id.title_event);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.places_points);
         tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
+        smallCategoryIcon = (ImageView) findViewById(R.id.image_small_category_place);
+        pointsLayout = findViewById(R.id.points_layout);
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
         gradientBottomView = findViewById(R.id.bottom_gradient_event);
         gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
@@ -90,14 +100,16 @@ public class EventView extends RelativeLayout{
         rvEventTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
         tagsView = findViewById(R.id.horizontal_tags_view);
         separator = findViewById(R.id.separator);
-        descriptionTv = findViewById(R.id.description_event);
+        descriptionView = findViewById(R.id.description_event);
 
-        setDescriptionTv(isDescription);
-        setSpotVisible(isSpot);
-        setTagsVisible(isTagsVisible);
+
+        marginToolbarRight.setVisibility(VISIBLE);
+        marginToolbarLeft.setVisibility(VISIBLE);
+
+        initPadding(isPadding);
         setBottomShadow(isBottomShadow);
         setTopShadow(isTopShadow);
-        initPadding(isPadding);
+        setToolbarView(toolbarMode);
     }
 
     public HorizontalTagsRecyclerView getRvEventTags() {
@@ -128,7 +140,7 @@ public class EventView extends RelativeLayout{
                 //EventCategory Icon
                 eventCategory = MyApplication.getCategoryById(event.category_id);
                 categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
-                MyApplication.setCategoryBackground(categoryIcon, event.getLevel());
+                //MyApplication.setCategoryBackground(categoryIcon, event.getLevel());
 
                 //Place background
                 backgroundImage.setImageResource(eventCategory.getBigImageResId());
@@ -196,23 +208,47 @@ public class EventView extends RelativeLayout{
         }
     }
 
+    private void setToolbarView(boolean toolbarMode) {
+        if(toolbarMode) {
+            mainLayoutEvent.setPadding(0,0,0,0);
+            marginToolbarRight.setVisibility(VISIBLE);
+            marginToolbarLeft.setVisibility(VISIBLE);
+            spotView.setVisibility(GONE);
+            gradientBottomView.setVisibility(GONE);
+            categoryIcon.setVisibility(GONE);
+            smallCategoryIcon.setVisibility(VISIBLE);
+            pointsLayout.setVisibility(GONE);
+            tagsView.setVisibility(GONE);
+            descriptionView.setVisibility(GONE);
+        } else {
+            setDescriptionView(isDescription);
+            setSpotVisible(isSpot);
+            setTagsVisible(isTagsVisible);
+            marginToolbarRight.setVisibility(GONE);
+            marginToolbarLeft.setVisibility(GONE);
+            categoryIcon.setVisibility(VISIBLE);
+            smallCategoryIcon.setVisibility(GONE);
+            pointsLayout.setVisibility(VISIBLE);
+        }
+    }
+
     public Place getEvent() {
         return event;
     }
 
-    public void setDescriptionTv(boolean isDescription) {
+    public void setDescriptionView(boolean isDescription) {
         if(isDescription) {
-            descriptionTv.setVisibility(VISIBLE);
+            descriptionView.setVisibility(VISIBLE);
         } else {
-            descriptionTv.setVisibility(GONE);
+            descriptionView.setVisibility(GONE);
         }
     }
 
-    public View getDescriptionTv() {
-        return descriptionTv;
+    public View getDescriptionView() {
+        return descriptionView;
     }
 
     public void setDescriptionTv(View descriptionTv) {
-        this.descriptionTv = descriptionTv;
+        this.descriptionView = descriptionTv;
     }
 }

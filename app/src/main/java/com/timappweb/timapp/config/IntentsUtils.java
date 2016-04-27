@@ -9,6 +9,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
+import com.timappweb.timapp.activities.CommentActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.ErrorActivity;
@@ -35,6 +36,7 @@ public class IntentsUtils {
     private static final String TAG = "IntentUtils";
 
     public static final int ACTIVITY_RESULT_PICK_SPOT = 1;
+    public static final int ACTIVITY_RESULT_COMMENT = 2;
 
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
@@ -206,6 +208,11 @@ public class IntentsUtils {
         }
         Intent intent = new Intent(context, AddPlaceActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void comment(Activity activity) {
+        Intent intent = new Intent(activity, CommentActivity.class);
+        activity.startActivityForResult(intent, ACTIVITY_RESULT_COMMENT);
     }
 
     public static void pinSpot(Activity activity) {

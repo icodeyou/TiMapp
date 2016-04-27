@@ -24,9 +24,19 @@
             android:id="@+id/spot_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             myattrs:bottom_shadow="false"
             myattrs:toolbar_mode="true"
             myattrs:background_color="@color/background_activity_event" />
+        <com.timappweb.timapp.views.EventView
+            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+            android:id="@+id/event_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            myattrs:toolbar_mode="true"
+            myattrs:bottom_shadow="false"
+            myattrs:top_shadow="false"
+            myattrs:color_event="@color/background_event" />
         <include android:id="@+id/toolbar_transparent"
             layout="@layout/toolbar_transparent" />
     </RelativeLayout>
@@ -137,9 +147,11 @@
     <!-- Separator-->
     <!-- ************************************* -->
     <View
+        android:id="@+id/separator_toolbar"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_below="@+id/toolbar_layout"
-        android:background="@drawable/separator_toolbar_event_activity" />
+        android:background="@drawable/separator_toolbar_event_activity"
+        android:visibility="gone"/>
 
 </RelativeLayout>

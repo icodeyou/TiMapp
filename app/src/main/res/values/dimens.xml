@@ -92,6 +92,8 @@
     <dimen name="little_icon_spot">40dp</dimen>
     <dimen name="margin_right_image_category_spot">5dp</dimen>
     <dimen name="width_category_title">150dp</dimen>
-    <dimen name="icon_add_event">40dp</dimen>
+    <dimen name="icon_add_event">50dp</dimen>
+    <dimen name="margin_custom_toolbar_left">40dp</dimen>
+    <dimen name="margin_custom_toolbar_right">95dp</dimen>
 
 </resources>

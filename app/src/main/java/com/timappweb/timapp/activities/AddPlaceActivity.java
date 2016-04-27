@@ -44,12 +44,15 @@ public class AddPlaceActivity extends BaseActivity {
     private String TAG = "AddPlaceActivity";
     private InputMethodManager imm;
 
+    private String comment;
+
     //Views
     private EditText groupNameET;
     RecyclerView categoriesRV;
     AddEventCategoriesAdapter categoriesAdapter;
     private EventCategory eventCategorySelected;
     private View createButton;
+    private View commentButton;
     private View progressView;
     private TextView nameCategoryTV;
     private View pinView;
@@ -69,7 +72,7 @@ public class AddPlaceActivity extends BaseActivity {
         context = this;
 
         this.initToolbar(true);
-        this.extractBundle(savedInstanceState);
+        this.extractSpot(savedInstanceState);
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -81,6 +84,7 @@ public class AddPlaceActivity extends BaseActivity {
         buttonsView = findViewById(R.id.buttons);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
         createButton = findViewById(R.id.create_button);
+        commentButton = findViewById(R.id.comment_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         pinView = findViewById(R.id.no_spot_view);
@@ -100,8 +104,8 @@ public class AddPlaceActivity extends BaseActivity {
         super.onResume();
     }
 
-    private void extractBundle(Bundle bundle){
-        if (bundle != null){
+    private void extractSpot(Bundle bundle){
+        if(bundle!=null) {
             spot = (Spot) bundle.getSerializable("spot");
             if (spot != null){
                 Log.v(TAG, "Spot is selected: " + spot);
@@ -111,19 +115,36 @@ public class AddPlaceActivity extends BaseActivity {
             } else {
                 Log.d(TAG, "spot is null");
             }
-        } else {
-            Log.d(TAG, "bundle is null");
         }
     }
 
+    private void extractComment(Bundle bundle){
+        if(bundle!=null) {
+            comment = (String) bundle.getSerializable("comment");
+            if (comment != null){
+                Log.v(TAG, "Comment is selected: " + comment);
+                //TODO : Display comment
+            } else {
+                Log.d(TAG, "spot is null");
+            }
+        }
+    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == IntentsUtils.ACTIVITY_RESULT_PICK_SPOT) {
-            if(resultCode == RESULT_OK){
-                Log.d(TAG, "extracting bundle");
-                extractBundle(data.getExtras());
-            }
+        switch (requestCode) {
+            case IntentsUtils.ACTIVITY_RESULT_PICK_SPOT:
+                if(resultCode == RESULT_OK){
+                    Log.d(TAG, "extracting bundle Spot");
+                    extractSpot(data.getExtras());
+                }
+                break;
+            case IntentsUtils.ACTIVITY_RESULT_COMMENT:
+                if(resultCode == RESULT_OK){
+                    Log.d(TAG, "extracting bundle Comment");
+                    extractComment(data.getExtras());
+                }
+                break;
         }
     }
 
@@ -268,6 +289,13 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 setButtonValidation();
+            }
+        });
+
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.comment(context);
             }
         });
 

@@ -125,6 +125,7 @@ public class EventActivity extends BaseActivity {
         initToolbar(false, colorRes);
 
         //Initialize
+        eventView = (EventView) findViewById(R.id.event_view);
         parentLayout = findViewById(R.id.main_layout_place);
         iAmComingButton = findViewById(R.id.button_coming);
         iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
@@ -393,6 +394,7 @@ public class EventActivity extends BaseActivity {
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + event.category_id);
         }
+        eventView.setEvent(event);
         fragmentTags.setEvent(event);
         updateBtnVisibility();
     }

@@ -31,7 +31,7 @@
             
             <Space
                 android:id="@+id/margin_left_toolbar_mode"
-                android:layout_width="40dp"
+                android:layout_width="@dimen/margin_custom_toolbar_left"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
@@ -95,13 +95,11 @@
             android:layout_alignBottom="@+id/horizontal_linear_layout"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:paddingRight="10dp"
-            android:paddingEnd="10dp"
             android:orientation="horizontal"
             android:visibility="visible">
             <Space
                 android:id="@+id/margin_right_toolbar_mode"
-                android:layout_width="70dp"
+                android:layout_width="@dimen/margin_custom_toolbar_right"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
             <ImageView
@@ -117,6 +115,8 @@
                 android:id="@+id/ic_remove"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:padding="3dp"
                 android:layout_gravity="center"
                 android:src="@drawable/trashcan_white"
