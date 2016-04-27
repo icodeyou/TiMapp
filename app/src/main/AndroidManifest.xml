@@ -68,7 +68,7 @@
 
 
         <!-- SYNC ADAPTERS ===================================================================== -->
-        <!-- SyncAdapter's dummy authentication service -->
+        <!-- ConfigSyncAdapter's dummy authentication service -->
         <service android:name=".sync.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -77,7 +77,7 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
-        <!-- This service implements our SyncAdapter. It needs to be exported, so that the system
+        <!-- This service implements our ConfigSyncAdapter. It needs to be exported, so that the system
         sync framework can access it. -->
         <service android:name=".sync.SyncService"
             android:exported="true"
@@ -87,7 +87,7 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <!-- This points to a required XML file which describes our SyncAdapter. -->
+            <!-- This points to a required XML file which describes our ConfigSyncAdapter. -->
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />

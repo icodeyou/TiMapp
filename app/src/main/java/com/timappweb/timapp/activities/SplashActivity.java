@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.sync.SyncAdapter;
 
 import org.jdeferred.DoneCallback;
 import org.jdeferred.FailCallback;

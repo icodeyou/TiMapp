@@ -1,5 +1,7 @@
 package com.timappweb.timapp.data.entities;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,31 +10,68 @@ import java.util.List;
  */
 public class ApplicationRules {
 
-    public ApplicationRules() {
-        this.places_points_levels = new LinkedList<>();
-    }
-
-    public List<Integer> places_points_levels;
+    @Expose
     public String tags_name_regex = "";
+
+    @Expose
     public int max_invite_per_request = 20;
+
+    @Expose
     public int picture_max_size;
+
+    @Expose
     public int picture_max_width;
+
+    @Expose
     public int picture_max_height;
+
+    @Expose
     public int place_max_reachable = 500;
+
+    @Expose
     public int tags_suggest_limit = 40;
+
+    @Expose
     public int places_populars_limit = 20;
+
+    @Expose
     public int places_min_delay_add = 60;
+
+    @Expose
     public int places_users_min_delay_add  = 60;
+
+    @Expose
     public int posts_min_tag_number = 3;
+
+    @Expose
     public int posts_max_tags_number = 3;
+
+    @Expose
     public int tags_min_name_length = 2;
+
+    @Expose
     public int tags_max_name_length = 30;
+
+    @Expose
     public int gps_min_time_delay = 60000;
+
+    @Expose
     public int gps_min_accuracy_add_place = 3500;
+
+    @Expose
     public int gps_min_accuracy = 3500;
+
+    @Expose
     public int places_min_name_length = 3;
-    public int places_max_name_length;
+
+    @Expose
+    public int places_max_name_length = 0; // @warning used to check if configuration is correctly loaded. Do not change default
+
+    @Expose
     public int tags_min_search_length = 0;
+
+    @Expose
+    public List<Integer> places_points_levels = new LinkedList<>();
 
     public String toString(){
         return "ApplicationRules{" +

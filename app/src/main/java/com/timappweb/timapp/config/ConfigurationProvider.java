@@ -69,8 +69,8 @@ public class ConfigurationProvider {
      */
     public static boolean hasFullConfiguration(){
         try{
-            rules();
-            return true;
+            ApplicationRules rules = rules();
+            return rules.places_max_name_length > 0;
         }
         catch (IncompleteConfigurationException ex){
             return false;

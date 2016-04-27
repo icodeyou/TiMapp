@@ -3,7 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/Authenticator.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/AuthenticatorService.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/SyncAdapter.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/ConfigSyncAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/SyncService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/authenticator.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter.xml" charset="windows-1252" />

@@ -21,6 +21,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 public class MapAreaInfo extends Model {
 
     private static final String TAG = "MapAreaInfo";
+
+    private static final int MAP_AREA = 1;
+    private static final int AROUND_USER = 2;
+
     /**
      * Area bounds
      */

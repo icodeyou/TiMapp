@@ -214,10 +214,9 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     public void setButtonValidation() {
-        String textAfterChange = groupNameET.getText().toString();
-        Log.d(TAG,"textafterchange : "+textAfterChange);
-        Log.d(TAG,"textafterchange Trim Length: "+textAfterChange.trim().length());
-        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
+        String textAfterChange = groupNameET.getText().toString().trim();
+//        Log.d(TAG,"textafterchange : "+textAfterChange);
+//        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
         if (eventCategorySelected !=null && Place.isValidName(textAfterChange)) {
             buttonsView.setVisibility(View.VISIBLE);
         } else {

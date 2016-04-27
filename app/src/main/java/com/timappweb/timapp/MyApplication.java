@@ -13,12 +13,9 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
-import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
@@ -26,7 +23,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
-import com.timappweb.timapp.sync.SyncAdapter;
+import com.timappweb.timapp.sync.ConfigSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
@@ -39,7 +36,6 @@ import org.jdeferred.impl.DeferredObject;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 public class MyApplication extends com.activeandroid.app.Application {
     private static final String DB_NAME = "prepop.db";
@@ -140,7 +136,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext());
 
-        SyncAdapter.initializeSyncAdapter(this);
+        ConfigSyncAdapter.initializeSyncAdapter(this);
 
         ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
             @Override
@@ -158,7 +154,7 @@ public class MyApplication extends com.activeandroid.app.Application {
             notifyLoadingState("Server configuration loaded");
         }
         else{
-            SyncAdapter.syncImmediately(this);
+            ConfigSyncAdapter.syncImmediately(this);
         }
 
         checkToken();

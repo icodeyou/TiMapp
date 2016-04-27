@@ -7,31 +7,31 @@ import android.util.Log;
 
 /** Service to handle sync requests.
  *
- * <p>This service is invoked in response to Intents with action android.content.SyncAdapter, and
- * returns a Binder connection to SyncAdapter.
+ * <p>This service is invoked in response to Intents with action android.content.ConfigSyncAdapter, and
+ * returns a Binder connection to ConfigSyncAdapter.
  *
  * <p>For performance, only one sync adapter will be initialized within this application's context.
  *
  * <p>Note: The SyncService itself is not notified when a new sync occurs. It's role is to
- * manage the lifecycle of our {@link SyncAdapter} and provide a handle to said SyncAdapter to the
+ * manage the lifecycle of our {@link ConfigSyncAdapter} and provide a handle to said ConfigSyncAdapter to the
  * OS on request.
  */
 public class SyncService extends Service {
     private static final String TAG = "SyncService";
 
     private static final Object sSyncAdapterLock = new Object();
-    private static SyncAdapter sSyncAdapter = null;
+    private static ConfigSyncAdapter sConfigSyncAdapter = null;
 
     /**
-     * Thread-safe constructor, creates static {@link SyncAdapter} instance.
+     * Thread-safe constructor, creates static {@link ConfigSyncAdapter} instance.
      */
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "Service created");
         synchronized (sSyncAdapterLock) {
-            if (sSyncAdapter == null) {
-                sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
+            if (sConfigSyncAdapter == null) {
+                sConfigSyncAdapter = new ConfigSyncAdapter(getApplicationContext(), true);
             }
         }
     }
@@ -46,15 +46,15 @@ public class SyncService extends Service {
     }
 
     /**
-     * Return Binder handle for IPC communication with {@link SyncAdapter}.
+     * Return Binder handle for IPC communication with {@link ConfigSyncAdapter}.
      *
-     * <p>New sync requests will be sent directly to the SyncAdapter using this channel.
+     * <p>New sync requests will be sent directly to the ConfigSyncAdapter using this channel.
      *
      * @param intent Calling intent
-     * @return Binder handle for {@link SyncAdapter}
+     * @return Binder handle for {@link ConfigSyncAdapter}
      */
     @Override
     public IBinder onBind(Intent intent) {
-        return sSyncAdapter.getSyncAdapterBinder();
+        return sConfigSyncAdapter.getSyncAdapterBinder();
     }
 }

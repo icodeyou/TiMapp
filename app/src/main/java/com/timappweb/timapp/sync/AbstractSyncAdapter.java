@@ -1,25 +1,8 @@
-/*
- * Copyright 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.timappweb.timapp.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.OperationApplicationException;
@@ -35,21 +18,12 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.UserQuota;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.services.ConfigInterface;
-import com.timappweb.timapp.utils.KeyValueStorage;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.security.Key;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -58,24 +32,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- * Define a sync adapter for the app.
- *
- * <p>This class is instantiated in {@link SyncService}, which also binds SyncAdapter to the system.
- * SyncAdapter should only be initialized in SyncService, never anywhere else.
- *
- * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
- * SyncService.
+ * Created by stephane on 4/27/2016.
  */
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
-    public static final String TAG = "SyncAdapter";
+public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
 
-    /**
-     * URL to fetch content from during a sync.
-     *
-     * <p>This points to the Android Developers Blog. (Side note: We highly recommend reading the
-     * Android Developer Blog to stay up to date on the latest Android platform developments!)
-     */
-    private static final String FEED_URL = "http://android-developers.blogspot.com/atom.xml";
+    private static final String TAG = "SyncAdapter";
 
     /**
      * Network connection timeout, in milliseconds.
@@ -87,69 +48,24 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      */
     private static final int NET_READ_TIMEOUT_MILLIS = 10000;  // 10 seconds
 
+    /**
+     * Sync interval in seconds
+     */
     public static final int SYNC_INTERVAL = 60 * 180;
+
+    /**
+     *
+     */
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
+
     private static Account mAccount;
 
-    /**
-     * Content resolver, for performing database operations.
-     */
-    private final ContentResolver mContentResolver;
-
-    /**
-     * Constructor. Obtains handle to content resolver for later use.
-     */
-    public SyncAdapter(Context context, boolean autoInitialize) {
+    public AbstractSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        mContentResolver = context.getContentResolver();
     }
 
-    /**
-     * Constructor. Obtains handle to content resolver for later use.
-     */
-    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public AbstractSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        mContentResolver = context.getContentResolver();
-    }
-
-    /**
-     * Called by the Android system in response to a request to run the sync adapter. The work
-     * required to read data from the network, parse it, and store it in the content provider is
-     * done here. Extending AbstractThreadedSyncAdapter ensures that all methods within SyncAdapter
-     * run on a background thread. For this reason, blocking I/O and other long-running tasks can be
-     * run <em>in situ</em>, and you don't have to set up a separate thread for them.
-     .
-     *
-     * <p>This is where we actually perform any work required to perform a sync.
-     * {@link AbstractThreadedSyncAdapter} guarantees that this will be called on a non-UI thread,
-     * so it is safe to peform blocking I/O here.
-     *
-     * <p>The syncResult argument allows you to pass information back to the method that triggered
-     * the sync.
-     */
-    @Override
-    public void onPerformSync(Account account, Bundle extras, String authority,
-                              ContentProviderClient provider, SyncResult syncResult) {
-        Log.i(TAG, "Beginning network synchronization");
-
-        this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
-        this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
-        this.performModelSync(EventCategory.class,  RestClient.service().eventCategories(), syncResult);
-
-        this.syncApplicationRules();
-        // TODO add user invites
-
-        Log.i(TAG, "Network synchronization complete");
-    }
-
-    private void syncApplicationRules() {
-        try {
-            ApplicationRules rules = RestClient.service().applicationRules().execute().body();
-            ConfigurationProvider.setApplicationRules(rules);
-        } catch (IOException e) {
-            Log.e(TAG, "Cannot load application rules: " + e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     public static void performModelSync(Class<? extends SyncBaseModel> classType, Call call, SyncResult syncResult){
@@ -190,6 +106,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             return;
         }
     }
+
+
     /**
      * Read XML from an input stream, storing it into the content provider.
      *
@@ -285,6 +203,19 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // syncToNetwork=false in the line above to prevent duplicate syncs.
     }
 
+    /**
+     * Helper method to have the sync adapter sync immediately
+     * @param context The context used to access the account service
+     */
+    public static void syncImmediately(Context context) {
+        Log.d(TAG, "Request sync immediately");
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+
+        ContentResolver.requestSync(getSyncAccount(context),
+                context.getString(R.string.content_authority), bundle);
+    }
 
 
     /**
@@ -307,21 +238,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     /**
-     * Helper method to have the sync adapter sync immediately
-     * @param context The context used to access the account service
-     */
-    public static void syncImmediately(Context context) {
-        Log.d(TAG, "Request sync immediately");
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-
-        ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
-    }
-
-    /**
-     * Helper method to get the fake account to be used with SyncAdapter, or make a new one
+     * Helper method to get the fake account to be used with ConfigSyncAdapter, or make a new one
      * if the fake account doesn't exist yet.  If we make a new account, we call the
      * onAccountCreated method so we can initialize things.
      *
@@ -366,11 +283,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         return mAccount;
     }
 
-    private static void onAccountCreated(Account newAccount, Context context) {
+
+
+    protected static void onAccountCreated(Account newAccount, Context context) {
         /*
          * Since we've created an account
          */
-        SyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+        ConfigSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
@@ -398,3 +317,4 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 }
+
