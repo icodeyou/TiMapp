@@ -1,34 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <me.grantland.widget.AutofitTextView
-        android:id="@+id/name_invitor"
+    <ImageView
+        android:id="@+id/background_invitation"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/top_radius_invitation"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_small"
-        android:text="Jack Overfield invited you 20 hours ago" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_bar"/>
 
-    <com.timappweb.timapp.views.EventView
-        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-        android:id="@+id/event_view"
-        android:layout_marginTop="-10dp"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        myattrs:tags_visible="true"
-        myattrs:bottom_shadow="true"
-        myattrs:top_shadow="true"/>
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/background_half_black"
+            android:layout_marginBottom="10dp">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/letter"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/name_invitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_small"
+                    android:text="Jack Overfield" />
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/date_invitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_small"
+                    android:text="Ten hours ago" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        
 
-</LinearLayout>
+        <com.timappweb.timapp.views.EventView
+            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/event_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            myattrs:color_event="@color/background_half_black"
+            myattrs:tags_visible="true"
+            myattrs:bottom_shadow="true"
+            myattrs:top_shadow="false"/>
+    </LinearLayout>
+
+</RelativeLayout>

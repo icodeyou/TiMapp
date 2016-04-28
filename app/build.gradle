@@ -79,6 +79,7 @@ dependencies {
     compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
     compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
     compile 'me.grantland:autofittextview:0.2.+'
+    compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.0-beta5'
 
     //compile 'com.pkmmte.view:circularimageview:1.1'
     //compile 'com.squareup.picasso:picasso:2.5.2'

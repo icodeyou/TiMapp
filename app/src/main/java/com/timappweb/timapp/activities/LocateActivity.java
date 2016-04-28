@@ -67,7 +67,6 @@ public class LocateActivity extends BaseActivity{
         Log.d(TAG, "Creating LocateActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
-        this.initToolbar(false);
 
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
@@ -82,6 +81,8 @@ public class LocateActivity extends BaseActivity{
         setListeners();
         initAdapterPlaces();
         initLocationListener();
+
+        this.initToolbar(false);
 
     }
 

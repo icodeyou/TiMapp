@@ -3,7 +3,7 @@ package com.timappweb.timapp.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -55,11 +55,24 @@ public class EventView extends RelativeLayout{
     private boolean                     isSpot;
     private boolean                     isDescription;
     private boolean                     toolbarMode;
-    private boolean                     belowToolbar;
+    private boolean                     showTitle;
 
 
     public EventView(Context context) {
         super(context);
+        this.isSpot = false;
+        this.isDescription = true;
+        this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
+        this.showTitle = true;
+        this.init();
+    }
+
+    public EventView(Context context, boolean showTitle) {
+        super(context);
+        this.isSpot = false;
+        this.isDescription = true;
+        this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
+        this.showTitle = showTitle;
         this.init();
     }
 
@@ -77,7 +90,7 @@ public class EventView extends RelativeLayout{
         isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
         isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
         toolbarMode = ta.getBoolean(R.styleable.EventView_toolbar_mode, false);
-        belowToolbar = ta.getBoolean(R.styleable.EventView_below_toolbar, false);
+        showTitle = ta.getBoolean(R.styleable.EventView_show_title, true);
         ta.recycle();
 
         this.init();
@@ -101,21 +114,23 @@ public class EventView extends RelativeLayout{
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
         gradientBottomView = findViewById(R.id.bottom_gradient_event);
         gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
-        gradientTopView = findViewById(R.id.topview);
         rvEventTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
         tagsView = findViewById(R.id.horizontal_tags_view);
         separator = findViewById(R.id.separator);
         descriptionView = findViewById(R.id.description_event);
+        if(isSpot) {
+            gradientTopView = findViewById(R.id.topview_no_spot);
+        } else {
+            gradientTopView = findViewById(R.id.topview_with_spot);
+        }
 
-
-        marginToolbarRight.setVisibility(VISIBLE);
-        marginToolbarLeft.setVisibility(VISIBLE);
-
-        initPadding(isPadding);
-        setBottomShadow(isBottomShadow);
-        setTopShadow(isTopShadow);
-        setToolbarView(toolbarMode);
-        setBelowToolbarView(belowToolbar);
+        initPadding();
+        setBottomShadow();
+        setTopShadow();
+        setDescriptionView(isDescription);
+        setTagsVisible(isTagsVisible);
+        setToolbarView();
+        setBelowToolbarView();
     }
 
     public HorizontalTagsRecyclerView getRvEventTags() {
@@ -159,7 +174,7 @@ public class EventView extends RelativeLayout{
         rvEventTags.getAdapter().setData(event.tags);
 
         // Spot view
-        if (event.spot != null){
+        if (event.spot != null && isSpot){
             spotView.setSpot(event.spot);
             this.setSpotVisible(true);
         }
@@ -175,6 +190,7 @@ public class EventView extends RelativeLayout{
 
     public void setSpotVisible(boolean isSpot) {
         if(isSpot) {
+            separator.setVisibility(VISIBLE);
             spotView.setVisibility(VISIBLE);
         } else {
             spotView.setVisibility(GONE);
@@ -182,16 +198,16 @@ public class EventView extends RelativeLayout{
         }
     }
 
-    public void setBottomShadow(boolean isVisible) {
-        if(isVisible) {
+    private void setBottomShadow() {
+        if(isBottomShadow) {
             gradientBottomView.setVisibility(VISIBLE);
         } else {
             gradientBottomView.setVisibility(GONE);
         }
     }
 
-    public void setTopShadow(boolean isVisible) {
-        if(isVisible) {
+    private void setTopShadow() {
+        if(isTopShadow) {
             gradientTopView.setVisibility(VISIBLE);
         } else {
             gradientTopView.setVisibility(GONE);
@@ -206,7 +222,7 @@ public class EventView extends RelativeLayout{
         }
     }
 
-    public void initPadding(boolean isPadding) {
+    private void initPadding() {
         if (!isPadding) {
             Log.d(TAG, "Removing padding");
             mainBox.setPadding(0, 0, 0, 0);
@@ -214,32 +230,22 @@ public class EventView extends RelativeLayout{
         }
     }
 
-    private void setToolbarView(boolean toolbarMode) {
+    private void setToolbarView() {
         if(toolbarMode) {
             mainLayoutEvent.setPadding(0,0,0,0);
             marginToolbarRight.setVisibility(VISIBLE);
             marginToolbarLeft.setVisibility(VISIBLE);
             spotView.setVisibility(GONE);
-            gradientBottomView.setVisibility(GONE);
             categoryIcon.setVisibility(GONE);
             smallCategoryIcon.setVisibility(VISIBLE);
             pointsLayout.setVisibility(GONE);
             tagsView.setVisibility(GONE);
             descriptionView.setVisibility(GONE);
-        } else {
-            setDescriptionView(isDescription);
-            setSpotVisible(isSpot);
-            setTagsVisible(isTagsVisible);
-            marginToolbarRight.setVisibility(GONE);
-            marginToolbarLeft.setVisibility(GONE);
-            categoryIcon.setVisibility(VISIBLE);
-            smallCategoryIcon.setVisibility(GONE);
-            pointsLayout.setVisibility(VISIBLE);
         }
     }
 
-    private void setBelowToolbarView(boolean belowToolbar) {
-        if(belowToolbar) {
+    private void setBelowToolbarView() {
+        if(!showTitle) {
             titleLayout.setVisibility(GONE);
             categoryIcon.setVisibility(GONE);
         }

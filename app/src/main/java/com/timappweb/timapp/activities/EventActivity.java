@@ -50,6 +50,7 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.views.EventView;
+import com.timappweb.timapp.views.SpotView;
 
 import java.util.Vector;
 
@@ -70,7 +71,8 @@ public class EventActivity extends BaseActivity {
     private TextView    onMyWayTv;
     private View        progressView;
     private ListView    tagsListView;
-    private EventView   eventView;
+    private EventView   eventToolbar;
+    private SpotView    spotToolbar;
     private View        progressBottom;
     private View        parentLayout;
 
@@ -125,7 +127,8 @@ public class EventActivity extends BaseActivity {
         initToolbar(false, colorRes);
 
         //Initialize
-        eventView = (EventView) findViewById(R.id.event_view);
+        spotToolbar = (SpotView) findViewById(R.id.spot_view);
+        eventToolbar = (EventView) findViewById(R.id.event_view);
         parentLayout = findViewById(R.id.main_layout_place);
         iAmComingButton = findViewById(R.id.button_coming);
         iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
@@ -134,8 +137,6 @@ public class EventActivity extends BaseActivity {
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         progressView = findViewById(R.id.progress_view);
-
-        initFragments();
 
         if (event != null){
             placeId = event.id;
@@ -310,6 +311,7 @@ public class EventActivity extends BaseActivity {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         childFragments = new Vector();
 
+        Bundle bundle = new Bundle();
         fragmentPictures = (PlacePicturesFragment) Fragment.instantiate(this, PlacePicturesFragment.class.getName());
         fragmentTags = (PlaceTagsFragment) Fragment.instantiate(this, PlaceTagsFragment.class.getName());
         fragmentPeople = (PlacePeopleFragment) Fragment.instantiate(this, PlacePeopleFragment.class.getName());
@@ -394,17 +396,24 @@ public class EventActivity extends BaseActivity {
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + event.category_id);
         }
-        eventView.setEvent(event);
-        fragmentTags.setEvent(event);
+        if(event.spot==null) {
+            eventToolbar.setVisibility(View.VISIBLE);
+            spotToolbar.setVisibility(View.GONE);
+            eventToolbar.setEvent(event);
+        } else {
+            spotToolbar.setVisibility(View.VISIBLE);
+            eventToolbar.setVisibility(View.GONE);
+            spotToolbar.setSpot(event.spot);
+        }
         updateBtnVisibility();
+        initFragments();
     }
-
 
     /**
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if(event != null && MyApplication.hasLastLocation()) {
+        if(event != null && MyApplication.hasLastLocation() && childFragments!=null) {
 
             for (PlaceBaseFragment fragment: childFragments){
                 if (fragment.isVisible()){
@@ -460,6 +469,14 @@ public class EventActivity extends BaseActivity {
 
     public Place getEvent() {
         return event;
+    }
+
+    public EventView getEventToolbar() {
+        return eventToolbar;
+    }
+
+    public SpotView getSpotToolbar() {
+        return spotToolbar;
     }
 
     public int getPlaceId() {

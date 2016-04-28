@@ -6,15 +6,21 @@
 
 
     <View
-        android:id="@+id/topview"
+        android:id="@+id/topview_with_spot"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_gradient_view"
-        android:background="@drawable/top_layout_place"/>
+        android:background="@drawable/top_layout_spot"/>
+
+    <View
+        android:id="@+id/topview_no_spot"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_top_gradient_view"
+        android:background="@drawable/top_layout_event"/>
 
     <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
     <ImageView
         android:id="@+id/background_image_event"
-        android:layout_below="@+id/topview"
+        android:layout_below="@+id/topview_no_spot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/main_box_relative"
@@ -22,7 +28,7 @@
 
     <RelativeLayout
         android:id="@+id/main_box_relative"
-        android:layout_below="@id/topview"
+        android:layout_below="@id/topview_no_spot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp">
@@ -98,7 +104,7 @@
                             android:layout_toRightOf="@id/margin_left_toolbar"
                             android:layout_toEndOf="@id/margin_left_toolbar"
                             android:src="@drawable/ic_category_highlight_party"
-                            android:visibility="visible"/>
+                            android:visibility="gone"/>
                         <!--<HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

@@ -26,6 +26,7 @@ import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.entities.Comment;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Spot;
@@ -37,6 +38,8 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SpotView;
 
+import org.w3c.dom.Text;
+
 import retrofit2.Call;
 
 
@@ -44,7 +47,7 @@ public class AddPlaceActivity extends BaseActivity {
     private String TAG = "AddPlaceActivity";
     private InputMethodManager imm;
 
-    private String comment;
+    private Comment comment;
 
     //Views
     private EditText groupNameET;
@@ -58,6 +61,7 @@ public class AddPlaceActivity extends BaseActivity {
     private View pinView;
     private ViewPager viewPager;
     private SpotView spotView;
+    private TextView commentView;
     private View buttonsView;
     // Data
     private Spot spot = null;
@@ -80,6 +84,7 @@ public class AddPlaceActivity extends BaseActivity {
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
         groupNameET.setFilters(filters);
+        groupNameET.requestFocus();
 
         buttonsView = findViewById(R.id.buttons);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
@@ -90,6 +95,7 @@ public class AddPlaceActivity extends BaseActivity {
         pinView = findViewById(R.id.no_spot_view);
         //pinnedSpot = findViewById(R.id.pinned_spot);
         spotView = (SpotView) findViewById(R.id.spot_view);
+        commentView = (TextView) findViewById(R.id.comment_text);
 
         initKeyboard();
         setListeners();
@@ -120,12 +126,12 @@ public class AddPlaceActivity extends BaseActivity {
 
     private void extractComment(Bundle bundle){
         if(bundle!=null) {
-            comment = (String) bundle.getSerializable("comment");
+            comment = (Comment) bundle.getSerializable("comment");
             if (comment != null){
                 Log.v(TAG, "Comment is selected: " + comment);
-                //TODO : Display comment
+                commentView.setText(comment.content);
             } else {
-                Log.d(TAG, "spot is null");
+                Log.d(TAG, "comment is null");
             }
         }
     }

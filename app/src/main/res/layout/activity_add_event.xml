@@ -6,8 +6,24 @@
     tools:context=".AddSpotActivity"
     android:background="@color/background">
 
-    <include android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar_layout"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/addplace_viewpager"
@@ -112,6 +128,16 @@
             android:textColor="@color/colorPrimary"
             android:hint="Add a description ..."
             android:textColorHint="@color/color_hint"/>-->
+
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|center"
+            android:textSize="@dimen/text_small"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:text="Okay c'est le commentaire."/>
     </LinearLayout>
 
     <LinearLayout
@@ -127,22 +153,26 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:background="@drawable/background_buttons_create_event"
             android:orientation="vertical">
-            <ImageView
-                android:layout_width="@dimen/icon_add_event"
-                android:layout_height="@dimen/icon_add_event"
-                android:src="@drawable/comment"
-                android:layout_marginBottom="10dp"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Write a comment"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_normal"/>-->
+                android:layout_height="match_parent"
+                android:background="@drawable/background_buttons_create_event"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="@dimen/icon_add_event"
+                    android:layout_height="@dimen/icon_add_event"
+                    android:src="@drawable/comment"/>
+                <!--<TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Write a comment"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal"/>-->
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -150,22 +180,29 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:background="@drawable/background_buttons_create_event"
             android:gravity="center"
             android:orientation="vertical">
-            <ImageView
-                android:layout_width="@dimen/icon_add_event"
-                android:layout_height="@dimen/icon_add_event"
-                android:src="@drawable/ic_validate"
-                android:layout_marginBottom="10dp"/>
-            <TextView
+            <!--android:layout_margin="10dp"-->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Create"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_normal"/>-->
+                android:layout_height="match_parent"
+                android:background="@drawable/background_buttons_create_event"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <!--android:layout_width="@dimen/width_add_event_buttons"-->
+                <ImageView
+                    android:layout_width="@dimen/icon_add_event"
+                    android:layout_height="@dimen/icon_add_event"
+                    android:src="@drawable/validate"/>
+                <!--<TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Create"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_normal"/>-->
+
+            </LinearLayout>
         </LinearLayout>
 
 

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,8 +52,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         eventActivity = (EventActivity) getActivity();
         View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
 
-        //Initialize
-        eventView = (EventView) root.findViewById(R.id.event_view);
+        //Find views
         mainButton = root.findViewById(R.id.main_button);
         tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         smallPicButton = root.findViewById(R.id.button_add_pic);
@@ -62,13 +62,20 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
 
+        //Create Event View
+        if(eventActivity.getEventToolbar().getVisibility()==View.VISIBLE) {
+            eventView = new EventView(eventActivity, false);
+        } else {
+            eventView = new EventView(eventActivity);
+        }
+        eventView.setEvent(eventActivity.getEvent());
+        FrameLayout eventFrameLayout = (FrameLayout) root.findViewById(R.id.event_frame_layout);
+        eventFrameLayout.addView(eventView);
+        eventFrameLayout.setVisibility(View.VISIBLE);
+
         initAdapter();
         setListeners();
         loadData();
-
-        Place event = eventActivity.getEvent();
-        setEvent(event);
-
 
         updateBtnVisibility();
 
@@ -83,11 +90,8 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         super.setMenuVisibility(visible);
     }
 
-    public void setEvent(Place event) {
-        if(event!=null && eventView!=null) {
-            eventView.setEvent(event);
-            eventView.setVisibility(View.VISIBLE);
-        }
+    public EventView getEventView() {
+        return eventView;
     }
 
     private void initAdapter() {
