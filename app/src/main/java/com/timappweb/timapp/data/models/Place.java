@@ -10,7 +10,6 @@ import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
-import com.timappweb.timapp.data.entities.Tag;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;

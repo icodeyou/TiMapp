@@ -36,8 +36,6 @@ public class BaseActivity extends AppCompatActivity {
     private static final String TAG     = "BaseActivity";
     protected SearchView                searchView;
     private MyLocationProvider          locationProvider;
-    private SimpleFacebook              mSimpleFacebook;
-    private OnFriendsListener           onFriendsListener;
     protected List<Call>                apiCalls = new LinkedList<>();
 
 
@@ -73,18 +71,10 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mSimpleFacebook != null){
-            mSimpleFacebook = SimpleFacebook.getInstance(this);
-            setAllFbFriends();
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (mSimpleFacebook != null){
-            mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
-        }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -122,11 +112,7 @@ public class BaseActivity extends AppCompatActivity {
         upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }
-
-    protected void getFriends(OnFriendsListener onFriendsListener){
-            this.onFriendsListener = onFriendsListener;
-    }
-
+/*
     private void setAllFbFriends() {
         PictureAttributes pictureAttributes = Attributes.createPictureAttributes();
         pictureAttributes.setHeight(100);
@@ -143,6 +129,7 @@ public class BaseActivity extends AppCompatActivity {
 
         mSimpleFacebook.getFriends(properties, onFriendsListener);
     }
+    */
 
     protected void setSearchview(Menu menu) {
         //Set search item

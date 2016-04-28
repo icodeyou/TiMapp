@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <!--
         <com.dpizarro.autolabel.library.AutoLabelUI
             android:id="@+id/label_view"
             android:layout_width="match_parent"
@@ -33,6 +34,7 @@
             autolabel:icon_cross="@drawable/delete"
             autolabel:label_background_res="@color/colorSecondary"
             autolabel:label_clickable="true"/>
+            -->
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"

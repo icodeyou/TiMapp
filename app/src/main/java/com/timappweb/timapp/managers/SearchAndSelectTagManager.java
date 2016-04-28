@@ -6,10 +6,9 @@ import android.content.Context;
 import android.support.v7.widget.SearchView;
 
 import com.greenfrvr.hashtagview.HashtagView;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;

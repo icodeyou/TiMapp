@@ -1,43 +1,38 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.sromku.simple.fb.listeners.OnFriendsListener;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class ListFriendsActivity extends BaseActivity{
 
     private String TAG = "ListFriendsActivity";
-    private List<User> allFbFriends;
+
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
-    //private SimpleFacebook mSimpleFacebook;
-    private View noFriendsView;
 
-    private OnFriendsListener onFriendsListener;
+    private View noFriendsView;
     private View progressView;
+    private FriendsLoader mLoader;
+    private ListFriendsActivity context;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Creating ListFriendsActivity");
+        context = this;
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
 
@@ -46,55 +41,57 @@ public class ListFriendsActivity extends BaseActivity{
         progressView = findViewById(R.id.loading_friends);
 
         initAdapterListFriends();
-        loadFriends();
+
+        mLoader = new FriendsLoader();
+        getSupportLoaderManager().initLoader(0, null, mLoader);
     }
 
     private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(llm);
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FriendsAdapter(this);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                onItemListClicked(position);
+                IntentsUtils.profile(context, adapter.getData().get(position));
             }
         });
     }
 
-    private void loadFriends(){
-        Call<PaginationResponse<User>> call = RestClient.service().friends();
-        apiCalls.add(call);
-        call.enqueue(new RestCallback<PaginationResponse<User>>(this) {
-            @Override
-            public void onResponse200(Response<PaginationResponse<User>> response) {
-                onUserLoaded(response.body().items);
-            }
+    //  ============================================================================================
 
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-                progressView.setVisibility(View.GONE);
-            }
-        });
-    }
+    class FriendsLoader implements LoaderManager.LoaderCallbacks<List<User>>
+    {
 
-    private void onUserLoaded(List<User> items){
-
-        allFbFriends = items;
-        if(allFbFriends.size()==0) {
-            noFriendsView.setVisibility(View.VISIBLE);
-        } else {
-            noFriendsView.setVisibility(View.GONE);
-            adapter.setData(items);
+        @Override
+        public Loader<List<User>> onCreateLoader(int id, Bundle args)
+        {
+            progressView.setVisibility(View.VISIBLE);
+            //setProgressBarIndeterminateVisibility(true);
+            return new ModelLoader<User>(ListFriendsActivity.this, User.class, true);
         }
-        progressView.setVisibility(View.GONE);
-    }
 
-    private void onItemListClicked(int position) {
-        User friend = allFbFriends.get(position);
-        IntentsUtils.profile(this, friend);
+
+        @Override
+        public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
+            adapter.clear();
+            adapter.setData(data);
+            adapter.notifyDataSetChanged();
+
+            //setProgressBarIndeterminateVisibility(false);
+            Log.i(TAG, "Loaded " + data.size() + " friends for the user");
+            //noFriendsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+            progressView.setVisibility(View.GONE);
+        }
+
+
+        @Override
+        public void onLoaderReset(Loader<List<User>> loader)
+        {
+            adapter.clear();
+            adapter.notifyDataSetChanged();
+        }
+
     }
 }

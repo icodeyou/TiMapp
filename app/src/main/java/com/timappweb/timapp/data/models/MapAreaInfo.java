@@ -16,6 +16,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
  * Created by stephane on 4/26/2016.
  *
  * Store information about area that are already loaded in the database
+ *      - The map area loaded represented by south west and north east coordinates
+ *      - The number of items loaded
+ *      - The total number of items
+ *      - The loading date time unix time format
  */
 @Table(name = "MapAreaInfo")
 public class MapAreaInfo extends Model {

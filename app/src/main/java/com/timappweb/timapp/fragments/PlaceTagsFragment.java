@@ -15,7 +15,7 @@ import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -157,7 +157,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND);
         boolean showMainButton = isUserAround && isAllowedToAddPost;
         mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        smallPeopleButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);
+        smallPeopleButton.setVisibility(!showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);
         smallPicButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPic ? View.VISIBLE : View.GONE);
     }
 

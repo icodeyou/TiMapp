@@ -2,7 +2,7 @@ package com.timappweb.timapp.managers;
 
 import android.util.Log;
 
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.SearchHistory;

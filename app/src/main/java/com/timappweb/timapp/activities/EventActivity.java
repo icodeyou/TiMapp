@@ -65,14 +65,9 @@ public class EventActivity extends BaseActivity {
 
     //Views
     private View        iAmComingButton;
-    private TextView    iAmComingTv;
     private View        onMyWayButton;
-    private TextView    onMyWayTv;
     private View        progressView;
-    private ListView    tagsListView;
-    private EventView   eventView;
     private View        progressBottom;
-    private View        parentLayout;
 
     //Camera
     private static final int REQUEST_CAMERA = 0;
@@ -125,13 +120,9 @@ public class EventActivity extends BaseActivity {
         initToolbar(false, colorRes);
 
         //Initialize
-        parentLayout = findViewById(R.id.main_layout_place);
         iAmComingButton = findViewById(R.id.button_coming);
-        iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
         onMyWayButton = findViewById(R.id.button_on_my_way);
         progressBottom = findViewById(R.id.progressview_bottom_place);
-        onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
-        tagsListView = (ListView) findViewById(R.id.tags_lv);
         progressView = findViewById(R.id.progress_view);
 
         initFragments();
@@ -196,11 +187,21 @@ public class EventActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) return;
-
-        if (requestCode == REQUEST_CAMERA) {
-            Uri photoUri = data.getData();
-            fragmentPictures.uploadPicture(photoUri);
+        switch (requestCode){
+            case REQUEST_CAMERA:
+                Log.d(TAG, "Result request camera");
+                if (resultCode != RESULT_OK){
+                    return; // TODO
+                }
+                Uri photoUri = data.getData();
+                fragmentPictures.uploadPicture(photoUri);
+                break;
+            case IntentsUtils.ACTIVITY_RESULT_INVITE_FRIENDS:
+                //
+                Log.d(TAG, "Result invite friend");
+                break;
+            default:
+                Log.e(TAG, "Unknown activity result: " + requestCode);
         }
 
         super.onActivityResult(requestCode, resultCode, data);

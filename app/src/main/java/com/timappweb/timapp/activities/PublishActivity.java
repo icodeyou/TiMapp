@@ -19,7 +19,7 @@ import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.ColorPublishButtonRadiusOnTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;

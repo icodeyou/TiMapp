@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.PlacesInvitation;
+import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;

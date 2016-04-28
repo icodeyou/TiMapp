@@ -6,8 +6,6 @@ import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.data.entities.Tag;
-import com.timappweb.timapp.data.entities.User;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;

@@ -1,24 +1,30 @@
-package com.timappweb.timapp.data.entities;
+package com.timappweb.timapp.data.models;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Tag implements Serializable, SearchHistory.SearchableItem{
+@Table(name = "Tag")
+public class Tag extends SyncBaseModel implements Serializable, SearchHistory.SearchableItem{
 
     public static final int MINLENGTH = 2;
     public static final int MAXLENGTH = 30;
 
     // =============================================================================================
 
+    @Column(name = "SyncId")
     @Expose
     public Integer id;
 
+    @Column(name = "Name")
     @Expose
     public String name;
 
+    @Column(name = "CountRef")
     @Expose(serialize = true, deserialize = false)
     public int count_ref;
 
@@ -95,5 +101,20 @@ public class Tag implements Serializable, SearchHistory.SearchableItem{
             res += "," + tags.get(i).name;
         }
         return res;
+    }
+
+    // =============================================================================================
+
+    @Override
+    public long getSyncKey() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel o) {
+        if (o == null) return false ;
+        if (!(o instanceof Tag)) return false ;
+        Tag tag = (Tag) o;
+        return tag.count_ref == this.count_ref;
     }
 }

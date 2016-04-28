@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.data.entities.Tag;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 

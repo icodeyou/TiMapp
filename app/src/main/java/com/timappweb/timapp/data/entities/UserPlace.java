@@ -3,6 +3,8 @@ package com.timappweb.timapp.data.entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
+import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
