@@ -59,10 +59,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         //Toolbar
         this.initToolbar(true);
 
-        //Keyboard
-        imm = (InputMethodManager) this
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-
         //Initialize
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
         createPlaceButton = findViewById(R.id.create_spot_button);
