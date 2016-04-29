@@ -14,9 +14,12 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.data.entities.Tag;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+
+import java.util.List;
 
 import me.grantland.widget.AutofitTextView;
 
@@ -127,6 +130,7 @@ public class EventView extends RelativeLayout{
         initPadding();
         setBottomShadow();
         setTopShadow();
+        setSpotVisible(isSpot);
         setDescriptionView(isDescription);
         setTagsVisible(isTagsVisible);
         setToolbarView();
@@ -170,8 +174,10 @@ public class EventView extends RelativeLayout{
             }
         }
 
-        //Adapter
+        //Tags Adapter
+        List<Tag> tags = event.tags;
         rvEventTags.getAdapter().setData(event.tags);
+        setTagsVisible(isTagsVisible);
 
         // Spot view
         if (event.spot != null && isSpot){
@@ -188,7 +194,7 @@ public class EventView extends RelativeLayout{
     }
 
 
-    public void setSpotVisible(boolean isSpot) {
+    private void setSpotVisible(boolean isSpot) {
         if(isSpot) {
             separator.setVisibility(VISIBLE);
             spotView.setVisibility(VISIBLE);
