@@ -297,6 +297,17 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
+        eventNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    commentView.setVisibility(View.GONE);
+                } else {
+                    commentView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

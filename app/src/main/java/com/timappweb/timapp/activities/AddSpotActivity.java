@@ -120,17 +120,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "got the focus", Toast.LENGTH_LONG).show();
-                    spotsRv.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-
-        etCustomPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!imm.isAcceptingText()) {
                     spotCategoriesRv.setVisibility(View.VISIBLE);
                 }
             }
