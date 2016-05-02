@@ -106,7 +106,7 @@
                 android:layout_height="40dp" />
         </RelativeLayout>
 
-        <EditText
+        <com.timappweb.timapp.views.BackCatchEditText
             android:id="@+id/event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -134,10 +134,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top|center"
-            android:textSize="@dimen/text_small"
+            android:textSize="@dimen/text_normal"
             android:ellipsize="end"
-            android:padding="10dp"
-            android:text="Okay c'est le commentaire."/>
+            android:padding="10dp" />
     </LinearLayout>
 
     <LinearLayout

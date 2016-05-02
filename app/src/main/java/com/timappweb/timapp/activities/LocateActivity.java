@@ -126,7 +126,6 @@ public class LocateActivity extends BaseActivity{
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 IntentsUtils.addPlace(that);
             }
         });
@@ -200,6 +199,7 @@ public class LocateActivity extends BaseActivity{
                         placeAdapter.notifyDataSetChanged();
                     } else {
                         IntentsUtils.addPlace(activity);
+                        finish();
                     }
                 }
             }

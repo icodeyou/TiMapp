@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -36,21 +37,20 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.views.BackCatchEditText;
 import com.timappweb.timapp.views.SpotView;
-
-import org.w3c.dom.Text;
 
 import retrofit2.Call;
 
 
 public class AddPlaceActivity extends BaseActivity {
     private String TAG = "AddPlaceActivity";
-    private InputMethodManager imm;
 
+    private InputMethodManager imm;
     private Comment comment;
 
     //Views
-    private EditText groupNameET;
+    private BackCatchEditText eventNameET;
     RecyclerView categoriesRV;
     AddEventCategoriesAdapter categoriesAdapter;
     private EventCategory eventCategorySelected;
@@ -80,11 +80,11 @@ public class AddPlaceActivity extends BaseActivity {
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        groupNameET = (EditText) findViewById(R.id.event_name);
+        eventNameET = (BackCatchEditText) findViewById(R.id.event_name);
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
-        groupNameET.setFilters(filters);
-        groupNameET.requestFocus();
+        eventNameET.setFilters(filters);
+        eventNameET.requestFocus();
 
         buttonsView = findViewById(R.id.buttons);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
@@ -110,34 +110,15 @@ public class AddPlaceActivity extends BaseActivity {
         super.onResume();
     }
 
-    private void extractSpot(Bundle bundle){
-        if(bundle!=null) {
-            spot = (Spot) bundle.getSerializable("spot");
-            if (spot != null){
-                Log.v(TAG, "Spot is selected: " + spot);
-                spotView.setSpot(spot);
-                spotView.setVisibility(View.VISIBLE);
-                pinView.setVisibility(View.GONE);
-            } else {
-                Log.d(TAG, "spot is null");
-            }
-        }
-    }
-
-    private void extractComment(Bundle bundle){
-        if(bundle!=null) {
-            comment = (Comment) bundle.getSerializable("comment");
-            if (comment != null){
-                Log.v(TAG, "Comment is selected: " + comment);
-                commentView.setText(comment.content);
-            } else {
-                Log.d(TAG, "comment is null");
-            }
-        }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        eventNameET.clearFocus();
+        commentView.setVisibility(View.VISIBLE);
         switch (requestCode) {
             case IntentsUtils.ACTIVITY_RESULT_PICK_SPOT:
                 if(resultCode == RESULT_OK){
@@ -171,7 +152,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     private void initKeyboard() {
-        groupNameET.setInputType(InputType.TYPE_CLASS_TEXT |
+        eventNameET.setInputType(InputType.TYPE_CLASS_TEXT |
                 InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD |
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
@@ -241,7 +222,7 @@ public class AddPlaceActivity extends BaseActivity {
     }
 
     public void setButtonValidation() {
-        String textAfterChange = groupNameET.getText().toString().trim();
+        String textAfterChange = eventNameET.getText().toString().trim();
 //        Log.d(TAG,"textafterchange : "+textAfterChange);
 //        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
         if (eventCategorySelected !=null && Place.isValidName(textAfterChange)) {
@@ -283,7 +264,7 @@ public class AddPlaceActivity extends BaseActivity {
             }
         });
 
-        groupNameET.addTextChangedListener(new TextWatcher() {
+        eventNameET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -295,6 +276,24 @@ public class AddPlaceActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 setButtonValidation();
+            }
+        });
+
+        eventNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    commentView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        eventNameET.setHandleDismissingKeyboard(new BackCatchEditText.HandleDismissingKeyboard() {
+            @Override
+            public void dismissKeyboard() {
+                imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
+                commentView.setVisibility(View.VISIBLE);
+                eventNameET.clearFocus();
             }
         });
 
@@ -311,7 +310,7 @@ public class AddPlaceActivity extends BaseActivity {
                 if (MyApplication.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
                     final Place place = new Place(MyApplication.getLastLocation(),
-                            groupNameET.getText().toString(), eventCategorySelected, context.spot);
+                            eventNameET.getText().toString(), eventCategorySelected, context.spot);
                     submitPlace(place);
                 } else if (MyApplication.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
@@ -335,5 +334,31 @@ public class AddPlaceActivity extends BaseActivity {
                 pinView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void extractSpot(Bundle bundle){
+        if(bundle!=null) {
+            spot = (Spot) bundle.getSerializable("spot");
+            if (spot != null){
+                Log.v(TAG, "Spot is selected: " + spot);
+                spotView.setSpot(spot);
+                spotView.setVisibility(View.VISIBLE);
+                pinView.setVisibility(View.GONE);
+            } else {
+                Log.d(TAG, "spot is null");
+            }
+        }
+    }
+
+    private void extractComment(Bundle bundle){
+        if(bundle!=null) {
+            comment = (Comment) bundle.getSerializable("comment");
+            if (comment != null){
+                Log.v(TAG, "Comment is selected: " + comment);
+                commentView.setText(comment.content);
+            } else {
+                Log.d(TAG, "comment is null");
+            }
+        }
     }
 }

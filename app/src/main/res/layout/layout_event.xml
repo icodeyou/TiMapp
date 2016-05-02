@@ -9,13 +9,15 @@
         android:id="@+id/topview_with_spot"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_gradient_view"
-        android:background="@drawable/top_layout_spot"/>
+        android:background="@drawable/top_layout_spot"
+        android:visibility="gone"/>
 
     <View
         android:id="@+id/topview_no_spot"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_top_gradient_view"
-        android:background="@drawable/top_layout_event"/>
+        android:background="@drawable/top_layout_event"
+        android:visibility="gone" />
 
     <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
     <ImageView
@@ -236,7 +238,7 @@
                 android:id="@+id/bottom_gradient_if_padding"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_bottom_gradient_view"
-                android:background="@drawable/bottom_layout_place" />
+                android:background="@drawable/bottom_layout_event" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -245,6 +247,6 @@
         android:layout_below="@+id/background_image_event"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_gradient_view"
-        android:background="@drawable/bottom_layout_place" />
+        android:background="@drawable/bottom_layout_event" />
 
 </RelativeLayout>
