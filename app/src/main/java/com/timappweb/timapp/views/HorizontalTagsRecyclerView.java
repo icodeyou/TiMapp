@@ -3,13 +3,16 @@ package com.timappweb.timapp.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.data.entities.Tag;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class HorizontalTagsRecyclerView extends RecyclerView {
@@ -17,59 +20,90 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
     private int textColor;
     private boolean isBold;
     private Float textSize;
-    private boolean viewInflated = false;
+    private HorizontalTagsAdapter horizontalTagsAdapter;
 
-    //Constructor
+    //Constructors
     public HorizontalTagsRecyclerView(Context context) {
         super(context);
-        this.init();
+        this.initAttributes();
+        this.initAdapter();
+    }
+
+    public HorizontalTagsRecyclerView(Context context, List<Tag> tags) {
+        super(context);
+
+        this.initAttributes();
+
+        this.initAdapter();
+        horizontalTagsAdapter.setData(tags);
     }
 
     public HorizontalTagsRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.initAttributes();
 
         //Get attributes in XML
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.HorizontalTagsRecyclerView, 0, 0);
-        backgroundColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_background_color, 0);
-        textColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_text_color, Color.BLACK);
+        backgroundColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_background_color, backgroundColor);
+        textColor = ta.getColor(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_text_color, textColor);
         isBold = ta.getBoolean(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_is_bold, true);
-        textSize = ta.getDimension(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_text_size, R.dimen.text_normal);
+        textSize = ta.getDimension(R.styleable.HorizontalTagsRecyclerView_horizontal_tags_text_size, textSize);
         ta.recycle();
 
-        this.init();
+        this.initAdapter();
     }
 
     public HorizontalTagsRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.init();
+        this.initAttributes();
+        this.initAdapter();
+    }
+
+    private void initAttributes() {
+        backgroundColor = 0;
+        textColor = Color.WHITE;
+        isBold = true;
+        textSize = getResources().getDimension(R.dimen.text_normal);
     }
 
     // Override
     @Override
     public HorizontalTagsAdapter getAdapter() {
-        return (HorizontalTagsAdapter) super.getAdapter();
+        return horizontalTagsAdapter;
     }
 
 
     //Methods
 
-    private void init() {
+    private void initAdapter() {
         this.setHasFixedSize(true);
 
-        HorizontalTagsAdapter horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
+        horizontalTagsAdapter = new HorizontalTagsAdapter(getContext());
         horizontalTagsAdapter.setColors(textColor, backgroundColor); // Set colors from attributes
         horizontalTagsAdapter.settextStyle(isBold);
         horizontalTagsAdapter.settextSize(textSize);
         this.setAdapter(horizontalTagsAdapter);
 
-        GridLayoutManager manager = new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         this.setLayoutManager(manager);
         this.scrollToEnd();
-        this.viewInflated = true;
+
+        //return horizontalTagsAdapter;
     }
 
-    public boolean isViewInflated(){
-        return viewInflated;
+    public void setDummyData() {
+        Tag dummy = new Tag("dummy");
+
+        List<Tag> dummyTags = new ArrayList<>();
+        dummyTags.add(dummy);
+        dummyTags.add(dummy);
+        dummyTags.add(dummy);
+        //adapter.setData(dummyTags);
+
+        //this.setAdapter(adapter);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        this.setLayoutManager(manager);
+        this.scrollToEnd();
     }
 
     public void scrollToEnd(){

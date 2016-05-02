@@ -2,7 +2,9 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     private String TAG = "HorizontalTagsAdapter";
 
     protected LayoutInflater inflater;
-    private List<Tag> data = new ArrayList<>();
+    private List<Tag> mDataTags;
     private Context context;
 
     private int textColor;
@@ -37,11 +39,13 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     public HorizontalTagsAdapter(Context context) {
         this.context = context;
+        this.mDataTags = new ArrayList<>();
         inflater = LayoutInflater.from(context);
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d(TAG, "Creating View Holder");
         View view = inflater.inflate(R.layout.item_horizontal_tags, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
@@ -49,7 +53,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Tag current = data.get(position);
+        Tag current = mDataTags.get(position);
         holder.textView.setText("#" + current.name);
 
         if (itemAdapterClickListener != null){
@@ -64,39 +68,39 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     @Override
     public int getItemCount() {
-        return data != null ? data.size() : 0;
+        return this.mDataTags.size();
     }
 
     public void setDummyData() {
-        data.add(new Tag("plongée"));
-        data.add(new Tag("chillmusic"));
-        data.add(new Tag("festival"));
+        mDataTags.add(new Tag("plongée"));
+        mDataTags.add(new Tag("chillmusic"));
+        mDataTags.add(new Tag("festival"));
         notifyDataSetChanged();
     }
 
     public void add(Tag tag) {
-        data.add(tag);
+        mDataTags.add(tag);
         notifyDataSetChanged();
     }
 
     public void setData(List<Tag> data) {
         if(data!=null) {
-            this.data = new ArrayList<>(data);
+            this.mDataTags = new ArrayList<>(data);
             notifyDataSetChanged();
         }
-    };
+    }
 
     public Tag getData(int position) {
-        return this.data.get(position);
+        return this.mDataTags.get(position);
     }
 
     public List<Tag> getData() {
-        return this.data;
+        return this.mDataTags;
     }
 
     public boolean tryAddData(String selectedTag) {
         Tag newTag = new Tag(selectedTag, 0);
-        if (this.data.contains(newTag)) {
+        if (this.mDataTags.contains(newTag)) {
             Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -114,24 +118,24 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         }
         else {
             newTag.setName(newTag.getName());
-            data.add(newTag);
+            mDataTags.add(newTag);
             notifyDataSetChanged();
             return true;
         }
     }
 
     public void removeData(int position) {
-        this.data.remove(position);
+        this.mDataTags.remove(position);
         this.notifyDataSetChanged();
     }
 
     public void resetData() {
-        this.data.clear();
+        this.mDataTags.clear();
         this.notifyDataSetChanged();
     }
 
     public boolean isOneSimilarValue(String string) {
-        for (Tag t : data) {
+        for (Tag t : mDataTags) {
             if(t.getName().equalsIgnoreCase(string)) {
                 return true;
             }
@@ -155,7 +159,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     /*
     public ArrayList<String> getStringsFromTags() {
         ArrayList<String> res = new ArrayList<String>();
-        for (Tag tag : this.data) {
+        for (Tag tag : this.mDataTags) {
             res.add(tag.getName());
         }
         return res;
@@ -178,7 +182,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             this.textView = (TextView) view.findViewById(R.id.item_horizontal_tag);
             view.setBackgroundColor(backgroundColor);
             textView.setTextColor(textColor);
-            textView.setTextSize(Util.convertPixelsToDp(textSize,context));
+            textView.setTextSize(Util.convertPixelsToDp(textSize, context));
             if(!isBold) {
                 textView.setTypeface(Typeface.DEFAULT);
             } else {
