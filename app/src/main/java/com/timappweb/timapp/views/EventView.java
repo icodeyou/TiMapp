@@ -51,6 +51,7 @@ public class EventView extends RelativeLayout{
     private View                        marginToolbarLeft;
     private View                        separator;
     private View                        descriptionView;
+    private TextView                    descriptionTv;
 
     private int                         colorSpot;
     private int                         colorEvent;
@@ -128,6 +129,7 @@ public class EventView extends RelativeLayout{
         tagsView = findViewById(R.id.horizontal_tags_view);
         separator = findViewById(R.id.separator);
         descriptionView = findViewById(R.id.description_event);
+        descriptionTv = (TextView) findViewById(R.id.description_textview);
 
         tagsFrameLayout = (FrameLayout) findViewById(R.id.htrv_frame_layout);
 
@@ -155,7 +157,7 @@ public class EventView extends RelativeLayout{
         return htrv;
     }
 
-    public void setEvent(Place event) {
+    public HorizontalTagsRecyclerView setEvent(Place event) {
         //TODO : CLEAR
 
         this.event = event;
@@ -165,6 +167,10 @@ public class EventView extends RelativeLayout{
 
         //Title
         tvName.setText(event.name);
+
+        if(event.description!=null) {
+            descriptionTv.setText(event.description);
+        }
 
         //EventCategory
         EventCategory eventCategory = null;
@@ -192,12 +198,15 @@ public class EventView extends RelativeLayout{
 
         //Tags Adapter
         List<Tag> tags = event.tags;
-        if(isTagsVisible && tags!=null && tags.size()>0) {
-            tagsFrameLayout.setVisibility(VISIBLE);
+        if(tags!=null) {
             htrv = new HorizontalTagsRecyclerView(context,tags);
+            tagsFrameLayout.removeAllViews();
             tagsFrameLayout.addView(htrv);
-        } else {
-            tagsFrameLayout.setVisibility(GONE);
+            if(isTagsVisible && tags.size()!=0) {
+                tagsFrameLayout.setVisibility(VISIBLE);
+            } else {
+                tagsFrameLayout.setVisibility(GONE);
+            }
         }
 
         // Spot view
@@ -212,6 +221,8 @@ public class EventView extends RelativeLayout{
         //Counter
         int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime * 1000);
+
+        return htrv;
     }
 
 
@@ -267,6 +278,7 @@ public class EventView extends RelativeLayout{
         if(!showTitle) {
             titleLayout.setVisibility(GONE);
             categoryIcon.setVisibility(GONE);
+            smallCategoryIcon.setVisibility(GONE);
         }
     }
 

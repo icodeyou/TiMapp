@@ -44,13 +44,14 @@ public class EventUsersHeaderAdapter extends EventUsersAdapter
         PlaceUserInterface placeUserInterface = data.get(position);
         switch (placeUserInterface.getViewType()) {
             case VIEW_TYPES.HERE:
-                textView.setText("Posts");
+                textView.setText(context.getResources().getString(R.string.header_posts));
                 break;
             case VIEW_TYPES.COMING:
-                textView.setText("Coming");
+                textView.setText(context.getResources().getString(R.string.header_coming));
                 break;
             case VIEW_TYPES.INVITED:
-                textView.setText("Invited");
+                textView.setText(context.getResources().getString(R.string.header_invited));
+                break;
         }
     }
 

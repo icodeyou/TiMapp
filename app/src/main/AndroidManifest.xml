@@ -409,7 +409,7 @@
         </activity>
 
         <!-- COMMENT ACTIVITY //////////////////////////////////////////////-->
-        <activity android:name=".activities.CommentActivity"
+        <activity android:name=".activities.DescriptionActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
             android:windowSoftInputMode="adjustResize|stateVisible"

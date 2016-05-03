@@ -9,13 +9,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.Comment;
 
 
-public class CommentActivity extends BaseActivity {
-    private String TAG = "CommentActivity";
+public class DescriptionActivity extends BaseActivity {
+    private String TAG = "DescriptionActivity";
     private InputMethodManager imm;
-    private CommentActivity context;
+    private DescriptionActivity context;
     private EditText commentEt;
 
     //----------------------------------------------------------------------------------------------
@@ -23,7 +22,7 @@ public class CommentActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+        setContentView(R.layout.activity_description);
         context = this;
 
         //this.initToolbar(true);
@@ -35,12 +34,11 @@ public class CommentActivity extends BaseActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String commentString = commentEt.getText().toString();
-                Log.d(TAG, "Saving comment: " + commentString);
-                Comment comment = new Comment(commentString);
+                String description = commentEt.getText().toString();
+                Log.d(TAG, "Saving description: " + description);
                 Intent intent = new Intent(activity, AddPlaceActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("comment", comment);
+                bundle.putSerializable("description", description);
                 intent.putExtras(bundle);
                 setResult(Activity.RESULT_OK, intent);
                 finish();

@@ -48,7 +48,7 @@
     <!-- Text dimensions -->
     <dimen name="default_horizontal_padding">20dp</dimen>
     <dimen name="text_tiny">10dp</dimen>
-    <dimen name="text_small">15dp</dimen>
+    <dimen name="text_small">16dp</dimen>
     <dimen name="text_normal">20dp</dimen>
     <dimen name="text_big">30dp</dimen>
     <dimen name="title_event_card">25dp</dimen>

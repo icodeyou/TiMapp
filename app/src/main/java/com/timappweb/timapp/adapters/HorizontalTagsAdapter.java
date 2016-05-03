@@ -45,7 +45,6 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "Creating View Holder");
         View view = inflater.inflate(R.layout.item_horizontal_tags, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;

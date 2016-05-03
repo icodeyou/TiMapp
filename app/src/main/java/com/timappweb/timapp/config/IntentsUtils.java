@@ -9,7 +9,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddPlaceActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
-import com.timappweb.timapp.activities.CommentActivity;
+import com.timappweb.timapp.activities.DescriptionActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.ErrorActivity;
@@ -211,7 +211,7 @@ public class IntentsUtils {
     }
 
     public static void comment(Activity activity) {
-        Intent intent = new Intent(activity, CommentActivity.class);
+        Intent intent = new Intent(activity, DescriptionActivity.class);
         activity.startActivityForResult(intent, ACTIVITY_RESULT_COMMENT);
     }
 

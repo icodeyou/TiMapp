@@ -1,12 +1,19 @@
 package com.timappweb.timapp.fragments;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerTabStrip;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +59,7 @@ public class ExploreFragment extends Fragment{
         View root = inflater.inflate(R.layout.fragment_explore, container, false);
 
         /** Important: Must use the child FragmentManager or you will see side effects. */
-        tabsAdapter = new TabsAdapter(getChildFragmentManager());
+        tabsAdapter = new TabsAdapter(getContext(), getChildFragmentManager());
 
         viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
         onPageChangeListener =new MyOnPageChangeListener();
@@ -76,9 +83,9 @@ public class ExploreFragment extends Fragment{
 
         //hide underline
         pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-        pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(),R.color.white));
+        pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
         pagerTabStrip.setDrawFullUnderline(true);
-        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryDark));
+        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
 
 
         return root;
@@ -101,10 +108,11 @@ public class ExploreFragment extends Fragment{
 
         private ExploreMapFragment exploreMapFragment;
         private ExploreEventsFragment exploreEventsFragment;
+        private Context mContext;
 
-        public TabsAdapter(FragmentManager fm) {
+        public TabsAdapter(Context context, FragmentManager fm) {
             super(fm);
-
+            this.mContext = context;
         }
 
         public ExploreMapFragment getExploreMapFragment() {
@@ -135,13 +143,24 @@ public class ExploreFragment extends Fragment{
 
         @Override
         public CharSequence getPageTitle(int position) {
+            SpannableStringBuilder sb;
+            Drawable drawable;
             if (position == 0) {
-                return "Map";
+                sb = new SpannableStringBuilder("  " + mContext.getString(R.string.tab_map));
+                drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_dialog_map);
             }
             else {
-                return "List";
+                sb = new SpannableStringBuilder("  " + mContext.getString(R.string.tab_map));
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_list);
             }
+            int icSize = (int) mContext.getResources().getDimension(R.dimen.logo_small);
+            drawable.setBounds(0, 0, icSize, icSize);
+            ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+            sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            return sb;
         }
+
     }
 
     private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {

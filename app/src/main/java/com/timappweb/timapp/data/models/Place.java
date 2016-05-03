@@ -95,21 +95,22 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     }
 
-    public Place(double lat, double lng, String name, EventCategory eventCategory) {
+    /*public Place(double lat, double lng, String name, EventCategory eventCategory) {
         this.loaded_time = Util.getCurrentTimeSec();
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
         this.category_id = eventCategory.id;
         this.created = Util.getCurrentTimeSec();
-    }
+    }*/
 
-    public Place(Location lastLocation, String name, EventCategory eventCategory, Spot spot) {
+    public Place(Location lastLocation, String name, EventCategory eventCategory, Spot spot, String description) {
         this.loaded_time = Util.getCurrentTimeSec();
         this.latitude = lastLocation.getLatitude();
         this.longitude = lastLocation.getLongitude();
         this.name = name;
         this.category_id = eventCategory.id;
+        this.description = description;
         if (spot != null){
             this.spot = spot;
             this.spot_id = spot.id;

@@ -20,6 +20,7 @@
     <color name="background_semi_transparent">#6ff6efef</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
+    <color name="background_event_map">#e3000000</color>
     <color name="background_event">#b7000000</color>
     <color name="background_half_black">#80000000</color>
     <color name="background_spot">@color/colorSecondaryDark</color>

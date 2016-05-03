@@ -48,7 +48,7 @@ public class InvitationsActivity extends BaseActivity{
 
     private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
         adapter = new InvitationsAdapter(this);

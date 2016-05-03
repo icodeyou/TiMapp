@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -16,7 +15,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +45,7 @@ public class AddPlaceActivity extends BaseActivity {
     private String TAG = "AddPlaceActivity";
 
     private InputMethodManager imm;
-    private Comment comment;
+    private String description;
 
     //Views
     private BackCatchEditText eventNameET;
@@ -310,7 +308,7 @@ public class AddPlaceActivity extends BaseActivity {
                 if (MyApplication.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
                     final Place place = new Place(MyApplication.getLastLocation(),
-                            eventNameET.getText().toString(), eventCategorySelected, context.spot);
+                            eventNameET.getText().toString(), eventCategorySelected, context.spot, description);
                     submitPlace(place);
                 } else if (MyApplication.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
@@ -352,12 +350,12 @@ public class AddPlaceActivity extends BaseActivity {
 
     private void extractComment(Bundle bundle){
         if(bundle!=null) {
-            comment = (Comment) bundle.getSerializable("comment");
-            if (comment != null){
-                Log.v(TAG, "Comment is selected: " + comment);
-                commentView.setText(comment.content);
+            description = (String) bundle.getSerializable("description");
+            if (description != null){
+                Log.v(TAG, "Comment is selected: " + description);
+                commentView.setText(description);
             } else {
-                Log.d(TAG, "comment is null");
+                Log.d(TAG, "description is null");
             }
         }
     }
