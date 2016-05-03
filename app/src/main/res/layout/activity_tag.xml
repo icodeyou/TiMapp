@@ -56,7 +56,7 @@
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
             android:id="@+id/rv_selected_tags"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/height_rv_displayed_tags"
@@ -133,12 +133,12 @@
     <!-- PLACE -->
     <!-- **********************************************************************-->
     <com.timappweb.timapp.views.EventView
-        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
         android:id="@+id/event_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        myattrs:tags_visible="false"
+        myattrs:tags_visible="true"
         myattrs:bottom_shadow="false"
         myattrs:top_shadow="true"/>
 

@@ -1,35 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <me.grantland.widget.AutofitTextView
-        android:id="@+id/name_invitor"
+    <!--<ImageView
+        android:id="@+id/background_invitation"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/top_radius_invitation"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:singleLine="true"
-        android:textColor="@color/DarkGray"
-        android:textStyle="bold"
-        android:textSize="@dimen/text_normal"
-        android:text="Jack Overfield invited you 20 hours ago" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_bar"/>-->
 
-    <com.timappweb.timapp.views.EventView
-        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-        android:id="@+id/event_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        myattrs:tags_visible="true"
-        myattrs:bottom_shadow="true"
-        myattrs:top_shadow="false"/>
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/transparent">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                android:alpha="0.9"
+                android:src="@drawable/letter"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/name_invitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_normal"
+                    android:text="Jack Overfield !!!!!!!!!" />
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/date_invitation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/DarkGray"
+                    android:textSize="@dimen/text_small"
+                    android:text="Ten hours ago" />
+            </LinearLayout>
+        </LinearLayout>
 
-</LinearLayout>
+        <!--<View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_bottom_gradient_view"
+            android:background="@drawable/bottom_layout_event" />-->
+
+        <com.timappweb.timapp.views.EventView
+            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/event_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            myattrs:is_spot="false"
+            myattrs:tags_visible="true"
+            myattrs:bottom_shadow="true"
+            myattrs:top_shadow="false"/>
+    </LinearLayout>
+
+</RelativeLayout>

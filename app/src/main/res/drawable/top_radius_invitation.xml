@@ -4,7 +4,7 @@
         <shape
             android:shape="rectangle">
             <solid android:color="@color/background_top_invitation" />
-            <corners android:radius="60dp"/>
+            <corners android:radius="10dp"/>
         </shape>
     </item>
 

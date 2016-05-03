@@ -67,7 +67,6 @@ public class LocateActivity extends BaseActivity{
         Log.d(TAG, "Creating LocateActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
-        this.initToolbar(false);
 
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
@@ -82,6 +81,8 @@ public class LocateActivity extends BaseActivity{
         setListeners();
         initAdapterPlaces();
         initLocationListener();
+
+        this.initToolbar(false);
 
     }
 
@@ -125,7 +126,6 @@ public class LocateActivity extends BaseActivity{
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 IntentsUtils.addPlace(that);
             }
         });
@@ -199,6 +199,7 @@ public class LocateActivity extends BaseActivity{
                         placeAdapter.notifyDataSetChanged();
                     } else {
                         IntentsUtils.addPlace(activity);
+                        finish();
                     }
                 }
             }

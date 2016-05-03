@@ -25,7 +25,7 @@ public class Tag extends SyncBaseModel implements Serializable, SearchHistory.Se
     public String name;
 
     @Column(name = "CountRef")
-    @Expose(serialize = true, deserialize = false)
+    @Expose(serialize = false, deserialize = true)
     public int count_ref;
 
     // =============================================================================================

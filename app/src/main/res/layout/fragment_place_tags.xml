@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,19 +9,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.timappweb.timapp.views.EventView
-            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-            android:id="@+id/event_view"
+        <FrameLayout
+            android:id="@+id/event_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            myattrs:tags_visible="false"
-            myattrs:bottom_shadow="true"
-            myattrs:top_shadow="false"
-            myattrs:is_spot="false"
-            myattrs:is_description="true"
-            myattrs:color_spot="@color/background_spot_very_transparent"
-            myattrs:color_event="@color/background_event"
-            android:visibility="gone"/>
+            android:layout_height="wrap_content" />
 
         <!-- Progress view -->
         <!-- **********************************************************************-->

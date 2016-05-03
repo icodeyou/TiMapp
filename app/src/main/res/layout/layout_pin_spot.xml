@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/pin_post_linear_layout"
-        android:background="@color/colorPrimaryVeryDark"
-        android:alpha="0.3"/>
+        android:background="@drawable/background_buttons_create_event" />
     <LinearLayout
         android:id="@+id/pin_post_linear_layout"
         android:layout_width="match_parent"

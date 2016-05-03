@@ -59,10 +59,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         //Toolbar
         this.initToolbar(true);
 
-        //Keyboard
-        imm = (InputMethodManager) this
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-
         //Initialize
         showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
         createPlaceButton = findViewById(R.id.create_spot_button);
@@ -120,17 +116,6 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "got the focus", Toast.LENGTH_LONG).show();
-                    spotsRv.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-
-        etCustomPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!imm.isAcceptingText()) {
                     spotCategoriesRv.setVisibility(View.VISIBLE);
                 }
             }

@@ -63,7 +63,7 @@
         <meta-data android:name="AA_DB_VERSION" android:value="5" />
         <!--
         // TODO for production set models to speed up launch
-        <meta-data  android:name="AA_MODELS"
+        <meta-data  android:name=""AA_MODELS"
             android:value="com.timappweb.timapp.data.models.UserActivity" />-->
 
 
@@ -424,6 +424,18 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ProfileActivity" />
+        </activity>
+
+        <!-- COMMENT ACTIVITY //////////////////////////////////////////////-->
+        <activity android:name=".activities.CommentActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_add_event"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:parentActivityName=".activities.AddPlaceActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.AddPlaceActivity" />
         </activity>
 
         <!-- SHARE ACTIVITY //////////////////////////////////////////////-->

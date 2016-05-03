@@ -84,7 +84,7 @@ public class EditProfileActivity extends BaseActivity{
     }
 
     private void initAdapter() {
-        horizontalTagsAdapter = horizontalTagsRecyclerView.getAdapter();
+        horizontalTagsAdapter = (HorizontalTagsAdapter) horizontalTagsRecyclerView.getAdapter();
     }
 
 

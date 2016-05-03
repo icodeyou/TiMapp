@@ -26,6 +26,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
@@ -71,6 +72,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private ExploreFragment exploreFragment;
     private DrawerActivity drawerActivity;
     private View newEventbutton;
+    private HorizontalTagsAdapter htAdapter;
     //private EachSecondTimerTask eachSecondTimerTask;
 
     @Override

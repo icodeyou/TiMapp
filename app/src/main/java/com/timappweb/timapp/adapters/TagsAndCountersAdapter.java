@@ -49,7 +49,9 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
             tvCounter.setText(tagCounterString);
         }
 
-        float dimens[] = new float[4];
+
+        // Make the first three tags bigger than the others ////////////////////////////
+        /*float dimens[] = new float[4];
         //Convert dp into pixels
         float scale = rowView.getResources().getDisplayMetrics().density;
         dimens[0] = rowView.getResources().getDimension(R.dimen.text_lv_base);
@@ -70,12 +72,12 @@ public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
             tvTag.setTypeface(Typeface.DEFAULT);
             tvCounter.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
             tvCounter.setTypeface(Typeface.DEFAULT);
-            /*if(position%2 == 0) {
+            *//*if(position%2 == 0) {
                 rowView.setBackgroundResource(R.color.background_list_main_tags);
             } else {
                 rowView.setBackgroundResource(R.color.background_list_tags);
-            }*/
-        }
+            }*//*
+        }*/
 
         return rowView;
     }

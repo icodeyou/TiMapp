@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.PlacesInvitation;
+import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -52,14 +55,22 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             String username = placeInvitation.getUserSource().getUsername();
             String prettyTimeInvitation = placeInvitation.getTimeCreated();
-            String topText = username + " invited you " + prettyTimeInvitation;
-            holder.invitorName.setText(topText);
+            holder.nameInvitation.setText(username);
+            holder.dateInvitation.setText(prettyTimeInvitation);
             holder.eventView.setEvent(placeInvitation.place);
 
+            try {
+                EventCategory eventCategory = MyApplication.getCategoryById(placeInvitation.place.getCategoryId());
+                //holder.backgroundImage.setImageResource(eventCategory.getBigImageResId());
+            } catch (UnknownCategoryException e) {
+                Log.e(TAG, "no category found for id : " + placeInvitation.place.getCategoryId());
+            }
+
             //OnTagsRvClick : Same event as adapter click.
+            HorizontalTagsRecyclerView htrv = holder.eventView.getRvEventTags();
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                     new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
+            htrv.setOnTouchListener(mHorizontalTagsTouchListener);
         }
     }
 
@@ -103,15 +114,17 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             View.OnClickListener {
 
         EventView eventView;
-        TextView invitorName;
-        HorizontalTagsRecyclerView horizontalTagsRv;
+        TextView nameInvitation;
+        TextView dateInvitation;
+        //ImageView backgroundImage;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             eventView = (EventView) itemView.findViewById(R.id.event_view);
-            invitorName = (TextView) itemView.findViewById(R.id.name_invitor);
-            horizontalTagsRv = eventView.getRvEventTags();
+            nameInvitation = (TextView) itemView.findViewById(R.id.name_invitation);
+            dateInvitation = (TextView) itemView.findViewById(R.id.date_invitation);
+            //backgroundImage = (ImageView) itemView.findViewById(R.id.background_invitation);
         }
 
         @Override
