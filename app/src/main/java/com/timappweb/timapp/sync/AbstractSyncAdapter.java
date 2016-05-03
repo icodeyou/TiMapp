@@ -5,26 +5,19 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-
-import org.xmlpull.v1.XmlPullParserException;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -74,6 +67,23 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
             if (response.isSuccess()){
                 List<? extends SyncBaseModel> localEntries = localQuery.execute();
                 updateLocalDatabase(classType, response.body(), localEntries, syncResult);
+            }
+            else {
+                // TODO handle this case globally ???
+                Log.e(TAG, "Cannot synchronise, api response invalid: " + response.code());
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error reading from network: " + e.toString());
+            syncResult.stats.numIoExceptions++;
+            return;
+        }
+    }
+    public void performPaginatedModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, From localQuery, SyncResult syncResult){
+        try {
+            Response<PaginationResponse<? extends SyncBaseModel>> response = remoteQuery.execute();
+            if (response.isSuccess()){
+                List<? extends SyncBaseModel> localEntries = localQuery.execute();
+                updateLocalDatabase(classType, response.body().items, localEntries, syncResult);
             }
             else {
                 // TODO handle this case globally ???
@@ -171,23 +181,31 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
      * Helper method to have the sync adapter sync immediately
      * @param context The context used to access the account service
      */
-    public static void syncImmediately(Context context) {
+    public static void syncImmediately(Context context, String authority, Bundle bundle) {
         Log.d(TAG, "Request sync immediately");
-        Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 
-        ContentResolver.requestSync(getSyncAccount(context),
-                context.getString(R.string.content_authority), bundle);
+        ContentResolver.requestSync(getSyncAccount(context), authority, bundle);
+    }
+    /**
+     * Helper method to have the sync adapter sync immediately
+     * @param context The context used to access the account service
+     */
+    public static void syncImmediately(Context context, String authority) {
+        Bundle bundle = new Bundle();
+        syncImmediately(context, authority, bundle);
     }
 
 
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+    public static void configurePeriodicSync(Context context,
+                                             int syncInterval,
+                                             int flexTime,
+                                             String authority) {
         Account account = getSyncAccount(context);
-        String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
@@ -238,7 +256,9 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
              * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
              * here.
              */
-            ContentResolver.setIsSyncable(mAccount, context.getString(R.string.content_authority), 1);
+            ContentResolver.setIsSyncable(mAccount, context.getString(R.string.content_authority_config), 1);
+            ContentResolver.setIsSyncable(mAccount, context.getString(R.string.content_authority_data), 1);
+
             onAccountCreated(mAccount, context);
         }
         else{
@@ -250,20 +270,21 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     protected static void onAccountCreated(Account newAccount, Context context) {
+        String authority = context.getString(R.string.content_authority_config);
         /*
          * Since we've created an account
          */
-        ConfigSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+        AbstractSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME, authority);
 
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
-        ContentResolver.setSyncAutomatically(newAccount, context.getString(R.string.content_authority), true);
+        ContentResolver.setSyncAutomatically(newAccount, authority, true);
 
         /*
          * Finally, let's do a sync to get things started
          */
-        syncImmediately(context);
+        syncImmediately(context, authority);
     }
 
     public static void initializeSyncAdapter(Context context) {
@@ -271,8 +292,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
         getSyncAccount(context);
     }
 
-    public static void logSyncPending(Context context) {
-        String authority = context.getString(R.string.content_authority);
+    public static void logSyncPending(Context context, String authority) {
         Account account = getSyncAccount(context);
         if (ContentResolver.isSyncPending(account, authority)  ||
                 ContentResolver.isSyncActive(account, authority)) {

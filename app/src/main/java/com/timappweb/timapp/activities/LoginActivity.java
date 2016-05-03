@@ -29,7 +29,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.SocialProvider;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;

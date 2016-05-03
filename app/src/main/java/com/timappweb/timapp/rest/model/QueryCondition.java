@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 
 import java.util.HashMap;
 import java.util.Map;

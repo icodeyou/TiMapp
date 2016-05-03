@@ -17,11 +17,10 @@ import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
 import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.data.entities.PlacesInvitation;
+import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.entities.UserPlace;
+import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
@@ -29,8 +28,6 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
-
-import org.jdeferred.impl.DeferredObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,8 +42,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private static final String TAG = "PlaceTagsFragment";
     private Context         context;
     private EventActivity eventActivity;
-    private Place place;
-    private int placeId;
 
     private EventUsersHeaderAdapter placeUsersAdapter;
     private RecyclerView    peopleRv;
@@ -56,13 +51,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private View            mainButton;
     private TextView        tvAddButton;
 
-    //private List<Post> posts;
-    //private List<UserPlace> peopleComing;
-    //private List<UserPlace> peopleInvited;
-
-   // private ArrayList<PlaceUserInterface> usersFullList;
-    private DeferredObject deferred;
-    private int loadCount = 0;
     private SimpleSectionedRecyclerViewAdapter mSectionedAdapter;
 
     @Nullable
@@ -75,6 +63,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         initRv();
         setListeners();
         updateBtnVisibility();
+
 
         return root;
     }
@@ -211,7 +200,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
 
     public void updateBtnVisibility() {
-        mainButton.setVisibility(MyApplication.isLoggedIn() && eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
+        mainButton.setVisibility(MyApplication.isLoggedIn() ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressView(boolean visibility) {

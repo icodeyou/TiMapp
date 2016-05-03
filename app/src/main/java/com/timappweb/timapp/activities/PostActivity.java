@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 

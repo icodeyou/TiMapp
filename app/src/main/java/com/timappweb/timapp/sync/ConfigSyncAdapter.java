@@ -17,24 +17,17 @@
 package com.timappweb.timapp.sync;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.OperationApplicationException;
-import android.content.SyncRequest;
 import android.content.SyncResult;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -43,25 +36,19 @@ import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
 
-import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Define a sync adapter for the app.
  *
- * <p>This class is instantiated in {@link SyncService}, which also binds ConfigSyncAdapter to the system.
- * ConfigSyncAdapter should only be initialized in SyncService, never anywhere else.
+ * <p>This class is instantiated in {@link ConfigSyncService}, which also binds ConfigSyncAdapter to the system.
+ * ConfigSyncAdapter should only be initialized in ConfigSyncService, never anywhere else.
  *
  * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
- * SyncService.
+ * ConfigSyncService.
  */
 public class ConfigSyncAdapter extends AbstractSyncAdapter {
 

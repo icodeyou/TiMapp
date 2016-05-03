@@ -198,11 +198,21 @@ public class EventActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != RESULT_OK) return;
-
-        if (requestCode == REQUEST_CAMERA) {
-            Uri photoUri = data.getData();
-            fragmentPictures.uploadPicture(photoUri);
+        switch (requestCode){
+            case REQUEST_CAMERA:
+                Log.d(TAG, "Result request camera");
+                if (resultCode != RESULT_OK){
+                    return; // TODO
+                }
+                Uri photoUri = data.getData();
+                fragmentPictures.uploadPicture(photoUri);
+                break;
+            case IntentsUtils.ACTIVITY_RESULT_INVITE_FRIENDS:
+                //
+                Log.d(TAG, "Result invite friend");
+                break;
+            default:
+                Log.e(TAG, "Unknown activity result: " + requestCode);
         }
 
         super.onActivityResult(requestCode, resultCode, data);

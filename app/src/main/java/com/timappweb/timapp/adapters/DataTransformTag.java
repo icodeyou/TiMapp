@@ -1,7 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import com.greenfrvr.hashtagview.HashtagView;
-import com.timappweb.timapp.data.entities.Tag;
+import com.timappweb.timapp.data.models.Tag;
 
 public class DataTransformTag implements HashtagView.DataTransform<Tag> {
 

@@ -77,9 +77,11 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
+        <!-- CONFIGURATION -->
         <!-- This service implements our ConfigSyncAdapter. It needs to be exported, so that the system
         sync framework can access it. -->
-        <service android:name=".sync.SyncService"
+        <service android:name=".sync.ConfigSyncService"
             android:exported="true"
             android:enabled="true" >
             <!-- This intent filter is required. It allows the system to launch our sync service
@@ -90,14 +92,30 @@
             <!-- This points to a required XML file which describes our ConfigSyncAdapter. -->
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/syncadapter_config" />
         </service>
 
         <provider
-            android:authorities="@string/content_authority"
-            android:name=".data.contentproviders.QuotaTypeContentProvider"
+            android:authorities="@string/content_authority_data"
+            android:name=".data.contentproviders.FriendsContentProvider"
             android:exported="false"
             android:syncable="true" />
+
+        <!-- DATA -->
+
+        <service android:name=".sync.DataSyncService"
+            android:exported="true"
+            android:enabled="true" >
+            <!-- This intent filter is required. It allows the system to launch our sync service
+            as needed. -->
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <!-- This points to a required XML file which describes our ConfigSyncAdapter. -->
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter_data" />
+        </service>
 
         <!-- END SYNC ADAPTERS ===================================================================== -->
 

@@ -12,12 +12,12 @@ import android.util.Log;
  *
  * <p>For performance, only one sync adapter will be initialized within this application's context.
  *
- * <p>Note: The SyncService itself is not notified when a new sync occurs. It's role is to
+ * <p>Note: The ConfigSyncService itself is not notified when a new sync occurs. It's role is to
  * manage the lifecycle of our {@link ConfigSyncAdapter} and provide a handle to said ConfigSyncAdapter to the
  * OS on request.
  */
-public class SyncService extends Service {
-    private static final String TAG = "SyncService";
+public class ConfigSyncService extends Service {
+    private static final String TAG = "ConfigSyncService";
 
     private static final Object sSyncAdapterLock = new Object();
     private static ConfigSyncAdapter sConfigSyncAdapter = null;

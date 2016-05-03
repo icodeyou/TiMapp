@@ -3,6 +3,8 @@ package com.timappweb.timapp;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -17,13 +19,15 @@ import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
+import com.timappweb.timapp.sync.AbstractSyncAdapter;
 import com.timappweb.timapp.sync.ConfigSyncAdapter;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
@@ -154,8 +158,12 @@ public class MyApplication extends com.activeandroid.app.Application {
             notifyLoadingState("Server configuration loaded");
         }
         else{
-            ConfigSyncAdapter.syncImmediately(this);
+            AbstractSyncAdapter.syncImmediately(this, this.getString(R.string.content_authority_config));
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, DataSyncAdapter.SYNC_TYPE_FRIENDS);
+        DataSyncAdapter.syncImmediately(this, this.getString(R.string.content_authority_data), bundle);
 
         checkToken();
     }

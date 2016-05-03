@@ -1,30 +1,35 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.google.gson.JsonArray;
-import com.sromku.simple.fb.listeners.OnFriendsListener;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,28 +37,31 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class InviteFriendsActivity extends BaseActivity{
+public class InviteFriendsActivity extends BaseActivity {
 
-    private final String KEY_INSTANCE_STATE_PEOPLE = "statePeople";
-    private String TAG = "InviteFriendsActivity";
-    private AutoLabelUI mAutoLabel;
-    private RecyclerView recyclerView;
-    private SelectFriendsAdapter adapter;
-    private View inviteButton;
-    private TextView textInviteButton;
-    private View noFriendsView;
-    private View progressView;
+    private String              TAG                         = "InviteFriendsActivity";
+    private static final int    LOADER_ID_FRIENDS_LIST      = 0;
 
-    private List<User> friendsSelected;
-    private List<User> allFbFriends;
-    private OnFriendsListener onFriendsListener;
-    private Place place;
+    //private AutoLabelUI                 mAutoLabel;
+    private RecyclerView                recyclerView;
+    private SelectFriendsAdapter        adapter;
+
+    private View                        inviteButton;
+    private View                        noFriendsView;
+    private View                        progressView;
+
+    private List<User>                  friendsSelected;
+    private List<User>                  allFbFriends;
+    private Place                       place;
+    private FriendsLoader               mLoader;
+    private ContentResolver             mResolver;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Creating InviteFriendsActivity");
         setContentView(R.layout.activity_invite_friends);
+
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         place = IntentsUtils.extractPlace(getIntent());
         if (place == null){
@@ -62,51 +70,26 @@ public class InviteFriendsActivity extends BaseActivity{
         }
 
         this.initToolbar(true);
-        findViews();
-        initSelectedFriends();
-        initAdapterListFriends();
-        initAutoLabel();
-        initInviteButton();
-        loadFriends();
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void loadFriends(){
-        Call<PaginationResponse<User>> call = RestClient.service().friends();
-        apiCalls.add(call);
-        call.enqueue(new RestCallback<PaginationResponse<User>>(this) {
-            @Override
-            public void onResponse200(Response<PaginationResponse<User>> response) {
-                onUserLoaded(response.body().items);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-                progressView.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    private void findViews() {
         inviteButton = findViewById(R.id.invite_button);
-        textInviteButton = (TextView) findViewById(R.id.text_invite_button);
         noFriendsView = findViewById(R.id.no_friends_view);
         progressView = findViewById(R.id.loading_friends);
-        mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
-        mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
+        //mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
+        //mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        initSelectedFriends();
+        initAdapterListFriends();
+        //initAutoLabel();
+        initInviteButton();
+
+        mLoader = new FriendsLoader();
+        getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
     }
 
     private void initSelectedFriends() {
         friendsSelected = new ArrayList<>();
         //TODO : Get invited users from placeActivity and add them to the list
-
     }
 
     private void initAdapterListFriends() {
@@ -119,11 +102,22 @@ public class InviteFriendsActivity extends BaseActivity{
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                itemListClicked(position);
+                User friend = allFbFriends.get(position);
+                boolean success;
+                if (friendsSelected.contains(friend)) {
+                    success = true;//mAutoLabel.removeLabel(position);
+                    friendsSelected.remove(friend);
+                } else {
+                    success = true;// mAutoLabel.addLabel(friend.getUsername(), position);
+                    friendsSelected.add(friend);
+                }
+
+                inviteButton.setVisibility(friendsSelected.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+                    adapter.notifyDataSetChanged();
             }
         });
     }
-
+/*
     private void initAutoLabel() {
         int maxLabels = ConfigurationProvider.rules().max_invite_per_request;
         //TODO : Replace 20 by maxLabels;
@@ -160,7 +154,7 @@ public class InviteFriendsActivity extends BaseActivity{
             }
         });
     }
-
+*/
     private void initInviteButton() {
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,9 +163,6 @@ public class InviteFriendsActivity extends BaseActivity{
                 sendInvites();
             }
         });
-
-        updateButtonVisibility();
-
     }
 
     private void sendInvites(){
@@ -185,55 +176,61 @@ public class InviteFriendsActivity extends BaseActivity{
             @Override
             public void onResponse200(Response<JsonArray> response) {
                 Toast.makeText(context, R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
-                onSendInviteSuccess();
+                finishActivityResult();
             }
 
         });
         this.apiCalls.add(call);
     }
 
-    private void onSendInviteSuccess(){
-        //int notificationId = NotificationFactory.invite(this, MyApplication.getCurrentUser(), this.place);
-        NavUtils.navigateUpFromSameTask(this);
-
-    }
-
-    private void itemListClicked(int position) {
-        User friend = allFbFriends.get(position);
-        boolean success;
-        if (friendsSelected.contains(friend)) {
-            success = mAutoLabel.removeLabel(position);
-            friendsSelected.remove(friend);
-        } else {
-            success = mAutoLabel.addLabel(friend.getUsername(), position);
-            friendsSelected.add(friend);
-        }
-        if (success) {
-            updateButtonVisibility();;
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    private void onUserLoaded(List<User> items){
-        allFbFriends = items;
-        if(allFbFriends.size()==0) {
-            noFriendsView.setVisibility(View.VISIBLE);
-        } else {
-            noFriendsView.setVisibility(View.GONE);
-            adapter.setData(items);
-        }
-        progressView.setVisibility(View.GONE);
-    }
-
-    private void updateButtonVisibility() {
-        if(mAutoLabel.getLabelsCounter()>0) {
-            inviteButton.setVisibility(View.VISIBLE);
-        } else {
-            inviteButton.setVisibility(View.GONE);
-        }
-    }
-
     public List<User> getFriendsSelected() {
         return friendsSelected;
+    }
+
+
+    private void finishActivityResult(){
+        Intent intent = NavUtils.getParentActivityIntent(this);
+        Bundle bundle = new Bundle();
+        intent.putExtras(bundle);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+
+    // LOADER FUNCTIONS ============================================================================
+
+    class FriendsLoader implements LoaderManager.LoaderCallbacks<List<User>>
+    {
+
+        @Override
+        public Loader<List<User>> onCreateLoader(int id, Bundle args)
+        {
+            progressView.setVisibility(View.VISIBLE);
+            //setProgressBarIndeterminateVisibility(true);
+            return new ModelLoader<User>(InviteFriendsActivity.this, User.class, true);
+        }
+
+
+        @Override
+        public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
+            allFbFriends = data;
+            adapter.clear();
+            adapter.setData(data);
+            adapter.notifyDataSetChanged();
+
+            //setProgressBarIndeterminateVisibility(false);
+            Log.i(TAG, "Loaded " + data.size() + " friends for the user");
+            //noFriendsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+            progressView.setVisibility(View.GONE);
+        }
+
+
+        @Override
+        public void onLoaderReset(Loader<List<User>> loader)
+        {
+            adapter.clear();
+            adapter.notifyDataSetChanged();
+        }
+
     }
 }

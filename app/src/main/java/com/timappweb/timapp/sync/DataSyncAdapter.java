@@ -19,58 +19,51 @@ package com.timappweb.timapp.sync;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.MapAreaInfo;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.UserQuota;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
-
-import java.io.IOException;
-
-import retrofit2.Call;
 
 /**
  * Define a sync adapter for the app.
  *
- * <p>This class is instantiated in {@link SyncService}, which also binds MapDataSyncAdapter to the system.
- * MapDataSyncAdapter should only be initialized in SyncService, never anywhere else.
+ * <p>This class is instantiated in {@link ConfigSyncService}, which also binds DataSyncAdapter to the system.
+ * DataSyncAdapter should only be initialized in ConfigSyncService, never anywhere else.
  *
  * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
- * SyncService.
+ * ConfigSyncService.
  */
-public class MapDataSyncAdapter extends AbstractSyncAdapter {
+public class DataSyncAdapter extends AbstractSyncAdapter {
 
     public static final String TAG = "MapDataAdapter";
 
+    public static final String SYNC_TYPE_KEY = "data_sync_type";
+    public static final int SYNC_TYPE_FRIENDS = 1;
+    public static final int SYNC_TYPE_EVENT_AROUD_USER = 2;
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
-    public MapDataSyncAdapter(Context context, boolean autoInitialize) {
+    public DataSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
     }
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
-    public MapDataSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
+    public DataSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
     }
 
@@ -92,22 +85,39 @@ public class MapDataSyncAdapter extends AbstractSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        Log.i(TAG, "--------------- Beginning network synchronization -----------------------------");
+        Log.i(TAG, "--------------- Beginning network synchronization for data---------------------");
 
+        int syncTypeId = extras.getInt(DataSyncAdapter.SYNC_TYPE_KEY, -1);
+        Log.i(TAG, "onPerformSync with type=" + syncTypeId);
+        switch (syncTypeId){
+            case DataSyncAdapter.SYNC_TYPE_FRIENDS:
+
+                // TODO find only user friends
+                From localEntries = new Select().from(User.class);//.where();
+                this.performPaginatedModelSync(User.class, RestClient.service().friends(), localEntries, syncResult);
+
+                break;
+            case DataSyncAdapter.SYNC_TYPE_EVENT_AROUD_USER:
+                // TODO
+                break;
+        }
+        Log.i(TAG, "--------------- Network synchronization complete for data----------------------");
+    }
+
+    private void performFriendsSync(){
+
+    }
+
+    private void performMapDataSync(LatLngBounds bounds, PaginationResponse<? extends SyncBaseModel> response, SyncResult syncResult){
         if (MyApplication.hasFineLocation()){
             Location location = MyApplication.getLastLocation();
             // TODO
             From localQuery = MapAreaInfo.findArea(null, MapAreaInfo.AROUND_USER);
-            this.performModelSync(  Place.class,
-                                RestClient.service().placeReachable(location.getLatitude(), location.getLongitude()),
-                                localQuery,
-                                syncResult);
+            this.performModelSync(Place.class,
+                    RestClient.service().placeReachable(location.getLatitude(), location.getLongitude()),
+                    localQuery,
+                    syncResult);
         }
-        Log.i(TAG, "--------------- Network synchronization complete -------------------------------");
-    }
-
-
-    private void performMapDataSync(LatLngBounds bounds, PaginationResponse<? extends SyncBaseModel> response){
         MapAreaInfo.addNewArea(bounds, MapAreaInfo.MAP_EVENT, response.total, response.items.size());
         for (SyncBaseModel model: response.items){
 

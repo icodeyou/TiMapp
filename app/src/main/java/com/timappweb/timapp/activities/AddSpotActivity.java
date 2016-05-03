@@ -94,7 +94,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
             @Override
             public void onClick(View v) {
                 Spot spot = new Spot(etCustomPlace.getText().toString(), categorySelected);
-                onSubmit(spot);
+                finishActivityResult(spot);
             }
         });
 
@@ -149,18 +149,17 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         spotsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                onSubmit(spotsAdapter.getItem(position));
+                finishActivityResult(spotsAdapter.getItem(position));
             }
         });
     }
 
-    private void onSubmit(Spot spot){
+    private void finishActivityResult(Spot spot){
         Log.d(TAG, "Spot chose: " + spot);
         Intent intent = new Intent(activity, AddPlaceActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("spot", spot);
         intent.putExtras(bundle);
-
         setResult(Activity.RESULT_OK, intent);
         finish();
         //NavUtils.navigateUpTo(activity, intent);

@@ -151,7 +151,7 @@ public class ExploreFragment extends Fragment{
             }
             else {
                 sb = new SpannableStringBuilder("  " + mContext.getString(R.string.tab_map));
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_list);
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_chineseman);
             }
             int icSize = (int) mContext.getResources().getDimension(R.dimen.logo_small);
             drawable.setBounds(0, 0, icSize, icSize);

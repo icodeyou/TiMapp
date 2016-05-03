@@ -25,7 +25,6 @@ import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.Comment;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Spot;

@@ -6,12 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.PlacesInvitation;
+import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;

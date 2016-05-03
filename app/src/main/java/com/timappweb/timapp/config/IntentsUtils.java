@@ -29,13 +29,14 @@ import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.User;
 
 public class IntentsUtils {
 
     private static final String TAG = "IntentUtils";
 
     public static final int ACTIVITY_RESULT_PICK_SPOT = 1;
+    public static final int ACTIVITY_RESULT_INVITE_FRIENDS = 1;
     public static final int ACTIVITY_RESULT_COMMENT = 2;
 
     public static void login(Context context){
@@ -189,7 +190,7 @@ public class IntentsUtils {
         Bundle extras = new Bundle();
         extras.putSerializable("place", place);          // TODO use constant
         intent.putExtras(extras);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, ACTIVITY_RESULT_INVITE_FRIENDS);
     }
 
     public static void viewPicture(Activity activity, int position, String[] data) {

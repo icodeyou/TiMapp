@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.Tag;
-import com.timappweb.timapp.data.entities.User;
+import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -53,13 +53,12 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
         //Horizontal tags
         HorizontalTagsAdapter horizontalTagsAdapter = friendViewHolder.horizontalTags.getAdapter();
-        List<Tag> tags = friend.tags;
-        if(tags.size() == 0) {
+        if(!friend.hasTags()) {
             List<Tag> newbieList = new ArrayList<>();
             newbieList.add(new Tag(context.getString(R.string.newbie_tag)));
             horizontalTagsAdapter.setData(newbieList);
         } else {
-            horizontalTagsAdapter.setData(tags);
+            horizontalTagsAdapter.setData(friend.tags);
         }
 
         //User pic
@@ -88,6 +87,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    public void clear() {
+        this.data.clear();
     }
 
     public class FriendViewHolder extends RecyclerView.ViewHolder implements

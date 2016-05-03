@@ -11,12 +11,13 @@ import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserQuota;
 
 /**
  * Created by stephane on 4/23/2016.
  */
-public class QuotaTypeContentProvider extends ContentProvider {
+public class FriendsContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         return false;
@@ -25,7 +26,7 @@ public class QuotaTypeContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String resultRecords = new Select().from(UserQuota.class).toSql();
+        String resultRecords = new Select().from(User.class).toSql();
         return Cache.openDatabase().rawQuery(resultRecords, null);
     }
 
@@ -43,7 +44,7 @@ public class QuotaTypeContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        new Delete().from(UserQuota.class)
+        new Delete().from(User.class)
                 .where(selection)
                 .execute();
         return 0;
