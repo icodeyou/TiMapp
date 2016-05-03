@@ -5,31 +5,30 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/background_invitation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/image_bar"/>
+        android:src="@drawable/image_bar"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="@color/background_half_black">
+            android:background="@color/transparent">
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginEnd="20dp"
-                android:alpha="0.5"
+                android:alpha="0.9"
                 android:src="@drawable/letter"/>
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -40,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_normal"
                     android:text="Jack Overfield !!!!!!!!!" />
@@ -49,25 +48,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/DarkGray"
                     android:textSize="@dimen/text_small"
                     android:text="Ten hours ago" />
             </LinearLayout>
         </LinearLayout>
 
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_bottom_gradient_view"
-            android:background="@drawable/bottom_layout_event" />
+            android:background="@drawable/bottom_layout_event" />-->
 
         <com.timappweb.timapp.views.EventView
             xmlns:myattrs="http://schemas.android.com/apk/res-auto"
             android:id="@+id/event_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             myattrs:is_spot="false"
-            myattrs:color_event="@color/background_half_black"
             myattrs:tags_visible="true"
             myattrs:bottom_shadow="true"
             myattrs:top_shadow="false"/>
