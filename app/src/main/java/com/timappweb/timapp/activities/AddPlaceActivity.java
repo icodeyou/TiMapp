@@ -27,7 +27,6 @@ import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.Comment;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Spot;
@@ -47,7 +46,6 @@ public class AddPlaceActivity extends BaseActivity {
     private String TAG = "AddPlaceActivity";
 
     private InputMethodManager imm;
-    private Comment comment;
 
     //Views
     private BackCatchEditText eventNameET;
@@ -352,13 +350,6 @@ public class AddPlaceActivity extends BaseActivity {
 
     private void extractComment(Bundle bundle){
         if(bundle!=null) {
-            comment = (Comment) bundle.getSerializable("comment");
-            if (comment != null){
-                Log.v(TAG, "Comment is selected: " + comment);
-                commentView.setText(comment.content);
-            } else {
-                Log.d(TAG, "comment is null");
-            }
         }
     }
 }

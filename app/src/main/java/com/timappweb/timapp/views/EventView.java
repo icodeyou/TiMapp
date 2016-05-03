@@ -16,9 +16,9 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.data.entities.Tag;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.util.List;

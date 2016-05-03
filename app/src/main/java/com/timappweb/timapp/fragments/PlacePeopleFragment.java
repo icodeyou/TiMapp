@@ -20,7 +20,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.entities.UserPlace;
+import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;

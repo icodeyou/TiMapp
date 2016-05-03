@@ -3,6 +3,8 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,9 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.ColorAllOnTouchListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.utils.loaders.ModelLoader;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -116,10 +121,6 @@ public class ProfileActivity extends BaseActivity{
         }
     }
 
-    private void initLastPostAdapter() {
-        //PostsAdapter postsAdapter = new PostsAdapter(this);
-        //lastPostListView.setAdapter(postsAdapter);
-    }
 
     private void setTagsListeners() {
         final Activity activity = this;
@@ -147,14 +148,23 @@ public class ProfileActivity extends BaseActivity{
         if (user != null){
             // Check last sync for user
             boolean upToDate = false;
-            if (!upToDate){
-                // TODO update row
+            if (upToDate){
+                this.onUserLoaded(user);
+                return ;
             }
         }
+
+
         // If not in cache
-        else {
             Call<User> call = RestClient.service().profile(userId);
             call.enqueue(new RestCallback<User>(this) {
+
+                @Override
+                public void onResponse200(Response<User> response) {
+                    User user = response.body();
+                    onUserLoaded(user);
+                }
+
                 @Override
                 public void onFailure(Throwable t) {
                     super.onFailure(t);
@@ -164,56 +174,51 @@ public class ProfileActivity extends BaseActivity{
                 }
 
                 @Override
-                public void onResponse(Response<User> response) {
-                    super.onResponse(response);
-                    if (response.isSuccess()) {
-                        User user = response.body();
-                        Log.i(TAG, user + " loaded");
-                        mUser = user;
-                        tvUsername.setText(mUser.username);
-                        tvAge.setText("100 years old");
-                        progressView1.setVisibility(View.GONE);
-                        tvCountTags.setText(String.valueOf(mUser.count_posts));
-                        tvCountTags.setVisibility(View.VISIBLE);
-                        progressView2.setVisibility(View.GONE);
-                        tvCountPlaces.setText(String.valueOf(mUser.count_places));
-                        tvCountPlaces.setVisibility(View.VISIBLE);
-
-                        initLastPostAdapter();
-                        initUserTagsAdapter();
-
-                        if (mUser.tags != null) {
-                            UserTagsAdapter adapter = (UserTagsAdapter) tagsListView.getAdapter();
-                            if(mUser.tags.size() > 0){
-                                Log.v(TAG, "User has a: " + mUser.tags.size() + " tag(s)");
-                                adapter.clear();
-                                adapter.addAll(mUser.tags);
-                                adapter.notifyDataSetChanged();
-                            }
-                            else {
-                                Tag defaultTag = new Tag(getString(MyApplication.isCurrentUser(userId)
-                                        ? R.string.define_yourself_tag
-                                        : R.string.newbie_tag));
-                                adapter.add(defaultTag);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-
-                        if (MyApplication.isCurrentUser(userId)) {
-                            invalidateOptionsMenu();
-                            setTagsListeners();
-                        }
-                        String photoUrl = mUser.getProfilePictureUrl();
-                        Uri uri = Uri.parse(photoUrl);
-                        profilePicture.setImageURI(uri);
-
-                        //mainView.setVisibility(View.VISIBLE);
-                        //loadingView.setVisibility(View.GONE);
-                    }
+                public void onFinish() {
+                    super.onFinish();
                 }
             });
             apiCalls.add(call);
+    }
+
+    private void onUserLoaded(User user){
+        Log.i(TAG, user + " loaded");
+        mUser = user;
+        tvUsername.setText(mUser.username);
+        tvAge.setText("100 years old");
+        progressView1.setVisibility(View.GONE);
+        tvCountTags.setText(String.valueOf(mUser.count_posts));
+        tvCountTags.setVisibility(View.VISIBLE);
+        progressView2.setVisibility(View.GONE);
+        tvCountPlaces.setText(String.valueOf(mUser.count_places));
+        tvCountPlaces.setVisibility(View.VISIBLE);
+
+        initUserTagsAdapter();
+
+        if (mUser.tags != null) {
+            UserTagsAdapter adapter = (UserTagsAdapter) tagsListView.getAdapter();
+            if(mUser.tags.size() > 0){
+                Log.v(TAG, "User has a: " + mUser.tags.size() + " tag(s)");
+                adapter.clear();
+                adapter.addAll(mUser.tags);
+                adapter.notifyDataSetChanged();
+            }
+            else {
+                Tag defaultTag = new Tag(getString(MyApplication.isCurrentUser(user.id)
+                        ? R.string.define_yourself_tag
+                        : R.string.newbie_tag));
+                adapter.add(defaultTag);
+                adapter.notifyDataSetChanged();
+            }
         }
+
+        if (MyApplication.isCurrentUser(user.id)) {
+            invalidateOptionsMenu();
+            setTagsListeners();
+        }
+        String photoUrl = mUser.getProfilePictureUrl();
+        Uri uri = Uri.parse(photoUrl);
+        profilePicture.setImageURI(uri);
     }
 
     private void initUserTagsAdapter() {

@@ -12,7 +12,7 @@ import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.entities.UserPlace;
+import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;

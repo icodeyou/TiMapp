@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.Comment;
 
 
 public class CommentActivity extends BaseActivity {
@@ -37,10 +36,8 @@ public class CommentActivity extends BaseActivity {
             public void onClick(View v) {
                 String commentString = commentEt.getText().toString();
                 Log.d(TAG, "Saving comment: " + commentString);
-                Comment comment = new Comment(commentString);
                 Intent intent = new Intent(activity, AddPlaceActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("comment", comment);
                 intent.putExtras(bundle);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
