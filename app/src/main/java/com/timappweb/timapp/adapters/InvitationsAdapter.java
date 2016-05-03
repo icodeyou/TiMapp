@@ -68,9 +68,10 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             //OnTagsRvClick : Same event as adapter click.
+            HorizontalTagsRecyclerView htrv = holder.eventView.getRvEventTags();
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                     new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
+            htrv.setOnTouchListener(mHorizontalTagsTouchListener);
         }
     }
 
@@ -117,7 +118,6 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView nameInvitation;
         TextView dateInvitation;
         ImageView backgroundImage;
-        HorizontalTagsRecyclerView horizontalTagsRv;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
@@ -126,7 +126,6 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             nameInvitation = (TextView) itemView.findViewById(R.id.name_invitation);
             dateInvitation = (TextView) itemView.findViewById(R.id.date_invitation);
             backgroundImage = (ImageView) itemView.findViewById(R.id.background_invitation);
-            horizontalTagsRv = eventView.getRvEventTags();
         }
 
         @Override

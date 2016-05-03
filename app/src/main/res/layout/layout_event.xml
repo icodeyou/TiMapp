@@ -184,15 +184,22 @@
                     android:id="@+id/horizontal_tags_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-                        android:id="@+id/rv_horizontal_tags"
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:id="@+id/htrv_frame_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/height_rv_displayed_tags"
-                        myattrs:horizontal_tags_text_color="@color/white"
-                        myattrs:horizontal_tags_background_color="@color/transparent"
+                        android:layout_gravity="center"/>
+                    <!--<com.timappweb.timapp.views.HorizontalTagsRecyclerView
+                        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/rv_horizontal_tags"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_rv_displayed_tags"
+                        android:layout_gravity="center"
+                        android:background="@color/DarkCyan"
+                        myattrs:horizontal_tags_text_color="@color/Red"
+                        myattrs:horizontal_tags_background_color="@color/DarkGreen"
                         myattrs:horizontal_tags_is_bold="true"
-                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
+                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>-->
                 </LinearLayout>
 
                 <!-- Description -->
