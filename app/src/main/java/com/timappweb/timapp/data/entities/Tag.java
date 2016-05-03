@@ -19,7 +19,7 @@ public class Tag implements Serializable, SearchHistory.SearchableItem{
     @Expose
     public String name;
 
-    @Expose(serialize = true, deserialize = false)
+    @Expose(serialize = false, deserialize = true)
     public int count_ref;
 
     // =============================================================================================
