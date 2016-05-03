@@ -62,7 +62,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             try {
                 EventCategory eventCategory = MyApplication.getCategoryById(placeInvitation.place.getCategoryId());
-                holder.backgroundImage.setImageResource(eventCategory.getBigImageResId());
+                //holder.backgroundImage.setImageResource(eventCategory.getBigImageResId());
             } catch (UnknownCategoryException e) {
                 Log.e(TAG, "no category found for id : " + placeInvitation.place.getCategoryId());
             }
@@ -117,7 +117,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         EventView eventView;
         TextView nameInvitation;
         TextView dateInvitation;
-        ImageView backgroundImage;
+        //ImageView backgroundImage;
 
         PlacesViewHolder(View itemView) {
             super(itemView);
@@ -125,7 +125,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             eventView = (EventView) itemView.findViewById(R.id.event_view);
             nameInvitation = (TextView) itemView.findViewById(R.id.name_invitation);
             dateInvitation = (TextView) itemView.findViewById(R.id.date_invitation);
-            backgroundImage = (ImageView) itemView.findViewById(R.id.background_invitation);
+            //backgroundImage = (ImageView) itemView.findViewById(R.id.background_invitation);
         }
 
         @Override
