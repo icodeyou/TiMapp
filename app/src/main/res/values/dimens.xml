@@ -44,7 +44,6 @@
     <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="width_border_white">4dp</dimen>
 
-
     <!-- Text dimensions -->
     <dimen name="default_horizontal_padding">20dp</dimen>
     <dimen name="text_tiny">10dp</dimen>
@@ -65,6 +64,7 @@
     <dimen name="logo_tiny">15dp</dimen>
     <dimen name="logo_small">25dp</dimen>
     <dimen name="logo_normal">30dp</dimen>
+    <dimen name="logo_ic_hot">32dp</dimen>
     <dimen name="logo_big">45dp</dimen>
 
     <!-- Map -->

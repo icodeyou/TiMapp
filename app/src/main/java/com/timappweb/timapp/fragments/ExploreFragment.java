@@ -146,16 +146,16 @@ public class ExploreFragment extends Fragment{
             SpannableStringBuilder sb;
             Drawable drawable;
             if (position == 0) {
-                sb = new SpannableStringBuilder("  " + mContext.getString(R.string.tab_map));
+                sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_map));
                 drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_dialog_map);
             }
             else {
-                sb = new SpannableStringBuilder("  " + mContext.getString(R.string.tab_map));
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_chineseman);
+                sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_list));
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.list);
             }
             int icSize = (int) mContext.getResources().getDimension(R.dimen.logo_small);
             drawable.setBounds(0, 0, icSize, icSize);
-            ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+            ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
             sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             return sb;

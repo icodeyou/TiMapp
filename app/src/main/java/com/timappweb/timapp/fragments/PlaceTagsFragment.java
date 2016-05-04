@@ -62,12 +62,15 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
 
+        //TODO : ENLEVER fonction if est tout faire dans 'eventview', puis corriger affichage spot
         //Create Event View
         if(eventActivity.getEventToolbar().getVisibility()==View.VISIBLE) {
-            eventView = new EventView(eventActivity, false);
+            eventView = new EventView(eventActivity, true);
         } else {
             eventView = new EventView(eventActivity);
         }
+
+
         eventView.setEvent(eventActivity.getEvent());
         FrameLayout eventFrameLayout = (FrameLayout) root.findViewById(R.id.event_frame_layout);
         eventFrameLayout.addView(eventView);

@@ -36,7 +36,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-        View root = inflater.inflate(R.layout.fragment_explore_places, container, false);
+        View root = inflater.inflate(R.layout.fragment_explore_events, container, false);
 
         exploreFragment = (ExploreFragment) getParentFragment();
         drawerActivity = (DrawerActivity) exploreFragment.getActivity();
