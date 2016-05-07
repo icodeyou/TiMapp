@@ -76,7 +76,7 @@
                 android:background="@color/background_event"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="30dp">
+                android:paddingBottom="10dp">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -140,15 +140,42 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/horizontal_tags_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <FrameLayout
+                        android:id="@+id/htrv_frame_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_rv_displayed_tags"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"/>
+                    <!--<com.timappweb.timapp.views.HorizontalTagsRecyclerView
+                        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/rv_horizontal_tags"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_rv_displayed_tags"
+                        android:layout_gravity="center"
+                        android:background="@color/DarkCyan"
+                        myattrs:horizontal_tags_text_color="@color/Red"
+                        myattrs:horizontal_tags_background_color="@color/DarkGreen"
+                        myattrs:horizontal_tags_is_bold="true"
+                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>-->
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/white_points_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center|start"
-                    android:visibility="gone">
+                    android:visibility="visible">
                     <ImageView
+                        android:id="@+id/ic_hot"
                         android:layout_width="@dimen/little_icon_spot"
                         android:layout_height="@dimen/logo_normal"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
                         android:src="@drawable/ic_hot_white"/>
                     <com.timappweb.timapp.views.SimpleTimerView
                         android:id="@+id/white_points_text"
@@ -163,25 +190,29 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/horizontal_tags_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <FrameLayout
-                        android:id="@+id/htrv_frame_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_rv_displayed_tags"
-                        android:layout_gravity="center"/>
-                    <!--<com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/rv_horizontal_tags"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_rv_displayed_tags"
-                        android:layout_gravity="center"
-                        android:background="@color/DarkCyan"
-                        myattrs:horizontal_tags_text_color="@color/Red"
-                        myattrs:horizontal_tags_background_color="@color/DarkGreen"
-                        myattrs:horizontal_tags_is_bold="true"
-                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>-->
+                    android:id="@+id/distance_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:gravity="center|start"
+                    android:visibility="visible">
+                    <ImageView
+                        android:layout_width="@dimen/little_icon_spot"
+                        android:layout_height="@dimen/logo_normal"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/distance"/>
+                    <com.timappweb.timapp.views.SimpleTimerView
+                        android:id="@+id/distance_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="bottom"
+                        android:singleLine="true"
+                        android:text="120 m"
+                        android:textSize="@dimen/text_normal"
+                        android:textColor="@color/White"
+                        android:textStyle="bold"/>
                 </LinearLayout>
 
                 <!-- Description -->
@@ -190,12 +221,13 @@
                     android:id="@+id/description_event"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/description_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
                         android:gravity="left"
                         android:textColor="@color/white"/>
 
@@ -240,62 +272,76 @@
         android:layout_below="@+id/main_box_relative"
         android:background="@drawable/bottom_layout_event" />
 
-    <RelativeLayout
-        android:id="@+id/points_layout"
-        android:layout_width="300dp"
+    <LinearLayout
+        android:id="@+id/post_buttons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-25dp"
-        android:layout_centerInParent="true"
-        android:padding="5dp"
-        android:layout_alignTop="@+id/bottom_gradient_event"
-        android:background="@drawable/border_radius_white">
+        android:layout_below="@+id/bottom_gradient_event"
+        android:layout_toLeftOf="@+id/match_button"
+        android:layout_toStartOf="@+id/match_button"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:src="@drawable/post_pic"/>
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:src="@drawable/post_tags"/>
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:src="@drawable/post_people"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/match_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingBottom="30dp"
+        android:layout_alignBottom="@+id/post_buttons"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true">
         <LinearLayout
-            android:id="@+id/horizontal_points_layout"
+            android:id="@+id/match_button_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:orientation="horizontal"
-            android:gravity="center|start"
-            android:layout_gravity="center">
-            <ImageView
-                android:layout_width="@dimen/logo_ic_hot"
-                android:layout_height="@dimen/logo_ic_hot"
-                android:src="@drawable/ic_hot"/>
-            <com.timappweb.timapp.views.SimpleTimerView
-                android:id="@+id/places_points"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="bottom"
-                android:singleLine="true"
-                android:text="3600"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/iamhere_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:orientation="horizontal">
+            android:background="@drawable/border_radius_white"
+            android:visibility="visible">
             <ImageView
                 android:id="@+id/match_icon"
                 android:layout_width="@dimen/logo_normal"
                 android:layout_height="@dimen/logo_normal"
                 android:layout_marginRight="5dp"
                 android:layout_marginEnd="5dp"
-                android:src="@drawable/match"/>
+                android:src="@drawable/match_red"/>
             <TextView
-                android:id="@+id/iamhere_text"
+                android:id="@+id/match_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="I am here"
+                android:text="@string/iamhere"
                 android:textSize="@dimen/text_normal"
-                android:textColor="@color/DarkGray"/>
+                android:textColor="@color/colorPrimaryDark"/>
         </LinearLayout>
     </RelativeLayout>
+    <!--<RelativeLayout
+        android:id="@+id/all_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bottom_gradient_event"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="-25dp">
+
+    </RelativeLayout>-->
 
 </RelativeLayout>

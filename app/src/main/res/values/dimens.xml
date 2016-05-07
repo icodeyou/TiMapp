@@ -83,7 +83,7 @@
     <dimen name="width_checkbox_card">62dp</dimen>
     <dimen name="upload_tags_margin">25dp</dimen>
     <dimen name="height_top_gradient_view">4dp</dimen>
-    <dimen name="height_bottom_gradient_view">10dp</dimen>
+    <dimen name="height_bottom_gradient_view">6dp</dimen>
     <dimen name="default_progressview">50dp</dimen>
     <dimen name="padding_zoom_fit_cluster">50dp</dimen>
     <dimen name="icon_default">40dp</dimen>
@@ -96,5 +96,7 @@
     <dimen name="margin_custom_toolbar_left">40dp</dimen>
     <dimen name="margin_custom_toolbar_right">95dp</dimen>
     <dimen name="width_add_event_buttons">120dp</dimen>
+    <integer name="slide_down_anim">90</integer>
+    <integer name="slide_up_anim">-90</integer>
 
 </resources>

@@ -15,7 +15,6 @@ import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
@@ -50,7 +49,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         eventActivity = (EventActivity) getActivity();
-        View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
+        View root = inflater.inflate(R.layout.fragment_event_tags, container, false);
 
         //Find views
         mainButton = root.findViewById(R.id.main_button);
@@ -62,7 +61,6 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
 
-        //TODO : ENLEVER fonction if est tout faire dans 'eventview', puis corriger affichage spot
         //Create Event View
         if(eventActivity.getEventToolbar().getVisibility()==View.VISIBLE) {
             eventView = new EventView(eventActivity, true);
@@ -70,7 +68,8 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
             eventView = new EventView(eventActivity);
         }
 
-
+        eventView.setBottomShadow(true);
+        eventView.setTagsVisible(false);
         eventView.setEvent(eventActivity.getEvent());
         FrameLayout eventFrameLayout = (FrameLayout) root.findViewById(R.id.event_frame_layout);
         eventFrameLayout.addView(eventView);

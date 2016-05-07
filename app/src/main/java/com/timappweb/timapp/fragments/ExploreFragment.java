@@ -147,7 +147,7 @@ public class ExploreFragment extends Fragment{
             Drawable drawable;
             if (position == 0) {
                 sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_map));
-                drawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_dialog_map);
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_map);
             }
             else {
                 sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_list));

@@ -313,7 +313,7 @@ public class AddPlaceActivity extends BaseActivity {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Click on add place before having a user location");
-                    Toast.makeText(getBaseContext(), "Please wait we are getting your location...", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.please_wait_location, Toast.LENGTH_LONG).show();
                 }
             }
         });

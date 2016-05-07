@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
+    <item android:bottom="0dp" android:left="0dp">
         <shape android:shape="rectangle">
             <solid android:color="@color/background_selected_button" />
+            <corners android:radius="5dp" />
         </shape>
     </item>
-    <!--<item android:bottom="@dimen/border_selected_button_littlesquare"
-        android:left="@dimen/border_selected_button_littlesquare"
-        android:right="@dimen/border_selected_button_littlesquare"
-        android:top="@dimen/border_selected_button_littlesquare">
-        <shape android:shape="rectangle" >
-            <solid android:color="@color/colorAccent" />
-        </shape>
-    </item>-->
 </layer-list>

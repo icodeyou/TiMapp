@@ -140,7 +140,7 @@
         android:layout_alignParentBottom="true"
         myattrs:tags_visible="true"
         myattrs:bottom_shadow="false"
-        myattrs:top_shadow="true"/>
+        myattrs:top_shadow="false"/>
 
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />

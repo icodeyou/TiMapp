@@ -1,35 +1,48 @@
 package com.timappweb.timapp.views;
 
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import me.grantland.widget.AutofitTextView;
 
 public class EventView extends RelativeLayout{
     private final static String TAG = "EventView";
+    private static final int TIMELAPSE_HOT_ANIM = 2000;
+    private static final int TIMELAPSE_BUTTONS_APPEAR_ANIM = 800;
+    private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM = 2000;
     private Context context;
 
     private Place event;
+    private boolean isAround;
+    private ValueAnimator animator;
 
     private View                        tagsView;
     private AutofitTextView             tvName;
@@ -37,10 +50,8 @@ public class EventView extends RelativeLayout{
     private FrameLayout                 tagsFrameLayout;
     private ImageView                   categoryIcon;
     private ImageView                   smallCategoryIcon;
-    private View                        pointsLayout;
     private ImageView                   backgroundImage;
     private SimpleTimerView             tvCountPoints;
-    private SimpleTimerView             tvCountPointsWhite;
     private View                        gradientBottomViewIfPadding;
     private View                        gradientTopView;
     private SpotView                    spotView;
@@ -52,23 +63,29 @@ public class EventView extends RelativeLayout{
     private View                        separator;
     private View                        descriptionView;
     private TextView                    descriptionTv;
+    private HorizontalTagsAdapter       htAdapter;
+    private HorizontalTagsRecyclerView  htrv;
+    private View                        matchButton;
+    private ImageView                   matchIcon;
+    private TextView                    matchText;
+    private View                        whitePointsLayout;
+    private View                        postButtons;
 
     private int                         colorSpot;
     private int                         colorEvent;
     private boolean                     isTagsVisible;
     private boolean                     isBottomShadow;
     private boolean                     isTopShadow;
-    private boolean                     isPadding;
+    private boolean                     isMatchButton;
     private boolean                     isSpot;
     private boolean                     isDescription;
     private boolean                     toolbarMode;
     private boolean                     isBelowToolbarView;
-    private HorizontalTagsAdapter       htAdapter;
-    private HorizontalTagsRecyclerView  htrv;
-    private View                        iamhereButton;
-    private ImageView                   matchIcon;
-    private TextView                    iamhereText;
-    private View                        whitePointsLayout;
+    private View distanceLayout;
+    private TextView distanceText;
+    private View matchBackground;
+    private boolean isMatchButtonSelected;
+    private ImageView icPoints;
 
 
     public EventView(Context context) {
@@ -102,7 +119,7 @@ public class EventView extends RelativeLayout{
         isTopShadow = ta.getBoolean(R.styleable.EventView_top_shadow, false);
         colorSpot = ta.getColor(R.styleable.EventView_color_spot, -1);
         colorEvent = ta.getColor(R.styleable.EventView_color_event, -1);
-        isPadding = ta.getBoolean(R.styleable.EventView_is_padding, false);
+        isMatchButton = ta.getBoolean(R.styleable.EventView_is_match_button, false);
         isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
         isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
         toolbarMode = ta.getBoolean(R.styleable.EventView_toolbar_mode, false);
@@ -121,13 +138,12 @@ public class EventView extends RelativeLayout{
         spotView = (SpotView) findViewById(R.id.spot_view);
         titleLayout = findViewById(R.id.text_relative_layout);
         whitePointsLayout = findViewById(R.id.white_points_layout);
-        tvCountPointsWhite = (SimpleTimerView) findViewById(R.id.white_points_text);
         tvName = (AutofitTextView) findViewById(R.id.title_event);
-        tvCountPoints = (SimpleTimerView) findViewById(R.id.places_points);
+        icPoints = (ImageView) findViewById(R.id.ic_hot);
+        tvCountPoints = (SimpleTimerView) findViewById(R.id.white_points_text);
         tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
         smallCategoryIcon = (ImageView) findViewById(R.id.image_small_category_place);
-        pointsLayout = findViewById(R.id.points_layout);
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
         gradientBottomView = findViewById(R.id.bottom_gradient_event);
         //gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
@@ -135,17 +151,13 @@ public class EventView extends RelativeLayout{
         separator = findViewById(R.id.separator);
         descriptionView = findViewById(R.id.description_event);
         descriptionTv = (TextView) findViewById(R.id.description_textview);
-        iamhereButton = findViewById(R.id.iamhere_button);
-        iamhereText = (TextView) findViewById(R.id.iamhere_text);
+        matchButton = findViewById(R.id.match_button);
+        matchText = (TextView) findViewById(R.id.match_text);
         matchIcon = (ImageView) findViewById(R.id.match_icon);
-
-        iamhereButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                matchIcon.setImageResource(R.drawable.match_red);
-                iamhereText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-            }
-        });
+        matchBackground = findViewById(R.id.match_button_background);
+        postButtons = findViewById(R.id.post_buttons);
+        distanceLayout = findViewById(R.id.distance_layout);
+        distanceText = (TextView) findViewById(R.id.distance_text);
 
         tagsFrameLayout = (FrameLayout) findViewById(R.id.htrv_frame_layout);
 
@@ -160,22 +172,270 @@ public class EventView extends RelativeLayout{
         }
 
         //initPadding();
-        setBottomShadow();
+        setAnimations();
+        setMatchView(false);
+        setBottomShadow(isBottomShadow);
         setTopShadow();
         setSpotVisible(isSpot);
         setDescriptionView(isDescription);
-        //setTagsVisible(isTagsVisible);
         setToolbarView();
         setBelowToolbarView();
+    }
+
+    private void setAnimations() {
+        //Buttons appearance
+        final AlphaAnimation postButtonsAppear = new AlphaAnimation(0, 1);
+        postButtonsAppear.setDuration(TIMELAPSE_BUTTONS_APPEAR_ANIM);
+        postButtonsAppear.setFillAfter(true);
+
+        //Buttonq Disappearance
+        final AlphaAnimation postButtonsDisappear = new AlphaAnimation(1, 0);
+        postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
+        postButtonsDisappear.setFillAfter(true);
+
+        /*//Move Coming View Down
+        final Animation slideDownAnim = AnimationUtils.loadAnimation(context, R.anim.slide_down);
+        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                matchButton.setPadding(0, 0, 0, 0);
+                postButtons.startAnimation(postButtonsAppear);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        final Animation slideUpAnim = AnimationUtils.loadAnimation(context, R.anim.slide_down);
+        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                matchButton.setPaddingRelative(0, 0, 0, context.getResources().getInteger(R.integer.slide_down_anim));
+                postButtons.startAnimation(postButtonsDisappear);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });*/
+
+        isMatchButtonSelected = false;
+        matchBackground.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setComingOrHere(postButtonsAppear, postButtonsDisappear);
+            }
+        });
+    }
+
+    private void setComingOrHere(AlphaAnimation postButtonsAppear, AlphaAnimation postButtonsDisappear) {
+        if(tvCountPoints.getPoints()==0) {
+            return;
+        }
+        boolean pointsAnimIsCurrent = animator!=null && animator.isRunning();
+        if (!isMatchButtonSelected && !pointsAnimIsCurrent) {
+            isMatchButtonSelected = true;
+            updatePointsView(true);
+            matchBackground.setBackgroundResource(R.drawable.border_radius_red);
+            matchText.setTextColor(ContextCompat.getColor(context, R.color.white));
+            if (isAround) {
+                matchIcon.setImageResource(R.drawable.match_white);
+                postButtons.startAnimation(postButtonsAppear);
+            } else {
+                matchIcon.setImageResource(R.drawable.ic_coming_guy_white);
+            }
+        }
+        else if(isMatchButtonSelected && !pointsAnimIsCurrent){
+            isMatchButtonSelected = false;
+            updatePointsView(false);
+            matchBackground.setBackgroundResource(R.drawable.border_radius_white);
+            matchText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            if (isAround) {
+                matchIcon.setImageResource(R.drawable.match_red);
+                postButtons.startAnimation(postButtonsDisappear);
+            } else {
+                matchIcon.setImageResource(R.drawable.ic_coming_guy_darkred);
+            }
+        }
+    }
+
+    private void updatePointsView(boolean increase) {
+        if(increase) {
+            icPoints.setImageResource(R.drawable.ic_hot);
+            tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+        } else {
+            icPoints.setImageResource(R.drawable.ic_hot_white);
+            tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.white));
+        }
+
+        animator = new ValueAnimator();
+        tvCountPoints.cancelTimer();
+        int initialPoints = tvCountPoints.getPoints();
+        final int finalPoints;
+        if(increase) {
+            finalPoints = initialPoints+300;
+        } else {
+            if(initialPoints>300) {
+                finalPoints = initialPoints-300;
+            } else {
+                finalPoints = 0;
+            }
+        }
+
+        Log.d(TAG, "Initial points : " + initialPoints);
+        Log.d(TAG, "Final points : " + finalPoints);
+        animator.setObjectValues(initialPoints, finalPoints);
+        animator.setDuration(TIMELAPSE_HOT_ANIM);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                tvCountPoints.setText(String.valueOf(animation.getAnimatedValue()));
+            }
+        });
+        animator.start();
+        if(finalPoints==0) {
+            Log.d(TAG, "Set timer text to Over");
+            tvCountPoints.setText(context.getString(R.string.counter_over));
+        } else {
+            Log.d(TAG, "Initializing timer to +" + finalPoints);
+            tvCountPoints.initTimer(finalPoints*1000 + TIMELAPSE_HOT_ANIM);
+        }
+    }
+
+    private void setMatchView(boolean isMatchButton) {
+        if(isMatchButton && tvCountPoints.getPoints()!=0) {
+            matchButton.setVisibility(VISIBLE);
+            postButtons.setVisibility(INVISIBLE);
+        } else {
+            matchButton.setVisibility(GONE);
+            postButtons.setVisibility(GONE);
+        }
+    }
+
+    public void matchButtonStateHere(boolean isHere) {
+        if(isHere) {
+            matchIcon.setImageResource(R.drawable.match_red);
+            matchText.setText(context.getString(R.string.iamhere));
+        } else {
+            matchIcon.setImageResource(R.drawable.ic_coming_guy_darkred);
+            matchText.setText(context.getString(R.string.iamcoming));
+        }
     }
 
     public HorizontalTagsRecyclerView getRvEventTags() {
         return htrv;
     }
 
-    public HorizontalTagsRecyclerView setEvent(Place event) {
-        //TODO : CLEAR
+    private void setDistance(boolean isAround) {
+        if(!toolbarMode && !isAround && event.distance!=-1) {
+            distanceText.setText(getPrettyDistance());
+            distanceLayout.setVisibility(VISIBLE);
+        } else {
+            distanceLayout.setVisibility(GONE);
+        }
+    }
 
+    private String getPrettyDistance() {
+        double dist = event.distance;
+        String distString = String.valueOf(dist);
+        if(dist<1000) {
+            return distString + " m";
+        } else {
+            double distKm = dist/1000;
+            DecimalFormat df = new DecimalFormat("#.#");
+            df.setRoundingMode(RoundingMode.HALF_DOWN);
+            String roundedDistKm = df.format(distKm);
+            return roundedDistKm + " km";
+        }
+    }
+
+    private void setSpotVisible(boolean isSpot) {
+        if(isSpot) {
+            separator.setVisibility(VISIBLE);
+            spotView.setVisibility(VISIBLE);
+        } else {
+            spotView.setVisibility(GONE);
+            separator.setVisibility(GONE);
+        }
+    }
+
+    public void setBottomShadow(boolean isShadow) {
+        if(isShadow) {
+            gradientBottomView.setVisibility(VISIBLE);
+        } else {
+            gradientBottomView.setVisibility(GONE);
+        }
+    }
+
+    private void setTopShadow() {
+        if(isTopShadow) {
+            gradientTopView.setVisibility(VISIBLE);
+        } else {
+            gradientTopView.setVisibility(GONE);
+        }
+    }
+
+    private void setToolbarView() {
+        if(toolbarMode) {
+            mainLayoutEvent.setPadding(0, 0, 0, 0);
+            marginToolbarRight.setVisibility(VISIBLE);
+            marginToolbarLeft.setVisibility(VISIBLE);
+            spotView.setVisibility(GONE);
+            categoryIcon.setVisibility(GONE);
+            smallCategoryIcon.setVisibility(VISIBLE);
+            tagsFrameLayout.setVisibility(GONE);
+            descriptionView.setVisibility(GONE);
+            distanceLayout.setVisibility(GONE);
+            whitePointsLayout.setVisibility(GONE);
+        }
+    }
+
+    private void setBelowToolbarView() {
+        if(isBelowToolbarView) {
+            titleLayout.setVisibility(GONE);
+            categoryIcon.setVisibility(GONE);
+            smallCategoryIcon.setVisibility(GONE);
+            whitePointsLayout.setVisibility(VISIBLE);
+        }
+    }
+
+    public Place getEvent() {
+        return event;
+    }
+
+    public void setDescriptionView(boolean isDescription) {
+        if(isDescription) {
+            if(descriptionTv!=null)
+            descriptionView.setVisibility(VISIBLE);
+        } else {
+            descriptionView.setVisibility(GONE);
+        }
+    }
+
+    public void setTagsVisible(boolean tagsVisible) {
+        this.isTagsVisible = tagsVisible;
+    }
+
+    public View getDescriptionView() {
+        return descriptionView;
+    }
+
+    public void setDescriptionTv(View descriptionTv) {
+        this.descriptionView = descriptionTv;
+    }
+
+    public HorizontalTagsRecyclerView setEvent(Place event) {
         this.event = event;
 
         //Date
@@ -238,89 +498,15 @@ public class EventView extends RelativeLayout{
 
         //Counter
         int initialTime = event.getPoints();
-        tvCountPoints.initTimer(initialTime * 1000);
-        tvCountPointsWhite.initTimer(initialTime * 1000);
+        tvCountPoints.initTimer(initialTime*1000);
+
+        isAround = event.distance< ConfigurationProvider.rules().place_max_reachable;
+        setDistance(isAround);
+        if(isMatchButton) {
+            setMatchView(true);
+            matchButtonStateHere(isAround);
+        }
 
         return htrv;
-    }
-
-
-    private void setSpotVisible(boolean isSpot) {
-        if(isSpot) {
-            separator.setVisibility(VISIBLE);
-            spotView.setVisibility(VISIBLE);
-        } else {
-            spotView.setVisibility(GONE);
-            separator.setVisibility(GONE);
-        }
-    }
-
-    private void setBottomShadow() {
-        if(isBottomShadow) {
-            gradientBottomView.setVisibility(VISIBLE);
-        } else {
-            gradientBottomView.setVisibility(GONE);
-        }
-    }
-
-    private void setTopShadow() {
-        if(isTopShadow) {
-            gradientTopView.setVisibility(VISIBLE);
-        } else {
-            gradientTopView.setVisibility(GONE);
-        }
-    }
-
-    /*private void initPadding() {
-        if (!isPadding) {
-            Log.d(TAG, "Removing padding");
-            mainBox.setPadding(0, 0, 0, 0);
-            gradientBottomViewIfPadding.setVisibility(GONE);
-        }
-    }*/
-
-    private void setToolbarView() {
-        if(toolbarMode) {
-            mainLayoutEvent.setPadding(0, 0, 0, 0);
-            marginToolbarRight.setVisibility(VISIBLE);
-            marginToolbarLeft.setVisibility(VISIBLE);
-            spotView.setVisibility(GONE);
-            categoryIcon.setVisibility(GONE);
-            smallCategoryIcon.setVisibility(VISIBLE);
-            pointsLayout.setVisibility(GONE);
-            tagsFrameLayout.setVisibility(GONE);
-            descriptionView.setVisibility(GONE);
-        }
-    }
-
-    private void setBelowToolbarView() {
-        if(isBelowToolbarView) {
-            titleLayout.setVisibility(GONE);
-            categoryIcon.setVisibility(GONE);
-            smallCategoryIcon.setVisibility(GONE);
-            pointsLayout.setVisibility(GONE);
-            whitePointsLayout.setVisibility(VISIBLE);
-        }
-    }
-
-    public Place getEvent() {
-        return event;
-    }
-
-    public void setDescriptionView(boolean isDescription) {
-        if(isDescription) {
-            if(descriptionTv!=null)
-            descriptionView.setVisibility(VISIBLE);
-        } else {
-            descriptionView.setVisibility(GONE);
-        }
-    }
-
-    public View getDescriptionView() {
-        return descriptionView;
-    }
-
-    public void setDescriptionTv(View descriptionTv) {
-        this.descriptionView = descriptionTv;
     }
 }
