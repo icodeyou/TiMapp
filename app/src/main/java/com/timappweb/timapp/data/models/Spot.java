@@ -15,11 +15,6 @@ public class Spot extends SyncBaseModel implements Serializable {
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "SyncId")
-    @Expose
-    @SerializedName("id")
-    public int id;
-
     @Column(name = "Name")
     @Expose
     @SerializedName("name")
@@ -91,7 +86,7 @@ public class Spot extends SyncBaseModel implements Serializable {
     public String toString() {
         return "Spot{" +
                 "name='" + name + '\'' +
-                ", id=" + id +
+                ", id=" + remote_id +
                 ", category_id=" + category_id +
                 '}';
     }

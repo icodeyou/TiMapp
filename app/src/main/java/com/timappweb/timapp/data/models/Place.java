@@ -294,6 +294,10 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public void setDistancePlace() {
+        if (MyApplication.hasLastLocation()){
+            this.distance = -1;
+            return;
+        }
         Location location = MyApplication.getLastLocation();
         double userLongitude = location.getLongitude();
         double userLatitude = location.getLatitude();
