@@ -10,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Spot")
-public class Spot implements Serializable {
+public class Spot extends SyncBaseModel implements Serializable {
+
+    // =============================================================================================
+    // DATABASE
 
     @Column(name = "SyncId")
     @Expose
@@ -46,6 +49,10 @@ public class Spot implements Serializable {
     @Expose(deserialize = true, serialize = false)
     public int created;
 
+    // =============================================================================================
+    // Fields
+
+    @SerializedName("tags")
     @Expose(deserialize = true, serialize = false)
     public List<Tag> tags;
 
@@ -87,5 +94,10 @@ public class Spot implements Serializable {
                 ", id=" + id +
                 ", category_id=" + category_id +
                 '}';
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        return false;
     }
 }

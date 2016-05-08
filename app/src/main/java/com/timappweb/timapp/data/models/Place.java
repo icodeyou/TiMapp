@@ -26,10 +26,8 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     private static final String TAG = "PlaceEntity" ;
 
-
-    @SerializedName("spot")
-    @Expose
-    public Spot spot;
+    // =============================================================================================
+    // DATABASE
 
     @Column(name = "SpotId")
     @Expose
@@ -42,7 +40,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Column(name = "Distance")
     @Expose
     public double           distance = -1;
-
 
     @Column(name = "Description")
     @Expose
@@ -60,9 +57,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose
     public double           longitude;
 
-    @Expose(serialize = false, deserialize = true)
-    public int              count_posts;
-
     @Column(name = "CategoryId")
     @Expose
     public int              category_id;
@@ -70,6 +64,12 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Column(name = "Points")
     @Expose(serialize = false, deserialize = true)
     public int              points;
+
+    // =============================================================================================
+    // Fields
+
+    @Expose(serialize = false, deserialize = true)
+    public int              count_posts;
 
     @Expose(serialize = false, deserialize = false)
     public int              loaded_time = -1;
@@ -80,9 +80,14 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose(serialize = false, deserialize = true)
     public ArrayList<Post>  posts;
 
+    @SerializedName("spot")
+    @Expose
+    public Spot spot;
+
+    // =============================================================================================
+
     public Place(){
         this.loaded_time = Util.getCurrentTimeSec();
-        setDistancePlace();
     }
 
     public Place(int id, double lat, double lng, String name) {
@@ -96,15 +101,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.tags = new ArrayList<>();
         setDistancePlace();
     }
-
-    /*public Place(double lat, double lng, String name, EventCategory eventCategory) {
-        this.loaded_time = Util.getCurrentTimeSec();
-        this.latitude = lat;
-        this.longitude = lng;
-        this.name = name;
-        this.category_id = eventCategory.remote_id;
-        this.created = Util.getCurrentTimeSec();
-    }*/
 
     public Place(Location lastLocation, String name, EventCategory eventCategory, Spot spot, String description) {
         this.loaded_time = Util.getCurrentTimeSec();
