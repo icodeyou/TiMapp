@@ -22,7 +22,7 @@ public class AreaRequestItem<T> {
 
     public int dataTimestamp;       // Timestamp on the server (used to filter data when we update the area)
     public int localTimestamp;      // Timestamp on the local machine (used to know when was the last update)
-    public int currentRequestId = -1;  // Request id
+    public int currentRequestId = -1;  // Request remote_id
     public List<T> data;         // LIFO: Last spot in => First spot out
     private Call<List<Place>> pendingCall; // Represents api calls in progress
 

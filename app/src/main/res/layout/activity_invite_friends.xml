@@ -23,7 +23,7 @@
         android:orientation="vertical">
         <!--
         <com.dpizarro.autolabel.library.AutoLabelUI
-            android:id="@+id/label_view"
+            android:remote_id="@+remote_id/label_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_labels_invitefriends"

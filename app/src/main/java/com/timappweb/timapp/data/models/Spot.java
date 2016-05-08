@@ -68,7 +68,7 @@ public class Spot implements Serializable {
         this.name = name;
         this.category = category;
         if (category != null){
-            this.category_id = category.id;
+            this.category_id = category.remote_id;
         }
     }
 

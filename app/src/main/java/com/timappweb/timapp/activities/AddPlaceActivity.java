@@ -90,7 +90,7 @@ public class AddPlaceActivity extends BaseActivity {
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         pinView = findViewById(R.id.no_spot_view);
-        //pinnedSpot = findViewById(R.id.pinned_spot);
+        //pinnedSpot = findViewById(R.remote_id.pinned_spot);
         spotView = (SpotView) findViewById(R.id.spot_view);
         commentView = (TextView) findViewById(R.id.comment_text);
 
@@ -200,9 +200,9 @@ public class AddPlaceActivity extends BaseActivity {
 
             @Override
             public void onActionSuccess(RestFeedback feedback) {
-                place.id = Integer.parseInt(feedback.data.get("place_id")); // TODO handle exception if invalid int
-                Log.i(TAG, "User created the event with id: " + place.id);
-                IntentsUtils.viewPlaceFromPublish(context, place.id);
+                place.remote_id = Integer.parseInt(feedback.data.get("place_id")); // TODO handle exception if invalid int
+                Log.i(TAG, "User created the event with id: " + place.remote_id);
+                IntentsUtils.viewPlaceFromPublish(context, place.remote_id);
                 setProgressView(false);
             }
 

@@ -29,7 +29,7 @@
         myattrs:horizontal_tags_text_size="@dimen/text_tags" />
 
     <!--<View
-        android:id="@+id/bottom_line_hrv"
+        android:remote_id="@+remote_id/bottom_line_hrv"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@drawable/separator_tags" />-->

@@ -35,11 +35,13 @@ import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 
 import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Define a sync adapter for the app.
@@ -57,14 +59,14 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
     /**
      * Content resolver, for performing database operations.
      */
-    private final ContentResolver mContentResolver;
+    //private final ContentResolver mContentResolver;
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
     public ConfigSyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
-        mContentResolver = context.getContentResolver();
+        //mContentResolver = context.getContentResolver();
     }
 
     /**
@@ -72,7 +74,7 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
      */
     public ConfigSyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSyncs) {
         super(context, autoInitialize, allowParallelSyncs);
-        mContentResolver = context.getContentResolver();
+        //mContentResolver = context.getContentResolver();
     }
 
     /**
@@ -94,6 +96,7 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "--------------- Beginning network synchronization -----------------------------");
+        // TODO paralelize this
         this.syncApplicationRules();
         this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
         this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
@@ -102,22 +105,19 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
     }
 
     public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult){
+        Log.i(TAG, "Performing model sync for " + classType.getCanonicalName() + "...");
         From localQuery = new Select().from(classType);
-        super.performModelSync(classType, remoteQuery, localQuery, syncResult);
-    }
-
-    @Override
-    public void updateLocalDatabase(Class<? extends SyncBaseModel> classType,
-                                    List<? extends SyncBaseModel> remoteEntries,
-                                    List<? extends SyncBaseModel> localEntries,
-                                    SyncResult syncResult) {
-        Log.i(TAG, "Found " + remoteEntries.size() + " remote entrie(s)");
-        if (remoteEntries.size() == 0){
-            Log.i(TAG, "No data returned by web service => removing all local entries");
-            new Delete().from(classType).execute();
-            return;
+        try {
+            Response response = remoteQuery.execute();
+            if (response.isSuccess()){
+                List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
+                new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
+            }
         }
-        super.updateLocalDatabase(classType, remoteEntries, localEntries, syncResult);
+        catch (IOException e) {
+            Log.e(TAG, "Error performing sync for " + classType + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void syncApplicationRules() {
@@ -130,7 +130,5 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
             e.printStackTrace();
         }
     }
-
-
 
 }

@@ -14,11 +14,6 @@ import java.io.Serializable;
 public class SpotCategory extends SyncBaseModel implements Serializable {
 
     @Expose
-    @SerializedName("id")
-    @Column(name = "SyncId")
-    public int id;
-
-    @Expose
     @SerializedName("name")
     @Column(name = "Name")
     public String name;
@@ -51,11 +46,6 @@ public class SpotCategory extends SyncBaseModel implements Serializable {
         return name.equals(that.name);
     }
 
-    @Override
-    public long getSyncKey(){
-        return this.id;
-    }
-
     // =============================================================================================
 
     public static SpotCategory createDummy() {
@@ -65,7 +55,7 @@ public class SpotCategory extends SyncBaseModel implements Serializable {
     @Override
     public String toString() {
         return "SpotCategory{" +
-                "id=" + id +
+                "id=" + remote_id +
                 ", name='" + name + '\'' +
                 ", position=" + position +
                 '}';

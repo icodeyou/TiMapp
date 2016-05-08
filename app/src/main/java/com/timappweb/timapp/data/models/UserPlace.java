@@ -14,7 +14,7 @@ import com.timappweb.timapp.utils.Util;
 import java.util.List;
 
 @Table(name = "UserPlace")
-public class UserPlace implements PlaceUserInterface {
+public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
 
     @Column(name = "PlaceId")
     @Expose
@@ -72,5 +72,12 @@ public class UserPlace implements PlaceUserInterface {
         } else {
             return EventUsersAdapter.VIEW_TYPES.UNDEFINED;
         }
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        if (model == null || !(model instanceof UserPlace)) return false;
+        UserPlace obj = (UserPlace) model;
+        return this.status == obj.status;
     }
 }

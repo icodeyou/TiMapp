@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/ConfigSyncService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/DataSyncAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/DataSyncService.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/UserSyncAdapter.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/UserSyncService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/authenticator.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_config.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_data.xml" charset="windows-1252" />

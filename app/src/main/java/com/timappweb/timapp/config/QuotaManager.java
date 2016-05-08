@@ -10,8 +10,6 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.UserActivity;
 import com.timappweb.timapp.data.models.UserQuota;
 
-import java.util.List;
-
 
 /**
  * Created by stephane on 4/4/2016.
@@ -40,7 +38,7 @@ public class QuotaManager {
         UserActivity userActivity = new UserActivity(quotaTypeId);
         userActivity.save();
 
-        UserQuota.increment(MyApplication.getCurrentUser().id, quotaTypeId);
+        UserQuota.increment(MyApplication.getCurrentUser().remote_id, quotaTypeId);
 
         return userActivity;
     }
@@ -62,7 +60,7 @@ public class QuotaManager {
         if (!MyApplication.isLoggedIn()){
             return false;
         }
-        UserQuota userQuota = UserQuota.get(MyApplication.getCurrentUser().id, quotaTypeId);
+        UserQuota userQuota = UserQuota.get(MyApplication.getCurrentUser().remote_id, quotaTypeId);
 
         if (userQuota == null){
             Log.e(TAG, "There is no quota with id " + quotaTypeId);

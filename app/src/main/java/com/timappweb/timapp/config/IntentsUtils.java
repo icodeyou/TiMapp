@@ -74,8 +74,8 @@ public class IntentsUtils {
 
     public static void profile(Activity activity, User user) {
         Intent intent = new Intent(activity, ProfileActivity.class);
-        intent.putExtra("user_id", user.id);
-        Log.d(TAG, "Intent to view profile: " + user.id);
+        intent.putExtra("user_id", user.remote_id);
+        Log.d(TAG, "Intent to view profile: " + user.remote_id);
         activity.startActivity(intent);
     }
 

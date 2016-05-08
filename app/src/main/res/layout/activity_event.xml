@@ -120,10 +120,10 @@
     <!-- Separator-->
     <!-- ************************************* -->
     <!--<View
-        android:id="@+id/separator_toolbar"
+        android:remote_id="@+remote_id/separator_toolbar"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:layout_below="@+id/toolbar_layout"
+        android:layout_below="@+remote_id/toolbar_layout"
         android:background="@drawable/separator_toolbar_event_activity"
         android:visibility="gone"/>-->
 

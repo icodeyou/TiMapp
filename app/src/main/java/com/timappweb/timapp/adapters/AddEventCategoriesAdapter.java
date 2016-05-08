@@ -56,7 +56,7 @@ public class AddEventCategoriesAdapter extends EventCategoriesAdapter {
 
         //Set image to highlight for new selected category
         int newCategoryResource = newEventCategory.getIconWhiteResId();
-        ImageView iconNewCategory = getIconFromId(newEventCategory.id);
+        ImageView iconNewCategory = getIconFromId(newEventCategory.remote_id);
         iconNewCategory.setImageResource(newCategoryResource);
         iconNewCategory.setBackgroundResource(R.drawable.b4);
 

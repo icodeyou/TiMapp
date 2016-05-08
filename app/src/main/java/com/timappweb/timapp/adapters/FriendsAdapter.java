@@ -58,7 +58,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             newbieList.add(new Tag(context.getString(R.string.newbie_tag)));
             horizontalTagsAdapter.setData(newbieList);
         } else {
-            horizontalTagsAdapter.setData(friend.tags);
+            horizontalTagsAdapter.setData(friend.getTags());
         }
 
         //User pic

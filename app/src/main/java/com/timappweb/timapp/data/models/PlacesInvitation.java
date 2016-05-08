@@ -20,16 +20,6 @@ import java.util.List;
 @Table(name = "PlacesInvitation")
 public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterface {
 
-    @Column(name = "SyncId")
-    @Expose
-    public int id;
-
-    @Expose
-    public int user_id;
-
-    @Expose
-    public int target_id;
-
     @Column(name = "Created")
     @Expose(serialize = false, deserialize = true)
     public int created;
@@ -42,20 +32,25 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Expose
     public PlacesInvitationStatus status;
 
+    @Column(name = "Place", onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("place")
     public Place place;
 
+    @Column(name = "UserSource", onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("user_source")
     public User user_source;
 
+    @Column(name = "UserTarget", onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("user_target")
     public User user_target;
 
 
     // =============================================================================================
+
+    public PlacesInvitation() {}
 
     public PlacesInvitation(Place place, User user) {
         this.place = place;
@@ -86,12 +81,19 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
         return null;
     }
 
-    // =============================================================================================
-
     @Override
-    public long getSyncKey() {
-        return this.id;
+    public String toString() {
+        return "PlacesInvitation{" +
+                "created=" + created +
+                ", status=" + status +
+                ", place=" + place +
+                ", user_source=" + user_source +
+                ", user_target=" + user_target +
+                '}';
     }
+
+// =============================================================================================
+
 
     @Override
     public boolean isSync(SyncBaseModel model) {
@@ -101,6 +103,9 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
 
         return this.status == invite.status
                 && this.created == invite.created
-                && this.modified == invite.modified;
+                && this.modified == invite.modified
+                && this.user_target == invite.user_target
+                && this.user_source == invite.user_source
+                && this.place == invite.place;
     }
 }

@@ -42,7 +42,7 @@ public class TagActivity extends BaseActivity{
     private Place currentPlace = null;
     private View progressEndView;
 
-    // @Bind(R.id.hashtags1)
+    // @Bind(R.remote_id.hashtags1)
     protected HashtagView suggestedTagsView;
 
     //others

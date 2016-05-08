@@ -10,8 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -39,29 +41,31 @@ import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.PlaceBaseFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
-import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.views.EventView;
 import com.timappweb.timapp.views.SpotView;
 
+import java.util.List;
 import java.util.Vector;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 public class EventActivity extends BaseActivity {
     private String TAG = "EventActivity";
     private MyPagerAdapter pagerAdapter;
     private Place event;
-    private int placeId;
+    private int eventId;
     private Activity currentActivity;
 
     //Views
@@ -108,11 +112,14 @@ public class EventActivity extends BaseActivity {
         currentActivity = this;
 
         this.event = IntentsUtils.extractPlace(getIntent());
-        placeId = IntentsUtils.extractPlaceId(getIntent());
-        if (event == null && placeId <= 0){
+        eventId = IntentsUtils.extractPlaceId(getIntent());
+        if (event == null && eventId <= 0){
             Log.e(TAG, "Trying to view an invalid event --> redirect to home");
             IntentsUtils.home(this);
             return;
+        }
+        else if (eventId <= 0){
+            eventId = event.remote_id;
         }
 
         //Set status bar blue
@@ -138,16 +145,11 @@ public class EventActivity extends BaseActivity {
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         progressView = findViewById(R.id.progress_view);
 
-        if (event != null){
-            placeId = event.id;
-            this.notifyEventLoaded();
-        }
-        else{
-            loadPlace(placeId);
-        };
-
         initLocationListener();
         setClickListeners();
+
+        EventLoader mLoader = new EventLoader();
+        getSupportLoaderManager().initLoader(0, null, mLoader);
     }
 
     @Override
@@ -242,7 +244,7 @@ public class EventActivity extends BaseActivity {
                     return;
                 }
                 QueryCondition conditions = new QueryCondition();
-                conditions.setPlaceId(placeId);
+                conditions.setPlaceId(eventId);
                 conditions.setAnonymous(false);
                 conditions.setUserLocation(MyApplication.getLastLocation());
 
@@ -250,8 +252,8 @@ public class EventActivity extends BaseActivity {
                 call.enqueue(new RestFeedbackCallback(currentActivity) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
-                        Log.d(TAG, "Success register coming for user on place " + placeId);
-                        PlaceStatusManager.add(placeId, UserPlaceStatusEnum.COMING);
+                        Log.d(TAG, "Success register coming for user on place " + eventId);
+                        PlaceStatusManager.add(eventId, UserPlaceStatusEnum.COMING);
 
                         progressBottom.setVisibility(View.GONE);
                         updateBtnVisibility();
@@ -259,7 +261,7 @@ public class EventActivity extends BaseActivity {
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
-                        Log.d(TAG, "Fail register coming for user on event " + placeId);
+                        Log.d(TAG, "Fail register coming for user on event " + eventId);
                         Toast.makeText(EventActivity.this,
                                 getString(R.string.cannot_add_coming_status), Toast.LENGTH_SHORT).show();
                         iAmComingButton.setVisibility(View.VISIBLE);
@@ -280,7 +282,7 @@ public class EventActivity extends BaseActivity {
                 }
 
                 QueryCondition conditions = new QueryCondition();
-                conditions.setPlaceId(placeId);
+                conditions.setPlaceId(eventId);
                 conditions.setAnonymous(false);
                 conditions.setUserLocation(MyApplication.getLastLocation());
                 Call<RestFeedback> call = RestClient.service().notifyPlaceHere(conditions.toMap());
@@ -371,33 +373,7 @@ public class EventActivity extends BaseActivity {
     }
 
 
-    private void loadPlace(int placeId) {
-        final EventActivity that = this;
-        Call<Place> call = RestClient.service().viewPlace(placeId);
-        call.enqueue(new RestCallback<Place>(this) {
-            @Override
-            public void onResponse(Response<Place> response) {
-                super.onResponse(response);
-                if (response.isSuccess()) {
-                    event = response.body();
-                    notifyEventLoaded();
-                } else {
-                    Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
-                    IntentsUtils.home(that);
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-                Toast.makeText(that, R.string.place_removed, Toast.LENGTH_LONG).show();
-                IntentsUtils.home(that);
-            }
-        });
-        apiCalls.add(call);
-    }
-
-    private void notifyEventLoaded() {
+    private void updateView() {
         progressView.setVisibility(View.GONE);
         try {
             EventCategory eventCategory = MyApplication.getCategoryById(event.category_id);
@@ -432,7 +408,7 @@ public class EventActivity extends BaseActivity {
             }
 
             //if we are in the place
-            boolean isUserComing = PlaceStatus.hasStatus(placeId, UserPlaceStatusEnum.COMING);
+            boolean isUserComing = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.COMING);
             boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
             Boolean isAllowedToCome = !event.isAround() && isAllowedToAddComing;
             iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
@@ -489,8 +465,8 @@ public class EventActivity extends BaseActivity {
         return spotToolbar;
     }
 
-    public int getPlaceId() {
-        return placeId;
+    public int getEventId() {
+        return eventId;
     }
 
     public View.OnClickListener getTagListener() {
@@ -514,4 +490,35 @@ public class EventActivity extends BaseActivity {
     public boolean isUserAround() {
         return this.event != null && this.event.isAround();
     }
+
+
+
+    // =============================================================================================
+
+    class EventLoader implements LoaderManager.LoaderCallbacks<List<Place>>{
+
+        @Override
+        public Loader<List<Place>> onCreateLoader(int id, Bundle args) {
+            event = (Place) SyncBaseModel.getRemoteEntry(Place.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_PLACE);
+            if (event != null){
+                updateView();
+            }
+            return new ModelLoader<>(EventActivity.this, Place.class, SyncBaseModel.queryByRemoteId(Place.class, eventId), false);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Place>> loader, List<Place> data) {
+            Log.d(TAG, "Place loaded finish");
+            if (data.size() > 0){
+                event = data.get(0);
+                updateView();
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<Place>> loader) {
+
+        }
+    }
+
 }

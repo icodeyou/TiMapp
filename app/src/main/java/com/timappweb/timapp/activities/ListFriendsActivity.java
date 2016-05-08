@@ -8,11 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.activeandroid.query.From;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
@@ -44,6 +47,8 @@ public class ListFriendsActivity extends BaseActivity{
 
         mLoader = new FriendsLoader();
         getSupportLoaderManager().initLoader(0, null, mLoader);
+
+
     }
 
     private void initAdapterListFriends() {
@@ -68,8 +73,9 @@ public class ListFriendsActivity extends BaseActivity{
         public Loader<List<User>> onCreateLoader(int id, Bundle args)
         {
             progressView.setVisibility(View.VISIBLE);
-            //setProgressBarIndeterminateVisibility(true);
-            return new ModelLoader<User>(ListFriendsActivity.this, User.class, true);
+            From from = MyApplication.getCurrentUser().getFriendsQuery();
+            User.getRemoteEntries(context, from, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000);
+            return new ModelLoader<>(ListFriendsActivity.this, User.class, from, true);
         }
 
 

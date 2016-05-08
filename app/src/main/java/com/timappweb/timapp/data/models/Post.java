@@ -1,6 +1,8 @@
 package com.timappweb.timapp.data.models;
 
 import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
@@ -12,33 +14,43 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Post extends Model implements Serializable, MarkerValueInterface, PlaceUserInterface {
+@Table(name = "Post")
+public class Post extends SyncBaseModel implements Serializable, MarkerValueInterface, PlaceUserInterface {
 
     private static final String TAG = "EntitySpot";
 
-    @Expose
-    public int id;
+    // =============================================================================================
+    // DATABASE
 
+    @Column(name = "User")
     @Expose
     public User user;
 
+    @Column(name = "Latitude")
     @Expose
     public double latitude;
 
+    @Column(name = "Longitude")
     @Expose
     public double longitude;
 
-    @Expose
-    public int place_id;
-
+    @Column(name = "Created")
     @Expose
     public int created;
 
+    @Column(name = "Comment")
     @Expose
     public String comment;
 
+    @Column(name = "Anonymous")
     @Expose
     public boolean anonymous;
+
+    // =============================================================================================
+    // FIELDS
+
+    @Expose
+    public int place_id;
 
     @Expose(deserialize = false, serialize = true)
     public String tag_string;
@@ -46,12 +58,16 @@ public class Post extends Model implements Serializable, MarkerValueInterface, P
     @Expose
     private List<Tag> tags;
 
+    // =============================================================================================
+    // GETTERS
+
+    // =============================================================================================
+
     public String country;
     public String state;
     public String city;
     public String route;
     public String street_number;
-
     public String address = "";
 
 
@@ -79,7 +95,7 @@ public class Post extends Model implements Serializable, MarkerValueInterface, P
     }
 
     public Post(int id, double latitude, double longitude, int created, String tag_string) {
-        this.id = id;
+        this.remote_id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.created = created;
@@ -111,12 +127,6 @@ public class Post extends Model implements Serializable, MarkerValueInterface, P
     }
 
 
-    private static final String KEY_LATITUDE = "latitude";
-    private static final String KEY_LONGITUDE = "longitude";
-    private static final String KEY_CREATED = "created";
-    private static final String KEY_TAG = "tags";
-    private static final String KEY_IS_BROADCASTING = "isBroadcasting";
-
     /**
      * Get the created as a pretty time format
      *
@@ -144,7 +154,7 @@ public class Post extends Model implements Serializable, MarkerValueInterface, P
     @Override
     public String toString() {
         return "Post{" +
-                "id=" + id +
+                "id=" + remote_id +
                 ", place_id=" + place_id +
                 ", user=" + user +
                 ", latitude=" + latitude +
@@ -175,7 +185,7 @@ public class Post extends Model implements Serializable, MarkerValueInterface, P
 
     @Override
     public int getMarkerId() {
-        return this.id;
+        return this.remote_id;
     }
 
     public boolean validateForSubmit() {
@@ -221,5 +231,10 @@ public class Post extends Model implements Serializable, MarkerValueInterface, P
 
     public String getComment() {
         return comment;
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        return false;
     }
 }

@@ -154,7 +154,7 @@ public class PublishActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 setProgressView(true);
-                currentPost.place_id = currentPlace.id;
+                currentPost.place_id = currentPlace.remote_id;
                 // Validating user input
                 if (!currentPost.validateForSubmit()) {
                     Toast.makeText(activity, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
@@ -205,7 +205,7 @@ public class PublishActivity extends BaseActivity{
             post.place_id = placeId;
             post.created = Util.getCurrentTimeSec();
             if (place.isNew()){
-                place.id = placeId;
+                place.remote_id = placeId;
                 place.created = Util.getCurrentTimeSec();
                 QuotaManager.instance().add(QuotaType.PLACES);
             }

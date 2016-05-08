@@ -22,7 +22,7 @@ public class UserQuota extends SyncBaseModel {
 
     @Expose
     @Column(name = "QuotaTypeId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
-    public int type_id;
+    public int remote_id;
 
     @Expose
     @Column(name = "UserId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
@@ -87,10 +87,6 @@ public class UserQuota extends SyncBaseModel {
 
     public UserQuota() {
         super();
-    }
-
-    public long getSyncKey(){
-        return this.type_id;
     }
 
     public static List<UserQuota> all(){
@@ -212,7 +208,7 @@ public class UserQuota extends SyncBaseModel {
     @Override
     public String toString() {
         return "UserQuota{" +
-                " type=" + type_id +
+                " type=" + remote_id +
                 ", user=" + user_id +
                 ", last_activity=" + last_activity + "/" + min_delay + " ("+ Util.delayFromNow((int)last_activity)+" sec)" +
                 ", minute=" + count_minute + "/" + quota_minute +
@@ -232,7 +228,7 @@ public class UserQuota extends SyncBaseModel {
 
         UserQuota userQuota = (UserQuota) o;
 
-        if (type_id != userQuota.type_id) return false;
+        if (remote_id != userQuota.remote_id) return false;
         if (user_id != userQuota.user_id) return false;
         if (min_delay != userQuota.min_delay) return false;
         if (quota_minute != userQuota.quota_minute) return false;
@@ -260,7 +256,7 @@ public class UserQuota extends SyncBaseModel {
 
         UserQuota userQuota = (UserQuota) o;
 
-        if (type_id != userQuota.type_id) return false;
+        if (remote_id != userQuota.remote_id) return false;
         if (user_id != userQuota.user_id) return false;
         if (min_delay != userQuota.min_delay) return false;
         if (quota_minute != userQuota.quota_minute) return false;
@@ -282,7 +278,7 @@ public class UserQuota extends SyncBaseModel {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + type_id;
+        result = 31 * result + remote_id;
         result = 31 * result + user_id;
         return result;
     }

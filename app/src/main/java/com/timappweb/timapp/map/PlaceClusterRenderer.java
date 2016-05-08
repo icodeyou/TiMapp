@@ -137,6 +137,10 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
                 }
             }
         }
+        // When there is no data because categories are not loaded correctly...
+        if (profilePhotos.values().size() == 0){
+            return;
+        }
         MultiDrawable multiDrawable = new MultiDrawable(new ArrayList<Drawable>(profilePhotos.values()));
         multiDrawable.setBounds(0, 0, width, height);
         mClusterImageView.setImageDrawable(multiDrawable);

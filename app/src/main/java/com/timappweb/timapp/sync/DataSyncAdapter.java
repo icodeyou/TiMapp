@@ -26,15 +26,24 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.MapAreaInfo;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
+import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
+import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
+import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Define a sync adapter for the app.
@@ -47,11 +56,18 @@ import com.timappweb.timapp.rest.model.PaginationResponse;
  */
 public class DataSyncAdapter extends AbstractSyncAdapter {
 
-    public static final String TAG = "MapDataAdapter";
+    public static final String TAG = "DataSyncAdapter";
 
     public static final String SYNC_TYPE_KEY = "data_sync_type";
+    public static final String SYNC_ID_KEY = "data_sync_id";
+
     public static final int SYNC_TYPE_FRIENDS = 1;
     public static final int SYNC_TYPE_EVENT_AROUD_USER = 2;
+    public static final int SYNC_TYPE_USER = 3;
+    public static final int SYNC_TYPE_PLACE = 4;
+    private static final int SYNC_TYPE_PLACE_STATUS = 5;
+    public static final int SYNC_TYPE_INVITE_SENT = 6;
+    public static final int SYNC_TYPE_INVITE_RECEIVED = 7;
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -89,40 +105,60 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
         int syncTypeId = extras.getInt(DataSyncAdapter.SYNC_TYPE_KEY, -1);
         Log.i(TAG, "onPerformSync with type=" + syncTypeId);
-        switch (syncTypeId){
-            case DataSyncAdapter.SYNC_TYPE_FRIENDS:
+        try {
+            switch (syncTypeId){
+                case DataSyncAdapter.SYNC_TYPE_FRIENDS:
+                    new FriendsSyncPerformer(
+                            RestClient.service().friends().execute().body().items,
+                            MyApplication.getCurrentUser().getFriends(),
+                            syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_EVENT_AROUD_USER:
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
+                    new InvitationsSyncPerformer(
+                            RestClient.service().inviteReceived().execute().body().items,
+                            MyApplication.getCurrentUser().getInviteReceived(),
+                            syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_INVITE_SENT:
+                    //new InvitationsSyncPerformer(
+                    //        RestClient.service().invitesSent().execute().body().items,
+                    //        MyApplication.getCurrentUser().getInviteReceived(),
+                    //        syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_PLACE_STATUS:
+                    new RemoteMasterSyncPerformer(
+                            RestClient.service().placeStatus().execute().body(),
+                            MyApplication.getCurrentUser().getPlaceStatus(),
+                            syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_USER:
+                    int id = extras.getInt(SYNC_ID_KEY, -1);
+                    if (id == -1) {
+                        Log.e(TAG, "Invalid sync key. Please provide a sync key");
+                        return; //throw new InvalidParameterException();
+                    }
+                    new SingleEntrySyncPerformer(User.class, id, RestClient.service().profile(id).execute(), syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_PLACE:
+                    id = extras.getInt(SYNC_ID_KEY, -1);
+                    if (id == -1) {
+                        Log.e(TAG, "Invalid sync key. Please provide a sync key");
+                        return; //throw new InvalidParameterException();
+                    }
+                    new SingleEntrySyncPerformer(Place.class, id, RestClient.service().viewPlace(id).execute(), syncResult).perform();
+                    break;
+                default:
+                    Log.e(TAG, "Invalid sync type id: " + syncTypeId);
+                    return;
+            }
+            SyncHistory.updateSync(syncTypeId);
 
-                // TODO find only user friends
-                From localEntries = new Select().from(User.class);//.where();
-                this.performPaginatedModelSync(User.class, RestClient.service().friends(), localEntries, syncResult);
-
-                break;
-            case DataSyncAdapter.SYNC_TYPE_EVENT_AROUD_USER:
-                // TODO
-                break;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         Log.i(TAG, "--------------- Network synchronization complete for data----------------------");
-    }
-
-    private void performFriendsSync(){
-
-    }
-
-    private void performMapDataSync(LatLngBounds bounds, PaginationResponse<? extends SyncBaseModel> response, SyncResult syncResult){
-        if (MyApplication.hasFineLocation()){
-            Location location = MyApplication.getLastLocation();
-            // TODO
-            From localQuery = MapAreaInfo.findArea(null, MapAreaInfo.AROUND_USER);
-            this.performModelSync(Place.class,
-                    RestClient.service().placeReachable(location.getLatitude(), location.getLongitude()),
-                    localQuery,
-                    syncResult);
-        }
-        MapAreaInfo.addNewArea(bounds, MapAreaInfo.MAP_EVENT, response.total, response.items.size());
-        for (SyncBaseModel model: response.items){
-
-        }
-
     }
 
 }

@@ -4,31 +4,29 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dpizarro.autolabel.library.AutoLabelUI;
+import com.activeandroid.query.From;
 import com.google.gson.JsonArray;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.PlacesInvitation;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.ArrayList;
@@ -74,7 +72,7 @@ public class InviteFriendsActivity extends BaseActivity {
         inviteButton = findViewById(R.id.invite_button);
         noFriendsView = findViewById(R.id.no_friends_view);
         progressView = findViewById(R.id.loading_friends);
-        //mAutoLabel = (AutoLabelUI) findViewById(R.id.label_view);
+        //mAutoLabel = (AutoLabelUI) findViewById(R.remote_id.label_view);
         //mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -113,7 +111,7 @@ public class InviteFriendsActivity extends BaseActivity {
                 }
 
                 inviteButton.setVisibility(friendsSelected.size() > 0 ? View.VISIBLE : View.INVISIBLE);
-                    adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -169,9 +167,9 @@ public class InviteFriendsActivity extends BaseActivity {
         // Encoding data:
         ArrayList<Integer> ids = new ArrayList<>();
         for (User user: friendsSelected){
-            ids.add(user.id);
+            ids.add(user.remote_id);
         }
-        Call<JsonArray> call = RestClient.service().sendInvite(place.id, ids);
+        Call<JsonArray> call = RestClient.service().sendInvite(place.remote_id, ids);
         call.enqueue(new RestCallback<JsonArray>(this) {
             @Override
             public void onResponse200(Response<JsonArray> response) {
@@ -207,6 +205,12 @@ public class InviteFriendsActivity extends BaseActivity {
         {
             progressView.setVisibility(View.VISIBLE);
             //setProgressBarIndeterminateVisibility(true);
+            From fromFriends = User.getFriendsQuery(MyApplication.getCurrentUser().remote_id);
+            SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromFriends, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000);
+
+            From fromInvites = MyApplication.getCurrentUser().getInviteSentQuery(place.getId());
+            SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromInvites, DataSyncAdapter.SYNC_TYPE_INVITE_SENT, 300 * 1000);
+
             return new ModelLoader<User>(InviteFriendsActivity.this, User.class, true);
         }
 

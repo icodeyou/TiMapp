@@ -90,10 +90,15 @@ public class AuthProvider {
             if (userId == -1){
                 return null;
             }
+            currentUser = User.loadByRemoteId(User.class, userId);
+            if (currentUser != null)
+                return currentUser;
+
             currentUser = new User();
-            currentUser.id = userId;
+            currentUser.remote_id = userId;
             currentUser.email = KeyValueStorage.out().getString(KEY_EMAIL, null);
             currentUser.username = KeyValueStorage.out().getString(KEY_NAME, null);
+            currentUser.save();
             Log.d(TAG, "Loading user form pref: " + currentUser);
             return currentUser;
         }
@@ -108,7 +113,7 @@ public class AuthProvider {
     private void setCurrentUser(User user){
         Log.i(TAG, "Writing user information: " + user);
         KeyValueStorage.in()
-            .putInt(KEY_ID, user.id)
+            .putInt(KEY_ID, user.remote_id)
             .putString(KEY_NAME, user.username)
             .putString(KEY_EMAIL, user.email)
             .putBoolean(KEY_IS_LOGIN, true)

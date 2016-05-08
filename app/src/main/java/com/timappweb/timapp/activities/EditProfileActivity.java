@@ -21,6 +21,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -134,19 +135,21 @@ public class EditProfileActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 Map<String, String> data = new HashMap<>();
-                currentUser.tags = horizontalTagsAdapter.getData();
+                currentUser.setTags(horizontalTagsAdapter.getData());
                 data.put("tag_string", currentUser.getTagsToString());
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
                 call.enqueue(new RestFeedbackCallback(context) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
+                        // Saving tags locally
+                        currentUser.saveAssociation(currentUser.getTags(), UserTag.class);
                         Toast.makeText(getApplicationContext(), "Your profile has been saved", Toast.LENGTH_LONG).show();
                         IntentsUtils.profile(context);
                     }
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
-                        currentUser.tags = null;
+                        currentUser.setTags(null);
                         Toast.makeText(getApplicationContext(), feedback.message, Toast.LENGTH_LONG).show();
                     }
                 });

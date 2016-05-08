@@ -11,14 +11,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.From;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,12 +33,12 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Network connection timeout, in milliseconds.
      */
-    private static final int NET_CONNECT_TIMEOUT_MILLIS = 15000;  // 15 seconds
+    private static final int NET_CONNECT_TIMEOUT_MILLIS = 20000;  // 20 seconds
 
     /**
      * Network read timeout, in milliseconds.
      */
-    private static final int NET_READ_TIMEOUT_MILLIS = 10000;  // 10 seconds
+    private static final int NET_READ_TIMEOUT_MILLIS = 15000;  // 15 seconds
 
     /**
      * Sync interval in seconds
@@ -61,128 +60,13 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize, allowParallelSyncs);
     }
 
-    public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, From localQuery, SyncResult syncResult){
-        try {
-            Response<List<? extends SyncBaseModel>> response = remoteQuery.execute();
-            if (response.isSuccess()){
-                List<? extends SyncBaseModel> localEntries = localQuery.execute();
-                updateLocalDatabase(classType, response.body(), localEntries, syncResult);
-            }
-            else {
-                // TODO handle this case globally ???
-                Log.e(TAG, "Cannot synchronise, api response invalid: " + response.code());
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error reading from network: " + e.toString());
-            syncResult.stats.numIoExceptions++;
-            return;
-        }
-    }
-    public void performPaginatedModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, From localQuery, SyncResult syncResult){
-        try {
-            Response<PaginationResponse<? extends SyncBaseModel>> response = remoteQuery.execute();
-            if (response.isSuccess()){
-                List<? extends SyncBaseModel> localEntries = localQuery.execute();
-                updateLocalDatabase(classType, response.body().items, localEntries, syncResult);
-            }
-            else {
-                // TODO handle this case globally ???
-                Log.e(TAG, "Cannot synchronise, api response invalid: " + response.code());
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error reading from network: " + e.toString());
-            syncResult.stats.numIoExceptions++;
-            return;
-        }
-    }
-
-
-    /**
-     * Read XML from an input stream, storing it into the content provider.
-     *
-     * <p>This is where incoming data is persisted, committing the results of a sync. In order to
-     * minimize (expensive) disk operations, we compare incoming data with what's already in our
-     * database, and compute a merge. Only changes (insert/update/delete) will result in a database
-     * write.
-     *
-     * <p>As an additional optimization, we use a batch operation to perform all database writes at
-     * once.
-     *
-     * <p>Merge strategy:
-     * 1. Get cursor to all items in feed<br/>
-     * 2. For each item, check if it's in the incoming data.<br/>
-     *    a. YES: Remove from "incoming" list. Check if data has mutated, if so, perform
-     *            database UPDATE.<br/>
-     *    b. NO: Schedule DELETE from database.<br/>
-     * (At this point, incoming database only contains missing items.)<br/>
-     * 3. For any items remaining in incoming list, ADD to database.
-     */
-    public void updateLocalDatabase(Class<? extends SyncBaseModel> classType,
-                                           final List<? extends SyncBaseModel> remoteEntries,
-                                           final List<? extends SyncBaseModel> localEntries,
-                                           final SyncResult syncResult) {
-        // Build hash table of incoming entries
-        HashMap<Long, SyncBaseModel> entryMap = new HashMap();
-        for (SyncBaseModel m : remoteEntries) {
-            entryMap.put(m.getSyncKey(), m);
-        }
-
-        Log.i(TAG, "Found " + localEntries.size() + " local entries. Computing merge solution...");
-        try
-        {
-            ActiveAndroid.beginTransaction();
-
-            // Update and remove existing items
-            for (SyncBaseModel localModel: localEntries){
-                SyncBaseModel match = entryMap.get(localModel.getSyncKey());
-                if (match != null) {
-                    entryMap.remove(localModel.getSyncKey());
-                    if (!match.isSync(localModel)){
-                        match.save();
-                        syncResult.stats.numUpdates++;
-                        Log.i(TAG, "Updating: " + localModel.toString());
-                    }
-                    else{
-                        Log.i(TAG, "No action: " + localModel.toString());
-                    }
-                }
-                else{
-                    Log.i(TAG, "Deleting: " + localModel.toString());
-                    localModel.delete();
-                    syncResult.stats.numDeletes++;
-                }
-            }
-
-            // Add new items
-            for (SyncBaseModel m : entryMap.values()) {
-                Log.i(TAG, "Scheduling insert: " + m.toString());
-                m.save();
-                syncResult.stats.numInserts++;
-            }
-
-            Log.i(TAG, "Merge solution ready. Applying updates");
-            ActiveAndroid.setTransactionSuccessful();
-        }
-        finally
-        {
-            Log.i(TAG, "Merge solution done");
-            ActiveAndroid.endTransaction();
-        }
-
-        // mContentResolver.notifyChange(
-        //        FeedContract.Entry.CONTENT_URI, // URI where data was modified
-        //        null,                           // No local observer
-        //        false);                         // IMPORTANT: Do not sync to network
-        // This sample doesn't support uploads, but if *your* code does, make sure you set
-        // syncToNetwork=false in the line above to prevent duplicate syncs.
-    }
 
     /**
      * Helper method to have the sync adapter sync immediately
      * @param context The context used to access the account service
      */
-    public static void syncImmediately(Context context, String authority, Bundle bundle) {
-        Log.d(TAG, "Request sync immediately");
+    public static void  syncImmediately(Context context, String authority, Bundle bundle) {
+        Log.d(TAG, "Request sync immediately with authority=" + authority);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 
@@ -300,5 +184,6 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
             ContentResolver.cancelSync(account, authority);
         }
     }
+
 }
 

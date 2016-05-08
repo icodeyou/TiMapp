@@ -161,11 +161,11 @@ public class BaseActivity extends AppCompatActivity {
 
         ////////////////// Test Get EditText in SearchView and handle on Space event
         //////////////////////////////////////////////////////////////////////////
-        /*int searchPlateId = getResources().getIdentifier("android:id/search_src_text", null, null);
+        /*int searchPlateId = getResources().getIdentifier("android:remote_id/search_src_text", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         if (searchPlate!=null) {
             searchPlate.setBackgroundColor(Color.CYAN);
-            int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+            int searchTextId = searchPlate.getContext().getResources().getIdentifier("android:remote_id/search_src_text", null, null);
             TextView searchText = (TextView) searchPlate.findViewById(searchTextId);
             if (searchText != null) {
                 searchText.setTextColor(Color.BLACK);

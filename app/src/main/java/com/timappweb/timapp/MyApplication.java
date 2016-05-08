@@ -3,8 +3,6 @@ package com.timappweb.timapp;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -15,6 +13,7 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
@@ -27,7 +26,6 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
 import com.timappweb.timapp.sync.ConfigSyncAdapter;
-import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
@@ -72,7 +70,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static boolean isCurrentUser(int userId){
-        return MyApplication.isLoggedIn() && MyApplication.getCurrentUser().id == userId;
+        return MyApplication.isLoggedIn() && MyApplication.getCurrentUser().remote_id == userId;
     }
 
     public void checkToken(){
@@ -125,22 +123,18 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     public void onCreate(){
         super.onCreate();
-
-        //this.deleteDatabase("timappdb");
-        Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         this.deferred = new DeferredObject();
+
+        //this.deleteDatabase(getString(R.string.db_name));
+
+        Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         MyApplication.auth = new AuthProvider();
         RestClient.init(this, getResources().getString(R.string.ws_endpoint), MyApplication.auth);
         KeyValueStorage.init(this, RestClient.instance().getGson());
-
-        // facebook
-        // TODO move from here
-        initFacebookPermissions();
-
+        initFacebookPermissions(); // Useless because friend are loaded from the server ... ? TODO move from here
         JodaTimeAndroid.init(this);
-        QuotaManager.init(getApplicationContext());
-
-        ConfigSyncAdapter.initializeSyncAdapter(this);
+        QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
+        AbstractSyncAdapter.initializeSyncAdapter(this);
 
         ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
             @Override
@@ -150,20 +144,19 @@ public class MyApplication extends com.activeandroid.app.Application {
 
             @Override
             public void onFail(String key) {
-                // TODO
+                Log.e(TAG, "Cannot load server configuration");
+                IntentsUtils.error(MyApplication.this);
             }
         });
+
         // If first start we need to wait for configuration from the server
         if (ConfigurationProvider.hasFullConfiguration()){
             notifyLoadingState("Server configuration loaded");
         }
         else{
-            AbstractSyncAdapter.syncImmediately(this, this.getString(R.string.content_authority_config));
+            // If new installed app, this will be triggered two times... Not good
+            ConfigSyncAdapter.syncImmediately(this, this.getString(R.string.content_authority_config));
         }
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, DataSyncAdapter.SYNC_TYPE_FRIENDS);
-        DataSyncAdapter.syncImmediately(this, this.getString(R.string.content_authority_data), bundle);
 
         checkToken();
     }
@@ -209,7 +202,7 @@ public class MyApplication extends com.activeandroid.app.Application {
 
     public static EventCategory getCategoryById(int id) throws UnknownCategoryException {
         for (EventCategory c: config.eventCategories()){
-            if (c.id == id){
+            if (c.remote_id == id){
                 return c;
             }
         }

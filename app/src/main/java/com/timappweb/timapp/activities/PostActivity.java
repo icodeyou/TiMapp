@@ -42,7 +42,7 @@ public class PostActivity extends BaseActivity {
         //------------------------------------------------------------------------------------------
         // 2 cases:
         //  - we gave the full post => we just display data
-        //  - we gave the post id => we need to request the server to have extra informations
+        //  - we gave the post remote_id => we need to request the server to have extra informations
         currentPost = (Post) getIntent().getSerializableExtra("post");
         int postId = (int) getIntent().getExtras().getInt("post.id", -1);
 

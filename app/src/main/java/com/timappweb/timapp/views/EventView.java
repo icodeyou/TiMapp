@@ -159,12 +159,15 @@ public class EventView extends RelativeLayout{
 
     public HorizontalTagsRecyclerView setEvent(Place event) {
         //TODO : CLEAR
-
         this.event = event;
+
+        if (event == null){
+            Log.e(TAG, "Trying to display a null event");
+            return htrv;
+        }
 
         //Date
         tvTime.setText(event.getTime());
-
         //Title
         tvName.setText(event.name);
 

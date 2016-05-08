@@ -87,7 +87,7 @@ public class MapAreaInfo extends Model {
         Log.i(TAG, "Clearing old map areas for type=" + type + " more that " + (timeago / 1000) + " seconds old");
         new Delete()
                 .from(MapAreaInfo.class)
-                .where(" DataType = " + type + " AND " + MapAreaInfo.oldCondition(timeago))
+                .where(" DataType = ? AND " + MapAreaInfo.oldCondition(timeago), type)
                 .execute();
     }
 

@@ -54,7 +54,7 @@
 
 
         <!--<RelativeLayout
-            android:id="@+id/spot_added_view"
+            android:remote_id="@+remote_id/spot_added_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -63,17 +63,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/pin_post_linear_layout"
+                android:layout_alignBottom="@+remote_id/pin_post_linear_layout"
                 android:background="@color/Black"
                 android:alpha="0.8"/>
             <LinearLayout
-                android:id="@+id/pin_post_linear_layout"
+                android:remote_id="@+remote_id/pin_post_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp">
                 <ImageView
-                    android:id="@+id/unlock_icon"
+                    android:remote_id="@+remote_id/unlock_icon"
                     android:layout_width="@dimen/icon_default"
                     android:layout_height="@dimen/icon_default"
                     android:src="@drawable/locked"
@@ -119,7 +119,7 @@
             android:textColorHint="@color/color_hint"
             android:singleLine="true"/>
         <!--<EditText
-            android:id="@+id/event_description"
+            android:remote_id="@+remote_id/event_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top|left"
@@ -206,14 +206,14 @@
 
 
         <!--<LinearLayout
-            android:id="@+id/create_button"
+            android:remote_id="@+remote_id/create_button"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginBottom="@dimen/margin_square_button">
             <TextView
-                android:id="@+id/text_create_button"
+                android:remote_id="@+remote_id/text_create_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="30dp"

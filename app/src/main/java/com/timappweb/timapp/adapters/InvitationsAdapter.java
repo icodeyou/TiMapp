@@ -12,6 +12,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -53,24 +54,29 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
             final PlacesInvitation placeInvitation = data.get(position);
 
-            String username = placeInvitation.getUserSource().getUsername();
+            User userSource = placeInvitation.getUserSource();
+            String username = userSource != null ? userSource.getUsername() : "Former user";
             String prettyTimeInvitation = placeInvitation.getTimeCreated();
             holder.nameInvitation.setText(username);
             holder.dateInvitation.setText(prettyTimeInvitation);
+
             holder.eventView.setEvent(placeInvitation.place);
 
+            /*
             try {
                 EventCategory eventCategory = MyApplication.getCategoryById(placeInvitation.place.getCategoryId());
                 //holder.backgroundImage.setImageResource(eventCategory.getBigImageResId());
             } catch (UnknownCategoryException e) {
                 Log.e(TAG, "no category found for id : " + placeInvitation.place.getCategoryId());
-            }
+            }*/
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsRecyclerView htrv = holder.eventView.getRvEventTags();
-            HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-                    new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            htrv.setOnTouchListener(mHorizontalTagsTouchListener);
+            if (htrv != null){
+                HorizontalTagsTouchListener mHorizontalTagsTouchListener =
+                        new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
+                htrv.setOnTouchListener(mHorizontalTagsTouchListener);
+            }
         }
     }
 
@@ -124,7 +130,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             eventView = (EventView) itemView.findViewById(R.id.event_view);
             nameInvitation = (TextView) itemView.findViewById(R.id.name_invitation);
             dateInvitation = (TextView) itemView.findViewById(R.id.date_invitation);
-            //backgroundImage = (ImageView) itemView.findViewById(R.id.background_invitation);
+            //backgroundImage = (ImageView) itemView.findViewById(R.remote_id.background_invitation);
         }
 
         @Override

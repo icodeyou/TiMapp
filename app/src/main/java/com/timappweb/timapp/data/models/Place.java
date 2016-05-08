@@ -26,9 +26,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     private static final String TAG = "PlaceEntity" ;
 
-    @Column(name = "SyncId", index = true)
-    @Expose
-    public int id = -1;
 
     @SerializedName("spot")
     @Expose
@@ -84,7 +81,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public Place(int id, double lat, double lng, String name) {
         this.loaded_time = Util.getCurrentTimeSec();
-        this.id = id;
+        this.remote_id = id;
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
@@ -99,7 +96,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.latitude = lat;
         this.longitude = lng;
         this.name = name;
-        this.category_id = eventCategory.id;
+        this.category_id = eventCategory.remote_id;
         this.created = Util.getCurrentTimeSec();
     }*/
 
@@ -108,7 +105,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.latitude = lastLocation.getLatitude();
         this.longitude = lastLocation.getLongitude();
         this.name = name;
-        this.category_id = eventCategory.id;
+        this.category_id = eventCategory.remote_id;
         this.description = description;
         if (spot != null){
             this.spot = spot;
@@ -126,7 +123,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
      * @return
      */
     public boolean isNew(){
-        return this.id == -1;
+        return this.remote_id == -1;
     }
 
     public int countPosts(){
@@ -173,7 +170,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Override
     public String toString() {
         return "Place{" +
-                "id=" + id +
+                "id=" + remote_id +
                 ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", created=" + created +
@@ -239,15 +236,10 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     @Override
     public int getMarkerId() {
-        return this.id;
+        return this.remote_id;
     }
 
     // =============================================================================================
-
-    @Override
-    public long getSyncKey() {
-        return this.id;
-    }
 
     @Override
     public boolean isSync(SyncBaseModel o) {
@@ -277,7 +269,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
         Place place = (Place) o;
 
-        if (id != place.id) return false;
+        if (remote_id != place.remote_id) return false;
         if (spot_id != place.spot_id) return false;
         if (created != place.created) return false;
         if (Double.compare(place.latitude, latitude) != 0) return false;
@@ -294,7 +286,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + id;
+        result = 31 * result + remote_id;
         return result;
     }
 

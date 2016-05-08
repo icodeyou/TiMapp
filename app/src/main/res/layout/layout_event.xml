@@ -170,7 +170,7 @@
                         android:layout_gravity="center"/>
                     <!--<com.timappweb.timapp.views.HorizontalTagsRecyclerView
                         xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/rv_horizontal_tags"
+                        android:remote_id="@+remote_id/rv_horizontal_tags"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/height_rv_displayed_tags"
                         android:layout_gravity="center"

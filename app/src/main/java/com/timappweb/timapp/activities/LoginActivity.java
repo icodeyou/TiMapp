@@ -81,13 +81,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         progressView = findViewById(R.id.progress_view);
 
         /*// Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.remote_id.email);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) findViewById(R.remote_id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+            public boolean onEditorAction(TextView textView, int remote_id, KeyEvent keyEvent) {
+                if (remote_id == R.remote_id.login || remote_id == EditorInfo.IME_NULL) {
                     attemptLogin();
                     return true;
                 }
@@ -101,15 +101,15 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             mPasswordView.setText("test");
         }
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.remote_id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-        mLoginFormView = findViewById(R.id.sign_up_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mLoginFormView = findViewById(R.remote_id.sign_up_form);
+        mProgressView = findViewById(R.remote_id.login_progress);
 */
         setListeners();
 
@@ -146,7 +146,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         user.username = feedback.data.get("username");
                         user.provider_uid = feedback.data.get("social_id");
                         user.provider = SocialProvider.FACEBOOK;
-                        user.id = Integer.parseInt(feedback.data.get("id"));
+                        user.remote_id = Integer.parseInt(feedback.data.get("id"));
                         user.app_id = InstanceID.getInstance(that).getId();
                         //MyApplication.updateGoogleMessagingToken(that);
                         Log.i(TAG, "Trying to login user: " + user);
@@ -419,7 +419,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         && response.data.containsKey("username")){
                     String token = (String) response.data.get("token");
                     user.username = response.data.get("username");
-                    user.id = Integer.parseInt(response.data.get("id"));
+                    user.remote_id = Integer.parseInt(response.data.get("id"));
                     MyApplication.login(user, token, null);
                     Log.i(TAG, "Session created with session token: " + token);
                     IntentsUtils.lastActivityBeforeLogin(this.activity);

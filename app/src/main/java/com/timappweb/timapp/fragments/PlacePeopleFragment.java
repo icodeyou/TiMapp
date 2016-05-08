@@ -123,7 +123,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         /*mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
                 context,
                 R.layout.header_place_people,
-                R.id.text_header_place_people,
+                R.remote_id.text_header_place_people,
                 placeUsersAdapter);*/
 
         peopleRv.setAdapter(placeUsersAdapter);
@@ -141,7 +141,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
 
     private void loadPosts() {
-        Call<List<Post>> call = RestClient.service().viewPostsForPlace(eventActivity.getPlaceId());
+        Call<List<Post>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
         RestCallback callback = new RestCallback<List<Post>>(getContext()) {
             @Override
             public void onResponse200(Response<List<Post>> response) {
@@ -167,7 +167,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         Map<String, String> conditions = new HashMap<>();
         conditions.put("status", String.valueOf(status));
 
-        Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(eventActivity.getPlaceId(), conditions);
+        Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(eventActivity.getEventId(), conditions);
         call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext(), this) {
             @Override
             public void onResponse200(Response<PaginationResponse<UserPlace>> response) {
@@ -184,7 +184,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
     private void loadInvites(){
-        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().invitesSent(eventActivity.getPlaceId());
+        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().invitesSent(eventActivity.getEventId());
         call.enqueue(new RestCallback<PaginationResponse<PlacesInvitation>>(getContext()) {
 
             @Override

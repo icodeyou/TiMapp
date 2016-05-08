@@ -124,7 +124,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     }
 
     /**
-     * From the id point in cache, convert it as a bounds
+     * From the remote_id point in cache, convert it as a bounds
      * @param p
      * @return
      */

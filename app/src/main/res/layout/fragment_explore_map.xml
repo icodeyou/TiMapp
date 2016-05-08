@@ -23,7 +23,7 @@
     </LinearLayout>
 
     <!--<ImageView
-        android:id="@+id/my_location_button"
+        android:remote_id="@+remote_id/my_location_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"

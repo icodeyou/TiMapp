@@ -13,6 +13,8 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
 import com.timappweb.timapp.configsync.SyncConfig;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
@@ -43,7 +45,7 @@ public class RestClient {
 
 
     // KEY ID
-    //public static final String KEY_SESSION_ID = "id";
+    //public static final String KEY_SESSION_ID = "remote_id";
 
     public static RestClient instance(){
         return conn;
@@ -68,10 +70,13 @@ public class RestClient {
         this.authProvider = authProvider;
 
         Log.i(TAG, "Initializing server connection at " + baseUrl);
-        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
-        httpClientBuilder.addInterceptor(new SessionRequestInterceptor());
-        httpClientBuilder.addInterceptor(new LogRequestInterceptor());
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
+                .addInterceptor(new SessionRequestInterceptor())
+                .addInterceptor(new LogRequestInterceptor())
+                .readTimeout(40, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS);
         this.httpClient = httpClientBuilder.build();
+
 
         this.gson =  new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()

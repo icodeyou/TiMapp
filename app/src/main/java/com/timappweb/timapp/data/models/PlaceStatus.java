@@ -13,6 +13,13 @@ import com.timappweb.timapp.utils.Util;
 @Table(name = "PlaceStatus")
 public class PlaceStatus extends SyncBaseModel {
 
+    private long MAX_STATUS_VALIDITY = 10600 * 1000; // Status validity is 3 hours
+
+    @Expose(serialize = false, deserialize = false)
+    @Column(name = "User", index = true, onDelete= Column.ForeignKeyAction.CASCADE)
+    public User user;
+
+    // TODO change as Place
     @Expose
     @Column(name = "PlaceId", index = true)
     public int place_id;
@@ -35,13 +42,15 @@ public class PlaceStatus extends SyncBaseModel {
         this.created = Util.getCurrentTimeSec();
     }
 
-    public static boolean hasStatus(int place_id, UserPlaceStatusEnum status) {
+    public static boolean hasStatus(int placeId, UserPlaceStatusEnum status) {
         PlaceStatus placeStatus = new Select()
                 .from(PlaceStatus.class)
-                .where("Status = ?", status)
-                .where("PlaceId = ?", place_id)
-                // .where("PlaceId = ?", place_id) TODO set created limit
+                .where("Status = ? AND PlaceId = ?", status, placeId)
                 .executeSingle();
+        if (placeStatus != null && !placeStatus.isStatusUpToDate()){
+            placeStatus.delete();
+            return false;
+        }
         return placeStatus != null;
     }
 
@@ -52,10 +61,6 @@ public class PlaceStatus extends SyncBaseModel {
     }
 
 
-    public long getSyncKey(){
-        return this.getId();
-    }
-
     @Override
     public boolean isSync(SyncBaseModel model) {
         if (!(model instanceof PlaceStatus)) return false;
@@ -65,4 +70,7 @@ public class PlaceStatus extends SyncBaseModel {
         return place_id != that.place_id;
     }
 
+    public boolean isStatusUpToDate() {
+        return (this.created - System.currentTimeMillis()) < MAX_STATUS_VALIDITY;
+    }
 }

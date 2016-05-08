@@ -88,7 +88,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         // primary sections of the activity.
         // mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
-        //  mViewPager = (ViewPager) findViewById(R.id.pager);
+        //  mViewPager = (ViewPager) findViewById(R.remote_id.pager);
         //  mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // !important Init drawer
@@ -250,7 +250,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         boolean res = super.onPrepareOptionsMenu(menu);
         // If the nav drawer is open, hide action items related to the content view
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
-        //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
+        //menu.findItem(R.remote_id.action_filter).setVisible(!drawerOpen);
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

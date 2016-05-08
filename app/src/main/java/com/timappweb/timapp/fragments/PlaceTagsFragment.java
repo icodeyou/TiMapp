@@ -15,7 +15,6 @@ import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
@@ -108,7 +107,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
 
     public void loadData() {
         final EventActivity eventActivity = (EventActivity) getActivity();
-        Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(eventActivity.getPlaceId());
+        Call<List<Tag>> call = RestClient.service().viewPopularTagsForPlace(eventActivity.getEventId());
         RestCallback callback = new RestCallback<List<Tag>>(getContext(), this) {
             @Override
             public void onResponse(Response<List<Tag>> response) {

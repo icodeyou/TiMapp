@@ -54,7 +54,7 @@ public class FilterActivity extends BaseActivity {
         setContentView(R.layout.activity_filter);
 
         progressBarView = findViewById(R.id.progress_view);
-        //categoriesRv = (RecyclerView) findViewById(R.id.rv_categories);
+        //categoriesRv = (RecyclerView) findViewById(R.remote_id.rv_categories);
         saveButton = findViewById(R.id.save_button);
         textSaveButton = (TextView) findViewById(R.id.text_save_button);
         selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);

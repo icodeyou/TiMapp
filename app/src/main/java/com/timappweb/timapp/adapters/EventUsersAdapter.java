@@ -67,40 +67,24 @@ public abstract class EventUsersAdapter
         User user = placeUserInterface.getUser();
         RecyclerView rvPostTags = holder.rvPostTags;
 
-        Log.d(TAG, "User: " + user.getUsername());
-        final String pic = user.getProfilePictureUrl();
-        if(pic !=null && holder.ivProfilePicture!=null) {
-            /*holder.ivProfilePicture.getViewTreeObserver()
-                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                        // Wait until layout to call Picasso
-                        @Override
-                        public void onGlobalLayout() {
-                            // Ensure we call this only once
-                            holder.ivProfilePicture.getViewTreeObserver()
-                                    .removeOnGlobalLayoutListener(this);
+        if (user != null){
+            Log.d(TAG, "User: " + user.getUsername());
+            final String pic = user.getProfilePictureUrl();
+            if(pic !=null && holder.ivProfilePicture!=null) {
+                Uri uri = Uri.parse(pic);
+                holder.ivProfilePicture.setImageURI(uri);
+            }
 
-
-                            Picasso.with(context)
-                                    .load(pic)
-                                    .centerCrop()
-                                    .resize(0, holder.ivProfilePicture.getMeasuredHeight())
-                                    .error(R.drawable.placeholder_profile_error)
-                                    .placeholder(R.drawable.placeholder_profile)
-                                    .into(holder.ivProfilePicture);
-                        }
-                    });*/
-
-            Uri uri = Uri.parse(pic);
-            holder.ivProfilePicture.setImageURI(uri);
+            String username = user.getUsername();
+            holder.tvUsername.setText(username);
         }
 
-        String username = user.getUsername();
-        holder.tvUsername.setText(username);
         holder.tvTime.setText(placeUserInterface.getTimeCreated());
 
-        if(placeUserInterface.getTags()==null) {
+        if (placeUserInterface.getTags()==null) {
             rvPostTags.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             rvPostTags.setVisibility(View.VISIBLE);
             List<Tag> tags = placeUserInterface.getTags();
 

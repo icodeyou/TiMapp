@@ -16,10 +16,6 @@ public class Tag extends SyncBaseModel implements Serializable, SearchHistory.Se
 
     // =============================================================================================
 
-    @Column(name = "SyncId")
-    @Expose
-    public Integer id;
-
     @Column(name = "Name")
     @Expose
     public String name;
@@ -106,15 +102,20 @@ public class Tag extends SyncBaseModel implements Serializable, SearchHistory.Se
     // =============================================================================================
 
     @Override
-    public long getSyncKey() {
-        return this.id;
-    }
-
-    @Override
     public boolean isSync(SyncBaseModel o) {
         if (o == null) return false ;
         if (!(o instanceof Tag)) return false ;
         Tag tag = (Tag) o;
         return tag.count_ref == this.count_ref;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id='" + this.getId() + '\'' +
+                "remoteId='" + this.remote_id + '\'' +
+                "name='" + name + '\'' +
+                ", count_ref=" + count_ref +
+                '}';
     }
 }

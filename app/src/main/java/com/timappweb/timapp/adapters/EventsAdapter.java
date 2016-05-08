@@ -110,7 +110,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         FooterPlacesViewHolder(View itemView) {
             super(itemView);
-            newEventButton = (Button) itemView.findViewById(R.id.create_button);
+            newEventButton = (Button) itemView.findViewById(R.remote_id.create_button);
             newEventButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

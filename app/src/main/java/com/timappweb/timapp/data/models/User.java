@@ -2,8 +2,10 @@ package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.SocialProvider;
@@ -16,16 +18,12 @@ import java.util.List;
 public class User extends SyncBaseModel implements Serializable, PlaceUserInterface {
     private static final String TAG = "UserEntity" ;
 
-    @Column(name = "SyncId")
-    @Expose
-    public int id = -1;
+    // =============================================================================================
+    // DATABASE
 
     @Column(name = "Username")
     @Expose
     public String username;
-
-    @Expose(serialize = true, deserialize = false)
-    public String password;
 
     @Column(name = "Email")
     @Expose
@@ -39,28 +37,46 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     @Expose(serialize = false, deserialize = true)
     public int count_places = 0;
 
-    @Expose
-    public SocialProvider provider;
-
     @Column(name = "ProviderUID")
     @Expose
     public String provider_uid;
 
+    @Column(name = "Status")
     @Expose(serialize = false, deserialize = true)
     private boolean status = false;
 
-    @Expose(serialize = false, deserialize = true)
-    public LinkedList<Post> posts;
-
-    @Expose(serialize = false, deserialize = true)
-    public List<Tag> tags;
-
+    @Column(name = "AppId")
     @Expose(serialize = false, deserialize = true)
     public String app_id;
 
+    @Column(name = "GoogleMessagingToken")
     @Expose(serialize = false, deserialize = true)
     public String google_messaging_token;
 
+    // =============================================================================================
+
+    @Expose(serialize = true, deserialize = false)
+    public String password;
+
+    @Expose
+    public SocialProvider provider;
+
+    /**
+     * Cached value. Set getTags
+     */
+    @Expose(serialize = false, deserialize = true)
+    protected List<Tag> tags;
+
+    /**
+     * Cached value
+     */
+    protected List<UserPlace> placeStatus;
+
+    // =============================================================================================
+
+    public List<User> getFriends() {
+        return this.getFriendsQuery().execute();
+    }
 
     public User(){
 
@@ -70,6 +86,7 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
         this.email = email;
         this.password = password;
     }
+
     public User(String email, String password, String username){
         this.email = email;
         this.password = password;
@@ -86,9 +103,10 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     @Override
     public String toString() {
         return "User{" +
-                "username='" + username + '\'' +
+                " db_id=" + this.getId() +
+                ", remote_id=" + remote_id +
+                ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", id=" + id +
                 ", provider_uid=" + provider +
                 ", app_id=" + app_id +
                 ", google_messaging_token =" + google_messaging_token +
@@ -105,6 +123,8 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
 
     @Override
     public List<Tag> getTags() {
+        if (tags != null) return tags;
+        tags = new Select().from(Tag.class).join(UserTag.class).on("Tag.Id = UserTag.Tag").execute();
         return tags;
     }
     public boolean hasTags() {
@@ -145,17 +165,60 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     // =============================================================================================
 
     @Override
-    public long getSyncKey() {
-        return this.id;
-    }
-
-    @Override
     public boolean isSync(SyncBaseModel model) {
         return false;
     }
 
-    public static User findByRemoteId(int userId) {
-        List<User> users = new Select().from(User.class).where("SyncId = " + userId).execute();
-        return users.size() > 0 ? users.get(0) : null;
+
+    public static From getFriendsQuery(long userId) {
+        return new Select()
+                .from(User.class)
+                .innerJoin(UserFriend.class)
+                .on("User.Id = UserFriend.UserTarget")
+                .where("UserFriend.UserSource = ?", userId);
+    }
+
+    public List<UserPlace> getPlaceStatus() {
+        if (placeStatus != null) return placeStatus;
+        placeStatus = new Select()
+                .from(UserPlace.class)
+                .where("User = ? ", this.getId())
+                .execute();
+        return placeStatus;
+    }
+
+
+    public From getInviteSentQuery() {
+        return new Select()
+                .from(PlacesInvitation.class)
+                .where("UserSource = ?", this.getId());
+    }
+
+    public From getInviteSentQuery(long placeId) {
+        return this.getInviteSentQuery().where("Place = ?", placeId);
+    }
+
+    public From getInviteReceivedQuery() {
+        return new Select()
+                .from(PlacesInvitation.class)
+                .where("UserTarget = ?", this.getId())
+                .orderBy("created DESC");
+    }
+
+    public From getInviteReceivedQuery(long placeId) {
+        return getInviteReceivedQuery().where("Place = ?", placeId);
+    }
+
+    public List<PlacesInvitation> getInviteReceived() {
+        return this.getInviteReceivedQuery().execute();
+    }
+
+    public From getFriendsQuery() {
+        return User.getFriendsQuery(this.getId());
+    }
+
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 }

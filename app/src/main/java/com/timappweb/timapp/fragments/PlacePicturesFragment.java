@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.desmond.squarecamera.ImageUtility;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
@@ -126,7 +125,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
     public void loadData(){
         Log.d(TAG, "Loading places pictures");
-        Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(eventActivity.getPlaceId());
+        Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(eventActivity.getEventId());
         RestCallback callback = new RestCallback<PaginationResponse<Picture>>(this.getContext(), this) {
             @Override
             public void onResponse(Response<PaginationResponse<Picture>> response) {
@@ -221,7 +220,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                     .build();
 
             // finally, execute the request
-            Call<RestFeedback> call = RestClient.service().upload(eventActivity.getPlaceId(), body);
+            Call<RestFeedback> call = RestClient.service().upload(eventActivity.getEventId(), body);
             RestCallback callback = new RestCallback<RestFeedback>(eventActivity, pictureLoadListener) {
                 @Override
                 public void onResponse200(Response<RestFeedback> response) {

@@ -28,8 +28,6 @@ public class ConfigurationProvider {
     private static final String TAG = "ConfigurationProvider";
     private static final String KEY_APPLICATION_RULE = "application_rules";
 
-    private static final int CONFIG_ID_RULES = 1;
-
     private static OnConfigurationLoadedListener listener;
     private static ApplicationRules applicationRules;
     private static List<EventCategory> eventCategories = null;
@@ -83,78 +81,17 @@ public class ConfigurationProvider {
         listener.onLoaded(KEY_APPLICATION_RULE);
     }
 
-    /*
-    public ConfigurationProvider(Context context, Listener listener) {
-        this.context = context;
-        this.sharedPref = context.getSharedPreferences(PREF_NAME, SHARED_PREF_PRIVATE_MODE);
-        this.listener = listener;
 
-        this.init();
-    }
-
-    private SyncConfigManager buildConfManager(int id, String path){
-        return new SyncConfigManager(
-                id,
-                new RESTRemoteSync(path, RestClient.instance().createService(ConfigInterface.class)),
-                new SharedPrefSync("config_" + id, sharedPref));
-    }
-
-    private void init(){
-        //eventCatagoriesManager = buildConfManager(CONFIG_ID_EVENT_CATEGORIES, "event_categories");
-        //spotCatagoriesManager = buildConfManager(CONFIG_ID_SPOT_CATEGORIES, "spot_categories");
-        //rulesManager = buildConfManager(CONFIG_ID_RULES, "rules");
-    }
-
-    public AsyncTask<Integer, Integer, Boolean> load() {
-        Log.d(TAG, "Start sync configuration from server...");
-        AsyncTask<Integer, Integer, Boolean> loadTask = new AsyncTask<Integer, Integer, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Integer... params) {
-                try {
-                    //eventCatagoriesManager.sync();
-                    //spotCatagoriesManager.sync();
-                    //rulesManager.sync();
-                } catch (RemotePersistenceManager.CannotLoadException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean success) {
-                super.onPostExecute(success);
-                if (!success){
-                    listener.onFail();
-                }
-                else{
-                    listener.onLoaded();
-                }
-            }
-        };
-        return loadTask.execute();
-    }
-
-    public void clear() {
-        //eventCatagoriesManager.clear();
-        //spotCatagoriesManager.clear();
-        rulesManager.clear();
-    }
-
-    public interface Listener{
-        void onLoaded();
-        void onFail();
-    }
 
     @Override
     public String toString() {
         return "ServerConfiguration{" +
-                ", rules=" + rulesManager +
+                ", rules=" + rules() +
                 //", event categories= " + eventCatagoriesManager.toString() +
                 //", spot categories= " + spotCatagoriesManager.toString() +
                 '}';
     }
-*/
+
     private static class IncompleteConfigurationException extends Error {
         public IncompleteConfigurationException(String s) {
             super(s);

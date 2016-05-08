@@ -16,10 +16,6 @@ public class EventCategory extends SyncBaseModel implements Serializable{
     private static final String TAG = "EventCategory";
 
     @Expose
-    @Column(name = "SyncId")
-    public int id;
-
-    @Expose
     @Column(name = "Name")
     public String name;
 
@@ -48,10 +44,10 @@ public class EventCategory extends SyncBaseModel implements Serializable{
         if (categories == null || categories.size() == 0){
             return "";
         }
-        String res = String.valueOf(categories.get(0).id);
+        String res = String.valueOf(categories.get(0).remote_id);
 
         for (int i = 1; i < categories.size(); i++){
-            res += "," + String.valueOf(categories.get(i).id);
+            res += "," + String.valueOf(categories.get(i).remote_id);
         }
         return res;
     }
@@ -130,11 +126,6 @@ public class EventCategory extends SyncBaseModel implements Serializable{
     }
 
     @Override
-    public long getSyncKey() {
-        return this.id;
-    }
-
-    @Override
     public boolean isSync(SyncBaseModel model) {
         if (!(model instanceof EventCategory)) return false;
         EventCategory that = (EventCategory) model;
@@ -148,7 +139,7 @@ public class EventCategory extends SyncBaseModel implements Serializable{
         return "EventCategory{" +
                 "position=" + position +
                 ", name='" + name + '\'' +
-                ", id=" + id +
+                ", id=" + remote_id +
                 '}';
     }
 
@@ -160,7 +151,7 @@ public class EventCategory extends SyncBaseModel implements Serializable{
 
         EventCategory that = (EventCategory) o;
 
-        if (id != that.id) return false;
+        if (remote_id != that.remote_id) return false;
         if (position != that.position) return false;
         return name.equals(that.name);
 
@@ -169,7 +160,7 @@ public class EventCategory extends SyncBaseModel implements Serializable{
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + id;
+        result = 31 * result + remote_id;
         return result;
     }
 }

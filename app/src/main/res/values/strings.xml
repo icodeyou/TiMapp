@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TiMapp</string>
+    <string name="db_name">database_timapp</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
@@ -199,8 +200,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
 
 
     <string name="sync_account_type">timapp.timappweb.com</string>
-    <string name="content_authority_config">com.timappweb.timapp.provider.config</string>
-    <string name="content_authority_data">com.timappweb.timapp.provider.data</string>
+    <string name="content_authority_config">com.timappweb.timapp.config.provider</string>
+    <string name="content_authority_data">com.timappweb.timapp.data.provider</string>
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
     <string name="unknown_category">Unknown category</string>

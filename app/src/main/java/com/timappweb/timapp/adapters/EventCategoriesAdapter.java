@@ -40,7 +40,7 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
     public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
         final EventCategory eventCategory = MyApplication.getEventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
-        icons.put(eventCategory.id, categoryIcon);
+        icons.put(eventCategory.remote_id, categoryIcon);
     }
 
     public ImageView getIconFromId(int categoryId) {

@@ -2,19 +2,28 @@ package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.activeandroid.query.From;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.PlacesInvitation;
+import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
 
@@ -43,7 +52,8 @@ public class InvitationsActivity extends BaseActivity{
         progressView = findViewById(R.id.loading_invitations);
 
         initAdapterListFriends();
-        loadInvitations();
+
+        getSupportLoaderManager().initLoader(0, null, new InvitationLoader());
     }
 
     private void initAdapterListFriends() {
@@ -61,24 +71,8 @@ public class InvitationsActivity extends BaseActivity{
         });
     }
 
-    private void loadInvitations(){
 
-        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().inviteReceived();
-        call.enqueue(new RestCallback<PaginationResponse<PlacesInvitation>>(this) {
-            @Override
-            public void onResponse200(Response<PaginationResponse<PlacesInvitation>> response) {
-                onInvitationsLoaded(response.body().items);
-            }
-
-            @Override
-            public void onFinish() {
-                progressView.setVisibility(View.GONE);
-            }
-        });
-
-    }
-
-    private void onInvitationsLoaded(List<PlacesInvitation> items){
+    private void updateView(List<PlacesInvitation> items){
 
         invitations = items;
         if(invitations.size()==0) {
@@ -93,5 +87,34 @@ public class InvitationsActivity extends BaseActivity{
     private void onItemListClicked(int position) {
         PlacesInvitation invitation = invitations.get(position);
         IntentsUtils.viewSpecifiedPlace(this, invitation.place);
+    }
+
+
+
+    // =============================================================================================
+
+    class InvitationLoader implements LoaderManager.LoaderCallbacks<List<PlacesInvitation>>{
+
+        @Override
+        public Loader<List<PlacesInvitation>> onCreateLoader(int id, Bundle args) {
+            From query = MyApplication.getCurrentUser().getInviteReceivedQuery();
+            List<PlacesInvitation> invites =
+                    SyncBaseModel.getRemoteEntries(InvitationsActivity.this, query, DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED, 300 * 1000);
+            if (invites != null){
+                updateView(invites);
+            }
+            return new ModelLoader<>(InvitationsActivity.this, PlacesInvitation.class, query, false);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<PlacesInvitation>> loader, List<PlacesInvitation> data) {
+            Log.d(TAG, "Place loaded finish");
+            updateView(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<List<PlacesInvitation>> loader) {
+
+        }
     }
 }

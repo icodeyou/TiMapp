@@ -61,7 +61,10 @@ public interface WebServiceInterface {
     Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
 
     @GET("PlacesInvitations/sent/{placeId}.json")
-    Call<PaginationResponse<PlacesInvitation>> invitesSent(@Path("placeId") int inviteId);
+    Call<PaginationResponse<PlacesInvitation>> invitesSent(@Path("placeId") int placeId);
+
+    //@GET("PlacesInvitations/sent.json")
+    //Call<PaginationResponse<PlacesInvitation>> invitesSent();
 
     @GET("PlacesInvitations/received.json")
     Call<PaginationResponse<PlacesInvitation>> inviteReceived();
@@ -92,7 +95,7 @@ public interface WebServiceInterface {
     Call<RestFeedback>  checkToken();
 
     @GET("users/profile/{id}.json")
-    Call<User>  profile(@Path("id") int username);
+    Call<User>  profile(@Path("id") int userId);
 
     @POST("users/facebook_login.json")
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
@@ -214,6 +217,9 @@ public interface WebServiceInterface {
 
     @POST("PlacesUsers/place/{id}.json")
     Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
+
+    @POST("PlacesUsers/user.json")
+    Call<List<UserPlace>> placeStatus();
 
     // ---------------------------------------------------------------------------------------------
     // Quotas
