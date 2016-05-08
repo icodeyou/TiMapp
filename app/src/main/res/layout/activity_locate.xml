@@ -8,12 +8,13 @@
 
     <LinearLayout
         android:id="@+id/progress_view"
+        android:layout_below="@+id/header"
+        android:layout_above="@+id/button_add_event"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center|top"
         android:orientation="vertical"
-        android:visibility="visible"
-        android:layout_marginBottom="@dimen/height_bottom_button">
+        android:visibility="visible"><!--
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -25,18 +26,29 @@
             android:textSize="@dimen/text_normal"
             android:gravity="center"
             android:typeface="serif"
-            android:text="@string/checking_around"/>
+            android:text="@string/checking_around"/>-->
         <include layout="@layout/progressview"
-            android:layout_height="50dp"
-            android:layout_width="50dp"/>
+            android:layout_height="@dimen/default_progressview"
+            android:layout_width="@dimen/default_progressview"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="50dp"
+        android:textSize="@dimen/text_normal"
+        android:text="Please check events that already exist near you."/>
 
     <LinearLayout
         android:id="@+id/no_connection_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:paddingBottom="100dp"
         android:orientation="vertical"
+        android:background="@color/background"
         android:visibility="gone">
         <ImageView
             android:layout_width="80dp"
@@ -54,25 +66,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_transparent"
-        android:layout_above="@+id/button_add_spot"
-        android:gravity="center_vertical">
+        android:layout_below="@+id/header"
+        android:layout_above="@+id/button_add_event"
+        android:gravity="center_vertical"
+        android:visibility="visible">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_places"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:divider="@color/divider_listview"
             android:dividerHeight="1dp"
             android:visibility="gone"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:id="@+id/layout_if_no_place"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -90,10 +103,10 @@
             android:textStyle="bold|italic"
             android:textSize="@dimen/text_normal"
             android:text="@string/text_no_event_around1"/>
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <LinearLayout
-        android:id="@+id/button_add_spot"
+        android:id="@+id/button_add_event"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_button"
         android:layout_alignParentBottom="true"

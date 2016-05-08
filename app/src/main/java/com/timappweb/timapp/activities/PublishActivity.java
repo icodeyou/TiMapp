@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,7 +47,7 @@ public class PublishActivity extends BaseActivity{
     private Post currentPost = null;
     private CheckBox checkBox = null;
     private EventView eventView;
-    private LinearLayout confirmButton;
+    private Button confirmButton;
     private TextView textButton1;
     private TextView textButton2;
 
@@ -74,9 +75,9 @@ public class PublishActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         eventView = (EventView) findViewById(R.id.event_view);
         progressView = findViewById(R.id.progress_view);
-        confirmButton = (LinearLayout) findViewById(R.id.confirm_button);
-        textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
-        textButton2 = (TextView) findViewById(R.id.text_confirm_button2);
+        confirmButton = (Button) findViewById(R.id.confirm_button);
+        //textButton1 = (TextView) findViewById(R.id.text_confirm_button1);
+        //textButton2 = (TextView) findViewById(R.id.text_confirm_button2);
 
         initButtonAnimation();
         initPlaceView();
@@ -147,8 +148,8 @@ public class PublishActivity extends BaseActivity{
 
     public void setListeners() {
 
-        confirmButton.setOnTouchListener(
-                new ColorPublishButtonRadiusOnTouchListener(this, textButton1, textButton2));
+        /*confirmButton.setOnTouchListener(
+                new ColorPublishButtonRadiusOnTouchListener(this, textButton1, textButton2));*/
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +173,7 @@ public class PublishActivity extends BaseActivity{
         if(bool) {
             progressView.setVisibility(View.VISIBLE);
             confirmButton.setVisibility(View.GONE);
+            confirmButton.clearAnimation();
             selectedTagsRV.setVisibility(View.GONE);
         }
         else {

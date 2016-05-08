@@ -121,6 +121,8 @@ public class UserQuota extends SyncBaseModel {
 
     public void setMinDelayReason(){
         int mustWaitSeconds = (int)this.min_delay - Util.delayFromNow((int)this.last_activity);
+        //TODO : get string instead of writing text here
+        // A solution to this : http://stackoverflow.com/questions/4391720/how-can-i-get-a-resource-content-from-a-static-context/4391811#4391811
         this._quota_error_reason = "You must wait " + Util.secondsDurationToPrettyTime(mustWaitSeconds) + " before posting again";
     }
 

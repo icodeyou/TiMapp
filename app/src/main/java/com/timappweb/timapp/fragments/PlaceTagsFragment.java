@@ -49,7 +49,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         eventActivity = (EventActivity) getActivity();
-        View root = inflater.inflate(R.layout.fragment_place_tags, container, false);
+        View root = inflater.inflate(R.layout.fragment_event_tags, container, false);
 
         //Find views
         mainButton = root.findViewById(R.id.main_button);
@@ -63,10 +63,13 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
 
         //Create Event View
         if(eventActivity.getEventToolbar().getVisibility()==View.VISIBLE) {
-            eventView = new EventView(eventActivity, false);
+            eventView = new EventView(eventActivity, true);
         } else {
             eventView = new EventView(eventActivity);
         }
+
+        eventView.setBottomShadow(true);
+        eventView.setTagsVisible(false);
         eventView.setEvent(eventActivity.getEvent());
         FrameLayout eventFrameLayout = (FrameLayout) root.findViewById(R.id.event_frame_layout);
         eventFrameLayout.addView(eventView);

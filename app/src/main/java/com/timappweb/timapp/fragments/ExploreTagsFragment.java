@@ -33,7 +33,7 @@ public class ExploreTagsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context= getActivity().getApplicationContext();
 
-        View root = inflater.inflate(R.layout.fragment_explore_places, container, false);
+        View root = inflater.inflate(R.layout.fragment_explore_events, container, false);
 
         //Initialize variables
         ListView lvTags = (ListView) root.findViewById(R.id.list_tags);

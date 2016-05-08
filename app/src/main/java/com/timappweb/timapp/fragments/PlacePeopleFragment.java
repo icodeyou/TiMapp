@@ -56,7 +56,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_place_people, container, false);
+        View root = inflater.inflate(R.layout.fragment_event_people, container, false);
 
         initVariables(root);
         initAdapter();
@@ -145,7 +145,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         RestCallback callback = new RestCallback<List<Post>>(getContext()) {
             @Override
             public void onResponse200(Response<List<Post>> response) {
-                placeUsersAdapter.addData(response.body());
+                List<Post> list = response.body();
+                placeUsersAdapter.addData(list);
             }
 
             @Override

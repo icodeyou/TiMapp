@@ -2,12 +2,12 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -66,11 +65,17 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
         etCustomPlace = (EditText) findViewById(R.id.edittext);
 
+        initEt();
         initAdapters();
         setListeners();
 
         loadData();
 
+    }
+
+    private void initEt() {
+        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT |
+                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 
     private void initAdapters() {

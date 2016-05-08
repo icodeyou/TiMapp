@@ -42,6 +42,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         //EventsViewHolder holder = (EventsViewHolder) baseHolder;
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
         final Place place = data.get(position);
+        place.setDistancePlace();
 
         //viewHolder.eventView.setEvent(place);
         viewHolder.eventView.setEvent(place);

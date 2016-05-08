@@ -39,6 +39,11 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose
     public String           name;
 
+    @Column(name = "Distance")
+    @Expose
+    public double           distance = -1;
+
+
     @Column(name = "Description")
     @Expose
     public String           description;
@@ -77,6 +82,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public Place(){
         this.loaded_time = Util.getCurrentTimeSec();
+        setDistancePlace();
     }
 
     public Place(int id, double lat, double lng, String name) {
@@ -88,7 +94,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.count_posts = 0;
         this.posts = new ArrayList<>();
         this.tags = new ArrayList<>();
-
+        setDistancePlace();
     }
 
     /*public Place(double lat, double lng, String name, EventCategory eventCategory) {
@@ -107,6 +113,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.name = name;
         this.category_id = eventCategory.remote_id;
         this.description = description;
+        setDistancePlace();
         if (spot != null){
             this.spot = spot;
             this.spot_id = spot.id;
@@ -288,6 +295,15 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         int result = super.hashCode();
         result = 31 * result + remote_id;
         return result;
+    }
+
+    public void setDistancePlace() {
+        Location location = MyApplication.getLastLocation();
+        double userLongitude = location.getLongitude();
+        double userLatitude = location.getLatitude();
+        double distance =  DistanceHelper.distFrom(userLatitude, userLongitude,
+                this.latitude, this.longitude);
+        this.distance = Math.round(distance);
     }
 
 }

@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class LocateActivity extends BaseActivity{
     private Menu mainMenu;
 
     private LocationListener mLocationListener;
+    private boolean eventsLoaded;
 
     // ----------------------------------------------------------------------------------------------
     //OVERRIDE METHODS
@@ -70,19 +72,21 @@ public class LocateActivity extends BaseActivity{
 
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
-        noPlaceView = findViewById(R.id.layout_if_no_place);
+        //noPlaceView = findViewById(R.id.layout_if_no_place);
         rvPlaces = (RecyclerView) findViewById(R.id.list_places);
-        buttonAddPlace = findViewById(R.id.button_add_spot);
+        buttonAddPlace = findViewById(R.id.button_add_event);
         noConnectionView = findViewById(R.id.no_connection_view);
 
         // Init variables
+        eventsLoaded = false;
         mResultReceiver = new AddressResultReceiver(new Handler());
 
         setListeners();
         initAdapterPlaces();
         initLocationListener();
 
-        this.initToolbar(false);
+        int colorRes = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+        initToolbar(false, colorRes);
 
     }
 
@@ -163,6 +167,7 @@ public class LocateActivity extends BaseActivity{
                 MyApplication.setLastLocation(location);
                 if (MyApplication.hasFineLocation()){
                     loadPlaces(location);
+
                 }
                 //startIntentServiceReverseGeocoding(location);
             }
@@ -187,13 +192,14 @@ public class LocateActivity extends BaseActivity{
 
                 if (response.isSuccess()){
                     List<Place> places = response.body();
+                    eventsLoaded = true;
                     Log.d(TAG, "Loading " + places.size() + " viewPlaceFromPublish(s)");
                     EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);
                     if (places.size() != 0) {
                         placeAdapter.setData(places);
-                        noPlaceView.setVisibility(View.GONE);
+                        //noPlaceView.setVisibility(View.GONE);
                         rvPlaces.setVisibility(View.VISIBLE);
                         buttonAddPlace.setVisibility(View.VISIBLE);
                         placeAdapter.notifyDataSetChanged();
@@ -207,8 +213,10 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onFailure(Throwable t) {
                 super.onFailure(t);
-                progressView.setVisibility(View.GONE);
-                noConnectionView.setVisibility(View.VISIBLE);
+                if(!eventsLoaded) {
+                    progressView.setVisibility(View.GONE);
+                    noConnectionView.setVisibility(View.VISIBLE);
+                };
             }
         });
     }

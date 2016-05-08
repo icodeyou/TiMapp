@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +17,7 @@ public class DescriptionActivity extends BaseActivity {
     private InputMethodManager imm;
     private DescriptionActivity context;
     private EditText commentEt;
+    private View saveButton;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -27,10 +29,15 @@ public class DescriptionActivity extends BaseActivity {
 
         //this.initToolbar(true);
 
-        final Activity activity = this;
-
         commentEt = (EditText) findViewById(R.id.comment_edit_text);
-        View saveButton = findViewById(R.id.save_button);
+        saveButton = findViewById(R.id.save_button);
+
+        initEt();
+        setListeners();
+    }
+
+    private void setListeners() {
+        final Activity activity = this;
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,5 +51,10 @@ public class DescriptionActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    private void initEt() {
+        commentEt.setInputType(InputType.TYPE_CLASS_TEXT |
+                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 }

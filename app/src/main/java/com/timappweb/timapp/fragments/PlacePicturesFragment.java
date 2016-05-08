@@ -66,7 +66,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_place_pictures, container, false);
+        View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
         context = eventActivity;
 
         initVariables(root);

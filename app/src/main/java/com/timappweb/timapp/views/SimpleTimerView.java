@@ -19,10 +19,10 @@ public class SimpleTimerView extends TextView{
         super(context, attrs);
     }
 
-    public void initTimer(int initialTime) {
+    public void initTimer(int initialms) {
         final TextView currentTextView = this;
         if(countDownTimer==null) {
-            countDownTimer = new CountDownTimer(initialTime, COUNTDOWNINTERVAL) {
+            countDownTimer = new CountDownTimer(initialms, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
                     currentTextView.setText(String.valueOf(millisUntilFinished / 1000));
@@ -34,5 +34,22 @@ public class SimpleTimerView extends TextView{
             };
             countDownTimer.start();
         }
+    }
+
+    public void cancelTimer() {
+        if(countDownTimer!=null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
+    }
+
+    public int getPoints() {
+        int points;
+        if(this.getText() == getResources().getString(R.string.counter_over)) {
+            points = 0;
+        } else {
+            points = Integer.parseInt(this.getText().toString());
+        }
+        return points;
     }
 }

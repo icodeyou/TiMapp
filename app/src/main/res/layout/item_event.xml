@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="15dp"
     android:orientation="vertical">
 
     <com.timappweb.timapp.views.EventView
@@ -10,7 +10,7 @@
         xmlns:myattrs="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        myattrs:is_padding="false"
+        myattrs:is_match_button="true"
         myattrs:bottom_shadow="true"
         myattrs:top_shadow="false"
         myattrs:tags_visible="true"/>

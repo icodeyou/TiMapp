@@ -31,15 +31,19 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
 
     @Column(name = "CountPosts")
     @Expose(serialize = false, deserialize = true)
-    public int count_posts = 0;
+    public int count_posts;
 
     @Column(name = "CountPlaces")
     @Expose(serialize = false, deserialize = true)
-    public int count_places = 0;
+    public int count_places;
 
     @Column(name = "ProviderUID")
     @Expose
     public String provider_uid;
+
+    @Column(name = "Provider")
+    @Expose
+    public SocialProvider provider;
 
     @Column(name = "Status")
     @Expose(serialize = false, deserialize = true)
@@ -58,11 +62,8 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     @Expose(serialize = true, deserialize = false)
     public String password;
 
-    @Expose
-    public SocialProvider provider;
-
     /**
-     * Cached value. Set getTags
+     * Cached value. See @getTags
      */
     @Expose(serialize = false, deserialize = true)
     protected List<Tag> tags;
