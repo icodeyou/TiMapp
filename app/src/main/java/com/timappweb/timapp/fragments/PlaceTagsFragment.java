@@ -162,9 +162,9 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
         boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND);
         boolean showMainButton = isUserAround && isAllowedToAddPost;
-        mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        smallPeopleButton.setVisibility(!showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);
-        smallPicButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPic ? View.VISIBLE : View.GONE);
+        //mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
+        //smallPeopleButton.setVisibility(!showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);
+        //smallPicButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPic ? View.VISIBLE : View.GONE);
     }
 
 }

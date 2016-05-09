@@ -49,7 +49,7 @@
                         android:layout_height="@dimen/height_name_card"
                         android:layout_marginRight="10dp"
                         android:maxLines="1"
-                        android:text="Jean Philippe"
+                        android:text="Mr Anonymous #Hacker"
                         android:textColor="@color/colorAccent"
                         android:textSize="@dimen/text_normal"
                         android:textStyle="bold"

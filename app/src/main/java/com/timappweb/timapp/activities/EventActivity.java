@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -28,7 +27,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.desmond.squarecamera.CameraActivity;
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -37,10 +35,10 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
-import com.timappweb.timapp.data.models.PlaceStatus;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.PlaceBaseFragment;
@@ -82,7 +80,6 @@ public class EventActivity extends BaseActivity {
 
     //Camera
     private static final int REQUEST_CAMERA = 0;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     private PlacePicturesFragment fragmentPictures;
     private PlaceTagsFragment fragmentTags;
@@ -147,9 +144,30 @@ public class EventActivity extends BaseActivity {
 
         initLocationListener();
         setClickListeners();
+        initFragments();
+        setActions();
 
         EventLoader mLoader = new EventLoader();
         getSupportLoaderManager().initLoader(0, null, mLoader);
+    }
+
+    public void setActions() {
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null) {
+            switch (extras.getInt(IntentsUtils.KEY_ACTION, -1)) {
+                case IntentsUtils.ACTION_CAMERA:
+                    pager.setCurrentItem(0);
+                    break;
+                case IntentsUtils.ACTION_TAGS:
+                    pager.setCurrentItem(1);
+                    addTags();
+                    break;
+                case IntentsUtils.ACTION_PEOPLE:
+                    pager.setCurrentItem(2);
+                    IntentsUtils.addPeople(this, event);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -201,17 +219,23 @@ public class EventActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case REQUEST_CAMERA:
-                Log.d(TAG, "Result request camera");
+            case IntentsUtils.REQUEST_CAMERA:
+                /*Log.d(TAG, "Result request camera");
                 if (resultCode != RESULT_OK){
                     return; // TODO
                 }
                 Uri photoUri = data.getData();
                 fragmentPictures.uploadPicture(photoUri);
+                break;*/
+            case IntentsUtils.REQUEST_INVITE_FRIENDS:
+                if(resultCode==RESULT_OK) {
+                    Log.d(TAG, "Result OK from InviteFriendsActivity");
+                }
                 break;
-            case IntentsUtils.ACTIVITY_RESULT_INVITE_FRIENDS:
-                //
-                Log.d(TAG, "Result invite friend");
+            case IntentsUtils.REQUEST_TAGS:
+                if(resultCode==RESULT_OK) {
+                    Log.d(TAG, "Result OK from TagActivity");
+                }
                 break;
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
@@ -268,45 +292,20 @@ public class EventActivity extends BaseActivity {
                         progressBottom.setVisibility(View.GONE);
                     }
                 });
-
             }
         });
 
         tagListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO fine location
-                if (!MyApplication.hasLastLocation()) {
-                    Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                QueryCondition conditions = new QueryCondition();
-                conditions.setPlaceId(eventId);
-                conditions.setAnonymous(false);
-                conditions.setUserLocation(MyApplication.getLastLocation());
-                Call<RestFeedback> call = RestClient.service().notifyPlaceHere(conditions.toMap());
-                call.enqueue(new RestFeedbackCallback(currentActivity) {
-                    @Override
-                    public void onActionSuccess(RestFeedback feedback) {
-                        Log.d(TAG, "Success register here for user");
-                    }
-
-                    @Override
-                    public void onActionFail(RestFeedback feedback) {
-                        Log.d(TAG, "Fail register here for user");
-                    }
-                });
-
-                IntentsUtils.addPostStepTags(currentActivity, event);
+                addTags();
             }
         };
 
         pictureListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //placeActivity.requestForCameraPermission();
-                takePicture();
+                IntentsUtils.addPicture(currentActivity);
             }
         };
 
@@ -318,6 +317,32 @@ public class EventActivity extends BaseActivity {
         };
     }
 
+    private void addTags() {
+        // TODO fine location
+        if (!MyApplication.hasLastLocation()) {
+            Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        QueryCondition conditions = new QueryCondition();
+        conditions.setPlaceId(event.remote_id);
+        conditions.setAnonymous(false);
+        conditions.setUserLocation(MyApplication.getLastLocation());
+        Call<RestFeedback> call = RestClient.service().notifyPlaceHere(conditions.toMap());
+        call.enqueue(new RestFeedbackCallback(currentActivity) {
+            @Override
+            public void onActionSuccess(RestFeedback feedback) {
+                Log.d(TAG, "Success register here for user");
+            }
+
+            @Override
+            public void onActionFail(RestFeedback feedback) {
+                Log.d(TAG, "Fail register here for user");
+            }
+        });
+
+        IntentsUtils.addTags(currentActivity, event);
+    }
 
     private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
@@ -359,6 +384,7 @@ public class EventActivity extends BaseActivity {
     }
 
 
+
     private void initLocationListener() {
         mLocationListener = new LocationListener() {
             @Override
@@ -392,7 +418,6 @@ public class EventActivity extends BaseActivity {
             spotToolbar.setSpot(event.spot);
         }
         updateBtnVisibility();
-        initFragments();
     }
 
     /**
@@ -411,9 +436,9 @@ public class EventActivity extends BaseActivity {
             boolean isUserComing = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.COMING);
             boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
             Boolean isAllowedToCome = !event.isAround() && isAllowedToAddComing;
-            iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
-            onMyWayButton.setVisibility(event != null && !event.isAround() && progressView.getVisibility() != View.VISIBLE
-                    && isUserComing ? View.VISIBLE : View.GONE);
+            //iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
+            //onMyWayButton.setVisibility(event != null && !event.isAround() && progressView.getVisibility() != View.VISIBLE
+            //        && isUserComing ? View.VISIBLE : View.GONE);
             pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
         }
     }
@@ -442,15 +467,8 @@ public class EventActivity extends BaseActivity {
             }
         } else {
             // Start CameraActivity
-            Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
-            startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+            IntentsUtils.addPicture(this);
         }
-    }
-
-    public void takePicture() {
-        // Start CameraActivity
-        Intent startCustomCameraIntent = new Intent(this, CameraActivity.class);
-        startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
     public Place getEvent() {

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".PlaceActivity"
     android:background="@color/background_event">
 
@@ -154,5 +155,56 @@
         <include android:id="@+id/toolbar_transparent"
             layout="@layout/toolbar_transparent" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/post_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_toLeftOf="@+id/fab"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+        <ImageView
+            android:id="@+id/post_pic"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/post_pic_white"
+            android:background="@drawable/background_button_littlesquare"/>
+        <ImageView
+            android:id="@+id/post_tags"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/post_tags_white"
+            android:background="@drawable/background_button_littlesquare"/>
+        <ImageView
+            android:id="@+id/post_people"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/post_people_white"
+            android:background="@drawable/background_button_littlesquare"/>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorPrimaryDark"
+        android:src="@drawable/match_white" />
 
 </RelativeLayout>

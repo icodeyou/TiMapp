@@ -2,6 +2,7 @@ package com.timappweb.timapp.views;
 
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.content.ContextCompat;
@@ -9,13 +10,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -37,7 +36,7 @@ public class EventView extends RelativeLayout{
     private final static String TAG = "EventView";
     private static final int TIMELAPSE_HOT_ANIM = 2000;
     private static final int TIMELAPSE_BUTTONS_APPEAR_ANIM = 800;
-    private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM = 2000;
+    private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM = 300;
     private Context context;
 
     private Place event;
@@ -81,17 +80,23 @@ public class EventView extends RelativeLayout{
     private boolean                     isDescription;
     private boolean                     toolbarMode;
     private boolean                     isBelowToolbarView;
+    private boolean                     isPointsVisible;
     private View distanceLayout;
     private TextView distanceText;
     private View matchBackground;
     private boolean isMatchButtonSelected;
     private ImageView icPoints;
+    private View picButton;
+    private View tagButton;
+    private View peopleButton;
 
 
     public EventView(Context context) {
         super(context);
         this.context = context;
         this.isSpot = false;
+        this.isTagsVisible = false;
+        this.isPointsVisible = true;
         this.isDescription = true;
         this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
         this.isBelowToolbarView = false;
@@ -102,6 +107,8 @@ public class EventView extends RelativeLayout{
         super(context);
         this.context = context;
         this.isSpot = false;
+        this.isTagsVisible = false;
+        this.isPointsVisible = true;
         this.isDescription = true;
         this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
         this.isBelowToolbarView = isBelowToolbarView;
@@ -114,6 +121,7 @@ public class EventView extends RelativeLayout{
 
         //Get attributes in XML
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EventView, 0, 0);
+        isPointsVisible = ta.getBoolean(R.styleable.EventView_points_visible, true);
         isTagsVisible = ta.getBoolean(R.styleable.EventView_tags_visible, false);
         isBottomShadow = ta.getBoolean(R.styleable.EventView_bottom_shadow, false);
         isTopShadow = ta.getBoolean(R.styleable.EventView_top_shadow, false);
@@ -156,6 +164,9 @@ public class EventView extends RelativeLayout{
         matchIcon = (ImageView) findViewById(R.id.match_icon);
         matchBackground = findViewById(R.id.match_button_background);
         postButtons = findViewById(R.id.post_buttons);
+        picButton = findViewById(R.id.post_pic);
+        tagButton = findViewById(R.id.post_tags);
+        peopleButton = findViewById(R.id.post_people);
         distanceLayout = findViewById(R.id.distance_layout);
         distanceText = (TextView) findViewById(R.id.distance_text);
 
@@ -174,6 +185,8 @@ public class EventView extends RelativeLayout{
         //initPadding();
         setAnimations();
         setMatchView(false);
+        setTagsVisibility();
+        setPointsVisibility();
         setBottomShadow(isBottomShadow);
         setTopShadow();
         setSpotVisible(isSpot);
@@ -435,12 +448,28 @@ public class EventView extends RelativeLayout{
         this.descriptionView = descriptionTv;
     }
 
-    public HorizontalTagsRecyclerView setEvent(Place event) {
+    public void setTagsVisibility() {
+        if(isTagsVisible) {
+            tagsFrameLayout.setVisibility(VISIBLE);
+        } else {
+            tagsFrameLayout.setVisibility(GONE);
+        }
+    }
+
+    public void setPointsVisibility() {
+        if(isPointsVisible) {
+            whitePointsLayout.setVisibility(VISIBLE);
+        } else {
+            whitePointsLayout.setVisibility(GONE);
+        }
+    }
+
+    public void setEvent(final Place event) {
         this.event = event;
 
         if (event == null){
             Log.e(TAG, "Trying to display a null event");
-            return htrv;
+            return;
         }
 
         //Date
@@ -457,25 +486,21 @@ public class EventView extends RelativeLayout{
 
         //EventCategory
         EventCategory eventCategory = null;
+        try {
+            Log.d(TAG, "Setting event Background");
+            eventCategory = MyApplication.getCategoryById(event.category_id);
+            smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
+            backgroundImage.setImageResource(eventCategory.getBigImageResId());
+        } catch (UnknownCategoryException e) {
+            Log.e(TAG, "no eventCategory found for id : " + event.category_id);
+        }
+
         if(colorEvent != -1) {
             Log.d(TAG,"Setting custom color");
             backgroundImage.setImageResource(0);
             mainLayoutEvent.setBackgroundColor(colorEvent);
             if (colorSpot != -1) {
                 spotView.setColor(colorSpot);
-            }
-        } else {
-            try {
-                Log.d(TAG,"Setting event Background");
-                //EventCategory Icon
-                eventCategory = MyApplication.getCategoryById(event.category_id);
-                categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
-                //MyApplication.setCategoryBackground(categoryIcon, event.getLevel());
-
-                //Place background
-                backgroundImage.setImageResource(eventCategory.getBigImageResId());
-            } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no eventCategory found for id : " + event.category_id);
             }
         }
 
@@ -485,8 +510,8 @@ public class EventView extends RelativeLayout{
             htrv = new HorizontalTagsRecyclerView(context,tags);
             tagsFrameLayout.removeAllViews();
             tagsFrameLayout.addView(htrv);
-            if(isTagsVisible && tags.size()!=0) {
-                tagsFrameLayout.setVisibility(VISIBLE);
+            if(tags.size()!=0) {
+                setTagsVisibility();
             } else {
                 tagsFrameLayout.setVisibility(GONE);
             }
@@ -512,6 +537,27 @@ public class EventView extends RelativeLayout{
             matchButtonStateHere(isAround);
         }
 
-        return htrv;
+        //Click listeners
+        final Activity activity = (Activity) context;
+        picButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.viewEventThenPost(activity, event, IntentsUtils.ACTION_CAMERA);
+            }
+        });
+
+        tagButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.viewEventThenPost(activity, event, IntentsUtils.ACTION_TAGS);
+            }
+        });
+
+        peopleButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.viewEventThenPost(activity, event, IntentsUtils.ACTION_PEOPLE);
+            }
+        });
     }
 }

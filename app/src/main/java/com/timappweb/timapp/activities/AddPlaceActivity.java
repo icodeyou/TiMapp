@@ -117,13 +117,13 @@ public class AddPlaceActivity extends BaseActivity {
         eventNameET.clearFocus();
         commentView.setVisibility(View.VISIBLE);
         switch (requestCode) {
-            case IntentsUtils.ACTIVITY_RESULT_PICK_SPOT:
+            case IntentsUtils.REQUEST_PICK_SPOT:
                 if(resultCode == RESULT_OK){
                     Log.d(TAG, "extracting bundle Spot");
                     extractSpot(data.getExtras());
                 }
                 break;
-            case IntentsUtils.ACTIVITY_RESULT_COMMENT:
+            case IntentsUtils.REQUEST_COMMENT:
                 if(resultCode == RESULT_OK){
                     Log.d(TAG, "extracting bundle Comment");
                     extractComment(data.getExtras());
@@ -202,7 +202,7 @@ public class AddPlaceActivity extends BaseActivity {
             public void onActionSuccess(RestFeedback feedback) {
                 place.remote_id = Integer.parseInt(feedback.data.get("place_id")); // TODO handle exception if invalid int
                 Log.i(TAG, "User created the event with id: " + place.remote_id);
-                IntentsUtils.viewPlaceFromPublish(context, place.remote_id);
+                IntentsUtils.viewEventFromId(context, place.remote_id);
                 setProgressView(false);
             }
 

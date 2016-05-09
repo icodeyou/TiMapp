@@ -59,7 +59,7 @@ public class TagActivity extends BaseActivity{
         this.currentPost = IntentsUtils.extractPost(getIntent());
         if (this.currentPlace == null || this.currentPost == null){
             Log.d(TAG, "Place is null");
-            IntentsUtils.addPostStepLocate(this);
+            IntentsUtils.locate(this);
             return;
         }
 
@@ -140,7 +140,14 @@ public class TagActivity extends BaseActivity{
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IntentsUtils.REQUEST_PUBLISH && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
+        }
+    }
 
 
     //----------------------------------------------------------------------------------------------
@@ -200,7 +207,7 @@ public class TagActivity extends BaseActivity{
                 suggestedTagsView.setVisibility(View.GONE);
                 progressEndView.setVisibility(View.VISIBLE);
                 currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
-                IntentsUtils.addPostStepPublish(this, currentPlace, currentPost);
+                IntentsUtils.publishPage(this, currentPlace, currentPost);
                 break;
 
             default:

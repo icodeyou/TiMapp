@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.listeners.ColorPublishButtonRadiusOnTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
@@ -63,7 +61,7 @@ public class PublishActivity extends BaseActivity{
         this.currentPost = IntentsUtils.extractPost(getIntent());
         if (this.currentPlace == null || this.currentPost == null){
             Log.d(TAG, "Place is null");
-            IntentsUtils.addPostStepLocate(this);
+            IntentsUtils.locate(this);
             return;
         }
 
@@ -92,7 +90,7 @@ public class PublishActivity extends BaseActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                IntentsUtils.addPostStepTags(this, currentPlace, currentPost);
+                IntentsUtils.addTags(this, currentPlace, currentPost);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -101,7 +99,7 @@ public class PublishActivity extends BaseActivity{
 
     @Override
     public void onBackPressed() {
-        IntentsUtils.addPostStepTags(this, currentPlace, currentPost);
+        IntentsUtils.addTags(this, currentPlace, currentPost);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -130,7 +128,7 @@ public class PublishActivity extends BaseActivity{
                 List<Tag> tagList = currentPost.getTags();
                 tagList.remove(position);
                 currentPost.setTags(tagList);
-                IntentsUtils.addPostStepTags(activity, currentPlace, currentPost);
+                IntentsUtils.addTags(activity, currentPlace, currentPost);
             }
         });
     }
@@ -215,7 +213,8 @@ public class PublishActivity extends BaseActivity{
             //CacheData.setLastPost(post);
             QuotaManager.instance().add(QuotaType.ADD_POST);
 
-            IntentsUtils.viewPlaceFromPublish(activity, placeId);
+            setResult(RESULT_OK);
+            finish();
         }
 
         @Override
