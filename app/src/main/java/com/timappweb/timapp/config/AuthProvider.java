@@ -23,13 +23,11 @@ public class AuthProvider {
     public static final String  SOCIAL_PROVIDER_TOKEN   = "social_provider_token";
     public static final String  SOCIAL_PROVIDER_TYPE    = "social_provider_type";
     public static final String  KEY_IS_LOGIN            = "IsLoggedIn";
-    private static final String KEY_CURRENT_USER        = "current_user";
     private static final String KEY_LOGIN_TIME          = "LoginTime";
-    public static final String  KEY_NAME                = "user.name";
     public static final String  KEY_ID                  = "user.id";
-    public static final String  KEY_EMAIL               = "user.email";
-    
-    private User                currentUser;
+
+    private boolean             _isUserLoaded           = false;
+    private User                currentUser             = null;
     private SocialProvider      _socialProviderType;
     private String              _socialProviderToken;
 
@@ -82,26 +80,17 @@ public class AuthProvider {
     }
 
     public User getCurrentUser() {
-        if (currentUser != null){
-            return currentUser;
-        }
-        else {
+        if (!_isUserLoaded){
+            _isUserLoaded = true;
             int userId = KeyValueStorage.out().getInt(KEY_ID, -1);
             if (userId == -1){
                 return null;
             }
             currentUser = User.loadByRemoteId(User.class, userId);
-            if (currentUser != null)
-                return currentUser;
-
-            currentUser = new User();
-            currentUser.remote_id = userId;
-            currentUser.email = KeyValueStorage.out().getString(KEY_EMAIL, null);
-            currentUser.username = KeyValueStorage.out().getString(KEY_NAME, null);
-            currentUser.save();
             Log.d(TAG, "Loading user form pref: " + currentUser);
-            return currentUser;
         }
+
+        return currentUser;
     }
 
     public interface OnTokenListener{
@@ -114,12 +103,12 @@ public class AuthProvider {
         Log.i(TAG, "Writing user information: " + user);
         KeyValueStorage.in()
             .putInt(KEY_ID, user.remote_id)
-            .putString(KEY_NAME, user.username)
-            .putString(KEY_EMAIL, user.email)
             .putBoolean(KEY_IS_LOGIN, true)
             .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
             .commit();
         currentUser = user;
+        currentUser.saveWithRemoteKey();
+        _isUserLoaded = true;
     }
 
 

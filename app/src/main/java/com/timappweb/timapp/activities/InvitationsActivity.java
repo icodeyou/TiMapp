@@ -98,11 +98,10 @@ public class InvitationsActivity extends BaseActivity{
         @Override
         public Loader<List<PlacesInvitation>> onCreateLoader(int id, Bundle args) {
             From query = MyApplication.getCurrentUser().getInviteReceivedQuery();
-            List<PlacesInvitation> invites =
-                    SyncBaseModel.getRemoteEntries(InvitationsActivity.this, query, DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED, 300 * 1000);
-            if (invites != null){
-                updateView(invites);
-            }
+            SyncBaseModel.getRemoteEntries(InvitationsActivity.this, query, DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED, 300 * 1000);
+            //if (invites != null){
+            //    updateView(invites);
+            //}
             return new ModelLoader<>(InvitationsActivity.this, PlacesInvitation.class, query, false);
         }
 

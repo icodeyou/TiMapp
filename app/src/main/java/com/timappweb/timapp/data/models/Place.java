@@ -29,9 +29,15 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "SpotId")
+    @Column(name = "Spot", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
+    @SerializedName("spot")
     @Expose
-    public int              spot_id;
+    public Spot             spot;
+
+    @Column(name = "User", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
+    @SerializedName("user")
+    @Expose
+    public User             user;
 
     @Column(name = "Name")
     @Expose
@@ -80,9 +86,8 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose(serialize = false, deserialize = true)
     public ArrayList<Post>  posts;
 
-    @SerializedName("spot")
     @Expose
-    public Spot spot;
+    public int              spot_id;
 
     // =============================================================================================
 
