@@ -2,8 +2,10 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
@@ -28,6 +30,7 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +38,9 @@ import retrofit2.Call;
 
 public class EditProfileActivity extends BaseActivity{
 
-    String TAG = "EditProfileActivity";
+    public static final String EXTRA_KEY_TAG_LIST  = "tag_list";
+    private static final String TAG                 = "EditProfileActivity";
+
     private Activity context = this;
     private InputMethodManager imm;
 
@@ -47,8 +52,6 @@ public class EditProfileActivity extends BaseActivity{
     private Button buttonSubmit;
 
     private int counterTags;
-
-    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,6 @@ public class EditProfileActivity extends BaseActivity{
         counterView = (TextView) findViewById(R.id.counter_view);
         buttonSubmit = (Button) findViewById(R.id.button_submit);
         submitView = findViewById(R.id.submit_view);
-        currentUser = IntentsUtils.extractUser(getIntent());
 
         init();
 
@@ -135,21 +137,16 @@ public class EditProfileActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 Map<String, String> data = new HashMap<>();
-                currentUser.setTags(horizontalTagsAdapter.getData());
-                data.put("tag_string", currentUser.getTagsToString());
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
                 call.enqueue(new RestFeedbackCallback(context) {
                     @Override
                     public void onActionSuccess(RestFeedback feedback) {
-                        // Saving tags locally
-                        currentUser.saveAssociation(currentUser.getTags(), UserTag.class);
                         Toast.makeText(getApplicationContext(), "Your profile has been saved", Toast.LENGTH_LONG).show();
-                        IntentsUtils.profile(context);
+                        finishActivityResult();
                     }
 
                     @Override
                     public void onActionFail(RestFeedback feedback) {
-                        currentUser.setTags(null);
                         Toast.makeText(getApplicationContext(), feedback.message, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -169,6 +166,16 @@ public class EditProfileActivity extends BaseActivity{
                 imm.showSoftInput(editText, 0);
             }
         });
+    }
+
+
+    private void finishActivityResult(){
+        Intent intent = NavUtils.getParentActivityIntent(this);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(EXTRA_KEY_TAG_LIST, (Serializable) horizontalTagsAdapter.getData());
+        intent.putExtras(bundle);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     private void setViewsAndCounter() {

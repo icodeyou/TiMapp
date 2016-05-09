@@ -110,14 +110,13 @@ public abstract class SyncBaseModel extends Model implements Serializable {
     }
 
     /**
-     * TODO Get remote entries for a specified model.
+     * Get remote entries for a specified model.
      * @param context
      * @param query
      * @param syncType
      * @return
      */
     public static <DataType extends SyncBaseModel> List<DataType> getRemoteEntries(Context context, From query, int syncType, long syncDelay){
-        // TODO check last sync
         // If need sync
         if (SyncHistory.requireUpdate(syncType, syncDelay)){
             Bundle bundle = new Bundle();
@@ -147,10 +146,10 @@ public abstract class SyncBaseModel extends Model implements Serializable {
         }
     }
 
-    private From queryByRemoteId() {
-        return queryByRemoteId(this.getClass(), (int) this.getRemoteId());
-    }
-
+    /**
+     * Sync and persist modification to database
+     * @param model
+     */
     public void sync(SyncBaseModel model){
         this.sync(model, true);
     }
@@ -195,15 +194,40 @@ public abstract class SyncBaseModel extends Model implements Serializable {
         }
     }
 
+    /**
+     * Update the last sync time
+     */
     public final void updateLastSyncTime(){
         this._last_sync = System.currentTimeMillis();
     }
 
-    public static User loadByRemoteId(Class<User> clazz, int id) {
+    /**
+     * Create a query for an entry thanks to the remote id
+     *
+     * @return
+     */
+    private From queryByRemoteId() {
+        return queryByRemoteId(this.getClass(), (int) this.getRemoteId());
+    }
+
+    /**
+     * Load an entry thanks to the remote id
+     *
+     * @param clazz
+     * @param id
+     * @return
+     */
+    public static <T extends SyncBaseModel> T loadByRemoteId(Class<T> clazz, int id) {
         return queryByRemoteId(clazz, id).executeSingle();
     }
 
-    public void saveAssociation(List<? extends Model> data, Class<? extends Model> associationModel){
+    /**
+     * Save belongs to many association.
+     * @param data association to save
+     * @param associationModel association model
+     */
+    public void saveAssociation(List<? extends Model> data,
+                                Class<? extends Model> associationModel){
         try {
             for (Model model: data){
                 Constructor<? extends Model> constructor = associationModel.getConstructor(this.getClass(), model.getClass());
@@ -221,10 +245,14 @@ public abstract class SyncBaseModel extends Model implements Serializable {
         }
     }
 
+    /**
+     * Delete association data
+     * @param associationModel
+     */
     public void deleteAssociation(Class<? extends Model> associationModel){
         new Delete()
                 .from(associationModel)
-                .where(associationModel.getSimpleName() + " = " + this.getId())
+                .where(this.getClass().getSimpleName() + " = " + this.getId())
                 .execute();
     }
 }

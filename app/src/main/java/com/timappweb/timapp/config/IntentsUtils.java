@@ -80,13 +80,13 @@ public class IntentsUtils {
     }
 
 
-    public static void editProfile(Activity activity, User user) {
+    public static void editProfile(ProfileActivity activity, User user) {
         if (!requireLogin(activity))
             return;
 
         Intent intent = new Intent(activity, EditProfileActivity.class);
         intent.putExtra("user", user);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, ProfileActivity.ACTIVITY_RESULT_EDIT_PROFILE);
     }
 
     public static void logout(Activity activity) {

@@ -204,11 +204,11 @@ public class InviteFriendsActivity extends BaseActivity {
         {
             progressView.setVisibility(View.VISIBLE);
             //setProgressBarIndeterminateVisibility(true);
-            From fromFriends = User.getFriendsQuery(MyApplication.getCurrentUser().remote_id);
+            From fromFriends = MyApplication.getCurrentUser().getFriendsQuery();
             SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromFriends, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000);
 
-            From fromInvites = MyApplication.getCurrentUser().getInviteSentQuery(place.getId());
-            SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromInvites, DataSyncAdapter.SYNC_TYPE_INVITE_SENT, 300 * 1000);
+            //From fromInvites = MyApplication.getCurrentUser().getInviteSentQuery(place.getId());
+            //SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromInvites, DataSyncAdapter.SYNC_TYPE_INVITE_SENT, 300 * 1000);
 
             return new ModelLoader<User>(InviteFriendsActivity.this, User.class, true);
         }

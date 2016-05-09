@@ -72,6 +72,9 @@ public class MyApplication extends com.activeandroid.app.Application {
     public static boolean isCurrentUser(int userId){
         return MyApplication.isLoggedIn() && MyApplication.getCurrentUser().remote_id == userId;
     }
+    public static boolean isCurrentUser(User mUser) {
+        return MyApplication.isCurrentUser(mUser.remote_id);
+    }
 
     public void checkToken(){
         auth.checkToken(this, new AuthProvider.OnTokenListener() {

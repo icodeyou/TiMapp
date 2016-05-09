@@ -7,6 +7,9 @@ import com.google.gson.annotations.Expose;
 @Table(name = "Picture")
 public class Picture extends SyncBaseModel {
 
+    // =============================================================================================
+    // DATABASE
+
     @Column(name = "Created")
     @Expose(serialize = false, deserialize = true)
     public int created;
@@ -15,21 +18,17 @@ public class Picture extends SyncBaseModel {
     @Expose(serialize = true, deserialize = true)
     public String photo;
 
-
     @Column(name = "Preview")
     @Expose(serialize = false, deserialize = true)
     public String preview;
-
 
     @Column(name = "Square")
     @Expose(serialize = false, deserialize = true)
     public String square;
 
-
     @Column(name = "PhotoDir")
     @Expose(serialize = false, deserialize = true)
     public String photo_dir;
-
 
     @Column(name = "Place")
     @Expose(serialize = false, deserialize = true)
@@ -39,6 +38,12 @@ public class Picture extends SyncBaseModel {
     @Expose(serialize = false, deserialize = true)
     public User user;
 
+    // =============================================================================================
+
+    public Picture() {
+    }
+
+    // =============================================================================================
 
     public String getUrl(){
         return  this.photo_dir + "/" + this.photo;

@@ -1,5 +1,7 @@
 package com.timappweb.timapp.data.models;
 
+import android.os.Parcelable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
@@ -25,6 +27,9 @@ public class Tag extends SyncBaseModel implements Serializable, SearchHistory.Se
     public int count_ref;
 
     // =============================================================================================
+
+    public Tag() {
+    }
 
     public Tag(String name, int count_ref)  {
         this.name = name;

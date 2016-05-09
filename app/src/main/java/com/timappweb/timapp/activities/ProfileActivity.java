@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -20,6 +21,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.listeners.ColorAllOnTouchListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -28,9 +30,11 @@ import java.util.List;
 
 public class ProfileActivity extends BaseActivity  {
 
-    String TAG = "ProfileActivity";
+    public static final String TAG = "ProfileActivity";
+    public static final int ACTIVITY_RESULT_EDIT_PROFILE = 1;
 
     private User mUser = null;
+
     private int userId;
 
     private TextView tvUsername;
@@ -124,7 +128,7 @@ public class ProfileActivity extends BaseActivity  {
 
         Log.i(TAG, mUser + " loaded");
         tvUsername.setText(mUser.username);
-        tvAge.setText("100 years old");
+        tvAge.setText("");
         progressView1.setVisibility(View.GONE);
         tvCountTags.setText(String.valueOf(mUser.count_posts));
         tvCountTags.setVisibility(View.VISIBLE);
@@ -134,22 +138,21 @@ public class ProfileActivity extends BaseActivity  {
 
         initUserTagsAdapter();
 
-        UserTagsAdapter adapter = (UserTagsAdapter) tagsListView.getAdapter();
+        UserTagsAdapter tagsAdapter = (UserTagsAdapter) tagsListView.getAdapter();
         if(mUser.hasTags()){
             Log.v(TAG, "User has a: " + mUser.getTags().size() + " tag(s)");
-            adapter.clear();
-            adapter.addAll(mUser.getTags());
-            adapter.notifyDataSetChanged();
+            tagsAdapter.clear();
+            tagsAdapter.addAll(mUser.getTags());
         }
         else {
-            Tag defaultTag = new Tag(getString(MyApplication.isCurrentUser(mUser.remote_id)
+            Tag defaultTag = new Tag(getString(MyApplication.isCurrentUser(mUser)
                     ? R.string.define_yourself_tag
                     : R.string.newbie_tag));
-            adapter.add(defaultTag);
-            adapter.notifyDataSetChanged();
+            tagsAdapter.add(defaultTag);
         }
+        tagsAdapter.notifyDataSetChanged();
 
-        if (MyApplication.isCurrentUser(mUser.remote_id)) {
+        if (MyApplication.isCurrentUser(mUser)) {
             invalidateOptionsMenu();
             setTagsListeners();
         }
@@ -160,18 +163,18 @@ public class ProfileActivity extends BaseActivity  {
 
 
     private void setTagsListeners() {
-        final Activity activity = this;
 
-        if(mUser.username.equals(MyApplication.getCurrentUser().username)) {
+        if(MyApplication.isCurrentUser(mUser)) {
             layoutTagsProfile.setOnTouchListener(new ColorAllOnTouchListener());
 
             layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.editProfile(activity, mUser);
+                    IntentsUtils.editProfile(ProfileActivity.this, mUser);
                 }
             });
         }
+
     }
 
 
@@ -179,6 +182,30 @@ public class ProfileActivity extends BaseActivity  {
         UserTagsAdapter userTagsAdapter= new UserTagsAdapter(this);
         tagsListView.setAdapter(userTagsAdapter);
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK){
+            return;
+        }
+        switch (requestCode){
+            case ACTIVITY_RESULT_EDIT_PROFILE:
+                // Get tags
+                List<Tag> tags = (List<Tag>) data.getSerializableExtra(EditProfileActivity.EXTRA_KEY_TAG_LIST);
+                Log.v(TAG, "Editing user tags: " + tags);
+                if (tags != null){
+                    mUser.deleteAssociation(UserTag.class);
+                    mUser.saveAssociation(tags, UserTag.class);
+                    mUser.setTags(tags);
+                    updateView();
+                }
+                break;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
 
     // =============================================================================================
 

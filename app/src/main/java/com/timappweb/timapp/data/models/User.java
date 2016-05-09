@@ -129,7 +129,7 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
         return tags;
     }
     public boolean hasTags() {
-        return tags != null && tags.size() > 0;
+        return getTags().size() > 0;
     }
 
     @Override
