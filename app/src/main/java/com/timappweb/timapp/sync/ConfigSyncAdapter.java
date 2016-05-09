@@ -28,6 +28,8 @@ import android.util.Log;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -98,7 +100,6 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
         Log.i(TAG, "--------------- Beginning network synchronization -----------------------------");
         // TODO paralelize this
         this.syncApplicationRules();
-        this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
         this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
         this.performModelSync(EventCategory.class, RestClient.service().eventCategories(), syncResult);
         Log.i(TAG, "--------------- Network synchronization complete -------------------------------");
@@ -131,4 +132,7 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
         }
     }
 
+    public static void syncImmediately(Context context) {
+        syncImmediately(context, context.getString(R.string.content_authority_config));
+    }
 }

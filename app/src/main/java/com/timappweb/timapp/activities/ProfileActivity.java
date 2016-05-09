@@ -195,8 +195,7 @@ public class ProfileActivity extends BaseActivity  {
                 List<Tag> tags = (List<Tag>) data.getSerializableExtra(EditProfileActivity.EXTRA_KEY_TAG_LIST);
                 Log.v(TAG, "Editing user tags: " + tags);
                 if (tags != null){
-                    mUser.deleteAssociation(UserTag.class);
-                    mUser.saveAssociation(tags, UserTag.class);
+                    mUser.replaceAssociation(tags, UserTag.class);
                     mUser.setTags(tags);
                     updateView();
                 }

@@ -1,7 +1,6 @@
 package com.timappweb.timapp.data.models;
 
 import android.location.Location;
-import android.widget.Toast;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -9,7 +8,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
@@ -38,7 +36,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     @Column(name = "User", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("user")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     public User             user;
 
     @Column(name = "Name")

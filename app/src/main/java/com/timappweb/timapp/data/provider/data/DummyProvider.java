@@ -1,4 +1,4 @@
-package com.timappweb.timapp.data.provider;
+package com.timappweb.timapp.data.provider.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;

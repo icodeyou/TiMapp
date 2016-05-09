@@ -13,6 +13,9 @@ import java.util.List;
 @Table(name = "UserPlace")
 public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
 
+    // =============================================================================================
+    // DATABASE
+
     @Column(name = "PlaceId")
     @Expose
     public int place_id;
@@ -21,17 +24,22 @@ public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
     @Expose
     public UserPlaceStatusEnum status;
 
-    @Column(name = "UserId")
-    @Expose
-    public int user_id;
-
     @Column(name = "Created")
     @Expose
     public int created;
 
+    @Column(name = "User")
     @Expose
     @SerializedName("user")
     public User user;
+
+    // =============================================================================================
+    // Fields
+
+    @Expose(deserialize = false, serialize = true)
+    public int user_id;
+
+    // =============================================================================================
 
     @Override
     public String toString() {

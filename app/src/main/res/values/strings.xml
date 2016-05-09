@@ -201,7 +201,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
 
     <string name="sync_account_type">timapp.timappweb.com</string>
     <string name="content_authority_config">com.timappweb.timapp.config.provider</string>
-    <string name="content_authority_data">com.timappweb.timapp.data.provider</string>
+    <string name="content_authority_data">com.timappweb.timapp.data.provider.data</string>
+    <string name="content_authority_user">com.timappweb.timapp.data.provider.user</string>
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
     <string name="unknown_category">Unknown category</string>

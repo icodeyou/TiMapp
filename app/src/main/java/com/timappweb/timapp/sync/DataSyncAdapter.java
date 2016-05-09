@@ -60,6 +60,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
     public static final String SYNC_TYPE_KEY = "data_sync_type";
     public static final String SYNC_ID_KEY = "data_sync_id";
+    public static final String SYNC_LAST_TIME = "data_sync_time";
 
     public static final int SYNC_TYPE_FRIENDS = 1;
     public static final int SYNC_TYPE_EVENT_AROUD_USER = 2;

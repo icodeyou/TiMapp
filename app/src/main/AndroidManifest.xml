@@ -60,7 +60,7 @@
         <!-- DATABASE CONFIGURATION -->
         <!-- pre populate db -->
         <meta-data android:name="AA_DB_NAME" android:value="@string/db_name" />
-        <meta-data android:name="AA_DB_VERSION" android:value="10" />
+        <meta-data android:name="AA_DB_VERSION" android:value="11" />
         <!--
         // TODO for production set models to speed up launch
         <meta-data  android:name=""AA_MODELS"
@@ -95,25 +95,8 @@
                 android:resource="@xml/syncadapter_config" />
         </service>
 
-        <provider android:name=".config.provider.DummyProvider"
-            android:authorities="@string/content_authority_config"
-            android:syncable="true"
-            android:label="DummyConfigProvider" />
-
-        <provider android:name=".data.provider.DummyProvider"
-            android:authorities="@string/content_authority_data"
-            android:syncable="true"
-            android:label="DummyDataProvider" />
-        <!--
-                <provider
-                    android:authorities="@string/content_authority_config"
-                    android:name=".data.provider.FriendsContentProvider"
-                    android:exported="false"
-                    android:syncable="true" />-->
-        <!-- DATA -->
-
         <service android:name=".sync.DataSyncService"
-            android:exported="true"
+            android:exported="false"
             android:enabled="true" >
             <!-- This intent filter is required. It allows the system to launch our sync service
             as needed. -->
@@ -125,6 +108,36 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter_data" />
         </service>
+
+        <service android:name=".sync.UserSyncService"
+            android:exported="false"
+            android:enabled="true" >
+            <!-- This intent filter is required. It allows the system to launch our sync service
+            as needed. -->
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <!-- This points to a required XML file which describes our ConfigSyncAdapter. -->
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter_user" />
+        </service>
+
+
+        <provider android:name=".config.provider.DummyProvider"
+            android:authorities="@string/content_authority_config"
+            android:syncable="true"
+            android:label="DummyConfigProvider" />
+
+        <provider android:name=".data.provider.data.DummyProvider"
+            android:authorities="@string/content_authority_data"
+            android:syncable="true"
+            android:label="DummyDataProvider" />
+
+        <provider android:name=".data.provider.user.DummyProvider"
+            android:authorities="@string/content_authority_user"
+            android:syncable="true"
+            android:label="DummyUserProvider" />
 
         <!-- END SYNC ADAPTERS ===================================================================== -->
 

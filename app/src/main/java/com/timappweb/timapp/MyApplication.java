@@ -26,6 +26,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
 import com.timappweb.timapp.sync.ConfigSyncAdapter;
+import com.timappweb.timapp.sync.UserSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
@@ -108,8 +109,9 @@ public class MyApplication extends com.activeandroid.app.Application {
         return auth.getCurrentUser();
     }
 
-    public static void login(User user, String token, String accessToken){
+    public static void login(Context context, User user, String token, String accessToken){
         auth.login(user, token, accessToken);
+        UserSyncAdapter.syncImmediately(context);
     }
 
     private static Location lastLocation = null;
@@ -158,7 +160,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         }
         else{
             // If new installed app, this will be triggered two times... Not good
-            ConfigSyncAdapter.syncImmediately(this, this.getString(R.string.content_authority_config));
+            ConfigSyncAdapter.syncImmediately(this);
         }
 
         checkToken();

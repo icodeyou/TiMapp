@@ -24,25 +24,32 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 
 import java.io.IOException;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
- * TODO sync adapter for user data
+ *
  */
 public class UserSyncAdapter extends AbstractSyncAdapter {
 
     public static final String TAG = "MapDataAdapter";
 
-    public static final String SYNC_TYPE_KEY = "data_sync_type";
-    public static final String SYNC_ID_KEY = "data_sync_id";
     /**
      * Constructor. Obtains handle to content resolver for later use.
      */
@@ -75,9 +82,28 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        Log.i(TAG, "--------------- Beginning network synchronization for data---------------------");
-
-        Log.i(TAG, "--------------- Network synchronization complete for data----------------------");
+        Log.i(TAG, "--------------- Beginning network synchronization for user---------------------");
+        this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
+        Log.i(TAG, "--------------- Network synchronization complete for user----------------------");
     }
 
+    public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult){
+        Log.i(TAG, "Performing model sync for " + classType.getCanonicalName() + "...");
+        From localQuery = new Select().from(classType);
+        try {
+            Response response = remoteQuery.execute();
+            if (response.isSuccess()){
+                List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
+                new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, "Error performing sync for " + classType + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void syncImmediately(Context context) {
+        syncImmediately(context, context.getString(R.string.content_authority_user));
+    }
 }

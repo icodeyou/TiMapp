@@ -51,4 +51,7 @@ public class SyncHistory extends Model {
                 .executeSingle();
     }
 
+    public static long getLastSyncTime(int syncType) {
+        return getByType(syncType).last_update;
+    }
 }

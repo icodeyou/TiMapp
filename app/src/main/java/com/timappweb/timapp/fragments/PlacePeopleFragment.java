@@ -197,7 +197,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     public void onResume() {
         Log.v(TAG, "onResume()");
         super.onResume();
-        placeUsersAdapter.clear();
         loadData();
     }
 }

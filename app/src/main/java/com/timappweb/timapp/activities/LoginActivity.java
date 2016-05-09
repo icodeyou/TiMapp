@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         user.app_id = InstanceID.getInstance(that).getId();
                         //MyApplication.updateGoogleMessagingToken(that);
                         Log.i(TAG, "Trying to login user: " + user);
-                        MyApplication.login(user, token, accessToken);
+                        MyApplication.login(getApplicationContext(), user, token, accessToken);
                         MyApplication.requestGcmToken(that);
                         IntentsUtils.lastActivityBeforeLogin(that);
                     }
@@ -384,85 +384,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mEmailView.setAdapter(adapter);
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     *
-     * TODO: remove useless
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final Activity activity;
-
-        /*UserLoginTask(UserActivity act, String email, String password) {
-            mEmail = email;
-            mPassword = password;
-            this.activity = act;
-        }*/
-
-        UserLoginTask(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            User user = new User("test@mail.com", "test");
-            Log.d(TAG, "Try login for user: " + user.toString());
-
-            try{
-                RestFeedback response = null; //= RestClient.service().login(user);
-                Log.i(TAG, "Server response: " + response);
-
-                if (response.success
-                        && response.data.containsKey("token")
-                        && response.data.containsKey("id")
-                        && response.data.containsKey("username")){
-                    String token = (String) response.data.get("token");
-                    user.username = response.data.get("username");
-                    user.remote_id = Integer.parseInt(response.data.get("id"));
-                    MyApplication.login(user, token, null);
-                    Log.i(TAG, "Session created with session token: " + token);
-                    IntentsUtils.lastActivityBeforeLogin(this.activity);
-                    return true;
-                }
-                else if (!response.data.containsKey("session_id")){
-                    Log.e(TAG, "Error on the server side: there are no session_id returned: " + response.data.keySet());
-                }
-                else{
-                    Log.i(TAG, "User attempt to connect with wrong credential");
-                }
-
-            }
-            //catch (retrofit.RetrofitError ex){
-            //    Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
-             //   Log.e(TAG, "Server unavailable");
-            //}
-            catch (Exception ex){
-                Toast.makeText(getApplicationContext(), R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
-                Log.e(TAG, "Exception: " + ex);
-            }
-            return false;
-        }
-
-        /*@Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            //showProgress(false);
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            //showProgress(false);
-        }*/
-    }
 
     private void setProgressVisibility(boolean bool) {
         if(bool) {

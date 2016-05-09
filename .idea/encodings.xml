@@ -12,6 +12,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/authenticator.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_config.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_data.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_user.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

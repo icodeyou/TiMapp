@@ -10,7 +10,10 @@ import java.util.List;
  * Created by stephane on 5/5/2016.
  */
 @Table(name = "UserFriend")
-public class UserFriend extends Model {
+public class UserFriend extends SyncBaseModel {
+
+    // =============================================================================================
+    // DATABASE
 
     @Column(name = "UserSource", uniqueGroups = "unique_friendship",
             onUpdate = Column.ForeignKeyAction.CASCADE,
@@ -22,11 +25,21 @@ public class UserFriend extends Model {
             onDelete= Column.ForeignKeyAction.CASCADE)
     public User userTarget;
 
+    // =============================================================================================
+
+    public UserFriend() {
+    }
+
     @Override
     public String toString() {
         return "UserFriend{" +
                 "userSource=" + userSource +
                 ", userTarget=" + userTarget +
                 '}';
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        return false;
     }
 }

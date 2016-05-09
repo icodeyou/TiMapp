@@ -8,6 +8,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
+import com.timappweb.timapp.data.models.UserTag;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,10 +41,12 @@ public class FriendsSyncPerformer extends MultipleEntriesSyncPerformer {
     @Override
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values){
         // Add new items
-        for (SyncBaseModel m : values) {
-            Log.i(TAG, "Scheduling insert: " + m.toString());
-            m.saveWithRemoteKey();
-            addAssociation((User) m);
+        for (SyncBaseModel model : values) {
+            User user = (User) model;
+            Log.i(TAG, "Scheduling insert: " + user.toString());
+            user.saveWithRemoteKey();
+            user.replaceAssociation(user.getTags(), UserTag.class);
+            addAssociation(user);
             syncResult.stats.numInserts++;
         }
     }

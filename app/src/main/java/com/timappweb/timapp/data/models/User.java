@@ -9,6 +9,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -66,6 +67,7 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
      * Cached value. See @getTags
      */
     @Expose(serialize = false, deserialize = true)
+    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO_MANY, saveStrategy = ModelAssociation.SaveStrategy.REPLACE)
     protected List<Tag> tags;
 
     /**
@@ -217,4 +219,5 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
 }

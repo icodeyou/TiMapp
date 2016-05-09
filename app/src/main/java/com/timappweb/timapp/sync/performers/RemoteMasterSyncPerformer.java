@@ -43,7 +43,7 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
         // Add new items
         for (SyncBaseModel m : values) {
             Log.i(TAG, "Scheduling insert: " + m.toString());
-            m.save();
+            m.deepSave();
             syncResult.stats.numInserts++;
         }
     }

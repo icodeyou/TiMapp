@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
-import com.activeandroid.query.From;import com.activeandroid.query.Delete;
-
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -121,6 +121,7 @@ public abstract class SyncBaseModel extends Model implements Serializable {
         if (SyncHistory.requireUpdate(syncType, syncDelay)){
             Bundle bundle = new Bundle();
             bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
+            bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(syncType));
             DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
             return null;
         }
@@ -245,6 +246,12 @@ public abstract class SyncBaseModel extends Model implements Serializable {
         }
     }
 
+    public void replaceAssociation(List<? extends Model> data,
+                                Class<? extends Model> associationModel){
+        this.deleteAssociation(associationModel);
+        this.saveAssociation(data, associationModel);
+    }
+
     /**
      * Delete association data
      * @param associationModel
@@ -254,5 +261,9 @@ public abstract class SyncBaseModel extends Model implements Serializable {
                 .from(associationModel)
                 .where(this.getClass().getSimpleName() + " = " + this.getId())
                 .execute();
+    }
+
+    public Long deepSave() {
+        return this.save();
     }
 }
