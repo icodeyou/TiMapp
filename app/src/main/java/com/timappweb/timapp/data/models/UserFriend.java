@@ -12,10 +12,14 @@ import java.util.List;
 @Table(name = "UserFriend")
 public class UserFriend extends Model {
 
-    @Column(name = "UserSource", uniqueGroups = "unique_friendship", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "UserSource", uniqueGroups = "unique_friendship",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     public User userSource;
 
-    @Column(name = "UserTarget", uniqueGroups = "unique_friendship", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "UserTarget", uniqueGroups = "unique_friendship",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     public User userTarget;
 
     @Override

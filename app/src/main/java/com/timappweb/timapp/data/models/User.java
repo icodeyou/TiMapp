@@ -142,11 +142,6 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
         return this;
     }
 
-    @Override
-    public int getViewType() {
-        return EventUsersAdapter.VIEW_TYPES.UNDEFINED;
-    }
-
     public void setStatus(boolean status) {
         this.status = status;
     }

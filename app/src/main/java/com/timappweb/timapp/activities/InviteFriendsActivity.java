@@ -20,7 +20,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;

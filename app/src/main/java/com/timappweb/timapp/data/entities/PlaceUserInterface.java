@@ -17,5 +17,4 @@ public interface PlaceUserInterface {
 
     User getUser();
 
-    int getViewType();
 }

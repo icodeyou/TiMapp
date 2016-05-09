@@ -112,7 +112,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         setDistancePlace();
         if (spot != null){
             this.spot = spot;
-            this.spot_id = spot.id;
+            this.spot_id = spot.remote_id;
         }
     }
 

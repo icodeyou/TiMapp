@@ -69,7 +69,7 @@ public abstract class MultipleSectionAdapter<DataType, ViewHolderType extends Re
 
     public DataType get(int position){
         SectionItem section = this.sections.get(0);
-        for (int i = 1; i < this.sections.size(); i++){
+        for (int i = 0; i < this.sections.size(); i++){
             if (section.size() > position){
                 return (DataType) section.getItem(position);
             }

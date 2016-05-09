@@ -4,12 +4,8 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.PlacesInvitationStatus;
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -32,17 +28,23 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Expose
     public PlacesInvitationStatus status;
 
-    @Column(name = "Place", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "Place",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("place")
     public Place place;
 
-    @Column(name = "UserSource", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "UserSource",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("user_source")
     public User user_source;
 
-    @Column(name = "UserTarget", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "UserTarget",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("user_target")
     public User user_target;
@@ -65,11 +67,6 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Override
     public User getUser() {
         return this.user_target;
-    }
-
-    @Override
-    public int getViewType() {
-        return EventUsersAdapter.VIEW_TYPES.INVITED;
     }
 
     public User getUserSource() {

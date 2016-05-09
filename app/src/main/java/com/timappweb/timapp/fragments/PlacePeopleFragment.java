@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
+import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
 import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -51,16 +52,22 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private View            mainButton;
     private TextView        tvAddButton;
 
-    private SimpleSectionedRecyclerViewAdapter mSectionedAdapter;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_event_people, container, false);
+        eventActivity = (EventActivity) getActivity();
+        context= eventActivity.getBaseContext();
 
-        initVariables(root);
+        //Views
+        mainButton = root.findViewById(R.id.main_button);
+        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
+        peopleRv = (RecyclerView) root.findViewById(R.id.list_people);
+        progressView = root.findViewById(R.id.progress_view);
+        noPostsView = root.findViewById(R.id.no_posts_view);
+        noConnectionView = root.findViewById(R.id.no_connection_view);
+
         initAdapter();
-        initRv();
         setListeners();
         updateBtnVisibility();
 
@@ -73,30 +80,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     @Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
-    }
-
-    private void initVariables(View root) {
-        eventActivity = (EventActivity) getActivity();
-        context= eventActivity.getBaseContext();
-
-        //Views
-        mainButton = root.findViewById(R.id.main_button);
-        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
-        peopleRv = (RecyclerView) root.findViewById(R.id.list_people);
-        progressView = root.findViewById(R.id.progress_view);
-        noPostsView = root.findViewById(R.id.no_posts_view);
-        noConnectionView = root.findViewById(R.id.no_connection_view);
-    }
-
-    private void initRv() {
-        peopleRv.setLayoutManager(new LinearLayoutManager(context));
-
-        // Add the sticky headers decoration
-        final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration(placeUsersAdapter);
-        peopleRv.addItemDecoration(headersDecor);
-
-        //TODO : Determine how the class DividerDecoration is usefull, and decide if we use it or not
-        //peopleRv.addItemDecoration(new DividerDecoration(eventActivity));
     }
 
     private void setListeners() {
@@ -116,16 +99,10 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
                 IntentsUtils.profile(eventActivity, user.getUser());
             }
         });
-        //placeUsersAdapter.create("post", getResources().getString(R.string.header_posts));
-        //placeUsersAdapter.create(UserPlaceStatusEnum.COMING, getResources().getString(R.string.header_coming));
-        //placeUsersAdapter.create(UserPlaceStatusEnum.INVITED, getResources().getString(R.string.header_invited));
-
-        /*mSectionedAdapter = new SimpleSectionedRecyclerViewAdapter(
-                context,
-                R.layout.header_place_people,
-                R.remote_id.text_header_place_people,
-                placeUsersAdapter);*/
-
+        peopleRv.setLayoutManager(new LinearLayoutManager(context));
+        peopleRv.addItemDecoration(new StickyRecyclerHeadersDecoration(placeUsersAdapter)); // Add the sticky headers decoration
+        //TODO : Determine how the class DividerDecoration is usefull, and decide if we use it or not
+        //peopleRv.addItemDecoration(new DividerDecoration(eventActivity));
         peopleRv.setAdapter(placeUsersAdapter);
     }
 
@@ -146,7 +123,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             @Override
             public void onResponse200(Response<List<Post>> response) {
                 List<Post> list = response.body();
-                placeUsersAdapter.addData(list);
+                placeUsersAdapter.addData(UserPlaceStatusEnum.HERE, list);
             }
 
             @Override
@@ -172,7 +149,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext(), this) {
             @Override
             public void onResponse200(Response<PaginationResponse<UserPlace>> response) {
-                placeUsersAdapter.addData(response.body().items);
+                placeUsersAdapter.addData(status, response.body().items);
             }
 
             @Override
@@ -192,7 +169,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             public void onResponse200(Response<PaginationResponse<PlacesInvitation>> response) {
                 List<PlacesInvitation> invitations = response.body().items;
                 Log.d(TAG, "Loading " + invitations.size() + " invites sent");
-                placeUsersAdapter.addData(invitations);
+                placeUsersAdapter.addData(UserPlaceStatusEnum.INVITED, invitations);
             }
 
         });

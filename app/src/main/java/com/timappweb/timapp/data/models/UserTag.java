@@ -10,10 +10,14 @@ import com.activeandroid.annotation.Table;
 @Table(name = "UserTag")
 public class UserTag extends Model {
 
-    @Column(name = "User", uniqueGroups = "unique_tag", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "User", uniqueGroups = "unique_tag",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     public User user;
 
-    @Column(name = "Tag", uniqueGroups = "unique_tag", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "Tag", uniqueGroups = "unique_tag",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     public Tag tag;
 
     @Override

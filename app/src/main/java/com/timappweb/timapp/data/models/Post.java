@@ -1,11 +1,9 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.utils.Util;
@@ -218,11 +216,6 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
 
     public User getUser() {
         return user;
-    }
-
-    @Override
-    public int getViewType() {
-        return EventUsersAdapter.VIEW_TYPES.HERE;
     }
 
     public boolean hasTagsLoaded() {

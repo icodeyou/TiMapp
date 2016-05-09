@@ -11,10 +11,14 @@ import com.activeandroid.annotation.Table;
 public class PlaceTag extends Model {
 
 
-    @Column(name = "Place", uniqueGroups = "unique_tag", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "Place", uniqueGroups = "unique_tag",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     public Place place;
 
-    @Column(name = "Tag", uniqueGroups = "unique_tag", onDelete= Column.ForeignKeyAction.CASCADE)
+    @Column(name = "Tag", uniqueGroups = "unique_tag",
+            onUpdate = Column.ForeignKeyAction.CASCADE,
+            onDelete= Column.ForeignKeyAction.CASCADE)
     public Tag tag;
 
     @Column(name = "CountRef")

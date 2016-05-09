@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -26,23 +25,21 @@ public class EventUsersHeaderAdapter extends EventUsersAdapter
 
     @Override
     public long getHeaderId(int position) {
-        PlaceUserInterface placeUserInterface = data.get(position);
-        return placeUserInterface.getViewType();
+        return ((EventUsersAdapter.SectionItem) data.getSectionFromPosition(position)).getViewType();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.header_place_people, parent, false);
-        return new RecyclerView.ViewHolder(view) {
-        };
+        return new RecyclerView.ViewHolder(view) {};
     }
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
         TextView textView = (TextView) holder.itemView;
-        PlaceUserInterface placeUserInterface = data.get(position);
-        switch (placeUserInterface.getViewType()) {
+        int type = ((EventUsersAdapter.SectionItem) data.getSectionFromPosition(position)).getViewType();
+        switch (type) {
             case VIEW_TYPES.HERE:
                 textView.setText(context.getResources().getString(R.string.header_posts));
                 break;
