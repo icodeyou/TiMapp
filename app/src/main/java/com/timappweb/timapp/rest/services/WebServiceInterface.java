@@ -5,7 +5,7 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.UserQuota;
-import com.timappweb.timapp.data.entities.Picture;
+import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.Post;

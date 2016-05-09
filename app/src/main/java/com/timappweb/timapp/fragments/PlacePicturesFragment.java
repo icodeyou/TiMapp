@@ -22,7 +22,7 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.entities.Picture;
+import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
