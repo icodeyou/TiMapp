@@ -14,21 +14,13 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class InvitationsActivity extends BaseActivity{
 
@@ -86,7 +78,7 @@ public class InvitationsActivity extends BaseActivity{
 
     private void onItemListClicked(int position) {
         PlacesInvitation invitation = invitations.get(position);
-        IntentsUtils.viewSpecifiedPlace(this, invitation.place);
+        IntentsUtils.viewSpecifiedEvent(this, invitation.place);
     }
 
 

@@ -1,6 +1,7 @@
 package com.timappweb.timapp.data.models;
 
 import android.location.Location;
+import android.widget.Toast;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -8,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
@@ -299,16 +301,16 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public void setDistancePlace() {
-        if (MyApplication.hasLastLocation()){
-            this.distance = -1;
-            return;
+        if (MyApplication.hasLastLocation()) {
+            Location location = MyApplication.getLastLocation();
+            if(MyApplication.hasFineLocation()) {
+                double userLongitude = location.getLongitude();
+                double userLatitude = location.getLatitude();
+                double distance =  DistanceHelper.distFrom(userLatitude, userLongitude,
+                        this.latitude, this.longitude);
+                this.distance = Math.round(distance);
+            }
         }
-        Location location = MyApplication.getLastLocation();
-        double userLongitude = location.getLongitude();
-        double userLatitude = location.getLatitude();
-        double distance =  DistanceHelper.distFrom(userLatitude, userLongitude,
-                this.latitude, this.longitude);
-        this.distance = Math.round(distance);
     }
 
 }

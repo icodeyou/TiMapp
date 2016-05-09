@@ -49,7 +49,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         newEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPostStepLocate(getContext());
+                IntentsUtils.locate(getContext());
             }
         });
 
@@ -106,7 +106,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                IntentsUtils.viewSpecifiedPlace(getContext(), eventsAdapter.getItem(position));
+                IntentsUtils.viewSpecifiedEvent(getContext(), eventsAdapter.getItem(position));
             }
         });
     }

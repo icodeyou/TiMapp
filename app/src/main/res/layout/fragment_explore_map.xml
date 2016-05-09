@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/map"
         myattrs:color_event="@color/background_event_map"
+        myattrs:points_visible="false"
         myattrs:is_spot="true"
         myattrs:bottom_shadow="false"
         myattrs:tags_visible="false"

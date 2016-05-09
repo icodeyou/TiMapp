@@ -1,10 +1,17 @@
 package com.timappweb.timapp.fragments;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,11 +21,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.ApplicationRules;
@@ -74,14 +83,31 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         setListeners();
         initRv();
         initAdapter();
-
-        this.loadData();
-
         updateBtnVisibility();
+        this.loadData();
 
         return root;
     }
 
+    private void startPictureActivity() {
+        Bundle extras = eventActivity.getIntent().getExtras();
+        if(extras!=null && extras.getInt(IntentsUtils.KEY_ACTION, -1) == IntentsUtils.ACTION_CAMERA) {
+            IntentsUtils.addPictureFromFragment(getActivity(), this);
+            eventActivity.getIntent().putExtra(IntentsUtils.KEY_ACTION, -1);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==IntentsUtils.REQUEST_CAMERA) {
+            Log.d(TAG, "Result request camera");
+            if (resultCode != Activity.RESULT_OK){
+                return; // TODO
+            }
+            Uri photoUri = data.getData();
+            uploadPicture(photoUri);
+        }
+    }
 
     @Override
     public void setMenuVisibility(final boolean visible) {
@@ -138,14 +164,15 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                     picturesAdapter.setBaseUrl(paginationData.extra.get("base_url"));
                     picturesAdapter.setData(paginationData.items);
                     picturesAdapter.notifyDataSetChanged();
-                }
 
-                if (picturesAdapter.getItemCount() == 0) {
-                    noPicView.setVisibility(View.VISIBLE);
-                    picturesRv.setVisibility(View.GONE);
-                } else {
-                    noPicView.setVisibility(View.GONE);
-                    picturesRv.setVisibility(View.VISIBLE);
+                    if (picturesAdapter.getItemCount() == 0) {
+                        noPicView.setVisibility(View.VISIBLE);
+                        picturesRv.setVisibility(View.GONE);
+                    } else {
+                        noPicView.setVisibility(View.GONE);
+                        picturesRv.setVisibility(View.VISIBLE);
+                    }
+                    startPictureActivity();
                 }
             }
 
@@ -265,8 +292,8 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
         boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE) && uploadView.getVisibility() != View.VISIBLE;
         boolean showMainButton = isUserAround && isAllowedToAddPic;
-        mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        smallTagsButton.setVisibility(!showMainButton && isUserAround && isAllowedToAddPost ? View.VISIBLE : View.GONE);
+        //mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
+        //smallTagsButton.setVisibility(!showMainButton && isUserAround && isAllowedToAddPost ? View.VISIBLE : View.GONE);
     }
 
 

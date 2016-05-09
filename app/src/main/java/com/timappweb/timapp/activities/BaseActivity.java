@@ -1,12 +1,11 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -18,12 +17,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.gms.location.LocationListener;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.entities.Profile;
-import com.sromku.simple.fb.listeners.OnFriendsListener;
-import com.sromku.simple.fb.utils.Attributes;
-import com.sromku.simple.fb.utils.PictureAttributes;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.utils.MyLocationProvider;
 
 import java.util.LinkedList;
@@ -38,6 +34,30 @@ public class BaseActivity extends AppCompatActivity {
     private MyLocationProvider          locationProvider;
     protected List<Call>                apiCalls = new LinkedList<>();
 
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bundle extras = getIntent().getExtras();
+        int placeId = -1;
+        if(extras!=null) {
+            placeId = getIntent().getExtras().getInt("place_id_from", -1);
+        }
+        switch (requestCode){
+            case IntentsUtils.REQUEST_CAMERA:
+                if (resultCode != RESULT_OK){
+                    return;
+                }
+                Uri photoUri = data.getData();
+                String photoString = photoUri.toString();
+                IntentsUtils.addPicToEventActivity(this, placeId, photoString);
+                break;
+            case IntentsUtils.REQUEST_INVITE_FRIENDS:
+                IntentsUtils.viewEventFromId(this,placeId);
+                break;
+            default:
+                Log.e(TAG, "Unknown activity result: " + requestCode);
+        }
+    }*/
 
     @Override
     protected void onDestroy() {
@@ -71,11 +91,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

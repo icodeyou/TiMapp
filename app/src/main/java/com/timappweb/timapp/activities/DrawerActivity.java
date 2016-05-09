@@ -154,8 +154,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -206,7 +206,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.addPostStepLocate(that);
+                    IntentsUtils.locate(that);
                 }
             });
         }
@@ -311,7 +311,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             //changeCurrentFragment(FragmentId.Explore);
         }
         else if (id == R.id.menu_item_tag_around){
-            IntentsUtils.addPostStepLocate(this);
+            IntentsUtils.locate(this);
         }
         else if (id == R.id.menu_item_my_invitations){
             IntentsUtils.invitations(this);

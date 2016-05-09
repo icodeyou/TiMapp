@@ -342,12 +342,11 @@
         <activity
             android:name="com.desmond.squarecamera.CameraActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_place"
-            android:parentActivityName=".activities.DrawerActivity" >
+            android:parentActivityName=".activities.EventActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
+                android:value=".activities.EventActivity" />
         </activity>
 
         <!-- Add People ACTIVITY //////////////////////////////////////////////-->

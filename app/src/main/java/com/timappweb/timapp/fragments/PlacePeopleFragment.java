@@ -178,7 +178,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
 
     public void updateBtnVisibility() {
-        mainButton.setVisibility(MyApplication.isLoggedIn() ? View.VISIBLE : View.GONE);
+        //mainButton.setVisibility(MyApplication.isLoggedIn() ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressView(boolean visibility) {

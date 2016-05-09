@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
@@ -143,7 +145,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         newEventbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPostStepLocate(drawerActivity);
+                IntentsUtils.locate(drawerActivity);
             }
         });
     }
@@ -177,11 +179,16 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void displayPlace(Place place) {
         eventView.setEvent(place);
+        final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
+        eventView.startAnimation(slideIn);
+        newEventbutton.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
     }
 
-
     public void hidePlace() {
+        final Animation slideOut = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_out_down);
+        eventView.startAnimation(slideOut);
+        //newEventbutton.startAnimation(slideOut);
         eventView.setVisibility(View.GONE);
     }
 
@@ -205,7 +212,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             @Override
             public void onClick(View v) {
                 Place place = eventView.getEvent();
-                IntentsUtils.viewSpecifiedPlace(getActivity(), place);
+                IntentsUtils.viewSpecifiedEvent(getActivity(), place);
             }
         });
 
@@ -356,7 +363,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Place place = (Place) markerValue;
         if(isPlaceViewVisible() && eventView.getEvent()==place) {
-            IntentsUtils.viewSpecifiedPlace(getActivity(), place);
+            IntentsUtils.viewSpecifiedEvent(getActivity(), place);
         } else {
             displayPlace(place);
         }
@@ -368,7 +375,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             public boolean onMarkerClick(Marker marker) {
                 MarkerValueInterface markerValue = mapMarkers.get(marker);
                 if (markerValue != null) {
-                    Log.i(TAG, "You clicked on a marker with viewPlaceFromPublish: " + markerValue.getMarkerId());
+                    Log.i(TAG, "You clicked on a marker with viewEventFromId: " + markerValue.getMarkerId());
                     showMarkerDetail(markerValue);
                 } else {
                     Log.e(TAG, "Cannot load this marker");

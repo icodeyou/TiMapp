@@ -24,7 +24,6 @@ import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -109,7 +108,7 @@ public class LocateActivity extends BaseActivity{
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Click on place adapter");
-                if (!MyApplication.hasFineLocation()) {
+                /*if (!MyApplication.hasFineLocation()) {
                     Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -117,8 +116,9 @@ public class LocateActivity extends BaseActivity{
                 Place place = eventsAdapter.getItem(position);
                 Post post = new Post();
                 post.longitude = MyApplication.getLastLocation().getLongitude();
-                post.latitude = MyApplication.getLastLocation().getLatitude();
-                IntentsUtils.addPostStepTags(that, place, post);
+                post.latitude = MyApplication.getLastLocation().getLatitude();*/
+                Place event = eventsAdapter.getItem(position);
+                IntentsUtils.viewSpecifiedEvent(that, event);
             }
 
         });
@@ -193,7 +193,7 @@ public class LocateActivity extends BaseActivity{
                 if (response.isSuccess()){
                     List<Place> places = response.body();
                     eventsLoaded = true;
-                    Log.d(TAG, "Loading " + places.size() + " viewPlaceFromPublish(s)");
+                    Log.d(TAG, "Loading " + places.size() + " viewPlace(s)");
                     EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);

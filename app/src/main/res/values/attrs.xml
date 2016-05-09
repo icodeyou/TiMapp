@@ -28,6 +28,7 @@
         <attr name="top_shadow" />
         <attr name="toolbar_mode" />
 
+        <attr name="points_visible" format="boolean" />
         <attr name="show_title" format="boolean" />
         <attr name="is_match_button" format="boolean" />
         <attr name="is_spot" format="boolean" />

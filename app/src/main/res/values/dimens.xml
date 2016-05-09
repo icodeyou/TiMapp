@@ -72,6 +72,7 @@
 
     <dimen name="tag_padding">10dp</dimen>
     <dimen name="tag_margin">5dp</dimen>
+    <dimen name="default_ic_margin">5dp</dimen>
     <dimen name="tag_padding_bottom">1dp</dimen>
     <dimen name="tag_padding_top">1dp</dimen>
     <dimen name="tag_padding_left">1dp</dimen>
@@ -98,5 +99,6 @@
     <dimen name="width_add_event_buttons">120dp</dimen>
     <integer name="slide_down_anim">90</integer>
     <integer name="slide_up_anim">-90</integer>
+    <integer name="slide_event_bottom_map">200</integer>
 
 </resources>

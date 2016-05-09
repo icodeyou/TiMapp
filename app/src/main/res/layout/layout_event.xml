@@ -111,6 +111,8 @@
                             android:layout_height="match_parent"
                             android:layout_toRightOf="@id/margin_left_toolbar"
                             android:layout_toEndOf="@id/margin_left_toolbar"
+                            android:layout_marginRight="@dimen/default_ic_margin"
+                            android:layout_marginEnd="@dimen/default_ic_margin"
                             android:src="@drawable/ic_category_highlight_party"
                             android:visibility="visible"/>
                         <me.grantland.widget.AutofitTextView
@@ -174,8 +176,8 @@
                         android:id="@+id/ic_hot"
                         android:layout_width="@dimen/little_icon_spot"
                         android:layout_height="@dimen/logo_normal"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="@dimen/default_ic_margin"
+                        android:layout_marginEnd="@dimen/default_ic_margin"
                         android:src="@drawable/ic_hot_white"/>
                     <com.timappweb.timapp.views.SimpleTimerView
                         android:id="@+id/white_points_text"
@@ -200,8 +202,8 @@
                     <ImageView
                         android:layout_width="@dimen/little_icon_spot"
                         android:layout_height="@dimen/logo_normal"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="@dimen/default_ic_margin"
+                        android:layout_marginEnd="@dimen/default_ic_margin"
                         android:src="@drawable/distance"/>
                     <com.timappweb.timapp.views.SimpleTimerView
                         android:id="@+id/distance_text"
@@ -283,16 +285,19 @@
         android:orientation="horizontal"
         android:visibility="invisible">
         <ImageView
+            android:id="@+id/post_pic"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:src="@drawable/post_pic"/>
         <ImageView
+            android:id="@+id/post_tags"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:src="@drawable/post_tags"/>
         <ImageView
+            android:id="@+id/post_people"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="50dp"
