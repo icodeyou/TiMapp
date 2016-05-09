@@ -83,7 +83,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
     private void setListeners() {
-        mainButton.setOnClickListener(eventActivity.getPeopleListener());
+        //mainButton.setOnClickListener(eventActivity.getPeopleListener());
     }
 
 

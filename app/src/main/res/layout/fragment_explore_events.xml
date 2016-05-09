@@ -68,6 +68,7 @@
         android:layout_above="@+id/event_view"
         android:layout_alignWithParentIfMissing="true"
         android:layout_margin="@dimen/fab_margin"
+        app:rippleColor="@color/colorAccent"
         app:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/plus_button_white" />
 

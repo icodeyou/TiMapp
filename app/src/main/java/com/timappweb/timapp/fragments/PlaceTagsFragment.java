@@ -103,9 +103,9 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     }
 
     private void setListeners() {
-        mainButton.setOnClickListener(eventActivity.getTagListener());
-        smallPicButton.setOnClickListener(eventActivity.getPictureListener());
-        smallPeopleButton.setOnClickListener(eventActivity.getPeopleListener());
+        //mainButton.setOnClickListener(eventActivity.getTagListener());
+        //smallPicButton.setOnClickListener(eventActivity.getPictureListener());
+        //smallPeopleButton.setOnClickListener(eventActivity.getPeopleListener());
     }
 
     public void loadData() {

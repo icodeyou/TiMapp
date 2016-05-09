@@ -101,6 +101,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==IntentsUtils.REQUEST_CAMERA) {
             Log.d(TAG, "Result request camera");
+            eventActivity.setPager(0);
             if (resultCode != Activity.RESULT_OK){
                 return; // TODO
             }
@@ -129,8 +130,8 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     }
 
     private void setListeners() {
-        mainButton.setOnClickListener(eventActivity.getPictureListener());
-        smallTagsButton.setOnClickListener(eventActivity.getTagListener());
+        //mainButton.setOnClickListener(eventActivity.getPictureListener());
+        //smallTagsButton.setOnClickListener(eventActivity.getTagListener());
     }
 
     private void initRv() {

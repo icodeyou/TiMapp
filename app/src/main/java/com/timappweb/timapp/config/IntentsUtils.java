@@ -204,10 +204,16 @@ public class IntentsUtils {
         context.startActivity(buildIntentViewPlace(context, place));
     }
 
-    public static void viewEventThenPost(Context context, Place place, int action) {
+    public static void postOutsideEvent(Context context, Place place, int action) {
         Intent intent = buildIntentViewPlace(context, place);
         intent.putExtra(KEY_ACTION, action);
         context.startActivity(intent);
+    }
+
+    public static void postInsideEvent(EventActivity eventActivity, int action) {
+        Intent intent = new Intent();
+        intent.putExtra(KEY_ACTION, action);
+        eventActivity.setActions();
     }
 
     public static Intent buildIntentViewPlace(Context context, int placeId) {

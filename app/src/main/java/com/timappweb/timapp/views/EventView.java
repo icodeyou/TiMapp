@@ -40,7 +40,6 @@ public class EventView extends RelativeLayout{
     private Context context;
 
     private Place event;
-    private boolean isAround;
     private ValueAnimator animator;
 
     private View                        tagsView;
@@ -89,6 +88,9 @@ public class EventView extends RelativeLayout{
     private View picButton;
     private View tagButton;
     private View peopleButton;
+
+    private AlphaAnimation postButtonsAppear;
+    private AlphaAnimation postButtonsDisappear;
 
 
     public EventView(Context context) {
@@ -197,12 +199,12 @@ public class EventView extends RelativeLayout{
 
     private void setAnimations() {
         //Buttons appearance
-        final AlphaAnimation postButtonsAppear = new AlphaAnimation(0, 1);
+        postButtonsAppear = new AlphaAnimation(0, 1);
         postButtonsAppear.setDuration(TIMELAPSE_BUTTONS_APPEAR_ANIM);
         postButtonsAppear.setFillAfter(true);
 
         //Buttonq Disappearance
-        final AlphaAnimation postButtonsDisappear = new AlphaAnimation(1, 0);
+        postButtonsDisappear = new AlphaAnimation(1, 0);
         postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
         postButtonsDisappear.setFillAfter(true);
 
@@ -248,12 +250,36 @@ public class EventView extends RelativeLayout{
         matchBackground.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setComingOrHere(postButtonsAppear, postButtonsDisappear);
+                setComingOrHere();
             }
         });
     }
 
-    private void setComingOrHere(AlphaAnimation postButtonsAppear, AlphaAnimation postButtonsDisappear) {
+    private void setButtonActive(boolean isActive) {
+        if(isActive) {
+            matchBackground.setBackgroundResource(R.drawable.border_radius_red);
+            matchText.setTextColor(ContextCompat.getColor(context, R.color.white));
+            if (isAround()) {
+                matchIcon.setImageResource(R.drawable.match_white);
+                enablePostButtons(true);
+                postButtons.startAnimation(postButtonsAppear);
+            } else {
+                matchIcon.setImageResource(R.drawable.ic_coming_guy_white);
+            }
+        } else {
+            matchBackground.setBackgroundResource(R.drawable.border_radius_white);
+            matchText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            if (isAround()) {
+                matchIcon.setImageResource(R.drawable.match_red);
+                enablePostButtons(false);
+                postButtons.startAnimation(postButtonsDisappear);
+            } else {
+                matchIcon.setImageResource(R.drawable.ic_coming_guy_darkred);
+            }
+        }
+    }
+
+    private void setComingOrHere() {
         if(tvCountPoints.getPoints()==0) {
             return;
         }
@@ -261,27 +287,19 @@ public class EventView extends RelativeLayout{
         if (!isMatchButtonSelected && !pointsAnimIsCurrent) {
             isMatchButtonSelected = true;
             updatePointsView(true);
-            matchBackground.setBackgroundResource(R.drawable.border_radius_red);
-            matchText.setTextColor(ContextCompat.getColor(context, R.color.white));
-            if (isAround) {
-                matchIcon.setImageResource(R.drawable.match_white);
-                postButtons.startAnimation(postButtonsAppear);
-            } else {
-                matchIcon.setImageResource(R.drawable.ic_coming_guy_white);
-            }
+            setButtonActive(true);
         }
         else if(isMatchButtonSelected && !pointsAnimIsCurrent){
             isMatchButtonSelected = false;
             updatePointsView(false);
-            matchBackground.setBackgroundResource(R.drawable.border_radius_white);
-            matchText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-            if (isAround) {
-                matchIcon.setImageResource(R.drawable.match_red);
-                postButtons.startAnimation(postButtonsDisappear);
-            } else {
-                matchIcon.setImageResource(R.drawable.ic_coming_guy_darkred);
-            }
+            setButtonActive(false);
         }
+    }
+
+    private void enablePostButtons(boolean isEnabled) {
+        picButton.setEnabled(isEnabled);
+        tagButton.setEnabled(isEnabled);
+        peopleButton.setEnabled(isEnabled);
     }
 
     private void updatePointsView(boolean increase) {
@@ -330,6 +348,7 @@ public class EventView extends RelativeLayout{
         if(isMatchButton && tvCountPoints.getPoints()!=0) {
             matchButton.setVisibility(VISIBLE);
             postButtons.setVisibility(INVISIBLE);
+            setButtonActive(false);
         } else {
             matchButton.setVisibility(GONE);
             postButtons.setVisibility(GONE);
@@ -464,6 +483,10 @@ public class EventView extends RelativeLayout{
         }
     }
 
+    private boolean isAround() {
+        return event!=null && event.isAround();
+    }
+
     public void setEvent(final Place event) {
         this.event = event;
 
@@ -528,13 +551,12 @@ public class EventView extends RelativeLayout{
 
         //Counter
         int initialTime = event.getPoints();
-        tvCountPoints.initTimer(initialTime*1000);
+        tvCountPoints.initTimer(initialTime * 1000);
 
-        isAround = event.distance< ConfigurationProvider.rules().place_max_reachable;
-        setDistance(isAround);
+        setDistance(isAround());
         if(isMatchButton) {
             setMatchView(true);
-            matchButtonStateHere(isAround);
+            matchButtonStateHere(isAround());
         }
 
         //Click listeners
@@ -542,21 +564,21 @@ public class EventView extends RelativeLayout{
         picButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.viewEventThenPost(activity, event, IntentsUtils.ACTION_CAMERA);
+                IntentsUtils.postOutsideEvent(activity, event, IntentsUtils.ACTION_CAMERA);
             }
         });
 
         tagButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.viewEventThenPost(activity, event, IntentsUtils.ACTION_TAGS);
+                IntentsUtils.postOutsideEvent(activity, event, IntentsUtils.ACTION_TAGS);
             }
         });
 
         peopleButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.viewEventThenPost(activity, event, IntentsUtils.ACTION_PEOPLE);
+                IntentsUtils.postOutsideEvent(activity, event, IntentsUtils.ACTION_PEOPLE);
             }
         });
     }

@@ -4,9 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -77,9 +81,16 @@ public class EventActivity extends BaseActivity {
     private SpotView    spotToolbar;
     private View        progressBottom;
     private View        parentLayout;
+    private View        postButtons;
+    private FloatingActionButton matchButton;
+    private View picButton;
+    private View tagButton;
+    private View peopleButton;
 
-    //Camera
+    //Static variables
     private static final int REQUEST_CAMERA = 0;
+    private static final int TIMELAPSE_BUTTONS_APPEAR_ANIM = 800;
+    private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM = 300;
 
     private PlacePicturesFragment fragmentPictures;
     private PlaceTagsFragment fragmentTags;
@@ -99,6 +110,8 @@ public class EventActivity extends BaseActivity {
     private View.OnClickListener pictureListener;
     private View.OnClickListener peopleListener;
     private Vector<PlaceBaseFragment> childFragments;
+
+    private boolean isMatchButtonSelected;
 
 
     //Override methods
@@ -141,10 +154,15 @@ public class EventActivity extends BaseActivity {
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         progressView = findViewById(R.id.progress_view);
+        postButtons = findViewById(R.id.event_post_buttons);
+        matchButton = (FloatingActionButton) findViewById(R.id.fab);
+        picButton = findViewById(R.id.event_post_pic);
+        tagButton = findViewById(R.id.event_post_tags);
+        peopleButton = findViewById(R.id.event_post_people);
 
         initLocationListener();
-        setClickListeners();
         initFragments();
+        setListeners();
         setActions();
 
         EventLoader mLoader = new EventLoader();
@@ -156,14 +174,14 @@ public class EventActivity extends BaseActivity {
         if(extras!=null) {
             switch (extras.getInt(IntentsUtils.KEY_ACTION, -1)) {
                 case IntentsUtils.ACTION_CAMERA:
-                    pager.setCurrentItem(0);
+                    //pager.setCurrentItem(0);
                     break;
                 case IntentsUtils.ACTION_TAGS:
-                    pager.setCurrentItem(1);
+                    //pager.setCurrentItem(1);
                     addTags();
                     break;
                 case IntentsUtils.ACTION_PEOPLE:
-                    pager.setCurrentItem(2);
+                    //pager.setCurrentItem(2);
                     IntentsUtils.addPeople(this, event);
                     break;
             }
@@ -219,28 +237,21 @@ public class EventActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case IntentsUtils.REQUEST_CAMERA:
-                /*Log.d(TAG, "Result request camera");
-                if (resultCode != RESULT_OK){
-                    return; // TODO
-                }
-                Uri photoUri = data.getData();
-                fragmentPictures.uploadPicture(photoUri);
-                break;*/
-            case IntentsUtils.REQUEST_INVITE_FRIENDS:
-                if(resultCode==RESULT_OK) {
-                    Log.d(TAG, "Result OK from InviteFriendsActivity");
-                }
-                break;
             case IntentsUtils.REQUEST_TAGS:
                 if(resultCode==RESULT_OK) {
+                    pager.setCurrentItem(1);
                     Log.d(TAG, "Result OK from TagActivity");
+                }
+                break;
+            case IntentsUtils.REQUEST_INVITE_FRIENDS:
+                if(resultCode==RESULT_OK) {
+                    pager.setCurrentItem(2);
+                    Log.d(TAG, "Result OK from InviteFriendsActivity");
                 }
                 break;
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -255,8 +266,66 @@ public class EventActivity extends BaseActivity {
         updateBtnVisibility();
     }
 
+    private void changeMatchColor(int color) {
+        matchButton.setBackgroundTintList(ColorStateList.valueOf(
+                ContextCompat.getColor(this, color)));
+    }
 
-    private void setClickListeners() {
+
+    private void setListeners() {
+        final Activity eventActivity = this;
+
+        picButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.addPictureFromFragment(eventActivity, fragmentPictures);
+                //pager.setCurrentItem(0);
+            }
+        });
+        tagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTags();
+                //pager.setCurrentItem(1);
+            }
+        });
+        peopleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.addPeople(eventActivity, event);
+                //pager.setCurrentItem(2);
+            }
+        });
+
+        //Buttons appearance
+        final AlphaAnimation postButtonsAppear = new AlphaAnimation(0, 1);
+        postButtonsAppear.setDuration(TIMELAPSE_BUTTONS_APPEAR_ANIM);
+
+        //Buttons Disappearance
+        final AlphaAnimation postButtonsDisappear = new AlphaAnimation(1, 0);
+        postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
+
+        isMatchButtonSelected = false;
+
+        matchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isMatchButtonSelected) {
+                    isMatchButtonSelected = true;
+                    changeMatchColor(R.color.colorPrimaryDark);
+                    matchButton.setImageResource(R.drawable.match_white);
+                    postButtons.startAnimation(postButtonsAppear);
+                    postButtons.setVisibility(View.VISIBLE);
+                } else {
+                    isMatchButtonSelected = false;
+                    changeMatchColor(R.color.white);
+                    matchButton.setImageResource(R.drawable.match_red);
+                    postButtons.startAnimation(postButtonsDisappear);
+                    postButtons.setVisibility(View.GONE);
+                }
+            }
+        });
+
         iAmComingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,27 +363,6 @@ public class EventActivity extends BaseActivity {
                 });
             }
         });
-
-        tagListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTags();
-            }
-        };
-
-        pictureListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.addPicture(currentActivity);
-            }
-        };
-
-        peopleListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.addPeople(currentActivity, event);
-            }
-        };
     }
 
     private void addTags() {
@@ -383,7 +431,9 @@ public class EventActivity extends BaseActivity {
         });
     }
 
-
+    public void setPager(int pageNumber) {
+        pager.setCurrentItem(pageNumber);
+    }
 
     private void initLocationListener() {
         mLocationListener = new LocationListener() {
@@ -485,18 +535,6 @@ public class EventActivity extends BaseActivity {
 
     public int getEventId() {
         return eventId;
-    }
-
-    public View.OnClickListener getTagListener() {
-        return tagListener;
-    }
-
-    public View.OnClickListener getPictureListener() {
-        return pictureListener;
-    }
-
-    public View.OnClickListener getPeopleListener() {
-        return peopleListener;
     }
     
 
