@@ -176,13 +176,14 @@ public class EventView extends RelativeLayout{
 
         //htAdapter = (HorizontalTagsAdapter) rvEventTags.getAdapter();
 
-
-
         if(isSpot) {
             gradientTopView = findViewById(R.id.topview_no_spot);
         } else {
             gradientTopView = findViewById(R.id.topview_with_spot);
         }
+
+
+        isMatchButtonSelected = false;
 
         //initPadding();
         setAnimations();
@@ -246,7 +247,6 @@ public class EventView extends RelativeLayout{
             }
         });*/
 
-        isMatchButtonSelected = false;
         matchBackground.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,14 +286,14 @@ public class EventView extends RelativeLayout{
         boolean pointsAnimIsCurrent = animator!=null && animator.isRunning();
         if (!isMatchButtonSelected && !pointsAnimIsCurrent) {
             isMatchButtonSelected = true;
-            updatePointsView(true);
-            setButtonActive(true);
+            //TODO : Add points on server
         }
         else if(isMatchButtonSelected && !pointsAnimIsCurrent){
             isMatchButtonSelected = false;
-            updatePointsView(false);
-            setButtonActive(false);
+            //TODO : Remove points on server
         }
+        updatePointsView(isMatchButtonSelected);
+        setButtonActive(isMatchButtonSelected);
     }
 
     private void enablePostButtons(boolean isEnabled) {
@@ -302,7 +302,7 @@ public class EventView extends RelativeLayout{
         peopleButton.setEnabled(isEnabled);
     }
 
-    private void updatePointsView(boolean increase) {
+    public void updatePointsView(boolean increase) {
         if(increase) {
             icPoints.setImageResource(R.drawable.ic_hot);
             tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
@@ -348,7 +348,7 @@ public class EventView extends RelativeLayout{
         if(isMatchButton && tvCountPoints.getPoints()!=0) {
             matchButton.setVisibility(VISIBLE);
             postButtons.setVisibility(INVISIBLE);
-            setButtonActive(false);
+            setButtonActive(isMatchButtonSelected);
         } else {
             matchButton.setVisibility(GONE);
             postButtons.setVisibility(GONE);

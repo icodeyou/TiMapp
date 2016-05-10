@@ -112,6 +112,8 @@ public class EventActivity extends BaseActivity {
     private Vector<PlaceBaseFragment> childFragments;
 
     private boolean isMatchButtonSelected;
+    private AlphaAnimation postButtonsAppear;
+    private AlphaAnimation postButtonsDisappear;
 
 
     //Override methods
@@ -164,6 +166,10 @@ public class EventActivity extends BaseActivity {
         initFragments();
         setListeners();
         setActions();
+
+        //Init Match Button
+        setButtonActive(isMatchButtonSelected);
+        matchButton.setVisibility(View.VISIBLE);
 
         EventLoader mLoader = new EventLoader();
         getSupportLoaderManager().initLoader(0, null, mLoader);
@@ -298,11 +304,11 @@ public class EventActivity extends BaseActivity {
         });
 
         //Buttons appearance
-        final AlphaAnimation postButtonsAppear = new AlphaAnimation(0, 1);
+        postButtonsAppear = new AlphaAnimation(0, 1);
         postButtonsAppear.setDuration(TIMELAPSE_BUTTONS_APPEAR_ANIM);
 
         //Buttons Disappearance
-        final AlphaAnimation postButtonsDisappear = new AlphaAnimation(1, 0);
+        postButtonsDisappear = new AlphaAnimation(1, 0);
         postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
 
         isMatchButtonSelected = false;
@@ -310,19 +316,15 @@ public class EventActivity extends BaseActivity {
         matchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isMatchButtonSelected) {
+                if(!isMatchButtonSelected && event.isAround()) {
                     isMatchButtonSelected = true;
-                    changeMatchColor(R.color.colorPrimaryDark);
-                    matchButton.setImageResource(R.drawable.match_white);
-                    postButtons.startAnimation(postButtonsAppear);
-                    postButtons.setVisibility(View.VISIBLE);
+
                 } else {
                     isMatchButtonSelected = false;
-                    changeMatchColor(R.color.white);
-                    matchButton.setImageResource(R.drawable.match_red);
-                    postButtons.startAnimation(postButtonsDisappear);
-                    postButtons.setVisibility(View.GONE);
                 }
+                setButtonActive(isMatchButtonSelected);
+                fragmentTags.getEventView().updatePointsView(isMatchButtonSelected);
+
             }
         });
 
@@ -363,6 +365,28 @@ public class EventActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    private void setButtonActive(boolean isActive) {
+        if(isActive) {
+            changeMatchColor(R.color.colorPrimaryDark);
+            if(event.isAround()) {
+                matchButton.setImageResource(R.drawable.match_white);
+                postButtons.startAnimation(postButtonsAppear);
+                postButtons.setVisibility(View.VISIBLE);
+            } else {
+                matchButton.setImageResource(R.drawable.ic_coming_guy_white);
+            }
+        } else {
+            changeMatchColor(R.color.white);
+            if(event.isAround()) {
+                matchButton.setImageResource(R.drawable.match_red);
+                postButtons.startAnimation(postButtonsDisappear);
+                postButtons.setVisibility(View.GONE);
+            } else {
+                matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
+            }
+        }
     }
 
     private void addTags() {
