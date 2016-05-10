@@ -71,6 +71,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         eventView.setBottomShadow(true);
         eventView.setTagsVisible(false);
         eventView.setEvent(eventActivity.getEvent());
+        eventActivity.updateBtnVisibility();
         FrameLayout eventFrameLayout = (FrameLayout) root.findViewById(R.id.event_frame_layout);
         eventFrameLayout.addView(eventView);
         eventFrameLayout.setVisibility(View.VISIBLE);
