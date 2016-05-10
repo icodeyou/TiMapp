@@ -67,7 +67,10 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
      * Cached value. See @getTags
      */
     @Expose(serialize = false, deserialize = true)
-    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO_MANY, saveStrategy = ModelAssociation.SaveStrategy.REPLACE)
+    @ModelAssociation(
+            type = ModelAssociation.Type.BELONGS_TO_MANY,
+            saveStrategy = ModelAssociation.SaveStrategy.REPLACE,
+            joinModel = UserTag.class)
     protected List<Tag> tags;
 
     /**

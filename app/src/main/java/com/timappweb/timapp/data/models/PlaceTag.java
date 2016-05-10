@@ -8,7 +8,7 @@ import com.activeandroid.annotation.Table;
  * Created by stephane on 5/8/2016.
  */
 @Table(name = "PlaceTag")
-public class PlaceTag extends Model {
+public class PlaceTag extends MyModel {
 
 
     @Column(name = "Place", uniqueGroups = "unique_tag",

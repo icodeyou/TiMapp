@@ -1,18 +1,22 @@
 package com.timappweb.timapp.data.models.annotations;
 
+import com.timappweb.timapp.data.models.UserTag;
+
 /**
  * Created by stephane on 5/9/2016.
  */
 public @interface ModelAssociation {
 
-    public enum SaveStrategy {
+    enum SaveStrategy {
         REPLACE,
         APPEND
     }
 
-    public enum Type {
+    enum Type {
         BELONGS_TO_MANY,
     }
+
+    Class<UserTag> joinModel();
 
     SaveStrategy saveStrategy() default SaveStrategy.REPLACE;
 

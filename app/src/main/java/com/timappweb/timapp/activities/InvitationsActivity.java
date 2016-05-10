@@ -24,6 +24,8 @@ import java.util.List;
 
 public class InvitationsActivity extends BaseActivity{
 
+    private static final long SYNC_UPDATE_DELAY = 30 * 1000;
+
     private String TAG = "ListFriendsActivity";
     private List<PlacesInvitation> invitations;
     private RecyclerView recyclerView;
@@ -90,7 +92,7 @@ public class InvitationsActivity extends BaseActivity{
         @Override
         public Loader<List<PlacesInvitation>> onCreateLoader(int id, Bundle args) {
             From query = MyApplication.getCurrentUser().getInviteReceivedQuery();
-            SyncBaseModel.getRemoteEntries(InvitationsActivity.this, query, DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED, 300 * 1000);
+            SyncBaseModel.getRemoteEntries(InvitationsActivity.this, query, DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED, SYNC_UPDATE_DELAY);
             //if (invites != null){
             //    updateView(invites);
             //}

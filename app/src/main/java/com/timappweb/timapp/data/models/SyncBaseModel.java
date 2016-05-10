@@ -12,6 +12,7 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * Class representing data that need synchronisation from the remote server.
  */
-public abstract class SyncBaseModel extends Model implements Serializable {
+public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     private static final String TAG = "SyncBaseModel";
     public static int SYNC_INTERVAL = 3600 * 1000;
@@ -139,7 +140,7 @@ public abstract class SyncBaseModel extends Model implements Serializable {
     public void saveWithRemoteKey(){
         SyncBaseModel model = this.queryByRemoteId().executeSingle();
         if (model == null){
-            long id = this.save();
+            long id = this.deepSave();
             Log.v(TAG, "Creating new entry " + this.getClass().getCanonicalName() + " with id " + id);
         }
         else{
@@ -191,7 +192,7 @@ public abstract class SyncBaseModel extends Model implements Serializable {
                 Log.e(TAG,"Cannot persist a non existing model: " + this);
                 return;
             }
-            this.save();
+            this.deepSave();
         }
     }
 
@@ -222,48 +223,4 @@ public abstract class SyncBaseModel extends Model implements Serializable {
         return queryByRemoteId(clazz, id).executeSingle();
     }
 
-    /**
-     * Save belongs to many association.
-     * @param data association to save
-     * @param associationModel association model
-     */
-    public void saveAssociation(List<? extends Model> data,
-                                Class<? extends Model> associationModel){
-        try {
-            for (Model model: data){
-                Constructor<? extends Model> constructor = associationModel.getConstructor(this.getClass(), model.getClass());
-                Model instance = constructor.newInstance(this, model);
-                instance.save();
-            }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void replaceAssociation(List<? extends Model> data,
-                                Class<? extends Model> associationModel){
-        this.deleteAssociation(associationModel);
-        this.saveAssociation(data, associationModel);
-    }
-
-    /**
-     * Delete association data
-     * @param associationModel
-     */
-    public void deleteAssociation(Class<? extends Model> associationModel){
-        new Delete()
-                .from(associationModel)
-                .where(this.getClass().getSimpleName() + " = " + this.getId())
-                .execute();
-    }
-
-    public Long deepSave() {
-        return this.save();
-    }
 }

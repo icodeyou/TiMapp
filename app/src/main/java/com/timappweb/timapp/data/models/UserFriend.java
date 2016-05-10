@@ -10,7 +10,7 @@ import java.util.List;
  * Created by stephane on 5/5/2016.
  */
 @Table(name = "UserFriend")
-public class UserFriend extends SyncBaseModel {
+public class UserFriend extends MyModel {
 
     // =============================================================================================
     // DATABASE
@@ -38,8 +38,4 @@ public class UserFriend extends SyncBaseModel {
                 '}';
     }
 
-    @Override
-    public boolean isSync(SyncBaseModel model) {
-        return false;
-    }
 }

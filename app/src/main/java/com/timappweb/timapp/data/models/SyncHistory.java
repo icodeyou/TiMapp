@@ -52,6 +52,7 @@ public class SyncHistory extends Model {
     }
 
     public static long getLastSyncTime(int syncType) {
-        return getByType(syncType).last_update;
+        SyncHistory history = getByType(syncType);
+        return history != null ? history.last_update : 0;
     }
 }

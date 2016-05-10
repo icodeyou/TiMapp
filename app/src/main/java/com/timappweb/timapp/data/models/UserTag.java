@@ -8,7 +8,7 @@ import com.activeandroid.annotation.Table;
  * Created by stephane on 5/8/2016.
  */
 @Table(name = "UserTag")
-public class UserTag extends Model {
+public class UserTag extends MyModel {
 
     @Column(name = "User", uniqueGroups = "unique_tag",
             onUpdate = Column.ForeignKeyAction.CASCADE,

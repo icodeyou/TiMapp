@@ -211,7 +211,7 @@ public class InviteFriendsActivity extends BaseActivity {
             //From fromInvites = MyApplication.getCurrentUser().getInviteSentQuery(place.getId());
             //SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromInvites, DataSyncAdapter.SYNC_TYPE_INVITE_SENT, 300 * 1000);
             
-            return new ModelLoader<User>(InviteFriendsActivity.this, User.class, true);
+            return new ModelLoader<User>(InviteFriendsActivity.this, User.class, fromFriends, true);
         }
 
 

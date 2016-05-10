@@ -22,6 +22,7 @@ import java.util.List;
 
 public class ListFriendsActivity extends BaseActivity{
 
+    private static final long SYNC_UPDATE_DELAY = 30 * 1000;
     private String TAG = "ListFriendsActivity";
 
     private RecyclerView recyclerView;
@@ -74,7 +75,7 @@ public class ListFriendsActivity extends BaseActivity{
         {
             progressView.setVisibility(View.VISIBLE);
             From from = MyApplication.getCurrentUser().getFriendsQuery();
-            User.getRemoteEntries(context, from, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000);
+            User.getRemoteEntries(context, from, DataSyncAdapter.SYNC_TYPE_FRIENDS, SYNC_UPDATE_DELAY);
             return new ModelLoader<>(ListFriendsActivity.this, User.class, from, true);
         }
 
