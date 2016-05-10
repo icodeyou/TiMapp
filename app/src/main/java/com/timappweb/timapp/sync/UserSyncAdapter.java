@@ -36,6 +36,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
+import com.timappweb.timapp.sync.performers.UserQuotaSyncPerformer;
 
 import java.io.IOException;
 import java.util.List;
@@ -94,7 +95,7 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
             Response response = remoteQuery.execute();
             if (response.isSuccess()){
                 List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
-                new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
+                new UserQuotaSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
             }
         }
         catch (IOException e) {

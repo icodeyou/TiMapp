@@ -215,6 +215,19 @@ public interface WebServiceInterface {
     @POST("PlacesUsers/here.json")
     Call<RestFeedback> notifyPlaceHere(@Body Map<String, String> conditions);
 
+    /**
+     *
+     */
+    @POST("PlacesUsers/cancelComing.json")
+    Call<RestFeedback> cancelComing(@Body Map<String, String> conditions);
+
+    /**
+     *
+     */
+    @POST("PlacesUsers/cancelHere.json")
+    Call<RestFeedback> cancelHere(@Body Map<String, String> conditions);
+
+
     @POST("PlacesUsers/place/{id}.json")
     Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
 
@@ -236,4 +249,5 @@ public interface WebServiceInterface {
 
     @GET("configurations/application-rules")
     Call<ApplicationRules> applicationRules();
+
 }

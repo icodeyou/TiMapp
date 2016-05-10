@@ -82,13 +82,14 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
                 }
             }
 
-            this.onRemoteOnly(entryMap.values());
+            if (entryMap.values().size() > 0){
+                this.onRemoteOnly(entryMap.values());
+            }
 
             Log.i(TAG, "Merge solution ready. Applying updates");
             ActiveAndroid.setTransactionSuccessful();
         }
-        finally
-        {
+        finally {
             Log.i(TAG, "Merge solution done");
             ActiveAndroid.endTransaction();
         }

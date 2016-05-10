@@ -30,6 +30,11 @@ public class UserFriend extends MyModel {
     public UserFriend() {
     }
 
+    public UserFriend(User userSource, User userTarget) {
+        this.userSource = userSource;
+        this.userTarget = userTarget;
+    }
+
     @Override
     public String toString() {
         return "UserFriend{" +

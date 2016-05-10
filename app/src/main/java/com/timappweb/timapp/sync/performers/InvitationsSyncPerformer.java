@@ -36,7 +36,7 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
 
             PlacesInvitation invitation = (PlacesInvitation) localModel;
             this.completeUser(invitation);
-            invitation.save();
+            invitation.deepSave();
 
             syncResult.stats.numUpdates++;
             Log.i(TAG, "Updating: " + localModel.toString());
@@ -53,11 +53,11 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
             Log.i(TAG, "Scheduling insert: " + m.toString());
             PlacesInvitation invitation = (PlacesInvitation) m;
             if (invitation.user_source == null && invitation.user_target == null) {
-                Log.e(TAG, "Receivied invitation from unknown counter part... Skipping...");
+                Log.e(TAG, "Received invitation from unknown counter part... Skipping...");
                 continue;
             }
             this.completeUser(invitation);
-            invitation.saveWithRemoteKey();
+            invitation.deepSave();
             syncResult.stats.numInserts++;
         }
     }
@@ -71,8 +71,9 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
 
 
     private void completeUser(PlacesInvitation invitation){
-        if (invitation.user_target == null && invitation.user_source != null)
+        if (invitation.user_target == null && invitation.user_source != null){
             invitation.user_target = MyApplication.getCurrentUser();
+        }
         else if (invitation.user_target != null && invitation.user_source == null){
             invitation.user_source = MyApplication.getCurrentUser();
         }

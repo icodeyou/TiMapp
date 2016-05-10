@@ -38,7 +38,7 @@ public class SingleEntrySyncPerformer implements SyncPerformer {
             SyncBaseModel model = response.body();
             if (model != null){
                 Log.d(TAG, "Server returned a object. Synchronizing with local entry.");
-                model.saveWithRemoteKey();
+                model.deepSave();
             }
             else{
                 Log.e(TAG, "Server returned a null response when performing a entry sync");

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
@@ -12,13 +11,10 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -52,6 +48,25 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     public long getRemoteId(){
         return this.remote_id;
+    }
+
+    /**
+     *
+     * Saving the model from the remote server key if there is no ActiveAndroid primary key.
+     * Il the record already exists, it is updated otherwise inserted
+     *
+     * @return
+     */
+    public <T extends MyModel> T deepSave(){
+        if (!this.hasLocalId()){
+            SyncBaseModel model = this.queryByRemoteId().executeSingle();
+            if (model != null){
+                model.sync(this);
+                Log.d(TAG, "Updating existing remote model: " + model);
+                return (T) model;
+            }
+        }
+        return super.deepSave();
     }
 
     /**
@@ -150,21 +165,6 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
         bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
         bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(syncType));
         DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
-    }
-
-    /**
-     * Saving the model from the remote server key (do not use ActiveAndroid primary key)
-     * Il the record already exists, it is updated otherwise inserted
-     */
-    public void saveWithRemoteKey(){
-        SyncBaseModel model = this.queryByRemoteId().executeSingle();
-        if (model == null){
-            long id = this.deepSave();
-            Log.v(TAG, "Creating new entry " + this.getClass().getCanonicalName() + " with id " + id);
-        }
-        else{
-            model.sync(this);
-        }
     }
 
     /**

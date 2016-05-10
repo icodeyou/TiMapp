@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.activeandroid.query.Delete;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
@@ -40,15 +41,7 @@ public class FriendsSyncPerformer extends MultipleEntriesSyncPerformer {
 
     @Override
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values){
-        // Add new items
-        for (SyncBaseModel model : values) {
-            User user = (User) model;
-            Log.i(TAG, "Scheduling insert: " + user.toString());
-            user.saveWithRemoteKey();
-            user.replaceAssociation(user.getTags(), UserTag.class);
-            addAssociation(user);
-            syncResult.stats.numInserts++;
-        }
+        MyApplication.getCurrentUser().saveBelongsToMany(values, UserFriend.class);
     }
 
     @Override
@@ -56,13 +49,5 @@ public class FriendsSyncPerformer extends MultipleEntriesSyncPerformer {
         Log.i(TAG, "Deleting: " + localModel.toString());
         new Delete().from(UserFriend.class).where("UserTarget = ?", localModel.getId()).execute();
         syncResult.stats.numDeletes++;
-    }
-
-    private void addAssociation(User model){
-        UserFriend friend = new UserFriend();
-        friend.userTarget = (User) model;
-        friend.userSource = MyApplication.getCurrentUser();
-        long id = friend.save();
-        Log.v(TAG, "Inserting new friend association with id: " + id);
     }
 }

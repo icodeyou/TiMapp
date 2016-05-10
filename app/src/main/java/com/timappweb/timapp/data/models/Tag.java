@@ -17,8 +17,9 @@ public class Tag extends SyncBaseModel implements Serializable, SearchHistory.Se
     public static final int MAXLENGTH = 30;
 
     // =============================================================================================
+    // DATABASE
 
-    @Column(name = "Name")
+    @Column(name = "Name", notNull = true)
     @Expose
     public String name;
 

@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.PlacesInvitationStatus;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @Table(name = "PlacesInvitation")
 public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterface {
 
-    @Column(name = "Created")
+    @Column(name = "Created", notNull = true)
     @Expose(serialize = false, deserialize = true)
     public int created;
 
@@ -24,17 +25,20 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Expose(serialize = false, deserialize = true)
     public int modified;
 
-    @Column(name = "Status")
+    @Column(name = "Status", notNull = true)
     @Expose
     public PlacesInvitationStatus status;
 
+    @ModelAssociation(joinModel = Place.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "Place",
+            notNull = true,
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("place")
     public Place place;
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserSource",
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
@@ -42,6 +46,7 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @SerializedName("user_source")
     public User user_source;
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserTarget",
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)

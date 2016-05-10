@@ -1,5 +1,6 @@
 package com.timappweb.timapp.data.models;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
@@ -22,11 +23,11 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "Username")
+    @Column(name = "Username", notNull = true)
     @Expose
     public String username;
 
-    @Column(name = "Email")
+    @Column(name = "Email", notNull = false)
     @Expose
     public String email;
 
@@ -124,13 +125,14 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     }
 
     public String getProfilePictureUrl() {
+        // TODO use server instead url instead ?
         return "https://graph.facebook.com/" + this.provider_uid + "/picture?type=large";
     }
 
     @Override
     public List<Tag> getTags() {
         if (tags != null) return tags;
-        tags = new Select().from(Tag.class).join(UserTag.class).on("Tag.Id = UserTag.Tag").execute();
+        tags = new Select().from(Tag.class).innerJoin(UserTag.class).on("Tag.Id = UserTag.Tag AND UserTag.User = ?", this.getId()).execute();
         return tags;
     }
     public boolean hasTags() {
@@ -223,4 +225,7 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
         this.tags = tags;
     }
 
+    public UserQuota getQuota(int quotaTypeId) {
+        return UserQuota.get(this.getId(), quotaTypeId);
+    }
 }

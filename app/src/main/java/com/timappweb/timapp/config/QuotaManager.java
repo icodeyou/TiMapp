@@ -38,7 +38,7 @@ public class QuotaManager {
         UserActivity userActivity = new UserActivity(quotaTypeId);
         userActivity.save();
 
-        UserQuota.increment(MyApplication.getCurrentUser().remote_id, quotaTypeId);
+        UserQuota.increment(MyApplication.getCurrentUser().getId(), quotaTypeId);
 
         return userActivity;
     }
@@ -60,7 +60,7 @@ public class QuotaManager {
         if (!MyApplication.isLoggedIn()){
             return false;
         }
-        UserQuota userQuota = UserQuota.get(MyApplication.getCurrentUser().remote_id, quotaTypeId);
+        UserQuota userQuota = MyApplication.getCurrentUser().getQuota(quotaTypeId);
 
         if (userQuota == null){
             Log.e(TAG, "There is no quota with id " + quotaTypeId);

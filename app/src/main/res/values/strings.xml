@@ -212,6 +212,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="iamcoming">I\'m coming !</string>
     <string name="please_wait_location">Please wait while we get your location</string>
     <string name="event_over_change_status">The event is finished, you can\'t change your status !</string>
+    <string name="cannot_notify_status">Sorry, you cannot notify your status for now</string>
 
 
 </resources>

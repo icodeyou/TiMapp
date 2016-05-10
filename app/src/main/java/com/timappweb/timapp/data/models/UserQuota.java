@@ -20,13 +20,16 @@ public class UserQuota extends SyncBaseModel {
     private static final String TAG = "UserQuota";
     public String _quota_error_reason;
 
+    // =============================================================================================
+    // DATABASE
+
     @Expose
-    @Column(name = "QuotaTypeId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
+    @Column(name = "QuotaTypeId", index = true, notNull = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public int remote_id;
 
     @Expose
-    @Column(name = "UserId", index = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
-    public int user_id;
+    @Column(name = "User", index = true, notNull = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
+    public User user;
 
     @Expose
     @Column(name = "MinDelay")
@@ -84,6 +87,7 @@ public class UserQuota extends SyncBaseModel {
     @Column(name = "CountOverall")
     public int count_overall;
 
+    // =============================================================================================
 
     public UserQuota() {
         super();
@@ -94,10 +98,10 @@ public class UserQuota extends SyncBaseModel {
                 .execute();
     }
 
-    public static UserQuota get(int user_id, int type){
+    public static UserQuota get(long user_id, int type){
         UserQuota userQuota = new Select()
                 .from(UserQuota.class)
-                .where("UserId = ?", user_id)
+                .where("User = ?", user_id)
                 .where("QuotaTypeId = ?", type)
                 .executeSingle();
         return userQuota;
@@ -141,7 +145,7 @@ public class UserQuota extends SyncBaseModel {
     }
 
 
-    public static void increment(int userId, int type) {
+    public static void increment(long userId, int type) {
         UserQuota userQuota = UserQuota.get(userId, type);
         if (userQuota == null){
             Log.i(TAG, "Quota type: " + type + " does not exists");
@@ -211,7 +215,7 @@ public class UserQuota extends SyncBaseModel {
     public String toString() {
         return "UserQuota{" +
                 " type=" + remote_id +
-                ", user=" + user_id +
+                ", user=" + user +
                 ", last_activity=" + last_activity + "/" + min_delay + " ("+ Util.delayFromNow((int)last_activity)+" sec)" +
                 ", minute=" + count_minute + "/" + quota_minute +
                 ", hour=" + count_hour + "/" + quota_hour +
@@ -231,7 +235,7 @@ public class UserQuota extends SyncBaseModel {
         UserQuota userQuota = (UserQuota) o;
 
         if (remote_id != userQuota.remote_id) return false;
-        if (user_id != userQuota.user_id) return false;
+        if (user != userQuota.user) return false;
         if (min_delay != userQuota.min_delay) return false;
         if (quota_minute != userQuota.quota_minute) return false;
         if (quota_hour != userQuota.quota_hour) return false;
@@ -259,7 +263,7 @@ public class UserQuota extends SyncBaseModel {
         UserQuota userQuota = (UserQuota) o;
 
         if (remote_id != userQuota.remote_id) return false;
-        if (user_id != userQuota.user_id) return false;
+        if (user != userQuota.user) return false;
         if (min_delay != userQuota.min_delay) return false;
         if (quota_minute != userQuota.quota_minute) return false;
         if (quota_hour != userQuota.quota_hour) return false;
@@ -281,7 +285,7 @@ public class UserQuota extends SyncBaseModel {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + remote_id;
-        result = 31 * result + user_id;
+        result = 31 * result + 2;
         return result;
     }
 

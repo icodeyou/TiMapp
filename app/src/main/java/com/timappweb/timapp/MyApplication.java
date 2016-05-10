@@ -41,7 +41,7 @@ import java.util.List;
 import retrofit2.Call;
 
 public class MyApplication extends com.activeandroid.app.Application {
-    private static final String DB_NAME = "prepop.db";
+
     private static final String TAG = "MyApplication";
     private static final int TOKEN_CHECK_DELAY = 3600; // Check token every 1 hour
 

@@ -107,7 +107,7 @@ public class AuthProvider {
             .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
             .commit();
         currentUser = user;
-        currentUser.saveWithRemoteKey();
+        currentUser = currentUser.deepSave();
         _isUserLoaded = true;
     }
 

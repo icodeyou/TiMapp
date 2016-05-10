@@ -307,9 +307,10 @@ public class EventActivity extends BaseActivity {
                     matchButton.setImageResource(R.drawable.match_white);
                     postButtons.startAnimation(postButtonsAppear);
                     postButtons.setVisibility(View.VISIBLE);
+                    addPlaceStatus(UserPlaceStatusEnum.HERE);
                 } else {
                     matchButton.setImageResource(R.drawable.ic_coming_guy_white);
-                    addComing();
+                    addPlaceStatus(UserPlaceStatusEnum.COMING);
                 }
             }
 
@@ -324,6 +325,7 @@ public class EventActivity extends BaseActivity {
                 } else {
                     matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
                 }
+                removePlaceStatus();
             }
         };
 
@@ -336,58 +338,29 @@ public class EventActivity extends BaseActivity {
         });
     }
 
-    private void addComing() {
+    private void addPlaceStatus(UserPlaceStatusEnum status) {
+        if (event == null){
+            return;
+        }
         // TODO fine location
-        if (!MyApplication.hasLastLocation()) {
+        if (!MyApplication.hasFineLocation()) {
             Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
-        QueryCondition conditions = new QueryCondition();
-        conditions.setPlaceId(eventId);
-        conditions.setAnonymous(false);
-        conditions.setUserLocation(MyApplication.getLastLocation());
-
-        Call<RestFeedback> call = RestClient.service().notifyPlaceComing(conditions.toMap());
-        call.enqueue(new RestFeedbackCallback(currentActivity) {
-            @Override
-            public void onActionSuccess(RestFeedback feedback) {
-                Log.d(TAG, "Success register coming for user on place " + eventId);
-                PlaceStatusManager.add(eventId, UserPlaceStatusEnum.COMING);
-            }
-
-            @Override
-            public void onActionFail(RestFeedback feedback) {
-                Log.d(TAG, "Fail register coming for user on event " + eventId);
-                Toast.makeText(EventActivity.this,
-                        getString(R.string.cannot_add_coming_status), Toast.LENGTH_SHORT).show();
-            }
-        });
+        PlaceStatusManager.instance().add(this, event, status);
+    }
+    private void removePlaceStatus() {
+        if (event == null){
+            return;
+        }
+        PlaceStatusManager.instance().cancel(this, event);
     }
 
     private void addTags() {
-        // TODO fine location
-        if (!MyApplication.hasLastLocation()) {
+        if (!MyApplication.hasFineLocation()) {
             Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
-
-        QueryCondition conditions = new QueryCondition();
-        conditions.setPlaceId(event.remote_id);
-        conditions.setAnonymous(false);
-        conditions.setUserLocation(MyApplication.getLastLocation());
-        Call<RestFeedback> call = RestClient.service().notifyPlaceHere(conditions.toMap());
-        call.enqueue(new RestFeedbackCallback(currentActivity) {
-            @Override
-            public void onActionSuccess(RestFeedback feedback) {
-                Log.d(TAG, "Success register here for user");
-            }
-
-            @Override
-            public void onActionFail(RestFeedback feedback) {
-                Log.d(TAG, "Fail register here for user");
-            }
-        });
-
         IntentsUtils.addTags(currentActivity, event);
     }
 
