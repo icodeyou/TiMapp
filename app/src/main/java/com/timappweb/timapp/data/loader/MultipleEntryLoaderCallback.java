@@ -41,6 +41,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
         SyncBaseModel.getEntries(context, query, syncType, syncDelay);
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
         return new ModelLoader(context, User.class, query, false);
     }
 
