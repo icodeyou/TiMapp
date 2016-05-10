@@ -142,6 +142,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
              */
             ContentResolver.setIsSyncable(mAccount, context.getString(R.string.content_authority_config), 1);
             ContentResolver.setIsSyncable(mAccount, context.getString(R.string.content_authority_data), 1);
+            ContentResolver.setIsSyncable(mAccount, context.getString(R.string.content_authority_user), 1);
 
             onAccountCreated(mAccount, context);
         }
