@@ -37,7 +37,7 @@ public class SingleEntrySyncPerformer implements SyncPerformer {
         if (response.isSuccess()){
             SyncBaseModel model = response.body();
             if (model != null){
-                Log.e(TAG, "Server returned a object. Synchronizing with local entry.");
+                Log.d(TAG, "Server returned a object. Synchronizing with local entry.");
                 model.saveWithRemoteKey();
             }
             else{

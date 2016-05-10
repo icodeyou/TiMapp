@@ -83,14 +83,14 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     /**
-     * Get a remote entry in the db. If no entry, request an immediate sync with the server
+     * Get a entry in the db. If no entry, request an immediate sync with the server
      * @param classType The entry class type
      * @param context   The context
      * @param key       The remote key remote_id
      * @param syncType  The sync type to call
      * @return If there is a local version of the entry, retu
      */
-    public static SyncBaseModel getRemoteEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
+    public static SyncBaseModel getEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
         SyncBaseModel model = queryByRemoteId(classType, key).executeSingle();
         if (model != null){
             if (model.isUpToDate()){
@@ -101,13 +101,23 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
                 Log.i(TAG, "Entry exists in local db but it's outdated: " + model);
             }
         }
-
+        getRemoteEntry(classType, context, key, syncType);
+        return null;
+    }
+    /**
+     * Request an immediate sync with the server to get data
+     * @param classType The entry class type
+     * @param context   The context
+     * @param key       The remote key remote_id
+     * @param syncType  The sync type to call
+     * @return If there is a local version of the entry, retu
+     */
+    public static void getRemoteEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
         Log.i(TAG, "Request sync for entry " + classType + " with id " + key);
         Bundle bundle = new Bundle();
         bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
         bundle.putInt(DataSyncAdapter.SYNC_ID_KEY, key);
         DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
-        return model;
     }
 
     /**
@@ -117,13 +127,10 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @param syncType
      * @return
      */
-    public static <DataType extends SyncBaseModel> List<DataType> getRemoteEntries(Context context, From query, int syncType, long syncDelay){
+    public static <DataType extends SyncBaseModel> List<DataType> getEntries(Context context, From query, int syncType, long syncDelay){
         // If need sync
         if (SyncHistory.requireUpdate(syncType, syncDelay)){
-            Bundle bundle = new Bundle();
-            bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
-            bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(syncType));
-            DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
+            getRemoteEntries(context, syncType);
             return null;
         }
         else {
@@ -131,6 +138,18 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
             List<DataType> data = query.execute();
             return data;
         }
+    }
+    /**
+     * Get remote entries for a specified model.
+     * @param context
+     * @param syncType
+     * @return
+     */
+    public static void getRemoteEntries(Context context, int syncType){
+        Bundle bundle = new Bundle();
+        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
+        bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(syncType));
+        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
     }
 
     /**

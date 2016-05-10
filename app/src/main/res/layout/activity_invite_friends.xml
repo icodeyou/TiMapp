@@ -7,64 +7,65 @@
 
     <include layout="@layout/toolbar" />
 
-    <include layout="@layout/no_friends_layout"
-        android:id="@+id/no_friends_view"
-        android:visibility="gone"/>
 
-    <include
-        layout="@layout/loading_friends"
-        android:id="@+id/loading_friends"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_big_header" />
+        android:layout_height="0dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <!--
-        <com.dpizarro.autolabel.library.AutoLabelUI
-            android:remote_id="@+remote_id/label_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_labels_invitefriends"
-            android:layout_marginBottom="@dimen/margin_labels_invitefriends"
-            autolabel:show_cross="true"
-            autolabel:text_color="@color/colorAccent"
-            autolabel:text_size="@dimen/label_title_size"
-            autolabel:icon_cross="@drawable/delete"
-            autolabel:label_background_res="@color/colorSecondary"
-            autolabel:label_clickable="true"/>
-            -->
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/recyclerView"
-            android:visibility="visible"/>
+        <include layout="@layout/no_friends_layout"
+            android:id="@+id/no_friends_view"
+            android:visibility="gone"/>
 
         <LinearLayout
-            android:id="@+id/invite_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin_square_button"
-            android:layout_marginBottom="@dimen/margin_square_button"
-            android:background="@drawable/background_button_littlesquare">
-            <TextView
-                android:id="@+id/text_invite_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--
+            <com.dpizarro.autolabel.library.AutoLabelUI
+                android:remote_id="@+remote_id/label_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_labels_invitefriends"
+                android:layout_marginBottom="@dimen/margin_labels_invitefriends"
+                autolabel:show_cross="true"
+                autolabel:text_color="@color/colorAccent"
+                autolabel:text_size="@dimen/label_title_size"
+                autolabel:icon_cross="@drawable/delete"
+                autolabel:label_background_res="@color/colorSecondary"
+                autolabel:label_clickable="true"/>
+                -->
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/recyclerView"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:id="@+id/invite_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="30dp"
-                android:paddingLeft="30dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:textColor="@color/text_button"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:text="@string/invite_button"
-                android:gravity="center"
-                android:textSize="@dimen/text_normal"/>
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_square_button"
+                android:layout_marginBottom="@dimen/margin_square_button"
+                android:background="@drawable/background_button_littlesquare">
+                <TextView
+                    android:id="@+id/text_invite_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="30dp"
+                    android:paddingLeft="30dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:textColor="@color/text_button"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:text="@string/invite_button"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_normal"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -1,11 +1,12 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.UserTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.SingleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
@@ -48,10 +50,9 @@ public class ProfileActivity extends BaseActivity  {
     private View layoutTagsProfile;
     private View noConnectionView;
     private SimpleDraweeView profilePicture;
-    private View progressView1;
-    private View progressView2;
     private View lastPostContainer;
     private UserLoader mLoader;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
@@ -74,9 +75,9 @@ public class ProfileActivity extends BaseActivity  {
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
         profilePicture = (SimpleDraweeView) findViewById(R.id.profile_picture);
-        progressView1 = findViewById(R.id.progress_view1);
-        progressView2 = findViewById(R.id.progress_view2);
         lastPostContainer = findViewById(R.id.profile_last_post_container);
+
+
 
         initUserTagsAdapter();
 
@@ -95,6 +96,7 @@ public class ProfileActivity extends BaseActivity  {
         mLoader = new UserLoader();
         getSupportLoaderManager().initLoader(0, null, mLoader);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,10 +131,8 @@ public class ProfileActivity extends BaseActivity  {
         Log.i(TAG, mUser + " loaded");
         tvUsername.setText(mUser.username);
         tvAge.setText("");
-        progressView1.setVisibility(View.GONE);
         tvCountTags.setText(String.valueOf(mUser.count_posts));
         tvCountTags.setVisibility(View.VISIBLE);
-        progressView2.setVisibility(View.GONE);
         tvCountPlaces.setText(String.valueOf(mUser.count_places));
         tvCountPlaces.setVisibility(View.VISIBLE);
 
@@ -208,29 +208,20 @@ public class ProfileActivity extends BaseActivity  {
 
     // =============================================================================================
 
-    class UserLoader implements LoaderManager.LoaderCallbacks<List<User>>{
+    class UserLoader extends SingleEntryLoaderCallback<User> {
 
-        @Override
-        public Loader<List<User>> onCreateLoader(int id, Bundle args) {
-            mUser = (User) SyncBaseModel.getRemoteEntry(User.class, ProfileActivity.this, userId, DataSyncAdapter.SYNC_TYPE_USER);
-            if (mUser != null){
-                updateView();
-            }
-            return new ModelLoader<User>(ProfileActivity.this, User.class, SyncBaseModel.queryByRemoteId(User.class, userId), false);
+        public UserLoader() {
+            super(ProfileActivity.this, userId, User.class, DataSyncAdapter.SYNC_TYPE_USER);
+            this.setSwipeAndRefreshLayout();
         }
 
         @Override
         public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
-            Log.d(TAG, "User loaded finish");
+            super.onLoadFinished(loader, data);
             if (data.size() > 0){
                 mUser = data.get(0);
                 updateView();
             }
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<User>> loader) {
-
         }
     }
 

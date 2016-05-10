@@ -6,21 +6,30 @@
 
     <include layout="@layout/toolbar" />
 
+
+
     <include
         layout="@layout/loading_friends"
         android:id="@+id/loading_friends"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_big_header" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="visible"/>
+        android:layout_height="match_parent">
 
-    <include layout="@layout/no_friends_layout"
-        android:id="@+id/no_friends_view"
-        android:visibility="gone"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="visible"/>
+
+        <include layout="@layout/no_friends_layout"
+            android:id="@+id/no_friends_view"
+            android:visibility="gone"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

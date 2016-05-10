@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -14,17 +15,19 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
 
 public class InvitationsActivity extends BaseActivity{
 
-    private static final long SYNC_UPDATE_DELAY = 30 * 1000;
+    private static final long SYNC_UPDATE_DELAY = 6 * 3600 * 1000;
 
     private String TAG = "ListFriendsActivity";
     private List<PlacesInvitation> invitations;
@@ -32,7 +35,6 @@ public class InvitationsActivity extends BaseActivity{
     private InvitationsAdapter adapter;
     private View noInvitationsView;
 
-    private View progressView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,7 +45,6 @@ public class InvitationsActivity extends BaseActivity{
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noInvitationsView = findViewById(R.id.no_invitations_view);
-        progressView = findViewById(R.id.loading_invitations);
 
         initAdapterListFriends();
 
@@ -75,7 +76,6 @@ public class InvitationsActivity extends BaseActivity{
             noInvitationsView.setVisibility(View.GONE);
             adapter.setData(items);
         }
-        progressView.setVisibility(View.GONE);
     }
 
     private void onItemListClicked(int position) {
@@ -87,27 +87,20 @@ public class InvitationsActivity extends BaseActivity{
 
     // =============================================================================================
 
-    class InvitationLoader implements LoaderManager.LoaderCallbacks<List<PlacesInvitation>>{
+    class InvitationLoader extends MultipleEntryLoaderCallback{
 
-        @Override
-        public Loader<List<PlacesInvitation>> onCreateLoader(int id, Bundle args) {
-            From query = MyApplication.getCurrentUser().getInviteReceivedQuery();
-            SyncBaseModel.getRemoteEntries(InvitationsActivity.this, query, DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED, SYNC_UPDATE_DELAY);
-            //if (invites != null){
-            //    updateView(invites);
-            //}
-            return new ModelLoader<>(InvitationsActivity.this, PlacesInvitation.class, query, false);
+        public InvitationLoader() {
+            super(InvitationsActivity.this,
+                    DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED,
+                    SYNC_UPDATE_DELAY,
+                    MyApplication.getCurrentUser().getInviteReceivedQuery());
+            this.setSwipeAndRefreshLayout();
         }
 
         @Override
-        public void onLoadFinished(Loader<List<PlacesInvitation>> loader, List<PlacesInvitation> data) {
-            Log.d(TAG, "Place loaded finish");
+        public void onLoadFinished(Loader loader, List data) {
+            super.onLoadFinished(loader, data);
             updateView(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<PlacesInvitation>> loader) {
-
         }
     }
 }

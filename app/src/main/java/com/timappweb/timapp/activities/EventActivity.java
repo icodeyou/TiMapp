@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -579,7 +578,7 @@ public class EventActivity extends BaseActivity {
 
         @Override
         public Loader<List<Place>> onCreateLoader(int id, Bundle args) {
-            event = (Place) SyncBaseModel.getRemoteEntry(Place.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_PLACE);
+            event = (Place) SyncBaseModel.getEntry(Place.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_PLACE);
             if (event != null){
                 updateView();
             }

@@ -19,6 +19,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
@@ -45,7 +46,6 @@ public class InviteFriendsActivity extends BaseActivity {
 
     private View                        inviteButton;
     private View                        noFriendsView;
-    private View                        progressView;
 
     private List<User>                  friendsSelected;
     private List<User>                  allFbFriends;
@@ -70,7 +70,6 @@ public class InviteFriendsActivity extends BaseActivity {
 
         inviteButton = findViewById(R.id.invite_button);
         noFriendsView = findViewById(R.id.no_friends_view);
-        progressView = findViewById(R.id.loading_friends);
         //mAutoLabel = (AutoLabelUI) findViewById(R.remote_id.label_view);
         //mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -196,45 +195,31 @@ public class InviteFriendsActivity extends BaseActivity {
 
     // LOADER FUNCTIONS ============================================================================
 
-    class FriendsLoader implements LoaderManager.LoaderCallbacks<List<User>>
+    class FriendsLoader extends MultipleEntryLoaderCallback
     {
 
-        @Override
-        public Loader<List<User>> onCreateLoader(int id, Bundle args)
-        {
-            progressView.setVisibility(View.VISIBLE);
-            //setProgressBarIndeterminateVisibility(true);
-            From fromFriends = MyApplication.getCurrentUser().getFriendsQuery();
-            SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromFriends, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000);
-
-            //TODO
-            //From fromInvites = MyApplication.getCurrentUser().getInviteSentQuery(place.getId());
-            //SyncBaseModel.getRemoteEntries(InviteFriendsActivity.this, fromInvites, DataSyncAdapter.SYNC_TYPE_INVITE_SENT, 300 * 1000);
-            
-            return new ModelLoader<User>(InviteFriendsActivity.this, User.class, fromFriends, true);
+        public FriendsLoader() {
+            super(InviteFriendsActivity.this, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000, MyApplication.getCurrentUser().getFriendsQuery());
+            this.setSwipeAndRefreshLayout();
         }
 
-
         @Override
-        public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
+        public void onLoadFinished(Loader loader, List data) {
+            super.onLoadFinished(loader, data);
             allFbFriends = data;
             adapter.clear();
             adapter.setData(data);
             adapter.notifyDataSetChanged();
-
             //setProgressBarIndeterminateVisibility(false);
             Log.i(TAG, "Loaded " + data.size() + " friends for the user");
             //noFriendsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
-            progressView.setVisibility(View.GONE);
         }
 
-
         @Override
-        public void onLoaderReset(Loader<List<User>> loader)
-        {
+        public void onLoaderReset(Loader loader) {
+            super.onLoaderReset(loader);
             adapter.clear();
             adapter.notifyDataSetChanged();
         }
-
     }
 }
