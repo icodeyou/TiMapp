@@ -473,7 +473,7 @@ public class EventActivity extends BaseActivity {
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if(event != null && MyApplication.hasLastLocation()) {
+        if(fragmentTags.getEventView()!=null && MyApplication.hasLastLocation()) {
 
             //if we are in the place
             boolean isUserComing = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.COMING);
@@ -577,7 +577,6 @@ public class EventActivity extends BaseActivity {
             if (data.size() > 0){
                 event = data.get(0);
                 updateView();
-                updateBtnVisibility();
             }
         }
 
