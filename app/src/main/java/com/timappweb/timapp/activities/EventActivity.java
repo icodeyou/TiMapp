@@ -168,8 +168,6 @@ public class EventActivity extends BaseActivity {
         setListeners();
         setActions();
 
-        updateBtnVisibility();
-
         EventLoader mLoader = new EventLoader();
         getSupportLoaderManager().initLoader(0, null, mLoader);
     }
@@ -200,22 +198,11 @@ public class EventActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.getItem(1).setEnabled(true);
-        return super.onPrepareOptionsMenu(menu);
-
-    }
-
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.action_share:
                 setDefaultShareIntent();
-                return true;
-            case R.id.action_reload:
-                reloadData();
                 return true;
             case android.R.id.home:
                 finish();
@@ -590,6 +577,7 @@ public class EventActivity extends BaseActivity {
             if (data.size() > 0){
                 event = data.get(0);
                 updateView();
+                updateBtnVisibility();
             }
         }
 

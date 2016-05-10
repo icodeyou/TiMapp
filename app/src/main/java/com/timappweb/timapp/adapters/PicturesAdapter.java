@@ -43,7 +43,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
     @Override
     public void onBindViewHolder(PictureViewHolder holder, final int position) {
-        Picture picture = data.get(data.size()-position-1);
+        Picture picture = data.get(position);
         final String fullUrl = this.baseUrl + "/" + picture.getPreviewUrl();
         Log.d(TAG, "Loading picture in adapter: " + fullUrl);
 

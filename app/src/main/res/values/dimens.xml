@@ -95,7 +95,7 @@
     <dimen name="width_category_title">150dp</dimen>
     <dimen name="icon_add_event">50dp</dimen>
     <dimen name="margin_custom_toolbar_left">40dp</dimen>
-    <dimen name="margin_custom_toolbar_right">95dp</dimen>
+    <dimen name="margin_custom_toolbar_right">50dp</dimen>
     <dimen name="width_add_event_buttons">120dp</dimen>
     <dimen name="margin_post_button">10dp</dimen>
     <dimen name="padding_post_button">10dp</dimen>

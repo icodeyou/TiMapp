@@ -155,6 +155,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="place_removed">This place does not exists anymore</string>
 
     <!-- Can't load -->
+    <string name="cannot_load">We cannot load any data.\nCheck your internet connection.</string>
     <string name="cannot_load_profile">We cannot load your profile.\nCheck your internet connection.</string>
     <string name="cannot_load_events">We cannot load the events.\nCheck your internet connection.</string>
     <string name="cannot_load_tags">We cannot load the tags.\nCheck your internet connection.</string>
