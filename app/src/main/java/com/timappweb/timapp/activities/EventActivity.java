@@ -8,7 +8,6 @@ import android.content.res.ColorStateList;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -48,6 +47,7 @@ import com.timappweb.timapp.fragments.PlaceBaseFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
+import com.timappweb.timapp.listeners.SelectableButtonListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.QueryCondition;
@@ -55,6 +55,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.views.EventView;
+import com.timappweb.timapp.views.SelectableFloatingButton;
 import com.timappweb.timapp.views.SpotView;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class EventActivity extends BaseActivity {
     private View        progressBottom;
     private View        parentLayout;
     private View        postButtons;
-    private FloatingActionButton matchButton;
+    private SelectableFloatingButton matchButton;
     private View picButton;
     private View tagButton;
     private View peopleButton;
@@ -113,6 +114,7 @@ public class EventActivity extends BaseActivity {
     private boolean isMatchButtonSelected;
     private AlphaAnimation postButtonsAppear;
     private AlphaAnimation postButtonsDisappear;
+    private SelectableButtonListener selectableButtonListener;
 
 
     //Override methods
@@ -156,7 +158,7 @@ public class EventActivity extends BaseActivity {
         tagsListView = (ListView) findViewById(R.id.tags_lv);
         progressView = findViewById(R.id.progress_view);
         postButtons = findViewById(R.id.event_post_buttons);
-        matchButton = (FloatingActionButton) findViewById(R.id.fab);
+        matchButton = (SelectableFloatingButton) findViewById(R.id.fab);
         picButton = findViewById(R.id.event_post_pic);
         tagButton = findViewById(R.id.event_post_tags);
         peopleButton = findViewById(R.id.event_post_people);
@@ -166,9 +168,7 @@ public class EventActivity extends BaseActivity {
         setListeners();
         setActions();
 
-        //Init Match Button
-        setButtonActive(isMatchButtonSelected);
-        matchButton.setVisibility(View.VISIBLE);
+        updateBtnVisibility();
 
         EventLoader mLoader = new EventLoader();
         getSupportLoaderManager().initLoader(0, null, mLoader);
@@ -271,7 +271,7 @@ public class EventActivity extends BaseActivity {
         updateBtnVisibility();
     }
 
-    private void changeMatchColor(int color) {
+    private void changeFabColor(int color) {
         matchButton.setBackgroundTintList(ColorStateList.valueOf(
                 ContextCompat.getColor(this, color)));
     }
@@ -310,82 +310,71 @@ public class EventActivity extends BaseActivity {
         postButtonsDisappear = new AlphaAnimation(1, 0);
         postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
 
-        isMatchButtonSelected = false;
 
+        selectableButtonListener = new SelectableButtonListener() {
+            @Override
+            public void onAble() {
+                changeFabColor(R.color.colorPrimaryDark);
+                fragmentTags.getEventView().updatePointsView(true);
+                if (isUserAround()) {
+                    matchButton.setImageResource(R.drawable.match_white);
+                    postButtons.startAnimation(postButtonsAppear);
+                    postButtons.setVisibility(View.VISIBLE);
+                } else {
+                    matchButton.setImageResource(R.drawable.ic_coming_guy_white);
+                    addComing();
+                }
+            }
+
+            @Override
+            public void onDisable() {
+                changeFabColor(R.color.white);
+                fragmentTags.getEventView().updatePointsView(false);
+                if(isUserAround()) {
+                    matchButton.setImageResource(R.drawable.match_red);
+                    postButtons.startAnimation(postButtonsDisappear);
+                    postButtons.setVisibility(View.GONE);
+                } else {
+                    matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
+                }
+            }
+        };
+
+        matchButton.setSelectableListener(selectableButtonListener);
         matchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isMatchButtonSelected && event.isAround()) {
-                    isMatchButtonSelected = true;
-
-                } else {
-                    isMatchButtonSelected = false;
-                }
-                setButtonActive(isMatchButtonSelected);
-                fragmentTags.getEventView().updatePointsView(isMatchButtonSelected);
-
-            }
-        });
-
-        iAmComingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                iAmComingButton.setVisibility(View.GONE);
-                progressBottom.setVisibility(View.VISIBLE);
-                // TODO fine location
-                if (!MyApplication.hasLastLocation()) {
-                    Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                QueryCondition conditions = new QueryCondition();
-                conditions.setPlaceId(eventId);
-                conditions.setAnonymous(false);
-                conditions.setUserLocation(MyApplication.getLastLocation());
-
-                Call<RestFeedback> call = RestClient.service().notifyPlaceComing(conditions.toMap());
-                call.enqueue(new RestFeedbackCallback(currentActivity) {
-                    @Override
-                    public void onActionSuccess(RestFeedback feedback) {
-                        Log.d(TAG, "Success register coming for user on place " + eventId);
-                        PlaceStatusManager.add(eventId, UserPlaceStatusEnum.COMING);
-
-                        progressBottom.setVisibility(View.GONE);
-                        updateBtnVisibility();
-                    }
-
-                    @Override
-                    public void onActionFail(RestFeedback feedback) {
-                        Log.d(TAG, "Fail register coming for user on event " + eventId);
-                        Toast.makeText(EventActivity.this,
-                                getString(R.string.cannot_add_coming_status), Toast.LENGTH_SHORT).show();
-                        iAmComingButton.setVisibility(View.VISIBLE);
-                        progressBottom.setVisibility(View.GONE);
-                    }
-                });
+                matchButton.switchButton();
             }
         });
     }
 
-    private void setButtonActive(boolean isActive) {
-        if(isActive) {
-            changeMatchColor(R.color.colorPrimaryDark);
-            if(event.isAround()) {
-                matchButton.setImageResource(R.drawable.match_white);
-                postButtons.startAnimation(postButtonsAppear);
-                postButtons.setVisibility(View.VISIBLE);
-            } else {
-                matchButton.setImageResource(R.drawable.ic_coming_guy_white);
-            }
-        } else {
-            changeMatchColor(R.color.white);
-            if(event.isAround()) {
-                matchButton.setImageResource(R.drawable.match_red);
-                postButtons.startAnimation(postButtonsDisappear);
-                postButtons.setVisibility(View.GONE);
-            } else {
-                matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
-            }
+    private void addComing() {
+        // TODO fine location
+        if (!MyApplication.hasLastLocation()) {
+            Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+            return;
         }
+        QueryCondition conditions = new QueryCondition();
+        conditions.setPlaceId(eventId);
+        conditions.setAnonymous(false);
+        conditions.setUserLocation(MyApplication.getLastLocation());
+
+        Call<RestFeedback> call = RestClient.service().notifyPlaceComing(conditions.toMap());
+        call.enqueue(new RestFeedbackCallback(currentActivity) {
+            @Override
+            public void onActionSuccess(RestFeedback feedback) {
+                Log.d(TAG, "Success register coming for user on place " + eventId);
+                PlaceStatusManager.add(eventId, UserPlaceStatusEnum.COMING);
+            }
+
+            @Override
+            public void onActionFail(RestFeedback feedback) {
+                Log.d(TAG, "Fail register coming for user on event " + eventId);
+                Toast.makeText(EventActivity.this,
+                        getString(R.string.cannot_add_coming_status), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void addTags() {
@@ -436,7 +425,7 @@ public class EventActivity extends BaseActivity {
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
         pager.setCurrentItem(1);
-        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        /*pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -451,7 +440,7 @@ public class EventActivity extends BaseActivity {
             public void onPageScrollStateChanged(int state) {
 
             }
-        });
+        });*/
     }
 
     public void setPager(int pageNumber) {
@@ -497,18 +486,28 @@ public class EventActivity extends BaseActivity {
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if(event != null && MyApplication.hasLastLocation() && childFragments!=null) {
-
-            for (PlaceBaseFragment fragment: childFragments){
-                if (fragment.isVisible()){
-                    fragment.updateBtnVisibility();
-                }
-            }
+        if(event != null && MyApplication.hasLastLocation()) {
 
             //if we are in the place
             boolean isUserComing = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.COMING);
             boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
-            Boolean isAllowedToCome = !event.isAround() && isAllowedToAddComing;
+            //boolean isAllowedToCome = !isUserAround() && isAllowedToAddComing;
+
+            boolean isHereStatus = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.HERE);; //TODO : Fetch user real status
+            boolean isAllowedToAddHere = true; //TODO : Fetch user real allowance
+
+            matchButton.setVisibility(View.GONE);
+
+            if(isUserAround()) {
+                matchButton.setVisibility(View.VISIBLE);
+                matchButton.setState(isHereStatus);
+            } else {
+                if(isAllowedToAddComing || isUserComing) {
+                    matchButton.setVisibility(View.VISIBLE);
+                    matchButton.setState(isUserComing);
+                }
+            }
+
             //iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
             //onMyWayButton.setVisibility(event != null && !event.isAround() && progressView.getVisibility() != View.VISIBLE
             //        && isUserComing ? View.VISIBLE : View.GONE);

@@ -141,35 +141,18 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/horizontal_tags_view"
+                <FrameLayout
+                    android:id="@+id/htrv_frame_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
-                    <FrameLayout
-                        android:id="@+id/htrv_frame_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_rv_displayed_tags"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="5dp"/>
-                    <!--<com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                        android:remote_id="@+remote_id/rv_horizontal_tags"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/height_rv_displayed_tags"
-                        android:layout_gravity="center"
-                        android:background="@color/DarkCyan"
-                        myattrs:horizontal_tags_text_color="@color/Red"
-                        myattrs:horizontal_tags_background_color="@color/DarkGreen"
-                        myattrs:horizontal_tags_is_bold="true"
-                        myattrs:horizontal_tags_text_size="@dimen/text_tags"/>-->
-                </LinearLayout>
+                    android:layout_height="@dimen/height_rv_displayed_tags"
+                    android:layout_gravity="center"/>
 
                 <LinearLayout
                     android:id="@+id/white_points_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
                     android:gravity="center|start"
                     android:visibility="visible">
                     <ImageView
@@ -228,8 +211,8 @@
                         android:id="@+id/description_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
                         android:gravity="left"
                         android:textColor="@color/white"/>
 
@@ -242,7 +225,7 @@
                         android:gravity="center_vertical">
                         <ImageView
                             android:layout_height="@dimen/logo_small"
-                            android:layout_width="@dimen/logo_small"
+                            android:layout_width="@dimen/little_icon_spot"
                             android:src="@drawable/ic_clock_gray"/>
                         <TextView
                             android:id="@+id/time_place"

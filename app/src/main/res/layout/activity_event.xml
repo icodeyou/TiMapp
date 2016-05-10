@@ -167,7 +167,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
         <ImageView
             android:id="@+id/event_post_pic"
             android:layout_weight="1"
@@ -200,7 +200,7 @@
             android:background="@drawable/background_button_littlesquare"/>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.timappweb.timapp.views.SelectableFloatingButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

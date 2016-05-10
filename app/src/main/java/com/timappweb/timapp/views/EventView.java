@@ -157,7 +157,6 @@ public class EventView extends RelativeLayout{
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
         gradientBottomView = findViewById(R.id.bottom_gradient_event);
         //gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
-        tagsView = findViewById(R.id.horizontal_tags_view);
         separator = findViewById(R.id.separator);
         descriptionView = findViewById(R.id.description_event);
         descriptionTv = (TextView) findViewById(R.id.description_textview);
