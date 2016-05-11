@@ -5,8 +5,10 @@ package com.timappweb.timapp.listeners;
  */
 public interface SelectableButtonListener {
 
-    public void onAble();
 
-    public void onDisable();
+    boolean performEnabled();
 
+    boolean performDisabled();
+
+    void updateUI(boolean enabled);
 }

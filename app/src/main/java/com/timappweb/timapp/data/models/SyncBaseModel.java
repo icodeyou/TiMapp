@@ -29,12 +29,12 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     // =============================================================================================
 
-    @Column(name = "SyncId", index = true, unique = true)
+    @Column(name = "SyncId", index = true, unique = true, notNull = true)
     @Expose(serialize = true, deserialize = true)
     @SerializedName("id")
     public int remote_id = -1;
 
-    @Column(name = "_lastSync")
+    @Column(name = "_lastSync", notNull = false)
     protected long _last_sync;
 
     // =============================================================================================
@@ -50,6 +50,9 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
         return this.remote_id;
     }
 
+    public void setRemoteId(int remoteId) {
+        this.remote_id = remoteId;
+    }
     /**
      *
      * Saving the model from the remote server key if there is no ActiveAndroid primary key.

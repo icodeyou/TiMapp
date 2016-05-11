@@ -35,8 +35,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
-import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
@@ -47,10 +45,9 @@ import com.timappweb.timapp.fragments.PlaceBaseFragment;
 import com.timappweb.timapp.fragments.PlacePeopleFragment;
 import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
+import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.listeners.SelectableButtonListener;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -60,8 +57,6 @@ import com.timappweb.timapp.views.SpotView;
 
 import java.util.List;
 import java.util.Vector;
-
-import retrofit2.Call;
 
 public class EventActivity extends BaseActivity {
     private String TAG = "EventActivity";
@@ -73,7 +68,6 @@ public class EventActivity extends BaseActivity {
     //Views
     private View        iAmComingButton;
     private TextView    iAmComingTv;
-    private View        onMyWayButton;
     private TextView    onMyWayTv;
     private View        progressView;
     private ListView    tagsListView;
@@ -111,10 +105,8 @@ public class EventActivity extends BaseActivity {
     private View.OnClickListener peopleListener;
     private Vector<PlaceBaseFragment> childFragments;
 
-    private boolean isMatchButtonSelected;
     private AlphaAnimation postButtonsAppear;
     private AlphaAnimation postButtonsDisappear;
-    private SelectableButtonListener selectableButtonListener;
 
 
     //Override methods
@@ -152,7 +144,6 @@ public class EventActivity extends BaseActivity {
         parentLayout = findViewById(R.id.main_layout_place);
         iAmComingButton = findViewById(R.id.button_coming);
         iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
-        onMyWayButton = findViewById(R.id.button_on_my_way);
         progressBottom = findViewById(R.id.progressview_bottom_place);
         onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
@@ -250,19 +241,6 @@ public class EventActivity extends BaseActivity {
     //private methods
     //////////////////////////////////////////////////////////////////////////////
 
-    private void reloadData() {
-        invalidateOptionsMenu();
-        for (PlaceBaseFragment fragment: childFragments){
-            fragment.loadData();
-        }
-        updateBtnVisibility();
-    }
-
-    private void changeFabColor(int color) {
-        matchButton.setBackgroundTintList(ColorStateList.valueOf(
-                ContextCompat.getColor(this, color)));
-    }
-
 
     private void setListeners() {
         final Activity eventActivity = this;
@@ -297,48 +275,64 @@ public class EventActivity extends BaseActivity {
         postButtonsDisappear = new AlphaAnimation(1, 0);
         postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
 
+        matchButton.setSelectableListener(new SelectableButtonListener() {
 
-        selectableButtonListener = new SelectableButtonListener() {
-            @Override
-            public void onAble() {
+            private void changeFabColor(int color) {
+                matchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventActivity.this, color)));
+            }
+
+            public void setUIEnabled(int resource) {
+                matchButton.setImageResource(resource);
                 changeFabColor(R.color.colorPrimaryDark);
-                fragmentTags.getEventView().updatePointsView(true);
-                if (isUserAround()) {
-                    matchButton.setImageResource(R.drawable.match_white);
-                    postButtons.startAnimation(postButtonsAppear);
-                    postButtons.setVisibility(View.VISIBLE);
-                    addPlaceStatus(UserPlaceStatusEnum.HERE);
-                } else {
-                    matchButton.setImageResource(R.drawable.ic_coming_guy_white);
-                    addPlaceStatus(UserPlaceStatusEnum.COMING);
-                }
             }
 
-            @Override
-            public void onDisable() {
+            public void setUIDisabled(int resource) {
+                matchButton.setImageResource(resource);
                 changeFabColor(R.color.white);
-                fragmentTags.getEventView().updatePointsView(false);
-                if(isUserAround()) {
-                    matchButton.setImageResource(R.drawable.match_red);
-                    postButtons.startAnimation(postButtonsDisappear);
-                    postButtons.setVisibility(View.GONE);
-                } else {
-                    matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
-                }
-                removePlaceStatus();
             }
-        };
 
-        matchButton.setSelectableListener(selectableButtonListener);
-        matchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                matchButton.switchButton();
+            public void updateUI(boolean enabled) {
+                //PlaceStatus placeStatus = PlaceStatusManager.getStatus(event);
+                if (isUserAround()) {
+                    //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.HERE){
+                    if (enabled) {
+                        setUIEnabled(R.drawable.match_white);
+                    } else {
+                        setUIDisabled(R.drawable.match_red);
+                    }
+                } else {
+                    //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.COMING){
+                    if (enabled) {
+                        setUIEnabled(R.drawable.ic_coming_guy_white);
+                    } else {
+                        setUIDisabled(R.drawable.ic_coming_guy_darkred);
+                    }
+                }
+            }
+
+            @Override
+            public boolean performEnabled() {
+                addPlaceStatus();
+                fragmentTags.getEventView().updatePointsView(true);
+                postButtons.startAnimation(postButtonsAppear);
+                postButtons.setVisibility(isUserAround() ? View.VISIBLE : View.GONE);
+                return true;
+            }
+
+            @Override
+            public boolean performDisabled() {
+                removePlaceStatus();
+                fragmentTags.getEventView().updatePointsView(false);
+                postButtons.startAnimation(postButtonsDisappear);
+                postButtons.setVisibility(View.GONE);
+                return true;
             }
         });
+
     }
 
-    private void addPlaceStatus(UserPlaceStatusEnum status) {
+    private void addPlaceStatus() {
         if (event == null){
             return;
         }
@@ -347,13 +341,45 @@ public class EventActivity extends BaseActivity {
             Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
-        PlaceStatusManager.instance().add(this, event, status);
+        final UserPlaceStatusEnum status = isUserAround() ? UserPlaceStatusEnum.HERE : UserPlaceStatusEnum.COMING;
+        PlaceStatusManager.instance().add(this, event, status , new BinaryActionListener(){
+
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure() {
+                matchButton.setStateOn(false);
+            }
+
+            @Override
+            public void onFinish() {
+                matchButton.setEnabled(true);
+            }
+
+        });
     }
     private void removePlaceStatus() {
         if (event == null){
             return;
         }
-        PlaceStatusManager.instance().cancel(this, event);
+        PlaceStatusManager.instance().cancel(this, event, new BinaryActionListener(){
+
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure() {
+                matchButton.setStateOn(true);
+            }
+
+            @Override
+            public void onFinish() {
+                matchButton.setEnabled(true);
+            }
+        });
     }
 
     private void addTags() {
@@ -411,6 +437,7 @@ public class EventActivity extends BaseActivity {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                // TODO only listen for big location changed..
                 MyApplication.setLastLocation(location);
                 if (MyApplication.hasFineLocation()){
                     updateBtnVisibility();
@@ -421,6 +448,9 @@ public class EventActivity extends BaseActivity {
     }
 
 
+    /**
+     *
+     */
     private void updateView() {
         progressView.setVisibility(View.GONE);
         try {
@@ -439,6 +469,11 @@ public class EventActivity extends BaseActivity {
             eventToolbar.setVisibility(View.GONE);
             spotToolbar.setSpot(event.spot);
         }
+
+        PlaceStatus placeStatus = PlaceStatusManager.getStatus(event);
+        boolean stateOn = placeStatus != null  && (placeStatus.status == UserPlaceStatusEnum.COMING || placeStatus.status == UserPlaceStatusEnum.HERE);
+        matchButton.setStateOn(stateOn);
+
         updateBtnVisibility();
     }
 
@@ -446,33 +481,13 @@ public class EventActivity extends BaseActivity {
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if(fragmentTags.getEventView()!=null && MyApplication.hasLastLocation()) {
-
-            //if we are in the place
-            boolean isUserComing = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.COMING);
-            boolean isAllowedToAddComing = !isUserComing && QuotaManager.instance().checkQuota(QuotaType.NOTIFY_COMING);
-            //boolean isAllowedToCome = !isUserAround() && isAllowedToAddComing;
-
-            boolean isHereStatus = PlaceStatus.hasStatus(eventId, UserPlaceStatusEnum.HERE);; //TODO : Fetch user real status
-            boolean isAllowedToAddHere = true; //TODO : Fetch user real allowance
-
+        if (fragmentTags.getEventView() == null || !MyApplication.isLoggedIn() || !MyApplication.hasLastLocation()) {
             matchButton.setVisibility(View.GONE);
-
-            if(isUserAround()) {
-                matchButton.setVisibility(View.VISIBLE);
-                matchButton.setState(isHereStatus);
-            } else {
-                if(isAllowedToAddComing || isUserComing) {
-                    matchButton.setVisibility(View.VISIBLE);
-                    matchButton.setState(isUserComing);
-                }
-            }
-
-            //iAmComingButton.setVisibility(progressView.getVisibility() != View.VISIBLE && isAllowedToCome ? View.VISIBLE : View.GONE);
-            //onMyWayButton.setVisibility(event != null && !event.isAround() && progressView.getVisibility() != View.VISIBLE
-            //        && isUserComing ? View.VISIBLE : View.GONE);
-            pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
+            return;
         }
+        matchButton.setVisibility(View.VISIBLE);
+        matchButton.updateUI();
+        pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
     }
 
     private void setDefaultShareIntent() {
@@ -537,10 +552,7 @@ public class EventActivity extends BaseActivity {
 
         @Override
         public Loader<List<Place>> onCreateLoader(int id, Bundle args) {
-            event = (Place) SyncBaseModel.getEntry(Place.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_PLACE);
-            if (event != null){
-                updateView();
-            }
+            SyncBaseModel.getEntry(Place.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_PLACE);
             return new ModelLoader<>(EventActivity.this, Place.class, SyncBaseModel.queryByRemoteId(Place.class, eventId), false);
         }
 

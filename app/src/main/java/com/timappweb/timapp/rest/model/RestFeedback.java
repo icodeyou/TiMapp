@@ -1,7 +1,5 @@
 package com.timappweb.timapp.rest.model;
 
-import android.app.Activity;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -33,4 +31,7 @@ public class RestFeedback extends RestResponse {
         return "ServerObject[Success: " + success + " ("+code+"); message=" + message + ";]";
     }
 
+    public int getIntData(String name) {
+        return Integer.valueOf(this.data.get(name));
+    }
 }

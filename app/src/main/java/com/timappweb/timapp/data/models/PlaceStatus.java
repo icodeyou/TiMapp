@@ -2,8 +2,10 @@ package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
@@ -49,7 +51,9 @@ public class PlaceStatus extends SyncBaseModel {
         this.created = Util.getCurrentTimeSec();
     }
 
-    public PlaceStatus(Place place, UserPlaceStatusEnum status) {
+
+    public PlaceStatus(User user, Place place, UserPlaceStatusEnum status) {
+        this.user = user;
         this.place = place;
         this.status = status;
         this.created = Util.getCurrentTimeSec();
@@ -60,20 +64,30 @@ public class PlaceStatus extends SyncBaseModel {
     }
 
     public static boolean hasStatus(long placeId, UserPlaceStatusEnum status) {
-        PlaceStatus placeStatus = new Select()
-                .from(PlaceStatus.class)
-                .where("Status = ? AND Place = ?", status, placeId)
-                .executeSingle();
+        PlaceStatus placeStatus = getStatus(placeId, MyApplication.getCurrentUser().getId());
         if (placeStatus != null && !placeStatus.isStatusUpToDate()){
             placeStatus.delete();
             return false;
         }
         return placeStatus != null;
     }
-
-    public static PlaceStatus addStatus(Place place, UserPlaceStatusEnum status){
-        PlaceStatus placeStatus = new PlaceStatus(place, status);
-        placeStatus.save();
+    public static PlaceStatus getStatus(long placeId, long userId){
+        return new Select()
+                .from(PlaceStatus.class)
+                .where("User = ? AND Place = ?", userId, placeId)
+                .executeSingle();
+    }
+    public static PlaceStatus setStatus(User user, Place place, UserPlaceStatusEnum status, int remoteId){
+        PlaceStatus placeStatus = getStatus(place.getId(), user.getId());
+        if (placeStatus == null){
+            placeStatus = new PlaceStatus(user, place, status);
+        }
+        else{
+            placeStatus.status = status;
+        }
+        placeStatus.remote_id = remoteId;
+        place.setRemoteId(remoteId);
+        placeStatus.mySave();
         return placeStatus;
     }
 
@@ -89,5 +103,9 @@ public class PlaceStatus extends SyncBaseModel {
 
     public boolean isStatusUpToDate() {
         return (this.created - System.currentTimeMillis()) < MAX_STATUS_VALIDITY;
+    }
+
+    public static void removeStatus(User user, Place place, UserPlaceStatusEnum status) {
+        new Delete().from(PlaceStatus.class).where("User = ? AND Place = ?", user.getId(), place.getId()).execute();
     }
 }
