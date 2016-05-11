@@ -3,15 +3,9 @@ package com.timappweb.timapp.sync.performers;
 import android.content.SyncResult;
 import android.util.Log;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserFriend;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +26,7 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
         if (!remoteModel.isSync(localModel)){
-            localModel.sync(remoteModel);
+            localModel.merge(remoteModel);
 
             PlacesInvitation invitation = (PlacesInvitation) localModel;
             this.completeUser(invitation);

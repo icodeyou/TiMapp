@@ -62,7 +62,6 @@ public class PlaceStatusManager {
 
     private QueryCondition _buildQuery(Place place){
         QueryCondition conditions = new QueryCondition();
-        conditions.setPlaceId((int) place.getRemoteId());
         //conditions.setAnonymous(false);
         conditions.setUserLocation(MyApplication.getLastLocation());
         return conditions;
@@ -74,10 +73,10 @@ public class PlaceStatusManager {
         // TODO call must be cancelable
         switch (status){
             case COMING:
-                call = RestClient.service().cancelComing(_buildQuery(place).toMap());
+                call = RestClient.service().cancelComing(place.getRemoteId());
                 break;
             case HERE:
-                call = RestClient.service().cancelHere(_buildQuery(place).toMap());
+                call = RestClient.service().cancelHere(place.getRemoteId());
                 break;
             default:
                 Log.v(TAG, "Nothing to do on remote for status: " + status);
@@ -91,13 +90,13 @@ public class PlaceStatusManager {
         // TODO call must be cancelable
         switch (status){
             case COMING:
-                call = RestClient.service().notifyPlaceComing(_buildQuery(place).toMap());
+                call = RestClient.service().notifyPlaceComing(place.getRemoteId(), _buildQuery(place).toMap());
                 break;
             case HERE:
-                call = RestClient.service().notifyPlaceHere(_buildQuery(place).toMap());
+                call = RestClient.service().notifyPlaceHere(place.getRemoteId(), _buildQuery(place).toMap());
                 break;
             case GONE:
-                call = RestClient.service().notifyPlaceGone(_buildQuery(place).toMap());
+                call = RestClient.service().notifyPlaceGone(place.getRemoteId(), _buildQuery(place).toMap());
                 break;
             default:
                 Log.v(TAG, "Nothing to do on remote for status: " + status);

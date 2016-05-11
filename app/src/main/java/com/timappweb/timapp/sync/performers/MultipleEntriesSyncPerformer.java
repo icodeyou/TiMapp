@@ -38,7 +38,7 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
     /**
      * Read XML from an input stream, storing it into the content provider.
      *
-     * <p>This is where incoming data is persisted, committing the results of a sync. In order to
+     * <p>This is where incoming data is persisted, committing the results of a merge. In order to
      * minimize (expensive) disk operations, we compare incoming data with what's already in our
      * database, and compute a merge. Only changes (insert/update/delete) will result in a database
      * write.
@@ -97,7 +97,7 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
         // mContentResolver.notifyChange(
         //        FeedContract.Entry.CONTENT_URI, // URI where data was modified
         //        null,                           // No local observer
-        //        false);                         // IMPORTANT: Do not sync to network
+        //        false);                         // IMPORTANT: Do not merge to network
         // This sample doesn't support uploads, but if *your* code does, make sure you set
         // syncToNetwork=false in the line above to prevent duplicate syncs.
     }

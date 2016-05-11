@@ -5,11 +5,8 @@ import android.util.Log;
 
 import com.activeandroid.query.Delete;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
-import com.timappweb.timapp.data.models.UserTag;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +27,7 @@ public class FriendsSyncPerformer extends MultipleEntriesSyncPerformer {
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
         if (!remoteModel.isSync(localModel)){
-            localModel.sync(remoteModel);
+            localModel.merge(remoteModel);
             syncResult.stats.numUpdates++;
             Log.i(TAG, "Updating: " + localModel.toString());
         }

@@ -25,7 +25,6 @@ import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.PlaceViewPagerActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
-import com.timappweb.timapp.activities.PublishActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
@@ -127,16 +126,6 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void publishPage(Activity activity, Place place, Post post) {
-        if (!requireLogin(activity))
-            return;
-        Intent intent = new Intent(activity, PublishActivity.class);
-        Bundle extras = new Bundle();
-        extras.putSerializable("place", place);          // TODO use constant
-        extras.putSerializable("post", post);          // TODO use constant
-        intent.putExtras(extras);
-        activity.startActivityForResult(intent, REQUEST_PUBLISH);
-    }
 
     public static void locate(Context context) {
         if (!requireLogin(context))

@@ -178,7 +178,8 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Override
     public String toString() {
         return "Place{" +
-                "id=" + remote_id +
+                "db_id=" + this.getId() +
+                "remote_id=" + remote_id +
                 ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", created=" + created +

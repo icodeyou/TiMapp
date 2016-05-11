@@ -80,11 +80,11 @@
 
         <!-- CONFIGURATION -->
         <!-- This service implements our ConfigSyncAdapter. It needs to be exported, so that the system
-        sync framework can access it. -->
+        merge framework can access it. -->
         <service android:name=".sync.ConfigSyncService"
             android:exported="true"
             android:enabled="true" >
-            <!-- This intent filter is required. It allows the system to launch our sync service
+            <!-- This intent filter is required. It allows the system to launch our merge service
             as needed. -->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -98,7 +98,7 @@
         <service android:name=".sync.DataSyncService"
             android:exported="false"
             android:enabled="true" >
-            <!-- This intent filter is required. It allows the system to launch our sync service
+            <!-- This intent filter is required. It allows the system to launch our merge service
             as needed. -->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
@@ -112,7 +112,7 @@
         <service android:name=".sync.UserSyncService"
             android:exported="false"
             android:enabled="true" >
-            <!-- This intent filter is required. It allows the system to launch our sync service
+            <!-- This intent filter is required. It allows the system to launch our merge service
             as needed. -->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />

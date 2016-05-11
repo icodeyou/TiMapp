@@ -3,11 +3,9 @@ package com.timappweb.timapp.sync.performers;
 import android.content.SyncResult;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,7 +28,7 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
 
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
         if (!remoteModel.isSync(localModel)){
-            localModel.sync(remoteModel);
+            localModel.merge(remoteModel);
             syncResult.stats.numUpdates++;
             Log.i(TAG, "Updating: " + localModel.toString());
         }

@@ -5,14 +5,14 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-/** Service to handle sync requests.
+/** Service to handle merge requests.
  *
  * <p>This service is invoked in response to Intents with action android.content.ConfigSyncAdapter, and
  * returns a Binder connection to ConfigSyncAdapter.
  *
- * <p>For performance, only one sync adapter will be initialized within this application's context.
+ * <p>For performance, only one merge adapter will be initialized within this application's context.
  *
- * <p>Note: The ConfigSyncService itself is not notified when a new sync occurs. It's role is to
+ * <p>Note: The ConfigSyncService itself is not notified when a new merge occurs. It's role is to
  * manage the lifecycle of our {@link ConfigSyncAdapter} and provide a handle to said ConfigSyncAdapter to the
  * OS on request.
  */
@@ -48,7 +48,7 @@ public class ConfigSyncService extends Service {
     /**
      * Return Binder handle for IPC communication with {@link ConfigSyncAdapter}.
      *
-     * <p>New sync requests will be sent directly to the ConfigSyncAdapter using this channel.
+     * <p>New merge requests will be sent directly to the ConfigSyncAdapter using this channel.
      *
      * @param intent Calling intent
      * @return Binder handle for {@link ConfigSyncAdapter}

@@ -202,30 +202,30 @@ public interface WebServiceInterface {
     /**
      *
      */
-    @POST("PlacesUsers/coming.json")
-    Call<RestFeedback> notifyPlaceComing(@Body Map<String, String> conditions);
+    @POST("PlacesUsers/coming/{placeId}.json")
+    Call<RestFeedback> notifyPlaceComing(@Path("placeId") long remoteId, @Body Map<String, String> conditions);
     /**
      *
      */
-    @POST("PlacesUsers/gone.json")
-    Call<RestFeedback> notifyPlaceGone(@Body Map<String, String> conditions);
+    @POST("PlacesUsers/gone/{placeId}.json")
+    Call<RestFeedback> notifyPlaceGone(@Path("placeId") long id, @Body Map<String, String> conditions);
     /**
      *
      */
-    @POST("PlacesUsers/here.json")
-    Call<RestFeedback> notifyPlaceHere(@Body Map<String, String> conditions);
+    @POST("PlacesUsers/here/{placeId}.json")
+    Call<RestFeedback> notifyPlaceHere(@Path("placeId") long id, @Body Map<String, String> conditions);
 
     /**
      *
      */
-    @POST("PlacesUsers/cancelComing.json")
-    Call<RestFeedback> cancelComing(@Body Map<String, String> conditions);
+    @POST("PlacesUsers/cancelComing/{placeId}.json")
+    Call<RestFeedback> cancelComing(@Path("placeId") long id);
 
     /**
      *
      */
-    @POST("PlacesUsers/cancelHere.json")
-    Call<RestFeedback> cancelHere(@Body Map<String, String> conditions);
+    @POST("PlacesUsers/cancelHere/{placeId}.json")
+    Call<RestFeedback> cancelHere(@Path("placeId") long id);
 
 
     @POST("PlacesUsers/place/{id}.json")

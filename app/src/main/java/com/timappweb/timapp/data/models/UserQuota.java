@@ -6,6 +6,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.Calendar;
@@ -25,7 +26,8 @@ public class UserQuota extends SyncBaseModel {
 
     @Expose
     @Column(name = "QuotaTypeId", index = true, notNull = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
-    public int remote_id;
+    @SerializedName("type_id")
+    public int type_id;
 
     @Expose
     @Column(name = "User", index = true, notNull = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
@@ -214,7 +216,7 @@ public class UserQuota extends SyncBaseModel {
     @Override
     public String toString() {
         return "UserQuota{" +
-                " type=" + remote_id +
+                " type=" + type_id +
                 ", user=" + user +
                 ", last_activity=" + last_activity + "/" + min_delay + " ("+ Util.delayFromNow((int)last_activity)+" sec)" +
                 ", minute=" + count_minute + "/" + quota_minute +
@@ -234,7 +236,7 @@ public class UserQuota extends SyncBaseModel {
 
         UserQuota userQuota = (UserQuota) o;
 
-        if (remote_id != userQuota.remote_id) return false;
+        if (type_id != userQuota.type_id) return false;
         if (user != userQuota.user) return false;
         if (min_delay != userQuota.min_delay) return false;
         if (quota_minute != userQuota.quota_minute) return false;
@@ -262,7 +264,7 @@ public class UserQuota extends SyncBaseModel {
 
         UserQuota userQuota = (UserQuota) o;
 
-        if (remote_id != userQuota.remote_id) return false;
+        if (type_id != userQuota.type_id) return false;
         if (user != userQuota.user) return false;
         if (min_delay != userQuota.min_delay) return false;
         if (quota_minute != userQuota.quota_minute) return false;
@@ -284,7 +286,7 @@ public class UserQuota extends SyncBaseModel {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + remote_id;
+        result = 31 * result + type_id;
         result = 31 * result + 2;
         return result;
     }

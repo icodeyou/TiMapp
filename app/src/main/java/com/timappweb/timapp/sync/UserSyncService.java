@@ -6,7 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * Service to handle user sync requests.
+ * Service to handle user merge requests.
  */
 public class UserSyncService extends Service {
     private static final String TAG = "UserSyncService";
@@ -40,7 +40,7 @@ public class UserSyncService extends Service {
     /**
      * Return Binder handle for IPC communication with {@link ConfigSyncAdapter}.
      *
-     * <p>New sync requests will be sent directly to the ConfigSyncAdapter using this channel.
+     * <p>New merge requests will be sent directly to the ConfigSyncAdapter using this channel.
      *
      * @param intent Calling intent
      * @return Binder handle for {@link ConfigSyncAdapter}

@@ -82,6 +82,7 @@ public class QueryCondition {
     }
 
     public void setUserLocation(Location lastLocation) {
+        if (lastLocation == null) return;
         queryMap.put("latitude", String.valueOf(lastLocation.getLatitude()));
         queryMap.put("longitude", String.valueOf(lastLocation.getLongitude()));
     }

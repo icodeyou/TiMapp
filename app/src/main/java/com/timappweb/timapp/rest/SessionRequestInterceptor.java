@@ -40,7 +40,7 @@ public class SessionRequestInterceptor implements Interceptor
         Log.d(TAG, "HTTP Reponse code: " + response.code());
         if (response.code() == 401) { //if unauthorized
             Log.d(TAG, "Trying to refresh token... Waiting for synchronisation...");
-            synchronized (RestClient.instance().getHttpClient()) { //perform all 401 in sync blocks, to avoid multiply token updates
+            synchronized (RestClient.instance().getHttpClient()) { //perform all 401 in merge blocks, to avoid multiply token updates
                 Log.d(TAG, "Synchronisation OK...");
                 String currentToken = MyApplication.auth.getToken(); //get currently stored token
 

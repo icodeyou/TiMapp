@@ -6,7 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * The service which allows the sync adapter framework to access the authenticator.
+ * The service which allows the merge adapter framework to access the authenticator.
  */
 public class AuthenticatorService extends Service {
     private static final String TAG = "AuthenticatorService";

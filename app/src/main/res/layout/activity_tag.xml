@@ -100,7 +100,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/scroll_view_suggested_tags">
             <com.greenfrvr.hashtagview.HashtagView
                 android:id="@+id/rv_search_suggested_tags"
                 android:layout_width="match_parent"
@@ -120,7 +121,30 @@
                 app:tagTextColor="@color/White"
                 />
         </ScrollView>
+
     </LinearLayout>
+
+    <!-- Confirm button -->
+    <!-- **********************************************************************-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/event_view">
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/button_selecting_margin"
+            android:padding="10dp"
+            android:background="@drawable/background_button_littlesquare"
+            android:gravity="center"
+            android:textColor="@color/text_button"
+            android:textSize="@dimen/text_big"
+            android:text="@string/main_text_publish_activity" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/progress_end"
@@ -130,17 +154,37 @@
         android:gravity="center"
         android:visibility="gone" />
 
-    <!-- PLACE -->
+
+
+    <!-- Anonymous button -->
     <!-- **********************************************************************-->
-    <com.timappweb.timapp.views.EventView
-        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/event_view"
+    <RelativeLayout
+        android:id="@+id/layout_checkbox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        myattrs:tags_visible="true"
-        myattrs:bottom_shadow="false"
-        myattrs:top_shadow="false"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/colorAccent"
+                android:text="@string/text_anonymous"
+                app:buttonTint="@color/colorAccent" />
+        </LinearLayout>
+        <ImageView
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_anonymous"/>
+    </RelativeLayout>
+
 
     <include android:id="@+id/toolbar_transparent"
         layout="@layout/toolbar_transparent" />

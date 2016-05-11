@@ -41,6 +41,7 @@ public class AuthProvider {
 
     public void logout() {
         KeyValueStorage.clear(SOCIAL_PROVIDER_TOKEN, SOCIAL_PROVIDER_TYPE, KEY_TOKEN, KEY_IS_LOGIN, KEY_ID);
+        currentUser = null;
     }
 
     public void checkToken(Context context, final OnTokenListener tokenListener) {

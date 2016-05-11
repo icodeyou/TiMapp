@@ -62,7 +62,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     /**
-     * Helper method to have the sync adapter sync immediately
+     * Helper method to have the merge adapter merge immediately
      * @param context The context used to access the account service
      */
     public static void  syncImmediately(Context context, String authority, Bundle bundle) {
@@ -73,7 +73,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
         ContentResolver.requestSync(getSyncAccount(context), authority, bundle);
     }
     /**
-     * Helper method to have the sync adapter sync immediately
+     * Helper method to have the merge adapter merge immediately
      * @param context The context used to access the account service
      */
     public static void syncImmediately(Context context, String authority) {
@@ -83,7 +83,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
 
 
     /**
-     * Helper method to schedule the sync adapter periodic execution
+     * Helper method to schedule the merge adapter periodic execution
      */
     public static void configurePeriodicSync(Context context,
                                              int syncInterval,
@@ -91,7 +91,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
                                              String authority) {
         Account account = getSyncAccount(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // we can enable inexact timers in our periodic sync
+            // we can enable inexact timers in our periodic merge
             SyncRequest request = new SyncRequest.Builder().
                     syncPeriodic(syncInterval, flexTime).
                     setSyncAdapter(account, authority).
@@ -162,12 +162,12 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
         AbstractSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME, authority);
 
         /*
-         * Without calling setSyncAutomatically, our periodic sync will not be enabled.
+         * Without calling setSyncAutomatically, our periodic merge will not be enabled.
          */
         ContentResolver.setSyncAutomatically(newAccount, authority, true);
 
         /*
-         * Finally, let's do a sync to get things started
+         * Finally, let's do a merge to get things started
          */
         syncImmediately(context, authority);
     }

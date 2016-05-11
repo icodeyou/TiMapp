@@ -30,7 +30,7 @@ public class SingleEntrySyncPerformer implements SyncPerformer {
     }
 
     /**
-     * Performe a single entry sync with the remote server
+     * Performe a single entry merge with the remote server
      */
     @Override
     public void perform() {

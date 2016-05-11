@@ -11,11 +11,17 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.listeners.BinaryActionListener;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * Created by stephane on 4/23/2016.
@@ -64,7 +70,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
         if (!this.hasLocalId()){
             SyncBaseModel model = this.queryByRemoteId().executeSingle();
             if (model != null){
-                model.sync(this);
+                model.merge(this);
                 Log.d(TAG, "Updating existing remote model: " + model);
                 return (T) model;
             }
@@ -73,7 +79,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     /**
-     * Return true if last sync date does not exceed sync interval
+     * Return true if last merge date does not exceed merge interval
      * @return
      */
     public boolean isUpToDate() {
@@ -101,11 +107,11 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     /**
-     * Get a entry in the db. If no entry, request an immediate sync with the server
+     * Get a entry in the db. If no entry, request an immediate merge with the server
      * @param classType The entry class type
      * @param context   The context
      * @param key       The remote key remote_id
-     * @param syncType  The sync type to call
+     * @param syncType  The merge type to call
      * @return If there is a local version of the entry, retu
      */
     public static SyncBaseModel getEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
@@ -122,12 +128,60 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
         getRemoteEntry(classType, context, key, syncType);
         return null;
     }
+
+
+    public void saveRemoteEntry(Context context, Call call){
+        saveRemoteEntry(context, call, null);
+    }
+
     /**
-     * Request an immediate sync with the server to get data
+     * Saving remote entry
+     * @param context
+     * @param call
+     * @param binaryActionListener
+     */
+    public void saveRemoteEntry(Context context, Call call, final BinaryActionListener binaryActionListener){
+
+        try {
+            call.enqueue(new RestFeedbackCallback(context) {
+                @Override
+                public void onActionSuccess(RestFeedback feedback) {
+                    int id = feedback.getIntData("id");
+                    if (id != -1) {
+                        setRemoteId(id);
+                    }
+                    mySave();
+                    if (binaryActionListener != null) binaryActionListener.onSuccess();
+                }
+
+                @Override
+                public void onActionFail(RestFeedback feedback) {
+                    Log.e(TAG, "Cannot save entry on remote");
+                    if (binaryActionListener != null) binaryActionListener.onFailure();
+                }
+
+                @Override
+                public void onFinish() {
+                    if (binaryActionListener != null) binaryActionListener.onFinish();
+                }
+            });
+            call.execute();
+        } catch (IOException e) {
+            Log.e(TAG, "Error " + e.getMessage());
+            e.printStackTrace();
+            if (binaryActionListener != null){
+                binaryActionListener.onFailure();
+                binaryActionListener.onFinish();
+            }
+        }
+    }
+
+    /**
+     * Request an immediate merge with the server to get data
      * @param classType The entry class type
      * @param context   The context
      * @param key       The remote key remote_id
-     * @param syncType  The sync type to call
+     * @param syncType  The merge type to call
      * @return If there is a local version of the entry, retu
      */
     public static void getRemoteEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
@@ -139,14 +193,14 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     /**
-     * Get remote entries for a specified model.
+     * Get entries for a specified model. If entries exists locally, take it otherwise request a sync update
      * @param context
      * @param query
      * @param syncType
      * @return
      */
     public static <DataType extends SyncBaseModel> List<DataType> getEntries(Context context, From query, int syncType, long syncDelay){
-        // If need sync
+        // If need merge
         if (SyncHistory.requireUpdate(syncType, syncDelay)){
             getRemoteEntries(context, syncType);
             return null;
@@ -174,17 +228,17 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * Sync and persist modification to database
      * @param model
      */
-    public void sync(SyncBaseModel model){
-        this.sync(model, true);
+    public void merge(SyncBaseModel model){
+        this.merge(model, true);
     }
 
     /**
      * Synchronise all fields that have the annotation @Expose(deserialize == true) from the given model
-     * Last sync time is updated with the current timestamp
+     * Last merge time is updated with the current timestamp
      * @param model
      * @param persist true if we save modification in db. If yes,
      */
-    public void sync(SyncBaseModel model, boolean persist){
+    public void merge(SyncBaseModel model, boolean persist){
         // For each deserialisable fields, we update the value if it is not null
         Class<? extends SyncBaseModel> clazz = this.getClass();
         for (Field field: clazz.getFields()){
@@ -219,7 +273,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     /**
-     * Update the last sync time
+     * Update the last merge time
      */
     public final void updateLastSyncTime(){
         this._last_sync = System.currentTimeMillis();
