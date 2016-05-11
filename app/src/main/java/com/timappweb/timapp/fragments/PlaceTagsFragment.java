@@ -20,6 +20,7 @@ import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.views.EventView;
+import com.timappweb.timapp.views.EventView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,6 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     private View                    progressView;
     private View                    noTagsView;
     private View                    noConnectionView;
-    private View mainButton;
-    private View                    smallPicButton;
-    private View                    smallPeopleButton;
-    private TextView                tvAddButton;
     private EventView               eventView;
 
     @Nullable
@@ -52,10 +49,6 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         View root = inflater.inflate(R.layout.fragment_event_tags, container, false);
 
         //Find views
-        mainButton = root.findViewById(R.id.main_button);
-        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
-        smallPicButton = root.findViewById(R.id.button_add_pic);
-        smallPeopleButton = root.findViewById(R.id.button_add_people);
         rvTags = (ListView) root.findViewById(R.id.list_tags);
         progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
@@ -77,22 +70,16 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         eventFrameLayout.setVisibility(View.VISIBLE);
 
         initAdapter();
-        setListeners();
         loadData();
-
-        updateBtnVisibility();
-
-        //Call setMenuVisibility to update Plus Button visibility
-        //setMenuVisibility(true);
 
         return root;
     }
 
-    @Override
+    /*@Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
     }
-
+*/
     public EventView getEventView() {
         return eventView;
     }
@@ -101,12 +88,6 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         ArrayList<Tag> data = new ArrayList<Tag>();
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         rvTags.setAdapter(tagsAndCountersAdapter);
-    }
-
-    private void setListeners() {
-        //mainButton.setOnClickListener(eventActivity.getTagListener());
-        //smallPicButton.setOnClickListener(eventActivity.getPictureListener());
-        //smallPeopleButton.setOnClickListener(eventActivity.getPeopleListener());
     }
 
     public void loadData() {
@@ -154,18 +135,4 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
             noConnectionView.setVisibility(View.GONE);
         }
     }
-
-    public void updateBtnVisibility() {
-        Log.v(TAG, "::updateBtnVisibility()");
-        // Check if the user can post in this place
-        boolean isUserAround = eventActivity.isUserAround();
-        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE);
-        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
-        boolean isAllowedToAddPeople = QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND);
-        boolean showMainButton = isUserAround && isAllowedToAddPost;
-        //mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        //smallPeopleButton.setVisibility(!showMainButton && isAllowedToAddPeople ? View.VISIBLE : View.GONE);
-        //smallPicButton.setVisibility(isUserAround && !showMainButton && isAllowedToAddPic ? View.VISIBLE : View.GONE);
-    }
-
 }

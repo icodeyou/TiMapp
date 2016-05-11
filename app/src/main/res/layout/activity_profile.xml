@@ -8,6 +8,7 @@
     <include layout="@layout/toolbar"/>
 
     <include layout="@layout/no_connection_view"
+        android:background="@color/background"
         android:id="@+id/no_connection_view"/>
 
     <android.support.v4.widget.SwipeRefreshLayout

@@ -10,12 +10,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 
 
 public class DescriptionActivity extends BaseActivity {
     private String TAG = "DescriptionActivity";
     private InputMethodManager imm;
-    private DescriptionActivity context;
     private EditText commentEt;
     private View saveButton;
 
@@ -25,7 +25,6 @@ public class DescriptionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_description);
-        context = this;
 
         //this.initToolbar(true);
 
@@ -43,11 +42,7 @@ public class DescriptionActivity extends BaseActivity {
             public void onClick(View v) {
                 String description = commentEt.getText().toString();
                 Log.d(TAG, "Saving description: " + description);
-                Intent intent = new Intent(activity, AddPlaceActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("description", description);
-                intent.putExtras(bundle);
-                setResult(Activity.RESULT_OK, intent);
+                IntentsUtils.exitDescriptionActivity(activity, description);
                 finish();
             }
         });
@@ -56,5 +51,8 @@ public class DescriptionActivity extends BaseActivity {
     private void initEt() {
         commentEt.setInputType(InputType.TYPE_CLASS_TEXT |
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        String comment = IntentsUtils.extractComment(getIntent());
+        commentEt.setText(comment);
+        commentEt.setSelection(commentEt.getText().length());
     }
 }

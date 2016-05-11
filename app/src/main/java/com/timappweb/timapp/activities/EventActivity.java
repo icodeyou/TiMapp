@@ -330,7 +330,6 @@ public class EventActivity extends BaseActivity {
                 return true;
             }
         });
-
     }
 
     private void addPlaceStatus() {
@@ -415,17 +414,13 @@ public class EventActivity extends BaseActivity {
         /*pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
-
             @Override
             public void onPageSelected(int position) {
                 updateBtnVisibility();
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });*/
     }
@@ -501,7 +496,6 @@ public class EventActivity extends BaseActivity {
     //Public methods
     //////////////////////////////////////////////////////////////////////////////
 
-
     // Check for camera permission in MashMallow
     public void requestForCameraPermission() {
         final String permission = Manifest.permission.CAMERA;
@@ -534,7 +528,7 @@ public class EventActivity extends BaseActivity {
     public int getEventId() {
         return eventId;
     }
-    
+
 
     @Override
     protected void onDestroy() {

@@ -42,7 +42,8 @@
         android:text="Please check events that already exist near you."/>
 
     <include layout="@layout/no_connection_view"
-        android:id="@+id/no_connection_view"/>
+        android:id="@+id/no_connection_view"
+        android:background="@color/background"/>
 
     <LinearLayout
         android:layout_width="match_parent"
