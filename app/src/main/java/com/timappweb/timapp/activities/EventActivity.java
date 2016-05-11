@@ -298,8 +298,10 @@ public class EventActivity extends BaseActivity {
                     //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.HERE){
                     if (enabled) {
                         setUIEnabled(R.drawable.match_white);
+                        postButtons.setVisibility(View.VISIBLE);
                     } else {
                         setUIDisabled(R.drawable.match_red);
+                        postButtons.setVisibility(View.GONE);
                     }
                 } else {
                     //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.COMING){
@@ -308,6 +310,7 @@ public class EventActivity extends BaseActivity {
                     } else {
                         setUIDisabled(R.drawable.ic_coming_guy_darkred);
                     }
+                    postButtons.setVisibility(View.GONE);
                 }
             }
 
@@ -316,7 +319,6 @@ public class EventActivity extends BaseActivity {
                 addPlaceStatus();
                 fragmentTags.getEventView().updatePointsView(true);
                 postButtons.startAnimation(postButtonsAppear);
-                postButtons.setVisibility(isUserAround() ? View.VISIBLE : View.GONE);
                 return true;
             }
 
@@ -325,7 +327,6 @@ public class EventActivity extends BaseActivity {
                 removePlaceStatus();
                 fragmentTags.getEventView().updatePointsView(false);
                 postButtons.startAnimation(postButtonsDisappear);
-                postButtons.setVisibility(View.GONE);
                 return true;
             }
         });
