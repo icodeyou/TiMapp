@@ -21,8 +21,10 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
@@ -63,8 +65,7 @@ public class EventView extends RelativeLayout{
     private TextView                    descriptionTv;
     private HorizontalTagsAdapter       htAdapter;
     private HorizontalTagsRecyclerView  htrv;
-    private View                        matchButton;
-    private ImageView                   matchIcon;
+    private SelectableFloatingButton    matchButton;
     private TextView                    matchText;
     private View                        whitePointsLayout;
     private View                        postButtons;
@@ -91,6 +92,7 @@ public class EventView extends RelativeLayout{
 
     private AlphaAnimation postButtonsAppear;
     private AlphaAnimation postButtonsDisappear;
+    private boolean hotPoints = false;
 
 
     public EventView(Context context) {
@@ -160,10 +162,7 @@ public class EventView extends RelativeLayout{
         separator = findViewById(R.id.separator);
         descriptionView = findViewById(R.id.description_event);
         descriptionTv = (TextView) findViewById(R.id.description_textview);
-        matchButton = findViewById(R.id.match_button);
-        matchText = (TextView) findViewById(R.id.match_text);
-        matchIcon = (ImageView) findViewById(R.id.match_icon);
-        matchBackground = findViewById(R.id.match_button_background);
+        matchButton = (SelectableFloatingButton) findViewById(R.id.match_button);
         postButtons = findViewById(R.id.post_buttons);
         picButton = findViewById(R.id.post_pic);
         tagButton = findViewById(R.id.post_tags);
@@ -208,45 +207,7 @@ public class EventView extends RelativeLayout{
         postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
         postButtonsDisappear.setFillAfter(true);
 
-        /*//Move Coming View Down
-        final Animation slideDownAnim = AnimationUtils.loadAnimation(context, R.anim.slide_down);
-        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                matchButton.setPadding(0, 0, 0, 0);
-                postButtons.startAnimation(postButtonsAppear);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        final Animation slideUpAnim = AnimationUtils.loadAnimation(context, R.anim.slide_down);
-        slideDownAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                matchButton.setPaddingRelative(0, 0, 0, context.getResources().getInteger(R.integer.slide_down_anim));
-                postButtons.startAnimation(postButtonsDisappear);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });*/
-
-        matchBackground.setOnClickListener(new OnClickListener() {
+        matchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 setComingOrHere();
@@ -256,24 +217,22 @@ public class EventView extends RelativeLayout{
 
     private void setButtonActive(boolean isActive) {
         if(isActive) {
-            matchBackground.setBackgroundResource(R.drawable.border_radius_red);
-            matchText.setTextColor(ContextCompat.getColor(context, R.color.white));
+            //matchBackground.setBackgroundResource(R.drawable.border_radius_red);
             if (isAround()) {
-                matchIcon.setImageResource(R.drawable.match_white);
+                matchButton.setImageResource(R.drawable.match_white);
                 enablePostButtons(true);
                 postButtons.startAnimation(postButtonsAppear);
             } else {
-                matchIcon.setImageResource(R.drawable.ic_coming_guy_white);
+                matchButton.setImageResource(R.drawable.ic_coming_guy_white);
             }
         } else {
-            matchBackground.setBackgroundResource(R.drawable.border_radius_white);
-            matchText.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            //matchBackground.setBackgroundResource(R.drawable.border_radius_white);
             if (isAround()) {
-                matchIcon.setImageResource(R.drawable.match_red);
+                matchButton.setImageResource(R.drawable.match_red);
                 enablePostButtons(false);
                 postButtons.startAnimation(postButtonsDisappear);
             } else {
-                matchIcon.setImageResource(R.drawable.ic_coming_guy_darkred);
+                matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
             }
         }
     }
@@ -302,12 +261,16 @@ public class EventView extends RelativeLayout{
     }
 
     public void updatePointsView(boolean increase) {
-        if(increase) {
+        if(increase && !hotPoints) {
+            hotPoints = true;
             icPoints.setImageResource(R.drawable.ic_hot);
             tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
-        } else {
+        } else if(!increase && hotPoints){
+            hotPoints = false;
             icPoints.setImageResource(R.drawable.ic_hot_white);
             tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.white));
+        } else {
+            return;
         }
 
         animator = new ValueAnimator();
@@ -356,11 +319,9 @@ public class EventView extends RelativeLayout{
 
     public void matchButtonStateHere(boolean isHere) {
         if(isHere) {
-            matchIcon.setImageResource(R.drawable.match_red);
-            matchText.setText(context.getString(R.string.iamhere));
+            matchButton.setImageResource(R.drawable.match_red);
         } else {
-            matchIcon.setImageResource(R.drawable.ic_coming_guy_darkred);
-            matchText.setText(context.getString(R.string.iamcoming));
+            matchButton.setImageResource(R.drawable.ic_coming_guy_darkred);
         }
     }
 
@@ -422,7 +383,7 @@ public class EventView extends RelativeLayout{
             mainLayoutEvent.setPadding(0, 0, 0, 0);
             marginToolbarRight.setVisibility(VISIBLE);
             marginToolbarLeft.setVisibility(VISIBLE);
-            spotView.setVisibility(GONE);
+            //spotView.setVisibility(GONE);
             categoryIcon.setVisibility(GONE);
             smallCategoryIcon.setVisibility(VISIBLE);
             tagsFrameLayout.setVisibility(GONE);
@@ -487,12 +448,17 @@ public class EventView extends RelativeLayout{
     }
 
     public void setEvent(final Place event) {
+
         this.event = event;
 
         if (event == null){
             Log.e(TAG, "Trying to display a null event");
             return;
         }
+
+        boolean isUserComing = PlaceStatus.hasStatus(event.remote_id, UserPlaceStatusEnum.COMING);
+        boolean isHereStatus = PlaceStatus.hasStatus(event.remote_id, UserPlaceStatusEnum.HERE);
+        boolean isHotView = isUserComing || isHereStatus ;
 
         //Date
         tvTime.setText(event.getTime());
@@ -522,7 +488,7 @@ public class EventView extends RelativeLayout{
             backgroundImage.setImageResource(0);
             mainLayoutEvent.setBackgroundColor(colorEvent);
             if (colorSpot != -1) {
-                spotView.setColor(colorSpot);
+                //spotView.setColor(colorSpot);
             }
         }
 
@@ -541,7 +507,7 @@ public class EventView extends RelativeLayout{
 
         // Spot view
         if (event.spot != null && isSpot){
-            spotView.setSpot(event.spot);
+            //spotView.setSpot(event.spot);
             this.setSpotVisible(true);
         }
         else{
@@ -551,6 +517,9 @@ public class EventView extends RelativeLayout{
         //Counter
         int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime * 1000);
+
+        updatePointsView(isHotView);
+        setButtonActive(isHotView);
 
         setDistance(isAround());
         if(isMatchButton) {

@@ -8,20 +8,16 @@ import com.timappweb.timapp.listeners.LoadingListener;
  */
 public abstract class  PlaceBaseFragment extends BaseFragment implements LoadingListener {
 
-    public abstract void updateBtnVisibility();
-
     public abstract void loadData();
 
     public abstract void setProgressView(boolean visibility);
 
     public void onLoadStart(){
         setProgressView(true);
-        updateBtnVisibility();
     }
 
     public void onLoadEnd(){
         setProgressView(false);
-        updateBtnVisibility();
     }
 
 }

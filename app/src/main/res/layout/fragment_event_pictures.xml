@@ -74,35 +74,6 @@
             android:listSelector="@android:color/transparent"/>
     </LinearLayout>
 
-    <!-- Main Add Button (Add pic)-->
-    <!-- **********************************************************************-->
-    <LinearLayout
-        android:id="@+id/main_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_bottom_button"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@drawable/background_button_littlesquare"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/default_horizontal_padding"
-            android:src="@drawable/ic_plus_red"/>
-        <TextView
-            android:id="@+id/text_main_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textStyle="bold"
-            android:textColor="@color/text_button"
-            android:textAllCaps="false"
-            android:text="@string/button_add_pic"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/text_big"/>
-    </LinearLayout>
-
     <!-- Uploading view-->
     <!-- **********************************************************************-->
     <LinearLayout
@@ -131,27 +102,6 @@
                 android:textColor="@color/Black"
                 android:textSize="@dimen/text_normal"/>
         </LinearLayout>
-    </LinearLayout>
-
-    <!-- Add Tag Button on right-->
-    <!-- **********************************************************************-->
-    <LinearLayout
-        android:id="@+id/button_add_tags"
-        android:layout_width="60dp"
-        android:layout_height="@dimen/height_bottom_button"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"
-        android:background="@drawable/border_radius_top_left"
-        android:gravity="right|bottom">
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="3dp"
-            android:src="@drawable/ic_hashtag_plus_white"/>
     </LinearLayout>
 
 </RelativeLayout>

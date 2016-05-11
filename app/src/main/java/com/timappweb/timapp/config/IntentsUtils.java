@@ -236,9 +236,18 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void comment(Activity activity) {
+    public static void comment(Activity activity, String comment) {
         Intent intent = new Intent(activity, DescriptionActivity.class);
+        intent.putExtra("comment", comment);
         activity.startActivityForResult(intent, REQUEST_COMMENT);
+    }
+
+    public static String extractComment(Intent intent) {
+        if(intent.getExtras()!=null) {
+            return intent.getExtras().getString("comment");
+        } else {
+            return null;
+        }
     }
 
     public static void pinSpot(Activity activity) {
@@ -344,5 +353,13 @@ public class IntentsUtils {
             return -1;
         }
         return extras.getInt("place_id", Integer.valueOf(extras.getString("place_id", "-1"))); // usefull for notifications
+    }
+
+    public static void exitDescriptionActivity(Activity activity, String description) {
+        Intent intent = new Intent(activity, AddPlaceActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("description", description);
+        intent.putExtras(bundle);
+        activity.setResult(Activity.RESULT_OK, intent);
     }
 }

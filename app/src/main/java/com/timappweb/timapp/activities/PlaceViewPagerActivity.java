@@ -41,14 +41,14 @@ public class PlaceViewPagerActivity extends FragmentActivity {
 
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         if (page.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
             page.setCurrentItem(page.getCurrentItem() - 1);
         }
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

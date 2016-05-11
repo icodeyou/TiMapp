@@ -62,9 +62,6 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     private View                    progressView;
     private View                    noPicView;
     private View                    noConnectionView;
-    private View                    mainButton;
-    private View                    smallTagsButton;
-    private TextView                tvAddButton;
     private RecyclerView            picturesRv;
     private View                    uploadView;
 
@@ -80,10 +77,8 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
         initVariables(root);
 
-        setListeners();
         initRv();
         initAdapter();
-        updateBtnVisibility();
         this.loadData();
 
         return root;
@@ -110,28 +105,15 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         }
     }
 
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-    }
-
     private void initVariables(View root) {
         eventActivity = (EventActivity) getActivity();
 
         //Views
-        mainButton = root.findViewById(R.id.main_button);
-        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
-        smallTagsButton = root.findViewById(R.id.button_add_tags);
         progressView = root.findViewById(R.id.progress_view);
         noPicView = root.findViewById(R.id.no_pictures_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         uploadView = root.findViewById(R.id.upload_view);
         picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
-    }
-
-    private void setListeners() {
-        //mainButton.setOnClickListener(eventActivity.getPictureListener());
-        //smallTagsButton.setOnClickListener(eventActivity.getTagListener());
     }
 
     private void initRv() {
@@ -215,13 +197,11 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
             @Override
             public void onLoadStart() {
                 setUploadVisibility(true);
-                updateBtnVisibility();
             }
 
             @Override
             public void onLoadEnd() {
                 setUploadVisibility(false);
-                updateBtnVisibility();
             }
         };
 
@@ -284,19 +264,5 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
             return ;
         }
     }
-
-
-    public void updateBtnVisibility() {
-        Log.v(TAG, "::updateBtnVisibility()");
-        // Check if the user can post in this place
-        boolean isUserAround = eventActivity.isUserAround();
-        boolean isAllowedToAddPost = QuotaManager.instance().checkQuota(QuotaType.ADD_POST);
-        boolean isAllowedToAddPic = QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE) && uploadView.getVisibility() != View.VISIBLE;
-        boolean showMainButton = isUserAround && isAllowedToAddPic;
-        //mainButton.setVisibility(showMainButton ? View.VISIBLE : View.GONE);
-        //smallTagsButton.setVisibility(!showMainButton && isUserAround && isAllowedToAddPost ? View.VISIBLE : View.GONE);
-    }
-
-
 }
 

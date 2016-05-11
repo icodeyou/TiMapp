@@ -49,8 +49,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
-    private View            mainButton;
-    private TextView        tvAddButton;
 
     @Nullable
     @Override
@@ -60,30 +58,15 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         context= eventActivity.getBaseContext();
 
         //Views
-        mainButton = root.findViewById(R.id.main_button);
-        tvAddButton = (TextView) root.findViewById(R.id.text_main_button);
         peopleRv = (RecyclerView) root.findViewById(R.id.list_people);
         progressView = root.findViewById(R.id.progress_view);
         noPostsView = root.findViewById(R.id.no_posts_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
 
         initAdapter();
-        setListeners();
-        updateBtnVisibility();
 
 
         return root;
-    }
-
-
-
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-    }
-
-    private void setListeners() {
-        //mainButton.setOnClickListener(eventActivity.getPeopleListener());
     }
 
 
@@ -174,11 +157,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
 
         });
         asynCalls.add(call);
-    }
-
-
-    public void updateBtnVisibility() {
-        //mainButton.setVisibility(MyApplication.isLoggedIn() ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressView(boolean visibility) {

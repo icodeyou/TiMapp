@@ -297,7 +297,7 @@ public class AddPlaceActivity extends BaseActivity {
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.comment(context);
+                IntentsUtils.comment(context, commentView.getText().toString());
             }
         });
 
