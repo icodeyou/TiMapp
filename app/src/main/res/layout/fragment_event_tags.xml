@@ -14,57 +14,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- Progress view -->
-        <!-- **********************************************************************-->
-        <LinearLayout
-            android:id="@+id/progress_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            android:gravity="bottom"
-            android:orientation="vertical">
-            <include layout="@layout/progressview"
-                android:layout_width="50dp"
-                android:layout_height="0dp"
-                android:layout_weight="0.45"
-                android:layout_gravity="center"/>
-            <TextView
-                android:id="@+id/progress_text"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.1"
-                android:gravity="center"
-                android:textSize="@dimen/text_normal"
-                android:textColor="@color/text_place"
-                android:text="@string/loading_tags"/>
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.45"/>
-        </LinearLayout>
-
-        <!-- No tags yet -->
-        <!-- **********************************************************************-->
-        <TextView
-            android:id="@+id/no_tags_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textSize="@dimen/text_normal"
-            android:text="@string/no_tags"
-            android:textColor="@color/text_place"
-            android:gravity="center"
-            android:visibility="gone"/>
-
         <include layout="@layout/no_connection_view"
             android:id="@+id/no_connection_view"/>
 
         <!-- List View -->
         <!-- **********************************************************************-->
-        <ListView
-            android:id="@+id/list_tags"
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_place_tags"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/list_tags"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <!-- No tags yet -->
+            <!-- **********************************************************************-->
+            <TextView
+                android:id="@+id/no_tags_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/text_normal"
+                android:text="@string/no_tags"
+                android:textColor="@color/text_place"
+                android:gravity="center"
+                android:visibility="gone"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </RelativeLayout>

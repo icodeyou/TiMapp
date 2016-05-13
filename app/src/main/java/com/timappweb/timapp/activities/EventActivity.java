@@ -47,8 +47,6 @@ import com.timappweb.timapp.fragments.PlacePicturesFragment;
 import com.timappweb.timapp.fragments.PlaceTagsFragment;
 import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.listeners.SelectableButtonListener;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.views.EventView;
@@ -59,11 +57,11 @@ import java.util.List;
 import java.util.Vector;
 
 public class EventActivity extends BaseActivity {
+    private static final int LOADER_PLACE_CORE = 0;
     private String TAG = "EventActivity";
     private MyPagerAdapter pagerAdapter;
     private Place event;
     private int eventId;
-    private Activity currentActivity;
 
     //Views
     private View        iAmComingButton;
@@ -107,6 +105,7 @@ public class EventActivity extends BaseActivity {
 
     private AlphaAnimation postButtonsAppear;
     private AlphaAnimation postButtonsDisappear;
+    private boolean firstLoad = true;
 
 
     //Override methods
@@ -114,7 +113,6 @@ public class EventActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentActivity = this;
 
         this.event = IntentsUtils.extractPlace(getIntent());
         eventId = IntentsUtils.extractPlaceId(getIntent());
@@ -154,13 +152,32 @@ public class EventActivity extends BaseActivity {
         tagButton = findViewById(R.id.event_post_tags);
         peopleButton = findViewById(R.id.event_post_people);
 
-        initLocationListener();
-        initFragments();
-        setListeners();
-        setActions();
+        getSupportLoaderManager().initLoader(LOADER_PLACE_CORE, null, new EventLoader());
+    }
 
-        EventLoader mLoader = new EventLoader();
-        getSupportLoaderManager().initLoader(0, null, mLoader);
+    /**
+     * Method called when event has finished loading.
+     * @warning Method must be called only ONCE.
+     */
+    private void onEventLoaded() {
+        if (firstLoad){
+            firstLoad = false;
+            initFragments();
+            setListeners();
+            setActions();
+
+            mLocationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    // TODO only listen for big location changed..
+                    MyApplication.setLastLocation(location);
+                    updateBtnVisibility();
+                }
+            };
+            initLocationProvider(mLocationListener);
+        }
+
+        updateView();
     }
 
     public void setActions() {
@@ -168,15 +185,16 @@ public class EventActivity extends BaseActivity {
         if(extras!=null) {
             switch (extras.getInt(IntentsUtils.KEY_ACTION, -1)) {
                 case IntentsUtils.ACTION_CAMERA:
+                    openAddPictureActivity();
                     //pager.setCurrentItem(0);
                     break;
                 case IntentsUtils.ACTION_TAGS:
                     //pager.setCurrentItem(1);
-                    addTags();
+                    openAddTagsActivity();
                     break;
                 case IntentsUtils.ACTION_PEOPLE:
                     //pager.setCurrentItem(2);
-                    IntentsUtils.addPeople(this, event);
+                    openAddPeopleActivity();
                     break;
             }
         }
@@ -243,27 +261,23 @@ public class EventActivity extends BaseActivity {
 
 
     private void setListeners() {
-        final Activity eventActivity = this;
-
         picButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPictureFromFragment(eventActivity, fragmentPictures);
+                openAddPictureActivity();
                 //pager.setCurrentItem(0);
             }
         });
         tagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTags();
-                //pager.setCurrentItem(1);
+                openAddTagsActivity();
             }
         });
         peopleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPeople(eventActivity, event);
-                //pager.setCurrentItem(2);
+                openAddPeopleActivity();
             }
         });
 
@@ -332,17 +346,18 @@ public class EventActivity extends BaseActivity {
         });
     }
 
+
     private void addPlaceStatus() {
         if (event == null){
             return;
         }
         // TODO fine location
         if (!MyApplication.hasFineLocation()) {
-            Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
         final UserPlaceStatusEnum status = isUserAround() ? UserPlaceStatusEnum.HERE : UserPlaceStatusEnum.COMING;
-        PlaceStatusManager.instance().add(this, event, status , new BinaryActionListener(){
+        PlaceStatusManager.instance().add(this, event, status, new BinaryActionListener() {
 
             @Override
             public void onSuccess() {
@@ -364,7 +379,7 @@ public class EventActivity extends BaseActivity {
         if (event == null){
             return;
         }
-        PlaceStatusManager.instance().cancel(this, event, new BinaryActionListener(){
+        PlaceStatusManager.instance().cancel(this, event, new BinaryActionListener() {
 
             @Override
             public void onSuccess() {
@@ -382,12 +397,20 @@ public class EventActivity extends BaseActivity {
         });
     }
 
-    private void addTags() {
+    private void openAddTagsActivity() {
         if (!MyApplication.hasFineLocation()) {
-            Toast.makeText(currentActivity, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
-        IntentsUtils.addTags(currentActivity, event);
+        IntentsUtils.addTags(this, event);
+    }
+
+    private void openAddPictureActivity() {
+        IntentsUtils.addPictureFromFragment(this, fragmentPictures);
+    }
+
+    private void openAddPeopleActivity() {
+        IntentsUtils.addPeople(this, event);
     }
 
     private void initFragments() {
@@ -429,19 +452,6 @@ public class EventActivity extends BaseActivity {
         pager.setCurrentItem(pageNumber);
     }
 
-    private void initLocationListener() {
-        mLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                // TODO only listen for big location changed..
-                MyApplication.setLastLocation(location);
-                if (MyApplication.hasFineLocation()){
-                    updateBtnVisibility();
-                }
-            }
-        };
-        initLocationProvider(mLocationListener);
-    }
 
 
     /**
@@ -477,7 +487,7 @@ public class EventActivity extends BaseActivity {
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if (fragmentTags.getEventView() == null || !MyApplication.isLoggedIn() || !MyApplication.hasLastLocation()) {
+        if (!MyApplication.isLoggedIn() || !MyApplication.hasLastLocation()) {
             matchButton.setVisibility(View.GONE);
             return;
         }
@@ -556,7 +566,7 @@ public class EventActivity extends BaseActivity {
             Log.d(TAG, "Place loaded finish");
             if (data.size() > 0){
                 event = data.get(0);
-                updateView();
+                onEventLoaded();
             }
         }
 

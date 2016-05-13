@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,18 +32,24 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.ApplicationRules;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Picture;
+import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -80,6 +87,9 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         initRv();
         initAdapter();
         this.loadData();
+
+
+        //getLoaderManager().initLoader(0, null, new PictureLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
 
         return root;
     }
@@ -263,6 +273,29 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
             e.printStackTrace();
             return ;
         }
+    }
+
+
+    // =============================================================================================
+
+    /**
+     * TODO
+     */
+    class PictureLoader extends MultipleEntryLoaderCallback<Picture> {
+
+        public PictureLoader(Context context, Place place) {
+            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_PLACE_PICTURE, place.getPicturesQuery());
+            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
+            //this.setSwipeAndRefreshLayout(mSwipeLayout);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Picture>> loader, List<Picture> data) {
+            super.onLoadFinished(loader, data);
+            picturesAdapter.setData(data);
+            picturesAdapter.notifyDataSetChanged();
+        }
+
     }
 }
 

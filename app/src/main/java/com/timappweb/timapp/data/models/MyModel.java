@@ -73,14 +73,9 @@ public class MyModel extends Model{
      * @return
      */
     public <T extends MyModel> T deepSave() {
-        Long id = this.mySave();
-        if (id != null){
-            Log.v(TAG, "Saving model " + this.getClass().getCanonicalName() + " with id " + id);
-            this._saveModelAssociations();
-        }
-        else{
-            Log.e(TAG, "Cannot save model: " + this);
-        }
+        Log.v(TAG, "Saving model " + this.getClass().getCanonicalName());
+        this._saveModelAssociations();
+        this.mySave();
         return (T) this;
     }
 

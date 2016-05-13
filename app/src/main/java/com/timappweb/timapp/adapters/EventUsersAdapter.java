@@ -17,6 +17,7 @@ import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.TwoDimArray;
@@ -55,6 +56,25 @@ public abstract class EventUsersAdapter
         this.data.add(type, items);
         this.notifyDataSetChanged();
     }
+
+    public void addData(List<UserPlace> data) {
+        for (UserPlace userPlace: data){
+            this.data.addOne(userPlace.status, userPlace);
+        }
+    }
+    public void clearSection(UserPlaceStatusEnum status) {
+        this.data.clear(status);
+    }
+
+
+
+    /*
+    public void addData(List<? extends PlaceUserInterface> data) {
+        for (PlaceUserInterface placeUser: data){
+            this.data.add(data.status, )
+        }
+    }*/
+
 
     @Override
     public PlacePeopleViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -195,9 +215,16 @@ public abstract class EventUsersAdapter
             return data.size();
         }
 
+        @Override
         public void addAll(List item) {
             this.data.addAll(item);
         }
+
+        @Override
+        public void add(Object item) {
+            this.data.add((T)item);
+        }
+
 
         public boolean is(Object id) {
             return this.id.equals(id);
@@ -206,6 +233,7 @@ public abstract class EventUsersAdapter
         public void clear() {
             this.data.clear();
         }
+
 
         public int getViewType() {
             return viewType;

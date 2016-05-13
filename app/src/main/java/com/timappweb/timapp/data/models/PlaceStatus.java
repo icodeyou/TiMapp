@@ -59,17 +59,14 @@ public class PlaceStatus extends SyncBaseModel {
         this.created = Util.getCurrentTimeSec();
     }
 
-    public static boolean hasStatus(Place place, UserPlaceStatusEnum status) {
-        return hasStatus(place.getId(), status);
-    }
 
-    public static boolean hasStatus(long placeId, UserPlaceStatusEnum status) {
-        PlaceStatus placeStatus = getStatus(placeId, MyApplication.getCurrentUser().getId());
+    public static boolean hasStatus(Long userId, long placeId, UserPlaceStatusEnum status) {
+        PlaceStatus placeStatus = getStatus(placeId, userId);
         if (placeStatus != null && !placeStatus.isStatusUpToDate()){
             placeStatus.delete();
             return false;
         }
-        return placeStatus != null;
+        return placeStatus != null && placeStatus.status == status;
     }
     public static PlaceStatus getStatus(long placeId, long userId){
         return new Select()
@@ -78,6 +75,12 @@ public class PlaceStatus extends SyncBaseModel {
                 .executeSingle();
     }
     public static PlaceStatus setStatus(User user, Place place, UserPlaceStatusEnum status, int remoteId){
+
+        // Remove all other here status
+        if (status == UserPlaceStatusEnum.HERE){
+            new Delete().from(PlaceStatus.class).where("User = ? AND Status = ", user.getId(), status).execute();
+        }
+
         PlaceStatus placeStatus = getStatus(place.getId(), user.getId());
         if (placeStatus == null){
             placeStatus = new PlaceStatus(user, place, status);

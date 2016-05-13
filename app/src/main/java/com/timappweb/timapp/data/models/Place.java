@@ -4,12 +4,15 @@ import android.location.Location;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
@@ -29,11 +32,13 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     // =============================================================================================
     // DATABASE
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "Spot", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("spot")
     @Expose
     public Spot             spot;
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "User", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("user")
     @Expose(serialize = false, deserialize = true)
@@ -87,7 +92,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     public ArrayList<Post>  posts;
 
     @Expose
-    public int              spot_id;
+    public Integer          spot_id  = null;
 
     // =============================================================================================
 
@@ -131,7 +136,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
      * @return
      */
     public boolean isNew(){
-        return this.remote_id == -1;
+        return this.remote_id == null;
     }
 
     public int countPosts(){
@@ -312,4 +317,27 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         }
     }
 
+    public From getPicturesQuery() {
+        return new Select().from(Picture.class).where("Place = ?", this.getId()).orderBy("created DESC");
+    }
+
+    public List<Picture> getPictures() {
+        return getPicturesQuery().execute();
+    }
+
+    public List<? extends SyncBaseModel> getUsers() {
+        return new Select().from(UserPlace.class).where("Place = ?", this.getId()).execute();
+    }
+
+    public From getTagsQuery() {
+        return new Select()
+                .from(Tag.class)
+                .where("PlaceTag.Place = ?", this.getId())
+                .join(PlaceTag.class).on("Tag.Id = PlaceTag.Tag")
+                .orderBy("PlaceTag.CountRef");
+    }
+
+    public List<Tag> getTags() {
+        return getTagsQuery().execute();
+    }
 }

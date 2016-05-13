@@ -17,6 +17,9 @@ import java.util.List;
 @Table(name = "PlacesInvitation")
 public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterface {
 
+    // =============================================================================================
+    // Database
+
     @Column(name = "Created", notNull = true)
     @Expose(serialize = false, deserialize = true)
     public int created;
@@ -53,7 +56,6 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Expose
     @SerializedName("user_target")
     public User user_target;
-
 
     // =============================================================================================
 

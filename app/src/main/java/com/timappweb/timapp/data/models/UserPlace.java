@@ -2,10 +2,13 @@ package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -16,19 +19,21 @@ public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "PlaceId")
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
+    @Column(name = "Place", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     @Expose
-    public int place_id;
+    public Place place;
 
-    @Column(name = "Status")
+    @Column(name = "Status", notNull = true)
     @Expose
     public UserPlaceStatusEnum status;
 
-    @Column(name = "Created")
+    @Column(name = "Created", notNull = true)
     @Expose
     public int created;
 
-    @Column(name = "User")
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
+    @Column(name = "User", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("user")
     public User user;
@@ -36,17 +41,18 @@ public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
     // =============================================================================================
     // Fields
 
-    @Expose(deserialize = false, serialize = true)
-    public int user_id;
-
     // =============================================================================================
+
+
+    public UserPlace() {
+    }
 
     @Override
     public String toString() {
         return "UserPlace{" +
-                "place_id=" + place_id +
+                "place=" + place +
                 ", status=" + status +
-                ", user_id=" + user_id + " (" + user + ")" +
+                ", user=" + user +
                 ", created=" + created +
                 '}';
     }
@@ -72,4 +78,20 @@ public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
         UserPlace obj = (UserPlace) model;
         return this.status == obj.status;
     }
+
+    public static From queryForPlace(Place place) {
+        return queryForPlace(place.getId());
+    }
+
+    public static From queryForPlace(long placeId) {
+        return new Select().from(UserPlace.class).where("Place = ?", placeId);
+    }
+
+    public static List<UserPlace> getForPlace(Place place) {
+        return queryForPlace(place).execute();
+    }
+    /*
+    public static From queryForPlace(long id) {
+        return new Select().from(UserPlace.class).where("Place = ?", id);
+    }*/
 }

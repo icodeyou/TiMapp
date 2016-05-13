@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     // =============================================================================================
     // DATABASE
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "User")
     @Expose
     public User user;

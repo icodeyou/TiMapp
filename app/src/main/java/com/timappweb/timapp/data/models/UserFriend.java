@@ -3,6 +3,7 @@ package com.timappweb.timapp.data.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.util.List;
 
@@ -15,11 +16,13 @@ public class UserFriend extends MyModel {
     // =============================================================================================
     // DATABASE
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserSource", uniqueGroups = "unique_friendship",
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     public User userSource;
 
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserTarget", uniqueGroups = "unique_friendship",
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)

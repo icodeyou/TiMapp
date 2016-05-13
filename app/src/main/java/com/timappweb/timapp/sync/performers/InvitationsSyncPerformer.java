@@ -6,6 +6,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +22,10 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
     public InvitationsSyncPerformer(List<? extends SyncBaseModel> remoteEntries,
                                     List<? extends SyncBaseModel> localEntries, SyncResult syncResult) {
         super(remoteEntries, localEntries, syncResult);
+    }
+
+    public InvitationsSyncPerformer(PaginationResponse<PlacesInvitation> body, List<PlacesInvitation> inviteSent, SyncResult syncResult) {
+        super(body.items, inviteSent, syncResult);
     }
 
     @Override

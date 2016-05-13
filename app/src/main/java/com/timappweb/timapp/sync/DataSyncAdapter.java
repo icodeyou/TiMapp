@@ -41,8 +41,10 @@ import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
+import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 
 /**
@@ -61,14 +63,21 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     public static final String SYNC_TYPE_KEY = "data_sync_type";
     public static final String SYNC_ID_KEY = "data_sync_id";
     public static final String SYNC_LAST_TIME = "data_sync_time";
+    public static final String SYNC_PARAM_PLACE_ID = "place_id";
 
     public static final int SYNC_TYPE_FRIENDS = 1;
     public static final int SYNC_TYPE_EVENT_AROUD_USER = 2;
     public static final int SYNC_TYPE_USER = 3;
+
     public static final int SYNC_TYPE_PLACE = 4;
+    public static final int SYNC_TYPE_PLACE_USERS = 8;
+
     private static final int SYNC_TYPE_PLACE_STATUS = 5;
     public static final int SYNC_TYPE_INVITE_SENT = 6;
     public static final int SYNC_TYPE_INVITE_RECEIVED = 7;
+    public static final int SYNC_TYPE_PLACE_INVITED = 9;
+    public static final int SYNC_TYPE_PLACE_PICTURE = 10;
+    public static final int SYNC_TYPE_PLACE_TAGS = 11;
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -123,10 +132,12 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                             syncResult).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_INVITE_SENT:
-                    //new InvitationsSyncPerformer(
-                    //        RestClient.service().invitesSent().execute().body().items,
-                    //        MyApplication.getCurrentUser().getInviteReceived(),
-                    //        syncResult).perform();
+                    Place place = extractPlace(extras);
+                    if (place == null) return;
+                    new InvitationsSyncPerformer(
+                            RestClient.service().invitesSent(place.getRemoteId()).execute().body().items,
+                            MyApplication.getCurrentUser().getInviteSent(place.getId()),
+                            syncResult).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_PLACE_STATUS:
                     new RemoteMasterSyncPerformer(
@@ -134,20 +145,46 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                             MyApplication.getCurrentUser().getPlaceStatus(),
                             syncResult).perform();
                     break;
+                case DataSyncAdapter.SYNC_TYPE_PLACE_PICTURE:
+                    place = extractPlace(extras);
+                    if (place == null) return;
+                    new RemoteMasterSyncPerformer(
+                            RestClient.service().viewPicturesForPlace(place.getRemoteId()).execute().body(),
+                            place.getPictures(),
+                            syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_PLACE_USERS:
+                    place = extractPlace(extras);
+                    if (place == null) return;
+                    new UserPlaceSyncPerformer(
+                            RestClient.service().viewUsersForPlace(place.getRemoteId()).execute().body(),
+                            place.getUsers(),
+                            syncResult,
+                            place).perform();
+
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_PLACE_INVITED:
+                    place = extractPlace(extras);
+                    if (place == null) return;
+                    new InvitationsSyncPerformer(
+                            RestClient.service().invitesSent(place.getRemoteId()).execute().body(),
+                            MyApplication.getCurrentUser().getInviteSent(place.getId()),
+                            syncResult).perform();
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_PLACE_TAGS:
+                    place = extractPlace(extras);
+                    if (place == null) return;
+                    new RemoteMasterSyncPerformer(
+                            RestClient.service().viewPopularTagsForPlace(place.getRemoteId()).execute().body(),
+                            place.getTags(),
+                            syncResult).perform();
+                    break;
                 case DataSyncAdapter.SYNC_TYPE_USER:
-                    int id = extras.getInt(SYNC_ID_KEY, -1);
-                    if (id == -1) {
-                        Log.e(TAG, "Invalid sync key. Please provide a sync key");
-                        return; //throw new InvalidParameterException();
-                    }
+                    long id = extractRemoteId(extras);
                     new SingleEntrySyncPerformer(User.class, id, RestClient.service().profile(id).execute(), syncResult).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_PLACE:
-                    id = extras.getInt(SYNC_ID_KEY, -1);
-                    if (id == -1) {
-                        Log.e(TAG, "Invalid sync key. Please provide a sync key");
-                        return; //throw new InvalidParameterException();
-                    }
+                    id = extractRemoteId(extras);
                     new SingleEntrySyncPerformer(Place.class, id, RestClient.service().viewPlace(id).execute(), syncResult).perform();
                     break;
                 default:
@@ -162,4 +199,21 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         Log.i(TAG, "--------------- Network synchronization complete for data----------------------");
     }
 
+
+    private Place extractPlace(Bundle extras){
+        long placeId = extras.getLong(SYNC_PARAM_PLACE_ID, -1);
+        if (placeId == -1) {
+            Log.e(TAG, "Invalid sync key. Please provide a sync key");
+            return null; //throw new InvalidParameterException();
+        }
+        return Place.loadByRemoteId(Place.class, placeId);
+    }
+    private long extractRemoteId(Bundle extras){
+        int id = extras.getInt(SYNC_ID_KEY, -1);
+        if (id == -1) {
+            Log.e(TAG, "Invalid sync key. Please provide a sync key");
+            throw new InvalidParameterException();
+        }
+        return id;
+    }
 }

@@ -61,7 +61,7 @@ public interface WebServiceInterface {
     Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
 
     @GET("PlacesInvitations/sent/{placeId}.json")
-    Call<PaginationResponse<PlacesInvitation>> invitesSent(@Path("placeId") int placeId);
+    Call<PaginationResponse<PlacesInvitation>> invitesSent(@Path("placeId") long placeId);
 
     //@GET("PlacesInvitations/sent.json")
     //Call<PaginationResponse<PlacesInvitation>> invitesSent();
@@ -95,7 +95,7 @@ public interface WebServiceInterface {
     Call<RestFeedback>  checkToken();
 
     @GET("users/profile/{id}.json")
-    Call<User>  profile(@Path("id") int userId);
+    Call<User>  profile(@Path("id") long userId);
 
     @POST("users/facebook_login.json")
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
@@ -133,7 +133,7 @@ public interface WebServiceInterface {
                               @Body RequestBody body);
 
     @GET("pictures/place/{id}.json")
-    Call<PaginationResponse<Picture>> viewPicturesForPlace(@Path("id") int id);
+    Call<PaginationResponse<Picture>> viewPicturesForPlace(@Path("id") long id);
 
     // ---------------------------------------------------------------------------------------------
     // Places
@@ -150,14 +150,14 @@ public interface WebServiceInterface {
      * @param id
      */
     @POST("tags/place/{id}.json")
-    Call<List<Tag>> viewPopularTagsForPlace(@Path("id") int id);
+    Call<List<Tag>> viewPopularTagsForPlace(@Path("id") long id);
 
     /**
      *
      * @param id
      */
     @POST("Places/view/{id}.json")
-    Call<Place> viewPlace(@Path("id") int id);
+    Call<Place> viewPlace(@Path("id") long id);
 
     /**
      * Find places to display on the map
@@ -230,6 +230,9 @@ public interface WebServiceInterface {
 
     @POST("PlacesUsers/place/{id}.json")
     Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
+
+    @POST("PlacesUsers/place/{id}.json")
+    Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") long placeId);
 
     @POST("PlacesUsers/user.json")
     Call<List<UserPlace>> placeStatus();

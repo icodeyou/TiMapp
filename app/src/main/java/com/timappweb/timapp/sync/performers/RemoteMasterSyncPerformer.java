@@ -4,9 +4,13 @@ import android.content.SyncResult;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.UserPlace;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 
 import java.util.Collection;
 import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * Created by stephane on 5/5/2016.
@@ -24,6 +28,13 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
                                      SyncResult syncResult) {
         super(remoteEntries, localEntries, syncResult);
     }
+
+    public RemoteMasterSyncPerformer(PaginationResponse<? extends SyncBaseModel> remoteEntries,
+                                     List<? extends SyncBaseModel> localEntries,
+                                     SyncResult syncResult) {
+        super(remoteEntries.items, localEntries, syncResult);
+    }
+
 
 
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {

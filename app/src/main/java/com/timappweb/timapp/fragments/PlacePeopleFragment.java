@@ -3,22 +3,23 @@ package com.timappweb.timapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
-import com.timappweb.timapp.adapters.SimpleSectionedRecyclerViewAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
+import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.UserPlace;
@@ -27,12 +28,11 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -41,6 +41,9 @@ import retrofit2.Response;
 public class PlacePeopleFragment extends PlaceBaseFragment {
 
     private static final String TAG = "PlaceTagsFragment";
+    private static final int LOADER_INVITATIONS = 1;
+    private static final int LOADER_PLACE_USERS = 2;
+
     private Context         context;
     private EventActivity eventActivity;
 
@@ -49,6 +52,8 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
+    private SwipeRefreshLayout mSwipeLayout;
+
 
     @Nullable
     @Override
@@ -62,9 +67,15 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         progressView = root.findViewById(R.id.progress_view);
         noPostsView = root.findViewById(R.id.no_posts_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
+        mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_people);
 
         initAdapter();
 
+
+        getLoaderManager().initLoader(LOADER_PLACE_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
+        if (MyApplication.isLoggedIn()){
+            getLoaderManager().initLoader(LOADER_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
+        }
 
         return root;
     }
@@ -87,16 +98,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         //TODO : Determine how the class DividerDecoration is usefull, and decide if we use it or not
         //peopleRv.addItemDecoration(new DividerDecoration(eventActivity));
         peopleRv.setAdapter(placeUsersAdapter);
-    }
-
-    public void loadData() {
-        placeUsersAdapter.clear();
-        loadPosts();
-        loadByStatus(UserPlaceStatusEnum.COMING);
-
-        if (MyApplication.isLoggedIn()){
-            loadInvites();
-        }
     }
 
 
@@ -124,40 +125,6 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     }
 
 
-    private void loadByStatus(final UserPlaceStatusEnum status){
-        Map<String, String> conditions = new HashMap<>();
-        conditions.put("status", String.valueOf(status));
-
-        Call<PaginationResponse<UserPlace>> call = RestClient.service().viewUsersForPlace(eventActivity.getEventId(), conditions);
-        call.enqueue(new RestCallback<PaginationResponse<UserPlace>>(getContext(), this) {
-            @Override
-            public void onResponse200(Response<PaginationResponse<UserPlace>> response) {
-                placeUsersAdapter.addData(status, response.body().items);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-                noConnectionView.setVisibility(View.VISIBLE);
-            }
-
-        });
-    }
-
-    private void loadInvites(){
-        Call<PaginationResponse<PlacesInvitation>> call = RestClient.service().invitesSent(eventActivity.getEventId());
-        call.enqueue(new RestCallback<PaginationResponse<PlacesInvitation>>(getContext()) {
-
-            @Override
-            public void onResponse200(Response<PaginationResponse<PlacesInvitation>> response) {
-                List<PlacesInvitation> invitations = response.body().items;
-                Log.d(TAG, "Loading " + invitations.size() + " invites sent");
-                placeUsersAdapter.addData(UserPlaceStatusEnum.INVITED, invitations);
-            }
-
-        });
-        asynCalls.add(call);
-    }
 
     public void setProgressView(boolean visibility) {
         if(visibility) {
@@ -175,6 +142,54 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
     public void onResume() {
         Log.v(TAG, "onResume()");
         super.onResume();
-        loadData();
+    }
+
+
+    // =============================================================================================
+
+    /**
+     * TODO
+     */
+    class UserStatusLoader extends MultipleEntryLoaderCallback<UserPlace> {
+
+        public UserStatusLoader(Context context, Place place) {
+            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_PLACE_USERS, UserPlace.queryForPlace(place));
+            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
+            this.setSwipeAndRefreshLayout(mSwipeLayout);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<UserPlace>> loader, List<UserPlace> data) {
+            super.onLoadFinished(loader, data);
+            placeUsersAdapter.clearSection(UserPlaceStatusEnum.COMING);
+            placeUsersAdapter.clearSection(UserPlaceStatusEnum.HERE);
+            placeUsersAdapter.addData(data);
+            placeUsersAdapter.notifyDataSetChanged();
+        }
+
+    }
+    /**
+     * TODO
+     */
+    class InviteSentLoader extends MultipleEntryLoaderCallback<PlacesInvitation> {
+
+        public InviteSentLoader(Context context, Place place) {
+            super(context, 3600 * 1000,
+                    DataSyncAdapter.SYNC_TYPE_PLACE_INVITED,
+                    MyApplication.getCurrentUser().getInviteSentQuery(place.getId()));
+
+            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
+
+            this.setSwipeAndRefreshLayout(mSwipeLayout);
+        }
+
+        @Override
+        public void onLoadFinished(Loader loader, List data) {
+            super.onLoadFinished(loader, data);
+            placeUsersAdapter.clearSection(UserPlaceStatusEnum.INVITED);
+            placeUsersAdapter.addData(UserPlaceStatusEnum.INVITED, data);
+            placeUsersAdapter.notifyDataSetChanged();
+        }
+
     }
 }

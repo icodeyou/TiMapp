@@ -17,12 +17,12 @@ import retrofit2.Response;
 public class SingleEntrySyncPerformer implements SyncPerformer {
 
     private static final String TAG = "SingleEntrySyncPerf";
-    private int key;
+    private long key;
     private SyncResult syncResult;
     private Response<? extends SyncBaseModel> response;
     private Class<? extends SyncBaseModel> classType;
 
-    public SingleEntrySyncPerformer(Class<? extends SyncBaseModel> classType, int key,  Response<? extends SyncBaseModel> response, SyncResult syncResult) {
+    public SingleEntrySyncPerformer(Class<? extends SyncBaseModel> classType, long key,  Response<? extends SyncBaseModel> response, SyncResult syncResult) {
         this.key = key;
         this.syncResult = syncResult;
         this.response = response;

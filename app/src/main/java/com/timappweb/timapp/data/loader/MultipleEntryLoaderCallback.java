@@ -12,6 +12,8 @@ import com.activeandroid.query.From;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
@@ -22,25 +24,25 @@ import java.util.List;
 public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>> {
 
     private static final String TAG = "MultipleEntriesCallback";
-    private final int syncType;
     private final long syncDelay;
     private final From query;
+    protected SyncAdapterOption syncOption;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
-    private Activity context;
+    private Context context;
 
-    public MultipleEntryLoaderCallback(Activity context,
-                                       int syncType,
+    public MultipleEntryLoaderCallback(Context context,
                                        long syncDelay,
+                                       int syncType,
                                        From query) {
         this.context = context;
-        this.syncType = syncType;
+        this.syncOption = new SyncAdapterOption(syncType);
         this.syncDelay = syncDelay;
         this.query = query;
     }
 
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
-        SyncBaseModel.getEntries(context, query, syncType, syncDelay);
+        SyncBaseModel.getEntries(context, syncOption, query, syncDelay);
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
         return new ModelLoader(context, User.class, query, false);
     }
@@ -59,7 +61,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     public void onRefresh(){
         Log.v(TAG, "Refreshing data");
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-        SyncBaseModel.getRemoteEntries(context, syncType);
+        SyncBaseModel.getRemoteEntries(context, syncOption);
     }
 
     public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout) {
@@ -73,7 +75,5 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
         });
     }
 
-    public void setSwipeAndRefreshLayout() {
-        this.setSwipeAndRefreshLayout((SwipeRefreshLayout) context.findViewById(R.id.swipe_refresh_layout));
-    }
+
 }

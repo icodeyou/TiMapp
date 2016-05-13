@@ -15,6 +15,7 @@ import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,10 +36,10 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     // =============================================================================================
 
-    @Column(name = "SyncId", index = true, unique = true, notNull = true)
+    @Column(name = "SyncId", index = true, unique = true, notNull = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     @Expose(serialize = true, deserialize = true)
     @SerializedName("id")
-    public int remote_id = -1;
+    public Integer remote_id = null;
 
     @Column(name = "_lastSync", notNull = false)
     protected long _last_sync;
@@ -67,6 +68,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @return
      */
     public <T extends MyModel> T deepSave(){
+        /*
         if (!this.hasLocalId()){
             SyncBaseModel model = this.queryByRemoteId().executeSingle();
             if (model != null){
@@ -74,7 +76,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
                 Log.d(TAG, "Updating existing remote model: " + model);
                 return (T) model;
             }
-        }
+        }*/
         return super.deepSave();
     }
 
@@ -92,7 +94,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @param key
      * @return
      */
-    public static From queryByRemoteId(Class<? extends SyncBaseModel> classType, int key) {
+    public static From queryByRemoteId(Class<? extends SyncBaseModel> classType, long key) {
         return new Select().from(classType).where("SyncId = ?", key);
     }
 
@@ -102,7 +104,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @param key
      * @return
      */
-    public static From deleteByRemoteId(Class<? extends SyncBaseModel> classType, int key) {
+    public static From deleteByRemoteId(Class<? extends SyncBaseModel> classType, long key) {
         return new Delete().from(classType).where("SyncId = ?", key);
     }
 
@@ -196,17 +198,16 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * Get entries for a specified model. If entries exists locally, take it otherwise request a sync update
      * @param context
      * @param query
-     * @param syncType
      * @return
      */
-    public static <DataType extends SyncBaseModel> List<DataType> getEntries(Context context, From query, int syncType, long syncDelay){
+    public static <DataType extends SyncBaseModel> List<DataType> getEntries(Context context, SyncAdapterOption options, From query, long syncDelay){
         // If need merge
-        if (SyncHistory.requireUpdate(syncType, syncDelay)){
-            getRemoteEntries(context, syncType);
+        if (SyncHistory.requireUpdate(options.getSyncType(), syncDelay)){
+            getRemoteEntries(context, options);
             return null;
         }
         else {
-            Log.i(TAG, "Entries are already in local db for type: " + syncType);
+            Log.i(TAG, "Entries are already in local db for type: " + options);
             List<DataType> data = query.execute();
             return data;
         }
@@ -214,14 +215,12 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     /**
      * Get remote entries for a specified model.
      * @param context
-     * @param syncType
+     * @param syncOption
      * @return
      */
-    public static void getRemoteEntries(Context context, int syncType){
-        Bundle bundle = new Bundle();
-        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
-        bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(syncType));
-        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
+    public static void getRemoteEntries(Context context, SyncAdapterOption syncOption){
+        syncOption.setLastSyncTime();
+        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), syncOption.getBundle());
     }
 
     /**
@@ -295,8 +294,9 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @param id
      * @return
      */
-    public static <T extends SyncBaseModel> T loadByRemoteId(Class<T> clazz, int id) {
+    public static <T extends SyncBaseModel> T loadByRemoteId(Class<T> clazz, long id) {
         return queryByRemoteId(clazz, id).executeSingle();
     }
 
+    public boolean hasRemoteId() { return this.remote_id != null;}
 }

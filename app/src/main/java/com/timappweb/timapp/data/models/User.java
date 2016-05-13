@@ -198,7 +198,10 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     }
 
     public From getInviteSentQuery(long placeId) {
-        return this.getInviteSentQuery().where("Place = ?", placeId);
+        return this.getInviteSentQuery().where("Place = ? AND UserSource = ?", placeId, this.getId());
+    }
+    public List<PlacesInvitation> getInviteSent(long placeId) {
+        return this.getInviteSentQuery().execute();
     }
 
     public From getInviteReceivedQuery() {

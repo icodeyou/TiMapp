@@ -2,6 +2,8 @@ package com.timappweb.timapp.utils;
 
 import android.util.Log;
 
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +36,11 @@ public class TwoDimArray<SectionType extends TwoDimArray.SectionItem> {
             SectionItem item = getSection(key);
             item.addAll(list);
         }
+    }
+
+    public void addOne(Object key, Object data){
+        SectionItem item = getSection(key);
+        if (item != null) item.add(data);
     }
 
 
@@ -77,10 +84,16 @@ public class TwoDimArray<SectionType extends TwoDimArray.SectionItem> {
         throw new IndexOutOfBoundsException();
     }
 
+    public void clear(Object id) {
+        this.getSection(id).clear();
+    }
+
+
     public interface SectionItem<T>{
         T getItem(int position);
         int size();
         void addAll(List<T> item);
+        void add(T item);
         void clear();
         boolean is(Object id);
     }

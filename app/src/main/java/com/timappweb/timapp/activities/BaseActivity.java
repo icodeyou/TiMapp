@@ -103,7 +103,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (locationProvider != null){
+        if (locationProvider != null) {
             locationProvider.disconnect();
         }
         super.onStop();

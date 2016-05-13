@@ -36,31 +36,14 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
     }
 
     /**
-     * Read XML from an input stream, storing it into the content provider.
      *
-     * <p>This is where incoming data is persisted, committing the results of a merge. In order to
-     * minimize (expensive) disk operations, we compare incoming data with what's already in our
-     * database, and compute a merge. Only changes (insert/update/delete) will result in a database
-     * write.
-     *
-     * <p>As an additional optimization, we use a batch operation to perform all database writes at
-     * once.
-     *
-     * <p>Merge strategy:
-     * 1. Get cursor to all items in feed<br/>
-     * 2. For each item, check if it's in the incoming data.<br/>
-     *    a. YES: Remove from "incoming" list. Check if data has mutated, if so, perform
-     *            database UPDATE.<br/>
-     *    b. NO: Schedule DELETE from database.<br/>
-     * (At this point, incoming database only contains missing items.)<br/>
-     * 3. For any items remaining in incoming list, ADD to database.
     */
     @Override
     public void perform() {
         // Build hash table of remote entries
         HashMap<Long, SyncBaseModel> entryMap = new HashMap();
         for (SyncBaseModel m : remoteEntries) {
-            entryMap.put(m.getRemoteId(), m);
+            if (m.hasRemoteId()) entryMap.put(m.getRemoteId(), m);
         }
 
         Log.i(TAG, "Found " + localEntries.size() + " local entries. Computing merge solution...");

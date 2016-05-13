@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -199,8 +200,8 @@ public class InviteFriendsActivity extends BaseActivity {
     {
 
         public FriendsLoader() {
-            super(InviteFriendsActivity.this, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000, MyApplication.getCurrentUser().getFriendsQuery());
-            this.setSwipeAndRefreshLayout();
+            super(InviteFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
+            this.setSwipeAndRefreshLayout((SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout));
         }
 
         @Override

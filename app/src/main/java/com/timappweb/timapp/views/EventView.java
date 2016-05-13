@@ -21,6 +21,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
@@ -456,8 +457,8 @@ public class EventView extends RelativeLayout{
             return;
         }
 
-        boolean isUserComing = PlaceStatus.hasStatus(event.remote_id, UserPlaceStatusEnum.COMING);
-        boolean isHereStatus = PlaceStatus.hasStatus(event.remote_id, UserPlaceStatusEnum.HERE);
+        boolean isUserComing = PlaceStatusManager.hasStatus(event.remote_id, UserPlaceStatusEnum.COMING);
+        boolean isHereStatus = PlaceStatusManager.hasStatus(event.remote_id, UserPlaceStatusEnum.HERE);
         boolean isHotView = isUserComing || isHereStatus ;
 
         //Date
@@ -507,7 +508,7 @@ public class EventView extends RelativeLayout{
 
         // Spot view
         if (event.spot != null && isSpot){
-            //spotView.setSpot(event.spot);
+            spotView.setSpot(event.spot);
             this.setSpotVisible(true);
         }
         else{

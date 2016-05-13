@@ -308,8 +308,10 @@ public class MyLocationProvider implements
     }
 
     public void disconnect() {
-        stopLocationUpdates();
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+            stopLocationUpdates();
+            mGoogleApiClient.disconnect();
+        }
     }
 
 }

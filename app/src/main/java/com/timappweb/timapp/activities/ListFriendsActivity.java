@@ -56,10 +56,6 @@ public class ListFriendsActivity extends BaseActivity{
 
     }
 
-    private void refreshItems() {
-        Log.v(TAG, "Request refresh friend sync");
-        SyncBaseModel.getRemoteEntries(context, DataSyncAdapter.SYNC_TYPE_FRIENDS);
-    }
 
     private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
@@ -81,8 +77,8 @@ public class ListFriendsActivity extends BaseActivity{
     {
 
         public FriendsLoader() {
-            super(ListFriendsActivity.this, DataSyncAdapter.SYNC_TYPE_FRIENDS, 3600 * 24 * 1000, MyApplication.getCurrentUser().getFriendsQuery());
-            this.setSwipeAndRefreshLayout();
+            super(ListFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
+            this.setSwipeAndRefreshLayout((SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout));
         }
 
         @Override

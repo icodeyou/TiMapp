@@ -36,29 +36,6 @@
                 android:layout_weight="0.45"/>
         </LinearLayout>
 
-        <!-- No pictures yet -->
-        <!-- **********************************************************************-->
-        <LinearLayout
-            android:id="@+id/no_pictures_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone">
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_camera"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="50dp"
-                android:textSize="@dimen/text_normal"
-                android:textColor="@color/text_place"
-                android:text="@string/no_pic"
-                android:gravity="center"/>
-        </LinearLayout>
 
 
         <include layout="@layout/no_connection_view"
@@ -67,11 +44,44 @@
 
         <!-- List View -->
         <!-- **********************************************************************-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/pictures_rv"
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_place_picture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"/>
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/pictures_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:listSelector="@android:color/transparent"/>
+
+
+            <!-- No pictures yet -->
+            <!-- **********************************************************************-->
+            <LinearLayout
+                android:id="@+id/no_pictures_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_camera"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="50dp"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/text_place"
+                    android:text="@string/no_pic"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 
     <!-- Uploading view-->
