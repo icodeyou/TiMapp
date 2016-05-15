@@ -28,6 +28,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.SyncHistory;
+import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.listeners.OnSpotClickListener;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestClient;
@@ -196,26 +198,23 @@ public class AddPlaceActivity extends BaseActivity {
     private void submitPlace(final Place place){
         Log.d(TAG, "Submit place " + place.toString());
         Call call = RestClient.service().addPlace(place);
-        call.enqueue(new RestFeedbackCallback(this) {
+        place.saveRemoteEntry(this, call, new BinaryActionListener() {
 
             @Override
-            public void onActionSuccess(RestFeedback feedback) {
-                place.remote_id = Integer.parseInt(feedback.data.get("place_id")); // TODO handle exception if invalid int
-                Log.i(TAG, "User created the event with id: " + place.remote_id);
+            public void onSuccess() {
                 IntentsUtils.viewEventFromId(context, place.remote_id);
-                setProgressView(false);
+                // TODO update sync to prevent reloading
             }
+
+            @Override
+            public void onFailure() { }
 
             @Override
             public void onFinish() {
                 setProgressView(false);
             }
-
-            @Override
-            public void onActionFail(RestFeedback feedback) {
-                Toast.makeText(context, feedback.message, Toast.LENGTH_LONG).show();
-            }
         });
+
     }
 
     public void setButtonValidation() {

@@ -125,12 +125,11 @@ public class LocateActivity extends BaseActivity{
     }
 
     private void setListeners() {
-        final LocateActivity that = this;
 
         buttonAddPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.addPlace(that);
+                IntentsUtils.addPlace(LocateActivity.this);
             }
         });
         //buttonAddPlace.setOnTouchListener(new ColorTopRadiusOnTouchListener(this, textButtonAddPlace));
@@ -167,7 +166,6 @@ public class LocateActivity extends BaseActivity{
                 MyApplication.setLastLocation(location);
                 if (MyApplication.hasFineLocation()){
                     loadPlaces(location);
-
                 }
                 //startIntentServiceReverseGeocoding(location);
             }
@@ -176,9 +174,8 @@ public class LocateActivity extends BaseActivity{
         initLocationProvider(mLocationListener);
     }
 
-
+    // TODO migrate to service
     private void loadPlaces(Location location){
-        final Activity activity = this;
         Log.d(TAG, "Loading places with location: " + Util.print(location));
         QueryCondition conditions = new QueryCondition();
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
@@ -204,7 +201,7 @@ public class LocateActivity extends BaseActivity{
                         buttonAddPlace.setVisibility(View.VISIBLE);
                         placeAdapter.notifyDataSetChanged();
                     } else {
-                        IntentsUtils.addPlace(activity);
+                        IntentsUtils.addPlace(LocateActivity.this);
                         finish();
                     }
                 }

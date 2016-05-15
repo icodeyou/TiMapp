@@ -184,7 +184,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     public String toString() {
         return "Place{" +
                 "db_id=" + this.getId() +
-                "remote_id=" + remote_id +
+                ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", created=" + created +
@@ -203,15 +203,15 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
      * @param longitude
      * @return true if the user can post in the place
      */
-    public boolean isAround(double latitude, double longitude) {
+    public boolean isUserAround(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
                 < ConfigurationProvider.rules().place_max_reachable;
     }
 
-    public boolean isAround() {
+    public boolean isUserAround() {
         Location lastLocation = MyApplication.getLastLocation();
         if (lastLocation == null) return false;
-        return this.isAround(lastLocation.getLatitude(), lastLocation.getLongitude());
+        return this.isUserAround(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
 
     public static boolean isValidName(String name) {
@@ -334,10 +334,11 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
                 .from(Tag.class)
                 .where("PlaceTag.Place = ?", this.getId())
                 .join(PlaceTag.class).on("Tag.Id = PlaceTag.Tag")
-                .orderBy("PlaceTag.CountRef");
+                .orderBy("PlaceTag.CountRef DESC");
     }
 
     public List<Tag> getTags() {
         return getTagsQuery().execute();
     }
+
 }

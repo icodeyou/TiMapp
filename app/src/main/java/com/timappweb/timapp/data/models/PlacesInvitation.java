@@ -43,6 +43,7 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserSource",
+            notNull = true,
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
@@ -51,6 +52,7 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserTarget",
+            notNull = true,
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
@@ -88,7 +90,9 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Override
     public String toString() {
         return "PlacesInvitation{" +
-                "created=" + created +
+                "db_id=" + this.getId() +
+                ", remote_id=" + this.remote_id +
+                ", created=" + created +
                 ", status=" + status +
                 ", place=" + place +
                 ", user_source=" + user_source +

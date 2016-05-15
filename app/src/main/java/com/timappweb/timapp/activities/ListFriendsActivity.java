@@ -26,36 +26,26 @@ import java.util.List;
 
 public class ListFriendsActivity extends BaseActivity{
 
-    private static final long SYNC_UPDATE_DELAY = 30 * 1000;
-    private String TAG = "ListFriendsActivity";
+    private static final long   SYNC_UPDATE_DELAY       = 3600 * 1000;
+    private static final int    LOADER_ID_FRIENDS       = 0;
+    private String               TAG                    = "ListFriendsActivity";
+
+    // =============================================================================================
 
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
-
     private View noFriendsView;
-    private View progressView;
-    private FriendsLoader mLoader;
-    private ListFriendsActivity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        noFriendsView = findViewById(R.id.no_friends_view);
-        progressView = findViewById(R.id.loading_friends);
-
+        noFriendsView = findViewById(R.id.no_friends_layout);
         initAdapterListFriends();
-
-        mLoader = new FriendsLoader();
-        getSupportLoaderManager().initLoader(0, null, mLoader);
-
-
+        getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, new FriendsLoader());
     }
-
 
     private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
@@ -65,7 +55,7 @@ public class ListFriendsActivity extends BaseActivity{
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                IntentsUtils.profile(context, adapter.getData().get(position));
+                IntentsUtils.profile(ListFriendsActivity.this, adapter.getData().get(position));
             }
         });
     }
@@ -77,20 +67,19 @@ public class ListFriendsActivity extends BaseActivity{
     {
 
         public FriendsLoader() {
-            super(ListFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
-            this.setSwipeAndRefreshLayout((SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout));
+            super(ListFriendsActivity.this, SYNC_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
+            final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+            this.setSwipeAndRefreshLayout(swipeRefreshLayout);
         }
 
         @Override
         public void onLoadFinished(Loader loader, List data) {
             super.onLoadFinished(loader, data);
+            Log.i(TAG, "Loaded " + data.size() + " friends for the user");
             adapter.clear();
             adapter.setData(data);
             adapter.notifyDataSetChanged();
-            //setProgressBarIndeterminateVisibility(false);
-            Log.i(TAG, "Loaded " + data.size() + " friends for the user");
-            //noFriendsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
-            progressView.setVisibility(View.GONE);
+            noFriendsView.setVisibility(data.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
         @Override

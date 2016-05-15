@@ -47,4 +47,6 @@
         <attr name="background_color"  format="boolean"/>
         <attr name="gravity_center" format="boolean" />
     </declare-styleable>
+
+
 </resources>

@@ -78,7 +78,7 @@ public class PlaceStatus extends SyncBaseModel {
 
         // Remove all other here status
         if (status == UserPlaceStatusEnum.HERE){
-            new Delete().from(PlaceStatus.class).where("User = ? AND Status = ", user.getId(), status).execute();
+            new Delete().from(PlaceStatus.class).where("User = ? AND Status = ?", user.getId(), status).execute();
         }
 
         PlaceStatus placeStatus = getStatus(place.getId(), user.getId());

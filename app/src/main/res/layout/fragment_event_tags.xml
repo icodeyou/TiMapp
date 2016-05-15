@@ -12,7 +12,8 @@
         <FrameLayout
             android:id="@+id/event_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"/>
 
         <include layout="@layout/no_connection_view"
             android:id="@+id/no_connection_view"/>
@@ -20,29 +21,33 @@
         <!-- List View -->
         <!-- **********************************************************************-->
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout_place_tags"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ListView
-                android:id="@+id/list_tags"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
 
-            <!-- No tags yet -->
-            <!-- **********************************************************************-->
+            <com.timappweb.timapp.views.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout_place_tags"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.timappweb.timapp.views.RefreshableRecyclerView
+                    android:id="@+id/list_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:clipToPadding="true"
+                    android:saveEnabled="false"/>
+                <!--android:listSelector="@android:color/transparent"-->
+            </com.timappweb.timapp.views.SwipeRefreshLayout>
+
             <TextView
+                style="@style/NoDataView"
                 android:id="@+id/no_tags_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:textSize="@dimen/text_normal"
-                android:text="@string/no_tags"
-                android:textColor="@color/text_place"
-                android:gravity="center"
-                android:visibility="gone"/>
+                android:text="@string/no_tags"/>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </FrameLayout>
+
     </LinearLayout>
+
+
 </RelativeLayout>

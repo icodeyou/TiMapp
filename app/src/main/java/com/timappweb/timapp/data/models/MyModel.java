@@ -28,17 +28,18 @@ public class MyModel extends Model{
     public  <T extends MyModel> void saveBelongsToMany(Collection<T> data,
                                   Class<? extends MyModel> associationModel){
         if (!this.hasLocalId()){
-            Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
-            return;
+            this.mySave();
+            //Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
+            //return;
         }
         try {
             for (MyModel model: data){
-                Constructor<? extends Model> constructor = associationModel.getConstructor(this.getClass(), model.getClass());
-                if (!model.hasLocalId()){
-                    model = model.deepSave();
-                }
-                Model instance = constructor.newInstance(this, model);
-                instance.save();
+                Constructor<? extends MyModel> constructor = associationModel.getConstructor(this.getClass(), model.getClass());
+                //if (!model.hasLocalId()){
+                //    model = model.deepSave();
+                //}
+                MyModel instance = constructor.newInstance(this, model);
+                instance.deepSave();
             }
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -75,16 +76,21 @@ public class MyModel extends Model{
     public <T extends MyModel> T deepSave() {
         Log.v(TAG, "Saving model " + this.getClass().getCanonicalName());
         this._saveModelAssociations();
-        this.mySave();
-        return (T) this;
+        return (T) this.mySave();
     }
 
     /**
      * Save model plus belongs to many associations
      * @return
      */
-    public Long mySave() {
-        return this.save();
+    public MyModel mySave() {
+        this.save();
+
+        if (!this.hasLocalId()){
+            Log.e(TAG, "Cannot save to local model: " + this);
+        }
+
+        return this;
     }
 
     private void _saveModelAssociations(){
@@ -98,7 +104,8 @@ public class MyModel extends Model{
                             case BELONGS_TO:
                                 MyModel fieldValue = (MyModel) field.get(this);
                                 if (fieldValue != null && !fieldValue.hasLocalId()){
-                                    fieldValue.deepSave();
+                                    MyModel model = fieldValue.deepSave();
+                                    field.set(this, model);
                                     Log.d(TAG, "Saving deep association for field '" + field.getName());
                                 }
                                 break;

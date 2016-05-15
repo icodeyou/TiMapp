@@ -32,6 +32,10 @@ public class RestFeedback extends RestResponse {
     }
 
     public int getIntData(String name) {
-        return Integer.valueOf(this.data.get(name));
+        try {
+            return Integer.valueOf(this.data.get(name));
+        } catch (NumberFormatException ex){
+            return -1;
+        }
     }
 }

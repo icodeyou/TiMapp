@@ -39,6 +39,8 @@ import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
 import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
+import com.timappweb.timapp.sync.performers.PlacePictureSyncPerformer;
+import com.timappweb.timapp.sync.performers.PlaceTagsSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
@@ -148,9 +150,9 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 case DataSyncAdapter.SYNC_TYPE_PLACE_PICTURE:
                     place = extractPlace(extras);
                     if (place == null) return;
-                    new RemoteMasterSyncPerformer(
+                    new PlacePictureSyncPerformer(
                             RestClient.service().viewPicturesForPlace(place.getRemoteId()).execute().body(),
-                            place.getPictures(),
+                            place,
                             syncResult).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_PLACE_USERS:
@@ -174,10 +176,10 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 case DataSyncAdapter.SYNC_TYPE_PLACE_TAGS:
                     place = extractPlace(extras);
                     if (place == null) return;
-                    new RemoteMasterSyncPerformer(
+                    new PlaceTagsSyncPerformer(
                             RestClient.service().viewPopularTagsForPlace(place.getRemoteId()).execute().body(),
-                            place.getTags(),
-                            syncResult).perform();
+                            syncResult,
+                            place).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_USER:
                     long id = extractRemoteId(extras);

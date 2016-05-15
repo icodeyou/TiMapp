@@ -1,10 +1,8 @@
 package com.timappweb.timapp.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,10 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
@@ -34,59 +30,53 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.PlaceStatusManager;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
-import com.timappweb.timapp.fragments.PlaceBaseFragment;
-import com.timappweb.timapp.fragments.PlacePeopleFragment;
-import com.timappweb.timapp.fragments.PlacePicturesFragment;
-import com.timappweb.timapp.fragments.PlaceTagsFragment;
-import com.timappweb.timapp.listeners.BinaryActionListener;
-import com.timappweb.timapp.listeners.SelectableButtonListener;
+import com.timappweb.timapp.fragments.EventPicturesFragment;
+import com.timappweb.timapp.fragments.EventTagsFragment;
+import com.timappweb.timapp.fragments.EventBaseFragment;
+import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.views.EventButtonsView;
 import com.timappweb.timapp.views.EventView;
-import com.timappweb.timapp.views.SelectableFloatingButton;
 import com.timappweb.timapp.views.SpotView;
 
 import java.util.List;
 import java.util.Vector;
 
 public class EventActivity extends BaseActivity {
-    private static final int LOADER_PLACE_CORE = 0;
-    private String TAG = "EventActivity";
+
+    private String          TAG                     = "EventActivity";
+
+    private static final int INITIAL_FRAGMENT_PAGE = 1;
+
+    public static final int LOADER_ID_CORE          = 0;
+    public static final int LOADER_ID_PICTURE       = 1;
+    public static final int LOADER_ID_INVITATIONS   = 2;
+    public static final int LOADER_ID_USERS         = 3;
+    public static final int LOADER_ID_TAGS          = 4;
+
+    private static final int REQUEST_CAMERA         = 0;
+
+    // =============================================================================================
+
     private MyPagerAdapter pagerAdapter;
     private Place event;
     private int eventId;
 
     //Views
-    private View        iAmComingButton;
-    private TextView    iAmComingTv;
-    private TextView    onMyWayTv;
-    private View        progressView;
     private ListView    tagsListView;
     private EventView   eventToolbar;
     private SpotView    spotToolbar;
     private View        progressBottom;
     private View        parentLayout;
-    private View        postButtons;
-    private SelectableFloatingButton matchButton;
-    private View picButton;
-    private View tagButton;
-    private View peopleButton;
 
-    //Static variables
-    private static final int REQUEST_CAMERA = 0;
-    private static final int TIMELAPSE_BUTTONS_APPEAR_ANIM = 800;
-    private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM = 300;
-
-    private PlacePicturesFragment fragmentPictures;
-    private PlaceTagsFragment fragmentTags;
-    private PlacePeopleFragment fragmentPeople;
+    private EventPicturesFragment fragmentPictures;
+    private EventTagsFragment fragmentTags;
+    private EventPeopleFragment fragmentPeople;
     private ViewPager pager;
 
     private ShareActionProvider shareActionProvider;
@@ -96,17 +86,14 @@ public class EventActivity extends BaseActivity {
     private GestureDetector gestureDetector;
     private View.OnTouchListener gestureListener;
 
-
     //Listeners
     private View.OnClickListener tagListener;
     private View.OnClickListener pictureListener;
     private View.OnClickListener peopleListener;
-    private Vector<PlaceBaseFragment> childFragments;
+    private Vector<EventBaseFragment> childFragments;
 
-    private AlphaAnimation postButtonsAppear;
-    private AlphaAnimation postButtonsDisappear;
-    private boolean firstLoad = true;
-
+    private boolean isEventLoaded = false;
+    private EventButtonsView eventButtons;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -140,19 +127,24 @@ public class EventActivity extends BaseActivity {
         spotToolbar = (SpotView) findViewById(R.id.spot_view);
         eventToolbar = (EventView) findViewById(R.id.event_view);
         parentLayout = findViewById(R.id.main_layout_place);
-        iAmComingButton = findViewById(R.id.button_coming);
-        iAmComingTv = (TextView) findViewById(R.id.text_coming_button);
-        progressBottom = findViewById(R.id.progressview_bottom_place);
-        onMyWayTv = (TextView) findViewById(R.id.text_onmyway_button);
         tagsListView = (ListView) findViewById(R.id.tags_lv);
-        progressView = findViewById(R.id.progress_view);
-        postButtons = findViewById(R.id.event_post_buttons);
-        matchButton = (SelectableFloatingButton) findViewById(R.id.fab);
-        picButton = findViewById(R.id.event_post_pic);
-        tagButton = findViewById(R.id.event_post_tags);
-        peopleButton = findViewById(R.id.event_post_people);
+        eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
-        getSupportLoaderManager().initLoader(LOADER_PLACE_CORE, null, new EventLoader());
+
+        getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
+
+
+        mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // TODO only listen for big location changed
+                MyApplication.setLastLocation(location);
+                if (isEventLoaded){
+                    updateBtnVisibility();
+                }
+            }
+        };
+        initLocationProvider(mLocationListener);
     }
 
     /**
@@ -160,21 +152,11 @@ public class EventActivity extends BaseActivity {
      * @warning Method must be called only ONCE.
      */
     private void onEventLoaded() {
-        if (firstLoad){
-            firstLoad = false;
+        if (!isEventLoaded){
+            isEventLoaded = true;
+            eventButtons.setEvent(event);
             initFragments();
-            setListeners();
             setActions();
-
-            mLocationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    // TODO only listen for big location changed..
-                    MyApplication.setLastLocation(location);
-                    updateBtnVisibility();
-                }
-            };
-            initLocationProvider(mLocationListener);
         }
 
         updateView();
@@ -260,143 +242,6 @@ public class EventActivity extends BaseActivity {
     //////////////////////////////////////////////////////////////////////////////
 
 
-    private void setListeners() {
-        picButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAddPictureActivity();
-                //pager.setCurrentItem(0);
-            }
-        });
-        tagButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAddTagsActivity();
-            }
-        });
-        peopleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openAddPeopleActivity();
-            }
-        });
-
-        //Buttons appearance
-        postButtonsAppear = new AlphaAnimation(0, 1);
-        postButtonsAppear.setDuration(TIMELAPSE_BUTTONS_APPEAR_ANIM);
-
-        //Buttons Disappearance
-        postButtonsDisappear = new AlphaAnimation(1, 0);
-        postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
-
-        matchButton.setSelectableListener(new SelectableButtonListener() {
-
-            private void changeFabColor(int color) {
-                matchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(EventActivity.this, color)));
-            }
-
-            public void setUIEnabled(int resource) {
-                matchButton.setImageResource(resource);
-                changeFabColor(R.color.colorPrimaryDark);
-            }
-
-            public void setUIDisabled(int resource) {
-                matchButton.setImageResource(resource);
-                changeFabColor(R.color.white);
-            }
-
-            @Override
-            public void updateUI(boolean enabled) {
-                //PlaceStatus placeStatus = PlaceStatusManager.getStatus(event);
-                if (isUserAround()) {
-                    //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.HERE){
-                    if (enabled) {
-                        setUIEnabled(R.drawable.match_white);
-                        postButtons.setVisibility(View.VISIBLE);
-                    } else {
-                        setUIDisabled(R.drawable.match_red);
-                        postButtons.setVisibility(View.GONE);
-                    }
-                } else {
-                    //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.COMING){
-                    if (enabled) {
-                        setUIEnabled(R.drawable.ic_coming_guy_white);
-                    } else {
-                        setUIDisabled(R.drawable.ic_coming_guy_darkred);
-                    }
-                    postButtons.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public boolean performEnabled() {
-                addPlaceStatus();
-                fragmentTags.getEventView().updatePointsView(true);
-                postButtons.startAnimation(postButtonsAppear);
-                return true;
-            }
-
-            @Override
-            public boolean performDisabled() {
-                removePlaceStatus();
-                fragmentTags.getEventView().updatePointsView(false);
-                postButtons.startAnimation(postButtonsDisappear);
-                return true;
-            }
-        });
-    }
-
-
-    private void addPlaceStatus() {
-        if (event == null){
-            return;
-        }
-        // TODO fine location
-        if (!MyApplication.hasFineLocation()) {
-            Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-            return;
-        }
-        final UserPlaceStatusEnum status = isUserAround() ? UserPlaceStatusEnum.HERE : UserPlaceStatusEnum.COMING;
-        PlaceStatusManager.instance().add(this, event, status, new BinaryActionListener() {
-
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure() {
-                matchButton.setStateOn(false);
-            }
-
-            @Override
-            public void onFinish() {
-                matchButton.setEnabled(true);
-            }
-
-        });
-    }
-    private void removePlaceStatus() {
-        if (event == null){
-            return;
-        }
-        PlaceStatusManager.instance().cancel(this, event, new BinaryActionListener() {
-
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onFailure() {
-                matchButton.setStateOn(true);
-            }
-
-            @Override
-            public void onFinish() {
-                matchButton.setEnabled(true);
-            }
-        });
-    }
-
     private void openAddTagsActivity() {
         if (!MyApplication.hasFineLocation()) {
             Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
@@ -418,9 +263,9 @@ public class EventActivity extends BaseActivity {
         childFragments = new Vector();
 
         Bundle bundle = new Bundle();
-        fragmentPictures = (PlacePicturesFragment) Fragment.instantiate(this, PlacePicturesFragment.class.getName());
-        fragmentTags = (PlaceTagsFragment) Fragment.instantiate(this, PlaceTagsFragment.class.getName());
-        fragmentPeople = (PlacePeopleFragment) Fragment.instantiate(this, PlacePeopleFragment.class.getName());
+        fragmentPictures = (EventPicturesFragment) Fragment.instantiate(this, EventPicturesFragment.class.getName());
+        fragmentTags = (EventTagsFragment) Fragment.instantiate(this, EventTagsFragment.class.getName());
+        fragmentPeople = (EventPeopleFragment) Fragment.instantiate(this, EventPeopleFragment.class.getName());
 
         // Ajout des Fragments dans la liste
         childFragments.add(fragmentPictures);
@@ -433,7 +278,7 @@ public class EventActivity extends BaseActivity {
         pager.setOffscreenPageLimit(2);
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
-        pager.setCurrentItem(1);
+        pager.setCurrentItem(INITIAL_FRAGMENT_PAGE);
         /*pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -458,7 +303,6 @@ public class EventActivity extends BaseActivity {
      *
      */
     private void updateView() {
-        progressView.setVisibility(View.GONE);
         try {
             EventCategory eventCategory = MyApplication.getCategoryById(event.category_id);
             ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
@@ -476,10 +320,6 @@ public class EventActivity extends BaseActivity {
             spotToolbar.setSpot(event.spot);
         }
 
-        PlaceStatus placeStatus = PlaceStatusManager.getStatus(event);
-        boolean stateOn = placeStatus != null  && (placeStatus.status == UserPlaceStatusEnum.COMING || placeStatus.status == UserPlaceStatusEnum.HERE);
-        matchButton.setStateOn(stateOn);
-
         updateBtnVisibility();
     }
 
@@ -487,12 +327,7 @@ public class EventActivity extends BaseActivity {
      * Show or hide add post or coming button according to user location
      */
     public void updateBtnVisibility(){
-        if (!MyApplication.isLoggedIn() || !MyApplication.hasLastLocation()) {
-            matchButton.setVisibility(View.GONE);
-            return;
-        }
-        matchButton.setVisibility(View.VISIBLE);
-        matchButton.updateUI();
+        eventButtons.updateUI();
         pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
     }
 
@@ -546,7 +381,7 @@ public class EventActivity extends BaseActivity {
     }
 
     public boolean isUserAround() {
-        return this.event != null && this.event.isAround();
+        return this.event != null && this.event.isUserAround();
     }
 
 

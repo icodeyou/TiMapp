@@ -23,6 +23,7 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class InvitationsActivity extends BaseActivity{
         setContentView(R.layout.activity_invitations);
         this.initToolbar(true);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RefreshableRecyclerView) findViewById(R.id.recyclerView);
         noInvitationsView = findViewById(R.id.no_invitations_view);
 
         initAdapterListFriends();

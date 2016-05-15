@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,7 @@ import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.sync.performers.SyncAdapterOption;
+import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.List;
@@ -38,17 +37,15 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class PlacePeopleFragment extends PlaceBaseFragment {
+public class EventPeopleFragment extends EventBaseFragment {
 
-    private static final String TAG = "PlaceTagsFragment";
-    private static final int LOADER_INVITATIONS = 1;
-    private static final int LOADER_PLACE_USERS = 2;
+    private static final String TAG = "EventTagsFragment";
 
     private Context         context;
     private EventActivity eventActivity;
 
     private EventUsersHeaderAdapter placeUsersAdapter;
-    private RecyclerView    peopleRv;
+    private RefreshableRecyclerView    peopleRv;
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
@@ -63,19 +60,31 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         context= eventActivity.getBaseContext();
 
         //Views
-        peopleRv = (RecyclerView) root.findViewById(R.id.list_people);
+
         progressView = root.findViewById(R.id.progress_view);
         noPostsView = root.findViewById(R.id.no_posts_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_people);
+        peopleRv = (RefreshableRecyclerView) root.findViewById(R.id.list_people);
 
         initAdapter();
 
 
-        getLoaderManager().initLoader(LOADER_PLACE_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
+        getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
         if (MyApplication.isLoggedIn()){
-            getLoaderManager().initLoader(LOADER_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
+            getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
         }
+
+        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLoaderManager().getLoader(EventActivity.LOADER_ID_USERS).forceLoad();
+                if (MyApplication.isLoggedIn()) {
+                    getLoaderManager().getLoader(EventActivity.LOADER_ID_INVITATIONS).forceLoad();
+                }
+            }
+        });
+
 
         return root;
     }
@@ -121,22 +130,9 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
                 super.finalize();
             }
         };
-        asynCalls.add(ApiCallFactory.build(call, callback, this));
+        //asynCalls.add(ApiCallFactory.build(call, callback, this));
     }
 
-
-
-    public void setProgressView(boolean visibility) {
-        if(visibility) {
-            progressView.setVisibility(View.VISIBLE);
-            peopleRv.setVisibility(View.GONE);
-            noConnectionView.setVisibility(View.GONE);
-        } else {
-            progressView.setVisibility(View.GONE);
-            peopleRv.setVisibility(View.VISIBLE);
-            noConnectionView.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onResume() {
@@ -155,7 +151,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
         public UserStatusLoader(Context context, Place place) {
             super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_PLACE_USERS, UserPlace.queryForPlace(place));
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
-            this.setSwipeAndRefreshLayout(mSwipeLayout);
+            this.setSwipeAndRefreshLayout(mSwipeLayout, false);
         }
 
         @Override
@@ -164,7 +160,9 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.COMING);
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.HERE);
             placeUsersAdapter.addData(data);
+            placeUsersAdapter.addData(data); // TODO remove
             placeUsersAdapter.notifyDataSetChanged();
+            noPostsView.setVisibility(placeUsersAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 
     }
@@ -179,8 +177,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
                     MyApplication.getCurrentUser().getInviteSentQuery(place.getId()));
 
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
-
-            this.setSwipeAndRefreshLayout(mSwipeLayout);
+            this.setSwipeAndRefreshLayout(mSwipeLayout, false);
         }
 
         @Override
@@ -189,6 +186,7 @@ public class PlacePeopleFragment extends PlaceBaseFragment {
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.INVITED);
             placeUsersAdapter.addData(UserPlaceStatusEnum.INVITED, data);
             placeUsersAdapter.notifyDataSetChanged();
+            noPostsView.setVisibility(placeUsersAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 
     }

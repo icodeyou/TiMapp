@@ -41,6 +41,12 @@ public class Picture extends SyncBaseModel {
     @Expose(serialize = false, deserialize = true)
     public User user;
 
+
+    // =============================================================================================
+    // Fields
+
+    public String base_url;
+
     // =============================================================================================
 
     public Picture() {
@@ -49,17 +55,34 @@ public class Picture extends SyncBaseModel {
     // =============================================================================================
 
     public String getUrl(){
-        return  this.photo_dir + "/" + this.photo;
+        return  this.base_url + "/" + this.photo_dir + "/" + this.photo;
     }
+
     public String getPreviewUrl(){
-        return  this.photo_dir + "/" + this.preview;
+        return  this.base_url + "/" + this.photo_dir + "/" + this.preview;
     }
     public String getSquareUrl(){
-        return  this.photo_dir + "/" + this.square;
+        return  this.base_url + "/" + this.photo_dir + "/" + this.square;
     }
 
     @Override
     public boolean isSync(SyncBaseModel model) {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Picture{" +
+                ", db_id=" + this.getId() +
+                ", remote_id=" + remote_id +
+                ", created=" + created +
+                ", photo='" + photo + '\'' +
+                ", preview='" + preview + '\'' +
+                ", square='" + square + '\'' +
+                ", photo_dir='" + photo_dir + '\'' +
+                ", base_url='" + base_url + '\'' +
+                ", place=" + place +
+                ", user=" + user +
+                '}';
     }
 }

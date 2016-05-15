@@ -106,7 +106,9 @@ public class PlaceStatusManager {
     }
 
     public void cancel(Context context, Place place, BinaryActionListener listener) {
-        UserPlaceStatusEnum status = PlaceStatus.hasStatus(MyApplication.getCurrentUser().getId(), place.getId(), UserPlaceStatusEnum.COMING)
+        User user = MyApplication.getCurrentUser();
+        if (user == null) return;
+        UserPlaceStatusEnum status = PlaceStatus.hasStatus(user.getId(), place.getId(), UserPlaceStatusEnum.COMING)
                 ? UserPlaceStatusEnum.COMING
                 : UserPlaceStatusEnum.HERE;
         cancel(context, place, status, listener);
@@ -115,7 +117,7 @@ public class PlaceStatusManager {
     public static PlaceStatus getStatus(Place event) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return null;
-        return PlaceStatus.getStatus(event.getId(), MyApplication.getCurrentUser().getId());
+        return PlaceStatus.getStatus(event.getId(), user.getId());
     }
 
     public static boolean hasStatus(long placeId, UserPlaceStatusEnum status) {

@@ -45,7 +45,6 @@ public class MyApplication extends com.activeandroid.app.Application {
     private static final String TAG = "MyApplication";
     private static final int TOKEN_CHECK_DELAY = 3600; // Check token every 1 hour
 
-    private static User currentUser = null;
     public static SearchFilter searchFilter = new SearchFilter();
     private static DeferredObject deferred;
     private int notifyCount = 0;
@@ -63,11 +62,7 @@ public class MyApplication extends com.activeandroid.app.Application {
      * @return true if user is logged in
      */
     public static boolean isLoggedIn(){
-        if (currentUser != null){
-            return true;
-        }
-        currentUser = getCurrentUser();
-        return currentUser != null;
+        return getCurrentUser() != null;
     }
 
     public static boolean isCurrentUser(int userId){
@@ -228,7 +223,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         if (isLoggedIn()){
             auth.logout();
             RestClient.instance().logoutUser();
-            MyApplication.currentUser = null;
         }
     }
     public static void setLastLocation(Location l) {

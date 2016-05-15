@@ -21,18 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <!-- Progress view -->
-        <!-- **********************************************************************-->
-        <LinearLayout
-            android:id="@+id/progress_view"
+<!--
+        <com.timappweb.timapp.views.EventButtonsView
+            android:id="@+id/event_buttons_view"
             android:layout_width="match_parent"
-            android:layout_height="91dp"
-            android:gravity="center">
-            <include layout="@layout/progressview"
-                android:layout_height="50dp"
-                android:layout_width="50dp"/>
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_below="@id/main_layout_place"></com.timappweb.timapp.views.EventButtonsView>-->
 
         <!-- Fragments -->
         <!-- ************************************* -->
@@ -42,80 +36,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <!-- Button I am Coming -->
-        <!-- ************************************* -->
-        <LinearLayout
-            android:id="@+id/button_coming"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_bottom_button"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@drawable/background_button_littlesquare"
-            android:visibility="gone">
-            <TextView
-                android:id="@+id/text_coming_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="15dp"
-                android:textColor="@color/text_button"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:text="@string/coming_button"
-                android:gravity="center"
-                android:textSize="@dimen/text_big"/>
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_coming_guy_white"/>
-        </LinearLayout>
-
-        <!-- Button On My Way -->
-        <!-- ************************************* -->
-        <LinearLayout
-            android:id="@+id/button_on_my_way"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_bottom_button"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="gone">
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="@dimen/default_horizontal_padding"
-                android:layout_marginRight="@dimen/default_horizontal_padding"
-                android:src="@drawable/ic_left_guy_darkred"/>
-            <TextView
-                android:id="@+id/text_onmyway_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/button_selecting_margin"
-                android:textColor="@color/colorAccent"
-                android:textAllCaps="false"
-                android:textStyle="bold"
-                android:text="@string/on_my_way"
-                android:gravity="center"
-                android:textSize="@dimen/text_big"/>
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="@dimen/default_horizontal_padding"
-                android:layout_marginRight="@dimen/default_horizontal_padding"
-                android:src="@drawable/ic_coming_guy_darkred"/>
-        </LinearLayout>
-
-        <!-- Bottom progress view-->
-        <!-- ************************************* -->
-        <LinearLayout
-            android:id="@+id/progressview_bottom_place"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_bottom_button"
-            android:gravity="center"
-            android:visibility="gone">
-            <include layout="@layout/progressview"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
-        </LinearLayout>
     </LinearLayout>
 
     <!-- Separator-->
@@ -156,62 +76,5 @@
             layout="@layout/toolbar_transparent" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/event_post_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:layout_toLeftOf="@+id/fab"
-        android:layout_toStartOf="@+id/fab"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:visibility="gone">
-        <ImageView
-            android:id="@+id/event_post_pic"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:padding="@dimen/padding_post_button"
-            android:layout_marginLeft="@dimen/margin_post_button"
-            android:layout_marginRight="@dimen/margin_post_button"
-            android:layout_height="match_parent"
-            android:src="@drawable/post_pic_white"
-            android:background="@drawable/background_button_littlesquare"/>
-        <ImageView
-            android:id="@+id/event_post_tags"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="@dimen/padding_post_button"
-            android:layout_marginLeft="@dimen/margin_post_button"
-            android:layout_marginRight="@dimen/margin_post_button"
-            android:src="@drawable/post_tags_white"
-            android:background="@drawable/background_button_littlesquare"/>
-        <ImageView
-            android:id="@+id/event_post_people"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:padding="10dp"
-            android:layout_marginLeft="@dimen/margin_post_button"
-            android:layout_marginRight="@dimen/margin_post_button"
-            android:src="@drawable/post_people_white"
-            android:background="@drawable/background_button_littlesquare"/>
-    </LinearLayout>
-
-    <com.timappweb.timapp.views.SelectableFloatingButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/white"
-        app:rippleColor="@color/colorAccent"
-        android:src="@drawable/match_red"
-        android:visibility="gone"/>
 
 </RelativeLayout>

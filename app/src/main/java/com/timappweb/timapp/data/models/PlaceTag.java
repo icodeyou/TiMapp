@@ -11,6 +11,8 @@ import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 @Table(name = "PlaceTag")
 public class PlaceTag extends MyModel {
 
+    // =============================================================================================
+    // DATABASE
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "Place", uniqueGroups = "unique_tag",
@@ -27,6 +29,10 @@ public class PlaceTag extends MyModel {
     @Column(name = "CountRef")
     public int count_ref;
 
+
+    // =============================================================================================
+    // DATABASE
+
     @Override
     public String toString() {
         return "PlaceTag{" +
@@ -39,4 +45,11 @@ public class PlaceTag extends MyModel {
         this.place = place;
         this.tag = tag;
     }
+
+    public PlaceTag(Place place, Tag model, int count_ref) {
+        this(place, model);
+        this.count_ref = count_ref;
+    }
+
+    public PlaceTag() {}
 }

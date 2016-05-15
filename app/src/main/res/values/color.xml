@@ -26,7 +26,7 @@
     <color name="background_half_black">#80000000</color>
     <color name="background_transparent_white">#cdffffff</color>
     <color name="background_spot">@color/colorSecondaryDark</color>
-    <color name="background_spot_transparent">#ac2b3778</color>
+    <color name="background_spot_transparent">#fff</color>
     <color name="background_spot_very_transparent">#602e468a</color>
     <color name="background_activity_event">@color/background_spot_transparent</color>
     <color name="border">#bababa</color>

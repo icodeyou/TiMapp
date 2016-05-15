@@ -2,93 +2,76 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.utils.Util;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-//Source :
-// http://hmkcode.com/android-custom-listview-titles-icons-counter/
+public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCountersAdapter.ViewHolder> {
 
-public class TagsAndCountersAdapter extends ArrayAdapter<Tag> {
     private final Context context;
+    private List<Tag> data;
 
     public TagsAndCountersAdapter(Context context) {
-        super(context, 0);
+        super();
         this.context = context;
+        this.data = new ArrayList<>();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_tag_with_counter, parent, false);
 
-        // Get the view from inflater
-        View rowView = convertView;
-        if(convertView==null) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.item_tag_with_counter, parent, false);
-        }
-
-        // Get icon,title & counter views from the rowView
-        TextView tvTag = (TextView) rowView.findViewById(R.id.tv_tag);
-        TextView tvCounter = (TextView) rowView.findViewById(R.id.tv_tag_counter);
-
-        // Set the text for textView
-        //TODO: The if loop should not be necessary
-        if (getData().size() > 0){
-            String tagString = String.valueOf(getItem(position).getName());
-            String tagCounterString = String.valueOf(getItem(position).getCountRef());
-            tvTag.setText(tagString);
-            tvCounter.setText(tagCounterString);
-        }
-
-
-        // Make the first three tags bigger than the others ////////////////////////////
-        /*float dimens[] = new float[4];
-        //Convert dp into pixels
-        float scale = rowView.getResources().getDisplayMetrics().density;
-        dimens[0] = rowView.getResources().getDimension(R.dimen.text_lv_base);
-        dimens[1] = rowView.getResources().getDimension(R.dimen.text_lv1);
-        dimens[2] = rowView.getResources().getDimension(R.dimen.text_lv2);
-        dimens[3] = rowView.getResources().getDimension(R.dimen.text_lv3);
-
-        if(position<3) {
-            int tagNumber = position + 1;
-            tvTag.setTextSize(Util.convertPixelsToDp(dimens[tagNumber], getContext()));
-            tvTag.setTypeface(Typeface.DEFAULT_BOLD);
-            tvCounter.setTextSize(Util.convertPixelsToDp(dimens[tagNumber], getContext()));
-            tvCounter.setTypeface(Typeface.DEFAULT_BOLD);
-            //rowView.setBackgroundResource(R.color.background_list_main_tags);
-        }
-        else  {
-            tvTag.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
-            tvTag.setTypeface(Typeface.DEFAULT);
-            tvCounter.setTextSize(Util.convertPixelsToDp(dimens[0], getContext()));
-            tvCounter.setTypeface(Typeface.DEFAULT);
-            *//*if(position%2 == 0) {
-                rowView.setBackgroundResource(R.color.background_list_main_tags);
-            } else {
-                rowView.setBackgroundResource(R.color.background_list_tags);
-            }*//*
-        }*/
-
-        return rowView;
+        return new ViewHolder(v);
     }
 
-    public ArrayList<Tag> getData() {
-        ArrayList<Tag> tags = new ArrayList<Tag>();
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.fillFields(data.get(position));
+    }
 
-        for (int i=0; i<this.getCount(); i++) {
-            tags.add(getItem(i));
+    @Override
+    public int getItemCount() {
+        return this.data == null ? 0 : this.data.size();
+    }
+
+    public void clear() {
+        this.data.clear();
+    }
+
+    public void addAll(List data) {
+        this.data.addAll(data);
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
+
+        private final TextView tagText;
+        private final TextView tagCounter;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tagText = (TextView) itemView.findViewById(R.id.tv_tag);
+            tagCounter = (TextView) itemView.findViewById(R.id.tv_tag_counter);
         }
 
-        return tags;
+        public void fillFields(Tag tag) {
+            tagText.setText(tag.name);
+            tagCounter.setText(tag.count_ref);
+        }
     }
 }

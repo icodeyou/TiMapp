@@ -12,6 +12,7 @@ import com.activeandroid.query.From;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -24,11 +25,16 @@ import java.util.List;
 public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>> {
 
     private static final String TAG = "MultipleEntriesCallback";
+
+    // =============================================================================================
+
     private final long syncDelay;
     private final From query;
     protected SyncAdapterOption syncOption;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
     private Context context;
+
+    // =============================================================================================
 
     public MultipleEntryLoaderCallback(Context context,
                                        long syncDelay,
@@ -49,7 +55,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<List<DataType>> loader, List<DataType> data) {
-        Log.d(TAG, "loaded finish");
+        Log.v(TAG, "Load finish for: " + this);
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
     }
 
@@ -64,15 +70,21 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
         SyncBaseModel.getRemoteEntries(context, syncOption);
     }
 
-    public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout) {
+    public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout, boolean setOnRefreshCallback) {
         this.mSwipeRefreshLayout = swipeAndRefreshLayout;
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                MultipleEntryLoaderCallback.this.onRefresh();
-            }
-        });
+        if (setOnRefreshCallback){
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    MultipleEntryLoaderCallback.this.onRefresh();
+                }
+            });
+        }
+    }
+
+    public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout) {
+        setSwipeAndRefreshLayout(swipeAndRefreshLayout, true);
     }
 
 

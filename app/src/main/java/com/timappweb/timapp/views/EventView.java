@@ -19,13 +19,11 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
@@ -94,6 +92,7 @@ public class EventView extends RelativeLayout{
     private AlphaAnimation postButtonsAppear;
     private AlphaAnimation postButtonsDisappear;
     private boolean hotPoints = false;
+    private EventButtonsView eventButtonsView;
 
 
     public EventView(Context context) {
@@ -172,6 +171,7 @@ public class EventView extends RelativeLayout{
         distanceText = (TextView) findViewById(R.id.distance_text);
 
         tagsFrameLayout = (FrameLayout) findViewById(R.id.htrv_frame_layout);
+        eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
         //htAdapter = (HorizontalTagsAdapter) rvEventTags.getAdapter();
 
@@ -445,7 +445,7 @@ public class EventView extends RelativeLayout{
     }
 
     private boolean isAround() {
-        return event!=null && event.isAround();
+        return event!=null && event.isUserAround();
     }
 
     public void setEvent(final Place event) {

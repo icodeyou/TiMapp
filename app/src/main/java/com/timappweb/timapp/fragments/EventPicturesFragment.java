@@ -1,28 +1,22 @@
 package com.timappweb.timapp.fragments;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.desmond.squarecamera.CameraActivity;
 import com.desmond.squarecamera.ImageUtility;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
@@ -32,16 +26,13 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
@@ -58,15 +49,15 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class PlacePicturesFragment extends PlaceBaseFragment {
+public class EventPicturesFragment extends EventBaseFragment {
 
-    private static final String TAG = "PlacePicturesFragment";
+    private static final String TAG = "EventPicturesFragment";
 
     private EventActivity eventActivity;
     private Context context;
 
     //Views
-    private View                    progressView;
+    //private View                    progressView;
     private View                    noPicView;
     private View                    noConnectionView;
     private RecyclerView            picturesRv;
@@ -75,21 +66,31 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     private PicturesAdapter         picturesAdapter;
 
     private static int NUMBER_OF_COLUMNS =  1;
+    private SwipeRefreshLayout mSwipeLayout;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
-        context = eventActivity;
+        context = getContext();
+        eventActivity = (EventActivity) getActivity();
+        //Views
+        // progressView = root.findViewById(R.id.progress_view);
+        noPicView = root.findViewById(R.id.no_pictures_view);
+        noConnectionView = root.findViewById(R.id.no_connection_view);
+        uploadView = root.findViewById(R.id.upload_view);
+        picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
+        mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
 
         initVariables(root);
 
         initRv();
         initAdapter();
-        this.loadData();
+        //this.loadData();
 
+        getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, new PictureLoader(this.getContext(), eventActivity.getEvent()));
 
-        //getLoaderManager().initLoader(0, null, new PictureLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+        startPictureActivity();
 
         return root;
     }
@@ -116,14 +117,6 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
     }
 
     private void initVariables(View root) {
-        eventActivity = (EventActivity) getActivity();
-
-        //Views
-        progressView = root.findViewById(R.id.progress_view);
-        noPicView = root.findViewById(R.id.no_pictures_view);
-        noConnectionView = root.findViewById(R.id.no_connection_view);
-        uploadView = root.findViewById(R.id.upload_view);
-        picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
     }
 
     private void initRv() {
@@ -141,7 +134,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
 
     //Public methods
     //////////////////////////////////////////////////////////////////////////////
-
+    /*
     public void loadData(){
         Log.d(TAG, "Loading places pictures");
         Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(eventActivity.getEventId());
@@ -172,7 +165,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         };
         asynCalls.add(ApiCallFactory.build(call, callback, this));
     }
-
+    */
     public RecyclerView getPicturesRv(){
         return picturesRv;
     }
@@ -187,6 +180,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         }
     }
 
+    /*
     public void setProgressView(boolean visibility) {
         if(visibility) {
             progressView.setVisibility(View.VISIBLE);
@@ -197,7 +191,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
             picturesRv.setVisibility(View.VISIBLE);
             noPicView.setVisibility(View.GONE);
         }
-    }
+    }*/
 
     public void uploadPicture(final Uri fileUri) {
         // create upload service client
@@ -250,7 +244,7 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
                         Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
                         getPicturesRv().smoothScrollToPosition(0);
                         QuotaManager.instance().add(QuotaType.ADD_PICTURE);
-                        loadData();
+                        // loadData();
                     } else {
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                     }
@@ -286,14 +280,16 @@ public class PlacePicturesFragment extends PlaceBaseFragment {
         public PictureLoader(Context context, Place place) {
             super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_PLACE_PICTURE, place.getPicturesQuery());
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
-            //this.setSwipeAndRefreshLayout(mSwipeLayout);
+            this.setSwipeAndRefreshLayout(mSwipeLayout);
         }
 
         @Override
         public void onLoadFinished(Loader<List<Picture>> loader, List<Picture> data) {
             super.onLoadFinished(loader, data);
+            //picturesAdapter.setBaseUrl(this.getServerResponse().extra.get("base_url"));
             picturesAdapter.setData(data);
             picturesAdapter.notifyDataSetChanged();
+            noPicView.setVisibility(picturesAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 
     }

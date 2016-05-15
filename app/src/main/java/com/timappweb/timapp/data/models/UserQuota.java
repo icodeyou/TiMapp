@@ -97,6 +97,12 @@ public class UserQuota extends SyncBaseModel {
         super();
     }
 
+    @Override
+    public MyModel mySave() {
+        this.remote_id = this.type_id; // hack because Remote id must not be null ...
+        return super.mySave();
+    }
+
     public static List<UserQuota> all(){
         return new Select().from(UserQuota.class)
                 .execute();
@@ -157,7 +163,7 @@ public class UserQuota extends SyncBaseModel {
         }
         Log.d(TAG, "Updated user quota: " + userQuota);
         userQuota.increment();
-        userQuota.save();
+        userQuota.mySave();
     }
 
     public void increment() {

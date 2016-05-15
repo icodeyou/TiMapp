@@ -26,7 +26,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     List<Picture> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
-    private String baseUrl = "";
+    //private String baseUrl = "";
 
     //Constructor
     public PicturesAdapter(Context context) {
@@ -44,13 +44,13 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     @Override
     public void onBindViewHolder(PictureViewHolder holder, final int position) {
         Picture picture = data.get(position);
-        final String fullUrl = this.baseUrl + "/" + picture.getPreviewUrl();
+        final String fullUrl = picture.getPreviewUrl();
         Log.d(TAG, "Loading picture in adapter: " + fullUrl);
 
         final String[] uris = new String[data.size()];
         int i = 0;
         for (Picture p: data){
-            uris[i++] = this.baseUrl + "/" + p.getUrl();
+            uris[i++] = p.getUrl();
         }
         final Uri uri = Uri.parse(fullUrl);
         holder.ivPicture.setImageURI(uri);
@@ -94,10 +94,11 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
         this.mItemClickListener = mItemClickListener;
     }
 
+    /*
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
 
-    }
+    }*/
 
     public class PictureViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {

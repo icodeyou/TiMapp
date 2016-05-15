@@ -11,7 +11,7 @@ import com.timappweb.timapp.MyApplication;
  * Created by stephane on 5/8/2016.
  */
 @Table(name = "SyncHistory")
-public class SyncHistory extends Model {
+public class SyncHistory extends MyModel {
 
     //@Column(name = "User", uniqueGroups = "uniqueHistoryPerUser")
     //User user;
@@ -35,7 +35,7 @@ public class SyncHistory extends Model {
             history.type = type;
         }
         history.last_update = System.currentTimeMillis();
-        history.save();
+        history.mySave();
     }
 
 

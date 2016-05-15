@@ -7,30 +7,30 @@
 
     <include layout="@layout/toolbar" />
 
-        <LinearLayout
-            android:id="@+id/no_invitations_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_normal"
-                android:text="@string/text_no_invitations"/>
-        </LinearLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <com.timappweb.timapp.views.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible"/>
+            android:layout_height="match_parent">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <com.timappweb.timapp.views.RefreshableRecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="true"
+                android:saveEnabled="false"/>
+            <!--android:listSelector="@android:color/transparent"-->
+        </com.timappweb.timapp.views.SwipeRefreshLayout>
+
+        <TextView
+            style="@style/NoDataView"
+            android:id="@+id/no_invitations_view"
+            android:text="@string/text_no_invitations"/>
+
+    </FrameLayout>
+
 </LinearLayout>

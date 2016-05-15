@@ -3,6 +3,7 @@ package com.timappweb.timapp.data.models;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Delete;
@@ -36,7 +37,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     // =============================================================================================
 
-    @Column(name = "SyncId", index = true, unique = true, notNull = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    @Column(name = "SyncId", index = true, unique = true, notNull = true) // onUniqueConflict = Column.ConflictAction.IGNORE
     @Expose(serialize = true, deserialize = true)
     @SerializedName("id")
     public Integer remote_id = null;
@@ -78,6 +79,19 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
             }
         }*/
         return super.deepSave();
+    }
+
+    @Override
+    public MyModel mySave() {
+        if (!this.hasLocalId() && this.hasRemoteId()){
+            SyncBaseModel model = this.queryByRemoteId().executeSingle();
+            if (model != null){
+                model.merge(this);
+                Log.d(TAG, "Updating existing remote model: " + model);
+                return model;
+            }
+        }
+        return super.mySave();
     }
 
     /**
@@ -143,8 +157,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @param binaryActionListener
      */
     public void saveRemoteEntry(Context context, Call call, final BinaryActionListener binaryActionListener){
-
-        try {
+        // try {
             call.enqueue(new RestFeedbackCallback(context) {
                 @Override
                 public void onActionSuccess(RestFeedback feedback) {
@@ -152,13 +165,16 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
                     if (id != -1) {
                         setRemoteId(id);
                     }
-                    mySave();
+                    SyncBaseModel.this.mySave();
                     if (binaryActionListener != null) binaryActionListener.onSuccess();
                 }
 
                 @Override
                 public void onActionFail(RestFeedback feedback) {
                     Log.e(TAG, "Cannot save entry on remote");
+                    if (feedback.message != null) {
+                        Toast.makeText(context, feedback.message, Toast.LENGTH_LONG).show();
+                    }
                     if (binaryActionListener != null) binaryActionListener.onFailure();
                 }
 
@@ -167,15 +183,15 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
                     if (binaryActionListener != null) binaryActionListener.onFinish();
                 }
             });
-            call.execute();
-        } catch (IOException e) {
-            Log.e(TAG, "Error " + e.getMessage());
-            e.printStackTrace();
-            if (binaryActionListener != null){
-                binaryActionListener.onFailure();
-                binaryActionListener.onFinish();
-            }
-        }
+            //call.execute();
+            //} catch (IOException e) {
+            //    Log.e(TAG, "Error " + e.getMessage());
+            //    e.printStackTrace();
+            //    if (binaryActionListener != null){
+            //       binaryActionListener.onFailure();
+            //       binaryActionListener.onFinish();
+            //    }
+            //}
     }
 
     /**
@@ -299,4 +315,5 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     public boolean hasRemoteId() { return this.remote_id != null;}
+
 }

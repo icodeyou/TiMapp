@@ -40,6 +40,11 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
     */
     @Override
     public void perform() {
+
+        if (localEntries == null || localEntries.size() == 0){
+            this.onRemoteOnly(remoteEntries);
+            return;
+        }
         // Build hash table of remote entries
         HashMap<Long, SyncBaseModel> entryMap = new HashMap();
         for (SyncBaseModel m : remoteEntries) {

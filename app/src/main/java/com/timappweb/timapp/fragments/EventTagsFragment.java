@@ -5,47 +5,33 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
-import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.config.QuotaType;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.rest.ApiCallFactory;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.views.EventView;
-import com.timappweb.timapp.views.EventView;
+import com.timappweb.timapp.views.RefreshableRecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Response;
 
+public class EventTagsFragment extends EventBaseFragment {
 
-public class PlaceTagsFragment extends PlaceBaseFragment {
-
-    private static final String TAG = "PlaceTagsFragment";
+    private static final String TAG = "EventTagsFragment";
+    private static final long MAX_UPDATE_DELAY = 10 * 1000;
     private TagsAndCountersAdapter  tagsAndCountersAdapter;
     private EventActivity eventActivity;
 
     //Views
-    private ListView                rvTags;
+    private RefreshableRecyclerView rvTags;
     private View                    noTagsView;
     private View                    noConnectionView;
     private EventView               eventView;
@@ -58,7 +44,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         View root = inflater.inflate(R.layout.fragment_event_tags, container, false);
 
         //Find views
-        rvTags = (ListView) root.findViewById(R.id.list_tags);
+        rvTags = (RefreshableRecyclerView) root.findViewById(R.id.list_tags);
         //progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
@@ -81,7 +67,7 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         rvTags.setAdapter(tagsAndCountersAdapter);
 
-        getLoaderManager().initLoader(0, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+        getLoaderManager().initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
 
         return root;
     }
@@ -105,36 +91,21 @@ public class PlaceTagsFragment extends PlaceBaseFragment {
     class PlaceTagLoader extends MultipleEntryLoaderCallback<Tag> {
 
         public PlaceTagLoader(Context context, Place place) {
-            super(context, 3600 * 1000,
+            super(context, MAX_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_PLACE_TAGS,
                     place.getTagsQuery());
 
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
-
-            //this.setSwipeAndRefreshLayout(mSwipeLayout);
+            this.setSwipeAndRefreshLayout(mSwipeLayout);
         }
 
         @Override
         public void onLoadFinished(Loader loader, List data) {
             super.onLoadFinished(loader, data);
             tagsAndCountersAdapter.clear();
-
-            if (data.size() == 0){
-                noTagsView.setVisibility(View.VISIBLE);
-                rvTags.setVisibility(View.GONE);
-            }
-            else{
-                /*
-                for (Tag tag : tags) {
-                    String addedhastag = "#" + tag.getName();
-                    tag.setName(addedhastag);
-                    tagsAndCountersAdapter.add(tag);
-                }*/
-                noTagsView.setVisibility(View.GONE);
-                rvTags.setVisibility(View.VISIBLE);
-                tagsAndCountersAdapter.addAll(data);
-                tagsAndCountersAdapter.notifyDataSetChanged();
-            }
+            tagsAndCountersAdapter.addAll(data);
+            tagsAndCountersAdapter.notifyDataSetChanged();
+            noTagsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.GONE);
         }
 
     }
