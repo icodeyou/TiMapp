@@ -1,5 +1,7 @@
 package com.timappweb.timapp.utils;
 
+import android.location.Location;
+
 /**
  * Created by stephane on 1/26/2016.
  */
@@ -18,4 +20,7 @@ public class DistanceHelper {
         return dist;
     }
 
+    public static double distFrom(Location newLocation, Location lastLocation) {
+        return distFrom(newLocation.getLatitude(), newLocation.getLongitude(), lastLocation.getLatitude(), lastLocation.getLongitude());
+    }
 }

@@ -31,6 +31,7 @@ import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 public class IntentsUtils {
 
@@ -193,16 +194,16 @@ public class IntentsUtils {
         context.startActivity(buildIntentViewPlace(context, place));
     }
 
-    public static void postOutsideEvent(Context context, Place place, int action) {
-        Intent intent = buildIntentViewPlace(context, place);
-        intent.putExtra(KEY_ACTION, action);
-        context.startActivity(intent);
-    }
 
-    public static void postInsideEvent(EventActivity eventActivity, int action) {
-        Intent intent = new Intent();
-        intent.putExtra(KEY_ACTION, action);
-        eventActivity.setActions();
+    public static void postEvent(Context context, Place place, int action) {
+        if (context instanceof EventActivity){
+            ((EventActivity)context).parseActionParameter(action);
+        }
+        else {
+            Intent intent = buildIntentViewPlace(context, place);
+            intent.putExtra(KEY_ACTION, action);
+            context.startActivity(intent);
+        }
     }
 
     public static Intent buildIntentViewPlace(Context context, int placeId) {
@@ -334,8 +335,8 @@ public class IntentsUtils {
             return;
         }
         Post post = new Post();
-        post.latitude = MyApplication.getLastLocation().getLatitude();
-        post.longitude = MyApplication.getLastLocation().getLongitude();
+        post.latitude = LocationManager.getLastLocation().getLatitude();
+        post.longitude = LocationManager.getLastLocation().getLongitude();
         IntentsUtils.addTags(activity, place, post);
     }
 

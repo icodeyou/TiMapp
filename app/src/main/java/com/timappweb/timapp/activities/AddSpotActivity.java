@@ -28,6 +28,7 @@ import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
@@ -182,7 +183,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
     }
 
     public void loadData(){
-        Location location = MyApplication.getLastLocation();
+        Location location = LocationManager.getLastLocation();
         if (location == null){
             // TODO wait for location
             Log.e(TAG, "User does not have a location");

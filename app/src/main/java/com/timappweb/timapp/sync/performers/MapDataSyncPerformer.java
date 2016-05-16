@@ -11,6 +11,7 @@ import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 /**
  * Created by stephane on 5/6/2016.
@@ -24,8 +25,8 @@ public class MapDataSyncPerformer implements SyncPerformer {
 
     private void performMapDataSync(LatLngBounds bounds, PaginationResponse<? extends SyncBaseModel> response, SyncResult syncResult){
 
-        if (MyApplication.hasFineLocation()){
-            Location location = MyApplication.getLastLocation();
+        if (LocationManager.hasFineLocation()){
+            Location location = LocationManager.getLastLocation();
             // TODO
             From localQuery = MapAreaInfo.findArea(null, MapAreaInfo.AROUND_USER);
             /*

@@ -15,6 +15,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import retrofit2.Call;
 
@@ -63,7 +64,7 @@ public class PlaceStatusManager {
     private QueryCondition _buildQuery(Place place){
         QueryCondition conditions = new QueryCondition();
         //conditions.setAnonymous(false);
-        conditions.setUserLocation(MyApplication.getLastLocation());
+        conditions.setUserLocation(LocationManager.getLastLocation());
         return conditions;
     }
 

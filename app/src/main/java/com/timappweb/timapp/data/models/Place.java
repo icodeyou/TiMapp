@@ -16,6 +16,7 @@ import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -209,7 +210,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public boolean isUserAround() {
-        Location lastLocation = MyApplication.getLastLocation();
+        Location lastLocation = LocationManager.getLastLocation();
         if (lastLocation == null) return false;
         return this.isUserAround(lastLocation.getLatitude(), lastLocation.getLongitude());
     }
@@ -305,9 +306,9 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public void setDistancePlace() {
-        if (MyApplication.hasLastLocation()) {
-            Location location = MyApplication.getLastLocation();
-            if(MyApplication.hasFineLocation()) {
+        if (LocationManager.hasLastLocation()) {
+            Location location = LocationManager.getLastLocation();
+            if(LocationManager.hasFineLocation()) {
                 double userLongitude = location.getLongitude();
                 double userLatitude = location.getLatitude();
                 double distance =  DistanceHelper.distFrom(userLatitude, userLongitude,

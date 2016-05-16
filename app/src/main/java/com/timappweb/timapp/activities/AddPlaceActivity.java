@@ -36,6 +36,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.BackCatchEditText;
 import com.timappweb.timapp.views.SpotView;
 
@@ -141,13 +142,19 @@ public class AddPlaceActivity extends BaseActivity {
      * Load places once user name is known
      */
     private void initLocationListener() {
-        initLocationProvider(new LocationListener() {
+        /*
+        LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
             @Override
-            public void onLocationChanged(Location l) {
-                Log.i(TAG, "Location has changed: " + Util.print(l));
-                MyApplication.setLastLocation(l);
+            public void onLocationChanged(Location newLocation, Location lastLocation) {
             }
-        });
+        });*/
+        LocationManager.start(this);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void initKeyboard() {
@@ -303,12 +310,12 @@ public class AddPlaceActivity extends BaseActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MyApplication.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
+                if (LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
-                    final Place place = new Place(MyApplication.getLastLocation(),
+                    final Place place = new Place(LocationManager.getLastLocation(),
                             eventNameET.getText().toString(), eventCategorySelected, context.spot, description);
                     submitPlace(place);
-                } else if (MyApplication.hasLastLocation()) {
+                } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Click on add place before having a user location");

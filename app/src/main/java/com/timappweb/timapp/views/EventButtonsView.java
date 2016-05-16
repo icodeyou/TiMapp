@@ -2,20 +2,24 @@ package com.timappweb.timapp.views;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.PlaceStatus;
 import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.listeners.SelectableButtonListener;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 /**
  * Created by stephane on 5/15/2016.
@@ -24,10 +28,11 @@ public class EventButtonsView extends RelativeLayout {
 
     private static final int TIMELAPSE_BUTTONS_APPEAR_ANIM      = 800;
     private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM   = 300;
+    private static final String TAG = "EventButtonsView";
 
     // =============================================================================================
 
-    private SelectableFloatingButton matchButton;
+    private SelectableFloatingButton hereButton;
     private View postButtons;
     private View picButton;
     private View tagButton;
@@ -40,6 +45,7 @@ public class EventButtonsView extends RelativeLayout {
     private Place event;
     private View viewGroupHere;
     private View viewGroupComing;
+    private View container;
 
     public EventButtonsView(Context context) {
         super(context);
@@ -60,7 +66,14 @@ public class EventButtonsView extends RelativeLayout {
     // =============================================================================================
 
     public void setEvent(Place event){
+        if (!event.hasLocalId()){
+            Log.e(TAG, "Cannot set event because it's not saved a local instance: " + event);
+            return;
+        }
         this.event = event;
+
+
+        updateUI();
     }
 
     // =============================================================================================
@@ -69,8 +82,9 @@ public class EventButtonsView extends RelativeLayout {
     private void init() {
         inflate(getContext(), R.layout.event_buttons, this);
 
-        matchButton = (SelectableFloatingButton) findViewById(R.id.match_button);
+        hereButton = (SelectableFloatingButton) findViewById(R.id.here_button);
         comingButton = (SelectableFloatingButton) findViewById(R.id.coming_button);
+        container = findViewById(R.id.event_buttons_container);
         postButtons = findViewById(R.id.post_buttons);
         picButton = findViewById(R.id.post_pic);
         tagButton = findViewById(R.id.post_tags);
@@ -78,16 +92,20 @@ public class EventButtonsView extends RelativeLayout {
         gpsLocation = findViewById(R.id.waiting_for_gps_location);
         viewGroupHere = findViewById(R.id.event_buttons_around);
         viewGroupComing = findViewById(R.id.event_buttons_away);
+        navigationButtons = findViewById(R.id.navi)
 
         //Buttons appearance
         postButtonsAppear = new AlphaAnimation(0, 1);
         postButtonsAppear.setDuration(TIMELAPSE_BUTTONS_APPEAR_ANIM);
+        postButtonsAppear.setFillAfter(true);
         //Buttons Disappearance
         postButtonsDisappear = new AlphaAnimation(1, 0);
         postButtonsDisappear.setDuration(TIMELAPSE_BUTTONS_DISAPPEAR_ANIM);
-
+        postButtonsDisappear.setFillAfter(true);
 
         comingButton.setSelectableListener(new SelectableButtonListener() {
+
+
             @Override
             public void updateUI(boolean enabled) {
                 if (enabled) {
@@ -97,7 +115,6 @@ public class EventButtonsView extends RelativeLayout {
                     comingButton.setImageResource(R.drawable.ic_coming_guy);
                     comingButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
                 }
-                postButtons.setVisibility(View.GONE);
             }
 
             @Override
@@ -108,22 +125,24 @@ public class EventButtonsView extends RelativeLayout {
 
             @Override
             public boolean performDisabled() {
-                removePlaceStatus();
+                removePlaceStatus(UserPlaceStatusEnum.COMING);
                 return false;
             }
 
         });
 
-        matchButton.setSelectableListener(new SelectableButtonListener() {
+        hereButton.setSelectableListener(new SelectableButtonListener() {
 
             @Override
             public void updateUI(boolean enabled) {
                 if (enabled) {
-                    matchButton.setImageResource(R.drawable.match_white);
-                    matchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)));
+                    hereButton.setImageResource(R.drawable.match_white);
+                    hereButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)));
+                    postButtons.setVisibility(event.isUserAround() ? View.VISIBLE : GONE);
                 } else {
-                    matchButton.setImageResource(R.drawable.match_red);
-                    matchButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+                    hereButton.setImageResource(R.drawable.match_red);
+                    hereButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+                    postButtons.setVisibility(View.GONE);
                 }
                 //if (placeStatus != null && placeStatus.status == UserPlaceStatusEnum.COMING){
             }
@@ -138,18 +157,17 @@ public class EventButtonsView extends RelativeLayout {
 
             @Override
             public boolean performDisabled() {
-                removePlaceStatus();
+                removePlaceStatus(UserPlaceStatusEnum.HERE);
                 //fragmentTags.getEventView().updatePointsView(false);
                 postButtons.startAnimation(postButtonsDisappear);
                 return true;
             }
         });
 
-
-
         picButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), event, IntentsUtils.ACTION_CAMERA);
                 //openAddPictureActivity();
                 //pager.setCurrentItem(0);
             }
@@ -157,19 +175,38 @@ public class EventButtonsView extends RelativeLayout {
         tagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), event, IntentsUtils.ACTION_TAGS);
                 //openAddTagsActivity();
             }
         });
         peopleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), event, IntentsUtils.ACTION_PEOPLE);
                 //openAddPeopleActivity();
             }
         });
 
+        // TODO what happens when view is destroyed
+        LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
+            @Override
+            public void onLocationChanged(Location newLocation, Location lastLocation) {
+                EventButtonsView.this.updateUI();
+            }
+        });
+
+
+
+        updateUI();
     }
 
     public void updateUI() {
+        if (event == null){
+            container.setVisibility(GONE);
+            return;
+        }
+        container.setVisibility(VISIBLE);
+
         if (!MyApplication.isLoggedIn()) {
             viewGroupHere.setVisibility(View.GONE);
             viewGroupComing.setVisibility(View.GONE);
@@ -180,57 +217,68 @@ public class EventButtonsView extends RelativeLayout {
         PlaceStatus placeStatus = PlaceStatusManager.getStatus(event);
 
         if (placeStatus != null){
-            viewGroupComing.setVisibility(placeStatus.status == UserPlaceStatusEnum.COMING ? VISIBLE : GONE);
-            viewGroupHere.setVisibility(placeStatus.status == UserPlaceStatusEnum.HERE ? VISIBLE : GONE);
+            switch (placeStatus.status){
+                case HERE:
+                case COMING:
+                    updateUserStatus(placeStatus.status, true);
+                    break;
+                default:
+                    viewGroupHere.setVisibility(GONE);
+                    viewGroupHere.setVisibility(GONE);
+                    gpsLocation.setVisibility(View.GONE);
+            }
         }
-        else if (!MyApplication.hasLastLocation()){
+        else if (!LocationManager.hasLastLocation()){
             viewGroupHere.setVisibility(View.GONE);
             viewGroupComing.setVisibility(View.GONE);
             gpsLocation.setVisibility(View.VISIBLE);
         }
         else if (event.isUserAround()){
-            viewGroupHere.setVisibility(View.VISIBLE);
-            viewGroupComing.setVisibility(View.GONE);
-            gpsLocation.setVisibility(View.GONE);
+            showGroupHere();
         }
         else{
-            viewGroupHere.setVisibility(View.GONE);
-            viewGroupComing.setVisibility(View.VISIBLE);
-            gpsLocation.setVisibility(View.GONE);
+            showGroupComing();
         }
 
     }
 
-
+    private void showGroupComing(){
+        viewGroupComing.setVisibility(VISIBLE);
+        viewGroupHere.setVisibility(GONE);
+        gpsLocation.setVisibility(GONE);
+        comingButton.updateUI();
+    }
+    private void showGroupHere(){
+        viewGroupHere.setVisibility(VISIBLE);
+        viewGroupComing.setVisibility(GONE);
+        gpsLocation.setVisibility(GONE);
+        hereButton.updateUI();
+    }
 
     private void addPlaceStatus(final UserPlaceStatusEnum status) {
         if (event == null){
             return;
         }
-        // TODO fine location
-        // if (!MyApplication.hasFineLocation()) {
-        //     Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-        //     return;
-        // }
         PlaceStatusManager.instance().add(getContext(), event, status, new BinaryActionListener() {
 
             @Override
             public void onSuccess() {
+                updateUserStatus(status, true);
             }
 
             @Override
             public void onFailure() {
-                //eventButtons.setComingState(false);
+                updateUserStatus(status, false);
             }
 
             @Override
             public void onFinish() {
-                //eventButtons.setComingState(true);
+
             }
 
         });
     }
-    private void removePlaceStatus() {
+    private void removePlaceStatus(final UserPlaceStatusEnum status) {
         if (event == null){
             return;
         }
@@ -238,18 +286,31 @@ public class EventButtonsView extends RelativeLayout {
 
             @Override
             public void onSuccess() {
+                updateUserStatus(status, true);
             }
 
             @Override
             public void onFailure() {
-                //matchButton.setStateOn(true);
+                updateUserStatus(status, false);
             }
 
             @Override
-            public void onFinish() {
-                //matchButton.setEnabled(true);
-            }
+            public void onFinish() {}
         });
     }
 
+    public void updateUserStatus(UserPlaceStatusEnum status, boolean active) {
+        switch (status){
+            case HERE:
+                this.hereButton.setStateOn(active);
+                this.hereButton.setEnabled(true);
+                showGroupHere();
+                break;
+            case COMING:
+                this.comingButton.setStateOn(active);
+                this.comingButton.setEnabled(true);
+                showGroupComing();
+                break;
+        }
+    }
 }

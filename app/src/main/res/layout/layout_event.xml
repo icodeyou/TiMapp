@@ -58,7 +58,6 @@
                     myattrs:top_shadow="false"
                     myattrs:gravity_center="true"
                     myattrs:background_color="@color/background_spot_transparent"/>
-
                 <View
                     android:id="@+id/separator"
                     android:layout_alignBottom="@+id/spot_view"
@@ -299,7 +298,9 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
+
     </RelativeLayout>
 
     <View
@@ -307,7 +308,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_gradient_view"
         android:layout_below="@+id/main_box_relative"
-        android:background="@drawable/bottom_layout_event" />
+        android:background="@drawable/bottom_layout_event"/>
 
 
     <!--<RelativeLayout

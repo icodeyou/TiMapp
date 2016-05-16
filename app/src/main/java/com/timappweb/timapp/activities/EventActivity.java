@@ -13,19 +13,15 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.MyPagerAdapter;
@@ -40,6 +36,7 @@ import com.timappweb.timapp.fragments.EventBaseFragment;
 import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.EventButtonsView;
 import com.timappweb.timapp.views.EventView;
 import com.timappweb.timapp.views.SpotView;
@@ -47,7 +44,7 @@ import com.timappweb.timapp.views.SpotView;
 import java.util.List;
 import java.util.Vector;
 
-public class EventActivity extends BaseActivity {
+public class EventActivity extends BaseActivity implements LocationManager.LocationListener {
 
     private String          TAG                     = "EventActivity";
 
@@ -68,28 +65,15 @@ public class EventActivity extends BaseActivity {
     private int eventId;
 
     //Views
-    private ListView    tagsListView;
     private EventView   eventToolbar;
     private SpotView    spotToolbar;
-    private View        progressBottom;
-    private View        parentLayout;
 
     private EventPicturesFragment fragmentPictures;
     private EventTagsFragment fragmentTags;
     private EventPeopleFragment fragmentPeople;
     private ViewPager pager;
 
-    private ShareActionProvider shareActionProvider;
-    private int counter = 0;
-
-    private LocationListener mLocationListener;
-    private GestureDetector gestureDetector;
-    private View.OnTouchListener gestureListener;
-
     //Listeners
-    private View.OnClickListener tagListener;
-    private View.OnClickListener pictureListener;
-    private View.OnClickListener peopleListener;
     private Vector<EventBaseFragment> childFragments;
 
     private boolean isEventLoaded = false;
@@ -126,25 +110,12 @@ public class EventActivity extends BaseActivity {
         //Initialize
         spotToolbar = (SpotView) findViewById(R.id.spot_view);
         eventToolbar = (EventView) findViewById(R.id.event_view);
-        parentLayout = findViewById(R.id.main_layout_place);
-        tagsListView = (ListView) findViewById(R.id.tags_lv);
         eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
 
         getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
 
 
-        mLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                // TODO only listen for big location changed
-                MyApplication.setLastLocation(location);
-                if (isEventLoaded){
-                    updateBtnVisibility();
-                }
-            }
-        };
-        initLocationProvider(mLocationListener);
     }
 
     /**
@@ -156,30 +127,41 @@ public class EventActivity extends BaseActivity {
             isEventLoaded = true;
             eventButtons.setEvent(event);
             initFragments();
-            setActions();
+            parseIntentParameters();
         }
 
         updateView();
     }
 
-    public void setActions() {
+    public void parseIntentParameters() {
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
-            switch (extras.getInt(IntentsUtils.KEY_ACTION, -1)) {
-                case IntentsUtils.ACTION_CAMERA:
-                    openAddPictureActivity();
-                    //pager.setCurrentItem(0);
-                    break;
-                case IntentsUtils.ACTION_TAGS:
-                    //pager.setCurrentItem(1);
-                    openAddTagsActivity();
-                    break;
-                case IntentsUtils.ACTION_PEOPLE:
-                    //pager.setCurrentItem(2);
-                    openAddPeopleActivity();
-                    break;
-            }
+            parseActionParameter(extras.getInt(IntentsUtils.KEY_ACTION, -1));
         }
+    }
+
+    public void parseActionParameter(int action){
+        switch (action) {
+            case IntentsUtils.ACTION_CAMERA:
+                openAddPictureActivity();
+                //pager.setCurrentItem(0);
+                break;
+            case IntentsUtils.ACTION_TAGS:
+                //pager.setCurrentItem(1);
+                openAddTagsActivity();
+                break;
+            case IntentsUtils.ACTION_PEOPLE:
+                //pager.setCurrentItem(2);
+                openAddPeopleActivity();
+                break;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocationManager.addOnLocationChangedListener(this);
+        LocationManager.start(this);
     }
 
     @Override
@@ -243,7 +225,7 @@ public class EventActivity extends BaseActivity {
 
 
     private void openAddTagsActivity() {
-        if (!MyApplication.hasFineLocation()) {
+        if (!LocationManager.hasFineLocation()) {
             Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
@@ -319,17 +301,8 @@ public class EventActivity extends BaseActivity {
             eventToolbar.setVisibility(View.GONE);
             spotToolbar.setSpot(event.spot);
         }
-
-        updateBtnVisibility();
     }
 
-    /**
-     * Show or hide add post or coming button according to user location
-     */
-    public void updateBtnVisibility(){
-        eventButtons.updateUI();
-        pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
-    }
 
     private void setDefaultShareIntent() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
@@ -384,6 +357,12 @@ public class EventActivity extends BaseActivity {
         return this.event != null && this.event.isUserAround();
     }
 
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        if (isEventLoaded) {
+            pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
+        }
+    }
 
 
     // =============================================================================================
@@ -401,6 +380,7 @@ public class EventActivity extends BaseActivity {
             Log.d(TAG, "Place loaded finish");
             if (data.size() > 0){
                 event = data.get(0);
+                if (!event.hasLocalId()) event.mySave();
                 onEventLoaded();
             }
         }

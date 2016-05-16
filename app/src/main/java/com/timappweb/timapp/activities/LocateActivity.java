@@ -29,7 +29,9 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.services.FetchAddressIntentService;
+import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
@@ -38,6 +40,7 @@ import retrofit2.Response;
 
 public class LocateActivity extends BaseActivity{
 
+    private static final double MIN_LOCATION_CHANGED_RELOAD_PLACE = 500.0;
     private String TAG = "LocateActivity";
 
     //Views
@@ -82,7 +85,6 @@ public class LocateActivity extends BaseActivity{
 
         setListeners();
         initAdapterPlaces();
-        initLocationListener();
 
         int colorRes = ContextCompat.getColor(this, R.color.colorPrimaryDark);
         initToolbar(false, colorRes);
@@ -144,6 +146,18 @@ public class LocateActivity extends BaseActivity{
     @Override
     protected void onStart() {
         super.onStart();
+
+        LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
+            @Override
+            public void onLocationChanged(Location newLocation, Location lastLocation) {
+                // if not loaded yet or if user location changed too much we need to reload places
+                if (eventsLoaded == false || (lastLocation != null && DistanceHelper.distFrom(newLocation, lastLocation) > MIN_LOCATION_CHANGED_RELOAD_PLACE)) {
+                    loadPlaces(newLocation);
+                }
+                //startIntentServiceReverseGeocoding(location);
+            }
+        });
+        LocationManager.start(this);
     }
 
     @Override
@@ -155,24 +169,7 @@ public class LocateActivity extends BaseActivity{
     // ----------------------------------------------------------------------------------------------
     //PRIVATE METHODS
 
-    /**
-     * Load places once user name is known
-     */
-    private void initLocationListener() {
-        mLocationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.d(TAG, "New location found for locate activity");
-                MyApplication.setLastLocation(location);
-                if (MyApplication.hasFineLocation()){
-                    loadPlaces(location);
-                }
-                //startIntentServiceReverseGeocoding(location);
-            }
-        };
 
-        initLocationProvider(mLocationListener);
-    }
 
     // TODO migrate to service
     private void loadPlaces(Location location){

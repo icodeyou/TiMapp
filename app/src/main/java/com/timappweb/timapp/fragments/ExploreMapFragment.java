@@ -41,7 +41,7 @@ import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
-import com.timappweb.timapp.utils.MyLocationProvider;
+import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.EventView;
 
@@ -178,6 +178,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void displayPlace(Place place) {
+        // TODO can be removed later when all data are synchronized localy...
+        if (!place.hasLocalId()) place.mySave();
+
         eventView.setEvent(place);
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);

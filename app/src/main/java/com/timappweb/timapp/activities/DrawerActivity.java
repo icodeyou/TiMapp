@@ -27,6 +27,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
+import com.timappweb.timapp.utils.location.LocationManager;
 //import android.support.design.widget.FloatingActionButton;
 
 
@@ -121,14 +122,18 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
 
     private void setListeners() {
-        final Activity that = this;
-
         onLogoutListener = new OnLogoutListener() {
             @Override
             public void onLogout() {
                 Log.i(TAG, "You are logged out");
             }
         };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocationManager.start(this);
     }
 
     @Override

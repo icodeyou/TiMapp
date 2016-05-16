@@ -225,37 +225,6 @@ public class MyApplication extends com.activeandroid.app.Application {
             RestClient.instance().logoutUser();
         }
     }
-    public static void setLastLocation(Location l) {
-        Log.i(TAG, "Location has changed: " + Util.print(l));
-        Log.d(TAG, "Last location accuracy: " + l.getAccuracy());
-        lastLocation = l;
-    }
-
-    /**
-     * Check if there is a last location that is not outdated
-     * @return
-     */
-    public static boolean hasLastLocation() {
-        return lastLocation != null &&
-                (lastLocation.getTime() - System.currentTimeMillis()) < ConfigurationProvider.rules().gps_min_time_delay;
-    }
-
-    /**
-     * Check if there is a last location with a fine location
-     * @return
-     */
-    public static boolean hasFineLocation() {
-        return hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy);
-    }
-
-    public static boolean hasFineLocation(int minAccuracy) {
-        return hasLastLocation() &&
-                lastLocation.getAccuracy() <= minAccuracy;
-    }
-
-    public static Location getLastLocation() {
-        return lastLocation;
-    }
 
     public static Promise ready() {
         return deferred.promise();
