@@ -2,14 +2,13 @@ package com.timappweb.timapp.views;
 
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,21 +18,17 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.List;
+import com.timappweb.timapp.utils.DistanceHelper;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import me.grantland.widget.AutofitTextView;
 
-public class EventView extends RelativeLayout{
+public class EventView extends RelativeLayout implements LocationManager.LocationListener {
     private final static String TAG = "EventView";
     private static final int TIMELAPSE_HOT_ANIM = 2000;
     private static final int TIMELAPSE_BUTTONS_APPEAR_ANIM = 800;
@@ -43,10 +38,9 @@ public class EventView extends RelativeLayout{
     private Place event;
     private ValueAnimator animator;
 
-    private View                        tagsView;
     private AutofitTextView             tvName;
     private TextView                    tvTime;
-    private FrameLayout                 tagsFrameLayout;
+    private HorizontalTagsRecyclerView  tagsView;
     private ImageView                   categoryIcon;
     private ImageView                   smallCategoryIcon;
     private ImageView                   backgroundImage;
@@ -73,16 +67,12 @@ public class EventView extends RelativeLayout{
     private boolean                     isTagsVisible;
     private boolean                     isBottomShadow;
     private boolean                     isTopShadow;
-    private boolean                     isMatchButton;
     private boolean                     isSpot;
     private boolean                     isDescription;
-    private boolean                     toolbarMode;
-    private boolean                     isBelowToolbarView;
+    private boolean showEventTitle;
     private boolean                     isPointsVisible;
     private View distanceLayout;
     private TextView distanceText;
-    private View matchBackground;
-    private boolean isMatchButtonSelected;
     private ImageView icPoints;
 
     private boolean hotPoints = false;
@@ -97,7 +87,7 @@ public class EventView extends RelativeLayout{
         this.isPointsVisible = true;
         this.isDescription = true;
         this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
-        this.isBelowToolbarView = false;
+        this.showEventTitle = false;
         this.init();
     }
 
@@ -109,7 +99,7 @@ public class EventView extends RelativeLayout{
         this.isPointsVisible = true;
         this.isDescription = true;
         this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
-        this.isBelowToolbarView = isBelowToolbarView;
+        this.showEventTitle = isBelowToolbarView;
         this.init();
     }
 
@@ -125,11 +115,9 @@ public class EventView extends RelativeLayout{
         isTopShadow = ta.getBoolean(R.styleable.EventView_top_shadow, false);
         colorSpot = ta.getColor(R.styleable.EventView_color_spot, -1);
         colorEvent = ta.getColor(R.styleable.EventView_color_event, -1);
-        isMatchButton = ta.getBoolean(R.styleable.EventView_is_match_button, false);
         isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
         isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
-        toolbarMode = ta.getBoolean(R.styleable.EventView_toolbar_mode, false);
-        isBelowToolbarView = ta.getBoolean(R.styleable.EventView_show_title, false);
+        showEventTitle = ta.getBoolean(R.styleable.EventView_show_title, false);
         ta.recycle();
 
         this.init();
@@ -160,7 +148,7 @@ public class EventView extends RelativeLayout{
         distanceLayout = findViewById(R.id.distance_layout);
         distanceText = (TextView) findViewById(R.id.distance_text);
 
-        tagsFrameLayout = (FrameLayout) findViewById(R.id.htrv_frame_layout);
+        tagsView = (HorizontalTagsRecyclerView) findViewById(R.id.htrv_tags);
         eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
         //htAdapter = (HorizontalTagsAdapter) rvEventTags.getAdapter();
@@ -171,19 +159,12 @@ public class EventView extends RelativeLayout{
             gradientTopView = findViewById(R.id.topview_with_spot);
         }
 
+        whitePointsLayout.setVisibility(isPointsVisible ? VISIBLE : GONE);
+        gradientTopView.setVisibility(isTopShadow ? VISIBLE : GONE);
+        gradientTopView.setVisibility(isTopShadow ? VISIBLE : GONE);
+        gradientBottomView.setVisibility(isBottomShadow ? VISIBLE : GONE);
 
-        //isMatchButtonSelected = false;
-
-        //initPadding();
-        //setMatchView(false);
-        setTagsVisibility();
-        setPointsVisibility();
-        setBottomShadow(isBottomShadow);
-        setTopShadow();
         setSpotVisible(isSpot);
-        setDescriptionView(isDescription);
-        setToolbarView();
-        setBelowToolbarView();
     }
 
 /*
@@ -250,44 +231,12 @@ public class EventView extends RelativeLayout{
             tvCountPoints.initTimer(finalPoints*1000 + TIMELAPSE_HOT_ANIM);
         }
     }
-/*
-    private void setMatchView(boolean isMatchButton) {
-        if(isMatchButton && tvCountPoints.getPoints()!=0) {
-            matchButton.setVisibility(VISIBLE);
-            postButtons.setVisibility(INVISIBLE);
-            setButtonActive(isMatchButtonSelected);
-        } else {
-            matchButton.setVisibility(GONE);
-            postButtons.setVisibility(GONE);
-        }
-    }*/
 
     public HorizontalTagsRecyclerView getRvEventTags() {
         return htrv;
     }
 
-    private void setDistance(boolean isAround) {
-        if(!toolbarMode && !isAround && event.distance!=-1) {
-            distanceText.setText(getPrettyDistance());
-            distanceLayout.setVisibility(VISIBLE);
-        } else {
-            distanceLayout.setVisibility(GONE);
-        }
-    }
 
-    private String getPrettyDistance() {
-        double dist = event.distance;
-        String distString = String.valueOf(dist);
-        if(dist<1000) {
-            return distString + " m";
-        } else {
-            double distKm = dist/1000;
-            DecimalFormat df = new DecimalFormat("#.#");
-            df.setRoundingMode(RoundingMode.HALF_DOWN);
-            String roundedDistKm = df.format(distKm);
-            return roundedDistKm + " km";
-        }
-    }
 
     private void setSpotVisible(boolean isSpot) {
         if(isSpot) {
@@ -299,89 +248,10 @@ public class EventView extends RelativeLayout{
         }
     }
 
-    public void setBottomShadow(boolean isShadow) {
-        if(isShadow) {
-            gradientBottomView.setVisibility(VISIBLE);
-        } else {
-            gradientBottomView.setVisibility(GONE);
-        }
-    }
 
-    private void setTopShadow() {
-        if(isTopShadow) {
-            gradientTopView.setVisibility(VISIBLE);
-        } else {
-            gradientTopView.setVisibility(GONE);
-        }
-    }
-
-    private void setToolbarView() {
-        if(toolbarMode) {
-            mainLayoutEvent.setPadding(0, 0, 0, 0);
-            marginToolbarRight.setVisibility(VISIBLE);
-            marginToolbarLeft.setVisibility(VISIBLE);
-            //spotView.setVisibility(GONE);
-            categoryIcon.setVisibility(GONE);
-            smallCategoryIcon.setVisibility(VISIBLE);
-            tagsFrameLayout.setVisibility(GONE);
-            descriptionView.setVisibility(GONE);
-            distanceLayout.setVisibility(GONE);
-            whitePointsLayout.setVisibility(GONE);
-        }
-    }
-
-    private void setBelowToolbarView() {
-        if(isBelowToolbarView) {
-            titleLayout.setVisibility(GONE);
-            categoryIcon.setVisibility(GONE);
-            smallCategoryIcon.setVisibility(GONE);
-            whitePointsLayout.setVisibility(VISIBLE);
-        }
-    }
 
     public Place getEvent() {
         return event;
-    }
-
-    public void setDescriptionView(boolean isDescription) {
-        if(isDescription) {
-            if(descriptionTv!=null)
-            descriptionView.setVisibility(VISIBLE);
-        } else {
-            descriptionView.setVisibility(GONE);
-        }
-    }
-
-    public void setTagsVisible(boolean tagsVisible) {
-        this.isTagsVisible = tagsVisible;
-    }
-
-    public View getDescriptionView() {
-        return descriptionView;
-    }
-
-    public void setDescriptionTv(View descriptionTv) {
-        this.descriptionView = descriptionTv;
-    }
-
-    public void setTagsVisibility() {
-        if(isTagsVisible) {
-            tagsFrameLayout.setVisibility(VISIBLE);
-        } else {
-            tagsFrameLayout.setVisibility(GONE);
-        }
-    }
-
-    public void setPointsVisibility() {
-        if(isPointsVisible) {
-            whitePointsLayout.setVisibility(VISIBLE);
-        } else {
-            whitePointsLayout.setVisibility(GONE);
-        }
-    }
-
-    private boolean isAround() {
-        return event!=null && event.isUserAround();
     }
 
     public void setEvent(final Place event) {
@@ -404,7 +274,7 @@ public class EventView extends RelativeLayout{
         //Title
         tvName.setText(event.name);
 
-        if(event.description!=null) {
+        if(event.hasDescription()) {
             descriptionTv.setText(event.description);
         } else {
             descriptionTv.setVisibility(GONE);
@@ -430,17 +300,15 @@ public class EventView extends RelativeLayout{
             }
         }
 
-        //Tags Adapter
-        List<Tag> tags = event.tags;
-        if(tags!=null) {
-            htrv = new HorizontalTagsRecyclerView(context,tags);
-            tagsFrameLayout.removeAllViews();
-            tagsFrameLayout.addView(htrv);
-            if(tags.size()!=0) {
-                setTagsVisibility();
-            } else {
-                tagsFrameLayout.setVisibility(GONE);
-            }
+        descriptionView.setVisibility(isDescription && event.hasDescription() ? VISIBLE : GONE);
+
+
+        if (isTagsVisible && event.hasTags()) {
+            tagsView.getAdapter().setData(event.tags);
+            tagsView.setVisibility(VISIBLE);
+        }
+        else{
+            tagsView.setVisibility(GONE);
         }
 
         // Spot view
@@ -457,9 +325,22 @@ public class EventView extends RelativeLayout{
         tvCountPoints.initTimer(initialTime * 1000);
 
         updatePointsView(isHotView);
-        //setButtonActive(isHotView);
+        setDistance();
 
-        setDistance(isAround());
+        LocationManager.addOnLocationChangedListener(this);
+    }
 
+    public void setDistance(){
+        distanceLayout.setVisibility(VISIBLE);
+
+        if (LocationManager.hasLastLocation()){
+            event.updateDistanceFromUser();
+            distanceText.setText(DistanceHelper.prettyPrint(event.getDistanceFromUser()));
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        setDistance();
     }
 }

@@ -1,23 +1,16 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.utils.Util;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCountersAdapter.ViewHolder> {
@@ -26,7 +19,6 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
     private List<Tag> data;
 
     public TagsAndCountersAdapter(Context context) {
-        super();
         this.context = context;
         this.data = new ArrayList<>();
     }
@@ -41,7 +33,7 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.fillFields(data.get(position));
+        holder.setTag(data.get(position));
     }
 
     @Override
@@ -69,9 +61,9 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
             tagCounter = (TextView) itemView.findViewById(R.id.tv_tag_counter);
         }
 
-        public void fillFields(Tag tag) {
+        public void setTag(Tag tag) {
             tagText.setText(tag.name);
-            tagCounter.setText(tag.count_ref);
+            tagCounter.setText(String.valueOf(tag.count_ref));
         }
     }
 }

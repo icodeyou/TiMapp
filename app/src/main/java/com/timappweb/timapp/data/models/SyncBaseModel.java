@@ -316,4 +316,5 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     public boolean hasRemoteId() { return this.remote_id != null;}
 
+
 }

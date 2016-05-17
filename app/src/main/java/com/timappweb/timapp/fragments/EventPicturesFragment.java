@@ -65,7 +65,7 @@ public class EventPicturesFragment extends EventBaseFragment {
 
     private PicturesAdapter         picturesAdapter;
 
-    private static int NUMBER_OF_COLUMNS =  1;
+    private static int NUMBER_OF_COLUMNS =  2;
     private SwipeRefreshLayout mSwipeLayout;
 
     @Nullable
@@ -80,11 +80,9 @@ public class EventPicturesFragment extends EventBaseFragment {
         noConnectionView = root.findViewById(R.id.no_connection_view);
         uploadView = root.findViewById(R.id.upload_view);
         picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
+        picturesRv.setLayoutManager(new GridLayoutManager(context, NUMBER_OF_COLUMNS));
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
 
-        initVariables(root);
-
-        initRv();
         initAdapter();
         //this.loadData();
 
@@ -114,16 +112,6 @@ public class EventPicturesFragment extends EventBaseFragment {
             Uri photoUri = data.getData();
             uploadPicture(photoUri);
         }
-    }
-
-    private void initVariables(View root) {
-    }
-
-    private void initRv() {
-        //picturesRv.setHasFixedSize(true);
-        GridLayoutManager layoutManager =
-                new GridLayoutManager(context, NUMBER_OF_COLUMNS);
-        picturesRv.setLayoutManager(layoutManager);
     }
 
     private void initAdapter() {

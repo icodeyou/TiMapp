@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class EventTagsFragment extends EventBaseFragment {
     private RefreshableRecyclerView rvTags;
     private View                    noTagsView;
     private View                    noConnectionView;
-    private EventView               eventView;
+    //private EventView               eventView;
     private SwipeRefreshLayout      mSwipeLayout;
 
     @Nullable
@@ -45,30 +46,17 @@ public class EventTagsFragment extends EventBaseFragment {
 
         //Find views
         rvTags = (RefreshableRecyclerView) root.findViewById(R.id.list_tags);
+        rvTags.setLayoutManager(new LinearLayoutManager(getContext()));
+
         //progressView = root.findViewById(R.id.progress_view);
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_tags);
 
-        //Create Event View
-        if(eventActivity.getEventToolbar().getVisibility()==View.VISIBLE) {
-            eventView = new EventView(eventActivity, true);
-        } else {
-            eventView = new EventView(eventActivity);
-        }
-
-        eventView.setBottomShadow(true);
-        eventView.setTagsVisible(false);
-        eventView.setEvent(eventActivity.getEvent());
-        FrameLayout eventFrameLayout = (FrameLayout) root.findViewById(R.id.event_frame_layout);
-        eventFrameLayout.addView(eventView);
-        eventFrameLayout.setVisibility(View.VISIBLE);
-
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         rvTags.setAdapter(tagsAndCountersAdapter);
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
-
         return root;
     }
 
@@ -76,14 +64,7 @@ public class EventTagsFragment extends EventBaseFragment {
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);
     }
-
 */
-    // TODO WTFFFF
-    public EventView getEventView() {
-        return eventView;
-    }
-
-
     // =============================================================================================
     /**
      * TODO

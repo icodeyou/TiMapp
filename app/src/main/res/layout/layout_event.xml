@@ -142,11 +142,15 @@
                 </RelativeLayout>
 
                 <!-- TAGS -->
-                <FrameLayout
-                    android:id="@+id/htrv_frame_layout"
+                <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+                    xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/htrv_tags"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_rv_displayed_tags"
-                    android:layout_gravity="center"/>
+                    myattrs:horizontal_tags_text_color="@color/colorAccent"
+                    myattrs:horizontal_tags_background_color="@color/background"
+                    myattrs:horizontal_tags_is_bold="true"
+                    myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -177,7 +181,7 @@
                             android:text="3600"
                             android:textSize="@dimen/text_normal"
                             android:textColor="@color/White"
-                            android:textStyle="bold"/>
+                            android:textStyle="normal"/>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/distance_layout"
@@ -203,7 +207,7 @@
                             android:text="120 m"
                             android:textSize="@dimen/text_normal"
                             android:textColor="@color/White"
-                            android:textStyle="bold"/>
+                            android:textStyle="normal"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -213,12 +217,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="@dimen/little_icon_spot"
+                            android:layout_height="@dimen/logo_normal"
+                            android:layout_marginRight="@dimen/default_ic_margin"
+                            android:layout_marginEnd="@dimen/default_ic_margin"
+                            android:src="@drawable/ic_coming_guy_white"/>
                         <TextView
                             android:id="@+id/count_coming_text"
                             android:layout_weight="1"
@@ -227,14 +237,21 @@
                             android:singleLine="true"
                             android:text="12 coming"
                             android:textSize="@dimen/text_normal"
+                            android:gravity="bottom"
                             android:textColor="@color/White"
-                            android:textStyle="bold"/>
+                            android:textStyle="normal"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="@dimen/little_icon_spot"
+                            android:layout_height="@dimen/logo_normal"
+                            android:layout_marginRight="@dimen/default_ic_margin"
+                            android:layout_marginEnd="@dimen/default_ic_margin"
+                            android:src="@drawable/match_white"/>
                         <TextView
                             android:id="@+id/count_here_text"
                             android:layout_weight="1"
@@ -243,8 +260,9 @@
                             android:textSize="@dimen/text_normal"
                             android:singleLine="true"
                             android:text="2 here"
+                            android:gravity="bottom"
                             android:textColor="@color/White"
-                            android:textStyle="bold"/>
+                            android:textStyle="normal"/>
                     </LinearLayout>
                 </LinearLayout>
 

@@ -25,4 +25,18 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return this.fragments.size();
     }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position){
+            case 0:
+                return "Pictures";
+            case 1:
+                return "Tags";
+            case 2:
+                return "People";
+            default:
+                return "Other";
+        }
+    }
 }

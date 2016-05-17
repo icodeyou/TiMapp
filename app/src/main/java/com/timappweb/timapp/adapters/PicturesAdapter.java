@@ -2,7 +2,6 @@ package com.timappweb.timapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +25,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     List<Picture> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
+    private String[] picturesUris;
     //private String baseUrl = "";
 
     //Constructor
@@ -43,25 +43,7 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
     @Override
     public void onBindViewHolder(PictureViewHolder holder, final int position) {
-        Picture picture = data.get(position);
-        final String fullUrl = picture.getPreviewUrl();
-        Log.d(TAG, "Loading picture in adapter: " + fullUrl);
-
-        final String[] uris = new String[data.size()];
-        int i = 0;
-        for (Picture p: data){
-            uris[i++] = p.getUrl();
-        }
-        final Uri uri = Uri.parse(fullUrl);
-        holder.ivPicture.setImageURI(uri);
-        holder.ivPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Activity mActivity = (Activity) context;
-                IntentsUtils.viewPicture(mActivity, position, uris);
-
-            }
-        });
+        holder.setPicture(position, data.get(position));
     }
 
     @Override
@@ -83,11 +65,12 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
     public void setData(List<Picture> pictures) {
         this.data = pictures;
         notifyDataSetChanged();
-    }
 
-    public void addData(Picture picture) {
-        this.data.add(picture);
-        notifyDataSetChanged();
+        picturesUris = new String[data.size()];
+        int i = 0;
+        for (Picture p: data){
+            picturesUris[i++] = p.getUrl();
+        }
     }
 
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
@@ -109,12 +92,8 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             itemView.setOnClickListener(this);
 
             ivPicture = (SimpleDraweeView) itemView.findViewById(R.id.picture);
-
             //set height picture to prevent padding on view
-            Point size = new Point();
-            ((Activity) context).getWindowManager().getDefaultDisplay().getSize(size);
-            int screenWidth = size.x;
-            ivPicture.getLayoutParams().height = screenWidth;
+            ivPicture.getLayoutParams().height = ivPicture.getLayoutParams().width;
         }
 
         @Override
@@ -122,6 +101,21 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             if (mItemClickListener != null) {
                 mItemClickListener.onClick(getAdapterPosition());
             }
+        }
+
+        public void setPicture(final int position, Picture picture) {
+            final String fullUrl = picture.getPreviewUrl();
+            Log.d(TAG, "Loading picture in adapter: " + fullUrl);
+
+            final Uri uri = Uri.parse(fullUrl);
+            ivPicture.setImageURI(uri);
+            ivPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Activity mActivity = (Activity) context;
+                    IntentsUtils.viewPicture(mActivity, position, picturesUris);
+                }
+            });
         }
     }
 }

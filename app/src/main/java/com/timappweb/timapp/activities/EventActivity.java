@@ -16,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -78,6 +77,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private boolean isEventLoaded = false;
     private EventButtonsView eventButtons;
+    private EventView eventView;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -108,9 +108,11 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         initToolbar(false, colorRes);
 
         //Initialize
-        spotToolbar = (SpotView) findViewById(R.id.spot_view);
-        eventToolbar = (EventView) findViewById(R.id.event_view);
-        eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
+        //spotToolbar = (SpotView) findViewById(R.id.spot_view);
+        //eventToolbar = (EventView) findViewById(R.id.event_view);
+
+        eventView = (EventView) findViewById(R.id.event_view);
+        //eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
 
         getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
@@ -125,7 +127,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void onEventLoaded() {
         if (!isEventLoaded){
             isEventLoaded = true;
-            eventButtons.setEvent(event);
+            eventView.setEvent(event);
             initFragments();
             parseIntentParameters();
         }
@@ -255,8 +257,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         childFragments.add(fragmentPeople);
 
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
-        this.pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), childFragments);
-        pager = (ViewPager) super.findViewById(R.id.place_viewpager);
+        pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), childFragments);
+        pager = (ViewPager) super.findViewById(R.id.event_viewpager);
         pager.setOffscreenPageLimit(2);
         // Affectation de l'adapter au ViewPager
         pager.setAdapter(this.pagerAdapter);
@@ -292,6 +294,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + event.category_id);
         }
+        /*
         if(event.spot==null) {
             eventToolbar.setVisibility(View.VISIBLE);
             spotToolbar.setVisibility(View.GONE);
@@ -300,7 +303,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             spotToolbar.setVisibility(View.VISIBLE);
             eventToolbar.setVisibility(View.GONE);
             spotToolbar.setSpot(event.spot);
-        }
+        }*/
     }
 
 

@@ -27,7 +27,9 @@ public class PlacePictureSyncPerformer extends RemoteMasterSyncPerformer {
     @Override
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values) {
         for (SyncBaseModel model: values){
-            ((Picture)model).base_url = this.baseUrl;
+            Picture picture = (Picture) model;
+            picture.base_url = this.baseUrl;
+            picture.place = place;
         }
         super.onRemoteOnly(values);
     }

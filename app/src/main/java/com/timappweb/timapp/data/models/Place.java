@@ -49,10 +49,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose
     public String           name;
 
-    @Column(name = "Distance")
-    @Expose
-    public double           distance = -1;
-
     @Column(name = "Description")
     @Expose
     public String           description;
@@ -95,6 +91,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose
     public Integer          spot_id  = null;
 
+    public double           distance = -1;
     // =============================================================================================
 
     public Place(){
@@ -110,7 +107,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.count_posts = 0;
         this.posts = new ArrayList<>();
         this.tags = new ArrayList<>();
-        setDistancePlace();
     }
 
     public Place(Location lastLocation, String name, EventCategory eventCategory, Spot spot, String description) {
@@ -120,7 +116,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.name = name;
         this.category_id = eventCategory.remote_id;
         this.description = description;
-        setDistancePlace();
         if (spot != null){
             this.spot = spot;
             this.spot_id = spot.remote_id;
@@ -305,18 +300,6 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         return result;
     }
 
-    public void setDistancePlace() {
-        if (LocationManager.hasLastLocation()) {
-            Location location = LocationManager.getLastLocation();
-            if(LocationManager.hasFineLocation()) {
-                double userLongitude = location.getLongitude();
-                double userLatitude = location.getLatitude();
-                double distance =  DistanceHelper.distFrom(userLatitude, userLongitude,
-                        this.latitude, this.longitude);
-                this.distance = Math.round(distance);
-            }
-        }
-    }
 
     public From getPicturesQuery() {
         return new Select().from(Picture.class).where("Place = ?", this.getId()).orderBy("created DESC");
@@ -342,4 +325,30 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         return getTagsQuery().execute();
     }
 
+    public boolean hasDescription() {
+        return description != null && description.length() > 0;
+    }
+
+    public boolean hasSpot() {
+        return spot != null;
+    }
+
+    public boolean hasTags() {
+        return this.tags != null && tags.size() > 0;
+    }
+
+    public double getDistanceFromUser() {
+        if (distance != -1){
+            return distance;
+        }
+        this.updateDistanceFromUser();
+        return distance;
+    }
+
+    public void updateDistanceFromUser() {
+        Location location = LocationManager.getLastLocation();
+        double distance =  DistanceHelper.distFrom(location.getLatitude(), location.getLongitude(),
+                this.latitude, this.longitude);
+        this.distance = Math.round(distance);
+    }
 }

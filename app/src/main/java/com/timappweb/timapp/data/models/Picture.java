@@ -15,7 +15,7 @@ public class Picture extends SyncBaseModel {
     @Expose(serialize = false, deserialize = true)
     public int created;
 
-    @Column(name = "Photo")
+    @Column(name = "Photo", notNull = true)
     @Expose(serialize = true, deserialize = true)
     public String photo;
 
@@ -32,20 +32,20 @@ public class Picture extends SyncBaseModel {
     public String photo_dir;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Place")
+    @Column(name = "Place", notNull = true)
     @Expose(serialize = false, deserialize = true)
     public Place place;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "User")
+    @Column(name = "User", notNull = false)
     @Expose(serialize = false, deserialize = true)
     public User user;
 
+    @Column(name = "BaseUrl")
+    public String base_url;
 
     // =============================================================================================
     // Fields
-
-    public String base_url;
 
     // =============================================================================================
 
@@ -73,7 +73,7 @@ public class Picture extends SyncBaseModel {
     @Override
     public String toString() {
         return "Picture{" +
-                ", db_id=" + this.getId() +
+                "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", created=" + created +
                 ", photo='" + photo + '\'' +

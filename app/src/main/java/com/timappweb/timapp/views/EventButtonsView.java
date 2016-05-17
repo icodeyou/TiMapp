@@ -1,8 +1,10 @@
 package com.timappweb.timapp.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.location.Location;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -46,6 +48,7 @@ public class EventButtonsView extends RelativeLayout {
     private View viewGroupHere;
     private View viewGroupComing;
     private View container;
+    private View navigationButtons;
 
     public EventButtonsView(Context context) {
         super(context);
@@ -92,7 +95,7 @@ public class EventButtonsView extends RelativeLayout {
         gpsLocation = findViewById(R.id.waiting_for_gps_location);
         viewGroupHere = findViewById(R.id.event_buttons_around);
         viewGroupComing = findViewById(R.id.event_buttons_away);
-        navigationButtons = findViewById(R.id.navi)
+        navigationButtons = findViewById(R.id.request_gps_path);
 
         //Buttons appearance
         postButtonsAppear = new AlphaAnimation(0, 1);
@@ -111,9 +114,11 @@ public class EventButtonsView extends RelativeLayout {
                 if (enabled) {
                     comingButton.setImageResource(R.drawable.ic_coming_guy_white);
                     comingButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark)));
+                    navigationButtons.setVisibility(VISIBLE);
                 } else {
                     comingButton.setImageResource(R.drawable.ic_coming_guy);
                     comingButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.white)));
+                    navigationButtons.setVisibility(GONE);
                 }
             }
 
@@ -184,6 +189,17 @@ public class EventButtonsView extends RelativeLayout {
             public void onClick(View v) {
                 IntentsUtils.postEvent(getContext(), event, IntentsUtils.ACTION_PEOPLE);
                 //openAddPeopleActivity();
+            }
+        });
+
+        navigationButtons.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String daddr = event.getPosition().latitude + "," + event.getPosition().longitude;
+                //String saddr = LocationManager.getLastLocation().getLatitude() + "," + LocationManager.getLastLocation().getLongitude();
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                        Uri.parse("http://maps.google.com/maps?daddr=" + daddr));
+                getContext().startActivity(intent);
             }
         });
 

@@ -85,22 +85,7 @@ public class TagActivity extends BaseActivity{
         progressEndView = findViewById(R.id.progress_end);
         confirmButton = (Button) findViewById(R.id.confirm_button);
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //setProgressView(true);
-                currentPost.place_id = currentPlace.remote_id;
-                // Validating user input
-                if (!currentPost.validateForSubmit()) {
-                    Toast.makeText(TagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
-                    return;
-                }
-                Log.d(TAG, "Submitting post: " + currentPost);
-
-                Call<RestFeedback> call = RestClient.service().addPost(currentPost);
-                call.enqueue(new AddPostCallback(TagActivity.this, currentPost, currentPlace));
-            }
-        });
+        confirmButton.setOnClickListener(new OnPostTagButtonClickListener());
 
         initClickSelectedTag();
     }
@@ -219,8 +204,6 @@ public class TagActivity extends BaseActivity{
             case 3:
                 searchView.clearFocus();
                 suggestedTagsView.setVisibility(View.GONE);
-                progressEndView.setVisibility(View.VISIBLE);
-                currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
                 confirmButton.setVisibility(View.VISIBLE);
                 break;
 
@@ -314,4 +297,20 @@ public class TagActivity extends BaseActivity{
         }
     }
 
+    private class OnPostTagButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
+            currentPost.place_id = currentPlace.remote_id;
+            // Validating user input
+            if (!currentPost.validateForSubmit()) {
+                Toast.makeText(TagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
+                return;
+            }
+            Log.d(TAG, "Submitting post: " + currentPost);
+
+            Call<RestFeedback> call = RestClient.service().addPost(currentPost);
+            call.enqueue(new AddPostCallback(TagActivity.this, currentPost, currentPlace));
+        }
+    }
 }

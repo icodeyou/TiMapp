@@ -51,14 +51,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <ImageView
+        <Button
             style="@style/EventShortcutButtons"
             android:id="@+id/request_gps_path"
-            android:src="@drawable/ic_info"
-            android:background="@drawable/background_button_littlesquare"
-            android:layout_width="0dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_weight="3"
+            android:text="Start navigation"
+            android:background="@color/white"/>
 
         <com.timappweb.timapp.views.SelectableFloatingButton
             style="@style/EventShortcutButtons"
