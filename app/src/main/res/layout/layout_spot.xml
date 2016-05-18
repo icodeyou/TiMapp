@@ -64,7 +64,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:maxLines="1"
-                    android:gravity="center_vertical"
+                    android:gravity="left|center"
                     android:textStyle="bold"
                     android:text="Vertigo"
                     android:textSize="@dimen/title_event_card"

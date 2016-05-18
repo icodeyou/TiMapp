@@ -33,7 +33,7 @@
             app:is_match_button="true"
             app:is_description="true"
             app:points_visible="true"
-            app:tags_visible="true"
+            app:tags_visible="false"
             app:is_spot="true"
             myattrs:color_event="@color/background_half_black"
             android:visibility="visible" />

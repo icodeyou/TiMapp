@@ -53,7 +53,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private LinearLayout                mainLayoutEvent;
     private View                        marginToolbarRight;
     private View                        marginToolbarLeft;
-    private View                        separator;
+    //private View                        separator;
     private View                        descriptionView;
     private TextView                    descriptionTv;
     private HorizontalTagsAdapter       htAdapter;
@@ -139,9 +139,9 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
         smallCategoryIcon = (ImageView) findViewById(R.id.image_small_category_place);
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
-        gradientBottomView = findViewById(R.id.bottom_gradient_event);
+        //gradientBottomView = findViewById(R.id.bottom_gradient_event);
         //gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
-        separator = findViewById(R.id.separator);
+        //separator = findViewById(R.id.separator);
         descriptionView = findViewById(R.id.description_event);
         descriptionTv = (TextView) findViewById(R.id.description_textview);
         //matchButton = (SelectableFloatingButton) findViewById(R.id.match_button);
@@ -153,18 +153,16 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
         //htAdapter = (HorizontalTagsAdapter) rvEventTags.getAdapter();
 
+        /*
         if(isSpot) {
             gradientTopView = findViewById(R.id.topview_no_spot);
         } else {
             gradientTopView = findViewById(R.id.topview_with_spot);
-        }
+        }*/
 
         whitePointsLayout.setVisibility(isPointsVisible ? VISIBLE : GONE);
-        gradientTopView.setVisibility(isTopShadow ? VISIBLE : GONE);
-        gradientTopView.setVisibility(isTopShadow ? VISIBLE : GONE);
-        gradientBottomView.setVisibility(isBottomShadow ? VISIBLE : GONE);
 
-        setSpotVisible(isSpot);
+        //setSpotVisible(isSpot);
     }
 
 /*
@@ -238,13 +236,14 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
 
 
-    private void setSpotVisible(boolean isSpot) {
-        if(isSpot) {
-            separator.setVisibility(VISIBLE);
+    private void setSpotVisible() {
+        if(isSpot && event.hasSpot()) {
+            spotView.setSpot(event.spot);
+            //separator.setVisibility(VISIBLE);
             spotView.setVisibility(VISIBLE);
         } else {
             spotView.setVisibility(GONE);
-            separator.setVisibility(GONE);
+            //separator.setVisibility(GONE);
         }
     }
 
@@ -311,14 +310,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
             tagsView.setVisibility(GONE);
         }
 
-        // Spot view
-        if (event.spot != null && isSpot){
-            spotView.setSpot(event.spot);
-            this.setSpotVisible(true);
-        }
-        else{
-            this.setSpotVisible(false);
-        }
+        this.setSpotVisible();
 
         //Counter
         int initialTime = event.getPoints();

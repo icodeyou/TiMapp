@@ -3,9 +3,11 @@ package com.timappweb.timapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.FrameLayout;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Tag;
@@ -37,6 +40,7 @@ public class EventTagsFragment extends EventBaseFragment {
     private View                    noConnectionView;
     //private EventView               eventView;
     private SwipeRefreshLayout      mSwipeLayout;
+    private FloatingActionButton postButton;
 
     @Nullable
     @Override
@@ -52,14 +56,29 @@ public class EventTagsFragment extends EventBaseFragment {
         noTagsView = root.findViewById(R.id.no_tags_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_tags);
+        postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         rvTags.setAdapter(tagsAndCountersAdapter);
+
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_TAGS);
+            }
+        });
+
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
         return root;
     }
 
+
+
+    public void onAddTagsClick(View view) {
+        IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_TAGS);
+    }
     /*@Override
     public void setMenuVisibility(final boolean visible) {
         super.setMenuVisibility(visible);

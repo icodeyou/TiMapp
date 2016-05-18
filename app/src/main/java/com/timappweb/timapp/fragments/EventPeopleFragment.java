@@ -3,6 +3,7 @@ package com.timappweb.timapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +51,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     private View            noPostsView;
     private View            noConnectionView;
     private SwipeRefreshLayout mSwipeLayout;
+    private FloatingActionButton postButton;
 
 
     @Nullable
@@ -66,6 +68,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         noConnectionView = root.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_people);
         peopleRv = (RefreshableRecyclerView) root.findViewById(R.id.list_people);
+        postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
         initAdapter();
 
@@ -82,6 +85,13 @@ public class EventPeopleFragment extends EventBaseFragment {
                 if (MyApplication.isLoggedIn()) {
                     getLoaderManager().getLoader(EventActivity.LOADER_ID_INVITATIONS).forceLoad();
                 }
+            }
+        });
+
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_PEOPLE);
             }
         });
 

@@ -33,11 +33,11 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
 
     @Column(name = "CountPosts")
     @Expose(serialize = false, deserialize = true)
-    public int count_posts;
+    public Integer count_posts;
 
     @Column(name = "CountPlaces")
     @Expose(serialize = false, deserialize = true)
-    public int count_places;
+    public Integer count_places;
 
     @Column(name = "ProviderUID")
     @Expose

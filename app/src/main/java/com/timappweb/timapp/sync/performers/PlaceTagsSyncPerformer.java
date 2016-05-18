@@ -6,8 +6,6 @@ import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.PlaceTag;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.data.models.UserPlace;
-import com.timappweb.timapp.rest.model.PaginationResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +21,8 @@ public class PlaceTagsSyncPerformer extends RemoteMasterSyncPerformer{
     public PlaceTagsSyncPerformer(List<? extends SyncBaseModel> data, SyncResult syncResult, Place place) {
         super(data, null, syncResult);
         this.place = place;
+
+        place.deleteTags();
     }
 
 

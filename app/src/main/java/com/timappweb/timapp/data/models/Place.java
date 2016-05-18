@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
@@ -320,6 +321,9 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
                 .join(PlaceTag.class).on("Tag.Id = PlaceTag.Tag")
                 .orderBy("PlaceTag.CountRef DESC");
     }
+    public void deleteTags() {
+        new Delete().from(PlaceTag.class).where("PlaceTag.Place = ?", this.getId()).execute();
+    }
 
     public List<Tag> getTags() {
         return getTagsQuery().execute();
@@ -351,4 +355,5 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
                 this.latitude, this.longitude);
         this.distance = Math.round(distance);
     }
+
 }

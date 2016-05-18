@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-
+<!--
     <RelativeLayout
         android:id="@+id/topview"
         android:layout_width="match_parent"
@@ -23,13 +23,12 @@
             android:layout_height="@dimen/height_top_gradient_view"
             android:background="@drawable/top_layout_event"
             android:visibility="gone" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/main_box_relative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topview">
+        android:layout_height="wrap_content">
         <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
         <ImageView
             android:id="@+id/background_image_event"
@@ -58,12 +57,13 @@
                     myattrs:top_shadow="false"
                     myattrs:gravity_center="true"
                     myattrs:background_color="@color/background_spot_transparent"/>
+                <!--
                 <View
                     android:id="@+id/separator"
                     android:layout_alignBottom="@+id/spot_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_top_gradient_view"
-                    android:background="@drawable/separator_event" />
+                    android:background="@drawable/separator_event" />-->
             </RelativeLayout>
 
 
@@ -321,22 +321,12 @@
 
     </RelativeLayout>
 
+    <!--
     <View
         android:id="@+id/bottom_gradient_event"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_bottom_gradient_view"
         android:layout_below="@+id/main_box_relative"
-        android:background="@drawable/bottom_layout_event"/>
-
-
-    <!--<RelativeLayout
-        android:id="@+id/all_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bottom_gradient_event"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="-25dp">
-
-    </RelativeLayout>-->
+        android:background="@drawable/bottom_layout_event"/>-->
 
 </RelativeLayout>

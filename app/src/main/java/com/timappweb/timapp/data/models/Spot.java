@@ -57,6 +57,8 @@ public class Spot extends SyncBaseModel implements Serializable {
 
     // =============================================================================================
 
+    public Spot() {}
+
     public Spot(String name) {
         this.name = name;
     }
@@ -73,6 +75,8 @@ public class Spot extends SyncBaseModel implements Serializable {
             this.category_id = category.remote_id;
         }
     }
+
+    // =============================================================================================
 
     public static Spot createDummy() {
         List<Tag> dummyTags = new ArrayList<>();

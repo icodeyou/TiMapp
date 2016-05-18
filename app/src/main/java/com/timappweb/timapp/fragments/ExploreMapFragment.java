@@ -121,7 +121,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         eventView = (EventView) root.findViewById(R.id.event_view);
-        newEventbutton = root.findViewById(R.id.fab);
+        newEventbutton = root.findViewById(R.id.post_event_button);
 
         setListeners();
 

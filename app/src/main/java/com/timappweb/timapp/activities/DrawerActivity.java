@@ -204,7 +204,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
      */
     protected void initAddSpotButton() {
         if (addSpotFloatingButton == null){
-            addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.fab);
+            addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.post_event_button);
             fabContainer = findViewById(R.id.fab_container);
             final Activity that = this;
             Log.d(TAG, "Init add_spot_button button");

@@ -45,7 +45,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         rvPlaces = (RecyclerView) root.findViewById(R.id.list_places);
         progressView = root.findViewById(R.id.loading_view);
         noEventsView = root.findViewById(R.id.no_events_view);
-        newEventButton = root.findViewById(R.id.fab);
+        newEventButton = root.findViewById(R.id.post_event_button);
         newEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

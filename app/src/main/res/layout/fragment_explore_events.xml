@@ -62,7 +62,7 @@
         android:dividerHeight="7dp"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/post_event_button"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_above="@+id/event_view"

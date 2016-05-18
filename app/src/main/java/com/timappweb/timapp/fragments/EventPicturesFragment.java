@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -67,6 +68,7 @@ public class EventPicturesFragment extends EventBaseFragment {
 
     private static int NUMBER_OF_COLUMNS =  2;
     private SwipeRefreshLayout mSwipeLayout;
+    private FloatingActionButton postButton;
 
     @Nullable
     @Override
@@ -82,7 +84,14 @@ public class EventPicturesFragment extends EventBaseFragment {
         picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
         picturesRv.setLayoutManager(new GridLayoutManager(context, NUMBER_OF_COLUMNS));
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
+        postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
+        postButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_CAMERA);
+            }
+        });
         initAdapter();
         //this.loadData();
 
