@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/toolbar_transparent"
+        android:layout_below="@+id/toolbar"
         android:layout_above="@+id/event_view">
 
         <!-- TITLE -->
@@ -124,16 +124,7 @@
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/button_selecting_margin"
-            android:padding="10dp"
-            android:background="@drawable/background_button_littlesquare"
-            android:gravity="center"
-            android:textColor="@color/text_button"
-            android:textSize="@dimen/text_big"
+            style="@style/pageSubmitButton"
             android:text="@string/main_text_publish_activity" />
 
     </LinearLayout>
@@ -181,7 +172,6 @@
     </RelativeLayout>
 
 
-    <include android:id="@+id/toolbar_transparent"
-        layout="@layout/toolbar_transparent" />
+    <include layout="@layout/toolbar_transparent" />
 
 </RelativeLayout>

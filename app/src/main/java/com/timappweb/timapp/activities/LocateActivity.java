@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,12 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -109,17 +107,17 @@ public class LocateActivity extends BaseActivity{
         eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                Log.d(TAG, "Click on place adapter");
+                Log.d(TAG, "Click on event adapter");
                 /*if (!MyApplication.hasFineLocation()) {
                     Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
                     return;
                 }
                 // We know that lastLocation is define because places are loaded only when location is defined
-                Place place = eventsAdapter.getItem(position);
+                Event event = eventsAdapter.getItem(position);
                 Post post = new Post();
                 post.longitude = MyApplication.getLastLocation().getLongitude();
                 post.latitude = MyApplication.getLastLocation().getLatitude();*/
-                Place event = eventsAdapter.getItem(position);
+                Event event = eventsAdapter.getItem(position);
                 IntentsUtils.viewSpecifiedEvent(that, event);
             }
 
@@ -177,22 +175,22 @@ public class LocateActivity extends BaseActivity{
         QueryCondition conditions = new QueryCondition();
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
 
-        Call<List<Place>> call = RestClient.service().placeReachable(conditions.toMap());
-        call.enqueue(new RestCallback<List<Place>>(this) {
+        Call<List<Event>> call = RestClient.service().placeReachable(conditions.toMap());
+        call.enqueue(new RestCallback<List<Event>>(this) {
 
             @Override
-            public void onResponse(Response<List<Place>> response) {
+            public void onResponse(Response<List<Event>> response) {
                 super.onResponse(response);
 
                 if (response.isSuccess()){
-                    List<Place> places = response.body();
+                    List<Event> events = response.body();
                     eventsLoaded = true;
-                    Log.d(TAG, "Loading " + places.size() + " viewPlace(s)");
+                    Log.d(TAG, "Loading " + events.size() + " viewPlace(s)");
                     EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
                     placeAdapter.clear();
                     progressView.setVisibility(View.GONE);
-                    if (places.size() != 0) {
-                        placeAdapter.setData(places);
+                    if (events.size() != 0) {
+                        placeAdapter.setData(events);
                         //noPlaceView.setVisibility(View.GONE);
                         rvPlaces.setVisibility(View.VISIBLE);
                         buttonAddPlace.setVisibility(View.VISIBLE);

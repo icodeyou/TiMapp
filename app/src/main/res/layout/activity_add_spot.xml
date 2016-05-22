@@ -41,7 +41,7 @@
                 android:maxLines="1"
                 android:textColor="@color/text_button"
                 android:textSize="@dimen/text_huge"
-                android:text="Create Place"/>
+                android:text="Create Event"/>
         </LinearLayout>-->
 
         <android.support.v7.widget.RecyclerView

@@ -2,8 +2,8 @@ package com.timappweb.timapp.sync.performers;
 
 import android.content.SyncResult;
 
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlaceTag;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
 
@@ -15,22 +15,22 @@ import java.util.List;
  */
 public class PlaceTagsSyncPerformer extends RemoteMasterSyncPerformer{
 
-    Place place;
+    Event event;
 
 
-    public PlaceTagsSyncPerformer(List<? extends SyncBaseModel> data, SyncResult syncResult, Place place) {
+    public PlaceTagsSyncPerformer(List<? extends SyncBaseModel> data, SyncResult syncResult, Event event) {
         super(data, null, syncResult);
-        this.place = place;
+        this.event = event;
 
-        place.deleteTags();
+        event.deleteTags();
     }
 
 
     @Override
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values) {
         for (SyncBaseModel model: values){
-            PlaceTag placeTag = new PlaceTag(place, (Tag) model, ((Tag)model).count_ref);
-            placeTag.deepSave();
+            EventTag eventTag = new EventTag(event, (Tag) model, ((Tag)model).count_ref);
+            eventTag.deepSave();
         }
     }
 }

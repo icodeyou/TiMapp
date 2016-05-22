@@ -13,16 +13,17 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
-@Table(name = "UserPlace")
-public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
+@Table(name = "UserEvent")
+public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
 
     // =============================================================================================
     // DATABASE
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Place", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+    @Column(name = "Event", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     @Expose
-    public Place place;
+    @SerializedName("place")
+    public Event event;
 
     @Column(name = "Status", notNull = true)
     @Expose
@@ -44,13 +45,13 @@ public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
     // =============================================================================================
 
 
-    public UserPlace() {
+    public UserEvent() {
     }
 
     @Override
     public String toString() {
-        return "UserPlace{" +
-                "place=" + place +
+        return "UserEvent{" +
+                "event=" + event +
                 ", status=" + status +
                 ", user=" + user +
                 ", created=" + created +
@@ -74,24 +75,24 @@ public class UserPlace extends SyncBaseModel implements PlaceUserInterface {
 
     @Override
     public boolean isSync(SyncBaseModel model) {
-        if (model == null || !(model instanceof UserPlace)) return false;
-        UserPlace obj = (UserPlace) model;
+        if (model == null || !(model instanceof UserEvent)) return false;
+        UserEvent obj = (UserEvent) model;
         return this.status == obj.status;
     }
 
-    public static From queryForPlace(Place place) {
-        return queryForPlace(place.getId());
+    public static From queryForPlace(Event event) {
+        return queryForPlace(event.getId());
     }
 
     public static From queryForPlace(long placeId) {
-        return new Select().from(UserPlace.class).where("Place = ?", placeId);
+        return new Select().from(UserEvent.class).where("Event = ?", placeId);
     }
 
-    public static List<UserPlace> getForPlace(Place place) {
-        return queryForPlace(place).execute();
+    public static List<UserEvent> getForPlace(Event event) {
+        return queryForPlace(event).execute();
     }
     /*
     public static From queryForPlace(long id) {
-        return new Select().from(UserPlace.class).where("Place = ?", id);
+        return new Select().from(UserEvent.class).where("Event = ?", id);
     }*/
 }

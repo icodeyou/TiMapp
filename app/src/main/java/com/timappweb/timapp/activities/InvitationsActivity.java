@@ -1,9 +1,7 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,18 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.activeandroid.query.From;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
-import com.timappweb.timapp.data.models.PlacesInvitation;
-import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.util.List;
@@ -32,7 +26,7 @@ public class InvitationsActivity extends BaseActivity{
     private static final long SYNC_UPDATE_DELAY = 6 * 3600 * 1000;
 
     private String TAG = "ListFriendsActivity";
-    private List<PlacesInvitation> invitations;
+    private List<EventsInvitation> invitations;
     private RecyclerView recyclerView;
     private InvitationsAdapter adapter;
     private View noInvitationsView;
@@ -69,7 +63,7 @@ public class InvitationsActivity extends BaseActivity{
     }
 
 
-    private void updateView(List<PlacesInvitation> items){
+    private void updateView(List<EventsInvitation> items){
 
         invitations = items;
         if(invitations.size()==0) {
@@ -81,8 +75,8 @@ public class InvitationsActivity extends BaseActivity{
     }
 
     private void onItemListClicked(int position) {
-        PlacesInvitation invitation = invitations.get(position);
-        IntentsUtils.viewSpecifiedEvent(this, invitation.place);
+        EventsInvitation invitation = invitations.get(position);
+        IntentsUtils.viewSpecifiedEvent(this, invitation.event);
     }
 
 

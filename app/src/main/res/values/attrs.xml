@@ -48,5 +48,13 @@
         <attr name="gravity_center" format="boolean" />
     </declare-styleable>
 
+    <!-- SLIDING TABS -->
+    <declare-styleable name="SlidingTabLayout">
+        <attr name="indicatorColor" format="color"/>
+        <attr name="shouldExpand" format="boolean" />
+        <attr name="tabBackgroundBase" format="reference" />
+        <attr name="tabBackgroundTextViewId" format="reference"/>
+    </declare-styleable>
+
 
 </resources>

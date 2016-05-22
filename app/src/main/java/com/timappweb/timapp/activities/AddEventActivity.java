@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,24 +17,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationListener;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.listeners.OnSpotClickListener;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.BackCatchEditText;
 import com.timappweb.timapp.views.SpotView;
@@ -43,8 +36,8 @@ import com.timappweb.timapp.views.SpotView;
 import retrofit2.Call;
 
 
-public class AddPlaceActivity extends BaseActivity {
-    private String TAG = "AddPlaceActivity";
+public class AddEventActivity extends BaseActivity {
+    private String TAG = "AddEventActivity";
 
     private InputMethodManager imm;
     private String description;
@@ -65,7 +58,7 @@ public class AddPlaceActivity extends BaseActivity {
     private View buttonsView;
     // Data
     private Spot spot = null;
-    private AddPlaceActivity context;
+    private AddEventActivity context;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -202,14 +195,14 @@ public class AddPlaceActivity extends BaseActivity {
         });
     }
 
-    private void submitPlace(final Place place){
-        Log.d(TAG, "Submit place " + place.toString());
-        Call call = RestClient.service().addPlace(place);
-        place.saveRemoteEntry(this, call, new BinaryActionListener() {
+    private void submitPlace(final Event event){
+        Log.d(TAG, "Submit event " + event.toString());
+        Call call = RestClient.service().addPlace(event);
+        event.saveRemoteEntry(this, call, new BinaryActionListener() {
 
             @Override
             public void onSuccess() {
-                IntentsUtils.viewEventFromId(context, place.remote_id);
+                IntentsUtils.viewEventFromId(context, event.remote_id);
                 // TODO update sync to prevent reloading
             }
 
@@ -228,7 +221,7 @@ public class AddPlaceActivity extends BaseActivity {
         String textAfterChange = eventNameET.getText().toString().trim();
 //        Log.d(TAG,"textafterchange : "+textAfterChange);
 //        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
-        if (eventCategorySelected !=null && Place.isValidName(textAfterChange)) {
+        if (eventCategorySelected !=null && Event.isValidName(textAfterChange)) {
             buttonsView.setVisibility(View.VISIBLE);
         } else {
             buttonsView.setVisibility(View.GONE);
@@ -312,13 +305,13 @@ public class AddPlaceActivity extends BaseActivity {
             public void onClick(View v) {
                 if (LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
-                    final Place place = new Place(LocationManager.getLastLocation(),
+                    final Event event = new Event(LocationManager.getLastLocation(),
                             eventNameET.getText().toString(), eventCategorySelected, context.spot, description);
-                    submitPlace(place);
+                    submitPlace(event);
                 } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
                 } else {
-                    Log.d(TAG, "Click on add place before having a user location");
+                    Log.d(TAG, "Click on add event before having a user location");
                     Toast.makeText(getBaseContext(), R.string.please_wait_location, Toast.LENGTH_LONG).show();
                 }
             }

@@ -2,9 +2,9 @@ package com.timappweb.timapp.sync.performers;
 
 import android.content.SyncResult;
 
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.UserPlace;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 
 import java.util.Collection;
@@ -15,23 +15,23 @@ import java.util.List;
  */
 public class UserPlaceSyncPerformer extends RemoteMasterSyncPerformer{
 
-    Place place;
+    Event event;
 
-    public UserPlaceSyncPerformer(PaginationResponse<UserPlace> body, List<? extends SyncBaseModel> users, SyncResult syncResult, Place place) {
+    public UserPlaceSyncPerformer(PaginationResponse<UserEvent> body, List<? extends SyncBaseModel> users, SyncResult syncResult, Event event) {
         super(body, users, syncResult);
-        this.place = place;
+        this.event = event;
     }
 
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
-        ((UserPlace)remoteModel).place = place;
+        ((UserEvent)remoteModel).event = event;
         super.onMatch(remoteModel, localModel);
     }
 
     @Override
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values) {
         for (SyncBaseModel model: values){
-            ((UserPlace)model).place = place;
+            ((UserEvent)model).event = event;
         }
         super.onRemoteOnly(values);
     }

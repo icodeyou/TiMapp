@@ -32,7 +32,7 @@ import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -54,7 +54,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private static LatLngBounds mapBounds;
 
     // Declare a variable for the cluster manager.
-    private ClusterManager<Place> mClusterManagerPost;
+    private ClusterManager<Event> mClusterManagerPost;
     private GoogleMap gMap = null;
     private MapView mapView = null;
     private float previousZoomLevel = -1;
@@ -67,7 +67,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private HorizontalTagsRecyclerView filterTagsRv;
     private View filterTagsContainer;
 
-    private static HashMap<Marker, Place> mapMarkers;
+    private static HashMap<Marker, Event> mapMarkers;
     private GoogleMap map;
     private Bundle mapBundle;
 
@@ -177,11 +177,11 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
     }
 
-    private void displayPlace(Place place) {
+    private void displayPlace(Event event) {
         // TODO can be removed later when all data are synchronized localy...
-        if (!place.hasLocalId()) place.mySave();
+        if (!event.hasLocalId()) event.mySave();
 
-        eventView.setEvent(place);
+        eventView.setEvent(event);
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         newEventbutton.startAnimation(slideIn);
@@ -214,8 +214,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Place place = eventView.getEvent();
-                IntentsUtils.viewSpecifiedEvent(getActivity(), place);
+                Event event = eventView.getEvent();
+                IntentsUtils.viewSpecifiedEvent(getActivity(), event);
             }
         });
 
@@ -269,15 +269,15 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         history.setAreaRequestItemFactory(new AreaRequestItemFactory() {
             @Override
             public AreaRequestItem build() {
-                AreaRequestItem<Place> requestItem = new AreaRequestItem<Place>();
+                AreaRequestItem<Event> requestItem = new AreaRequestItem<Event>();
                 requestItem.setListener(new AreaRequestItem.OnDataChangeListener() {
                     @Override
                     public void onDataChange() {
                         Log.d(TAG, "AreaRequestItem.onDataChange(): ");
                         // Each time data change we reset everything
-                        List<Place> places = history.getInsideBoundsItems(getMapBounds());
+                        List<Event> events = history.getInsideBoundsItems(getMapBounds());
                         mClusterManagerPost.clearItems();
-                        mClusterManagerPost.addItems(places);
+                        mClusterManagerPost.addItems(events);
                         mClusterManagerPost.cluster();
                     }
                 });
@@ -364,11 +364,11 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
-        Place place = (Place) markerValue;
-        if(isPlaceViewVisible() && eventView.getEvent()==place) {
-            IntentsUtils.viewSpecifiedEvent(getActivity(), place);
+        Event event = (Event) markerValue;
+        if(isPlaceViewVisible() && eventView.getEvent()== event) {
+            IntentsUtils.viewSpecifiedEvent(getActivity(), event);
         } else {
-            displayPlace(place);
+            displayPlace(event);
         }
     }
 
@@ -401,9 +401,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         // Initialize the manager with the context and the map.
         mClusterManagerPost = new ClusterManager<>(getActivity(), gMap);
         mClusterManagerPost.setRenderer(new PlaceClusterRenderer(getActivity(), gMap, mClusterManagerPost));
-        mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Place>() {
+        mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
             @Override
-            public boolean onClusterClick(Cluster<Place> cluster) {
+            public boolean onClusterClick(Cluster<Event> cluster) {
 
                 // If zoom level is too big, go to list (TODO global parameter)
                 if (currentZoomLevel > gMap.getMaxZoomLevel() - 2){
@@ -414,7 +414,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 Log.d(TAG, "You clicked on a cluster");
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 //builder.include(cluster.getPosition());
-                for (Place m : cluster.getItems()) {
+                for (Event m : cluster.getItems()) {
                     builder.include(m.getPosition());
                 }
                 LatLngBounds bounds = builder.build();
@@ -429,9 +429,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 return true;
             }
         });
-        mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Place>() {
+        mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Event>() {
             @Override
-            public boolean onClusterItemClick(Place item) {
+            public boolean onClusterItemClick(Event item) {
                 Log.d(TAG, "You clicked on a cluster item: " + item);
                 showMarkerDetail(item);
                 return true;
@@ -441,7 +441,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         gMap.setOnMarkerClickListener(mClusterManagerPost);
         gMap.setOnCameraChangeListener(new OnCameraChangeListener());
 
-        mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Place>());
+        mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
     }

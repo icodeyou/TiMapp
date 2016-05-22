@@ -3,8 +3,8 @@ package com.timappweb.timapp.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Point;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -14,40 +14,41 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.MyPagerAdapter;
+import com.timappweb.timapp.adapters.EventPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.fragments.EventInformationFragment;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.fragments.EventTagsFragment;
-import com.timappweb.timapp.fragments.EventBaseFragment;
 import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.EventButtonsView;
 import com.timappweb.timapp.views.EventView;
-import com.timappweb.timapp.views.SpotView;
+import com.timappweb.timapp.views.parallaxviewpager.ParallaxViewPagerBaseActivity;
+import com.timappweb.timapp.views.parallaxviewpager.ScrollTabHolder;
+import com.timappweb.timapp.views.slidingTab.SlidingTabLayout;
 
 import java.util.List;
-import java.util.Vector;
 
-public class EventActivity extends BaseActivity implements LocationManager.LocationListener {
+public class EventActivity extends ParallaxViewPagerBaseActivity implements LocationManager.LocationListener, ScrollTabHolder{
 
     private String          TAG                     = "EventActivity";
 
-    private static final int INITIAL_FRAGMENT_PAGE = 1;
+    private static final int INITIAL_FRAGMENT_PAGE  = 0;
+    private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 2;
 
     public static final int LOADER_ID_CORE          = 0;
     public static final int LOADER_ID_PICTURE       = 1;
@@ -59,25 +60,25 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     // =============================================================================================
 
-    private MyPagerAdapter pagerAdapter;
-    private Place event;
+    private Event event;
     private int eventId;
 
     //Views
-    private EventView   eventToolbar;
-    private SpotView    spotToolbar;
-
     private EventPicturesFragment fragmentPictures;
     private EventTagsFragment fragmentTags;
     private EventPeopleFragment fragmentPeople;
-    private ViewPager pager;
 
     //Listeners
-    private Vector<EventBaseFragment> childFragments;
 
     private boolean isEventLoaded = false;
-    private EventButtonsView eventButtons;
     private EventView eventView;
+    private SlidingTabLayout pagerTabStrip;
+    private View mHeaderParallax;
+    private EventInformationFragment fragmentInformation;
+    private FragmentGroup mFragmentGroup;
+    private View eventTitleContainer;
+    private int windowHeight;
+    private View mViewContainer;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -97,27 +98,37 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
 
         //Set status bar blue
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorSecondaryDark));
-        }
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //    Window window = getWindow();
+        //    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //   window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorSecondaryDark));
+        //}
+/*
+        FadingActionBarHelper helper = new FadingActionBarHelper()
+                .actionBarBackground(R.drawable.background_button)
+                .headerLayout(R.layout.header_event_activity)
+                .contentLayout(R.layout.activity_event);
+        setContentView(helper.createView(this));
+        helper.initActionBar(this);*/
 
         setContentView(R.layout.activity_event);
-        int colorRes = ContextCompat.getColor(this, R.color.white);
-        initToolbar(false, colorRes);
+
+        initToolbar(false);
 
         //Initialize
         //spotToolbar = (SpotView) findViewById(R.id.spot_view);
         //eventToolbar = (EventView) findViewById(R.id.event_view);
+        //eventView = (EventView) findViewById(R.id.event_view);
+        pagerTabStrip = (SlidingTabLayout) findViewById(R.id.pager_tab_strip);
+        eventTitleContainer = findViewById(R.id.event_title_container);
 
-        eventView = (EventView) findViewById(R.id.event_view);
+        mHeader = findViewById(R.id.header);
+        mHeaderParallax = findViewById(R.id.background_image_event);
+        mViewContainer = findViewById(R.id.activity_event_container);
+
         //eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
-
         getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
-
-
     }
 
     /**
@@ -127,8 +138,10 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void onEventLoaded() {
         if (!isEventLoaded){
             isEventLoaded = true;
-            eventView.setEvent(event);
+            //eventView.setEvent(event);
             initFragments();
+            initValues();
+            setupAdapter();
             parseIntentParameters();
         }
 
@@ -146,14 +159,14 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         switch (action) {
             case IntentsUtils.ACTION_CAMERA:
                 openAddPictureActivity();
-                //pager.setCurrentItem(0);
+                //mViewPager.setCurrentItem(0);
                 break;
             case IntentsUtils.ACTION_TAGS:
-                //pager.setCurrentItem(1);
+                //mViewPager.setCurrentItem(1);
                 openAddTagsActivity();
                 break;
             case IntentsUtils.ACTION_PEOPLE:
-                //pager.setCurrentItem(2);
+                //mViewPager.setCurrentItem(2);
                 openAddPeopleActivity();
                 break;
         }
@@ -206,13 +219,13 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         switch (requestCode){
             case IntentsUtils.REQUEST_TAGS:
                 if(resultCode==RESULT_OK) {
-                    pager.setCurrentItem(1);
+                    mViewPager.setCurrentItem(1);
                     Log.d(TAG, "Result OK from TagActivity");
                 }
                 break;
             case IntentsUtils.REQUEST_INVITE_FRIENDS:
                 if(resultCode==RESULT_OK) {
-                    pager.setCurrentItem(2);
+                    mViewPager.setCurrentItem(2);
                     Log.d(TAG, "Result OK from InviteFriendsActivity");
                 }
                 break;
@@ -244,26 +257,19 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
-        childFragments = new Vector();
-
-        Bundle bundle = new Bundle();
-        fragmentPictures = (EventPicturesFragment) Fragment.instantiate(this, EventPicturesFragment.class.getName());
-        fragmentTags = (EventTagsFragment) Fragment.instantiate(this, EventTagsFragment.class.getName());
-        fragmentPeople = (EventPeopleFragment) Fragment.instantiate(this, EventPeopleFragment.class.getName());
-
-        // Ajout des Fragments dans la liste
-        childFragments.add(fragmentPictures);
-        childFragments.add(fragmentTags);
-        childFragments.add(fragmentPeople);
+        mFragmentGroup = FragmentGroup.createGroup(this);
+        fragmentInformation = (EventInformationFragment) mFragmentGroup.add(Fragment.instantiate(this, EventInformationFragment.class.getName()));
+        fragmentPictures = (EventPicturesFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPicturesFragment.class.getName()));
+        fragmentTags = (EventTagsFragment) mFragmentGroup.add(Fragment.instantiate(this, EventTagsFragment.class.getName()));
+        fragmentPeople = (EventPeopleFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPeopleFragment.class.getName()));
 
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
-        pagerAdapter = new MyPagerAdapter(super.getSupportFragmentManager(), childFragments);
-        pager = (ViewPager) super.findViewById(R.id.event_viewpager);
-        pager.setOffscreenPageLimit(2);
-        // Affectation de l'adapter au ViewPager
-        pager.setAdapter(this.pagerAdapter);
-        pager.setCurrentItem(INITIAL_FRAGMENT_PAGE);
-        /*pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mFragmentAdapter = new EventPagerAdapter(super.getSupportFragmentManager(), mFragmentGroup.getFragments());
+        mViewPager = (ViewPager) super.findViewById(R.id.event_viewpager);
+        mViewPager.setOffscreenPageLimit(PAGER_OFFSCREEN_PAGE_LIMIT);
+        mViewPager.setAdapter(this.mFragmentAdapter);
+        mViewPager.setCurrentItem(INITIAL_FRAGMENT_PAGE);
+        /*mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -277,8 +283,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         });*/
     }
 
-    public void setPager(int pageNumber) {
-        pager.setCurrentItem(pageNumber);
+    public void setmViewPager(int pageNumber) {
+        mViewPager.setCurrentItem(pageNumber);
     }
 
 
@@ -289,8 +295,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void updateView() {
         try {
             EventCategory eventCategory = MyApplication.getCategoryById(event.category_id);
-            ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
-            backgroundImage.setImageResource(eventCategory.getBigImageResId());
+            //ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
+            //backgroundImage.setImageResource(eventCategory.getBigImageResId());
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + event.category_id);
         }
@@ -334,16 +340,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
     }
 
-    public Place getEvent() {
+    public Event getEvent() {
         return event;
-    }
-
-    public EventView getEventToolbar() {
-        return eventToolbar;
-    }
-
-    public SpotView getSpotToolbar() {
-        return spotToolbar;
     }
 
     public int getEventId() {
@@ -363,24 +361,64 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         if (isEventLoaded) {
-            pagerAdapter.getItem(pager.getCurrentItem()).setMenuVisibility(true);
+            mFragmentAdapter.getItem(mViewPager.getCurrentItem()).setMenuVisibility(true);
         }
     }
 
 
     // =============================================================================================
+    // SCROLL TAB
 
-    class EventLoader implements LoaderManager.LoaderCallbacks<List<Place>>{
+    @Override
+    protected void initValues() {
+        //int tabHeight = pagerTabStrip.getHeight() + eventTitleContainer.getHeight() + mToolbar.getHeight();
+        mMinHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_header_height);
+        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
+        mMinHeaderTranslation = -mMinHeaderHeight;
+        mNumFragments = mFragmentGroup.size();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        windowHeight = size.y;
+    }
+
+
+    @Override
+    protected void scrollHeader(int scrollY) {
+        float translationY = Math.max(-scrollY, mMinHeaderTranslation);
+        mHeader.setTranslationY(translationY);
+        mHeaderParallax.setTranslationY(-translationY/3);
+
+       // mViewPager.getLayoutParams().height = (int)(windowHeight - mHeader.getHeight());
+        //mViewPager.requestLayout();
+
+        mHeader.requestLayout();
+        mViewContainer.requestLayout();
+        mViewPager.requestLayout();
+    }
+
+    @Override
+    protected void setupAdapter() {
+        mViewPager.setAdapter(mFragmentAdapter);
+        mViewPager.setOffscreenPageLimit(mNumFragments);
+        pagerTabStrip.setOnPageChangeListener(getViewPagerChangeListener());
+        pagerTabStrip.setViewPager(mViewPager);
+    }
+
+    // =============================================================================================
+
+    class EventLoader implements LoaderManager.LoaderCallbacks<List<Event>>{
 
         @Override
-        public Loader<List<Place>> onCreateLoader(int id, Bundle args) {
-            SyncBaseModel.getEntry(Place.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_PLACE);
-            return new ModelLoader<>(EventActivity.this, Place.class, SyncBaseModel.queryByRemoteId(Place.class, eventId), false);
+        public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
+            SyncBaseModel.getEntry(Event.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_EVENT);
+            return new ModelLoader<>(EventActivity.this, Event.class, SyncBaseModel.queryByRemoteId(Event.class, eventId), false);
         }
 
         @Override
-        public void onLoadFinished(Loader<List<Place>> loader, List<Place> data) {
-            Log.d(TAG, "Place loaded finish");
+        public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
+            Log.d(TAG, "Event loaded finish");
             if (data.size() > 0){
                 event = data.get(0);
                 if (!event.hasLocalId()) event.mySave();
@@ -389,7 +427,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
 
         @Override
-        public void onLoaderReset(Loader<List<Place>> loader) {
+        public void onLoaderReset(Loader<List<Event>> loader) {
 
         }
     }

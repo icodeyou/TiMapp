@@ -1,7 +1,7 @@
 package com.timappweb.timapp.rest;
 
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Post;
 
 /**
@@ -12,11 +12,11 @@ public class PostAndPlaceRequest {
     @SerializedName("post")
     private Post post;
 
-    @SerializedName("place")
-    private Place place;
+    @SerializedName("event")
+    private Event event;
 
-    public PostAndPlaceRequest(Post post, Place place) {
+    public PostAndPlaceRequest(Post post, Event event) {
         this.post = post;
-        this.place = place;
+        this.event = event;
     }
 }

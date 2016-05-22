@@ -2,7 +2,7 @@ package com.timappweb.timapp.utils.AreaDataCaching;
 
 import android.util.Log;
 
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
@@ -24,7 +24,7 @@ public class AreaRequestItem<T> {
     public int localTimestamp;      // Timestamp on the local machine (used to know when was the last update)
     public int currentRequestId = -1;  // Request remote_id
     public List<T> data;         // LIFO: Last spot in => First spot out
-    private Call<List<Place>> pendingCall; // Represents api calls in progress
+    private Call<List<Event>> pendingCall; // Represents api calls in progress
 
     public void setListener(OnDataChangeListener listener) {
         this.listener = listener;
@@ -72,7 +72,7 @@ public class AreaRequestItem<T> {
         return Util.getCurrentTimeSec() - this.localTimestamp;
     }
 
-    public int setPendingCall(Call<List<Place>> pendingCall) {
+    public int setPendingCall(Call<List<Event>> pendingCall) {
         if (this.pendingCall != null){
             Log.d(TAG, "Cancel old call");
             this.pendingCall.cancel();

@@ -1,19 +1,15 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.adapters.EventUsersAdapter;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
 @Table(name = "User")
@@ -77,7 +73,7 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
     /**
      * Cached value
      */
-    protected List<UserPlace> placeStatus;
+    protected List<UserEvent> placeStatus;
 
     // =============================================================================================
 
@@ -181,10 +177,10 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
                 .where("UserFriend.UserSource = ?", userId);
     }
 
-    public List<UserPlace> getPlaceStatus() {
+    public List<UserEvent> getPlaceStatus() {
         if (placeStatus != null) return placeStatus;
         placeStatus = new Select()
-                .from(UserPlace.class)
+                .from(UserEvent.class)
                 .where("User = ? ", this.getId())
                 .execute();
         return placeStatus;
@@ -193,29 +189,29 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
 
     public From getInviteSentQuery() {
         return new Select()
-                .from(PlacesInvitation.class)
+                .from(EventsInvitation.class)
                 .where("UserSource = ?", this.getId());
     }
 
     public From getInviteSentQuery(long placeId) {
-        return this.getInviteSentQuery().where("Place = ? AND UserSource = ?", placeId, this.getId());
+        return this.getInviteSentQuery().where("Event = ? AND UserSource = ?", placeId, this.getId());
     }
-    public List<PlacesInvitation> getInviteSent(long placeId) {
+    public List<EventsInvitation> getInviteSent(long placeId) {
         return this.getInviteSentQuery().execute();
     }
 
     public From getInviteReceivedQuery() {
         return new Select()
-                .from(PlacesInvitation.class)
+                .from(EventsInvitation.class)
                 .where("UserTarget = ?", this.getId())
                 .orderBy("created DESC");
     }
 
     public From getInviteReceivedQuery(long placeId) {
-        return getInviteReceivedQuery().where("Place = ?", placeId);
+        return getInviteReceivedQuery().where("Event = ?", placeId);
     }
 
-    public List<PlacesInvitation> getInviteReceived() {
+    public List<EventsInvitation> getInviteReceived() {
         return this.getInviteReceivedQuery().execute();
     }
 

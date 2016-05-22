@@ -9,7 +9,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,8 +19,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -35,7 +34,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private static final int TIMELAPSE_BUTTONS_DISAPPEAR_ANIM = 300;
     private Context context;
 
-    private Place event;
+    private Event event;
     private ValueAnimator animator;
 
     private AutofitTextView             tvName;
@@ -51,8 +50,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private View                        titleLayout;
     private View                        gradientBottomView;
     private LinearLayout                mainLayoutEvent;
-    private View                        marginToolbarRight;
-    private View                        marginToolbarLeft;
     //private View                        separator;
     private View                        descriptionView;
     private TextView                    descriptionTv;
@@ -77,6 +74,8 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
     private boolean hotPoints = false;
     private EventButtonsView eventButtonsView;
+    private TextView tvCountComing;
+    private TextView tvCountHere;
 
 
     public EventView(Context context) {
@@ -86,7 +85,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         this.isTagsVisible = false;
         this.isPointsVisible = true;
         this.isDescription = true;
-        this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
+        this.colorEvent = -1;
         this.showEventTitle = false;
         this.init();
     }
@@ -98,7 +97,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         this.isTagsVisible = false;
         this.isPointsVisible = true;
         this.isDescription = true;
-        this.colorEvent = ContextCompat.getColor(context, R.color.background_half_black);
+        this.colorEvent = -1;
         this.showEventTitle = isBelowToolbarView;
         this.init();
     }
@@ -127,10 +126,10 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         inflate(getContext(), R.layout.layout_event, this);
 
         mainLayoutEvent = (LinearLayout) findViewById(R.id.main_layout_event);
-        marginToolbarRight = findViewById(R.id.margin_right_toolbar);
-        marginToolbarLeft = findViewById(R.id.margin_left_toolbar);
+        //marginToolbarRight = findViewById(R.id.margin_right_toolbar);
+        //marginToolbarLeft = findViewById(R.id.margin_left_toolbar);
         spotView = (SpotView) findViewById(R.id.spot_view);
-        titleLayout = findViewById(R.id.text_relative_layout);
+        titleLayout = findViewById(R.id.event_title_container);
         whitePointsLayout = findViewById(R.id.white_points_layout);
         tvName = (AutofitTextView) findViewById(R.id.title_event);
         icPoints = (ImageView) findViewById(R.id.ic_hot);
@@ -150,6 +149,8 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
         tagsView = (HorizontalTagsRecyclerView) findViewById(R.id.htrv_tags);
         eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
+        tvCountComing = (TextView) findViewById(R.id.count_coming_text);
+        tvCountHere = (TextView) findViewById(R.id.count_here_text);
 
         //htAdapter = (HorizontalTagsAdapter) rvEventTags.getAdapter();
 
@@ -187,12 +188,12 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     public void updatePointsView(boolean increase) {
         if(increase && !hotPoints) {
             hotPoints = true;
-            icPoints.setImageResource(R.drawable.ic_hot);
-            tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
+            //icPoints.setImageResource(R.drawable.ic_hot);
+            //tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.colorPrimaryDark));
         } else if(!increase && hotPoints){
             hotPoints = false;
-            icPoints.setImageResource(R.drawable.ic_hot_white);
-            tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.white));
+            //icPoints.setImageResource(R.drawable.ic_hot_white);
+            //tvCountPoints.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
             return;
         }
@@ -249,14 +250,16 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
 
 
-    public Place getEvent() {
+    public Event getEvent() {
         return event;
     }
 
-    public void setEvent(final Place event) {
+    public void setEvent(final Event event) {
 
         this.event = event;
-        this.eventButtonsView.setEvent(event);
+        if (this.eventButtonsView != null){
+            this.eventButtonsView.setEvent(event);
+        }
 
         if (event == null){
             Log.e(TAG, "Trying to display a null event");
@@ -280,15 +283,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         }
 
         //EventCategory
-        EventCategory eventCategory = null;
-        try {
-            Log.d(TAG, "Setting event Background");
-            eventCategory = MyApplication.getCategoryById(event.category_id);
-            smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
-            backgroundImage.setImageResource(eventCategory.getBigImageResId());
-        } catch (UnknownCategoryException e) {
-            Log.e(TAG, "no eventCategory found for id : " + event.category_id);
-        }
 
         if(colorEvent != -1) {
             Log.d(TAG,"Setting custom color");
@@ -298,7 +292,17 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
                 //spotView.setColor(colorSpot);
             }
         }
-
+        else {
+            EventCategory eventCategory = null;
+            try {
+                Log.d(TAG, "Setting event Background");
+                eventCategory = MyApplication.getCategoryById(event.category_id);
+                smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
+                backgroundImage.setImageResource(eventCategory.getBigImageResId());
+            } catch (UnknownCategoryException e) {
+                Log.e(TAG, "no eventCategory found for id : " + event.category_id);
+            }
+        }
         descriptionView.setVisibility(isDescription && event.hasDescription() ? VISIBLE : GONE);
 
 
@@ -315,6 +319,9 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         //Counter
         int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime * 1000);
+
+        tvCountComing.setText(event.count_coming == null ? "0" : event.count_coming.toString());
+        tvCountHere.setText(event.count_here == null ? "0" : event.count_here.toString());
 
         updatePointsView(isHotView);
         setDistance();

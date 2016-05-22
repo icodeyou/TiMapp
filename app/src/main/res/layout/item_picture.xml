@@ -21,9 +21,8 @@
     android:id="@+id/picture"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_margin="3dp"
     android:elevation="@dimen/card_elevation"
+    fresco:viewAspectRatio="1"
     fresco:actualImageScaleType="centerCrop"
     fresco:placeholderImage="@drawable/placeholder_default" />

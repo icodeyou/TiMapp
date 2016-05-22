@@ -5,11 +5,8 @@ import android.location.Location;
 
 import com.activeandroid.query.From;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.MapAreaInfo;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.utils.location.LocationManager;
 
@@ -30,7 +27,7 @@ public class MapDataSyncPerformer implements SyncPerformer {
             // TODO
             From localQuery = MapAreaInfo.findArea(null, MapAreaInfo.AROUND_USER);
             /*
-            this.performModelSync(Place.class,
+            this.performModelSync(Event.class,
                     RestClient.service().placeReachable(location.getLatitude(), location.getLongitude()),
                     localQuery,
                     syncResult);*/

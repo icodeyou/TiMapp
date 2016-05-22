@@ -31,6 +31,7 @@ public class BaseActivity extends AppCompatActivity {
     protected SearchView                searchView;
     private MyLocationProvider          locationProvider;
     protected List<Call>                apiCalls = new LinkedList<>();
+    public Toolbar mToolbar;
 
 
     @Override
@@ -64,11 +65,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void initToolbar(boolean showTitle){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if(toolbar==null) {
-            toolbar = (Toolbar) findViewById(R.id.toolbar_transparent);
-        }
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -77,7 +75,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
-        final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
+        final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.design.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
         upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }

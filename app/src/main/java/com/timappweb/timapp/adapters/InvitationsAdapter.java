@@ -8,12 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.PlacesInvitation;
-import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -29,7 +26,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean isTagsVisible;
     private boolean footerActive;
 
-    private List<PlacesInvitation> data;
+    private List<EventsInvitation> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
@@ -52,7 +49,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(baseHolder instanceof PlacesViewHolder) {
             PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
             Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
-            final PlacesInvitation placeInvitation = data.get(position);
+            final EventsInvitation placeInvitation = data.get(position);
 
             User userSource = placeInvitation.getUserSource();
             String username = userSource != null ? userSource.getUsername() : "Former user";
@@ -60,14 +57,14 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.nameInvitation.setText(username);
             holder.dateInvitation.setText(prettyTimeInvitation);
 
-            holder.eventView.setEvent(placeInvitation.place);
+            holder.eventView.setEvent(placeInvitation.event);
 
             /*
             try {
-                EventCategory eventCategory = MyApplication.getCategoryById(placeInvitation.place.getCategoryId());
+                EventCategory eventCategory = MyApplication.getCategoryById(placeInvitation.event.getCategoryId());
                 //holder.backgroundImage.setImageResource(eventCategory.getBigImageResId());
             } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no category found for id : " + placeInvitation.place.getCategoryId());
+                Log.e(TAG, "no category found for id : " + placeInvitation.event.getCategoryId());
             }*/
 
             //OnTagsRvClick : Same event as adapter click.
@@ -89,21 +86,21 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public void add(PlacesInvitation placesInvitation) {
-        this.data.add(placesInvitation);
+    public void add(EventsInvitation eventsInvitation) {
+        this.data.add(eventsInvitation);
         notifyDataSetChanged();
     }
 
-    public void setData(List<PlacesInvitation> placesInvitations) {
-        this.data = placesInvitations;
+    public void setData(List<EventsInvitation> eventsInvitations) {
+        this.data = eventsInvitations;
         notifyDataSetChanged();
     }
 
-    public List<PlacesInvitation> getData() {
+    public List<EventsInvitation> getData() {
         return data;
     }
 
-    public PlacesInvitation getItem(int position) {
+    public EventsInvitation getItem(int position) {
         return data.get(position);
     }
 

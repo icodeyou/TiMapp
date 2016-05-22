@@ -17,12 +17,11 @@ import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserPlace;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.TwoDimArray;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -57,11 +56,17 @@ public abstract class EventUsersAdapter
         this.notifyDataSetChanged();
     }
 
-    public void addData(List<UserPlace> data) {
-        for (UserPlace userPlace: data){
-            this.data.addOne(userPlace.status, userPlace);
+    public void addData(List<UserEvent> data) {
+        for (UserEvent userEvent : data){
+            this.data.addOne(userEvent.status, userEvent);
         }
     }
+
+    public PlaceUserInterface getData(int position) {
+        return data.get(position);
+    }
+
+
     public void clearSection(UserPlaceStatusEnum status) {
         this.data.clear(status);
     }
@@ -141,11 +146,6 @@ public abstract class EventUsersAdapter
         SectionItem sectionItem = (SectionItem) data.getSectionFromPosition(position);
         return sectionItem.getViewType();
     }
-
-    public PlaceUserInterface getData(int position) {
-        return data.get(position);
-    }
-
 
     public void clear() {
         data.clear();

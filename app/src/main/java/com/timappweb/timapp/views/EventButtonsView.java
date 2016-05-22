@@ -17,8 +17,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.PlaceStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlaceStatus;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.listeners.SelectableButtonListener;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -44,7 +44,7 @@ public class EventButtonsView extends RelativeLayout {
     private AlphaAnimation postButtonsAppear;
     private AlphaAnimation postButtonsDisappear;
     private View gpsLocation;
-    private Place event;
+    private Event event;
     private View viewGroupHere;
     private View viewGroupComing;
     private View container;
@@ -68,7 +68,7 @@ public class EventButtonsView extends RelativeLayout {
 
     // =============================================================================================
 
-    public void setEvent(Place event){
+    public void setEvent(Event event){
         if (!event.hasLocalId()){
             Log.e(TAG, "Cannot set event because it's not saved a local instance: " + event);
             return;
@@ -230,13 +230,13 @@ public class EventButtonsView extends RelativeLayout {
             return;
         }
 
-        PlaceStatus placeStatus = PlaceStatusManager.getStatus(event);
+        EventStatus eventStatus = PlaceStatusManager.getStatus(event);
 
-        if (placeStatus != null){
-            switch (placeStatus.status){
+        if (eventStatus != null){
+            switch (eventStatus.status){
                 case HERE:
                 case COMING:
-                    updateUserStatus(placeStatus.status, true);
+                    updateUserStatus(eventStatus.status, true);
                     break;
                 default:
                     viewGroupHere.setVisibility(GONE);

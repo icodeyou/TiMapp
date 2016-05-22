@@ -26,16 +26,10 @@ import android.util.Log;
 
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
-import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
-import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.UserQuotaSyncPerformer;
 
 import java.io.IOException;

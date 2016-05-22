@@ -9,7 +9,7 @@
     tools:context=".FilterActivity">
 
     <!-- TOOLBAR -->
-    <include layout="@layout/toolbar_transparent" android:id="@+id/toolbar_transparent"/>
+    <include layout="@layout/toolbar_transparent"/>
 
         <!-- Searchview is in Action Bar -->
 

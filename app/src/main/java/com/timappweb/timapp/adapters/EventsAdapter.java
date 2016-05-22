@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -21,7 +21,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private static final String TAG = "EventsAdapter";
     private Context context;
 
-    private List<Place> data;
+    private List<Event> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
@@ -41,10 +41,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         //if(baseHolder instanceof EventsViewHolder)
         //EventsViewHolder holder = (EventsViewHolder) baseHolder;
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
-        final Place place = data.get(position);
+        final Event event = data.get(position);
 
-        //viewHolder.eventView.setEvent(place);
-        viewHolder.eventView.setEvent(place);
+        //viewHolder.eventView.setEvent(event);
+        viewHolder.eventView.setEvent(event);
         HorizontalTagsRecyclerView htrv = viewHolder.eventView.getRvEventTags();
         if (htrv != null){
             //OnTagsRvClick : Same event as adapter click.
@@ -60,21 +60,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         return data.size();
     }
 
-    public void add(Place place) {
-        this.data.add(place);
+    public void add(Event event) {
+        this.data.add(event);
         notifyDataSetChanged();
     }
 
-    public void setData(List<Place> places) {
-        this.data = places;
+    public void setData(List<Event> events) {
+        this.data = events;
         notifyDataSetChanged();
     }
 
-    public List<Place> getData() {
+    public List<Event> getData() {
         return data;
     }
 
-    public Place getItem(int position) {
+    public Event getItem(int position) {
         return data.get(position);
     }
 

@@ -19,17 +19,17 @@ import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlacesInvitation;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.models.UserPlace;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
+import com.timappweb.timapp.views.parallaxviewpager.RecyclerViewFragment;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     private EventActivity eventActivity;
 
     private EventUsersHeaderAdapter placeUsersAdapter;
-    private RefreshableRecyclerView    peopleRv;
+
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
@@ -57,6 +57,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_event_people, container, false);
         eventActivity = (EventActivity) getActivity();
         context= eventActivity.getBaseContext();
@@ -67,13 +68,15 @@ public class EventPeopleFragment extends EventBaseFragment {
         noPostsView = root.findViewById(R.id.no_posts_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_people);
-        peopleRv = (RefreshableRecyclerView) root.findViewById(R.id.list_people);
+        mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.list_people);
         postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
         initAdapter();
 
+        setupRecyclerView();
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
+
         if (MyApplication.isLoggedIn()){
             getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
         }
@@ -112,11 +115,6 @@ public class EventPeopleFragment extends EventBaseFragment {
                 IntentsUtils.profile(eventActivity, user.getUser());
             }
         });
-        peopleRv.setLayoutManager(new LinearLayoutManager(context));
-        peopleRv.addItemDecoration(new StickyRecyclerHeadersDecoration(placeUsersAdapter)); // Add the sticky headers decoration
-        //TODO : Determine how the class DividerDecoration is usefull, and decide if we use it or not
-        //peopleRv.addItemDecoration(new DividerDecoration(eventActivity));
-        peopleRv.setAdapter(placeUsersAdapter);
     }
 
 
@@ -150,22 +148,37 @@ public class EventPeopleFragment extends EventBaseFragment {
         super.onResume();
     }
 
+    // =============================================================================================
+    // PARALLAX VIEW
+    @Override
+    protected void setScrollOnLayoutManager(int scrollY) {
+        ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, -scrollY);
+    }
+
+    @Override
+    protected void setupRecyclerView() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(placeUsersAdapter)); // Add the sticky headers decoration
+        mRecyclerView.setAdapter(placeUsersAdapter);
+        setRecyclerViewOnScrollListener();
+    }
+
 
     // =============================================================================================
 
     /**
      * TODO
      */
-    class UserStatusLoader extends MultipleEntryLoaderCallback<UserPlace> {
+    class UserStatusLoader extends MultipleEntryLoaderCallback<UserEvent> {
 
-        public UserStatusLoader(Context context, Place place) {
-            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_PLACE_USERS, UserPlace.queryForPlace(place));
-            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
+        public UserStatusLoader(Context context, Event event) {
+            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_EVENT_USERS, UserEvent.queryForPlace(event));
+            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout, false);
         }
 
         @Override
-        public void onLoadFinished(Loader<List<UserPlace>> loader, List<UserPlace> data) {
+        public void onLoadFinished(Loader<List<UserEvent>> loader, List<UserEvent> data) {
             super.onLoadFinished(loader, data);
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.COMING);
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.HERE);
@@ -179,14 +192,14 @@ public class EventPeopleFragment extends EventBaseFragment {
     /**
      * TODO
      */
-    class InviteSentLoader extends MultipleEntryLoaderCallback<PlacesInvitation> {
+    class InviteSentLoader extends MultipleEntryLoaderCallback<EventsInvitation> {
 
-        public InviteSentLoader(Context context, Place place) {
+        public InviteSentLoader(Context context, Event event) {
             super(context, 3600 * 1000,
-                    DataSyncAdapter.SYNC_TYPE_PLACE_INVITED,
-                    MyApplication.getCurrentUser().getInviteSentQuery(place.getId()));
+                    DataSyncAdapter.SYNC_TYPE_EVENT_INVITED,
+                    MyApplication.getCurrentUser().getInviteSentQuery(event.getId()));
 
-            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
+            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout, false);
         }
 

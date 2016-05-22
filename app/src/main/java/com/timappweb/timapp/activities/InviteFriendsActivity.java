@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,21 +13,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.activeandroid.query.From;
 import com.google.gson.JsonArray;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +46,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
     private List<User>                  friendsSelected;
     private List<User>                  allFbFriends;
-    private Place                       place;
+    private Event event;
     private FriendsLoader               mLoader;
     private ContentResolver             mResolver;
 
@@ -61,8 +57,8 @@ public class InviteFriendsActivity extends BaseActivity {
 
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        place = IntentsUtils.extractPlace(getIntent());
-        if (place == null){
+        event = IntentsUtils.extractPlace(getIntent());
+        if (event == null){
             IntentsUtils.home(this);
             finish();
         }
@@ -168,7 +164,7 @@ public class InviteFriendsActivity extends BaseActivity {
         for (User user: friendsSelected){
             ids.add(user.remote_id);
         }
-        Call<JsonArray> call = RestClient.service().sendInvite(place.remote_id, ids);
+        Call<JsonArray> call = RestClient.service().sendInvite(event.remote_id, ids);
         call.enqueue(new RestCallback<JsonArray>(this) {
             @Override
             public void onResponse200(Response<JsonArray> response) {

@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
@@ -162,7 +161,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
     private void finishActivityResult(Spot spot){
         Log.d(TAG, "Spot chose: " + spot);
-        Intent intent = new Intent(activity, AddPlaceActivity.class);
+        Intent intent = new Intent(activity, AddEventActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("spot", spot);
         intent.putExtras(bundle);

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.listeners.LoadingListener;
@@ -22,14 +22,14 @@ import retrofit2.Response;
 /**
  * Created by stephane on 12/9/2015.
  */
-public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
+public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
     private Context mContext;
     private SearchFilter filter;
     private LoadingListener loadingListener;
 
-    private ClusterManager<Place> mClusterManagerPlaces = null;
+    private ClusterManager<Event> mClusterManagerPlaces = null;
     private int requestCounter = 0;
     private int lastClear = -1;
 
@@ -50,7 +50,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
 
 
-    public void setClusterManager(ClusterManager<Place> mClusterManagerPost) {
+    public void setClusterManager(ClusterManager<Event> mClusterManagerPost) {
         Log.d(TAG, "setClusterManager");
         this.mClusterManagerPlaces = mClusterManagerPost;
     }
@@ -71,13 +71,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
 
         final int requestId = this.requestCounter++;
 
-        Call<List<Place>> call = RestClient.service().bestPlaces(conditions.toMap());
+        Call<List<Event>> call = RestClient.service().bestPlaces(conditions.toMap());
 
         final int itemRequestId = request.setPendingCall(call);
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
 
         if (loadingListener!=null) loadingListener.onLoadStart();
-        call.enqueue(new RestCallback<List<Place>>(mContext) {
+        call.enqueue(new RestCallback<List<Event>>(mContext) {
 
             @Override
             public void onFailure(Throwable t) {
@@ -86,7 +86,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
             }
 
             @Override
-            public void onResponse(Response<List<Place>> response) {
+            public void onResponse(Response<List<Event>> response) {
                 super.onResponse(response);
                 if (loadingListener!= null) loadingListener.onLoadEnd();
 
@@ -102,15 +102,15 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Place> {
                         return;
                     }
 
-                    List<Place> places = response.body();
-                    Log.i(TAG, "WS loaded tags done. Loaded " + places.size() + " result(s). " + " for point " + pCpy);
+                    List<Event> events = response.body();
+                    Log.i(TAG, "WS loaded tags done. Loaded " + events.size() + " result(s). " + " for point " + pCpy);
                     // Setting the last timestamp retrieved from the server
                     // TODO what happens if two row have the same timestamp for the same area ?
                     request.setDataTimestamp(
-                            places.size() > 1
-                                    ? places.get(places.size() - 1).created
+                            events.size() > 1
+                                    ? events.get(events.size() - 1).created
                                     : 0);
-                    request.setData(places);
+                    request.setData(events);
                 }
 
             }

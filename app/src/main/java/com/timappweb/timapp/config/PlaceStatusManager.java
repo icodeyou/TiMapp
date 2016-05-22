@@ -6,8 +6,8 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlaceStatus;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.BinaryActionListener;
@@ -43,100 +43,100 @@ public class PlaceStatusManager {
 
     /**
      *  @param context
-     * @param place
+     * @param event
      * @param status
      * @param listener
      */
-    public void add(Context context, Place place, UserPlaceStatusEnum status, BinaryActionListener listener) {
-        _addOnRemote(context, place, status, listener);
+    public void add(Context context, Event event, UserPlaceStatusEnum status, BinaryActionListener listener) {
+        _addOnRemote(context, event, status, listener);
 
     }
     /**
      *
      * @param context
-     * @param place
+     * @param event
      * @param status
      */
-    public void cancel(Context context, Place place, UserPlaceStatusEnum status, BinaryActionListener listener) {
-        _removeOnRemote(context, place, status, listener);
+    public void cancel(Context context, Event event, UserPlaceStatusEnum status, BinaryActionListener listener) {
+        _removeOnRemote(context, event, status, listener);
     }
 
-    private QueryCondition _buildQuery(Place place){
+    private QueryCondition _buildQuery(Event event){
         QueryCondition conditions = new QueryCondition();
         //conditions.setAnonymous(false);
         conditions.setUserLocation(LocationManager.getLastLocation());
         return conditions;
     }
 
-    private void _removeOnRemote(Context context, Place place, final UserPlaceStatusEnum status, BinaryActionListener listener){
+    private void _removeOnRemote(Context context, Event event, final UserPlaceStatusEnum status, BinaryActionListener listener){
 
         Call<RestFeedback> call;
         // TODO call must be cancelable
         switch (status){
             case COMING:
-                call = RestClient.service().cancelComing(place.getRemoteId());
+                call = RestClient.service().cancelComing(event.getRemoteId());
                 break;
             case HERE:
-                call = RestClient.service().cancelHere(place.getRemoteId());
+                call = RestClient.service().cancelHere(event.getRemoteId());
                 break;
             default:
                 Log.v(TAG, "Nothing to do on remote for status: " + status);
                 return;
         }
-        call.enqueue(new OnStatusCancelCallback(context, place, status, listener));
+        call.enqueue(new OnStatusCancelCallback(context, event, status, listener));
     }
 
-    public void _addOnRemote(Context context, Place place, final UserPlaceStatusEnum status, BinaryActionListener listener){
+    public void _addOnRemote(Context context, Event event, final UserPlaceStatusEnum status, BinaryActionListener listener){
         Call<RestFeedback> call;
         // TODO call must be cancelable
         switch (status){
             case COMING:
-                call = RestClient.service().notifyPlaceComing(place.getRemoteId(), _buildQuery(place).toMap());
+                call = RestClient.service().notifyPlaceComing(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             case HERE:
-                call = RestClient.service().notifyPlaceHere(place.getRemoteId(), _buildQuery(place).toMap());
+                call = RestClient.service().notifyPlaceHere(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             case GONE:
-                call = RestClient.service().notifyPlaceGone(place.getRemoteId(), _buildQuery(place).toMap());
+                call = RestClient.service().notifyPlaceGone(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             default:
                 Log.v(TAG, "Nothing to do on remote for status: " + status);
                 return;
         }
-        call.enqueue(new OnStatusAddCallback(context, place, status, listener));
+        call.enqueue(new OnStatusAddCallback(context, event, status, listener));
     }
 
-    public void cancel(Context context, Place place, BinaryActionListener listener) {
+    public void cancel(Context context, Event event, BinaryActionListener listener) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return;
-        UserPlaceStatusEnum status = PlaceStatus.hasStatus(user.getId(), place.getId(), UserPlaceStatusEnum.COMING)
+        UserPlaceStatusEnum status = EventStatus.hasStatus(user.getId(), event.getId(), UserPlaceStatusEnum.COMING)
                 ? UserPlaceStatusEnum.COMING
                 : UserPlaceStatusEnum.HERE;
-        cancel(context, place, status, listener);
+        cancel(context, event, status, listener);
     }
 
-    public static PlaceStatus getStatus(Place event) {
+    public static EventStatus getStatus(Event event) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return null;
-        return PlaceStatus.getStatus(event.getId(), user.getId());
+        return EventStatus.getStatus(event.getId(), user.getId());
     }
 
     public static boolean hasStatus(long placeId, UserPlaceStatusEnum status) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return false;
-        return PlaceStatus.hasStatus(user.getId(), placeId, status);
+        return EventStatus.hasStatus(user.getId(), placeId, status);
     }
 
 
     public class OnStatusAddCallback extends RestFeedbackCallback {
 
-        private final Place place;
+        private final Event event;
         private final UserPlaceStatusEnum status;
         private final BinaryActionListener listener;
 
-        public OnStatusAddCallback(Context context, Place place, UserPlaceStatusEnum status, BinaryActionListener listener) {
+        public OnStatusAddCallback(Context context, Event event, UserPlaceStatusEnum status, BinaryActionListener listener) {
             super(context);
-            this.place = place;
+            this.event = event;
             this.status = status;
             this.listener = listener;
         }
@@ -144,15 +144,15 @@ public class PlaceStatusManager {
 
         @Override
         public void onActionSuccess(RestFeedback feedback) {
-            Log.d(TAG, "Success register status=" +status+ " for user on event: " + place);
-            PlaceStatus.setStatus(MyApplication.getCurrentUser(), place, status, feedback.getIntData("id"));
+            Log.d(TAG, "Success register status=" +status+ " for user on event: " + event);
+            EventStatus.setStatus(MyApplication.getCurrentUser(), event, status, feedback.getIntData("id"));
             QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
             listener.onSuccess();
         }
 
         @Override
         public void onActionFail(RestFeedback feedback) {
-            Log.e(TAG, "Fail register status="+status + " for user on event: " + place);
+            Log.e(TAG, "Fail register status="+status + " for user on event: " + event);
             Toast.makeText(context, context.getString(R.string.cannot_notify_status), Toast.LENGTH_SHORT).show();
             listener.onFailure();
         }
@@ -166,13 +166,13 @@ public class PlaceStatusManager {
 
     public class OnStatusCancelCallback extends RestFeedbackCallback {
 
-        private final Place place;
+        private final Event event;
         private final UserPlaceStatusEnum status;
         private final BinaryActionListener listener;
 
-        public OnStatusCancelCallback(Context context, Place place, UserPlaceStatusEnum status, BinaryActionListener listener) {
+        public OnStatusCancelCallback(Context context, Event event, UserPlaceStatusEnum status, BinaryActionListener listener) {
             super(context);
-            this.place = place;
+            this.event = event;
             this.status = status;
             this.listener = listener;
         }
@@ -180,14 +180,14 @@ public class PlaceStatusManager {
 
         @Override
         public void onActionSuccess(RestFeedback feedback) {
-            Log.d(TAG, "Success canceling status=" + status + " for user on event: " + place);
-            PlaceStatus.removeStatus(MyApplication.getCurrentUser(), place, status);
+            Log.d(TAG, "Success canceling status=" + status + " for user on event: " + event);
+            EventStatus.removeStatus(MyApplication.getCurrentUser(), event, status);
             listener.onSuccess();
         }
 
         @Override
         public void onActionFail(RestFeedback feedback) {
-            Log.e(TAG, "Fail canceling status=" + status + " for user on event: " + place);
+            Log.e(TAG, "Fail canceling status=" + status + " for user on event: " + event);
             Toast.makeText(context, context.getString(R.string.cannot_notify_status), Toast.LENGTH_SHORT).show();
             listener.onFailure();
         }

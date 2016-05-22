@@ -16,7 +16,6 @@
             android:layout_height="match_parent"/>
     </LinearLayout>
 
-    <include android:id="@+id/toolbar_transparent"
-        layout="@layout/toolbar_transparent" />
+    <include layout="@layout/toolbar_transparent" />
 
 </RelativeLayout>

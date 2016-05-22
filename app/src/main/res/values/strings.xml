@@ -21,7 +21,7 @@
     <string name="title_activity_my_profile">My Profile</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_add_event">Add event</string>
-    <string name="title_activity_add_spot">Attach a place</string>
+    <string name="title_activity_add_spot">Attach a event</string>
     <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
 
@@ -141,7 +141,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="share_message_subject">TiMapp</string>
     <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the big red button to invite some of your friends.</string>
     <string name="subject_share_activity">Share TiMapp with your friends !</string>
-    <string name="checking_around">Please wait while we load the places that already exist here</string>
+    <string name="checking_around">Please wait while we load the events that already exist here</string>
     <string name="or_text_login">Or</string>
     <string name="text_create_account_login">Create account</string>
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
@@ -152,7 +152,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="places_created">Places created</string>
     <string name="edit_first_profile1">Well done.</string>
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
-    <string name="place_removed">This place does not exists anymore</string>
+    <string name="place_removed">This event does not exists anymore</string>
 
     <!-- Can't load -->
     <string name="cannot_load">We cannot load any data.\nCheck your internet connection.</string>
@@ -164,10 +164,10 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
 
     <!-- TOASTS -->
     <string name="cannot_add_coming_status">Coming Failed. Please Try again later</string><string name="create_second_post_delay">You\'ve already added a post a moment ago. Please wait before adding a new one!</string>
-    <string name="create_second_place_delay">You\'ve already added a place a moment ago. Please wait before adding a new one!</string>
+    <string name="create_second_place_delay">You\'ve already added a event a moment ago. Please wait before adding a new one!</string>
     <string name="cannot_add_more_friends">You can\'t add more than 10 friends</string>
 
-    <!--Headers Place People-->
+    <!--Headers Event People-->
     <string name="header_posts">Here</string>
     <string name="header_coming">On their way</string>
     <string name="header_invited">Friends invited</string>
@@ -185,7 +185,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
     <string name="menu_search_tags">Search tags</string>
     <string name="no_events_message1">Nothing here !</string>
-    <string name="no_events_message2">Please swipe left and find some places on the map.</string>
+    <string name="no_events_message2">Please swipe left and find some events on the map.</string>
     <string name="uploading_pic">Uploading picture</string>
     <string name="counter_over">Over !</string>
     <string name="loading_friends">Loading friends</string>
@@ -194,10 +194,10 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="text_no_invitations">No invitation at the moment</string>
     <string name="title_add_spot">Where are you ?</string>
     <string name="title_add_event">What is it ?</string>
-    <string name="no_place_attach">Pin a place</string>
-    <string name="add_spot">Add a place</string>
+    <string name="no_place_attach">Pin a event</string>
+    <string name="add_spot">Add a event</string>
     <string name="where_are_you">Where are you ?</string>
-    <string name="hint_new_spot">Or type a new place here</string>
+    <string name="hint_new_spot">Or type a new event here</string>
 
 
     <string name="sync_account_type">timapp.timappweb.com</string>

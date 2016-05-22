@@ -16,13 +16,14 @@
     <color name="background">#f6fcff</color>
     <!--<color name="background">#f6efef</color>-->
     <color name="background_secondary">#eff4f6</color>
+    <color name="background_dark">#111111</color>
     <color name="backgroundLightlyDark2">#f4e8e8</color>
     <color name="backgroundLightlyDark">#e3dbdb</color>
     <color name="background_semi_transparent">#6ff6efef</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
     <color name="background_event_map">#e3000000</color>
-    <color name="background_event">#b7000000</color>
+    <color name="background_event">@color/DarkGray</color>
     <color name="background_half_black">#80000000</color>
     <color name="background_transparent_white">#cdffffff</color>
     <color name="background_spot">@color/colorSecondaryDark</color>

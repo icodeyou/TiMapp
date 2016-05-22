@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.AddPlaceActivity;
+import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.data.models.EventCategory;
 
 public class AddEventCategoriesAdapter extends EventCategoriesAdapter {
@@ -25,7 +25,7 @@ public class AddEventCategoriesAdapter extends EventCategoriesAdapter {
     @Override
     public void onBindViewHolder(EventCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
-        final AddPlaceActivity addPlaceActivity = (AddPlaceActivity) context;
+        final AddEventActivity addEventActivity = (AddEventActivity) context;
         final EventCategory eventCategory = MyApplication.getEventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
@@ -42,14 +42,14 @@ public class AddEventCategoriesAdapter extends EventCategoriesAdapter {
         holder.getItemView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPlaceActivity.getViewPager().setCurrentItem(position);
+                addEventActivity.getViewPager().setCurrentItem(position);
             }
         });
     }
 
-    public void setIconNewCategory(AddPlaceActivity addPlaceActivity, EventCategory newEventCategory) {
+    public void setIconNewCategory(AddEventActivity addEventActivity, EventCategory newEventCategory) {
         //Set image to normal for old selected category
-        EventCategory oldEventCategorySelected = addPlaceActivity.getEventCategorySelected();
+        EventCategory oldEventCategorySelected = addEventActivity.getEventCategorySelected();
         int oldCategoryResource = oldEventCategorySelected.getIconBlackResId();
         currentCategoryIcon.setImageResource(oldCategoryResource);
         currentCategoryIcon.setBackground(null);
@@ -62,8 +62,8 @@ public class AddEventCategoriesAdapter extends EventCategoriesAdapter {
 
         currentCategoryIcon = iconNewCategory;
 
-        //set selected category in AddPlaceActivity
-        addPlaceActivity.setCategory(newEventCategory);
+        //set selected category in AddEventActivity
+        addEventActivity.setCategory(newEventCategory);
     }
 
 

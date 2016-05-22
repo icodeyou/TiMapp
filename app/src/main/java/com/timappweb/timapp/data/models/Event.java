@@ -1,6 +1,7 @@
 package com.timappweb.timapp.data.models;
 
 import android.location.Location;
+import android.widget.TextView;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -26,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Table(name = "Place")
-public class Place extends SyncBaseModel implements Serializable, MarkerValueInterface {
+@Table(name = "Event")
+public class Event extends SyncBaseModel implements Serializable, MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
 
@@ -74,6 +75,14 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose(serialize = false, deserialize = true)
     public int              points;
 
+    @Column(name = "CountHere")
+    @Expose(serialize = false, deserialize = true)
+    public Integer count_here;
+
+    @Column(name = "CountComing")
+    @Expose(serialize = false, deserialize = true)
+    public Integer count_coming;
+
     // =============================================================================================
     // Fields
 
@@ -95,11 +104,11 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     public double           distance = -1;
     // =============================================================================================
 
-    public Place(){
+    public Event(){
         this.loaded_time = Util.getCurrentTimeSec();
     }
 
-    public Place(int id, double lat, double lng, String name) {
+    public Event(int id, double lat, double lng, String name) {
         this.loaded_time = Util.getCurrentTimeSec();
         this.remote_id = id;
         this.latitude = lat;
@@ -110,7 +119,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         this.tags = new ArrayList<>();
     }
 
-    public Place(Location lastLocation, String name, EventCategory eventCategory, Spot spot, String description) {
+    public Event(Location lastLocation, String name, EventCategory eventCategory, Spot spot, String description) {
         this.loaded_time = Util.getCurrentTimeSec();
         this.latitude = lastLocation.getLatitude();
         this.longitude = lastLocation.getLongitude();
@@ -129,7 +138,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     /**
-     * Return true if this place is not saved on the server
+     * Return true if this event is not saved on the server
      * @return
      */
     public boolean isNew(){
@@ -143,15 +152,15 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     // Dummy data
     private static int dummyIndice = 0;
 
-    public static Place createDummy(){
-        Place place = new Place(1, dummyIndice, dummyIndice, "Test");
-        place.tags.add(Tag.createDummy());
-        place.addPost(Post.createDummy());
-        place.addPost(Post.createDummy());
-        place.addPost(Post.createDummy());
-        place.addPost(Post.createDummy());
+    public static Event createDummy(){
+        Event event = new Event(1, dummyIndice, dummyIndice, "Test");
+        event.tags.add(Tag.createDummy());
+        event.addPost(Post.createDummy());
+        event.addPost(Post.createDummy());
+        event.addPost(Post.createDummy());
+        event.addPost(Post.createDummy());
         dummyIndice++;
-        return place;
+        return event;
     }
 
     @Override
@@ -179,7 +188,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
     @Override
     public String toString() {
-        return "Place{" +
+        return "Event{" +
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
@@ -198,7 +207,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     /**
      * @param latitude
      * @param longitude
-     * @return true if the user can post in the place
+     * @return true if the user can post in the event
      */
     public boolean isUserAround(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
@@ -225,7 +234,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public int getLevel(){
-        return Place.computeLevel(this.getPoints());
+        return Event.computeLevel(this.getPoints());
     }
 
     private static int computeLevel(int points) {
@@ -255,17 +264,17 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     @Override
     public boolean isSync(SyncBaseModel o) {
         if (o == null) return false;
-        Place place = (Place) o;
+        Event event = (Event) o;
 
-        if (spot_id != place.spot_id) return false;
-        if (created != place.created) return false;
-        if (Double.compare(place.latitude, latitude) != 0) return false;
-        if (Double.compare(place.longitude, longitude) != 0) return false;
-        if (count_posts != place.count_posts) return false;
-        if (category_id != place.category_id) return false;
-        if (points != place.points) return false;
-        if (!name.equals(place.name)) return false;
-        return !(description != null ? !description.equals(place.description) : place.description != null);
+        if (spot_id != event.spot_id) return false;
+        if (created != event.created) return false;
+        if (Double.compare(event.latitude, latitude) != 0) return false;
+        if (Double.compare(event.longitude, longitude) != 0) return false;
+        if (count_posts != event.count_posts) return false;
+        if (category_id != event.category_id) return false;
+        if (points != event.points) return false;
+        if (!name.equals(event.name)) return false;
+        return !(description != null ? !description.equals(event.description) : event.description != null);
     }
 
 
@@ -278,19 +287,19 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        Place place = (Place) o;
+        Event event = (Event) o;
 
-        if (remote_id != place.remote_id) return false;
-        if (spot_id != place.spot_id) return false;
-        if (created != place.created) return false;
-        if (Double.compare(place.latitude, latitude) != 0) return false;
-        if (Double.compare(place.longitude, longitude) != 0) return false;
-        if (count_posts != place.count_posts) return false;
-        if (category_id != place.category_id) return false;
-        if (points != place.points) return false;
-        if (spot != null ? !spot.equals(place.spot) : place.spot != null) return false;
-        if (!name.equals(place.name)) return false;
-        return !(description != null ? !description.equals(place.description) : place.description != null);
+        if (remote_id != event.remote_id) return false;
+        if (spot_id != event.spot_id) return false;
+        if (created != event.created) return false;
+        if (Double.compare(event.latitude, latitude) != 0) return false;
+        if (Double.compare(event.longitude, longitude) != 0) return false;
+        if (count_posts != event.count_posts) return false;
+        if (category_id != event.category_id) return false;
+        if (points != event.points) return false;
+        if (spot != null ? !spot.equals(event.spot) : event.spot != null) return false;
+        if (!name.equals(event.name)) return false;
+        return !(description != null ? !description.equals(event.description) : event.description != null);
 
     }
 
@@ -303,7 +312,7 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
 
 
     public From getPicturesQuery() {
-        return new Select().from(Picture.class).where("Place = ?", this.getId()).orderBy("created DESC");
+        return new Select().from(Picture.class).where("Event = ?", this.getId()).orderBy("created DESC");
     }
 
     public List<Picture> getPictures() {
@@ -311,18 +320,18 @@ public class Place extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public List<? extends SyncBaseModel> getUsers() {
-        return new Select().from(UserPlace.class).where("Place = ?", this.getId()).execute();
+        return new Select().from(UserEvent.class).where("Event = ?", this.getId()).execute();
     }
 
     public From getTagsQuery() {
         return new Select()
                 .from(Tag.class)
-                .where("PlaceTag.Place = ?", this.getId())
-                .join(PlaceTag.class).on("Tag.Id = PlaceTag.Tag")
-                .orderBy("PlaceTag.CountRef DESC");
+                .where("EventTag.Event = ?", this.getId())
+                .join(EventTag.class).on("Tag.Id = EventTag.Tag")
+                .orderBy("EventTag.CountRef DESC");
     }
     public void deleteTags() {
-        new Delete().from(PlaceTag.class).where("PlaceTag.Place = ?", this.getId()).execute();
+        new Delete().from(EventTag.class).where("EventTag.Event = ?", this.getId()).execute();
     }
 
     public List<Tag> getTags() {

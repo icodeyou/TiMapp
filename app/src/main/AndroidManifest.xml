@@ -304,11 +304,11 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:label="@string/title_activity_add_spot"
-            android:parentActivityName=".activities.AddPlaceActivity" >
+            android:parentActivityName=".activities.AddEventActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.AddPlaceActivity" />
+                android:value=".activities.AddEventActivity" />
 
             <intent-filter>
                 <action android:name="OPEN_PLACE_FROM_NOTIFICATION" />
@@ -437,7 +437,7 @@
         </activity>
 
         <!-- ADDPLACE ACTIVITY //////////////////////////////////////////////-->
-        <activity android:name=".activities.AddPlaceActivity"
+        <activity android:name=".activities.AddEventActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
             android:parentActivityName=".activities.ProfileActivity">
@@ -452,11 +452,11 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:parentActivityName=".activities.AddPlaceActivity">
+            android:parentActivityName=".activities.AddEventActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.AddPlaceActivity" />
+                android:value=".activities.AddEventActivity" />
         </activity>
 
         <!-- SHARE ACTIVITY //////////////////////////////////////////////-->

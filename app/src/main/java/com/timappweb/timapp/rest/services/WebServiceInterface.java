@@ -2,17 +2,17 @@ package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonArray;
 import com.timappweb.timapp.data.entities.ApplicationRules;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.Place;
-import com.timappweb.timapp.data.models.PlacesInvitation;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserPlace;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
@@ -44,12 +44,12 @@ public interface WebServiceInterface {
     Call<PaginationResponse<SpotCategory>> spots();
 
     // ---------------------------------------------------------------------------------------------
-    // Place
+    // Event
     @POST("places/add")
-    Call<RestFeedback> addPlace(@Body Place place);
+    Call<RestFeedback> addPlace(@Body Event event);
 
     // ---------------------------------------------------------------------------------------------
-    // Place invites
+    // Event invites
     @FormUrlEncoded
     @POST("PlacesInvitations/invite/{placeId}.json")
     Call<JsonArray> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Integer> ids);
@@ -61,13 +61,13 @@ public interface WebServiceInterface {
     Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
 
     @GET("PlacesInvitations/sent/{placeId}.json")
-    Call<PaginationResponse<PlacesInvitation>> invitesSent(@Path("placeId") long placeId);
+    Call<PaginationResponse<EventsInvitation>> invitesSent(@Path("placeId") long placeId);
 
     //@GET("PlacesInvitations/sent.json")
-    //Call<PaginationResponse<PlacesInvitation>> invitesSent();
+    //Call<PaginationResponse<EventsInvitation>> invitesSent();
 
     @GET("PlacesInvitations/received.json")
-    Call<PaginationResponse<PlacesInvitation>> inviteReceived();
+    Call<PaginationResponse<EventsInvitation>> inviteReceived();
 
 
     // ---------------------------------------------------------------------------------------------
@@ -157,36 +157,36 @@ public interface WebServiceInterface {
      * @param id
      */
     @POST("Places/view/{id}.json")
-    Call<Place> viewPlace(@Path("id") long id);
+    Call<Event> viewPlace(@Path("id") long id);
 
     /**
      * Find places to display on the map
      * @param conditions
      */
     @POST("Places/populars.json")
-    Call<List<Place>> bestPlaces(@QueryMap Map<String, String> conditions);
+    Call<List<Event>> bestPlaces(@QueryMap Map<String, String> conditions);
     /**
      * Adding a place
-     * @param place
+     * @param event
      * @param restFeedback
      */
     // @POST("Places/add.json")
-    // void addPlace(@Body Place place, RestCallback<RestFeedback> restFeedback);
+    // void addPlace(@Body Event event, RestCallback<RestFeedback> restFeedback);
 
 
     /**
-     * Used to get all place that are in a area
+     * Used to get all event that are in a area
      * @param conditions
      */
     //@GET("Places/around_me.json")
-    //Call<List<Place>> placeAroundMe(@QueryMap Map<String, String> conditions);
+    //Call<List<Event>> placeAroundMe(@QueryMap Map<String, String> conditions);
 
     /**
-     * Used to get all place that are around user position
+     * Used to get all event that are around user position
      * @param conditions"
      */
     @GET("Places/reachable.json")
-    Call<List<Place>> placeReachable(@QueryMap Map<String, String> conditions);
+    Call<List<Event>> placeReachable(@QueryMap Map<String, String> conditions);
 
     /**
      *
@@ -195,7 +195,7 @@ public interface WebServiceInterface {
      * @return
      */
     @GET("Places/reachable.json")
-    Call<List<Place>> placeReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
+    Call<List<Event>> placeReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
 
     // ---------------------------------------------------------------------------------------------
     // PlacesUsers
@@ -229,13 +229,13 @@ public interface WebServiceInterface {
 
 
     @POST("PlacesUsers/place/{id}.json")
-    Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
+    Call<PaginationResponse<UserEvent>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
 
     @POST("PlacesUsers/place/{id}.json")
-    Call<PaginationResponse<UserPlace>> viewUsersForPlace(@Path("id") long placeId);
+    Call<PaginationResponse<UserEvent>> viewUsersForPlace(@Path("id") long placeId);
 
     @POST("PlacesUsers/user.json")
-    Call<List<UserPlace>> placeStatus();
+    Call<List<UserEvent>> placeStatus();
 
     // ---------------------------------------------------------------------------------------------
     // Quotas

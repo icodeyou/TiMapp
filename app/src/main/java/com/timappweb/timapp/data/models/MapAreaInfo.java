@@ -63,7 +63,7 @@ public class MapAreaInfo extends Model {
     public int size;
 
     /**
-     * Type of element (Place, post ?)
+     * Type of element (Event, post ?)
      */
     @Column(name="DataType")
     public int data_type;

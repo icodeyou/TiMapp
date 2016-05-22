@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.desmond.squarecamera.CameraActivity;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.activities.AddPlaceActivity;
+import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.activities.DescriptionActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
@@ -28,7 +28,7 @@ import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.activities.TagActivity;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -159,13 +159,13 @@ public class IntentsUtils {
         fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
-    public static void addTags(Activity activity, Place place, Post post) {
+    public static void addTags(Activity activity, Event event, Post post) {
         if (!requireLogin(activity))
             return;
 
         Intent intent = new Intent(activity, TagActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("place", place);          // TODO use constant
+        extras.putSerializable("event", event);          // TODO use constant
         extras.putSerializable("post", post);          // TODO use constant
         intent.putExtras(extras);
         activity.startActivityForResult(intent, REQUEST_TAGS);
@@ -177,10 +177,10 @@ public class IntentsUtils {
         activity.overridePendingTransition(R.anim.in_from_left, R.anim.in_from_left);*/
     }
 
-    public static void addPeople(Activity activity, Place place) {
+    public static void addPeople(Activity activity, Event event) {
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("place", place);          // TODO use constant
+        extras.putSerializable("event", event);          // TODO use constant
         intent.putExtras(extras);
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
@@ -190,17 +190,17 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void viewSpecifiedEvent(Context context, Place place) {
-        context.startActivity(buildIntentViewPlace(context, place));
+    public static void viewSpecifiedEvent(Context context, Event event) {
+        context.startActivity(buildIntentViewPlace(context, event));
     }
 
 
-    public static void postEvent(Context context, Place place, int action) {
+    public static void postEvent(Context context, Event event, int action) {
         if (context instanceof EventActivity){
             ((EventActivity)context).parseActionParameter(action);
         }
         else {
-            Intent intent = buildIntentViewPlace(context, place);
+            Intent intent = buildIntentViewPlace(context, event);
             intent.putExtra(KEY_ACTION, action);
             context.startActivity(intent);
         }
@@ -211,10 +211,10 @@ public class IntentsUtils {
         intent.putExtra("place_id", placeId);
         return  intent;
     }
-    public static Intent buildIntentViewPlace(Context context, Place place) {
+    public static Intent buildIntentViewPlace(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("place", place);          // TODO use constant
+        extras.putSerializable("event", event);          // TODO use constant
         intent.putExtras(extras);
         return intent;
     }
@@ -233,7 +233,7 @@ public class IntentsUtils {
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
-        Intent intent = new Intent(context, AddPlaceActivity.class);
+        Intent intent = new Intent(context, AddEventActivity.class);
         context.startActivity(intent);
     }
 
@@ -285,12 +285,12 @@ public class IntentsUtils {
         activity.overridePendingTransition(0, 0);
     }
 
-    public static Place extractPlace(Intent intent) {
+    public static Event extractPlace(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return null;
         }
-        return (Place) extras.getSerializable("place");
+        return (Event) extras.getSerializable("event");
     }
 
     public static String[] extractPicture(Intent intent) {
@@ -327,7 +327,7 @@ public class IntentsUtils {
         return extras.getInt(KEY_USER_ID, -1);
     }
 
-    public static void addTags(Activity activity, Place place) {
+    public static void addTags(Activity activity, Event event) {
         if (!requireLogin(activity))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_POST, true)){
@@ -337,7 +337,7 @@ public class IntentsUtils {
         Post post = new Post();
         post.latitude = LocationManager.getLastLocation().getLatitude();
         post.longitude = LocationManager.getLastLocation().getLongitude();
-        IntentsUtils.addTags(activity, place, post);
+        IntentsUtils.addTags(activity, event, post);
     }
 
     public static boolean requireLogin(Context context){
@@ -357,7 +357,7 @@ public class IntentsUtils {
     }
 
     public static void exitDescriptionActivity(Activity activity, String description) {
-        Intent intent = new Intent(activity, AddPlaceActivity.class);
+        Intent intent = new Intent(activity, AddEventActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("description", description);
         intent.putExtras(bundle);

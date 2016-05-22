@@ -6,6 +6,8 @@
     tools:context=".LocateActivity"
     android:background="@color/background">
 
+    <include layout="@layout/toolbar"></include>
+
     <LinearLayout
         android:id="@+id/progress_view"
         android:layout_below="@+id/header"
@@ -37,9 +39,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="50dp"
+        android:padding="20dp"
         android:textSize="@dimen/text_normal"
-        android:text="Please check events that already exist near you."/>
+        android:text="Please check events that already exist near you."
+        android:layout_below="@id/toolbar_layout"/>
 
     <include layout="@layout/no_connection_view"
         android:id="@+id/no_connection_view"
@@ -94,21 +97,11 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="center"
         android:background="@drawable/background_button_littlesquare"
-        android:visibility="gone">
+        android:visibility="visible">
         <TextView
             android:id="@+id/text_save_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingRight="30dp"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/text_button"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:text="@string/button_add_place"
-            android:gravity="center"
-            android:textSize="@dimen/text_big"/>
+            style="@style/pageSubmitButton"
+            android:text="@string/button_add_place"/>
     </LinearLayout>
 
     <!--TOP RADIUS BUTTON -->
@@ -141,13 +134,7 @@
         </LinearLayout>
     </LinearLayout>-->
 
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/toolbar_transparent"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:theme="@style/AppTheme.TransparentPopupOverlay" />
+    <include layout="@layout/toolbar_transparent"></include>
 
     <!--<include
         layout="@layout/toolbar_transparent" />-->

@@ -52,14 +52,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/post_event_button"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        style="@style/PostPlusButton"
         android:layout_alignParentRight="true"
         android:layout_above="@+id/event_view"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_margin="@dimen/fab_margin"
-        app:rippleColor="@color/colorAccent"
-        app:backgroundTint="@color/colorPrimaryDark"
-        android:src="@drawable/plus_button_white" />
+        app:backgroundTint="@color/colorPrimaryDark" />
+
 
     <com.timappweb.timapp.views.EventView
         xmlns:myattrs="http://schemas.android.com/apk/res-auto"
@@ -67,7 +65,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/map"
-        myattrs:color_event="@color/background_event_map"
         myattrs:points_visible="false"
         myattrs:is_spot="true"
         myattrs:bottom_shadow="false"

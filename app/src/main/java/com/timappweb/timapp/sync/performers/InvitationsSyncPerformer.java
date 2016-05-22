@@ -4,7 +4,7 @@ import android.content.SyncResult;
 import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.models.PlacesInvitation;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.model.PaginationResponse;
 
@@ -24,7 +24,7 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
         super(remoteEntries, localEntries, syncResult);
     }
 
-    public InvitationsSyncPerformer(PaginationResponse<PlacesInvitation> body, List<PlacesInvitation> inviteSent, SyncResult syncResult) {
+    public InvitationsSyncPerformer(PaginationResponse<EventsInvitation> body, List<EventsInvitation> inviteSent, SyncResult syncResult) {
         super(body.items, inviteSent, syncResult);
     }
 
@@ -33,7 +33,7 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
         if (!remoteModel.isSync(localModel)){
             localModel.merge(remoteModel);
 
-            PlacesInvitation invitation = (PlacesInvitation) localModel;
+            EventsInvitation invitation = (EventsInvitation) localModel;
             this.completeUser(invitation);
             invitation.deepSave();
 
@@ -50,7 +50,7 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
         // Add new items
         for (SyncBaseModel m : values) {
             Log.i(TAG, "Scheduling insert: " + m.toString());
-            PlacesInvitation invitation = (PlacesInvitation) m;
+            EventsInvitation invitation = (EventsInvitation) m;
             if (invitation.user_source == null && invitation.user_target == null) {
                 Log.e(TAG, "Received invitation from unknown counter part... Skipping...");
                 continue;
@@ -69,7 +69,7 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
     }
 
 
-    private void completeUser(PlacesInvitation invitation){
+    private void completeUser(EventsInvitation invitation){
         if (invitation.user_target == null && invitation.user_source != null){
             invitation.user_target = MyApplication.getCurrentUser();
         }

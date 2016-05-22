@@ -27,18 +27,13 @@ public class MyModel extends Model{
      */
     public  <T extends MyModel> void saveBelongsToMany(Collection<T> data,
                                   Class<? extends MyModel> associationModel){
-        if (!this.hasLocalId()){
-            this.mySave();
+        MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
             //Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
             //return;
-        }
         try {
             for (MyModel model: data){
-                Constructor<? extends MyModel> constructor = associationModel.getConstructor(this.getClass(), model.getClass());
-                //if (!model.hasLocalId()){
-                //    model = model.deepSave();
-                //}
-                MyModel instance = constructor.newInstance(this, model);
+                Constructor<? extends MyModel> constructor = associationModel.getConstructor(savedModel.getClass(), model.getClass());
+                MyModel instance = constructor.newInstance(savedModel, model);
                 instance.deepSave();
             }
         } catch (InstantiationException e) {

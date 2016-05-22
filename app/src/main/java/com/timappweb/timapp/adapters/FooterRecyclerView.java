@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -26,7 +26,7 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean isTagsVisible;
     private boolean footerActive;
 
-    private List<Place> data;
+    private List<Event> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
@@ -42,9 +42,9 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(baseHolder instanceof PlacesViewHolder) {
             PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
-            final Place place = data.get(position);
+            final Event event = data.get(position);
 
-            //holder.eventView.setEvent(place);
+            //holder.eventView.setEvent(event);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -107,21 +107,21 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     //////////////////////////////////////////////////
 
-    public void add(Place place) {
-        this.data.add(place);
+    public void add(Event event) {
+        this.data.add(event);
         notifyDataSetChanged();
     }
 
-    public void setData(List<Place> places) {
-        this.data = places;
+    public void setData(List<Event> events) {
+        this.data = events;
         notifyDataSetChanged();
     }
 
-    public List<Place> getData() {
+    public List<Event> getData() {
         return data;
     }
 
-    public Place getItem(int position) {
+    public Event getItem(int position) {
         return data.get(position);
     }
 
@@ -132,10 +132,10 @@ public class FooterRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public void generateDummyData() {
-        Place dummyPlace = Place.createDummy();
-        add(dummyPlace);
-        Place dummyPlace2 = Place.createDummy();
-        add(dummyPlace2);
+        Event dummyEvent = Event.createDummy();
+        add(dummyEvent);
+        Event dummyEvent2 = Event.createDummy();
+        add(dummyEvent2);
     }
 
     public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {

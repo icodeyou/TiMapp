@@ -13,46 +13,51 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Picture;
+import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
 public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.PictureViewHolder> {
     private static final String TAG = "PicturesAdapter";
 
-    List<Picture> data = new ArrayList<>();
     OnItemAdapterClickListener mItemClickListener;
     Context context;
     private String[] picturesUris;
+
+    private List<Picture> mData;
     //private String baseUrl = "";
 
     //Constructor
     public PicturesAdapter(Context context) {
         this.context = context;
+        this.mData = new LinkedList<>();
     }
 
     @Override
-    public PictureViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext())
+    public PictureViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_picture, viewGroup, false);
-
-        return new PictureViewHolder(v);
+        return new PictureViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(PictureViewHolder holder, final int position) {
-        holder.setPicture(position, data.get(position));
+    public void onBindViewHolder(PictureViewHolder viewHolder, int position) {
+        PictureViewHolder holder = (PictureViewHolder) viewHolder;
+        holder.setPicture(position, (Picture) mData.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return 0;
     }
 
+/*
     @Override
-    public void onViewRecycled(PictureViewHolder holder) {
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
         if (holder.ivPicture.getController() != null) {
             holder.ivPicture.getController().onDetach();
         }
@@ -60,15 +65,15 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
             holder.ivPicture.getTopLevelDrawable().setCallback(null);
 //                ((BitmapDrawable) holder.mImageView.getTopLevelDrawable()).getBitmap().recycle();
         }
-    }
+    }*/
 
     public void setData(List<Picture> pictures) {
-        this.data = pictures;
+        this.mData = pictures;
         notifyDataSetChanged();
 
-        picturesUris = new String[data.size()];
+        picturesUris = new String[mData.size()];
         int i = 0;
-        for (Picture p: data){
+        for (Picture p: mData){
             picturesUris[i++] = p.getUrl();
         }
     }
@@ -93,7 +98,6 @@ public class PicturesAdapter extends RecyclerView.Adapter<PicturesAdapter.Pictur
 
             ivPicture = (SimpleDraweeView) itemView.findViewById(R.id.picture);
             //set height picture to prevent padding on view
-            ivPicture.getLayoutParams().height = ivPicture.getLayoutParams().width;
         }
 
         @Override

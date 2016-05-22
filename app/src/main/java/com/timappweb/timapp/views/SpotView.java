@@ -38,8 +38,6 @@ public class SpotView extends LinearLayout{
     private View                        marginRightToolbarMode;
 
     private boolean                     isTagsVisible;
-    private boolean                     isBottomShadow;
-    private boolean                     isTopShadow;
     private AutofitTextView             tvName;
     private boolean                     isGravityCentered;
     private int                         colorRes;
@@ -57,8 +55,8 @@ public class SpotView extends LinearLayout{
         //Get attributes in XML
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SpotView, 0, 0);
         isTagsVisible = ta.getBoolean(R.styleable.SpotView_tags_visible, false);
-        isBottomShadow = ta.getBoolean(R.styleable.SpotView_bottom_shadow, false);
-        isTopShadow = ta.getBoolean(R.styleable.SpotView_top_shadow, false);
+        //isBottomShadow = ta.getBoolean(R.styleable.SpotView_bottom_shadow, false);
+        //isTopShadow = ta.getBoolean(R.styleable.SpotView_top_shadow, false);
         colorRes = ta.getColor(R.styleable.SpotView_background_color, -1);
         isGravityCentered = ta.getBoolean(R.styleable.SpotView_gravity_center, false);
         editMode = ta.getBoolean(R.styleable.SpotView_edit_mode, false);
@@ -76,8 +74,8 @@ public class SpotView extends LinearLayout{
         parentTextViews = (LinearLayout) findViewById(R.id.parent_textviews);
         bigCategoryIcon = (ImageView) findViewById(R.id.big_image_category_spot);
         smallCategoryIcon = (ImageView) findViewById(R.id.small_image_category_spot);
-        gradientBottomView = findViewById(R.id.bottom_gradient);
-        gradientTopView = findViewById(R.id.top_gradient);
+        //gradientBottomView = findViewById(R.id.bottom_gradient);
+        //gradientTopView = findViewById(R.id.top_gradient);
         rvSpotTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
         tvName = (AutofitTextView) findViewById(R.id.title_spot);
         editView = findViewById(R.id.action_view);
@@ -87,8 +85,8 @@ public class SpotView extends LinearLayout{
         marginRightToolbarMode= findViewById(R.id.margin_right_toolbar_mode);
 
         parentLayout.setBackgroundColor(colorRes);
-        setBottomShadow(isBottomShadow);
-        setTopShadow(isTopShadow);
+        //setBottomShadow(isBottomShadow);
+        //setTopShadow(isTopShadow);
         setTagsVisible(isTagsVisible);
         setEditView(editMode);
         setToolbarView(toolbarMode);
@@ -115,7 +113,7 @@ public class SpotView extends LinearLayout{
     public HorizontalTagsRecyclerView getRvSpotTags() {
         return rvSpotTags;
     }
-
+/*
     private void setBottomShadow(boolean isVisible) {
         if(isVisible) {
             Log.d(TAG, "bottom shadow is visible");
@@ -133,7 +131,7 @@ public class SpotView extends LinearLayout{
             gradientTopView.setVisibility(GONE);
         }
     }
-
+*/
     public void setTagsVisible(boolean tagsVisibility) {
         if(tagsVisibility) {
             rvSpotTags.setVisibility(VISIBLE);

@@ -5,7 +5,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.MyApplication;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
@@ -13,8 +13,8 @@ import com.timappweb.timapp.utils.Util;
 /**
  * Created by stephane on 4/5/2016.
  */
-@Table(name = "PlaceStatus")
-public class PlaceStatus extends SyncBaseModel {
+@Table(name = "EventStatus")
+public class EventStatus extends SyncBaseModel {
 
     private long MAX_STATUS_VALIDITY = 10800 * 1000; // Status validity is 3 hours
 
@@ -26,10 +26,11 @@ public class PlaceStatus extends SyncBaseModel {
     @Column(name = "User", index = true, notNull = true, onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     public User user;
 
-    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = Place.class)
+    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = Event.class)
     @Expose
-    @Column(name = "Place", index = true, notNull = true, onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
-    public Place place;
+    @Column(name = "Event", index = true, notNull = true, onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
+    @SerializedName("place")
+    public Event event;
 
     @Expose
     @Column(name = "Created", notNull = true)
@@ -41,74 +42,74 @@ public class PlaceStatus extends SyncBaseModel {
 
     // =============================================================================================
 
-    public PlaceStatus() {
+    public EventStatus() {
         super();
     }
 
-    public PlaceStatus(int place_id, UserPlaceStatusEnum status) {
-        this.place = Place.loadByRemoteId(Place.class, place_id);
+    public EventStatus(int place_id, UserPlaceStatusEnum status) {
+        this.event = Event.loadByRemoteId(Event.class, place_id);
         this.status = status;
         this.created = Util.getCurrentTimeSec();
     }
 
 
-    public PlaceStatus(User user, Place place, UserPlaceStatusEnum status) {
+    public EventStatus(User user, Event event, UserPlaceStatusEnum status) {
         this.user = user;
-        this.place = place;
+        this.event = event;
         this.status = status;
         this.created = Util.getCurrentTimeSec();
     }
 
 
     public static boolean hasStatus(Long userId, long placeId, UserPlaceStatusEnum status) {
-        PlaceStatus placeStatus = getStatus(placeId, userId);
-        if (placeStatus != null && !placeStatus.isStatusUpToDate()){
-            placeStatus.delete();
+        EventStatus eventStatus = getStatus(placeId, userId);
+        if (eventStatus != null && !eventStatus.isStatusUpToDate()){
+            eventStatus.delete();
             return false;
         }
-        return placeStatus != null && placeStatus.status == status;
+        return eventStatus != null && eventStatus.status == status;
     }
-    public static PlaceStatus getStatus(long placeId, long userId){
+    public static EventStatus getStatus(long placeId, long userId){
         return new Select()
-                .from(PlaceStatus.class)
-                .where("User = ? AND Place = ?", userId, placeId)
+                .from(EventStatus.class)
+                .where("User = ? AND Event = ?", userId, placeId)
                 .executeSingle();
     }
-    public static PlaceStatus setStatus(User user, Place place, UserPlaceStatusEnum status, int remoteId){
+    public static EventStatus setStatus(User user, Event event, UserPlaceStatusEnum status, int remoteId){
 
         // Remove all other here status
         if (status == UserPlaceStatusEnum.HERE){
-            new Delete().from(PlaceStatus.class).where("User = ? AND Status = ?", user.getId(), status).execute();
+            new Delete().from(EventStatus.class).where("User = ? AND Status = ?", user.getId(), status).execute();
         }
 
-        PlaceStatus placeStatus = getStatus(place.getId(), user.getId());
-        if (placeStatus == null){
-            placeStatus = new PlaceStatus(user, place, status);
+        EventStatus eventStatus = getStatus(event.getId(), user.getId());
+        if (eventStatus == null){
+            eventStatus = new EventStatus(user, event, status);
         }
         else{
-            placeStatus.status = status;
+            eventStatus.status = status;
         }
-        placeStatus.remote_id = remoteId;
-        place.setRemoteId(remoteId);
-        placeStatus.mySave();
-        return placeStatus;
+        eventStatus.remote_id = remoteId;
+        event.setRemoteId(remoteId);
+        eventStatus.mySave();
+        return eventStatus;
     }
 
 
     @Override
     public boolean isSync(SyncBaseModel model) {
-        if (!(model instanceof PlaceStatus)) return false;
-        PlaceStatus that = (PlaceStatus) model;
+        if (!(model instanceof EventStatus)) return false;
+        EventStatus that = (EventStatus) model;
 
         if (status != that.status) return false;
-        return place != that.place;
+        return event != that.event;
     }
 
     public boolean isStatusUpToDate() {
         return (this.created - System.currentTimeMillis()) < MAX_STATUS_VALIDITY;
     }
 
-    public static void removeStatus(User user, Place place, UserPlaceStatusEnum status) {
-        new Delete().from(PlaceStatus.class).where("User = ? AND Place = ?", user.getId(), place.getId()).execute();
+    public static void removeStatus(User user, Event event, UserPlaceStatusEnum status) {
+        new Delete().from(EventStatus.class).where("User = ? AND Event = ?", user.getId(), event.getId()).execute();
     }
 }

@@ -3,6 +3,7 @@ package com.timappweb.timapp.data.models;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 @Table(name = "Picture")
@@ -32,9 +33,10 @@ public class Picture extends SyncBaseModel {
     public String photo_dir;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Place", notNull = true)
+    @Column(name = "Event", notNull = true)
+    @SerializedName("place")
     @Expose(serialize = false, deserialize = true)
-    public Place place;
+    public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "User", notNull = false)
@@ -81,7 +83,7 @@ public class Picture extends SyncBaseModel {
                 ", square='" + square + '\'' +
                 ", photo_dir='" + photo_dir + '\'' +
                 ", base_url='" + base_url + '\'' +
-                ", place=" + place +
+                ", event=" + event +
                 ", user=" + user +
                 '}';
     }

@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * Created by stephane on 3/28/2016.
  */
-@Table(name = "PlacesInvitation")
-public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterface {
+@Table(name = "EventsInvitation")
+public class EventsInvitation extends SyncBaseModel implements PlaceUserInterface {
 
     // =============================================================================================
     // Database
@@ -32,14 +32,14 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Expose
     public PlacesInvitationStatus status;
 
-    @ModelAssociation(joinModel = Place.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Place",
+    @ModelAssociation(joinModel = Event.class, type = ModelAssociation.Type.BELONGS_TO)
+    @Column(name = "Event",
             notNull = true,
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("place")
-    public Place place;
+    public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserSource",
@@ -61,10 +61,10 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     // =============================================================================================
 
-    public PlacesInvitation() {}
+    public EventsInvitation() {}
 
-    public PlacesInvitation(Place place, User user) {
-        this.place = place;
+    public EventsInvitation(Event event, User user) {
+        this.event = event;
         this.user_target = user;
     }
 
@@ -89,12 +89,12 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     @Override
     public String toString() {
-        return "PlacesInvitation{" +
+        return "EventsInvitation{" +
                 "db_id=" + this.getId() +
                 ", remote_id=" + this.remote_id +
                 ", created=" + created +
                 ", status=" + status +
-                ", place=" + place +
+                ", event=" + event +
                 ", user_source=" + user_source +
                 ", user_target=" + user_target +
                 '}';
@@ -106,14 +106,14 @@ public class PlacesInvitation extends SyncBaseModel implements PlaceUserInterfac
     @Override
     public boolean isSync(SyncBaseModel model) {
         if (model == null) return false;
-        if (!(model instanceof PlacesInvitation)) return false;
-        PlacesInvitation invite = (PlacesInvitation) model;
+        if (!(model instanceof EventsInvitation)) return false;
+        EventsInvitation invite = (EventsInvitation) model;
 
         return this.status == invite.status
                 && this.created == invite.created
                 && this.modified == invite.modified
                 && this.user_target == invite.user_target
                 && this.user_source == invite.user_source
-                && this.place == invite.place;
+                && this.event == invite.event;
     }
 }

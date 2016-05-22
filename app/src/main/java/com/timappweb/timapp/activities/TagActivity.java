@@ -21,7 +21,7 @@ import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
@@ -37,7 +37,6 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.EventView;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import retrofit2.Call;
 
@@ -49,7 +48,7 @@ public class TagActivity extends BaseActivity{
     private HorizontalTagsRecyclerView selectedTagsRV;
     private View progressBarView;
     private EventView eventView;
-    private Place currentPlace = null;
+    private Event currentEvent = null;
     private View progressEndView;
 
     // @Bind(R.remote_id.hashtags1)
@@ -65,11 +64,11 @@ public class TagActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check that we gave the place as an extra parameter
-        this.currentPlace = IntentsUtils.extractPlace(getIntent());
+        // Check that we gave the event as an extra parameter
+        this.currentEvent = IntentsUtils.extractPlace(getIntent());
         this.currentPost = IntentsUtils.extractPost(getIntent());
-        if (this.currentPlace == null || this.currentPost == null){
-            Log.d(TAG, "Place is null");
+        if (this.currentEvent == null || this.currentPost == null){
+            Log.d(TAG, "Event is null");
             IntentsUtils.home(this);
             return;
         }
@@ -252,27 +251,27 @@ public class TagActivity extends BaseActivity{
     private class AddPostCallback extends RestFeedbackCallback {
 
         private Post post;
-        private Place place;
+        private Event event;
         // TODO get post from server instead. (in case tags are in a black list)
 
-        AddPostCallback(Context context, Post post, Place place) {
+        AddPostCallback(Context context, Post post, Event event) {
             super(context);
             this.post = post;
-            this.place = place;
+            this.event = event;
         }
 
         @Override
         public void onActionSuccess(RestFeedback feedback) {
             int id = Integer.valueOf(feedback.data.get("id"));
             int placeId = Integer.valueOf(feedback.data.get("place_id"));
-            Log.i(TAG, "Post for place " + placeId + " has been saved with id: " + id);
+            Log.i(TAG, "Post for event " + placeId + " has been saved with id: " + id);
 
             // Caching data
             post.place_id = placeId;
             post.created = Util.getCurrentTimeSec();
-            if (place.isNew()){
-                place.remote_id = placeId;
-                place.created = Util.getCurrentTimeSec();
+            if (event.isNew()){
+                event.remote_id = placeId;
+                event.created = Util.getCurrentTimeSec();
                 QuotaManager.instance().add(QuotaType.PLACES);
             }
             //QuotaManager.instance().add(QuotaType.ActionTypeName.CREATE_PLACE);
@@ -301,7 +300,7 @@ public class TagActivity extends BaseActivity{
         @Override
         public void onClick(View v) {
             currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
-            currentPost.place_id = currentPlace.remote_id;
+            currentPost.place_id = currentEvent.remote_id;
             // Validating user input
             if (!currentPost.validateForSubmit()) {
                 Toast.makeText(TagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
@@ -310,7 +309,7 @@ public class TagActivity extends BaseActivity{
             Log.d(TAG, "Submitting post: " + currentPost);
 
             Call<RestFeedback> call = RestClient.service().addPost(currentPost);
-            call.enqueue(new AddPostCallback(TagActivity.this, currentPost, currentPlace));
+            call.enqueue(new AddPostCallback(TagActivity.this, currentPost, currentEvent));
         }
     }
 }

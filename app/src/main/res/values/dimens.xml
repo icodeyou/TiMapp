@@ -12,7 +12,7 @@
     <dimen name="padding_fragments_place">5dp</dimen>
     <dimen name="margin_tags">10dp</dimen>
 
-    <dimen name="toolbar">50dp</dimen>
+    <dimen name="toolbarHeight">50dp</dimen>
 
     <!-- Cards -->
     <dimen name="card_elevation">4dp</dimen>
@@ -99,6 +99,9 @@
     <dimen name="width_add_event_buttons">120dp</dimen>
     <dimen name="margin_post_button">10dp</dimen>
     <dimen name="padding_post_button">10dp</dimen>
+    <dimen name="header_height">250dp</dimen>
+    <dimen name="tab_height">50dp</dimen>
+    <dimen name="min_header_height">150dp</dimen>
     <integer name="slide_down_anim">90</integer>
     <integer name="slide_up_anim">-90</integer>
     <integer name="slide_event_bottom_map">200</integer>

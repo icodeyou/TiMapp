@@ -145,6 +145,6 @@
             android:layout_alignParentBottom="true"/>
     </LinearLayout>
 
-    <include android:id="@id/toolbar_transparent" layout="@layout/toolbar_transparent" />
+    <include layout="@layout/toolbar_transparent" />
 </RelativeLayout>
 

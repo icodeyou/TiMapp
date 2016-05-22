@@ -17,7 +17,7 @@
             <item android:remote_id="@+remote_id/layout_spot" android:icon="@android:drawable/ic_menu_send"
                 android:title="Spot" />
             <item android:remote_id="@+remote_id/layout_event" android:icon="@android:drawable/ic_menu_send"
-                android:title="Place" />
+                android:title="Event" />
                 -->
         </menu>
     </item>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,40 +24,28 @@
             android:layout_height="@dimen/height_top_gradient_view"
             android:background="@drawable/top_layout_event"
             android:visibility="gone" />
-    </RelativeLayout>-->
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/main_box_relative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
-        <ImageView
-            android:id="@+id/background_image_event"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/main_box"
-            android:scaleType="centerCrop" />
-
+        android:layout_height="wrap_content">-->
         <LinearLayout
             android:id="@+id/main_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
                 <!-- ___________________________ SPOT _______________________________________________-->
-                <com.timappweb.timapp.views.SpotView
-                    android:id="@+id/spot_view"
-                    xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    myattrs:tags_visible="false"
-                    myattrs:bottom_shadow="false"
-                    myattrs:top_shadow="false"
-                    myattrs:gravity_center="true"
-                    myattrs:background_color="@color/background_spot_transparent"/>
+            <com.timappweb.timapp.views.SpotView
+                android:id="@+id/spot_view"
+                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                myattrs:tags_visible="false"
+                myattrs:bottom_shadow="false"
+                myattrs:top_shadow="false"
+                myattrs:gravity_center="true"/>
                 <!--
                 <View
                     android:id="@+id/separator"
@@ -64,7 +53,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_top_gradient_view"
                     android:background="@drawable/separator_event" />-->
-            </RelativeLayout>
 
 
             <!-- ___________________________ EVENT _______________________________________________-->
@@ -72,247 +60,17 @@
                 android:id="@+id/main_layout_event"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/background_event"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/image_category_place"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_width="@dimen/icon_spot"
-                        android:layout_height="@dimen/icon_spot"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/ic_category_highlight_party"
-                        android:visibility="gone"/>
+                <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
+
+                <include layout="@layout/header_event_activity"></include>
+
+                <!-- _______________________ DESCRIPTION __________________________________________-->
 
 
-                    <RelativeLayout
-                        android:id="@+id/text_relative_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/toolbar"
-                        android:layout_toRightOf="@+id/image_category_place"
-                        android:layout_toEndOf="@+id/image_category_place">
-                        <View
-                            android:id="@+id/margin_left_toolbar"
-                            android:layout_width="@dimen/margin_custom_toolbar_left"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:visibility="gone"/>
-                        <ImageView
-                            android:id="@+id/image_small_category_place"
-                            android:layout_width="@dimen/little_icon_spot"
-                            android:layout_height="match_parent"
-                            android:layout_toRightOf="@id/margin_left_toolbar"
-                            android:layout_toEndOf="@id/margin_left_toolbar"
-                            android:layout_marginRight="@dimen/default_ic_margin"
-                            android:layout_marginEnd="@dimen/default_ic_margin"
-                            android:src="@drawable/ic_category_highlight_party"
-                            android:visibility="visible"/>
-                        <me.grantland.widget.AutofitTextView
-                            android:id="@+id/title_event"
-                            android:layout_toRightOf="@+id/image_small_category_place"
-                            android:layout_toEndOf="@+id/image_small_category_place"
-                            android:layout_toLeftOf="@+id/margin_right_toolbar"
-                            android:layout_toStartOf="@+id/margin_right_toolbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center|start"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:layout_gravity="center"
-                            android:textStyle="bold"
-                            android:text="Soirée dansante Rock N Roll"
-                            android:textSize="@dimen/title_event_card"
-                            android:textColor="@color/White" />
-                        <View
-                            android:id="@+id/margin_right_toolbar"
-                            android:layout_width="@dimen/margin_custom_toolbar_right"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:visibility="gone"/>
-                    </RelativeLayout>
-                </RelativeLayout>
+                <include layout="@layout/event_information"></include>
 
-                <!-- TAGS -->
-                <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                    xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/htrv_tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_rv_displayed_tags"
-                    myattrs:horizontal_tags_text_color="@color/colorAccent"
-                    myattrs:horizontal_tags_background_color="@color/background"
-                    myattrs:horizontal_tags_is_bold="true"
-                    myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:id="@+id/white_points_layout"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center|start"
-                        android:visibility="visible">
-                        <ImageView
-                            android:id="@+id/ic_hot"
-                            android:layout_width="@dimen/little_icon_spot"
-                            android:layout_height="@dimen/logo_normal"
-                            android:layout_marginRight="@dimen/default_ic_margin"
-                            android:layout_marginEnd="@dimen/default_ic_margin"
-                            android:src="@drawable/ic_hot_white"/>
-                        <com.timappweb.timapp.views.SimpleTimerView
-                            android:id="@+id/white_points_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="bottom"
-                            android:singleLine="true"
-                            android:text="3600"
-                            android:textSize="@dimen/text_normal"
-                            android:textColor="@color/White"
-                            android:textStyle="normal"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/distance_layout"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal"
-                        android:gravity="center|start"
-                        android:visibility="visible">
-                        <ImageView
-                            android:layout_width="@dimen/little_icon_spot"
-                            android:layout_height="@dimen/logo_normal"
-                            android:layout_marginRight="@dimen/default_ic_margin"
-                            android:layout_marginEnd="@dimen/default_ic_margin"
-                            android:src="@drawable/distance"/>
-                        <com.timappweb.timapp.views.SimpleTimerView
-                            android:id="@+id/distance_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="bottom"
-                            android:singleLine="true"
-                            android:text="120 m"
-                            android:textSize="@dimen/text_normal"
-                            android:textColor="@color/White"
-                            android:textStyle="normal"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/count_people"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp"
-                    android:visibility="visible">
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:layout_width="@dimen/little_icon_spot"
-                            android:layout_height="@dimen/logo_normal"
-                            android:layout_marginRight="@dimen/default_ic_margin"
-                            android:layout_marginEnd="@dimen/default_ic_margin"
-                            android:src="@drawable/ic_coming_guy_white"/>
-                        <TextView
-                            android:id="@+id/count_coming_text"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:singleLine="true"
-                            android:text="12 coming"
-                            android:textSize="@dimen/text_normal"
-                            android:gravity="bottom"
-                            android:textColor="@color/White"
-                            android:textStyle="normal"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:layout_width="@dimen/little_icon_spot"
-                            android:layout_height="@dimen/logo_normal"
-                            android:layout_marginRight="@dimen/default_ic_margin"
-                            android:layout_marginEnd="@dimen/default_ic_margin"
-                            android:src="@drawable/match_white"/>
-                        <TextView
-                            android:id="@+id/count_here_text"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:textSize="@dimen/text_normal"
-                            android:singleLine="true"
-                            android:text="2 here"
-                            android:gravity="bottom"
-                            android:textColor="@color/White"
-                            android:textStyle="normal"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Description -->
-                <!-- **********************************************************************-->
-                <LinearLayout
-                    android:id="@+id/description_event"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/description_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="left"
-                        android:textColor="@color/white"
-                        android:text="This is the description text for this event. It's not very interesting but it can be usefull in some case. It also has a maximum height..."/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="left"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <ImageView
-                            android:layout_height="@dimen/logo_small"
-                            android:layout_width="@dimen/little_icon_spot"
-                            android:src="@drawable/ic_clock_gray"/>
-                        <TextView
-                            android:id="@+id/time_place"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center"
-                            android:singleLine="true"
-                            android:text="5 min ago"
-                            android:textSize="@dimen/text_small"
-                            android:textColor="@color/VeryLightGray"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <com.timappweb.timapp.views.EventButtonsView
-                    android:id="@+id/event_buttons_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </com.timappweb.timapp.views.EventButtonsView>
 
             </LinearLayout>
 
@@ -328,5 +86,3 @@
         android:layout_height="@dimen/height_bottom_gradient_view"
         android:layout_below="@+id/main_box_relative"
         android:background="@drawable/bottom_layout_event"/>-->
-
-</RelativeLayout>

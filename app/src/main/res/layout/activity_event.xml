@@ -1,68 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    android:id="@+id/activity_event_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".PlaceActivity"
-    android:background="@color/background_event">
+    android:background="@color/background"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/background_place"
+    <com.github.florent37.materialviewpager.MaterialViewPager
+        android:id="@+id/event_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/image_else"
-        android:alpha="0.2"/>
+        app:viewpager_logo="@layout/event_activity_logo"
+        app:viewpager_logoMarginTop="100dp"
+        app:viewpager_color="@color/colorPrimary"
+        app:viewpager_headerHeight="200dp"
+        app:viewpager_headerAlpha="1.0"
+        app:viewpager_hideLogoWithFade="false"
+        app:viewpager_hideToolbarAndTitle="true"
+        app:viewpager_enableToolbarElevation="true"
+        app:viewpager_parallaxHeaderFactor="1.5"
+        app:viewpager_headerAdditionalHeight="20dp"
+        app:viewpager_displayToolbarWhenSwipe="true"
+        app:viewpager_transparentToolbar="true"
+        app:viewpager_animatedHeaderImage="true"
+        app:viewpager_disableToolbar="false"
 
-    <LinearLayout
-        android:id="@+id/main_layout_place"
-        android:layout_marginTop="@dimen/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        />
 
-        <com.timappweb.timapp.views.EventView
-            xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-            android:id="@+id/event_view"
+        <LinearLayout
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            myattrs:toolbar_mode="true"
-            myattrs:bottom_shadow="true"
-            myattrs:top_shadow="false"
-            app:is_match_button="true"
-            app:is_description="true"
-            app:points_visible="true"
-            app:tags_visible="false"
-            app:is_spot="true"
-            myattrs:color_event="@color/background_half_black"
-            android:visibility="visible" />
-<!--
-        <com.timappweb.timapp.views.EventButtonsView
-            android:id="@+id/event_buttons_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/main_layout_place"></com.timappweb.timapp.views.EventButtonsView>-->
+            android:orientation="vertical"
+            android:background="@color/black">
 
-        <!-- Fragments -->
-        <!-- ************************************* -->
-        <android.support.v4.view.ViewPager
-            android:id="@+id/event_viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
 
-            <android.support.v4.view.PagerTabStrip
-                android:id="@+id/pager_title_strip"
+
+            <!--
+            <com.timappweb.timapp.views.EventView
+                xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+                android:id="@+id/event_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
+                myattrs:bottom_shadow="true"
+                myattrs:top_shadow="false"
+                app:is_match_button="true"
+                app:is_description="true"
+                app:points_visible="true"
+                app:tags_visible="false"
+                app:is_spot="true"
+                android:visibility="visible"
+            />-->
+
+            <!--
+
+            <com.timappweb.timapp.views.slidingTab.SlidingTabLayout
+                android:id="@+id/pager_tab_strip"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_height"
                 android:background="@color/colorPrimary"
-                android:textColor="@color/white"/>
+                app:indicatorColor="@color/white"
+                app:shouldExpand="true"
+                app:tabBackgroundTextViewId="@+id/tab_textview"
+                app:tabBackgroundBase="@layout/sliding_tab_view"/>-->
+    <!--
+        <ImageView
+            android:id="@+id/background_place"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_else"
+            android:alpha="0.2"/>-->
 
-        </android.support.v4.view.ViewPager>
+    <!--
+            <com.timappweb.timapp.views.EventButtonsView
+                android:id="@+id/event_buttons_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/main_layout_place"></com.timappweb.timapp.views.EventButtonsView>-->
 
-    </LinearLayout>
+            <!-- Fragments -->
+            <!-- ************************************* -->
+        </LinearLayout>
+
+
+    <include layout="@layout/toolbar_transparent" />
+
 
     <!-- Separator-->
     <!-- ************************************* -->
@@ -74,16 +102,15 @@
         android:background="@drawable/separator_toolbar_event_activity"
         android:visibility="gone"/>-->
 
-    <!-- TOOLBAR -->
+    <!-- TOOLBAR
+
     <RelativeLayout
         android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-<!---->
-
         <include android:id="@+id/toolbar_transparent"
             layout="@layout/toolbar_transparent" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
 
 </RelativeLayout>

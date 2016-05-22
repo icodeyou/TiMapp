@@ -28,8 +28,8 @@ import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.Place;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.ApiCallFactory;
 import com.timappweb.timapp.rest.RestCallback;
@@ -38,6 +38,7 @@ import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,18 +62,19 @@ public class EventPicturesFragment extends EventBaseFragment {
     //private View                    progressView;
     private View                    noPicView;
     private View                    noConnectionView;
-    private RecyclerView            picturesRv;
     private View                    uploadView;
 
     private PicturesAdapter         picturesAdapter;
 
-    private static int NUMBER_OF_COLUMNS =  2;
+    public static int PICUTRE_GRID_COLUMN_NB =  2;
+    
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton postButton;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
         context = getContext();
         eventActivity = (EventActivity) getActivity();
@@ -81,8 +83,8 @@ public class EventPicturesFragment extends EventBaseFragment {
         noPicView = root.findViewById(R.id.no_pictures_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         uploadView = root.findViewById(R.id.upload_view);
-        picturesRv = (RecyclerView) root.findViewById(R.id.pictures_rv);
-        picturesRv.setLayoutManager(new GridLayoutManager(context, NUMBER_OF_COLUMNS));
+        mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(context, PICUTRE_GRID_COLUMN_NB));
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
         postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
@@ -94,6 +96,8 @@ public class EventPicturesFragment extends EventBaseFragment {
         });
         initAdapter();
         //this.loadData();
+
+        setupRecyclerView();
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, new PictureLoader(this.getContext(), eventActivity.getEvent()));
 
@@ -114,7 +118,7 @@ public class EventPicturesFragment extends EventBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==IntentsUtils.REQUEST_CAMERA) {
             Log.d(TAG, "Result request camera");
-            eventActivity.setPager(0);
+            eventActivity.setmViewPager(0);
             if (resultCode != Activity.RESULT_OK){
                 return; // TODO
             }
@@ -125,7 +129,7 @@ public class EventPicturesFragment extends EventBaseFragment {
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(eventActivity);
-        picturesRv.setAdapter(picturesAdapter);
+        mRecyclerView.setAdapter(picturesAdapter);
     }
 
 
@@ -164,7 +168,7 @@ public class EventPicturesFragment extends EventBaseFragment {
     }
     */
     public RecyclerView getPicturesRv(){
-        return picturesRv;
+        return mRecyclerView;
     }
 
 
@@ -268,15 +272,28 @@ public class EventPicturesFragment extends EventBaseFragment {
 
 
     // =============================================================================================
+    // PARALLAX VIEW
+    @Override
+    protected void setScrollOnLayoutManager(int scrollY) {
+        ((GridLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, -scrollY);
+    }
+
+    @Override
+    protected void setupRecyclerView() {
+        setRecyclerViewOnScrollListener();
+    }
+
+
+    // =============================================================================================
 
     /**
      * TODO
      */
     class PictureLoader extends MultipleEntryLoaderCallback<Picture> {
 
-        public PictureLoader(Context context, Place place) {
-            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_PLACE_PICTURE, place.getPicturesQuery());
-            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_PLACE_ID, place.getRemoteId());
+        public PictureLoader(Context context, Event event) {
+            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, event.getPicturesQuery());
+            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout);
         }
 

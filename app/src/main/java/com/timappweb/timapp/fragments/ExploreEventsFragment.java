@@ -14,7 +14,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
@@ -87,7 +87,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");
         eventsAdapter.clear();
         ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-        List<Place> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
+        List<Event> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
         eventsAdapter.setData(markers);
         if(eventsAdapter.getData().size()==0) {
             noEventsView.setVisibility(View.VISIBLE);

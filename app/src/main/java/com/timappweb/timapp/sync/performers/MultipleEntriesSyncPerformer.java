@@ -40,7 +40,6 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
     */
     @Override
     public void perform() {
-
         if (localEntries == null || localEntries.size() == 0){
             this.onRemoteOnly(remoteEntries);
             return;

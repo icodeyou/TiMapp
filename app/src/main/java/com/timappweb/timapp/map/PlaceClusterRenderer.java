@@ -18,13 +18,13 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.Place;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
+public class PlaceClusterRenderer extends DefaultClusterRenderer<Event> {
 
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterIconGenerator;
@@ -57,15 +57,15 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(Place place, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(Event event, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
         try {
-            categoryImage.setImageResource(place.getCategory().getIconWhiteResId());
+            categoryImage.setImageResource(event.getCategory().getIconWhiteResId());
         } catch (UnknownCategoryException e) {
             // TODO
             return;
         }
-        categoryImage = MyApplication.setCategoryBackground(categoryImage,place.getLevel());
+        categoryImage = MyApplication.setCategoryBackground(categoryImage, event.getLevel());
 
         categoryImage.setDrawingCacheEnabled(true);
 
@@ -114,7 +114,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
 
 
     @Override
-    protected void onBeforeClusterRendered(Cluster<Place> cluster, MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(Cluster<Event> cluster, MarkerOptions markerOptions) {
         // Draw multiple people.
         // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
         HashMap<Integer, Drawable> profilePhotos = new HashMap<>();
@@ -122,7 +122,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Place> {
         int height = mDimension;
 
 
-        for (Place p : cluster.getItems()) {
+        for (Event p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
             if (!profilePhotos.containsKey(p.category_id)){
