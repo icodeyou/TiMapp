@@ -71,13 +71,15 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(showTitle);
+        actionBar.setDisplayUseLogoEnabled(false);
+        actionBar.setHomeButtonEnabled(true);
     }
 
     protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
-        final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.design.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
-        upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
-        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        //final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
+        //upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
+        //getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }
 
     protected void setSearchview(Menu menu) {

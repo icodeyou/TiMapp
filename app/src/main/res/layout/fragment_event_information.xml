@@ -1,16 +1,16 @@
-<com.timappweb.timapp.views.parallaxviewpager.NotifyingScrollView
+<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollview"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="none">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:showDividers="middle">
+        android:orientation="vertical">
+
+        <include layout="@layout/material_view_pager_placeholder"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,4 +43,4 @@
 
     </LinearLayout>
 
-</com.timappweb.timapp.views.parallaxviewpager.NotifyingScrollView>
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

@@ -9,15 +9,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--
-        <FrameLayout
-            android:id="@+id/event_frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="40dp"/>-->
-
-        <include layout="@layout/no_connection_view"
-            android:id="@+id/no_connection_view"/>
 
         <!-- List View -->
         <!-- **********************************************************************-->
@@ -44,8 +35,7 @@
             <TextView
                 style="@style/NoDataView"
                 android:id="@+id/no_tags_view"
-                android:text="@string/no_tags"
-                android:visibility="gone"/>
+                android:text="@string/no_tags"/>
 
         </FrameLayout>
 

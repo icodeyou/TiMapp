@@ -48,14 +48,12 @@ public class AddEventActivity extends BaseActivity {
     AddEventCategoriesAdapter categoriesAdapter;
     private EventCategory eventCategorySelected;
     private View createButton;
-    private View commentButton;
     private View progressView;
     private TextView nameCategoryTV;
     private View pinView;
     private ViewPager viewPager;
     private SpotView spotView;
     private TextView commentView;
-    private View buttonsView;
     // Data
     private Spot spot = null;
     private AddEventActivity context;
@@ -79,10 +77,8 @@ public class AddEventActivity extends BaseActivity {
         eventNameET.setFilters(filters);
         eventNameET.requestFocus();
 
-        buttonsView = findViewById(R.id.buttons);
         categoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
         createButton = findViewById(R.id.create_button);
-        commentButton = findViewById(R.id.comment_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         pinView = findViewById(R.id.no_spot_view);
@@ -222,9 +218,9 @@ public class AddEventActivity extends BaseActivity {
 //        Log.d(TAG,"textafterchange : "+textAfterChange);
 //        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
         if (eventCategorySelected !=null && Event.isValidName(textAfterChange)) {
-            buttonsView.setVisibility(View.VISIBLE);
+            createButton.setVisibility(View.VISIBLE);
         } else {
-            buttonsView.setVisibility(View.GONE);
+            createButton.setVisibility(View.GONE);
         }
     }
 
@@ -290,13 +286,6 @@ public class AddEventActivity extends BaseActivity {
                 imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
                 commentView.setVisibility(View.VISIBLE);
                 eventNameET.clearFocus();
-            }
-        });
-
-        commentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.comment(context, commentView.getText().toString());
             }
         });
 

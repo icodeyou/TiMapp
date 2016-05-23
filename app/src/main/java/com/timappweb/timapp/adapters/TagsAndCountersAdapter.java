@@ -27,15 +27,15 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_tag_with_counter, parent, false);
-            return new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_tag_with_counter, parent, false);
+        return new ViewHolder(view);
     }
 
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mData.size();
     }
 
     @Override
@@ -49,6 +49,10 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     public void clear() {
         this.mData.clear();
+    }
+
+    public void add(Tag tag) {
+        this.mData.add(tag);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

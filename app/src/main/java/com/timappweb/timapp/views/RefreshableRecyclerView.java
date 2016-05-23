@@ -1,9 +1,12 @@
 package com.timappweb.timapp.views;
 
 import android.content.Context;
+import android.support.v4.widget.*;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
+
+import com.timappweb.timapp.listeners.OnScrollListenerRefreshableView;
 
 import java.security.InvalidParameterException;
 
@@ -35,25 +38,13 @@ public class RefreshableRecyclerView extends RecyclerView {
     public void init(){
         this.mSwipeRefreshLayout = (android.support.v4.widget.SwipeRefreshLayout) getParent();
         if (this.mSwipeRefreshLayout == null) throw new InvalidParameterException("Refreshable recycler view should be wrap with a SwipeRefreshLayout");
-        this.addOnScrollListener(new MyOnScrollListener());
-    }
-
-    private class MyOnScrollListener extends OnScrollListener {
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            //super.onScrollStateChanged(recyclerView, newState);
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            //super.onScrolled(recyclerView, dx, dy);
-            if (dx == 0)
-                mSwipeRefreshLayout.setEnabled(true);
-            else
-                mSwipeRefreshLayout.setEnabled(false);
-        }
+        this.addOnScrollListener(new OnScrollListenerRefreshableView(mSwipeRefreshLayout));
     }
 
 
+    @Override
+    public void setAdapter(Adapter adapter) {
+        // Wrap with a new adapter that have another item type which is NO DATA
+        super.setAdapter(adapter);
+    }
 }

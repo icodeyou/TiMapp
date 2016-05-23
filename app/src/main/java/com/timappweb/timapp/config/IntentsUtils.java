@@ -236,12 +236,12 @@ public class IntentsUtils {
         Intent intent = new Intent(context, AddEventActivity.class);
         context.startActivity(intent);
     }
-
+/*
     public static void comment(Activity activity, String comment) {
         Intent intent = new Intent(activity, DescriptionActivity.class);
         intent.putExtra("comment", comment);
         activity.startActivityForResult(intent, REQUEST_COMMENT);
-    }
+    }*/
 
     public static String extractComment(Intent intent) {
         if(intent.getExtras()!=null) {

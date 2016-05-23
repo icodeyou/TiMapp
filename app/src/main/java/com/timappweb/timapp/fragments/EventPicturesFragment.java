@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.desmond.squarecamera.ImageUtility;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
@@ -70,6 +72,8 @@ public class EventPicturesFragment extends EventBaseFragment {
     
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton postButton;
+    private RefreshableRecyclerView mRecyclerView;
+    private RecyclerViewMaterialAdapter mAdapter;
 
     @Nullable
     @Override
@@ -97,8 +101,6 @@ public class EventPicturesFragment extends EventBaseFragment {
         initAdapter();
         //this.loadData();
 
-        setupRecyclerView();
-
         getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, new PictureLoader(this.getContext(), eventActivity.getEvent()));
 
         startPictureActivity();
@@ -118,7 +120,7 @@ public class EventPicturesFragment extends EventBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==IntentsUtils.REQUEST_CAMERA) {
             Log.d(TAG, "Result request camera");
-            eventActivity.setmViewPager(0);
+            eventActivity.setCurrentPageSelected(EventActivity.PAGER_PICTURE);
             if (resultCode != Activity.RESULT_OK){
                 return; // TODO
             }
@@ -129,7 +131,10 @@ public class EventPicturesFragment extends EventBaseFragment {
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(eventActivity);
-        mRecyclerView.setAdapter(picturesAdapter);
+        mAdapter = new RecyclerViewMaterialAdapter(picturesAdapter);
+        mRecyclerView.setAdapter(mAdapter);
+
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
 
@@ -271,18 +276,6 @@ public class EventPicturesFragment extends EventBaseFragment {
     }
 
 
-    // =============================================================================================
-    // PARALLAX VIEW
-    @Override
-    protected void setScrollOnLayoutManager(int scrollY) {
-        ((GridLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, -scrollY);
-    }
-
-    @Override
-    protected void setupRecyclerView() {
-        setRecyclerViewOnScrollListener();
-    }
-
 
     // =============================================================================================
 
@@ -302,7 +295,7 @@ public class EventPicturesFragment extends EventBaseFragment {
             super.onLoadFinished(loader, data);
             //picturesAdapter.setBaseUrl(this.getServerResponse().extra.get("base_url"));
             picturesAdapter.setData(data);
-            picturesAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
             noPicView.setVisibility(picturesAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 

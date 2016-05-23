@@ -3,7 +3,6 @@ package com.timappweb.timapp.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -12,14 +11,14 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
@@ -37,13 +36,15 @@ import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.EventView;
-import com.timappweb.timapp.views.parallaxviewpager.ParallaxViewPagerBaseActivity;
-import com.timappweb.timapp.views.parallaxviewpager.ScrollTabHolder;
-import com.timappweb.timapp.views.slidingTab.SlidingTabLayout;
 
 import java.util.List;
 
-public class EventActivity extends ParallaxViewPagerBaseActivity implements LocationManager.LocationListener, ScrollTabHolder{
+public class EventActivity extends BaseActivity implements LocationManager.LocationListener{
+
+    private static final int PAGER_INFO = 0;
+    public static final int PAGER_PICTURE = 1;
+    private static final int PAGER_TAG = 2;
+    private static final int PAGER_PEOPLE = 3;
 
     private String          TAG                     = "EventActivity";
 
@@ -72,13 +73,15 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
 
     private boolean isEventLoaded = false;
     private EventView eventView;
-    private SlidingTabLayout pagerTabStrip;
     private View mHeaderParallax;
     private EventInformationFragment fragmentInformation;
     private FragmentGroup mFragmentGroup;
     private View eventTitleContainer;
     private int windowHeight;
     private View mViewContainer;
+    private View mHeader;
+    private MaterialViewPager mMaterialViewPager;
+    private EventPagerAdapter mFragmentAdapter;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -119,7 +122,6 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
         //spotToolbar = (SpotView) findViewById(R.id.spot_view);
         //eventToolbar = (EventView) findViewById(R.id.event_view);
         //eventView = (EventView) findViewById(R.id.event_view);
-        pagerTabStrip = (SlidingTabLayout) findViewById(R.id.pager_tab_strip);
         eventTitleContainer = findViewById(R.id.event_title_container);
 
         mHeader = findViewById(R.id.header);
@@ -140,8 +142,6 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
             isEventLoaded = true;
             //eventView.setEvent(event);
             initFragments();
-            initValues();
-            setupAdapter();
             parseIntentParameters();
         }
 
@@ -159,14 +159,14 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
         switch (action) {
             case IntentsUtils.ACTION_CAMERA:
                 openAddPictureActivity();
-                //mViewPager.setCurrentItem(0);
+                //mMaterialViewPager.setCurrentItem(0);
                 break;
             case IntentsUtils.ACTION_TAGS:
-                //mViewPager.setCurrentItem(1);
+                //mMaterialViewPager.setCurrentItem(1);
                 openAddTagsActivity();
                 break;
             case IntentsUtils.ACTION_PEOPLE:
-                //mViewPager.setCurrentItem(2);
+                //mMaterialViewPager.setCurrentItem(2);
                 openAddPeopleActivity();
                 break;
         }
@@ -219,13 +219,13 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
         switch (requestCode){
             case IntentsUtils.REQUEST_TAGS:
                 if(resultCode==RESULT_OK) {
-                    mViewPager.setCurrentItem(1);
+                    setCurrentPageSelected(PAGER_TAG);
                     Log.d(TAG, "Result OK from TagActivity");
                 }
                 break;
             case IntentsUtils.REQUEST_INVITE_FRIENDS:
                 if(resultCode==RESULT_OK) {
-                    mViewPager.setCurrentItem(2);
+                    setCurrentPageSelected(PAGER_PEOPLE);
                     Log.d(TAG, "Result OK from InviteFriendsActivity");
                 }
                 break;
@@ -265,11 +265,15 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
 
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
         mFragmentAdapter = new EventPagerAdapter(super.getSupportFragmentManager(), mFragmentGroup.getFragments());
-        mViewPager = (ViewPager) super.findViewById(R.id.event_viewpager);
-        mViewPager.setOffscreenPageLimit(PAGER_OFFSCREEN_PAGE_LIMIT);
-        mViewPager.setAdapter(this.mFragmentAdapter);
-        mViewPager.setCurrentItem(INITIAL_FRAGMENT_PAGE);
-        /*mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mMaterialViewPager = (MaterialViewPager) super.findViewById(R.id.event_viewpager);
+        mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
+        //After set an adapter to the ViewPager
+        mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
+
+        //mMaterialViewPager.setOffscreenPageLimit(PAGER_OFFSCREEN_PAGE_LIMIT);
+        //mMaterialViewPager.setAdapter(this.mFragmentAdapter);
+        //mMaterialViewPager.setCurrentItem(INITIAL_FRAGMENT_PAGE);
+        /*mMaterialViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -281,10 +285,39 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
             public void onPageScrollStateChanged(int state) {
             }
         });*/
+
+        mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                switch (page) {
+                    case 0:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue,
+                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
+                    case 1:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.green,
+                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
+                    case 2:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.cyan,
+                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                    case 3:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.red,
+                                "http://www.tothemobile.com/wp-content/uploads/2014/07/original.jpg");
+                }
+
+                //execute others actions if needed (ex : modify your header logo)
+
+                return null;
+            }
+        });
     }
 
-    public void setmViewPager(int pageNumber) {
-        mViewPager.setCurrentItem(pageNumber);
+    // TODO
+    public void setCurrentPageSelected(int pageNumber) {
+        mMaterialViewPager.getViewPager().setCurrentItem(pageNumber);
     }
 
 
@@ -361,50 +394,10 @@ public class EventActivity extends ParallaxViewPagerBaseActivity implements Loca
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         if (isEventLoaded) {
-            mFragmentAdapter.getItem(mViewPager.getCurrentItem()).setMenuVisibility(true);
+            mFragmentAdapter.getItem(mMaterialViewPager.getViewPager().getCurrentItem()).setMenuVisibility(true);
         }
     }
 
-
-    // =============================================================================================
-    // SCROLL TAB
-
-    @Override
-    protected void initValues() {
-        //int tabHeight = pagerTabStrip.getHeight() + eventTitleContainer.getHeight() + mToolbar.getHeight();
-        mMinHeaderHeight = getResources().getDimensionPixelSize(R.dimen.min_header_height);
-        mHeaderHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
-        mMinHeaderTranslation = -mMinHeaderHeight;
-        mNumFragments = mFragmentGroup.size();
-
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        windowHeight = size.y;
-    }
-
-
-    @Override
-    protected void scrollHeader(int scrollY) {
-        float translationY = Math.max(-scrollY, mMinHeaderTranslation);
-        mHeader.setTranslationY(translationY);
-        mHeaderParallax.setTranslationY(-translationY/3);
-
-       // mViewPager.getLayoutParams().height = (int)(windowHeight - mHeader.getHeight());
-        //mViewPager.requestLayout();
-
-        mHeader.requestLayout();
-        mViewContainer.requestLayout();
-        mViewPager.requestLayout();
-    }
-
-    @Override
-    protected void setupAdapter() {
-        mViewPager.setAdapter(mFragmentAdapter);
-        mViewPager.setOffscreenPageLimit(mNumFragments);
-        pagerTabStrip.setOnPageChangeListener(getViewPagerChangeListener());
-        pagerTabStrip.setViewPager(mViewPager);
-    }
 
     // =============================================================================================
 

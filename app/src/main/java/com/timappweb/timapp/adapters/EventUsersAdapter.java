@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class EventUsersAdapter
-        extends  RecyclerView.Adapter<EventUsersAdapter.PlacePeopleViewHolder> {
+        extends RecyclerView.Adapter<EventUsersAdapter.PlacePeopleViewHolder> {
 
     private static final String TAG = "EventUsersAdapter";
 

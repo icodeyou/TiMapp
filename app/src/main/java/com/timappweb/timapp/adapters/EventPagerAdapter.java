@@ -4,16 +4,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.timappweb.timapp.views.parallaxviewpager.ParallaxFragmentPagerAdapter;
 
 import java.util.List;
 
-public class EventPagerAdapter extends ParallaxFragmentPagerAdapter {
+public class EventPagerAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> fragments;
 
     public EventPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
-        super(fm, fragments.size());
+        super(fm);
         this.fragments = fragments;
     }
 

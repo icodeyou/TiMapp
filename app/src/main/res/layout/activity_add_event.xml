@@ -1,227 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".AddSpotActivity"
     android:background="@color/background">
 
     <include layout="@layout/toolbar"></include>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/addplace_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_layout"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/toolbar_layout">
-
-        <include
-            android:id="@+id/no_spot_view"
-            layout="@layout/layout_pin_spot"
-            android:visibility = "visible" />
-
-        <com.timappweb.timapp.views.SpotView
-            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/spot_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            myattrs:edit_mode="true"
-            myattrs:bottom_shadow="true"
-            myattrs:background_color="@color/background_spot_transparent"
-            android:visibility="gone"/>
-
-
-        <!--<RelativeLayout
-            android:remote_id="@+remote_id/spot_added_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="gone">
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+remote_id/pin_post_linear_layout"
-                android:background="@color/Black"
-                android:alpha="0.8"/>
-            <LinearLayout
-                android:remote_id="@+remote_id/pin_post_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="5dp">
-                <ImageView
-                    android:remote_id="@+remote_id/unlock_icon"
-                    android:layout_width="@dimen/icon_default"
-                    android:layout_height="@dimen/icon_default"
-                    android:src="@drawable/locked"
-                    android:padding="5dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:gravity="bottom"
-                    android:text="Bar ObouDuPont"
-                    android:textColor="@color/White"
-                    android:textSize="@dimen/text_big"/>
-            </LinearLayout>
-        </RelativeLayout>-->
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="30dp">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_categories"
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-        </RelativeLayout>
-
-        <com.timappweb.timapp.views.BackCatchEditText
-            android:id="@+id/event_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:imeOptions="actionDone"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_big"
-            android:textColor="@color/colorPrimary"
-            android:hint="@string/hint_place_name"
-            android:textColorHint="@color/color_hint"
-            android:singleLine="true"/>
-        <!--<EditText
-            android:remote_id="@+remote_id/event_description"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top|left"
-            android:imeOptions="actionDone"
-            android:textSize="@dimen/text_tiny"
-            android:textColor="@color/colorPrimary"
-            android:hint="Add a description ..."
-            android:textColorHint="@color/color_hint"/>-->
-
-        <TextView
-            android:id="@+id/comment_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top|left"
-            android:textSize="@dimen/text_normal"
-            android:ellipsize="end"
-            android:padding="10dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/buttons"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
         <LinearLayout
-            android:id="@+id/comment_button"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <LinearLayout
+
+            <include
+                android:id="@+id/no_spot_view"
+                layout="@layout/layout_pin_spot"
+                android:visibility="visible" />
+
+            <com.timappweb.timapp.views.SpotView
+                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/spot_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_buttons_create_event"
-                android:layout_gravity="center"
-                android:gravity="center">
-                <ImageView
-                    android:layout_width="@dimen/icon_add_event"
-                    android:layout_height="@dimen/icon_add_event"
-                    android:src="@drawable/comment"/>
-                <!--<TextView
+                android:layout_height="wrap_content"
+                myattrs:edit_mode="true"
+                myattrs:bottom_shadow="true"
+                myattrs:background_color="@color/background_spot_transparent"
+                android:visibility="gone"/>
+
+
+            <!--<RelativeLayout
+                android:remote_id="@+remote_id/spot_added_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+remote_id/pin_post_linear_layout"
+                    android:background="@color/Black"
+                    android:alpha="0.8"/>
+                <LinearLayout
+                    android:remote_id="@+remote_id/pin_post_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Write a comment"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_normal"/>-->
-            </LinearLayout>
+                    android:padding="5dp">
+                    <ImageView
+                        android:remote_id="@+remote_id/unlock_icon"
+                        android:layout_width="@dimen/icon_default"
+                        android:layout_height="@dimen/icon_default"
+                        android:src="@drawable/locked"
+                        android:padding="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:gravity="bottom"
+                        android:text="Bar ObouDuPont"
+                        android:textColor="@color/White"
+                        android:textSize="@dimen/text_big"/>
+                </LinearLayout>
+            </RelativeLayout>-->
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/create_button"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-            <!--android:layout_margin="10dp"-->
-            <LinearLayout
+            <android.support.v4.view.ViewPager
+                android:id="@+id/addplace_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_buttons_create_event"
-                android:layout_gravity="center"
-                android:gravity="center">
-                <!--android:layout_width="@dimen/width_add_event_buttons"-->
-                <ImageView
-                    android:layout_width="@dimen/icon_add_event"
-                    android:layout_height="@dimen/icon_add_event"
-                    android:src="@drawable/validate"/>
-                <!--<TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Create"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_normal"/>-->
-
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_height="150dp"
+                android:layout_below="@+id/toolbar_layout"/>
 
 
-        <!--<LinearLayout
-            android:remote_id="@+remote_id/create_button"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/margin_square_button">
-            <TextView
-                android:remote_id="@+remote_id/text_create_button"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="30dp"
-                android:paddingLeft="30dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="30dp">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+            </RelativeLayout>
+
+            <com.timappweb.timapp.views.BackCatchEditText
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:background="@drawable/background_button_littlesquare"
-                android:textColor="@color/text_button"
+                android:imeOptions="actionDone"
                 android:textStyle="bold"
-                android:textAllCaps="true"
-                android:text="@string/create_button"
-                android:textSize="@dimen/text_normal"/>
-        </LinearLayout>-->
-    </LinearLayout>
+                android:textSize="@dimen/text_big"
+                android:textColor="@color/colorPrimary"
+                android:hint="@string/hint_place_name"
+                android:textColorHint="@color/color_hint"
+                android:singleLine="true"/>
+            <!--<EditText
+                android:remote_id="@+remote_id/event_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top|left"
+                android:imeOptions="actionDone"
+                android:textSize="@dimen/text_tiny"
+                android:textColor="@color/colorPrimary"
+                android:hint="Add a description ..."
+                android:textColorHint="@color/color_hint"/>-->
+
+            <TextView
+                android:id="@+id/comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top|left"
+                android:textSize="@dimen/text_normal"
+                android:ellipsize="end"
+                android:padding="10dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@color/background">
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/comment_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:gravity="top|left"
+            android:background="@color/white"
+            android:hint="@string/write_description"/>
+
+
+        <Button
+            android:id="@+id/create_button"
+            style="@style/pageSubmitButton"
+            android:text="Post"/>
 
 
 
-    <LinearLayout
-        android:id="@+id/progress_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:background="@color/background">
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

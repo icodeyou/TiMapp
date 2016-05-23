@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
@@ -29,7 +32,6 @@ import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
-import com.timappweb.timapp.views.parallaxviewpager.RecyclerViewFragment;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.List;
@@ -43,7 +45,6 @@ public class EventPeopleFragment extends EventBaseFragment {
     private static final String TAG = "EventTagsFragment";
 
     private Context         context;
-    private EventActivity eventActivity;
 
     private EventUsersHeaderAdapter placeUsersAdapter;
 
@@ -52,6 +53,9 @@ public class EventPeopleFragment extends EventBaseFragment {
     private View            noConnectionView;
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton postButton;
+    private RefreshableRecyclerView mRecyclerView;
+    private RecyclerViewMaterialAdapter mAdapter;
+    //private ObservableScrollView viewContainer;
 
 
     @Nullable
@@ -59,21 +63,23 @@ public class EventPeopleFragment extends EventBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_event_people, container, false);
-        eventActivity = (EventActivity) getActivity();
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         context= eventActivity.getBaseContext();
 
-        //Views
-
-        progressView = root.findViewById(R.id.progress_view);
-        noPostsView = root.findViewById(R.id.no_posts_view);
-        noConnectionView = root.findViewById(R.id.no_connection_view);
-        mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_people);
-        mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.list_people);
-        postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
+        // viewContainer = (ObservableScrollView) root.findViewById(R.id.scrollView);
+        progressView = view.findViewById(R.id.progress_view);
+        noPostsView = view.findViewById(R.id.no_posts_view);
+        noConnectionView = view.findViewById(R.id.no_connection_view);
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
+        mRecyclerView = (RefreshableRecyclerView) view.findViewById(R.id.list_people);
+        postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
         initAdapter();
-
-        setupRecyclerView();
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
 
@@ -98,10 +104,8 @@ public class EventPeopleFragment extends EventBaseFragment {
             }
         });
 
-
-        return root;
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
-
 
     private void initAdapter() {
         //Construct Adapter
@@ -115,6 +119,11 @@ public class EventPeopleFragment extends EventBaseFragment {
                 IntentsUtils.profile(eventActivity, user.getUser());
             }
         });
+
+
+        mAdapter = new RecyclerViewMaterialAdapter(placeUsersAdapter);
+        mRecyclerView.setAdapter(mAdapter);
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
 
@@ -148,27 +157,9 @@ public class EventPeopleFragment extends EventBaseFragment {
         super.onResume();
     }
 
-    // =============================================================================================
-    // PARALLAX VIEW
-    @Override
-    protected void setScrollOnLayoutManager(int scrollY) {
-        ((LinearLayoutManager)mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, -scrollY);
-    }
-
-    @Override
-    protected void setupRecyclerView() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(placeUsersAdapter)); // Add the sticky headers decoration
-        mRecyclerView.setAdapter(placeUsersAdapter);
-        setRecyclerViewOnScrollListener();
-    }
-
 
     // =============================================================================================
 
-    /**
-     * TODO
-     */
     class UserStatusLoader extends MultipleEntryLoaderCallback<UserEvent> {
 
         public UserStatusLoader(Context context, Event event) {
@@ -189,9 +180,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         }
 
     }
-    /**
-     * TODO
-     */
+
     class InviteSentLoader extends MultipleEntryLoaderCallback<EventsInvitation> {
 
         public InviteSentLoader(Context context, Event event) {
@@ -208,7 +197,7 @@ public class EventPeopleFragment extends EventBaseFragment {
             super.onLoadFinished(loader, data);
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.INVITED);
             placeUsersAdapter.addData(UserPlaceStatusEnum.INVITED, data);
-            placeUsersAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
             noPostsView.setVisibility(placeUsersAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 
