@@ -53,7 +53,6 @@ public class AddEventActivity extends BaseActivity {
     private View pinView;
     private ViewPager viewPager;
     private SpotView spotView;
-    private TextView commentView;
     // Data
     private Spot spot = null;
     private AddEventActivity context;
@@ -84,7 +83,6 @@ public class AddEventActivity extends BaseActivity {
         pinView = findViewById(R.id.no_spot_view);
         //pinnedSpot = findViewById(R.remote_id.pinned_spot);
         spotView = (SpotView) findViewById(R.id.spot_view);
-        commentView = (TextView) findViewById(R.id.comment_text);
 
         initKeyboard();
         setListeners();
@@ -107,18 +105,11 @@ public class AddEventActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         eventNameET.clearFocus();
-        commentView.setVisibility(View.VISIBLE);
         switch (requestCode) {
             case IntentsUtils.REQUEST_PICK_SPOT:
                 if(resultCode == RESULT_OK){
                     Log.d(TAG, "extracting bundle Spot");
                     extractSpot(data.getExtras());
-                }
-                break;
-            case IntentsUtils.REQUEST_COMMENT:
-                if(resultCode == RESULT_OK){
-                    Log.d(TAG, "extracting bundle Comment");
-                    extractComment(data.getExtras());
                 }
                 break;
         }
@@ -271,20 +262,10 @@ public class AddEventActivity extends BaseActivity {
             }
         });
 
-        eventNameET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    commentView.setVisibility(View.GONE);
-                }
-            }
-        });
-
         eventNameET.setHandleDismissingKeyboard(new BackCatchEditText.HandleDismissingKeyboard() {
             @Override
             public void dismissKeyboard() {
                 imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
-                commentView.setVisibility(View.VISIBLE);
                 eventNameET.clearFocus();
             }
         });
@@ -335,15 +316,4 @@ public class AddEventActivity extends BaseActivity {
         }
     }
 
-    private void extractComment(Bundle bundle){
-        if(bundle!=null) {
-            description = (String) bundle.getSerializable("description");
-            if (description != null){
-                Log.v(TAG, "Comment is selected: " + description);
-                commentView.setText(description);
-            } else {
-                Log.d(TAG, "description is null");
-            }
-        }
-    }
 }

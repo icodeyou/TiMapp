@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="textDark">#111111</color>
-    <color name="textLight">#dddddd</color>
+    <color name="textLight">#eeeeee</color>
     <color name="background_light">#eeeeee</color>
+    <color name="textMuteDark">#555555</color>
 </resources>

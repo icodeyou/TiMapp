@@ -37,7 +37,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private Event event;
     private ValueAnimator animator;
 
-    private AutofitTextView             tvName;
+    private TextView tvName;
     private TextView                    tvTime;
     private HorizontalTagsRecyclerView  tagsView;
     private ImageView                   categoryIcon;
@@ -131,7 +131,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         spotView = (SpotView) findViewById(R.id.spot_view);
         titleLayout = findViewById(R.id.event_title_container);
         whitePointsLayout = findViewById(R.id.white_points_layout);
-        tvName = (AutofitTextView) findViewById(R.id.title_event);
+        tvName = (TextView) findViewById(R.id.title_event);
         icPoints = (ImageView) findViewById(R.id.ic_hot);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.white_points_text);
         tvTime = (TextView) findViewById(R.id.time_place);
@@ -147,7 +147,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         distanceLayout = findViewById(R.id.distance_layout);
         distanceText = (TextView) findViewById(R.id.distance_text);
 
-        tagsView = (HorizontalTagsRecyclerView) findViewById(R.id.htrv_tags);
+        //tagsView = (HorizontalTagsRecyclerView) findViewById(R.id.htrv_tags);
         eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
         tvCountComing = (TextView) findViewById(R.id.count_coming_text);
         tvCountHere = (TextView) findViewById(R.id.count_here_text);
@@ -297,7 +297,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
             try {
                 Log.d(TAG, "Setting event Background");
                 eventCategory = MyApplication.getCategoryById(event.category_id);
-                smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
+                //smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
                 backgroundImage.setImageResource(eventCategory.getBigImageResId());
             } catch (UnknownCategoryException e) {
                 Log.e(TAG, "no eventCategory found for id : " + event.category_id);
@@ -305,21 +305,20 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         }
         descriptionView.setVisibility(isDescription && event.hasDescription() ? VISIBLE : GONE);
 
-
+/*
         if (isTagsVisible && event.hasTags()) {
             tagsView.getAdapter().setData(event.tags);
             tagsView.setVisibility(VISIBLE);
         }
         else{
             tagsView.setVisibility(GONE);
-        }
+        }*/
 
         this.setSpotVisible();
 
         //Counter
         int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime * 1000);
-
         tvCountComing.setText(event.count_coming == null ? "0" : event.count_coming.toString());
         tvCountHere.setText(event.count_here == null ? "0" : event.count_here.toString());
 

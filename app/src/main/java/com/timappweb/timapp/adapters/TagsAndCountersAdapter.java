@@ -40,7 +40,7 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setTag(mData.get(position));
+        holder.setTag(position, mData.get(position));
     }
 
     public void addAll(List data) {
@@ -66,9 +66,15 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
             tagCounter = (TextView) itemView.findViewById(R.id.tv_tag_counter);
         }
 
-        public void setTag(Tag tag) {
+        public void setTag(int position, Tag tag) {
             tagText.setText(tag.name);
             tagCounter.setText(String.valueOf(tag.count_ref));
+            if (position % 2 == 1){
+                itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            }
+            else {
+                itemView.setBackgroundColor(context.getResources().getColor(R.color.background_light));
+            }
         }
     }
 }

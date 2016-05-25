@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".AddSpotActivity"
-    android:background="@color/background">
 
-    <include layout="@layout/toolbar"></include>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        tools:context=".AddSpotActivity"
+        android:background="@color/background_light">
+
+        <include layout="@layout/toolbar"></include>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,40 +96,99 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp" />
             </RelativeLayout>
-
-            <com.timappweb.timapp.views.BackCatchEditText
-                android:id="@+id/event_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/colorPrimary"
-                android:hint="@string/hint_place_name"
-                android:textColorHint="@color/color_hint"
-                android:singleLine="true"/>
-            <!--<EditText
-                android:remote_id="@+remote_id/event_description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top|left"
-                android:imeOptions="actionDone"
-                android:textSize="@dimen/text_tiny"
-                android:textColor="@color/colorPrimary"
-                android:hint="Add a description ..."
-                android:textColorHint="@color/color_hint"/>-->
-
-            <TextView
-                android:id="@+id/comment_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top|left"
-                android:textSize="@dimen/text_normal"
-                android:ellipsize="end"
-                android:padding="10dp" />
         </LinearLayout>
 
+        <LinearLayout
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_location"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="Name"/>
+
+                <com.timappweb.timapp.views.BackCatchEditText
+                    android:id="@+id/event_name"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_place_name"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_location"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="Location"/>
+
+                <EditText
+                    android:id="@+id/place_name"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_event_location"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_comment"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="Description"/>
+
+                <EditText
+                    android:id="@+id/comment_edit_text"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_write_description"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_clock"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="Dates"/>
+
+                <EditText
+                    android:id="@+id/hours_field"
+                    style="@style/formEditText"
+                    android:hint="Start and end date"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/progress_view"
@@ -133,16 +199,6 @@
             android:background="@color/background">
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/comment_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:gravity="top|left"
-            android:background="@color/white"
-            android:hint="@string/write_description"/>
-
 
         <Button
             android:id="@+id/create_button"
@@ -151,4 +207,6 @@
 
 
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -53,7 +53,6 @@ public abstract class EventUsersAdapter
 
     public void addData(UserPlaceStatusEnum type, List<? extends PlaceUserInterface> items) {
         this.data.add(type, items);
-        this.notifyDataSetChanged();
     }
 
     public void addData(List<UserEvent> data) {
@@ -149,7 +148,6 @@ public abstract class EventUsersAdapter
 
     public void clear() {
         data.clear();
-        notifyDataSetChanged();
     }
 
 

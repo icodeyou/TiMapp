@@ -365,4 +365,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         this.distance = Math.round(distance);
     }
 
+    public String getName() {
+        return name;
+    }
 }

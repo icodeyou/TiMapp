@@ -4,35 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LocateActivity"
-    android:background="@color/background">
+    android:background="@color/background_light">
 
     <include layout="@layout/toolbar"></include>
 
-    <LinearLayout
-        android:id="@+id/progress_view"
-        android:layout_below="@+id/header"
-        android:layout_above="@+id/button_add_event"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center|top"
-        android:orientation="vertical"
-        android:visibility="visible"><!--
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_location"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_horizontal_padding"
-            android:textSize="@dimen/text_normal"
-            android:gravity="center"
-            android:typeface="serif"
-            android:text="@string/checking_around"/>-->
-        <include layout="@layout/progressview"
-            android:layout_height="@dimen/default_progressview"
-            android:layout_width="@dimen/default_progressview"/>
-    </LinearLayout>
 
     <TextView
         android:id="@+id/header"
@@ -42,6 +17,7 @@
         android:padding="20dp"
         android:textSize="@dimen/text_normal"
         android:text="Please check events that already exist near you."
+        android:textColor="@color/colorAccent"
         android:layout_below="@id/toolbar_layout"/>
 
     <include layout="@layout/no_connection_view"
@@ -52,89 +28,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/header"
-        android:layout_above="@+id/button_add_event"
         android:gravity="center_vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|top"
+            android:orientation="vertical"
+            android:visibility="visible">
+            <include layout="@layout/progressview"
+                android:layout_height="@dimen/default_progressview"
+                android:layout_width="@dimen/default_progressview"/>
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_places"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical"
             android:divider="@color/divider_listview"
             android:dividerHeight="1dp"
             android:visibility="gone"/>
-    </LinearLayout>
 
-    <!--<RelativeLayout
-        android:id="@+id/layout_if_no_place"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/desert"
-            android:alpha="0.2"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="80dp"
-            android:padding="10dp"
-            android:textColor="@color/Black"
-            android:gravity="center"
-            android:textStyle="bold|italic"
-            android:textSize="@dimen/text_normal"
-            android:text="@string/text_no_event_around1"/>
-    </RelativeLayout>-->
-
-    <LinearLayout
-        android:id="@+id/button_add_event"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_bottom_button"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:background="@drawable/background_button_littlesquare"
-        android:visibility="visible">
-        <TextView
-            android:id="@+id/text_save_button"
+        <Button
+            android:id="@+id/button_add_event"
             style="@style/pageSubmitButton"
             android:text="@string/button_add_place"/>
+
     </LinearLayout>
 
-    <!--TOP RADIUS BUTTON -->
-    <!--<LinearLayout
-        android:remote_id="@+remote_id/button_add_spot"
-        android:layout_width="250dp"
-        android:layout_height="@dimen/height_bottom_button"
-        android:layout_marginTop="@dimen/margin_square_button"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:background="@color/transparent"
-        android:visibility="visible">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/button_selecting_margin"
-            android:layout_marginRight="@dimen/button_selecting_margin"
-            android:layout_marginTop="@dimen/button_selecting_margin"
-            android:background="@drawable/background_top_radius_button"
-            android:gravity="center">
-            <TextView
-                android:remote_id="@+remote_id/text_button_add_spot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="@string/button_add_place"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_big"
-                android:textColor="@color/text_button"/>
-        </LinearLayout>
-    </LinearLayout>-->
-
-    <include layout="@layout/toolbar_transparent"></include>
+    <include layout="@layout/toolbar"></include>
 
     <!--<include
         layout="@layout/toolbar_transparent" />-->

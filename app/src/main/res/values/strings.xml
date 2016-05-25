@@ -116,7 +116,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="title_activity_publish">Check and send</string>
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
-    <string name="hint_place_name">Name</string>
+    <string name="hint_place_name">Event name</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
     <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
     <string name="searchview_hint_3">Choose 3 tags</string>
@@ -207,13 +207,14 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
     <string name="unknown_category">Unknown category</string>
-    <string name="write_description">Write a description (price, address, closure hour, access code ...)</string>
+    <string name="hint_write_description">Price, access code...</string>
     <string name="iamhere">I\'m here !</string>
     <string name="iamcoming">I\'m coming !</string>
     <string name="please_wait_location">Please wait while we get your location</string>
     <string name="event_over_change_status">The event is finished, you can\'t change your status !</string>
     <string name="cannot_notify_status">Sorry, you cannot notify your status for now</string>
     <string name="no_friends">You have no friends</string>
+    <string name="hint_event_location">Event location</string>
 
 
 </resources>

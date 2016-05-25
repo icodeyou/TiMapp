@@ -2,38 +2,42 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <!-- **********************************************************************-->
-
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.timappweb.timapp.views.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout_place_people"
+
+        <!-- **********************************************************************-->
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.timappweb.timapp.views.RefreshableRecyclerView
-                android:id="@+id/list_people"
+            <com.timappweb.timapp.views.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout_place_people"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipToPadding="true"
-                android:saveEnabled="false"/>
-            <!--android:listSelector="@android:color/transparent"-->
-        </com.timappweb.timapp.views.SwipeRefreshLayout>
+                android:layout_height="match_parent">
 
-        <TextView
-            style="@style/NoDataView"
-            android:id="@+id/no_posts_view"
-            android:text="@string/no_people"/>
+                <com.timappweb.timapp.views.RefreshableRecyclerView
+                    android:id="@+id/list_people"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="true"
+                    android:saveEnabled="false"/>
+                <!--android:listSelector="@android:color/transparent"-->
+            </com.timappweb.timapp.views.SwipeRefreshLayout>
 
-    </FrameLayout>
+            <TextView
+                style="@style/NoDataView"
+                android:id="@+id/no_posts_view"
+                android:text="@string/no_people"/>
+
+        </FrameLayout>
+    </LinearLayout>
 
 
     <RelativeLayout

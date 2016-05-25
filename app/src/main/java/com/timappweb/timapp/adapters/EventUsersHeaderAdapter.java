@@ -37,7 +37,7 @@ public class EventUsersHeaderAdapter extends EventUsersAdapter
 
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, int position) {
-        TextView textView = (TextView) holder.itemView;
+        TextView textView = (TextView) holder.itemView.findViewById(R.id.text_header_place_people);
         int type = ((EventUsersAdapter.SectionItem) data.getSectionFromPosition(position)).getViewType();
         switch (type) {
             case VIEW_TYPES.HERE:

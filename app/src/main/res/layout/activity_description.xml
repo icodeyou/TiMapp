@@ -18,7 +18,7 @@
         android:padding="10dp"
         android:gravity="top|left"
         android:background="@color/white"
-        android:hint="@string/write_description"/>
+        android:hint="@string/hint_write_description"/>
 
     <LinearLayout
         android:id="@+id/save_button"

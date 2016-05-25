@@ -8,10 +8,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/no_connection_view"
-            android:id="@+id/no_connection_view"/>
-
-
         <!-- List View -->
         <!-- **********************************************************************-->
 

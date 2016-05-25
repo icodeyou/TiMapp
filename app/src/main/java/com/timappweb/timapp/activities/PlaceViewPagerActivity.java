@@ -39,6 +39,13 @@ public class PlaceViewPagerActivity extends FragmentActivity {
         page = (MyHackyViewPager)findViewById(R.id.view_pager);
         page.setAdapter(pagerAdapter);
 
+        int initialPosition = extractInitialPosition();
+
+        page.setCurrentItem(initialPosition);
+    }
+
+    private int extractInitialPosition() {
+        return getIntent().getIntExtra(IntentsUtils.VIEW_PICTURE_POSITION, 0);
     }
 
     /*@Override

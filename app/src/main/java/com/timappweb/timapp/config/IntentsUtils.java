@@ -51,6 +51,8 @@ public class IntentsUtils {
     public static final String KEY_ACTION = "action";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_USER = "user";
+    public static final String VIEW_PICTURE_POSITION = "position";
+    public static final String VIEW_PICTURE_LIST = "pictures";
 
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
@@ -221,8 +223,8 @@ public class IntentsUtils {
 
     public static void viewPicture(Activity activity, int position, String[] data) {
         Intent intent = new Intent(activity, PlaceViewPagerActivity.class);
-        intent.putExtra("position", position);
-        intent.putExtra("pictures", data);
+        intent.putExtra(VIEW_PICTURE_POSITION, position);
+        intent.putExtra(VIEW_PICTURE_LIST, data);
         activity.startActivity(intent);
     }
 
@@ -295,11 +297,10 @@ public class IntentsUtils {
 
     public static String[] extractPicture(Intent intent) {
         Bundle extras = intent.getExtras();
-        //TODO Steph : remove condition :
         if (extras == null){
             return null;
         }
-        return extras.getStringArray("pictures");
+        return extras.getStringArray(IntentsUtils.VIEW_PICTURE_LIST);
     }
 
     public static Post extractPost(Intent intent) {

@@ -69,6 +69,7 @@ public class EventPicturesFragment extends EventBaseFragment {
     private PicturesAdapter         picturesAdapter;
 
     public static int PICUTRE_GRID_COLUMN_NB =  2;
+    private static final long MAX_UPDATE_DELAY = 3600 * 1000;
     
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton postButton;
@@ -131,7 +132,7 @@ public class EventPicturesFragment extends EventBaseFragment {
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(eventActivity);
-        mAdapter = new RecyclerViewMaterialAdapter(picturesAdapter);
+        mAdapter = new RecyclerViewMaterialAdapter(picturesAdapter, PICUTRE_GRID_COLUMN_NB);
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
@@ -285,7 +286,7 @@ public class EventPicturesFragment extends EventBaseFragment {
     class PictureLoader extends MultipleEntryLoaderCallback<Picture> {
 
         public PictureLoader(Context context, Event event) {
-            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, event.getPicturesQuery());
+            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, event.getPicturesQuery());
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout);
         }

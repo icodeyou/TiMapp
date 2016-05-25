@@ -1,33 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/event_title_container"
+<TextView
+    android:id="@+id/title_event"
+    android:layout_toRightOf="@+id/image_small_category_place"
+    android:layout_toEndOf="@+id/image_small_category_place"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black"
-    android:alpha="0.8"
-    android:layout_alignParentBottom="true"
-    >
-    <ImageView
-        android:id="@+id/image_small_category_place"
-        android:layout_width="@dimen/little_icon_spot"
-        android:layout_height="45dp"
-        android:layout_marginRight="@dimen/default_ic_margin"
-        android:layout_marginEnd="@dimen/default_ic_margin"
-        android:textAlignment="center"
-        android:src="@drawable/ic_category_highlight_party"
-        android:visibility="visible"/>
-    <me.grantland.widget.AutofitTextView
-        android:id="@+id/title_event"
-        android:layout_toRightOf="@+id/image_small_category_place"
-        android:layout_toEndOf="@+id/image_small_category_place"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center|start"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:layout_gravity="center"
-        android:textStyle="bold"
-        android:text="Soirée dansante Rock N Roll"
-        android:textSize="@dimen/title_event_card" />
-</LinearLayout>
+    android:gravity="center|start"
+    android:ellipsize="end"
+    android:layout_gravity="center"
+    android:textStyle="bold"
+    android:text="Soirée dansante Rock N Roll de folie"
+    android:textSize="@dimen/title_event_card"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

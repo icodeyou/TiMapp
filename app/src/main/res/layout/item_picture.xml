@@ -25,4 +25,5 @@
     android:elevation="@dimen/card_elevation"
     fresco:viewAspectRatio="1"
     fresco:actualImageScaleType="centerCrop"
-    fresco:placeholderImage="@drawable/placeholder_default" />
+    fresco:placeholderImage="@drawable/placeholder_default"
+    android:background="@color/background_light"/>

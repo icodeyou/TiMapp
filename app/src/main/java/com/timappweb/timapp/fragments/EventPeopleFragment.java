@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
@@ -43,6 +42,7 @@ import retrofit2.Response;
 public class EventPeopleFragment extends EventBaseFragment {
 
     private static final String TAG = "EventTagsFragment";
+    private static final long MAX_UPDATE_DELAY = 3600 * 1000;
 
     private Context         context;
 
@@ -79,7 +79,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         mRecyclerView = (RefreshableRecyclerView) view.findViewById(R.id.list_people);
         postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
-        initAdapter();
+        initRecyclerView();
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
 
@@ -104,10 +104,10 @@ public class EventPeopleFragment extends EventBaseFragment {
             }
         });
 
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
-    private void initAdapter() {
+    private void initRecyclerView() {
+
         //Construct Adapter
         placeUsersAdapter = new EventUsersHeaderAdapter(context);
         placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
@@ -119,10 +119,13 @@ public class EventPeopleFragment extends EventBaseFragment {
                 IntentsUtils.profile(eventActivity, user.getUser());
             }
         });
-
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(placeUsersAdapter));
 
         mAdapter = new RecyclerViewMaterialAdapter(placeUsersAdapter);
         mRecyclerView.setAdapter(mAdapter);
+
+
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
@@ -163,7 +166,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     class UserStatusLoader extends MultipleEntryLoaderCallback<UserEvent> {
 
         public UserStatusLoader(Context context, Event event) {
-            super(context, 3600 * 1000, DataSyncAdapter.SYNC_TYPE_EVENT_USERS, UserEvent.queryForPlace(event));
+            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_USERS, UserEvent.queryForPlace(event));
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout, false);
         }
@@ -174,8 +177,7 @@ public class EventPeopleFragment extends EventBaseFragment {
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.COMING);
             placeUsersAdapter.clearSection(UserPlaceStatusEnum.HERE);
             placeUsersAdapter.addData(data);
-            placeUsersAdapter.addData(data); // TODO remove
-            placeUsersAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
             noPostsView.setVisibility(placeUsersAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 
@@ -184,7 +186,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     class InviteSentLoader extends MultipleEntryLoaderCallback<EventsInvitation> {
 
         public InviteSentLoader(Context context, Event event) {
-            super(context, 3600 * 1000,
+            super(context, MAX_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_EVENT_INVITED,
                     MyApplication.getCurrentUser().getInviteSentQuery(event.getId()));
 

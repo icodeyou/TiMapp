@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,10 +12,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -68,20 +72,15 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private EventPicturesFragment fragmentPictures;
     private EventTagsFragment fragmentTags;
     private EventPeopleFragment fragmentPeople;
+    private EventInformationFragment fragmentInformation;
 
     //Listeners
 
     private boolean isEventLoaded = false;
-    private EventView eventView;
-    private View mHeaderParallax;
-    private EventInformationFragment fragmentInformation;
     private FragmentGroup mFragmentGroup;
-    private View eventTitleContainer;
-    private int windowHeight;
-    private View mViewContainer;
-    private View mHeader;
     private MaterialViewPager mMaterialViewPager;
     private EventPagerAdapter mFragmentAdapter;
+    private TextView pageTitle;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -100,34 +99,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             eventId = event.remote_id;
         }
 
-        //Set status bar blue
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        //    Window window = getWindow();
-        //    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //   window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorSecondaryDark));
-        //}
-/*
-        FadingActionBarHelper helper = new FadingActionBarHelper()
-                .actionBarBackground(R.drawable.background_button)
-                .headerLayout(R.layout.header_event_activity)
-                .contentLayout(R.layout.activity_event);
-        setContentView(helper.createView(this));
-        helper.initActionBar(this);*/
-
         setContentView(R.layout.activity_event);
 
-        initToolbar(false);
-
-        //Initialize
-        //spotToolbar = (SpotView) findViewById(R.id.spot_view);
-        //eventToolbar = (EventView) findViewById(R.id.event_view);
-        //eventView = (EventView) findViewById(R.id.event_view);
-        eventTitleContainer = findViewById(R.id.event_title_container);
-
-        mHeader = findViewById(R.id.header);
-        mHeaderParallax = findViewById(R.id.background_image_event);
-        mViewContainer = findViewById(R.id.activity_event_container);
-
+        pageTitle = (TextView) findViewById(R.id.title_event);
         //eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
         getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
@@ -140,7 +114,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void onEventLoaded() {
         if (!isEventLoaded){
             isEventLoaded = true;
-            //eventView.setEvent(event);
+           // eventView.setEvent(event);
             initFragments();
             parseIntentParameters();
         }
@@ -289,23 +263,25 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
+                Drawable drawable = null;
+                try {
+                    drawable = getResources().getDrawable(event.getCategory().getBigImageResId());
+                } catch (UnknownCategoryException e) {
+                    drawable = getResources().getDrawable(R.drawable.image_else);
+                }
                 switch (page) {
                     case 0:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.blue,
-                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.colorPrimary, drawable);
                     case 1:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.green,
-                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.colorPrimary, drawable);
                     case 2:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.cyan,
-                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.colorPrimary, drawable);
                     case 3:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.red,
-                                "http://www.tothemobile.com/wp-content/uploads/2014/07/original.jpg");
+                        return HeaderDesign.fromColorResAndDrawable(
+                                R.color.colorPrimary, drawable);
                 }
 
                 //execute others actions if needed (ex : modify your header logo)
@@ -313,14 +289,24 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 return null;
             }
         });
+
+        //initToolbar(false);
+        Toolbar toolbar = mMaterialViewPager.getToolbar();
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayUseLogoEnabled(false);
+            actionBar.setHomeButtonEnabled(true);
+        }
     }
 
-    // TODO
     public void setCurrentPageSelected(int pageNumber) {
         mMaterialViewPager.getViewPager().setCurrentItem(pageNumber);
     }
-
-
 
     /**
      *
@@ -333,16 +319,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         } catch (UnknownCategoryException e) {
             Log.e(TAG, "no category found for id : " + event.category_id);
         }
-        /*
-        if(event.spot==null) {
-            eventToolbar.setVisibility(View.VISIBLE);
-            spotToolbar.setVisibility(View.GONE);
-            eventToolbar.setEvent(event);
-        } else {
-            spotToolbar.setVisibility(View.VISIBLE);
-            eventToolbar.setVisibility(View.GONE);
-            spotToolbar.setSpot(event.spot);
-        }*/
+
+        pageTitle.setText(event.getName());
     }
 
 
