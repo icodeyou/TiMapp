@@ -95,7 +95,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHold
             super(itemView);
             itemView.setOnClickListener(this);
             spotView = (SpotView) itemView.findViewById(R.id.spot_view);
-            horizontalTagsRv = spotView.getRvSpotTags();
+            //horizontalTagsRv = spotView.getRvSpotTags();
         }
 
         @Override

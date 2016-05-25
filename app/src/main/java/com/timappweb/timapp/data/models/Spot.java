@@ -99,4 +99,8 @@ public class Spot extends SyncBaseModel implements Serializable {
     public boolean isSync(SyncBaseModel model) {
         return false;
     }
+
+    public void setCategory(SpotCategory category) {
+        this.category = category;
+    }
 }

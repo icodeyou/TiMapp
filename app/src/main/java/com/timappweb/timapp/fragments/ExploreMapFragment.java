@@ -33,6 +33,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;

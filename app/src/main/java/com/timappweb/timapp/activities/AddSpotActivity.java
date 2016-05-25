@@ -37,7 +37,7 @@ import retrofit2.Response;
 public class AddSpotActivity extends BaseActivity implements LoadingListener {
 
     private static final String TAG = "AddSpotActivity";
-    private ImageView showCategoriesButton;
+    //private ImageView showCategoriesButton;
     private View createPlaceButton;
     private EditText etCustomPlace;
     private RecyclerView spotCategoriesRv;
@@ -59,7 +59,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         this.initToolbar(true);
 
         //Initialize
-        showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
+        //showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
         createPlaceButton = findViewById(R.id.create_spot_button);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
@@ -139,7 +139,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
                 spotCategoriesAdapter.notifyDataSetChanged();
             }
         });
-
+/*
         showCategoriesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +149,7 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
                     spotCategoriesRv.setVisibility(View.GONE);
                 }
             }
-        });
+        });*/
 
         spotsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -174,10 +174,10 @@ public class AddSpotActivity extends BaseActivity implements LoadingListener {
         //TODO : Get rules from server configuration
         if(etCustomPlace.length()>=2 && getCategorySelected()!=null) {
             createPlaceButton.setVisibility(View.VISIBLE);
-            showCategoriesButton.setVisibility(View.GONE);
+            //showCategoriesButton.setVisibility(View.GONE);
         } else {
             createPlaceButton.setVisibility(View.GONE);
-            showCategoriesButton.setVisibility(View.VISIBLE);
+            //showCategoriesButton.setVisibility(View.VISIBLE);
         }
     }
 

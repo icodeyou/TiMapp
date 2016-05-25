@@ -73,7 +73,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private ImageView icPoints;
 
     private boolean hotPoints = false;
-    private EventButtonsView eventButtonsView;
+    //private EventButtonsView eventButtonsView;
     private TextView tvCountComing;
     private TextView tvCountHere;
 
@@ -148,7 +148,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         distanceText = (TextView) findViewById(R.id.distance_text);
 
         //tagsView = (HorizontalTagsRecyclerView) findViewById(R.id.htrv_tags);
-        eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
+        //eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
         tvCountComing = (TextView) findViewById(R.id.count_coming_text);
         tvCountHere = (TextView) findViewById(R.id.count_here_text);
 
@@ -257,9 +257,9 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     public void setEvent(final Event event) {
 
         this.event = event;
-        if (this.eventButtonsView != null){
-            this.eventButtonsView.setEvent(event);
-        }
+        //if (this.eventButtonsView != null){
+        //    this.eventButtonsView.setEvent(event);
+        //}
 
         if (event == null){
             Log.e(TAG, "Trying to display a null event");

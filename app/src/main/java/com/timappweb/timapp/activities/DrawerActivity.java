@@ -25,6 +25,7 @@ import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -268,6 +269,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_my_invitations).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_share).setVisible(isLoggedIn);
 
+
         MenuItem item = menu.findItem(R.id.action_clear_filter);
         if(exploreFragment != null) {
             if(exploreFragment.getExploreMapFragment()!=null) {
@@ -311,36 +313,41 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.menu_item_explore) {
-            IntentsUtils.home(this);
-            //changeCurrentFragment(FragmentId.Explore);
-        }
-        else if (id == R.id.menu_item_tag_around){
-            IntentsUtils.locate(this);
-        }
-        else if (id == R.id.menu_item_my_invitations){
-            IntentsUtils.invitations(this);
-        }
-        else if (id == R.id.menu_item_my_friends){
-            IntentsUtils.listFriends(this);
-        }
-        else if (id == R.id.menu_item_share){
-            IntentsUtils.share(this);
-        }
-        else if (id == R.id.menu_item_profile) {
-            IntentsUtils.profile(this);
-        }
-        else if (id == R.id.menu_item_settings) {
-            IntentsUtils.settings(this);
-            //IntentsUtils.addPeople(this);
-        }
-        else if (id == R.id.menu_item_login){
-            IntentsUtils.login(this);
-        }
-        else if (id == R.id.menu_item_logout) {
-            IntentsUtils.logout(this);
-            mSimpleFacebook.logout(onLogoutListener);
-            finish();
+
+        switch (id){
+            case R.id.menu_item_explore:
+                IntentsUtils.home(this);
+                break;
+            case R.id.menu_item_tag_around:
+                IntentsUtils.locate(this);
+                break;
+            case R.id.menu_item_my_invitations:
+                IntentsUtils.invitations(this);
+                break;
+            case R.id.menu_item_my_friends:
+                IntentsUtils.listFriends(this);
+                break;
+            case R.id.menu_item_share:
+                IntentsUtils.share(this);
+                break;
+            case R.id.menu_item_profile:
+                IntentsUtils.profile(this);
+                break;
+            case R.id.menu_item_settings:
+                IntentsUtils.settings(this);
+                break;
+            case R.id.menu_item_login:
+                IntentsUtils.login(this);
+                break;
+            case R.id.menu_item_logout:
+                IntentsUtils.logout(this);
+                mSimpleFacebook.logout(onLogoutListener);
+                finish();
+                break;
+            // DEV
+            case R.id.menu_item_dummy_event:
+                IntentsUtils.viewSpecifiedEvent(this, Event.createDummy());
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

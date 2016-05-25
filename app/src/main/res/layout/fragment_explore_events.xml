@@ -23,12 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:alpha="0.1"
-            android:src="@drawable/desert" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_big_header"

@@ -98,12 +98,14 @@
     </style>
 
     <style name="EventShortcutButtons">
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">45dp</item>
         <item name="android:padding">10dp</item>
+        <item name="android:gravity">center</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
 
 
@@ -122,12 +124,24 @@
         <item name="android:singleLine">true</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/textDark</item>
+        <item name="android:gravity">left|center</item>
     </style>
     <style name="TextInfoSecondary">
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/textDark</item>
+        <item name="android:gravity">left|center</item>
+    </style>
+
+    <style name="TextMute">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/textMute</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="pageSubmitButton">
@@ -147,8 +161,9 @@
     <style name="formLabel">
        <item name="android:layout_width">match_parent</item>
        <item name="android:layout_height">wrap_content</item>
-       <item name="android:textColor">@color/textMuteDark</item>
+       <item name="android:textColor">@color/textMute</item>
        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:paddingBottom">4dp</item>
     </style>
 
     <style name="formEditText">
@@ -163,7 +178,6 @@
         <item name="android:singleLine">true</item>
         <item name="android:background">@drawable/edittext_bottom_line</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingTop">4dp</item>
     </style>
 
     <style name="formGroup">
@@ -181,4 +195,50 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:paddingRight">10dp</item>
     </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="title2">
+        <item name="android:textSize">@dimen/text_big</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+    <style name="title1">
+        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingBottom">7dp</item>
+    </style>
+
+    <style name="imageIcon">
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">30dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="imageIconBig">
+        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_width">45dp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="imageIconSmall">
+        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_width">25dp</item>
+        <item name="android:padding">3dp</item>
+    </style>
+
+
+    <color name="textMute">#777777</color>
 </resources>

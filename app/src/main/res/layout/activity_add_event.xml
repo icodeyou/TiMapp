@@ -21,88 +21,101 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <!--
+                        <include
+                            android:id="@+id/no_spot_view"
+                            layout="@layout/layout_pin_spot"
+                            android:visibility="visible" />
 
-            <include
-                android:id="@+id/no_spot_view"
-                layout="@layout/layout_pin_spot"
-                android:visibility="visible" />
-
-            <com.timappweb.timapp.views.SpotView
-                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/spot_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                myattrs:edit_mode="true"
-                myattrs:bottom_shadow="true"
-                myattrs:background_color="@color/background_spot_transparent"
-                android:visibility="gone"/>
+                        <com.timappweb.timapp.views.SpotView
+                            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/spot_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            myattrs:edit_mode="true"
+                            myattrs:bottom_shadow="true"
+                            myattrs:background_color="@color/background_spot_transparent"
+                            android:visibility="gone"/>
 
 
-            <!--<RelativeLayout
-                android:remote_id="@+remote_id/spot_added_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:visibility="gone">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+remote_id/pin_post_linear_layout"
-                    android:background="@color/Black"
-                    android:alpha="0.8"/>
+                        <RelativeLayout
+                            android:remote_id="@+remote_id/spot_added_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:visibility="gone">
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@+remote_id/pin_post_linear_layout"
+                                android:background="@color/Black"
+                                android:alpha="0.8"/>
+                            <LinearLayout
+                                android:remote_id="@+remote_id/pin_post_linear_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:padding="5dp">
+                                <ImageView
+                                    android:remote_id="@+remote_id/unlock_icon"
+                                    android:layout_width="@dimen/icon_default"
+                                    android:layout_height="@dimen/icon_default"
+                                    android:src="@drawable/locked"
+                                    android:padding="5dp"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginStart="10dp"
+                                    android:maxLines="1"
+                                    android:ellipsize="end"
+                                    android:gravity="bottom"
+                                    android:text="Bar ObouDuPont"
+                                    android:textColor="@color/White"
+                                    android:textSize="@dimen/text_big"/>
+                            </LinearLayout>
+                        </RelativeLayout>-->
+
+            <LinearLayout
+                style="@style/formGroup">
+                <ImageView
+                    style="@style/formIconGroup"
+                    android:src="@drawable/ic_tag_dark"/>
+
                 <LinearLayout
-                    android:remote_id="@+remote_id/pin_post_linear_layout"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="5dp">
-                    <ImageView
-                        android:remote_id="@+remote_id/unlock_icon"
-                        android:layout_width="@dimen/icon_default"
-                        android:layout_height="@dimen/icon_default"
-                        android:src="@drawable/locked"
-                        android:padding="5dp"/>
+                    android:orientation="vertical">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginStart="10dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:gravity="bottom"
-                        android:text="Bar ObouDuPont"
-                        android:textColor="@color/White"
-                        android:textSize="@dimen/text_big"/>
-                </LinearLayout>
-            </RelativeLayout>-->
+                        style="@style/formLabel"
+                        android:text="Event category"/>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_categories"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/addplace_viewpager"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"/>
+                    </FrameLayout>
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/addplace_viewpager"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_below="@+id/toolbar_layout"/>
+                    </LinearLayout>
+
+            </LinearLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="30dp">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_categories"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp" />
-            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             style="@style/formGroup">
             <ImageView
                 style="@style/formIconGroup"
-                android:src="@drawable/ic_location"/>
+                android:src="@drawable/ic_title_dark"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -136,9 +149,15 @@
                     android:text="Location"/>
 
                 <EditText
-                    android:id="@+id/place_name"
+                    android:id="@+id/event_location"
                     style="@style/formEditText"
                     android:hint="@string/hint_event_location"/>
+
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/map_min_height" />
             </LinearLayout>
 
         </LinearLayout>
@@ -148,7 +167,7 @@
             style="@style/formGroup">
             <ImageView
                 style="@style/formIconGroup"
-                android:src="@drawable/ic_comment"/>
+                android:src="@drawable/ic_comment_dark"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -162,11 +181,12 @@
                 <EditText
                     android:id="@+id/comment_edit_text"
                     style="@style/formEditText"
-                    android:hint="@string/hint_write_description"/>
+                    android:hint="@string/hint_write_description"
+                    android:lines="5"/>
             </LinearLayout>
 
         </LinearLayout>
-
+        <!--
         <LinearLayout
             style="@style/formGroup">
             <ImageView
@@ -188,7 +208,7 @@
                     android:hint="Start and end date"/>
             </LinearLayout>
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/progress_view"

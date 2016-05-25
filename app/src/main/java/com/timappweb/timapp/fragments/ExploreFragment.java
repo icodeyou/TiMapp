@@ -8,9 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -147,7 +145,7 @@ public class ExploreFragment extends Fragment{
             Drawable drawable;
             if (position == 0) {
                 sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_map));
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_map);
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_map_light);
             }
             else {
                 sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_list));

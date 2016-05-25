@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
     <!--<ImageView
         android:remote_id="@+remote_id/background_invitation"
         android:layout_width="match_parent"
@@ -13,27 +7,31 @@
         android:src="@drawable/image_bar"/>-->
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background_card"
+        android:layout_marginBottom="10dp"
+        android:elevation="@dimen/card_elevation">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@color/transparent">
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginEnd="20dp"
-                android:alpha="0.9"
+                style="@style/imageIcon"
                 android:src="@drawable/letter"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
+            ,<LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginLeft="5dp">
                 <me.grantland.widget.AutofitTextView
                     android:id="@+id/name_invitation"
                     android:layout_width="wrap_content"
@@ -54,21 +52,30 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
+
+        <include layout="@layout/header_event_activity" android:layout_height="100dp"
+            android:layout_width="match_parent"></include>
+
+        <!-- _______________________ DESCRIPTION __________________________________________-->
+
+
+    <include layout="@layout/event_user_interaction" />
+
+    <include layout="@layout/event_stats_people"></include>
         <!--<View
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_bottom_gradient_view"
             android:background="@drawable/bottom_layout_event" />-->
-
+<!--
         <com.timappweb.timapp.views.EventView
             xmlns:myattrs="http://schemas.android.com/apk/res-auto"
             android:id="@+id/event_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="7dp"
             myattrs:is_spot="false"
             myattrs:tags_visible="true"
             myattrs:bottom_shadow="true"
-            myattrs:top_shadow="false"/>
+            myattrs:top_shadow="false"/>-->
     </LinearLayout>
-
-</RelativeLayout>

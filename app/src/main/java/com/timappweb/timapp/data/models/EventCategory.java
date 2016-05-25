@@ -15,6 +15,8 @@ public class EventCategory extends SyncBaseModel implements Serializable{
 
     private static final String TAG = "EventCategory";
 
+    // =============================================================================================
+
     @Expose
     @Column(name = "Name")
     public String name;
@@ -23,6 +25,7 @@ public class EventCategory extends SyncBaseModel implements Serializable{
     @Column(name = "Position")
     public int position;
 
+    // =============================================================================================
 
     private int resourceBlack = -1;
     private int resourceWhite = -1;
@@ -30,7 +33,22 @@ public class EventCategory extends SyncBaseModel implements Serializable{
     private int smallImageResId = -1;
     private int bigImageResId= -1;
 
+    // =============================================================================================
 
+
+    public EventCategory() {
+    }
+
+    public EventCategory(String name) {
+        this.name = name;
+        this.position = 0;
+    }
+    public EventCategory(String name, int position) {
+        this.name = name;
+        this.position = position;
+    }
+
+    // =============================================================================================
     public String getName() {
         return name;
     }

@@ -4,7 +4,6 @@ package com.timappweb.timapp.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,16 +22,16 @@ public class SpotView extends LinearLayout{
 
     //private OnSpotClickListener         onSpotClickListener;
 
-    private HorizontalTagsRecyclerView  rvSpotTags;
+    //private HorizontalTagsRecyclerView  rvSpotTags;
     private ImageView                   bigCategoryIcon;
     private ImageView                   smallCategoryIcon;
-    private RelativeLayout              parentLayout;
+    private View containerLayout;
     private LinearLayout                parentTextViews;
     private View                        gradientBottomView;
     private View                        gradientTopView;
     private LinearLayout                mainHorizontalLayout;
     private View                        editView;
-    private ImageView                   editButton;
+    //private ImageView                   editButton;
     private ImageView                   removeButton;
     private View                        marginLeftToolbarMode;
     private View                        marginRightToolbarMode;
@@ -69,32 +68,31 @@ public class SpotView extends LinearLayout{
     private void init() {
         inflate(getContext(), R.layout.layout_spot, this);
 
-        parentLayout = (RelativeLayout) findViewById(R.id.parent_layout_spot);
         mainHorizontalLayout = (LinearLayout) findViewById(R.id.horizontal_linear_layout);
         parentTextViews = (LinearLayout) findViewById(R.id.parent_textviews);
         bigCategoryIcon = (ImageView) findViewById(R.id.big_image_category_spot);
         smallCategoryIcon = (ImageView) findViewById(R.id.small_image_category_spot);
         //gradientBottomView = findViewById(R.id.bottom_gradient);
         //gradientTopView = findViewById(R.id.top_gradient);
-        rvSpotTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
+        //rvSpotTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
         tvName = (AutofitTextView) findViewById(R.id.title_spot);
-        editView = findViewById(R.id.action_view);
-        editButton = (ImageView) findViewById(R.id.ic_edit);
-        removeButton = (ImageView) findViewById(R.id.ic_remove);
-        marginLeftToolbarMode = findViewById(R.id.margin_left_toolbar_mode);
-        marginRightToolbarMode= findViewById(R.id.margin_right_toolbar_mode);
+        containerLayout = findViewById(R.id.layout_spot);
+        //editView = findViewById(R.id.action_view);
+        //editButton = (ImageView) findViewById(R.id.ic_edit);
+        //removeButton = (ImageView) findViewById(R.id.ic_remove);
 
-        parentLayout.setBackgroundColor(colorRes);
+        containerLayout.setBackgroundColor(colorRes);
         //setBottomShadow(isBottomShadow);
         //setTopShadow(isTopShadow);
         setTagsVisible(isTagsVisible);
         setEditView(editMode);
-        setToolbarView(toolbarMode);
+        //setToolbarView(toolbarMode);
         if(isGravityCentered) {
             mainHorizontalLayout.setGravity(Gravity.CENTER);
         }
     }
 
+    /*
     public void setOnSpotClickListener(final OnSpotClickListener onSpotClickListener) {
         editButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -109,7 +107,7 @@ public class SpotView extends LinearLayout{
             }
         });
     }
-
+/*
     public HorizontalTagsRecyclerView getRvSpotTags() {
         return rvSpotTags;
     }
@@ -134,17 +132,19 @@ public class SpotView extends LinearLayout{
 */
     public void setTagsVisible(boolean tagsVisibility) {
         if(tagsVisibility) {
-            rvSpotTags.setVisibility(VISIBLE);
+            //rvSpotTags.setVisibility(VISIBLE);
             bigCategoryIcon.setVisibility(VISIBLE);
             smallCategoryIcon.setVisibility(GONE);
         } else {
-            rvSpotTags.setVisibility(GONE);
+            //rvSpotTags.setVisibility(GONE);
             bigCategoryIcon.setVisibility(GONE);
             smallCategoryIcon.setVisibility(VISIBLE);
         }
     }
 
     private void setEditView(boolean editMode) {
+        // TODO usage ?
+        /*
         if(editMode) {
             editButton.setVisibility(VISIBLE);
             removeButton.setVisibility(VISIBLE);
@@ -154,9 +154,9 @@ public class SpotView extends LinearLayout{
         } else {
             editButton.setVisibility(GONE);
             removeButton.setVisibility(GONE);
-        }
+        }*/
     }
-
+/*
     private void setToolbarView(boolean toolbarMode) {
         if(toolbarMode) {
             marginRightToolbarMode.setVisibility(VISIBLE);
@@ -166,14 +166,14 @@ public class SpotView extends LinearLayout{
             marginLeftToolbarMode.setVisibility(GONE);
         }
     }
-
+*/
     public void setSpot(Spot spot) {
-        HorizontalTagsAdapter htAdapter = rvSpotTags.getAdapter();
-        htAdapter.setData(spot.tags);
+        //HorizontalTagsAdapter htAdapter = rvSpotTags.getAdapter();
+        //htAdapter.setData(spot.tags);
         tvName.setText(spot.name);
     }
 
     public void setColor(int color) {
-        parentLayout.setBackgroundColor(color);
+        containerLayout.setBackgroundColor(color);
     }
 }

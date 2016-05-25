@@ -368,4 +368,20 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public String getName() {
         return name;
     }
+
+    public EventCategory getCategoryWithDefault() {
+        try {
+            return this.getCategory();
+        } catch (UnknownCategoryException e) {
+            return new EventCategory("else");
+        }
+    }
+
+    public void setSpot(Spot spot) {
+        this.spot = spot;
+    }
+
+    public void setCategory(EventCategory category) {
+        this.category_id = (int) category.getRemoteId();
+    }
 }

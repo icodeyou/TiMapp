@@ -1,0 +1,80 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimaryDark"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="left">
+            <ImageView
+                android:id="@+id/image_category_place"
+                style="@style/imageIcon"
+                android:src="@drawable/ic_category_else"/>
+
+            <TextView
+                android:id="@+id/event_category_name"
+                style="@style/TextInfoPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Category name"
+                android:textColor="@color/textLight"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/distance_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:gravity="left"
+            android:visibility="visible">
+            <ImageView
+                style="@style/imageIcon"
+                android:src="@drawable/ic_direction_light"/>
+            <com.timappweb.timapp.views.SimpleTimerView
+                android:id="@+id/distance_text"
+                style="@style/TextInfoPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:textColor="@color/textLight"
+                android:text="120 m"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <com.timappweb.timapp.views.SelectableFloatingButton
+            style="@style/EventShortcutButtons"
+            android:id="@+id/here_button"
+            android:src="@drawable/match_red"
+            app:backgroundTint="@color/white"
+            app:rippleColor="@color/colorAccent"
+            />
+
+        <com.timappweb.timapp.views.SelectableFloatingButton
+            style="@style/EventShortcutButtons"
+            android:id="@+id/coming_button"
+            app:backgroundTint="@color/white"
+            app:rippleColor="@color/colorAccent"
+            android:src="@drawable/ic_coming_guy"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>

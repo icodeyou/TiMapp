@@ -57,7 +57,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.nameInvitation.setText(username);
             holder.dateInvitation.setText(prettyTimeInvitation);
 
-            holder.eventView.setEvent(placeInvitation.event);
+            //holder.eventView.setEvent(placeInvitation.event);
 
             /*
             try {
@@ -68,12 +68,13 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }*/
 
             //OnTagsRvClick : Same event as adapter click.
+            /*
             HorizontalTagsRecyclerView htrv = holder.eventView.getRvEventTags();
             if (htrv != null){
                 HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                         new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
                 htrv.setOnTouchListener(mHorizontalTagsTouchListener);
-            }
+            }*/
         }
     }
 
@@ -116,7 +117,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class PlacesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        EventView eventView;
+        //EventView eventView;
         TextView nameInvitation;
         TextView dateInvitation;
         //ImageView backgroundImage;
@@ -124,7 +125,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            eventView = (EventView) itemView.findViewById(R.id.event_view);
+            //eventView = (EventView) itemView.findViewById(R.id.event_view);
             nameInvitation = (TextView) itemView.findViewById(R.id.name_invitation);
             dateInvitation = (TextView) itemView.findViewById(R.id.date_invitation);
             //backgroundImage = (ImageView) itemView.findViewById(R.remote_id.background_invitation);

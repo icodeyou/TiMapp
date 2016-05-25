@@ -65,6 +65,10 @@ public class AuthProvider {
                     tokenListener.onTokenOutdated();
                 }
 
+                @Override
+                public void onFailure(Throwable t) {
+                    tokenListener.onTokenFailure();
+                }
             });
         } else{
             Log.i(TAG, "Token is still valid (" + tokenOld + " seconds old)");
@@ -97,6 +101,7 @@ public class AuthProvider {
     public interface OnTokenListener{
         void onTokenValid();
         void onTokenOutdated();
+        void onTokenFailure();
     }
 
 

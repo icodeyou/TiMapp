@@ -19,12 +19,47 @@
             <include layout="@layout/event_information"></include>
         </LinearLayout>
 
+        <View style="@style/Divider"></View>
 
-        <com.timappweb.timapp.views.EventButtonsView
-            android:id="@+id/event_buttons_view"
+        <!--<TextView
+            style="@style/title2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.timappweb.timapp.views.EventButtonsView>
+            android:layout_height="wrap_content"
+            android:text="@string/title_event_location"/>-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginTop="7dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                style="@style/imageIcon"
+                android:src="@drawable/ic_location"/>
+            <TextView
+                android:id="@+id/event_location"
+                style="@style/TextInfoSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="2 place Paul vallier, 38000 Grenoble"
+                />
+        </LinearLayout>
+
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/map_min_height" />
+
+        <Button
+            style="@style/EventShortcutButtons"
+            android:id="@+id/request_gps_path"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/btn_start_navigation"/>
 
 
     </LinearLayout>

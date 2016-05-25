@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,128 +10,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
+        android:background="@color/colorPrimaryDark">
 
-        <ImageView
-            android:id="@+id/image_category_place"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_width="@dimen/icon_spot"
-            android:layout_height="@dimen/icon_spot"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_category_highlight_else"
-            android:visibility="visible"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Category name"
-            android:textSize="@dimen/text_big"
-            android:gravity="center|left"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <LinearLayout
-            android:id="@+id/white_points_layout"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp"
-            android:gravity="center|start"
-            android:visibility="visible">
-            <ImageView
-                android:id="@+id/ic_hot"
-                android:layout_width="@dimen/little_icon_spot"
-                android:layout_height="@dimen/logo_normal"
-                android:layout_marginRight="@dimen/default_ic_margin"
-                android:layout_marginEnd="@dimen/default_ic_margin"
-                android:src="@drawable/ic_hot"/>
-            <com.timappweb.timapp.views.SimpleTimerView
-                android:id="@+id/white_points_text"
-                style="@style/TextInfoPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:text="3600"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/distance_layout"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal"
-            android:gravity="center|start"
-            android:visibility="visible">
-            <ImageView
-                android:layout_width="@dimen/little_icon_spot"
-                android:layout_height="@dimen/logo_normal"
-                android:layout_marginRight="@dimen/default_ic_margin"
-                android:layout_marginEnd="@dimen/default_ic_margin"
-                android:src="@drawable/distance"/>
-            <com.timappweb.timapp.views.SimpleTimerView
-                android:id="@+id/distance_text"
-                style="@style/TextInfoPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:text="120 m"/>
-        </LinearLayout>
+            android:id="@+id/title_event"
+            android:text="Fete de la musique"
+            style="@style/title1"
+            android:textColor="@color/textLight"/>
+
+        <include layout="@layout/event_user_interaction"/>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/count_people"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="7dp"
-        android:visibility="visible">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="@dimen/little_icon_spot"
-                android:layout_height="@dimen/logo_normal"
-                android:layout_marginRight="@dimen/default_ic_margin"
-                android:layout_marginEnd="@dimen/default_ic_margin"
-                android:src="@drawable/ic_coming_guy_darkred"/>
-            <TextView
-                android:id="@+id/count_coming_text"
-                style="@style/TextInfoPrimary"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="12 coming"
-                android:gravity="bottom"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="@dimen/little_icon_spot"
-                android:layout_height="@dimen/logo_normal"
-                android:layout_marginRight="@dimen/default_ic_margin"
-                android:layout_marginEnd="@dimen/default_ic_margin"
-                android:src="@drawable/match_red"/>
-            <TextView
-                android:id="@+id/count_here_text"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                style="@style/TextInfoPrimary"
-                android:text="2 here"
-                android:gravity="bottom"/>
-        </LinearLayout>
-    </LinearLayout>
+    <include layout="@layout/layout_spot"></include>
+
+    <include layout="@layout/event_stats_people"></include>
+    <!--<View style="@style/Divider"></View>-->
 
     <!-- Description -->
     <!-- **********************************************************************-->
@@ -138,6 +38,7 @@
         android:id="@+id/description_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/description_textview"
@@ -147,7 +48,6 @@
             android:layout_marginBottom="10dp"
             android:gravity="left"
             android:textColor="@color/textDark"
-            android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="This is the description text for this event. It's not very interesting but it can be usefull in some case. It also has a maximum height..."/>
 
@@ -156,43 +56,18 @@
             android:layout_height="match_parent"
             android:layout_gravity="left"
             android:layout_marginTop="7dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="horizontal">
             <ImageView
-                android:layout_height="@dimen/logo_small"
-                android:layout_width="@dimen/little_icon_spot"
+                style="@style/imageIconSmall"
                 android:src="@drawable/ic_clock"/>
             <TextView
                 android:id="@+id/time_place"
-                style="@style/TextInfoSecondary"
+                style="@style/TextMute"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:gravity="center"
                 android:text="5 min ago"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:layout_marginTop="7dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-            <ImageView
-                android:layout_height="@dimen/logo_small"
-                android:layout_width="@dimen/little_icon_spot"
-                android:src="@drawable/ic_location"/>
-            <TextView
-                android:id="@+id/event_location"
-                style="@style/TextInfoSecondary"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:gravity="center"
-                android:text="2 place Paul vallier, 38000 Grenoble"
                 />
         </LinearLayout>
     </LinearLayout>

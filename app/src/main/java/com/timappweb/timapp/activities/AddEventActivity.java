@@ -17,6 +17,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
@@ -32,6 +35,10 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.BackCatchEditText;
 import com.timappweb.timapp.views.SpotView;
+
+import org.w3c.dom.Text;
+
+import java.util.HashMap;
 
 import retrofit2.Call;
 
@@ -50,12 +57,16 @@ public class AddEventActivity extends BaseActivity {
     private View createButton;
     private View progressView;
     private TextView nameCategoryTV;
-    private View pinView;
+    //private View pinView;
     private ViewPager viewPager;
-    private SpotView spotView;
+    //private SpotView spotView;
     // Data
     private Spot spot = null;
     private AddEventActivity context;
+
+    private MapView mapView = null;
+    private GoogleMap gMap;
+    private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -80,9 +91,11 @@ public class AddEventActivity extends BaseActivity {
         createButton = findViewById(R.id.create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
-        pinView = findViewById(R.id.no_spot_view);
+        //pinView = findViewById(R.id.no_spot_view);
         //pinnedSpot = findViewById(R.remote_id.pinned_spot);
-        spotView = (SpotView) findViewById(R.id.spot_view);
+        eventLocation = (TextView) findViewById(R.id.event_location);
+        //spotView = (SpotView) findViewById(R.id.spot_view);
+        mapView = (MapView) findViewById(R.id.map);
 
         initKeyboard();
         setListeners();
@@ -90,6 +103,7 @@ public class AddEventActivity extends BaseActivity {
         initViewPager();
         initLocationListener();
         setButtonValidation();
+        initMap();
     }
 
     @Override
@@ -240,7 +254,7 @@ public class AddEventActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        pinView.setOnClickListener(new View.OnClickListener() {
+        eventLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.pinSpot(context);
@@ -286,7 +300,7 @@ public class AddEventActivity extends BaseActivity {
                 }
             }
         });
-
+/*
         spotView.setOnSpotClickListener(new OnSpotClickListener() {
             @Override
             public void onEditClick() {
@@ -297,9 +311,9 @@ public class AddEventActivity extends BaseActivity {
             public void onRemoveClick() {
                 spot = null;
                 spotView.setVisibility(View.GONE);
-                pinView.setVisibility(View.VISIBLE);
+                //pinView.setVisibility(View.VISIBLE);
             }
-        });
+        });*/
     }
 
     private void extractSpot(Bundle bundle){
@@ -307,13 +321,25 @@ public class AddEventActivity extends BaseActivity {
             spot = (Spot) bundle.getSerializable("spot");
             if (spot != null){
                 Log.v(TAG, "Spot is selected: " + spot);
-                spotView.setSpot(spot);
-                spotView.setVisibility(View.VISIBLE);
-                pinView.setVisibility(View.GONE);
+                //spotView.setSpot(spot);
+                //spotView.setVisibility(View.VISIBLE);
+                //pinView.setVisibility(View.GONE);
             } else {
                 Log.d(TAG, "spot is null");
             }
         }
     }
 
+    private void initMap(){
+        mapView.onCreate(null);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                Log.d(TAG, "Map is now ready!");
+                gMap = googleMap;
+            }
+        });
+        gMap = mapView.getMap();
+        gMap.setIndoorEnabled(true);
+    }
 }

@@ -103,6 +103,19 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
+
+    private static boolean hasAccount(Context context, String name) {
+        AccountManager accountManager =
+                (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
+        Account[] accounts = accountManager.getAccounts();
+        for(Account account : accounts) {
+            if(account.name.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Helper method to get the fake account to be used with ConfigSyncAdapter, or make a new one
      * if the fake account doesn't exist yet.  If we make a new account, we call the
@@ -110,6 +123,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
      *
      * @param context The context used to access the account service
      * @return a fake account.
+     * @throws java.lang.SecurityException TODO handle this error
      */
     public static Account getSyncAccount(Context context) {
         if (mAccount != null){
@@ -124,13 +138,14 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
                 context.getString(R.string.app_name), context.getString(R.string.sync_account_type));
 
         // If the password doesn't exist, the account doesn't exist
-        if ( null == accountManager.getPassword(mAccount) ) {
+        if (!hasAccount(context, mAccount.name) ) {
 
         /*
          * Add the account and account type, no password or user data
          * If successful, return the Account object, otherwise report an error.
          */
             if (!accountManager.addAccountExplicitly(mAccount, "", null)) {
+                // TODO throw exception instead
                 Log.e(TAG, "Cannot add this account for authority");
                 return null;
             }

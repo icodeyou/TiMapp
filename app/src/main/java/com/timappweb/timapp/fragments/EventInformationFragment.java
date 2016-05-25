@@ -2,28 +2,30 @@ package com.timappweb.timapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.EventButtonsView;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.SimpleTimerView;
 
 
 public class EventInformationFragment extends EventBaseFragment {
 
-    private static final String TAG = "EventInformationFragment";
+    private static final String TAG = "EventInformationFrag";
     private ObservableScrollView mScrollView;
     private SimpleTimerView tvCountPoints;
     private TextView tvCountComing;
@@ -33,6 +35,11 @@ public class EventInformationFragment extends EventBaseFragment {
     private TextView descriptionTv;
     private ImageView smallCategoryIcon;
     private TextView tvTime;
+
+    private MapView mapView = null;
+    private GoogleMap gMap;
+    private ImageView eventCategoryIcon;
+    private TextView eventCategoryName;
 
     @Nullable
     @Override
@@ -63,8 +70,15 @@ public class EventInformationFragment extends EventBaseFragment {
         tvCountComing = (TextView) view.findViewById(R.id.count_coming_text);
         tvCountHere = (TextView) view.findViewById(R.id.count_here_text);
 
+        eventCategoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
+        eventCategoryName = (TextView) view.findViewById(R.id.event_category_name);
+
+        mapView = (MapView) view.findViewById(R.id.map);
+
+
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
+        initMap();
         updateView();
     }
 
@@ -75,22 +89,35 @@ public class EventInformationFragment extends EventBaseFragment {
         tvCountHere.setText(event.count_here == null ? "0" : event.count_here.toString());
         tvTime.setText(event.getTime());
 
-        if(event.hasDescription()) {
-            descriptionTv.setText(event.description);
-            descriptionTv.setVisibility(View.VISIBLE);
-        } else {
-            descriptionTv.setVisibility(View.GONE);
-        }
+        EventCategory category = event.getCategoryWithDefault();
+        eventCategoryIcon.setImageResource(category.getIconBlackResId());
+        eventCategoryName.setText(category.getName());
 
+        descriptionTv.setText(event.hasDescription() ? event.description : getContext().getText(R.string.no_event_description));
 
         if (LocationManager.hasLastLocation()){
-            distanceLayout.setVisibility(View.VISIBLE);
+            //distanceLayout.setVisibility(View.VISIBLE);
             event.updateDistanceFromUser();
             distanceText.setText(DistanceHelper.prettyPrint(event.getDistanceFromUser()));
         }
         else {
-            distanceLayout.setVisibility(View.GONE);
+            //distanceLayout.setVisibility(View.GONE);
+            distanceText.setText(R.string.waiting_for_location);
         }
 
+    }
+
+
+    private void initMap(){
+        mapView.onCreate(null);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                Log.d(TAG, "Map is now ready!");
+                gMap = googleMap;
+            }
+        });
+        gMap = mapView.getMap();
+        gMap.setIndoorEnabled(true);
     }
 }

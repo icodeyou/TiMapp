@@ -100,11 +100,18 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
 
         setContentView(R.layout.activity_event);
-
         pageTitle = (TextView) findViewById(R.id.title_event);
         //eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
         getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
+
+        if (event != null){
+            onEventLoaded();
+
+            if (!event.hasLocalId()) {
+                event = event.deepSave();
+            }
+        }
     }
 
     /**

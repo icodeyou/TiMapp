@@ -12,6 +12,7 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
+import com.timappweb.timapp.config.AuthProvider.OnTokenListener;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
@@ -73,7 +74,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public void checkToken(){
-        auth.checkToken(this, new AuthProvider.OnTokenListener() {
+        auth.checkToken(this, new OnTokenListener() {
             @Override
             public void onTokenValid() {
                 Log.i(TAG, "Token is still valid.");
@@ -84,6 +85,11 @@ public class MyApplication extends com.activeandroid.app.Application {
             public void onTokenOutdated() {
                 Log.i(TAG, "Token is not valid anymore. Login out");
                 notifyLoadingState("User token is not valid");
+            }
+
+            @Override
+            public void onTokenFailure() {
+                notifyLoadingState("Cannot get user token");
             }
         });
 

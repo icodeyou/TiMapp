@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Table(name = "SpotCategory")
 public class SpotCategory extends SyncBaseModel implements Serializable {
 
+    // =============================================================================================
+
     @Expose
     @SerializedName("name")
     @Column(name = "Name")

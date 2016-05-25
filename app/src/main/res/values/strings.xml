@@ -21,7 +21,7 @@
     <string name="title_activity_my_profile">My Profile</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_add_event">Add event</string>
-    <string name="title_activity_add_spot">Attach a event</string>
+    <string name="title_activity_add_spot">Attach a place</string>
     <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
 
@@ -104,7 +104,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
         grâce à Lucia qui s’est mise toute nue sur le bar.</string>
     <string name="hashtag">#</string>
     <string name="please_wait">Please wait ...</string>
-    <string name="waiting_for_location">Getting your location</string>
+    <string name="waiting_for_location">Getting your location...</string>
     <string name="action_skip_loggin">Skip</string>
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>
@@ -197,7 +197,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_place_attach">Pin a place</string>
     <string name="add_spot">Add a place</string>
     <string name="where_are_you">Where are you ?</string>
-    <string name="hint_new_spot">Or type a new event here</string>
+    <string name="hint_spot_name">Name</string>
 
 
     <string name="sync_account_type">timapp.timappweb.com</string>
@@ -207,7 +207,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
     <string name="unknown_category">Unknown category</string>
-    <string name="hint_write_description">Price, access code...</string>
+    <string name="hint_write_description">Other information</string>
     <string name="iamhere">I\'m here !</string>
     <string name="iamcoming">I\'m coming !</string>
     <string name="please_wait_location">Please wait while we get your location</string>
@@ -215,6 +215,12 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_notify_status">Sorry, you cannot notify your status for now</string>
     <string name="no_friends">You have no friends</string>
     <string name="hint_event_location">Event location</string>
+    <string name="btn_start_navigation">Start navigation</string>
+    <string name="title_event_location">Location</string>
+    <string name="no_event_description">There is no description for this event.</string>
+    <string name="hint_spot_category">Category</string>
+    <string name="label_spot_name">Name</string>
+    <string name="label_category_name">Category</string>
 
 
 </resources>
