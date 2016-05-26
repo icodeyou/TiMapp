@@ -221,6 +221,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="hint_spot_category">Category</string>
     <string name="label_spot_name">Name</string>
     <string name="label_category_name">Category</string>
+    <string name="btn_submit_new_spot">Add</string>
 
 
 </resources>

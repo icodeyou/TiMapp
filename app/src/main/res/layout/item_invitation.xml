@@ -52,13 +52,9 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
 
-        <include layout="@layout/header_event_activity" android:layout_height="100dp"
-            android:layout_width="match_parent"></include>
-
-        <!-- _______________________ DESCRIPTION __________________________________________-->
-
+    <include layout="@layout/header_event_activity" android:layout_height="100dp"
+        android:layout_width="match_parent"></include>
 
     <include layout="@layout/event_user_interaction" />
 

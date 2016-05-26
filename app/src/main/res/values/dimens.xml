@@ -103,6 +103,8 @@
     <dimen name="tab_height">50dp</dimen>
     <dimen name="min_header_height">150dp</dimen>
     <dimen name="map_min_height">200dp</dimen>
+    <dimen name="paddingBottomDefault">6dp</dimen>
+    <dimen name="cardMarginBottom">10dp</dimen>
     <integer name="slide_down_anim">90</integer>
     <integer name="slide_up_anim">-90</integer>
     <integer name="slide_event_bottom_map">200</integer>

@@ -26,7 +26,7 @@
 
             <TextView
                 android:id="@+id/event_category_name"
-                style="@style/TextInfoPrimary"
+                style="@style/TextDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Category name"
@@ -47,7 +47,7 @@
                 android:src="@drawable/ic_direction_light"/>
             <com.timappweb.timapp.views.SimpleTimerView
                 android:id="@+id/distance_text"
-                style="@style/TextInfoPrimary"
+                style="@style/TextDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="bottom"

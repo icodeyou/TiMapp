@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/material_view_pager_placeholder"/>
+        <include         layout="@layout/material_view_pager_placeholder"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:src="@drawable/ic_location"/>
             <TextView
                 android:id="@+id/event_location"
-                style="@style/TextInfoSecondary"
+                style="@style/TextDefaultSecondary"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"

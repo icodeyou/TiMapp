@@ -1,99 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/background"
-    android:orientation="vertical">
-
-    <include
-        android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar" />
-
-    <TextView
-        android:id="@+id/text_existing_place_around"
-        style="@style/title1"
-        android:text="@string/where_are_you"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/spots_rv"
+    android:background="@color/background">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
-    <!--<LinearLayout
-        android:remote_id="@+remote_id/create_place_button"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+remote_id/text_whereareyou"
-        android:layout_margin="@dimen/button_selecting_margin"
-        android:background="@drawable/border_little_radius_buttoncolor"
-        android:gravity="center"
-        android:visibility="visible">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar_layout"
+            layout="@layout/toolbar" />
+
         <TextView
-            android:remote_id="@+remote_id/text_confirm_button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ellipsize="none"
-            android:maxLines="1"
-            android:textColor="@color/text_button"
-            android:textSize="@dimen/text_huge"
-            android:text="Create Event"/>
-    </LinearLayout>-->
+            android:id="@+id/text_existing_place_around"
+            style="@style/title1"
+            android:text="@string/where_are_you"/>
 
+        <TextView
+            android:id="@+id/info_message"
+            style="@style/TextInfo"
+            android:text="There isn't any place registered around you. Create a new one!"
+            android:gravity="center"
+            android:singleLine="false"/>
 
-    <LinearLayout
-        style="@style/formGroup">
-        <ImageView
-            style="@style/formIconGroup"
-            android:src="@drawable/ic_title_dark"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/spots_rv"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+        <!--<LinearLayout
+            android:remote_id="@+remote_id/create_place_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+remote_id/text_whereareyou"
+            android:layout_margin="@dimen/button_selecting_margin"
+            android:background="@drawable/border_little_radius_buttoncolor"
+            android:gravity="center"
+            android:visibility="visible">
+            <TextView
+                android:remote_id="@+remote_id/text_confirm_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="none"
+                android:maxLines="1"
+                android:textColor="@color/text_button"
+                android:textSize="@dimen/text_huge"
+                android:text="Create Event"/>
+        </LinearLayout>-->
+
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                style="@style/formLabel"
-                android:text="@string/label_spot_name"/>
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_title_dark"/>
 
-            <EditText
-                android:id="@+id/edittext"
-                style="@style/formEditText"
-                android:hint="@string/hint_spot_name"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="@string/label_spot_name"/>
+
+                <EditText
+                    android:id="@+id/edittext"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_spot_name"/>
+            </LinearLayout>
+
+
         </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/formGroup">
-        <ImageView
-            style="@style/formIconGroup"
-            android:src="@drawable/ic_tag_dark"/>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                style="@style/formLabel"
-                android:text="@string/label_category_name"/>
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_tag_dark"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/spot_categories_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/custom_place_layout"
-                android:background="@color/colorPrimary"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="@string/label_category_name"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/spot_categories_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
+        <LinearLayout
+            style="@style/formGroup">
+            <ImageView
+                style="@style/formIconGroup"
+                android:src="@drawable/ic_location"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/formLabel"
+                    android:text="Location"/>
+
+                <EditText
+                    android:id="@+id/event_location"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_event_location"/>
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/map_min_height" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            style="@style/pageSubmitButton"
+            android:id="@+id/create_spot_button"
+            android:text="@string/btn_submit_new_spot"/>
 
     </LinearLayout>
-
-    <Button
-        style="@style/pageSubmitButton"
-        android:id="@+id/create_spot_button"
-        android:src="@drawable/ok_button"
-        android:visibility="visible"/>
-
-</LinearLayout>
+</ScrollView>

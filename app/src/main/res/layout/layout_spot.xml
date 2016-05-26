@@ -90,7 +90,7 @@
                     android:src="@drawable/ic_category_highlight_else"/>
 
                 <TextView
-                    style="@style/TextInfoPrimary"
+                    style="@style/TextDefault"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

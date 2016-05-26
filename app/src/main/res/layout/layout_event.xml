@@ -1,89 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/event_view_container"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background_card"
+    android:elevation="@dimen/card_elevation"
+    android:layout_marginBottom="@dimen/cardMarginBottom">
 
-<!--
-    <RelativeLayout
-        android:id="@+id/topview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <View
-            android:id="@+id/topview_with_spot"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_top_gradient_view"
-            android:background="@drawable/top_layout_spot"
-            android:visibility="gone"/>
+    <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
 
-        <View
-            android:id="@+id/topview_no_spot"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_top_gradient_view"
-            android:background="@drawable/top_layout_event"
-            android:visibility="gone" />
-    </RelativeLayout>
+    <include layout="@layout/header_event_activity"
+        android:layout_height="100dp"
+        android:layout_width="match_parent"></include>
 
-    <RelativeLayout
-        android:id="@+id/main_box_relative"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">-->
-        <LinearLayout
-            android:id="@+id/main_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <!-- _______________________ DESCRIPTION __________________________________________-->
 
-                <!-- ___________________________ SPOT _______________________________________________-->
-            <com.timappweb.timapp.views.SpotView
-                android:id="@+id/spot_view"
-                xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                myattrs:tags_visible="false"
-                myattrs:bottom_shadow="false"
-                myattrs:top_shadow="false"
-                myattrs:gravity_center="true"/>
-                <!--
-                <View
-                    android:id="@+id/separator"
-                    android:layout_alignBottom="@+id/spot_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_top_gradient_view"
-                    android:background="@drawable/separator_event" />-->
+    <include layout="@layout/event_user_interaction"></include>
+    <include layout="@layout/layout_spot"></include>
 
+    <include layout="@layout/event_stats_people"></include>
 
-            <!-- ___________________________ EVENT _______________________________________________-->
-            <LinearLayout
-                android:id="@+id/main_layout_event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+</LinearLayout>
 
-                <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
-
-                <include layout="@layout/header_event_activity"></include>
-
-                <!-- _______________________ DESCRIPTION __________________________________________-->
-
-
-                <include layout="@layout/event_information"></include>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <!--
-    <View
-        android:id="@+id/bottom_gradient_event"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_bottom_gradient_view"
-        android:layout_below="@+id/main_box_relative"
-        android:background="@drawable/bottom_layout_event"/>-->

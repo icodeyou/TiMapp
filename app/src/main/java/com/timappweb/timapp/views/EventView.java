@@ -49,9 +49,8 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private SpotView                    spotView;
     private View                        titleLayout;
     private View                        gradientBottomView;
-    private LinearLayout                mainLayoutEvent;
     //private View                        separator;
-    private View                        descriptionView;
+    //private View                        descriptionView;
     private TextView                    descriptionTv;
     private HorizontalTagsAdapter       htAdapter;
     private HorizontalTagsRecyclerView  htrv;
@@ -125,7 +124,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private void init() {
         inflate(getContext(), R.layout.layout_event, this);
 
-        mainLayoutEvent = (LinearLayout) findViewById(R.id.main_layout_event);
         //marginToolbarRight = findViewById(R.id.margin_right_toolbar);
         //marginToolbarLeft = findViewById(R.id.margin_left_toolbar);
         spotView = (SpotView) findViewById(R.id.spot_view);
@@ -134,15 +132,15 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         tvName = (TextView) findViewById(R.id.title_event);
         icPoints = (ImageView) findViewById(R.id.ic_hot);
         tvCountPoints = (SimpleTimerView) findViewById(R.id.white_points_text);
-        tvTime = (TextView) findViewById(R.id.time_place);
+        //tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
         smallCategoryIcon = (ImageView) findViewById(R.id.image_small_category_place);
         backgroundImage = (ImageView) findViewById(R.id.background_image_event);
         //gradientBottomView = findViewById(R.id.bottom_gradient_event);
         //gradientBottomViewIfPadding = findViewById(R.id.bottom_gradient_if_padding);
         //separator = findViewById(R.id.separator);
-        descriptionView = findViewById(R.id.description_event);
-        descriptionTv = (TextView) findViewById(R.id.description_textview);
+       //descriptionView = findViewById(R.id.description_event);
+        //descriptionTv = (TextView) findViewById(R.id.description_textview);
         //matchButton = (SelectableFloatingButton) findViewById(R.id.match_button);
         distanceLayout = findViewById(R.id.distance_layout);
         distanceText = (TextView) findViewById(R.id.distance_text);
@@ -236,7 +234,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     }
 
 
-
+/*
     private void setSpotVisible() {
         if(isSpot && event.hasSpot()) {
             spotView.setSpot(event.spot);
@@ -246,7 +244,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
             spotView.setVisibility(GONE);
             //separator.setVisibility(GONE);
         }
-    }
+    }*/
 
 
 
@@ -271,39 +269,29 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         boolean isHotView = isUserComing || isHereStatus ;
 
         //Date
-        tvTime.setText(event.getTime());
+        //tvTime.setText(event.getTime());
 
         //Title
         tvName.setText(event.name);
-
+/*
         if(event.hasDescription()) {
             descriptionTv.setText(event.description);
         } else {
             descriptionTv.setVisibility(GONE);
-        }
+        }*/
 
         //EventCategory
 
-        if(colorEvent != -1) {
-            Log.d(TAG,"Setting custom color");
-            backgroundImage.setImageResource(0);
-            mainLayoutEvent.setBackgroundColor(colorEvent);
-            if (colorSpot != -1) {
-                //spotView.setColor(colorSpot);
-            }
+        EventCategory eventCategory = null;
+        try {
+            Log.d(TAG, "Setting event Background");
+            eventCategory = MyApplication.getCategoryById(event.category_id);
+            //smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
+            backgroundImage.setImageResource(eventCategory.getBigImageResId());
+        } catch (UnknownCategoryException e) {
+            Log.e(TAG, "no eventCategory found for id : " + event.category_id);
         }
-        else {
-            EventCategory eventCategory = null;
-            try {
-                Log.d(TAG, "Setting event Background");
-                eventCategory = MyApplication.getCategoryById(event.category_id);
-                //smallCategoryIcon.setImageResource(eventCategory.getIconWhiteResId());
-                backgroundImage.setImageResource(eventCategory.getBigImageResId());
-            } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no eventCategory found for id : " + event.category_id);
-            }
-        }
-        descriptionView.setVisibility(isDescription && event.hasDescription() ? VISIBLE : GONE);
+        //descriptionView.setVisibility(isDescription && event.hasDescription() ? VISIBLE : GONE);
 
 /*
         if (isTagsVisible && event.hasTags()) {
@@ -314,7 +302,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
             tagsView.setVisibility(GONE);
         }*/
 
-        this.setSpotVisible();
+        //this.setSpotVisible();
 
         //Counter
         int initialTime = event.getPoints();

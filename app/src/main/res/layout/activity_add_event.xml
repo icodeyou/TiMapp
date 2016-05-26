@@ -153,7 +153,6 @@
                     style="@style/formEditText"
                     android:hint="@string/hint_event_location"/>
 
-
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
@@ -182,7 +181,10 @@
                     android:id="@+id/comment_edit_text"
                     style="@style/formEditText"
                     android:hint="@string/hint_write_description"
-                    android:lines="5"/>
+                    android:inputType="textMultiLine"
+                    android:scrollHorizontally="false"
+                    android:scrollbars="vertical"
+                    android:lines="6"/>
             </LinearLayout>
 
         </LinearLayout>

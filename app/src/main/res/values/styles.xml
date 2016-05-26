@@ -119,14 +119,28 @@
         <item name="backgroundTint">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="TextInfoPrimary">
+    <style name="TextInfo">
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:gravity">left|center</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+    </style>
+
+    <style name="TextDefault">
         <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:singleLine">true</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/textDark</item>
         <item name="android:gravity">left|center</item>
     </style>
-    <style name="TextInfoSecondary">
+    <style name="TextDefaultSecondary">
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:textStyle">normal</item>
@@ -209,8 +223,8 @@
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">4dp</item>
     </style>
     <style name="title1">
         <item name="android:textSize">@dimen/text_huge</item>
@@ -238,6 +252,7 @@
         <item name="android:layout_width">25dp</item>
         <item name="android:padding">3dp</item>
     </style>
+
 
 
     <color name="textMute">#777777</color>

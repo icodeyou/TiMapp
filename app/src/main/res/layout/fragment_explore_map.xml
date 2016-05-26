@@ -59,18 +59,27 @@
         app:backgroundTint="@color/colorPrimaryDark" />
 
 
-    <com.timappweb.timapp.views.EventView
-        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/event_view"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/map"
-        myattrs:points_visible="false"
-        myattrs:is_spot="true"
-        myattrs:bottom_shadow="false"
-        myattrs:tags_visible="false"
-        myattrs:top_shadow="true"
+        android:id="@+id/event_view"
         android:alpha="0.9"
-        android:visibility="gone"/>
+        android:orientation="vertical">
+        <TextView
+            android:layout_height="wrap_content"
+            android:id="@+id/title_event"
+            android:text="Fete de la musique"
+            style="@style/title2"
+            android:textColor="@color/textLight"
+            android:background="@color/colorPrimaryDark"/>
+
+        <include layout="@layout/event_user_interaction" />
+
+        <include layout="@layout/layout_spot"></include>
+        <!--<include layout="@layout/event_stats_people"></include>-->
+    </LinearLayout>
+
 
 </RelativeLayout>

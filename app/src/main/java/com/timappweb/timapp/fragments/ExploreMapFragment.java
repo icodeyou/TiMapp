@@ -63,7 +63,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     //Views
     private View root;
-    private EventView eventView;
+    private View eventView;
     private View progressView;
     private HorizontalTagsRecyclerView filterTagsRv;
     private View filterTagsContainer;
@@ -76,6 +76,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private DrawerActivity drawerActivity;
     private View newEventbutton;
     private HorizontalTagsAdapter htAdapter;
+    private Event previewEvent;
     //private EachSecondTimerTask eachSecondTimerTask;
 
     @Override
@@ -121,7 +122,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
-        eventView = (EventView) root.findViewById(R.id.event_view);
+        eventView = root.findViewById(R.id.event_view);
+        eventView.setVisibility(View.GONE);
         newEventbutton = root.findViewById(R.id.post_event_button);
 
         setListeners();
@@ -182,7 +184,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         // TODO can be removed later when all data are synchronized localy...
         if (!event.hasLocalId()) event.mySave();
 
-        eventView.setEvent(event);
+        previewEvent  = event;
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         newEventbutton.startAnimation(slideIn);
@@ -215,8 +217,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Event event = eventView.getEvent();
-                IntentsUtils.viewSpecifiedEvent(getActivity(), event);
+                IntentsUtils.viewSpecifiedEvent(getActivity(), previewEvent);
             }
         });
 
@@ -366,7 +367,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Event event = (Event) markerValue;
-        if(isPlaceViewVisible() && eventView.getEvent()== event) {
+        if(isPlaceViewVisible() && previewEvent == event) {
             IntentsUtils.viewSpecifiedEvent(getActivity(), event);
         } else {
             displayPlace(event);
