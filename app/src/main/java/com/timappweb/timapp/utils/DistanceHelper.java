@@ -29,9 +29,13 @@ public class DistanceHelper {
 
     public static String prettyPrint(double dist) {
         String distString = String.valueOf(dist);
-        if(dist<1000) {
+        if (dist < 30){
+            return "Next to you";
+        }
+        else if (dist<1000) {
             return distString + " m";
-        } else {
+        }
+        else {
             double distKm = dist/1000;
             DecimalFormat df = new DecimalFormat("#.#");
             df.setRoundingMode(RoundingMode.HALF_DOWN);

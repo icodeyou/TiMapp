@@ -46,7 +46,6 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.EventView;
 
 import java.util.HashMap;
 import java.util.List;

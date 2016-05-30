@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+<data>
+    <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
+</data>
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="15dp"
-    android:orientation="vertical">
+    android:id="@+id/event_view_container"
+    android:orientation="vertical"
+    android:background="@drawable/background_card"
+    android:elevation="@dimen/card_elevation"
+    android:layout_marginBottom="@dimen/cardMarginBottom">
 
-    <com.timappweb.timapp.views.EventView
-        android:id="@+id/event_view"
-        xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+    <!-- _______________________ BACKGROUND IMAGE __________________________________________-->
+
+    <include layout="@layout/header_event_activity"
+        android:layout_height="100dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        myattrs:is_match_button="true"
-        myattrs:bottom_shadow="true"
-        myattrs:top_shadow="false"
-        myattrs:tags_visible="true"/>
+        bind:event="@{event}"></include>
+
+    <!-- _______________________ DESCRIPTION __________________________________________-->
+
+    <include layout="@layout/event_user_interaction"
+        bind:event="@{event}"></include>
+
+    <include layout="@layout/layout_spot"
+        bind:spot="@{event.spot}"></include>
+
+    <include layout="@layout/event_stats_people"
+        bind:event="@{event}"></include>
 
 </LinearLayout>
+</layout>

@@ -16,7 +16,8 @@
     android:orientation="horizontal"
     android:background="@color/white"
     android:paddingBottom="5dp"
-    android:paddingTop="5dp">
+    android:paddingTop="5dp"
+    android:visibility="@{spot == null ? View.GONE : View.VISIBLE}">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/big_image_category_spot"

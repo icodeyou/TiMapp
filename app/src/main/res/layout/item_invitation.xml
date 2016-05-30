@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -61,7 +60,6 @@
             </LinearLayout>
         </LinearLayout>
 
-
     <include layout="@layout/header_event_activity" android:layout_height="100dp"
         android:layout_width="match_parent"
         bind:event="@{event}"></include>
@@ -69,22 +67,11 @@
     <include layout="@layout/event_user_interaction"
         bind:event="@{event}"/>
 
+    <include layout="@layout/layout_spot" bind:spot="@{event.spot}"></include>
+
     <include layout="@layout/event_stats_people"
         bind:event="@{event}"></include>
-        <!--<View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_bottom_gradient_view"
-            android:background="@drawable/bottom_layout_event" />-->
-<!--
-        <com.timappweb.timapp.views.EventView
-            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/event_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            myattrs:is_spot="false"
-            myattrs:tags_visible="true"
-            myattrs:bottom_shadow="true"
-            myattrs:top_shadow="false"/>-->
+
+
     </LinearLayout>
 </layout>

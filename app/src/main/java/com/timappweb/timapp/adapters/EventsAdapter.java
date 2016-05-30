@@ -1,6 +1,7 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,21 +10,24 @@ import android.view.ViewGroup;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
+import com.timappweb.timapp.databinding.ItemEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.EventView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> {
+
     private static final String TAG = "EventsAdapter";
+
+    // =============================================================================================
+
     private Context context;
-
     private List<Event> data;
-
     private OnItemAdapterClickListener itemAdapterClickListener;
+    private ItemEventBinding mBinding;
+
+    // =============================================================================================
 
     public EventsAdapter(Context context) {
         data = new ArrayList<>();
@@ -32,27 +36,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     @Override
     public EventsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
-        return new EventsViewHolder(v);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_event, parent, false);
+        return new EventsViewHolder(mBinding.getRoot());
     }
 
     @Override
     public void onBindViewHolder(EventsViewHolder viewHolder, int position) {
-        //if(baseHolder instanceof EventsViewHolder)
-        //EventsViewHolder holder = (EventsViewHolder) baseHolder;
-        Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
         final Event event = data.get(position);
-
-        //viewHolder.eventView.setEvent(event);
-        viewHolder.eventView.setEvent(event);
-        HorizontalTagsRecyclerView htrv = viewHolder.eventView.getRvEventTags();
-        if (htrv != null){
-            //OnTagsRvClick : Same event as adapter click.
-            HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-                    new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            htrv.setOnTouchListener(mHorizontalTagsTouchListener);
-        }
-
+        Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
+        mBinding.setEvent(event);
     }
 
     @Override
@@ -90,12 +82,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     public class EventsViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-        EventView eventView;
-
         EventsViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            eventView = (EventView) itemView.findViewById(R.id.event_view);
         }
 
         @Override
@@ -106,20 +95,4 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         }
     }
 
-    /*public class FooterPlacesViewHolder extends RecyclerView.ViewHolder {
-
-        private final Button newEventButton;
-
-        FooterPlacesViewHolder(View itemView) {
-            super(itemView);
-            newEventButton = (Button) itemView.findViewById(R.remote_id.create_button);
-            newEventButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.addPlace(context);
-                }
-            });
-
-        }
-    }*/
 }

@@ -28,26 +28,12 @@
         android:dividerHeight="7dp"
         android:visibility="visible"/>
 
-    <LinearLayout
+    <TextView
         android:id="@+id/no_events_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:orientation="vertical">
-        <TextView
-            style="@style/NoDataView"
-            android:text="@string/no_events_message1"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
-        <TextView
-            style="@style/NoDataView"
-            android:text="@string/no_events_message2"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-    </LinearLayout>
+        style="@style/NoDataView"
+        android:text="@string/no_events_message1"
+        android:visibility="gone"
+        />
 
     <android.support.design.widget.FloatingActionButton
         style="@style/PostPlusButton"

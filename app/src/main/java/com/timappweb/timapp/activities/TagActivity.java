@@ -34,7 +34,6 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.EventView;
 
 import java.util.LinkedList;
 
@@ -47,7 +46,6 @@ public class TagActivity extends BaseActivity{
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
     private View progressBarView;
-    private EventView eventView;
     private Event currentEvent = null;
     private View progressEndView;
 

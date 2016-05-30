@@ -17,7 +17,6 @@ import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.EventView;
 
 import java.util.ArrayList;
 import java.util.List;

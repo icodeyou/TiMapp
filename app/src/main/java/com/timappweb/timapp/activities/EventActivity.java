@@ -41,7 +41,6 @@ import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.EventView;
 
 import java.util.List;
 

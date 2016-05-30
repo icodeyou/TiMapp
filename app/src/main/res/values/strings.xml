@@ -184,8 +184,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="newbie_tag">Newbie</string>
     <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
     <string name="menu_search_tags">Search tags</string>
-    <string name="no_events_message1">Nothing here !</string>
-    <string name="no_events_message2">Please swipe left and find some events on the map.</string>
+    <string name="no_events_message1">There are no events in this area!</string>
     <string name="uploading_pic">Uploading picture</string>
     <string name="counter_over">Over !</string>
     <string name="loading_friends">Loading friends</string>
