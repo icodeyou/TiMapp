@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="5dp"
-    android:paddingTop="5dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:background="@color/background_light">
         <LinearLayout
             android:id="@+id/white_points_layout"
             android:layout_width="0dp"
@@ -27,7 +33,9 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_huge"
                 android:gravity="bottom"
-                android:text="3600"/>
+                android:text="@{event.isOver() ? @string/event_over_points : event.displayPoints()}"
+                tools:text="3600"/>
+            <!---->
         </LinearLayout>
 
         <LinearLayout
@@ -37,12 +45,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="7dp"
+            android:gravity="center"
             android:visibility="visible">
+
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="7dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="@{event.isOver() ? View.GONE : View.VISIBLE}">
                 <ImageView
                     style="@style/imageIcon"
                     android:src="@drawable/ic_coming_guy_darkred"/>
@@ -52,8 +63,10 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:text="12 coming"
-                    android:gravity="bottom"/>
+                    tools:text="12 coming"
+                    android:gravity="bottom"
+                    android:text="@{event.displayCountComing()}"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,8 +81,11 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     style="@style/TextDefault"
-                    android:text="2 here"
+                    tools:text="2 here"
+                    android:text="@{event.displayCountHere()}"
                     android:gravity="bottom"/>
+                <!-- -->
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+</layout>

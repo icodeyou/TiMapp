@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <!--<ImageView
-        android:remote_id="@+remote_id/background_invitation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/image_bar"/>-->
 
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="event"
+            type="com.timappweb.timapp.data.models.Event"></variable>
+        <variable
+            name="user"
+            type="com.timappweb.timapp.data.models.User"></variable>
+        <variable
+            name="invitation"
+            type="com.timappweb.timapp.data.models.EventsInvitation"></variable>
+    </data>
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -26,7 +33,7 @@
             <ImageView
                 style="@style/imageIcon"
                 android:src="@drawable/letter"/>
-            ,<LinearLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -40,7 +47,8 @@
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_normal"
-                    android:text="Jack Overfield !!!!!!!!!" />
+                    android:text="@{user != null ? user.getUsername() : @string/former_username}"
+                    tools:text="Jack Overfield" />
                 <me.grantland.widget.AutofitTextView
                     android:id="@+id/date_invitation"
                     android:layout_width="wrap_content"
@@ -48,17 +56,21 @@
                     android:singleLine="true"
                     android:textColor="@color/DarkGray"
                     android:textSize="@dimen/text_small"
-                    android:text="Ten hours ago" />
+                    android:text="@{invitation.getTimeCreated()}"
+                    tools:text="Ten hours ago" />
             </LinearLayout>
         </LinearLayout>
 
 
     <include layout="@layout/header_event_activity" android:layout_height="100dp"
-        android:layout_width="match_parent"></include>
+        android:layout_width="match_parent"
+        bind:event="@{event}"></include>
 
-    <include layout="@layout/event_user_interaction" />
+    <include layout="@layout/event_user_interaction"
+        bind:event="@{event}"/>
 
-    <include layout="@layout/event_stats_people"></include>
+    <include layout="@layout/event_stats_people"
+        bind:event="@{event}"></include>
         <!--<View
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_bottom_gradient_view"
@@ -75,3 +87,4 @@
             myattrs:bottom_shadow="true"
             myattrs:top_shadow="false"/>-->
     </LinearLayout>
+</layout>

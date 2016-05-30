@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
+    </data>
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,21 +22,28 @@
         android:paddingTop="7dp"
         android:background="@color/colorPrimaryDark">
 
-
         <TextView
             android:layout_height="wrap_content"
             android:id="@+id/title_event"
-            android:text="Fete de la musique"
+            tools:text="Fete de la musique"
+            android:text="@{event.name}"
             style="@style/title1"
             android:textColor="@color/textLight"/>
 
-        <include layout="@layout/event_user_interaction"/>
+        <include layout="@layout/event_user_interaction" bind:event="@{event}"/>
 
     </LinearLayout>
 
-    <include layout="@layout/layout_spot"></include>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
+        <include layout="@layout/layout_spot"
+            bind:spot="@{event.spot}"
+            ></include>
+    </FrameLayout>
 
-    <include layout="@layout/event_stats_people"></include>
+    <include layout="@layout/event_stats_people" bind:event="@{event}"></include>
     <!--<View style="@style/Divider"></View>-->
 
     <!-- Description -->
@@ -49,7 +63,8 @@
             android:gravity="left"
             android:textColor="@color/textDark"
             android:paddingRight="10dp"
-            android:text="This is the description text for this event. It's not very interesting but it can be usefull in some case. It also has a maximum height..."/>
+            android:text="@{event.description ?? @string/no_event_description}"
+            tools:text="This is the description text for this event. It's not very interesting but it can be usefull in some case. It also has a maximum height..."/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -67,9 +82,11 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:text="5 min ago"
+                android:text="@{event.getTime()}"
+                tools:text="5 min ago"
                 />
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

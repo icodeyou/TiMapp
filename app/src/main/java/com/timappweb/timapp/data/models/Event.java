@@ -9,6 +9,7 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
@@ -229,6 +230,18 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return points > 0 ? points : 0;
     }
 
+    public String displayPoints() {
+        int points = this.points - (Util.getCurrentTimeSec() - this.loaded_time);
+        return points > 0 ? String.valueOf(points) : "0";
+    }
+
+    public String displayCountComing() {
+        return count_coming != null ? count_coming.toString() : "0";
+    }
+    public String displayCountHere() {
+        return count_here != null ? count_here.toString() : "0";
+    }
+
     public int getCategoryId() {
         return category_id;
     }
@@ -383,5 +396,17 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public void setCategory(EventCategory category) {
         this.category_id = (int) category.getRemoteId();
+    }
+
+    public boolean isOver(){
+        return this.getPoints() <= 0;
+    }
+
+    public String getAddress(){
+        return null;
+    }
+
+    public MarkerOptions getMarkerOption() {
+        return new MarkerOptions().position(getPosition());
     }
 }

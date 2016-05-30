@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,9 +18,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
@@ -44,6 +47,7 @@ import retrofit2.Call;
 
 
 public class AddEventActivity extends BaseActivity {
+    private static final float ZOOM_LEVEL_CENTER_MAP = 12.0f;
     private String TAG = "AddEventActivity";
 
     private InputMethodManager imm;
@@ -66,7 +70,7 @@ public class AddEventActivity extends BaseActivity {
 
     private MapView mapView = null;
     private GoogleMap gMap;
-    private View eventLocation;
+    //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -93,7 +97,7 @@ public class AddEventActivity extends BaseActivity {
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         //pinView = findViewById(R.id.no_spot_view);
         //pinnedSpot = findViewById(R.remote_id.pinned_spot);
-        eventLocation = (TextView) findViewById(R.id.event_location);
+        //eventLocation = (TextView) findViewById(R.id.event_location);
         //spotView = (SpotView) findViewById(R.id.spot_view);
         mapView = (MapView) findViewById(R.id.map);
 
@@ -104,11 +108,6 @@ public class AddEventActivity extends BaseActivity {
         initLocationListener();
         setButtonValidation();
         initMap();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -136,12 +135,14 @@ public class AddEventActivity extends BaseActivity {
      * Load places once user name is known
      */
     private void initLocationListener() {
-        /*
         LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
             @Override
             public void onLocationChanged(Location newLocation, Location lastLocation) {
+                // TODO
+                Log.v(TAG, "User location changed!");
+                updateMapCenter(newLocation);
             }
-        });*/
+        });
         LocationManager.start(this);
 
     }
@@ -220,13 +221,7 @@ public class AddEventActivity extends BaseActivity {
 
     public void setButtonValidation() {
         String textAfterChange = eventNameET.getText().toString().trim();
-//        Log.d(TAG,"textafterchange : "+textAfterChange);
-//        Log.d(TAG,"textafterchange Length: "+textAfterChange.length());
-        if (eventCategorySelected !=null && Event.isValidName(textAfterChange)) {
-            createButton.setVisibility(View.VISIBLE);
-        } else {
-            createButton.setVisibility(View.GONE);
-        }
+        createButton.setEnabled(eventCategorySelected != null && Event.isValidName(textAfterChange));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -254,12 +249,13 @@ public class AddEventActivity extends BaseActivity {
     }
 
     private void setListeners() {
+        /*
         eventLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.pinSpot(context);
             }
-        });
+        });*/
 
         eventNameET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -328,6 +324,43 @@ public class AddEventActivity extends BaseActivity {
                 Log.d(TAG, "spot is null");
             }
         }
+    }
+
+
+    @Override
+    public void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
+        Log.d(TAG, "ExploreMapFragment.onResume()");
+        this.loadMapIfNeeded();
+    }
+
+    private void loadMapIfNeeded() {
+        try {
+            if (gMap == null){
+                gMap = mapView.getMap();
+            }
+            gMap.setIndoorEnabled(true);
+            Location location = LocationManager.getLastLocation();
+            if (location != null){
+                updateMapCenter(location);
+                //gMap.addMarker(event.getMarkerOption());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateMapCenter(Location location){
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
+
     }
 
     private void initMap(){

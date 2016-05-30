@@ -43,7 +43,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private ImageView                   categoryIcon;
     private ImageView                   smallCategoryIcon;
     private ImageView                   backgroundImage;
-    private SimpleTimerView             tvCountPoints;
     private View                        gradientBottomViewIfPadding;
     private View                        gradientTopView;
     private SpotView                    spotView;
@@ -58,13 +57,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     private TextView                    matchText;
     private View                        whitePointsLayout;
 
-    private int                         colorSpot;
-    private int                         colorEvent;
-    private boolean                     isTagsVisible;
-    private boolean                     isBottomShadow;
-    private boolean                     isTopShadow;
-    private boolean                     isSpot;
-    private boolean                     isDescription;
     private boolean showEventTitle;
     private boolean                     isPointsVisible;
     private View distanceLayout;
@@ -80,11 +72,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     public EventView(Context context) {
         super(context);
         this.context = context;
-        this.isSpot = false;
-        this.isTagsVisible = false;
         this.isPointsVisible = true;
-        this.isDescription = true;
-        this.colorEvent = -1;
         this.showEventTitle = false;
         this.init();
     }
@@ -92,11 +80,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
     public EventView(Context context, boolean isBelowToolbarView) {
         super(context);
         this.context = context;
-        this.isSpot = false;
-        this.isTagsVisible = false;
         this.isPointsVisible = true;
-        this.isDescription = true;
-        this.colorEvent = -1;
         this.showEventTitle = isBelowToolbarView;
         this.init();
     }
@@ -108,13 +92,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         //Get attributes in XML
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EventView, 0, 0);
         isPointsVisible = ta.getBoolean(R.styleable.EventView_points_visible, true);
-        isTagsVisible = ta.getBoolean(R.styleable.EventView_tags_visible, false);
-        isBottomShadow = ta.getBoolean(R.styleable.EventView_bottom_shadow, false);
-        isTopShadow = ta.getBoolean(R.styleable.EventView_top_shadow, false);
-        colorSpot = ta.getColor(R.styleable.EventView_color_spot, -1);
-        colorEvent = ta.getColor(R.styleable.EventView_color_event, -1);
-        isSpot = ta.getBoolean(R.styleable.EventView_is_spot, true);
-        isDescription = ta.getBoolean(R.styleable.EventView_is_description, false);
         showEventTitle = ta.getBoolean(R.styleable.EventView_show_title, false);
         ta.recycle();
 
@@ -128,10 +105,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         //marginToolbarLeft = findViewById(R.id.margin_left_toolbar);
         spotView = (SpotView) findViewById(R.id.spot_view);
         titleLayout = findViewById(R.id.event_title_container);
-        whitePointsLayout = findViewById(R.id.white_points_layout);
         tvName = (TextView) findViewById(R.id.title_event);
-        icPoints = (ImageView) findViewById(R.id.ic_hot);
-        tvCountPoints = (SimpleTimerView) findViewById(R.id.white_points_text);
         //tvTime = (TextView) findViewById(R.id.time_place);
         categoryIcon = (ImageView) findViewById(R.id.image_category_place);
         smallCategoryIcon = (ImageView) findViewById(R.id.image_small_category_place);
@@ -147,8 +121,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
         //tagsView = (HorizontalTagsRecyclerView) findViewById(R.id.htrv_tags);
         //eventButtonsView = (EventButtonsView) findViewById(R.id.event_buttons_view);
-        tvCountComing = (TextView) findViewById(R.id.count_coming_text);
-        tvCountHere = (TextView) findViewById(R.id.count_here_text);
 
         //htAdapter = (HorizontalTagsAdapter) rvEventTags.getAdapter();
 
@@ -197,6 +169,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         }
 
         animator = new ValueAnimator();
+        /*
         tvCountPoints.cancelTimer();
         int initialPoints = tvCountPoints.getPoints();
         final int finalPoints;
@@ -226,7 +199,7 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
         } else {
             Log.d(TAG, "Initializing timer to +" + finalPoints);
             tvCountPoints.initTimer(finalPoints*1000 + TIMELAPSE_HOT_ANIM);
-        }
+        }*/
     }
 
     public HorizontalTagsRecyclerView getRvEventTags() {
@@ -306,9 +279,6 @@ public class EventView extends RelativeLayout implements LocationManager.Locatio
 
         //Counter
         int initialTime = event.getPoints();
-        tvCountPoints.initTimer(initialTime * 1000);
-        tvCountComing.setText(event.count_coming == null ? "0" : event.count_coming.toString());
-        tvCountHere.setText(event.count_here == null ? "0" : event.count_here.toString());
 
         updatePointsView(isHotView);
         setDistance();

@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/event_title_picture_container"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-    android:background="@color/black">
+<layout
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="event"
+            type="com.timappweb.timapp.data.models.Event"></variable>
+    </data>
+    <FrameLayout
+    android:id="@+id/event_title_picture_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+        android:background="@color/black">
 
-    <ImageView
-        android:id="@+id/background_image_event"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/image_bar"
-        android:alpha="0.6"/>
+        <ImageView
+            android:id="@+id/background_image_event"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_bar"
+            android:alpha="0.6"/>
 
-    <include layout="@layout/event_title"></include>
+        <include layout="@layout/event_title"
+            bind:event="@{event}"></include>
 
-</FrameLayout>
+    </FrameLayout>
+</layout>

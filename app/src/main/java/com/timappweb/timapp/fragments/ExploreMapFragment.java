@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fragments;
 
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
+import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -76,7 +78,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private DrawerActivity drawerActivity;
     private View newEventbutton;
     private HorizontalTagsAdapter htAdapter;
-    private Event previewEvent;
+    private FragmentExploreMapBinding mBinding;
+    private float ZOOM_LEVEL_CENTER_MAP = 12.0f;
     //private EachSecondTimerTask eachSecondTimerTask;
 
     @Override
@@ -110,7 +113,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
 
-        root = inflater.inflate(R.layout.fragment_explore_map, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_explore_map, container, false);
+        root = mBinding.getRoot();
 
         exploreFragment = (ExploreFragment) getParentFragment();
         drawerActivity = (DrawerActivity) exploreFragment.getActivity();
@@ -183,8 +187,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private void displayPlace(Event event) {
         // TODO can be removed later when all data are synchronized localy...
         if (!event.hasLocalId()) event.mySave();
-
-        previewEvent  = event;
+        mBinding.setEvent(event);
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         newEventbutton.startAnimation(slideIn);
@@ -217,7 +220,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.viewSpecifiedEvent(getActivity(), previewEvent);
+                IntentsUtils.viewSpecifiedEvent(getActivity(), mBinding.getEvent());
             }
         });
 
@@ -239,7 +242,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private void loadMapIfNeeded() {
         try {
             if (gMap == null){
-                gMap = ((MapView) root.findViewById(R.id.map)).getMap();
+                gMap = mapView.getMap();
                 loadMap();
                 mapMarkers = new HashMap<>();
             }
@@ -326,7 +329,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         });
 
         try{
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(locationProvider.getLastGPSLocation()), 12.0f));
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(locationProvider.getLastGPSLocation()), ZOOM_LEVEL_CENTER_MAP));
         }
         catch (NoLastLocationException ex){
             Log.e(TAG, "Cannot center: no last name");
@@ -367,7 +370,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
         Event event = (Event) markerValue;
-        if(isPlaceViewVisible() && previewEvent == event) {
+        if(isPlaceViewVisible() && mBinding.getEvent() == event) {
             IntentsUtils.viewSpecifiedEvent(getActivity(), event);
         } else {
             displayPlace(event);

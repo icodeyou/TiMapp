@@ -106,6 +106,8 @@
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_marginTop">5dp</item>
+        <item name="backgroundTint">@color/background_floating_btn_state</item>
+        <item name="rippleColor">@color/ripple_floating_btn_state</item>
     </style>
 
 
@@ -186,7 +188,7 @@
         <item name="android:gravity">left</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">@dimen/text_big</item>
+        <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/color_hint</item>
         <item name="android:singleLine">true</item>
@@ -253,6 +255,12 @@
         <item name="android:padding">3dp</item>
     </style>
 
+    <style name="formMultilineText" parent="formEditText">
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:lines">6</item>
+    </style>
 
 
     <color name="textMute">#777777</color>

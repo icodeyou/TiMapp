@@ -24,7 +24,6 @@ public class SpotView extends LinearLayout{
 
     //private HorizontalTagsRecyclerView  rvSpotTags;
     private ImageView                   bigCategoryIcon;
-    private ImageView                   smallCategoryIcon;
     private View containerLayout;
     private LinearLayout                parentTextViews;
     private View                        gradientBottomView;
@@ -71,7 +70,6 @@ public class SpotView extends LinearLayout{
         mainHorizontalLayout = (LinearLayout) findViewById(R.id.horizontal_linear_layout);
         parentTextViews = (LinearLayout) findViewById(R.id.parent_textviews);
         bigCategoryIcon = (ImageView) findViewById(R.id.big_image_category_spot);
-        smallCategoryIcon = (ImageView) findViewById(R.id.small_image_category_spot);
         //gradientBottomView = findViewById(R.id.bottom_gradient);
         //gradientTopView = findViewById(R.id.top_gradient);
         //rvSpotTags = (HorizontalTagsRecyclerView) findViewById(R.id.rv_horizontal_tags);
@@ -134,11 +132,9 @@ public class SpotView extends LinearLayout{
         if(tagsVisibility) {
             //rvSpotTags.setVisibility(VISIBLE);
             bigCategoryIcon.setVisibility(VISIBLE);
-            smallCategoryIcon.setVisibility(GONE);
         } else {
             //rvSpotTags.setVisibility(GONE);
             bigCategoryIcon.setVisibility(GONE);
-            smallCategoryIcon.setVisibility(VISIBLE);
         }
     }
 

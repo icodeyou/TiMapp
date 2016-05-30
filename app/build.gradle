@@ -2,6 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    dataBinding {
+        enabled = true
+    }
+    dexOptions {
+        incremental = true;
+        preDexLibraries = false
+        javaMaxHeapSize "2g"
+    }
+
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 

@@ -1,6 +1,8 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -29,6 +32,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<EventsInvitation> data;
 
     private OnItemAdapterClickListener itemAdapterClickListener;
+    private ItemInvitationBinding mBinding;
 
     public InvitationsAdapter(Context context) {
         data = new ArrayList<>();
@@ -37,44 +41,30 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View v;
-
-        v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_invitation, viewGroup, false);
-        return new PlacesViewHolder(v);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        mBinding  = DataBindingUtil.inflate(inflater, R.layout.item_invitation, viewGroup, false);
+        return new PlacesViewHolder(mBinding.getRoot());
 
     }
+
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder baseHolder, int position) {
         if(baseHolder instanceof PlacesViewHolder) {
-            PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
+            //PlacesViewHolder holder = (PlacesViewHolder) baseHolder;
             Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
             final EventsInvitation placeInvitation = data.get(position);
+            mBinding.setInvitation(placeInvitation);
+            mBinding.setEvent(placeInvitation.event);
+            mBinding.setUser(placeInvitation.getUserSource());
 
+            /*
             User userSource = placeInvitation.getUserSource();
             String username = userSource != null ? userSource.getUsername() : "Former user";
             String prettyTimeInvitation = placeInvitation.getTimeCreated();
             holder.nameInvitation.setText(username);
-            holder.dateInvitation.setText(prettyTimeInvitation);
+            holder.dateInvitation.setText(prettyTimeInvitation);*/
 
-            //holder.eventView.setEvent(placeInvitation.event);
-
-            /*
-            try {
-                EventCategory eventCategory = MyApplication.getCategoryById(placeInvitation.event.getCategoryId());
-                //holder.backgroundImage.setImageResource(eventCategory.getBigImageResId());
-            } catch (UnknownCategoryException e) {
-                Log.e(TAG, "no category found for id : " + placeInvitation.event.getCategoryId());
-            }*/
-
-            //OnTagsRvClick : Same event as adapter click.
-            /*
-            HorizontalTagsRecyclerView htrv = holder.eventView.getRvEventTags();
-            if (htrv != null){
-                HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-                        new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-                htrv.setOnTouchListener(mHorizontalTagsTouchListener);
-            }*/
         }
     }
 

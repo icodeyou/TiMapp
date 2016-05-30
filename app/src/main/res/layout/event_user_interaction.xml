@@ -1,10 +1,15 @@
-<LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
+    </data>
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:background="@color/colorPrimaryDark"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingBottom="5dp"
     android:paddingTop="5dp">
 
@@ -29,7 +34,8 @@
                 style="@style/TextDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Category name"
+                android:text="@{event.getCategoryWithDefault().name}"
+                tools:text="Category name"
                 android:textColor="@color/textLight"/>
 
         </LinearLayout>
@@ -59,22 +65,22 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:visibility="@{event.isOver() ? View.GONE: View.VISIBLE}">
 
-        <com.timappweb.timapp.views.SelectableFloatingButton
+        <android.support.design.widget.FloatingActionButton
             style="@style/EventShortcutButtons"
             android:id="@+id/here_button"
-            android:src="@drawable/match_red"
-            app:backgroundTint="@color/white"
-            app:rippleColor="@color/colorAccent"
-            />
+            android:src="@drawable/background_button_event_here"
+            android:drawable="@color/background_floating_btn_state"/>
 
-        <com.timappweb.timapp.views.SelectableFloatingButton
+        <android.support.design.widget.FloatingActionButton
             style="@style/EventShortcutButtons"
             android:id="@+id/coming_button"
-            app:backgroundTint="@color/white"
-            app:rippleColor="@color/colorAccent"
-            android:src="@drawable/ic_coming_guy"
+            android:src="@drawable/background_button_event_coming"
+            android:drawable="@color/background_floating_btn_state"
             android:visibility="gone"/>
-    </FrameLayout>
-</LinearLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+</layout>

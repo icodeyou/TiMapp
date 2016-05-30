@@ -21,7 +21,7 @@ public class DummyEventFactory {
         event.longitude = 13;
         event.setSpot(DummySpotFactory.create());
         event.setCategory(new EventCategory("party"));
-        event.description = "La fête de la musique c'est vraiment une occasion en or pour venir écouter une multitude de genre musical différent." +
+        event.description = "La fête de la musique c'est vraiment une occasion en or pour venir écouter une multitude de genre musicaux différents." +
                 " C'est vraiment cool alors il ne faut pas rater ça!!";
         return event;
     }

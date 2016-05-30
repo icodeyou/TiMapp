@@ -3,6 +3,8 @@ package com.timappweb.timapp.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -64,7 +66,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private static final int REQUEST_CAMERA         = 0;
 
     // =============================================================================================
-
+    //private EventActivityBinding binding;
     private Event event;
     private int eventId;
 
@@ -81,6 +83,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private MaterialViewPager mMaterialViewPager;
     private EventPagerAdapter mFragmentAdapter;
     private TextView pageTitle;
+    private ViewDataBinding mBinding;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -99,7 +102,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             eventId = event.remote_id;
         }
 
-        setContentView(R.layout.activity_event);
+
+       mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
+
         pageTitle = (TextView) findViewById(R.id.title_event);
         //eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
 
@@ -245,27 +250,11 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         fragmentPeople = (EventPeopleFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPeopleFragment.class.getName()));
 
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
-        mFragmentAdapter = new EventPagerAdapter(super.getSupportFragmentManager(), mFragmentGroup.getFragments());
-        mMaterialViewPager = (MaterialViewPager) super.findViewById(R.id.event_viewpager);
+        mFragmentAdapter = new EventPagerAdapter(getSupportFragmentManager(), mFragmentGroup.getFragments());
+        mMaterialViewPager = (MaterialViewPager) findViewById(R.id.event_viewpager);
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
         //After set an adapter to the ViewPager
         mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
-
-        //mMaterialViewPager.setOffscreenPageLimit(PAGER_OFFSCREEN_PAGE_LIMIT);
-        //mMaterialViewPager.setAdapter(this.mFragmentAdapter);
-        //mMaterialViewPager.setCurrentItem(INITIAL_FRAGMENT_PAGE);
-        /*mMaterialViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-            @Override
-            public void onPageSelected(int position) {
-                updateBtnVisibility();
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });*/
 
         mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override

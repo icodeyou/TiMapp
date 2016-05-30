@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.graphics.drawable.Drawable"/>
+        <variable
+            name="spot"
+            type="com.timappweb.timapp.data.models.Spot"></variable>
+    </data>
 <LinearLayout
     android:id="@+id/layout_spot"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -9,22 +18,16 @@
     android:paddingBottom="5dp"
     android:paddingTop="5dp">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/big_image_category_spot"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:src="@drawable/image_bar"/>
-
-    <ImageView
-        android:id="@+id/small_image_category_spot"
-        android:layout_width="@dimen/little_icon_spot"
-        android:layout_height="@dimen/little_icon_spot"
-        android:layout_marginRight="@dimen/margin_right_image_category_spot"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_category_highlight_nightclub"
-        android:visibility="gone"/>
+        android:src="@drawable/image_bar"
+        tools:src="@drawable/image_bar"
+        fresco:actualImageScaleType="fitCenter"
+        fresco:roundAsCircle="true"/>
 
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
@@ -53,29 +56,10 @@
                     android:maxLines="1"
                     android:gravity="left|center"
                     android:textStyle="bold"
-                    android:text="Vertigo"
+                    android:text="@{spot.name}"
+                    tools:text="Le vertigo"
                     android:textSize="@dimen/text_big"
                     android:textColor="@color/colorAccent" />
-
-
-<!--
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:visibility="gone">
-
-                    <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                        xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-                        android:id="@+id/rv_horizontal_tags"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/height_rv_displayed_tags"
-                        myattrs:horizontal_tags_text_color="@color/default_spot_color"
-                        myattrs:horizontal_tags_background_color="@color/transparent"
-                        myattrs:horizontal_tags_is_bold="true"
-                        myattrs:horizontal_tags_text_size="@dimen/text_tags" />
-                </LinearLayout>-->
 
             </LinearLayout>
 
@@ -94,8 +78,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Bar"/>
+                    tools:text="Bar"
+                    android:text="@{spot.category.name}"/>
 
             </LinearLayout>
         </LinearLayout>
 </LinearLayout>
+</layout>

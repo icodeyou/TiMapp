@@ -18,35 +18,6 @@
             android:layout_marginTop="20dp"/>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/no_events_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_big_header"
-            android:gravity="center"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:text="@string/no_events_message1"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_normal"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/no_events_message2"
-                android:textSize="@dimen/text_normal"/>
-        </LinearLayout>
-    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_places"
@@ -54,7 +25,29 @@
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
         android:divider="@drawable/bottom_layout_event"
-        android:dividerHeight="7dp"/>
+        android:dividerHeight="7dp"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/no_events_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical">
+        <TextView
+            style="@style/NoDataView"
+            android:text="@string/no_events_message1"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+        <TextView
+            style="@style/NoDataView"
+            android:text="@string/no_events_message2"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         style="@style/PostPlusButton"

@@ -1,9 +1,12 @@
 package com.timappweb.timapp.data.models;
 
+import android.graphics.drawable.Drawable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.timappweb.timapp.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -102,5 +105,9 @@ public class Spot extends SyncBaseModel implements Serializable {
 
     public void setCategory(SpotCategory category) {
         this.category = category;
+    }
+
+    public int getItemPicture(){
+        return R.drawable.image_bar;
     }
 }

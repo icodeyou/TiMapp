@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    android:id="@+id/title_event"
-    android:layout_toRightOf="@+id/image_small_category_place"
-    android:layout_toEndOf="@+id/image_small_category_place"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center|start"
-    android:ellipsize="end"
-    android:layout_gravity="center"
-    android:textStyle="bold"
-    android:text="Soirée dansante Rock N Roll de folie"
-    android:textSize="@dimen/title_event_card"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
+    </data>
+    <TextView
+        android:id="@+id/title_event"
+        android:layout_toRightOf="@+id/image_small_category_place"
+        android:layout_toEndOf="@+id/image_small_category_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|start"
+        android:ellipsize="end"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textSize="@dimen/title_event_card"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="@{event.name}"
+        tools:text="My very great event name"/>
+</layout>
