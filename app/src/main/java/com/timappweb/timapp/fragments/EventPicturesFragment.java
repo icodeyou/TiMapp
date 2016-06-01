@@ -259,7 +259,7 @@ public class EventPicturesFragment extends EventBaseFragment {
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call c, Throwable t) {
                     Log.e(TAG, "Upload error:" + t.getMessage());
                     Toast.makeText(context, "We cannot upload this image", Toast.LENGTH_LONG).show();
                 }

@@ -39,19 +39,18 @@ public class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
         Call<List<Tag>> call = RestClient.service().suggest(term);
         call.enqueue(new RestCallback<List<Tag>>(manager.getActivity()) {
             @Override
-            public void onResponse(Response<List<Tag>> response) {
-                super.onResponse(response);
-                if (response.isSuccess()){
+            public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
+                super.onResponse(call, response);
+                if (response.isSuccessful()){
                     List<Tag> tags = response.body();
                     Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
                     manager.getSearchHistory().addInCache(term, tags);
                 }
-                onLoadEnds();
             }
 
             @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
+            public void onFinish() {
+                super.onFinish();
                 onLoadEnds();
             }
         });

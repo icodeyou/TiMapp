@@ -1,6 +1,9 @@
 package com.timappweb.timapp.data.models;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import com.activeandroid.annotation.Column;
@@ -120,10 +123,9 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         this.tags = new ArrayList<>();
     }
 
-    public Event(Location lastLocation, String name, EventCategory eventCategory, Spot spot, String description) {
+    public Event(Location location, String name, EventCategory eventCategory, Spot spot, String description) {
         this.loaded_time = Util.getCurrentTimeSec();
-        this.latitude = lastLocation.getLatitude();
-        this.longitude = lastLocation.getLongitude();
+        this.setLocation(location);
         this.name = name;
         this.category_id = eventCategory.remote_id;
         this.description = description;
@@ -164,6 +166,8 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return event;
     }
 
+    // =============================================================================================
+
     @Override
     public LatLng getPosition() {
         return new LatLng(this.latitude, this.longitude);
@@ -201,30 +205,6 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
                 '}';
     }
 
-    public int countUsers() {
-        return this.count_posts;
-    }
-
-    /**
-     * @param latitude
-     * @param longitude
-     * @return true if the user can post in the event
-     */
-    public boolean isUserAround(double latitude, double longitude) {
-        return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
-                < ConfigurationProvider.rules().place_max_reachable;
-    }
-
-    public boolean isUserAround() {
-        Location lastLocation = LocationManager.getLastLocation();
-        if (lastLocation == null) return false;
-        return this.isUserAround(lastLocation.getLatitude(), lastLocation.getLongitude());
-    }
-
-    public static boolean isValidName(String name) {
-        return name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
-    }
-
     public int getPoints() {
         int points = this.points - (Util.getCurrentTimeSec() - this.loaded_time);
         return points > 0 ? points : 0;
@@ -250,6 +230,67 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return Event.computeLevel(this.getPoints());
     }
 
+    public EventCategory getCategory() throws UnknownCategoryException {
+        return MyApplication.getCategoryById(this.category_id);
+    }
+
+
+    @Override
+    public int getMarkerId() {
+        return this.remote_id;
+    }
+
+    public boolean hasDistanceFromUser(){
+        this.updateDistanceFromUser();
+        return distance != -1;
+    }
+
+    public double getDistanceFromUser() {
+        this.updateDistanceFromUser();
+        return distance;
+    }
+
+    public String getAddress(){
+        return null;
+    }
+
+    public MarkerOptions getMarkerOption() {
+        return new MarkerOptions().position(getPosition());
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+// =============================================================================================
+
+    /**
+     * @param latitude
+     * @param longitude
+     * @return true if the user can post in the event
+     */
+    public boolean isUserAround(double latitude, double longitude) {
+        return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
+                < ConfigurationProvider.rules().place_max_reachable;
+    }
+
+    public boolean isUserAround() {
+        Location lastLocation = LocationManager.getLastLocation();
+        if (lastLocation == null) return false;
+        return this.isUserAround(lastLocation.getLatitude(), lastLocation.getLongitude());
+    }
+
+    public static boolean isValidName(String name) {
+        return name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
+    }
+
     private static int computeLevel(int points) {
         List<Integer> levels = ConfigurationProvider.rules().places_points_levels;
         int num = 0;
@@ -260,16 +301,6 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
             num++;
         }
         return num;
-    }
-
-    public EventCategory getCategory() throws UnknownCategoryException {
-        return MyApplication.getCategoryById(this.category_id);
-    }
-
-
-    @Override
-    public int getMarkerId() {
-        return this.remote_id;
     }
 
     // =============================================================================================
@@ -363,16 +394,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return this.tags != null && tags.size() > 0;
     }
 
-    public double getDistanceFromUser() {
-        if (distance != -1){
-            return distance;
-        }
-        this.updateDistanceFromUser();
-        return distance;
-    }
-
     public void updateDistanceFromUser() {
         Location location = LocationManager.getLastLocation();
+        if (location == null)
+            return;
         double distance =  DistanceHelper.distFrom(location.getLatitude(), location.getLongitude(),
                 this.latitude, this.longitude);
         this.distance = Math.round(distance);
@@ -402,11 +427,12 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return this.getPoints() <= 0;
     }
 
-    public String getAddress(){
-        return null;
+    public void setLocation(Location location) {
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 
-    public MarkerOptions getMarkerOption() {
-        return new MarkerOptions().position(getPosition());
+    public Drawable getBackgroundImage(Context context){
+        return ContextCompat.getDrawable(context, getCategoryWithDefault().getBigImageResId());
     }
 }

@@ -179,10 +179,10 @@ public class LocateActivity extends BaseActivity{
         call.enqueue(new RestCallback<List<Event>>(this) {
 
             @Override
-            public void onResponse(Response<List<Event>> response) {
-                super.onResponse(response);
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                super.onResponse(call, response);
 
-                if (response.isSuccess()){
+                if (response.isSuccessful()){
                     List<Event> events = response.body();
                     eventsLoaded = true;
                     Log.d(TAG, "Loading " + events.size() + " viewPlace(s)");
@@ -203,8 +203,8 @@ public class LocateActivity extends BaseActivity{
             }
 
             @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
+            public void onFailure(Call call, Throwable t) {
+                super.onFailure(call, t);
                 if(!eventsLoaded) {
                     progressView.setVisibility(View.GONE);
                     noConnectionView.setVisibility(View.VISIBLE);

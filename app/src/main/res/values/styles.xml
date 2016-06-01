@@ -175,7 +175,8 @@
     </style>
 
     <style name="formLabel">
-       <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
        <item name="android:layout_height">wrap_content</item>
        <item name="android:textColor">@color/textMute</item>
        <item name="android:textSize">@dimen/text_small</item>
@@ -194,12 +195,13 @@
         <item name="android:singleLine">true</item>
         <item name="android:background">@drawable/edittext_bottom_line</item>
         <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">4dp</item>
     </style>
 
     <style name="formGroup">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
+        <item name="android:orientation">vertical</item>
         <item name="android:paddingTop">6dp</item>
         <item name="android:paddingBottom">6dp</item>
         <item name="android:paddingLeft">5dp</item>
@@ -263,5 +265,22 @@
     </style>
 
 
-    <color name="textMute">#777777</color>
+    <style name="RestErrorMessage" parent="TextInfo">
+        <item name="android:color">@color/colorAccent</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="formLabelGroup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
+
+    <color name="textMute">
+        #777777
+    </color>
+
 </resources>

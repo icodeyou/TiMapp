@@ -70,15 +70,11 @@ public class PostActivity extends BaseActivity {
     private void loadTagsForPost() {
         Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentPost.getMarkerId());
         call.enqueue(new RestCallback<List<Tag>>(this) {
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-            }
 
             @Override
-            public void onResponse(Response<List<Tag>> response) {
-                super.onResponse(response);
-                if (response.isSuccess()){
+            public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
+                super.onResponse(call, response);
+                if (response.isSuccessful()){
                     List<Tag> tags = response.body();
                     currentPost.setTags(tags);
                     fetchDataToView();
@@ -90,15 +86,11 @@ public class PostActivity extends BaseActivity {
     private void loadPost(int postId) {
         Call<Post> call = RestClient.service().viewPost(currentPost.getMarkerId());
         call.enqueue(new RestCallback<Post>(this) {
-            @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
-            }
 
             @Override
-            public void onResponse(Response<Post> response) {
-                super.onResponse(response);
-                if (response.isSuccess()){
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                super.onResponse(call,response);
+                if (response.isSuccessful()){
                     Post post = response.body();
                     currentPost = post;
                     fetchDataToView();

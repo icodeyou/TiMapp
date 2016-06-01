@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by stephane on 8/21/2015.
@@ -42,6 +42,12 @@ public class RestClient {
     private final AuthProvider authProvider;
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
+
+    public Retrofit getRetrofit() {
+        return retrofit;
+    }
+
+    private Retrofit retrofit;
 
 
     // KEY ID
@@ -88,7 +94,6 @@ public class RestClient {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(this.httpClient);
 
-
         this.createService();
         Log.i(TAG, "Create connection with web service done!");
 
@@ -99,7 +104,8 @@ public class RestClient {
     }
 
     public void createService(){
-        this.service =  builder.build().create(WebServiceInterface.class);
+        this.retrofit = builder.build();
+        this.service =  retrofit.create(WebServiceInterface.class);
     }
 
     public <T> T createService(Class<T> service){

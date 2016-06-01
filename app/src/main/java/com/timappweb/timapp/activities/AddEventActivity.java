@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,27 +33,23 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.listeners.BinaryActionListener;
-import com.timappweb.timapp.listeners.OnSpotClickListener;
+import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.model.RestValidationErrors;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.BackCatchEditText;
-import com.timappweb.timapp.views.SpotView;
-
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
 
 import retrofit2.Call;
 
 
-public class AddEventActivity extends BaseActivity {
+public class AddEventActivity extends BaseActivity{
     private static final float ZOOM_LEVEL_CENTER_MAP = 12.0f;
     private String TAG = "AddEventActivity";
 
     private InputMethodManager imm;
-    private String description;
 
     //Views
     private BackCatchEditText eventNameET;
@@ -66,10 +64,12 @@ public class AddEventActivity extends BaseActivity {
     //private SpotView spotView;
     // Data
     private Spot spot = null;
-    private AddEventActivity context;
 
     private MapView mapView = null;
     private GoogleMap gMap;
+    private ActivityAddEventBinding mBinding;
+    private View mButtonAddPicture;
+    private View mBtnAddSpot;
     //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
@@ -77,8 +77,8 @@ public class AddEventActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_event);
-        context = this;
+
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_event);
 
         this.initToolbar(true);
         this.extractSpot(savedInstanceState);
@@ -95,11 +95,15 @@ public class AddEventActivity extends BaseActivity {
         createButton = findViewById(R.id.create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
-        //pinView = findViewById(R.id.no_spot_view);
-        //pinnedSpot = findViewById(R.remote_id.pinned_spot);
-        //eventLocation = (TextView) findViewById(R.id.event_location);
-        //spotView = (SpotView) findViewById(R.id.spot_view);
         mapView = (MapView) findViewById(R.id.map);
+        mButtonAddPicture = findViewById(R.id.button_take_picture);
+        mBtnAddSpot = (Button) findViewById(R.id.button_add_spot);
+
+        Event event = new Event();
+        if (LocationManager.hasLastLocation()){
+            event.setLocation(LocationManager.getLastLocation());
+        }
+        mBinding.setEvent(event);
 
         initKeyboard();
         setListeners();
@@ -107,27 +111,23 @@ public class AddEventActivity extends BaseActivity {
         initViewPager();
         initLocationListener();
         setButtonValidation();
+        initEvents();
         initMap();
+    }
+
+    private void initEvents() {
+        mButtonAddPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.addPicture(AddEventActivity.this);
+            }
+        });
     }
 
     @Override
     public void onBackPressed() {
         finish();
     }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        eventNameET.clearFocus();
-        switch (requestCode) {
-            case IntentsUtils.REQUEST_PICK_SPOT:
-                if(resultCode == RESULT_OK){
-                    Log.d(TAG, "extracting bundle Spot");
-                    extractSpot(data.getExtras());
-                }
-                break;
-        }
-    }
-
     //----------------------------------------------------------------------------------------------
     //Private methods
 
@@ -191,7 +191,7 @@ public class AddEventActivity extends BaseActivity {
 
             public void onPageSelected(int position) {
                 EventCategory newEventCategory = categoriesAdapter.getCategory(position);
-                categoriesAdapter.setIconNewCategory(context, newEventCategory);
+                categoriesAdapter.setIconNewCategory(AddEventActivity.this, newEventCategory);
                 eventCategorySelected = newEventCategory;
             }
         });
@@ -200,16 +200,19 @@ public class AddEventActivity extends BaseActivity {
     private void submitPlace(final Event event){
         Log.d(TAG, "Submit event " + event.toString());
         Call call = RestClient.service().addPlace(event);
-        event.saveRemoteEntry(this, call, new BinaryActionListener() {
+        event.saveRemoteEntry(this, call, new RestFeedbackCallback(this){
 
             @Override
-            public void onSuccess() {
-                IntentsUtils.viewEventFromId(context, event.remote_id);
-                // TODO update sync to prevent reloading
+            public void onActionSuccess(RestFeedback feedback) {
+                IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
             }
 
             @Override
-            public void onFailure() { }
+            public void onActionFail(RestFeedback feedback) {
+                if (feedback == null) return;;
+                RestValidationErrors errors = feedback.getValidationErrors();
+                mBinding.setErrors(errors);
+            }
 
             @Override
             public void onFinish() {
@@ -249,13 +252,12 @@ public class AddEventActivity extends BaseActivity {
     }
 
     private void setListeners() {
-        /*
-        eventLocation.setOnClickListener(new View.OnClickListener() {
+        mBtnAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.pinSpot(context);
+                IntentsUtils.pinSpot(AddEventActivity.this);
             }
-        });*/
+        });
 
         eventNameET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -285,8 +287,9 @@ public class AddEventActivity extends BaseActivity {
             public void onClick(View v) {
                 if (LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
                     setProgressView(true);
-                    final Event event = new Event(LocationManager.getLastLocation(),
-                            eventNameET.getText().toString(), eventCategorySelected, context.spot, description);
+                    Event event = mBinding.getEvent();
+                    event.setCategory(eventCategorySelected);
+                    event.setSpot(AddEventActivity.this.spot);
                     submitPlace(event);
                 } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
@@ -374,5 +377,28 @@ public class AddEventActivity extends BaseActivity {
         });
         gMap = mapView.getMap();
         gMap.setIndoorEnabled(true);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        eventNameET.clearFocus();
+        switch (requestCode){
+            case IntentsUtils.REQUEST_PICK_SPOT:
+                if(resultCode == RESULT_OK){
+                    Log.d(TAG, "extracting bundle Spot");
+                    extractSpot(data.getExtras());
+                }
+                break;
+            case IntentsUtils.ACTION_ADD_EVENT_PICTURE:
+                if(resultCode==RESULT_OK) {
+                    // TODO
+                    Log.d(TAG, "Result OK from TagActivity");
+                }
+                break;
+            default:
+                Log.e(TAG, "Unknown activity result: " + requestCode);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

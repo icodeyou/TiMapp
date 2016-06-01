@@ -8,6 +8,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.listeners.LoadingListener;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -31,8 +32,8 @@ public class RestCallback<T> implements Callback<T> {
     public void onResponse200(Response<T> response){}
 
     @Override
-    public void onResponse(Response<T> response) {
-        if (!response.isSuccess()){
+    public void onResponse(Call<T> call, Response<T> response) {
+        if (!response.isSuccessful()){
             String userMessage =  "";
             switch (response.code()){
                 case 500:
@@ -58,7 +59,7 @@ public class RestCallback<T> implements Callback<T> {
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<T> call, Throwable t) {
         Log.e(TAG, "::onFailure() -> " + t.getMessage());
         t.printStackTrace();
         this.onFinish();
@@ -69,5 +70,4 @@ public class RestCallback<T> implements Callback<T> {
             listener.onLoadEnd();
         }
     }
-
 }

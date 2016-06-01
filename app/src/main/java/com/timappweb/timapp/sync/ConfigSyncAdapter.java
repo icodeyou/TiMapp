@@ -110,7 +110,7 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
         From localQuery = new Select().from(classType);
         try {
             Response response = remoteQuery.execute();
-            if (response.isSuccess()){
+            if (response.isSuccessful()){
                 List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
                 new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
             }

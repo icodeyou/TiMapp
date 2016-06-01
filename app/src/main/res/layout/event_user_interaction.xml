@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
+        <import type="com.timappweb.timapp.utils.DistanceHelper"/>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
     <LinearLayout
@@ -27,7 +28,9 @@
             <ImageView
                 android:id="@+id/image_category_place"
                 style="@style/imageIcon"
-                android:src="@drawable/ic_category_else"/>
+                tools:src="@drawable/ic_category_else"
+                app:imageResource="@{event.getCategoryWithDefault().getIconWhiteResId()}"
+                />
 
             <TextView
                 android:id="@+id/event_category_name"
@@ -51,6 +54,9 @@
             <ImageView
                 style="@style/imageIcon"
                 android:src="@drawable/ic_direction_light"/>
+            <ProgressBar
+                style="@style/formIconGroup"
+                android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}"/>
             <com.timappweb.timapp.views.SimpleTimerView
                 android:id="@+id/distance_text"
                 style="@style/TextDefault"
@@ -58,7 +64,9 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:textColor="@color/textLight"
-                android:text="120 m"/>
+                android:textStyle="bold"
+                android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
+                tools:text="120 m"/>
         </LinearLayout>
 
     </LinearLayout>

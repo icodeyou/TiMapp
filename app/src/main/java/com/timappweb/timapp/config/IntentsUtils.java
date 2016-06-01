@@ -48,6 +48,8 @@ public class IntentsUtils {
     public static final int ACTION_TAGS = 2;
     public static final int ACTION_PEOPLE = 3;
 
+    public static final int ACTION_ADD_EVENT_PICTURE = 4;
+
     public static final String KEY_ACTION = "action";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_USER = "user";

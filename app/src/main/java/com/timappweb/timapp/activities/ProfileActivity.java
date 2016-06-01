@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -40,17 +41,14 @@ public class ProfileActivity extends BaseActivity  {
     private int userId;
 
     private TextView tvUsername;
-    private TextView tvAge;
+    //private TextView tvAge;
     private TextView tvCountTags;
     private TextView tvCountPlaces;
-    private ListView lastPostListView;
     private ListView tagsListView;
     private View loadingView;
-    private View mainView;
     private View layoutTagsProfile;
     private View noConnectionView;
     private SimpleDraweeView profilePicture;
-    private View lastPostContainer;
     private UserLoader mLoader;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -65,17 +63,14 @@ public class ProfileActivity extends BaseActivity  {
 
         //Initialize
         tvUsername = (TextView) findViewById(R.id.tv_profile_username);
-        tvAge = (TextView) findViewById(R.id.text_age);
+        //tvAge = (TextView) findViewById(R.id.text_age);
         tvCountTags = (TextView) findViewById(R.id.tags_counter);
         tvCountPlaces = (TextView) findViewById(R.id.places_counter);
-        lastPostListView = (ListView) findViewById(R.id.profile_last_post);
         tagsListView = (ListView) findViewById(R.id.listview_usertags);
         //loadingView = findViewById(R.remote_id.loading_view);
-        mainView = findViewById(R.id.main_view);
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
         profilePicture = (SimpleDraweeView) findViewById(R.id.profile_picture);
-        lastPostContainer = findViewById(R.id.profile_last_post_container);
 
 
 
@@ -130,7 +125,7 @@ public class ProfileActivity extends BaseActivity  {
 
         Log.i(TAG, mUser + " loaded");
         tvUsername.setText(mUser.username);
-        tvAge.setText("");
+   //     tvAge.setText("");
         tvCountTags.setText(String.valueOf(mUser.count_posts));
         tvCountTags.setVisibility(View.VISIBLE);
         tvCountPlaces.setText(String.valueOf(mUser.count_places));
@@ -156,6 +151,7 @@ public class ProfileActivity extends BaseActivity  {
             invalidateOptionsMenu();
             setTagsListeners();
         }
+
         String photoUrl = mUser.getProfilePictureUrl();
         Uri uri = Uri.parse(photoUrl);
         profilePicture.setImageURI(uri);
@@ -163,18 +159,20 @@ public class ProfileActivity extends BaseActivity  {
 
 
     private void setTagsListeners() {
+        layoutTagsProfile.setOnTouchListener(new ColorAllOnTouchListener());
 
-        if(MyApplication.isCurrentUser(mUser)) {
-            layoutTagsProfile.setOnTouchListener(new ColorAllOnTouchListener());
-
-            layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.editProfile(ProfileActivity.this, mUser);
-                }
-            });
-        }
-
+        layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.editProfile(ProfileActivity.this, mUser);
+            }
+        });
+        tagsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                IntentsUtils.editProfile(ProfileActivity.this, mUser);
+            }
+        });
     }
 
 

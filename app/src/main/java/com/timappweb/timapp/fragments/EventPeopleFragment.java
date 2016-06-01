@@ -140,8 +140,8 @@ public class EventPeopleFragment extends EventBaseFragment {
             }
 
             @Override
-            public void onFailure(Throwable t) {
-                super.onFailure(t);
+            public void onFailure(Call c, Throwable t) {
+                super.onFailure(c, t);
                 noConnectionView.setVisibility(View.VISIBLE);
             }
 

@@ -286,12 +286,6 @@ public class TagActivity extends BaseActivity{
             //setProgressView(false);
         }
 
-
-        @Override
-        public void onFailure(Throwable t) {
-            super.onFailure(t);
-            //setProgressView(false);
-        }
     }
 
     private class OnPostTagButtonClickListener implements View.OnClickListener {

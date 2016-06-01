@@ -34,7 +34,7 @@ public class RESTRemoteSync implements RemotePersistenceManager {
         Call call = service.get(this.path, currentVersion);
         try {
             Response response = call.execute();
-            if (response.isSuccess()){
+            if (response.isSuccessful()){
                 return (SyncConfig) response.body();
             }
             else{

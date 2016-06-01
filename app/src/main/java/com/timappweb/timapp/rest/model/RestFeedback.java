@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,6 +27,11 @@ public class RestFeedback extends RestResponse {
     @SerializedName("data")
     public HashMap<String, String> data;
 
+    @Expose
+    @SerializedName("validationErrors")
+    public JsonObject errors;
+
+    // =============================================================================================
 
     public String toString(){
         return "ServerObject[Success: " + success + " ("+code+"); message=" + message + ";]";
@@ -38,4 +44,9 @@ public class RestFeedback extends RestResponse {
             return -1;
         }
     }
+
+    public RestValidationErrors getValidationErrors(){
+        return new RestValidationErrors(this.errors);
+    }
+
 }

@@ -34,7 +34,7 @@ public class SingleEntrySyncPerformer implements SyncPerformer {
      */
     @Override
     public void perform() {
-        if (response.isSuccess()){
+        if (response.isSuccessful()){
             SyncBaseModel model = response.body();
             if (model != null){
                 Log.d(TAG, "Server returned a object. Synchronizing with local entry.");

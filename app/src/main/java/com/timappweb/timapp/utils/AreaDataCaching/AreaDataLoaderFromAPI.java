@@ -80,14 +80,14 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
         call.enqueue(new RestCallback<List<Event>>(mContext) {
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call call, Throwable t) {
                 if (loadingListener!=null) loadingListener.onLoadEnd();
-                super.onFailure(t);
+                super.onFailure(call, t);
             }
 
             @Override
-            public void onResponse(Response<List<Event>> response) {
-                super.onResponse(response);
+            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
+                super.onResponse(call, response);
                 if (loadingListener!= null) loadingListener.onLoadEnd();
 
                 if (request.isOutdated(itemRequestId)) {
@@ -95,7 +95,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                     return;
                 }
 
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
 
                     if (requestId < lastClear) {
                         Log.d(TAG, "Outdated request " + requestId + " < " + lastClear + " . Do not load tags");

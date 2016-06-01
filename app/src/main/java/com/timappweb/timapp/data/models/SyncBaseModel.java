@@ -12,13 +12,11 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -152,35 +150,44 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     /**
      * Saving remote entry
+     * @param binaryActionListener
      * @param context
      * @param call
-     * @param binaryActionListener
+     * @param callback
      */
-    public void saveRemoteEntry(Context context, Call call, final BinaryActionListener binaryActionListener){
+    public void saveRemoteEntry(Context context, Call call, final RestFeedbackCallback callback){
         // try {
             call.enqueue(new RestFeedbackCallback(context) {
                 @Override
                 public void onActionSuccess(RestFeedback feedback) {
+                    if (feedback == null){
+                        Log.e(TAG, "Server returned a null response...");
+                        return;
+                    }
                     int id = feedback.getIntData("id");
                     if (id != -1) {
                         setRemoteId(id);
                     }
                     SyncBaseModel.this.mySave();
-                    if (binaryActionListener != null) binaryActionListener.onSuccess();
+                    if (callback != null) callback.onActionSuccess(feedback);
                 }
 
                 @Override
                 public void onActionFail(RestFeedback feedback) {
                     Log.e(TAG, "Cannot save entry on remote");
+                    if (feedback == null){
+                        Log.e(TAG, "Server returned a null response...");
+                        return;
+                    }
                     if (feedback.message != null) {
                         Toast.makeText(context, feedback.message, Toast.LENGTH_LONG).show();
                     }
-                    if (binaryActionListener != null) binaryActionListener.onFailure();
+                    if (callback != null) callback.onActionFail(feedback);
                 }
 
                 @Override
                 public void onFinish() {
-                    if (binaryActionListener != null) binaryActionListener.onFinish();
+                    if (callback != null) callback.onFinish();
                 }
             });
             //call.execute();

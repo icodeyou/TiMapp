@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:event="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="event"
@@ -13,13 +14,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
         android:background="@color/black">
-
+<!--
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/background_image_event"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/image_bar"
+            android:alpha="0.6"
+            fresco:placeholderImage="@drawable/placeholder_profile"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"
+            fresco:backgroundImage="@{event.getBackgroundImage()}"/>-->
         <ImageView
             android:id="@+id/background_image_event"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/image_bar"
+            tools:src="@drawable/image_bar"
+            event:backgroundImage="@{event}"
             android:alpha="0.6"/>
 
         <include layout="@layout/event_title"

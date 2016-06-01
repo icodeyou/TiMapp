@@ -24,9 +24,6 @@ import java.util.List;
 public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "EventsAdapter";
     private Context context;
-    private int colorRes = -1;
-    private boolean isTagsVisible;
-    private boolean footerActive;
 
     private List<EventsInvitation> data;
 
@@ -69,11 +66,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        if(footerActive) {
-            return data.size()+1;
-        } else {
-            return data.size();
-        }
+        return data.size();
     }
 
     public void add(EventsInvitation eventsInvitation) {
@@ -114,10 +107,8 @@ public class InvitationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         PlacesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            //eventView = (EventView) itemView.findViewById(R.id.event_view);
             nameInvitation = (TextView) itemView.findViewById(R.id.name_invitation);
             dateInvitation = (TextView) itemView.findViewById(R.id.date_invitation);
-            //backgroundImage = (ImageView) itemView.findViewById(R.remote_id.background_invitation);
         }
 
         @Override

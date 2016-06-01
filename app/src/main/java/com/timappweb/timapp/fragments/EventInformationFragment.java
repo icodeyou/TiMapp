@@ -110,17 +110,6 @@ public class EventInformationFragment extends EventBaseFragment {
 
         EventCategory category = event.getCategoryWithDefault();
         eventCategoryIcon.setImageResource(category.getIconBlackResId());
-
-        if (LocationManager.hasLastLocation()){
-            //distanceLayout.setVisibility(View.VISIBLE);
-            event.updateDistanceFromUser();
-            distanceText.setText(DistanceHelper.prettyPrint(event.getDistanceFromUser()));
-        }
-        else {
-            //distanceLayout.setVisibility(View.GONE);
-            distanceText.setText(R.string.waiting_for_location);
-        }
-
     }
 
 

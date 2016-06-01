@@ -10,6 +10,8 @@ import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
+import retrofit2.Call;
+
 
 /**
  * Created by stephane on 4/26/2016.
@@ -66,7 +68,7 @@ public class AuthProvider {
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
+                public void onFailure(Call call, Throwable t) {
                     tokenListener.onTokenFailure();
                 }
             });

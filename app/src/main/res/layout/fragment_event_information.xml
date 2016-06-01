@@ -18,13 +18,75 @@
 
         <include layout="@layout/material_view_pager_placeholder"/>
 
+
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <include layout="@layout/event_information"
-                bind:event="@{event}"></include>
+            android:background="@color/background_light"
+            android:paddingBottom="10dp">
+
+            <include layout="@layout/event_user_interaction" bind:event="@{event}"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
+                <include layout="@layout/layout_spot"
+                    bind:spot="@{event.spot}"
+                    ></include>
+            </FrameLayout>
+
+            <include layout="@layout/event_stats_people" bind:event="@{event}"></include>
+            <!--<View style="@style/Divider"></View>-->
+
+            <!-- Description -->
+            <!-- **********************************************************************-->
+            <LinearLayout
+                android:id="@+id/description_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/description_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="left"
+                    android:textColor="@color/textDark"
+                    android:paddingRight="10dp"
+                    android:text="@{event.description ?? @string/no_event_description}"
+                    tools:text="This is the description text for this event. It's not very interesting but it can be usefull in some case. It also has a maximum height..."/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="7dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        style="@style/imageIconSmall"
+                        android:src="@drawable/ic_clock"/>
+                    <TextView
+                        android:id="@+id/time_place"
+                        style="@style/TextMute"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:text="@{event.getTime()}"
+                        tools:text="5 min ago"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
+
+
+
+
         <View style="@style/Divider"></View>
 
         <!--<TextView

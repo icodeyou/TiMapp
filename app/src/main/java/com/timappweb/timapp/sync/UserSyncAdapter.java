@@ -87,7 +87,7 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
         From localQuery = new Select().from(classType);
         try {
             Response response = remoteQuery.execute();
-            if (response.isSuccess()){
+            if (response.isSuccessful()){
                 List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
                 new UserQuotaSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
             }
