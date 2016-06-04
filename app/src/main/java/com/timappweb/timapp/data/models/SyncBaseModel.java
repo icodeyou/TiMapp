@@ -1,6 +1,7 @@
 package com.timappweb.timapp.data.models;
 
 import android.content.Context;
+import android.databinding.Observable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -150,7 +151,6 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
 
     /**
      * Saving remote entry
-     * @param binaryActionListener
      * @param context
      * @param call
      * @param callback
@@ -190,15 +190,6 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
                     if (callback != null) callback.onFinish();
                 }
             });
-            //call.execute();
-            //} catch (IOException e) {
-            //    Log.e(TAG, "Error " + e.getMessage());
-            //    e.printStackTrace();
-            //    if (binaryActionListener != null){
-            //       binaryActionListener.onFailure();
-            //       binaryActionListener.onFinish();
-            //    }
-            //}
     }
 
     /**

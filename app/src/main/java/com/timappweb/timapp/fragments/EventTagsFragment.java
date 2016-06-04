@@ -1,6 +1,8 @@
 package com.timappweb.timapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,7 @@ public class EventTagsFragment extends EventBaseFragment {
     private FloatingActionButton postButton;
     private RecyclerView mRecyclerView;
     private RecyclerViewMaterialAdapter mAdapter;
+    private Loader<List<Tag>> mTagLoader;
 
     @Nullable
     @Override
@@ -74,11 +78,26 @@ public class EventTagsFragment extends EventBaseFragment {
         postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_TAGS);
+            IntentsUtils.addTags(EventTagsFragment.this, eventActivity.getEvent());
             }
         });
 
-        getLoaderManager().initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+        mTagLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case IntentsUtils.REQUEST_TAGS:
+                if(resultCode == Activity.RESULT_OK) {
+                    // TODO update list
+                    //mTagLoader.reset();
+                }
+                break;
+            default:
+                Log.e(TAG, "Unknown activity result: " + requestCode);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     // =============================================================================================

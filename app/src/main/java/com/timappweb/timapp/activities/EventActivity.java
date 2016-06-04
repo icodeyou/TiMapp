@@ -205,7 +205,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             case IntentsUtils.REQUEST_TAGS:
                 if(resultCode==RESULT_OK) {
                     setCurrentPageSelected(PAGER_TAG);
-                    Log.d(TAG, "Result OK from TagActivity");
+                    Log.d(TAG, "Result OK from AddTagActivity");
                 }
                 break;
             case IntentsUtils.REQUEST_INVITE_FRIENDS:
@@ -229,7 +229,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
-        IntentsUtils.addTags(this, event);
+        IntentsUtils.addTags(fragmentTags, event);
     }
 
     private void openAddPictureActivity() {
@@ -307,14 +307,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
      *
      */
     private void updateView() {
-        try {
-            EventCategory eventCategory = MyApplication.getCategoryById(event.category_id);
-            //ImageView backgroundImage = (ImageView) findViewById(R.id.background_place);
-            //backgroundImage.setImageResource(eventCategory.getBigImageResId());
-        } catch (UnknownCategoryException e) {
-            Log.e(TAG, "no category found for id : " + event.category_id);
-        }
-
         pageTitle.setText(event.getName());
     }
 

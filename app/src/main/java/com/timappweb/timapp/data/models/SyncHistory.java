@@ -39,9 +39,15 @@ public class SyncHistory extends MyModel {
     }
 
 
+    /**
+     *
+     * @param type
+     * @param updateMinDelay if 0 means infinite delay
+     * @return
+     */
     public static boolean requireUpdate(int type, long updateMinDelay){
         SyncHistory history = getByType(type);
-        return history == null || (System.currentTimeMillis() - history.last_update > updateMinDelay);
+        return history == null || (updateMinDelay != 0 && System.currentTimeMillis() - history.last_update > updateMinDelay);
     }
 
     public static SyncHistory getByType(int type){

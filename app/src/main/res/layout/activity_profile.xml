@@ -5,6 +5,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="android.graphics.drawable.Drawable"/>
+        <import type="com.timappweb.timapp.utils.NumberUtility"/>
         <variable
             name="user"
             type="com.timappweb.timapp.data.models.User"></variable>
@@ -54,6 +55,7 @@
                     android:textSize="@dimen/text_big"
                     android:textColor="@color/textDark"
                     android:gravity="center"
+                    android:text="@{user.getUsername()}"
                     tools:text="Super Sayen"/>
             </LinearLayout>
 
@@ -82,6 +84,7 @@
                         android:textColor="@color/colorAccent"
                         android:visibility="visible"
                         android:layout_marginBottom="5dp"
+                        android:text="@{NumberUtility.displayCount(user.count_posts)}"
                         tools:text="23"/>
                     <TextView
                         android:layout_width="wrap_content"
@@ -110,6 +113,7 @@
                         android:textColor="@color/colorAccent"
                         android:visibility="visible"
                         android:layout_marginBottom="5dp"
+                        android:text="@{NumberUtility.displayCount(user.count_places)}"
                         tools:text="56"/>
                     <TextView
                         android:layout_width="wrap_content"

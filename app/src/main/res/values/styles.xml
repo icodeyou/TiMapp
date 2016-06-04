@@ -20,9 +20,9 @@
 
 
         <!-- -->
-        <item name="android:textColor">@color/textLight</item>
-        <item name="android:textColorPrimary">@color/textLight</item>
-        <item name="android:textColorSecondary">@color/colorPrimary</item>
+        <item name="android:textColor">@color/textDark</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/colorAccent</item>
 
         <!-- Material Theme -->
         <item name="colorPrimary">@color/colorPrimary</item>

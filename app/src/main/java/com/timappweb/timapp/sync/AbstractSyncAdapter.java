@@ -6,22 +6,11 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncRequest;
-import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.query.From;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.model.PaginationResponse;
-import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
-
-import java.io.IOException;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by stephane on 4/27/2016.

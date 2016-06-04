@@ -73,6 +73,9 @@ public class ApplicationRules {
     @Expose
     public List<Integer> places_points_levels = new LinkedList<>();
 
+    @Expose
+    public int spot_min_name_length = 2;
+
     public String toString(){
         return "ApplicationRules{" +
                 ", places_points_levels=" + places_points_levels +
@@ -91,6 +94,7 @@ public class ApplicationRules {
                 ", gps_min_accuracy=" + gps_min_accuracy +
                 ", places_min_name_length=" + places_min_name_length +
                 ", tags_min_search_length=" + tags_min_search_length +
+                ", spot_min_name_length=" + spot_min_name_length +
                 '}';
     }
 }

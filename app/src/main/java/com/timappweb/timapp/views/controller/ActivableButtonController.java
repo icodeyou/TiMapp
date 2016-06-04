@@ -13,6 +13,7 @@ public abstract class ActivableButtonController extends ButtonStateController {
 
     protected abstract boolean performActivate();
     protected abstract boolean cancelActivate();
+    //protected abstract boolean isRequestPending();
 
     // =============================================================================================
 
@@ -38,11 +39,11 @@ public abstract class ActivableButtonController extends ButtonStateController {
     }
 
     protected void rollbackChange() {
-        mView.setActivated(mPendingState);
+        mView.setActivated(!mPendingState);
     }
 
     protected void commitChange() {
-        mView.setActivated(!mPendingState);
+        mView.setActivated(mPendingState);
     }
 
     public void setActivated(boolean activated) {

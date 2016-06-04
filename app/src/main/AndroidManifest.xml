@@ -266,7 +266,7 @@
         </activity>
 
         <!-- TAG ACTIVITY //////////////////////////////////////////////-->
-        <activity android:name=".activities.TagActivity"
+        <activity android:name=".activities.AddTagActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.LocateActivity"
             android:windowSoftInputMode="adjustNothing|stateHidden" >
@@ -280,11 +280,11 @@
         <activity android:name=".activities.PublishActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing|stateHidden"
-            android:parentActivityName=".activities.TagActivity" >
+            android:parentActivityName=".activities.AddTagActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.TagActivity" />
+                android:value=".activities.AddTagActivity" />
         </activity>
 
         <!-- POST ACTIVITY //////////////////////////////////////////////-->

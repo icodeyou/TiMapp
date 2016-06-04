@@ -33,15 +33,16 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
 
 import retrofit2.Call;
 
-public class TagActivity extends BaseActivity{
+public class AddTagActivity extends BaseActivity{
 
-    private String TAG = "TagActivity";
+    private String TAG = "AddTagActivity";
 
     //Views
     private HorizontalTagsRecyclerView selectedTagsRV;
@@ -62,10 +63,11 @@ public class TagActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check that we gave the event as an extra parameter
         this.currentEvent = IntentsUtils.extractPlace(getIntent());
-        this.currentPost = IntentsUtils.extractPost(getIntent());
-        if (this.currentEvent == null || this.currentPost == null){
+        this.currentPost = new Post();
+        this.currentPost.setLocation(LocationManager.getLastLocation());
+
+        if (this.currentEvent == null){
             Log.d(TAG, "Event is null");
             IntentsUtils.home(this);
             return;
@@ -267,15 +269,7 @@ public class TagActivity extends BaseActivity{
             // Caching data
             post.place_id = placeId;
             post.created = Util.getCurrentTimeSec();
-            if (event.isNew()){
-                event.remote_id = placeId;
-                event.created = Util.getCurrentTimeSec();
-                QuotaManager.instance().add(QuotaType.PLACES);
-            }
-            //QuotaManager.instance().add(QuotaType.ActionTypeName.CREATE_PLACE);
-            //CacheData.setLastPost(post);
             QuotaManager.instance().add(QuotaType.ADD_POST);
-
             setResult(RESULT_OK);
             finish();
         }
@@ -283,7 +277,6 @@ public class TagActivity extends BaseActivity{
         @Override
         public void onActionFail(RestFeedback feedback) {
             Toast.makeText(this.context, feedback.message, Toast.LENGTH_LONG).show();
-            //setProgressView(false);
         }
 
     }
@@ -295,13 +288,13 @@ public class TagActivity extends BaseActivity{
             currentPost.place_id = currentEvent.remote_id;
             // Validating user input
             if (!currentPost.validateForSubmit()) {
-                Toast.makeText(TagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
+                Toast.makeText(AddTagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
                 return;
             }
             Log.d(TAG, "Submitting post: " + currentPost);
 
             Call<RestFeedback> call = RestClient.service().addPost(currentPost);
-            call.enqueue(new AddPostCallback(TagActivity.this, currentPost, currentEvent));
+            call.enqueue(new AddPostCallback(AddTagActivity.this, currentPost, currentEvent));
         }
     }
 }

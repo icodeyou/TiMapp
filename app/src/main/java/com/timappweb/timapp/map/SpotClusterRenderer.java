@@ -16,15 +16,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.data.models.Spot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PlaceClusterRenderer extends DefaultClusterRenderer<Event> {
+public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
 
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterIconGenerator;
@@ -38,7 +36,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Event> {
     private final Context context;
 
     // TODO
-    public PlaceClusterRenderer(Activity activity, GoogleMap map, com.google.maps.android.clustering.ClusterManager clusterManager) {
+    public SpotClusterRenderer(Activity activity, GoogleMap map, com.google.maps.android.clustering.ClusterManager clusterManager) {
         super(activity, map, clusterManager);
         mIconGenerator = new IconGenerator(activity);
         mClusterIconGenerator = new IconGenerator(activity);
@@ -57,16 +55,9 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Event> {
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(Event event, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(Spot spot, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
-        try {
-            categoryImage.setImageResource(event.getCategory().getIconWhiteResId());
-        } catch (UnknownCategoryException e) {
-            // TODO
-            return;
-        }
-        categoryImage = MyApplication.setCategoryBackground(categoryImage, event.getLevel());
-
+        categoryImage.setImageResource(spot.getCategory().getIconWhiteResId());
         categoryImage.setDrawingCacheEnabled(true);
 
         // Without this code, the view will have a dimension of 0,0 and the bitmap will be null
@@ -114,7 +105,7 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Event> {
 
 
     @Override
-    protected void onBeforeClusterRendered(Cluster<Event> cluster, MarkerOptions markerOptions) {
+    protected void onBeforeClusterRendered(Cluster<Spot> cluster, MarkerOptions markerOptions) {
         // Draw multiple people.
         // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
         HashMap<Integer, Drawable> profilePhotos = new HashMap<>();
@@ -122,19 +113,13 @@ public class PlaceClusterRenderer extends DefaultClusterRenderer<Event> {
         int height = mDimension;
 
 
-        for (Event p : cluster.getItems()) {
+        for (Spot spot : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            if (!profilePhotos.containsKey(p.category_id)){
-                Drawable drawable = null;
-                try {
-                    drawable = ContextCompat.getDrawable(context, p.getCategory().getIconWhiteResId());
-                    drawable.setBounds(0, 0, width, height);
-                    profilePhotos.put(p.category_id, drawable);
-                } catch (UnknownCategoryException e) {
-                    e.printStackTrace();
-                    // TODO
-                }
+            if (!profilePhotos.containsKey(spot.category_id)){
+                Drawable drawable = ContextCompat.getDrawable(context, spot.getCategory().getIconWhiteResId());
+                drawable.setBounds(0, 0, width, height);
+                profilePhotos.put(spot.category_id, drawable);
             }
         }
         // When there is no data because categories are not loaded correctly...

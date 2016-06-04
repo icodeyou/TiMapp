@@ -123,7 +123,8 @@ public class EventPicturesFragment extends EventBaseFragment {
             Log.d(TAG, "Result request camera");
             eventActivity.setCurrentPageSelected(EventActivity.PAGER_PICTURE);
             if (resultCode != Activity.RESULT_OK){
-                return; // TODO
+                Log.e(TAG, "Activity result for requesting camera returned a non success code: " + resultCode);
+                return;
             }
             Uri photoUri = data.getData();
             uploadPicture(photoUri);
@@ -144,14 +145,14 @@ public class EventPicturesFragment extends EventBaseFragment {
     /*
     public void loadData(){
         Log.d(TAG, "Loading places pictures");
-        Call<PaginationResponse<Picture>> call = RestClient.service().viewPicturesForPlace(eventActivity.getEventId());
-        RestCallback callback = new RestCallback<PaginationResponse<Picture>>(this.getContext(), this) {
+        Call<PaginatedResponse<Picture>> call = RestClient.service().viewPicturesForPlace(eventActivity.getEventId());
+        RestCallback callback = new RestCallback<PaginatedResponse<Picture>>(this.getContext(), this) {
             @Override
-            public void onResponse(Response<PaginationResponse<Picture>> response) {
+            public void onResponse(Response<PaginatedResponse<Picture>> response) {
                 super.onResponse(response);
 
                 if (response.isSuccess()) {
-                    PaginationResponse<Picture> paginationData = response.body();
+                    PaginatedResponse<Picture> paginationData = response.body();
                     Log.d(TAG, "Loading " + paginationData.total + " picture(s) with base url: " + paginationData.extra.get("base_url"));
                     //picturesAdapter.addDummyData();
                     picturesAdapter.setBaseUrl(paginationData.extra.get("base_url"));
@@ -251,7 +252,7 @@ public class EventPicturesFragment extends EventBaseFragment {
                         Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
                         getPicturesRv().smoothScrollToPosition(0);
                         QuotaManager.instance().add(QuotaType.ADD_PICTURE);
-                        // loadData();
+                        // TODO add picture in local db...
                     } else {
                         Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
                     }

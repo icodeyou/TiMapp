@@ -1,6 +1,8 @@
 package com.timappweb.timapp.data.models;
 
 import android.content.Context;
+import android.databinding.Bindable;
+import android.databinding.Observable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.timappweb.timapp.BR;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
@@ -106,6 +109,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public Integer          spot_id  = null;
 
     public double           distance = -1;
+
     // =============================================================================================
 
     public Event(){
@@ -234,7 +238,6 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return MyApplication.getCategoryById(this.category_id);
     }
 
-
     @Override
     public int getMarkerId() {
         return this.remote_id;
@@ -249,9 +252,13 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         this.updateDistanceFromUser();
         return distance;
     }
-
     public String getAddress(){
-        return null;
+        if (hasSpot()){
+            return spot.getAddress();
+        }
+        else{
+            return null;
+        }
     }
 
     public MarkerOptions getMarkerOption() {
@@ -269,7 +276,13 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public String getDescription() {
         return description;
     }
-// =============================================================================================
+
+    @Bindable
+    public Spot getSpot() {
+        return spot;
+    }
+
+    // =============================================================================================
 
     /**
      * @param latitude
@@ -417,6 +430,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public void setSpot(Spot spot) {
         this.spot = spot;
+        notifyPropertyChanged(BR.spot);
     }
 
     public void setCategory(EventCategory category) {
@@ -434,5 +448,9 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public Drawable getBackgroundImage(Context context){
         return ContextCompat.getDrawable(context, getCategoryWithDefault().getBigImageResId());
+    }
+
+    public boolean hasAddress(){
+        return getAddress() != null;
     }
 }

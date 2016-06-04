@@ -226,4 +226,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="formAddEventLabelDescription">Description</string>
     <string name="formAddEventLabelPicture">Picture</string>
     <string name="formAddEventButtonAddSpot">Create a new place</string>
+    <string name="loading_address">Loading adress</string>
+    <string name="event_organizer">Organised by</string>
+    <string name="event_popularity">Popularity</string>
+    <string name="event_description">Description</string>
 </resources>

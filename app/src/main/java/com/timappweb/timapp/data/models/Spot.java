@@ -1,19 +1,26 @@
 package com.timappweb.timapp.data.models;
 
-import android.graphics.drawable.Drawable;
+import android.databinding.Bindable;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.maps.android.clustering.ClusterItem;
+import com.timappweb.timapp.BR;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.queries.AreaQueryHelper;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Spot")
-public class Spot extends SyncBaseModel implements Serializable {
+public class Spot extends SyncBaseModel implements Serializable, ClusterItem {
 
     // =============================================================================================
     // DATABASE
@@ -58,6 +65,11 @@ public class Spot extends SyncBaseModel implements Serializable {
     @Expose(deserialize = true, serialize = false)
     public SpotCategory category;
 
+
+    // =============================================================================================
+
+    public String address;
+
     // =============================================================================================
 
     public Spot() {}
@@ -81,19 +93,12 @@ public class Spot extends SyncBaseModel implements Serializable {
 
     // =============================================================================================
 
-    public static Spot createDummy() {
-        List<Tag> dummyTags = new ArrayList<>();
-        dummyTags.add(Tag.createDummy());
-        dummyTags.add(Tag.createDummy());
-        dummyTags.add(Tag.createDummy());
-        return new Spot("DummySpot", dummyTags);
-    }
-
     @Override
     public String toString() {
         return "Spot{" +
-                "name='" + name + '\'' +
-                ", id=" + remote_id +
+                " db_id=" + this.getId() +
+                ", remote_id=" + remote_id +
+                ", name='" + name + '\'' +
                 ", category_id=" + category_id +
                 '}';
     }
@@ -103,11 +108,89 @@ public class Spot extends SyncBaseModel implements Serializable {
         return false;
     }
 
+    // =============================================================================================
+    // Setters/Getters
+
+    /**
+     * TODO use converter for GSON...
+     * @param category
+     */
     public void setCategory(SpotCategory category) {
         this.category = category;
+        if (category != null){
+            this.category_id = category.remote_id;
+        }
     }
 
     public int getItemPicture(){
         return R.drawable.image_bar;
     }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(latitude, longitude);
+    }
+
+    public SpotCategory getCategory() {
+        if (category == null){
+            if (category_id != 0){
+                category = ConfigurationProvider.findSpotCategoriesByRemoteId(category_id);
+            }
+        }
+        return category;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean hasAddress(){
+        return address != null;
+    }
+
+    // =============================================================================================
+    public static From queryByArea(LatLngBounds bounds) {
+        return new Select()
+                .from(Spot.class)
+                .where(AreaQueryHelper.rowInBounds(bounds));
+    }
+
+    public static List<? extends SyncBaseModel> findInArea(LatLngBounds bounds) {
+        return queryByArea(bounds).execute();
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+        notifyPropertyChanged(BR.address);
+    }
+
+    @Bindable
+    public String getAddress() {
+        return address;
+    }
+
+    public boolean isValid() {
+        return name != null && name.length() >= ConfigurationProvider.rules().spot_min_name_length;
+    }
+
+    public boolean hasCategory(SpotCategory category) {
+        return (this.category != null && this.category.equals(category)) || (this.category == null && category == null);
+    }
+
+    public boolean isNew(){
+        return !this.hasRemoteId();
+    }
 }
+

@@ -105,6 +105,7 @@
     <dimen name="map_min_height">200dp</dimen>
     <dimen name="paddingBottomDefault">6dp</dimen>
     <dimen name="cardMarginBottom">10dp</dimen>
+    <dimen name="padding_small">4dp</dimen>
     <integer name="slide_down_anim">90</integer>
     <integer name="slide_up_anim">-90</integer>
     <integer name="slide_event_bottom_map">200</integer>

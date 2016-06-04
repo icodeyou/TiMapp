@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,28 +28,43 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.managers.SpanningGridLayoutManager;
+import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
+import com.timappweb.timapp.map.SpotClusterRenderer;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.model.RestValidationErrors;
+import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.BackCatchEditText;
+
+import java.util.List;
 
 import retrofit2.Call;
 
 
-public class AddEventActivity extends BaseActivity{
-    private static final float ZOOM_LEVEL_CENTER_MAP = 12.0f;
+public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
+    private static final float ZOOM_LEVEL_CENTER_MAP = 14.0f;
+
+    private static final int LOADER_ID_SPOT_AROUND = 0;
+
     private String TAG = "AddEventActivity";
 
     private InputMethodManager imm;
@@ -63,13 +81,15 @@ public class AddEventActivity extends BaseActivity{
     private ViewPager viewPager;
     //private SpotView spotView;
     // Data
-    private Spot spot = null;
-
     private MapView mapView = null;
     private GoogleMap gMap;
     private ActivityAddEventBinding mBinding;
-    private View mButtonAddPicture;
+    //private View mButtonAddPicture;
     private View mBtnAddSpot;
+    private ClusterManager<Spot> mClusterManagerSpot;
+    private Loader<List<Spot>> mSpotLoader;
+    private View mSpotContainer;
+    private AddressResultReceiver mAddressResultReceiver;
     //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
@@ -96,8 +116,9 @@ public class AddEventActivity extends BaseActivity{
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         mapView = (MapView) findViewById(R.id.map);
-        mButtonAddPicture = findViewById(R.id.button_take_picture);
+        //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = (Button) findViewById(R.id.button_add_spot);
+        mSpotContainer = findViewById(R.id.spot_container);
 
         Event event = new Event();
         if (LocationManager.hasLastLocation()){
@@ -116,12 +137,13 @@ public class AddEventActivity extends BaseActivity{
     }
 
     private void initEvents() {
+        /*
         mButtonAddPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.addPicture(AddEventActivity.this);
             }
-        });
+        });*/
     }
 
     @Override
@@ -135,14 +157,7 @@ public class AddEventActivity extends BaseActivity{
      * Load places once user name is known
      */
     private void initLocationListener() {
-        LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
-            @Override
-            public void onLocationChanged(Location newLocation, Location lastLocation) {
-                // TODO
-                Log.v(TAG, "User location changed!");
-                updateMapCenter(newLocation);
-            }
-        });
+        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
 
     }
@@ -289,13 +304,22 @@ public class AddEventActivity extends BaseActivity{
                     setProgressView(true);
                     Event event = mBinding.getEvent();
                     event.setCategory(eventCategorySelected);
-                    event.setSpot(AddEventActivity.this.spot);
                     submitPlace(event);
                 } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Click on add event before having a user location");
                     Toast.makeText(getBaseContext(), R.string.please_wait_location, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        mSpotContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Spot spot =  mBinding.getEvent().getSpot();
+                if (spot != null && spot.isNew()){
+                    IntentsUtils.pinSpot(AddEventActivity.this, spot);
                 }
             }
         });
@@ -317,15 +341,10 @@ public class AddEventActivity extends BaseActivity{
 
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {
-            spot = (Spot) bundle.getSerializable("spot");
-            if (spot != null){
-                Log.v(TAG, "Spot is selected: " + spot);
-                //spotView.setSpot(spot);
-                //spotView.setVisibility(View.VISIBLE);
-                //pinView.setVisibility(View.GONE);
-            } else {
-                Log.d(TAG, "spot is null");
-            }
+            Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
+            mBinding.getEvent().setSpot(spot);
+            mClusterManagerSpot.addItem(spot);
+            mClusterManagerSpot.cluster();
         }
     }
 
@@ -363,20 +382,42 @@ public class AddEventActivity extends BaseActivity{
 
     private void updateMapCenter(Location location){
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
-
     }
 
     private void initMap(){
         mapView.onCreate(null);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "Map is now ready!");
-                gMap = googleMap;
-            }
-        });
+        mapView.getMapAsync(this);
         gMap = mapView.getMap();
         gMap.setIndoorEnabled(true);
+        gMap.setMyLocationEnabled(true);
+        setUpClusterer();
+    }
+
+
+    private void setUpClusterer(){
+        Log.i(TAG, "Setting up cluster!");
+        // Initialize the manager with the context and the map.
+        mClusterManagerSpot = new ClusterManager<Spot>(this, gMap);
+        mClusterManagerSpot.setRenderer(new SpotClusterRenderer(this, gMap, mClusterManagerSpot));
+        mClusterManagerSpot.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Spot>() {
+            @Override
+            public boolean onClusterClick(Cluster<Spot> cluster) {
+                Log.d(TAG, "You clicked on a cluster");
+                // TODO
+                return true;
+            }
+        });
+        mClusterManagerSpot.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Spot>() {
+            @Override
+            public boolean onClusterItemClick(Spot item) {
+                Log.d(TAG, "You clicked on a cluster item: " + item);
+                mBinding.getEvent().setSpot(item);
+                return true;
+            }
+
+        });
+        mClusterManagerSpot.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Spot>());
+        gMap.setOnMarkerClickListener(mClusterManagerSpot);
     }
 
 
@@ -393,12 +434,84 @@ public class AddEventActivity extends BaseActivity{
             case IntentsUtils.ACTION_ADD_EVENT_PICTURE:
                 if(resultCode==RESULT_OK) {
                     // TODO
-                    Log.d(TAG, "Result OK from TagActivity");
+                    Log.d(TAG, "Result OK from AddTagActivity");
                 }
                 break;
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // =============================================================================================
+
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        Log.v(TAG, "User location changed!");
+        updateMapCenter(newLocation);
+        requestReverseGeocoding(newLocation);
+        if (mSpotLoader == null){
+            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map is now ready!");
+        gMap = googleMap;
+
+        if (LocationManager.hasLastLocation()){
+            updateMapCenter(LocationManager.getLastLocation());
+            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
+        }
+    }
+
+    // =============================================================================================
+
+    class SpotAroundLoader extends MultipleEntryLoaderCallback<Spot> {
+
+        public SpotAroundLoader(Context context) {
+            super(context, 10, DataSyncAdapter.SYNC_TYPE_SPOT);
+
+            // TODO increase map bounds by 2*precision to be sure (=> prevent reloading when location change)
+            LatLngBounds bounds = gMap.getProjection().getVisibleRegion().latLngBounds;
+            this.query = Spot.queryByArea(bounds);
+            this.syncOption.getBundle()
+                    .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(bounds));
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
+            super.onLoadFinished(loader, data);
+            mClusterManagerSpot.clearItems();
+            mClusterManagerSpot.addItems(data);
+            //mClusterManagerSpot.notify();
+        }
+
+
+    }
+
+    // =============================================================================================
+
+    private void requestReverseGeocoding(Location location){
+        if (mAddressResultReceiver == null){
+            mAddressResultReceiver = new AddressResultReceiver();
+        }
+        ReverseGeocodingHelper.request(this, location, mAddressResultReceiver);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+
+        public AddressResultReceiver() {
+            super(new Handler());
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            Log.i(TAG, "Receive result from service: " + resultCode);
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                mBinding.setAddress(resultData.getString(Constants.RESULT_DATA_KEY));
+            }
+        }
     }
 }

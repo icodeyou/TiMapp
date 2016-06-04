@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddSpotActivity;
+import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
@@ -41,33 +43,28 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<SpotCategoriesAd
 
     @Override
     public void onBindViewHolder(SpotCategoriesViewHolder holder, int position) {
-        Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
-
-        final SpotCategory spotCategory = MyApplication.getSpotCategories().get(position);
-
+        Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
+        final SpotCategory spotCategory = ConfigurationProvider.spotCategories().get(position);
         holder.tvCategory.setText(spotCategory.name);
-        //holder.icCategory.setImageResource(spotCategory.resource);
 
-        if(addSpotActivity.getCategorySelected() != null && addSpotActivity.getCategorySelected()==spotCategory) {
-            holder.itemView.setBackgroundResource(R.color.colorPrimaryDark);
-            holder.selectedView.setVisibility(View.VISIBLE);
+        if (spotCategory.equals(addSpotActivity.getCategorySelected())) {
+            holder.itemView.setBackgroundResource(R.color.silver);
         } else {
             holder.itemView.setBackground(null);
-            holder.selectedView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return MyApplication.getSpotCategories().size();
+        return ConfigurationProvider.spotCategories().size();
     }
 
     public List<SpotCategory> getData() {
-        return MyApplication.getSpotCategories();
+        return ConfigurationProvider.spotCategories();
     }
 
     public SpotCategory getCategory(int position) {
-        return MyApplication.getSpotCategories().get(position);
+        return ConfigurationProvider.spotCategories().get(position);
     }
 
     public void add(SpotCategory spotCategory) {
@@ -84,19 +81,21 @@ public class SpotCategoriesAdapter extends RecyclerView.Adapter<SpotCategoriesAd
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
+    public void addAll(List<SpotCategory> spotCategories) {
+        this.data.addAll(spotCategories);
+    }
+
     public class SpotCategoriesViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
         TextView tvCategory;
         ImageView icCategory;
-        View selectedView;
 
         SpotCategoriesViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             tvCategory = (TextView) itemView.findViewById(R.id.text);
             icCategory = (ImageView) itemView.findViewById(R.id.icon);
-            selectedView = itemView.findViewById(R.id.icon_selected);
         }
 
         @Override

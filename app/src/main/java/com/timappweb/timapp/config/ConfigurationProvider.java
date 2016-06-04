@@ -12,6 +12,7 @@ import com.timappweb.timapp.configsync.SharedPrefSync;
 import com.timappweb.timapp.configsync.SyncConfigManager;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.services.ConfigInterface;
@@ -90,6 +91,15 @@ public class ConfigurationProvider {
                 //", event categories= " + eventCatagoriesManager.toString() +
                 //", spot categories= " + spotCatagoriesManager.toString() +
                 '}';
+    }
+
+    public static SpotCategory findSpotCategoriesByRemoteId(int remoteId) {
+        for (SpotCategory category: spotCategories()){
+            if (category.remote_id == remoteId){
+                return category;
+            }
+        }
+        return null;
     }
 
     private static class IncompleteConfigurationException extends Error {

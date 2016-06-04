@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by stephane on 3/16/2016.
  */
-public class PaginationResponse<T> {
+public class PaginatedResponse<T> {
 
     @Expose
     public int total;

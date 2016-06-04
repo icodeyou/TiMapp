@@ -30,6 +30,7 @@ import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 
 import java.util.List;
 
@@ -152,7 +153,7 @@ public class LocateActivity extends BaseActivity{
                 if (eventsLoaded == false || (lastLocation != null && DistanceHelper.distFrom(newLocation, lastLocation) > MIN_LOCATION_CHANGED_RELOAD_PLACE)) {
                     loadPlaces(newLocation);
                 }
-                //startIntentServiceReverseGeocoding(location);
+                //ReverseGeocodingHelper.request(LocateActivity.this, newLocation, mResultReceiver);
             }
         });
         LocationManager.start(this);
@@ -215,17 +216,6 @@ public class LocateActivity extends BaseActivity{
 
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
-    //PROTECTED METHODS
-    protected void startIntentServiceReverseGeocoding(Location location) {
-        Log.d(TAG, "Starting IntentService to get use address from name");
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
-        startService(intent);
-    }
-
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
     // INNER CLASSES
 
     class AddressResultReceiver extends ResultReceiver {
@@ -240,19 +230,9 @@ public class LocateActivity extends BaseActivity{
             // Show a toast comment if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
                 Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).show();
             }
         }
     }
-
-
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // GETTERS AND SETTERS
-
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
-    // MISCELLANEOUS
 
 
 }

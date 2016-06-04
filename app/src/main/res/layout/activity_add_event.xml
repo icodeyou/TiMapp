@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
         <import type="android.graphics.drawable.Drawable"/>
@@ -11,6 +11,9 @@
         <variable
             name="event"
             type="com.timappweb.timapp.data.models.Event"></variable>
+        <variable
+            name="address"
+            type="String"></variable>
     </data>
 <ScrollView
     android:layout_width="fill_parent"
@@ -84,39 +87,6 @@
                 style="@style/formLabelGroup">
                 <ImageView
                     style="@style/formIconGroup"
-                    android:src="@drawable/ic_location"/>
-                <TextView
-                    style="@style/formLabel"
-                    android:text="Location"/>
-                    <!--
-                    <EditText
-                        android:id="@+id/event_location"
-                        style="@style/formEditText"
-                        android:hint="@string/hint_event_location"/>-->
-            </LinearLayout>
-            <include layout="@layout/layout_spot"></include>
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/map_min_height" />
-
-            <Button
-                android:id="@+id/button_add_spot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/formAddEventButtonAddSpot"/>
-
-        </LinearLayout>
-        <View style="@style/Divider"></View>
-
-        <LinearLayout
-            style="@style/formGroup">
-
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
                     android:src="@drawable/ic_comment_dark"/>
 
                 <TextView
@@ -139,7 +109,60 @@
                 />
 
         </LinearLayout>
+        <View style="@style/Divider"></View>
 
+        <LinearLayout
+            style="@style/formGroup">
+
+            <LinearLayout
+                style="@style/formLabelGroup">
+                <ImageView
+                    style="@style/formIconGroup"
+                    android:src="@drawable/ic_location"/>
+                <TextView
+                    style="@style/formLabel"
+                    android:text="Location"/>
+                <!--
+                <EditText
+                    android:id="@+id/event_location"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_event_location"/>-->
+            </LinearLayout>
+
+            <include layout="@layout/layout_spot"
+                bind:spot="@{event.spot}"
+                android:id="@+id/spot_container"></include>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ProgressBar
+                    style="@style/imageIcon"
+                    android:layout_gravity="center"
+                    android:visibility="@{event.hasAddress() || address != null ? View.GONE : View.VISIBLE}"/>
+
+                <TextView
+                    style="@style/TextInfo"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:singleLine="false"
+                    android:text="@{event.hasAddress() ? event.getAddress() : (address != null ? address : @string/loading_address)}"
+                    tools:text="182 washington street, Manhatan, New York"/>
+            </LinearLayout>
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/map_min_height" />
+
+            <Button
+                android:id="@+id/button_add_spot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/formAddEventButtonAddSpot"/>
+        </LinearLayout>
+        <!--
         <LinearLayout
             style="@style/formGroup">
 
@@ -159,6 +182,7 @@
                 android:layout_height="150dp"
                 android:src="@drawable/ic_camera"/>
         </LinearLayout>
+        -->
         <!--
         <LinearLayout
             style="@style/formGroup">

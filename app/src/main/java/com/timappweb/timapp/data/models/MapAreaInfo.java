@@ -11,6 +11,7 @@ import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.timappweb.timapp.data.queries.AreaQueryHelper;
 
 /**
  * Created by stephane on 4/26/2016.
@@ -19,7 +20,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
  *      - The map area loaded represented by south west and north east coordinates
  *      - The number of items loaded
  *      - The total number of items
- *      - The loading date time unix time format
+ *      - The loading date (unix timestamp format <=> timezone independant)
  */
 @Table(name = "MapAreaInfo")
 public class MapAreaInfo extends Model {
@@ -104,7 +105,7 @@ public class MapAreaInfo extends Model {
         // Remove area that are included in this new area
         new Delete()
                 .from(MapAreaInfo.class)
-                .where(MapAreaInfo.areaContains(data.getBounds()))
+                .where(areaContainedInBounds(data.getBounds()))
                 .execute();
 
         data.save();
@@ -129,25 +130,48 @@ public class MapAreaInfo extends Model {
     private static String oldCondition(long timeago){
         return "Created >= " + (System.currentTimeMillis() - timeago);
     }
+
+    public LatLngBounds getBounds() {
+        return new LatLngBounds(new LatLng(this.SW_latitude, this.SW_longitude), new LatLng(this.NE_latitude, this.NE_latitude));
+    }
+
+    public static From findArea(LatLngBounds bounds, int type, long timeago) {
+        String whereClause = "DataType = " + type
+                + " AND " + areaContainedInBounds(bounds);
+        if (timeago > 0){
+            whereClause += " AND " + oldCondition(timeago);
+        }
+        return new Select()
+                .from(MapAreaInfo.class)
+                .where(whereClause);
+    }
+    public static From findArea(LatLngBounds bounds, int type) {
+        return findArea(bounds, type, 0);
+    }
+
+
+    // =============================================================================================
     /**
-     * Find history that contains bounds
+     * Create a condition to get an area that contains the bounds area
      * @param bounds
      * @return
      */
-    private static String areaContains(LatLngBounds bounds){
-        return areaContains(bounds.southwest)
-                + " AND " + areaContains(bounds.northeast);
+    private static String areaContainedInBounds(LatLngBounds bounds){
+        return areaContainedInBounds(bounds.southwest)
+                + " AND " + areaContainedInBounds(bounds.northeast);
     }
 
+
     /**
-     * Find history that contain the location
+     * Create a condition to get an area that contains the location
      * @param location
      * @return
      */
-    private static String areaContains(LatLng location){
+    private static String areaContainedInBounds(LatLng location){
         return latitudeCondition(location.latitude)
                 + " AND " + longitudeCondition(location.longitude);
     }
+
     /**
      * Inspired by LatLngBounds.contain()
      * @param latitude
@@ -163,24 +187,8 @@ public class MapAreaInfo extends Model {
      * @return
      */
     private static String longitudeCondition(double longitude) {
-        return "(( SWLongitude <= NELongitude AND SWLongitude <= " + longitude + " AND " + longitude + " <= NELongitude) OR (SWLongitude <= " + longitude + " || " + longitude + " <= NELongitude))";
+        return "(( SWLongitude <= NELongitude AND SWLongitude <= " + longitude + " AND " +
+                longitude + " <= NELongitude) OR (SWLongitude <= " + longitude + " OR " + longitude + " <= NELongitude))";
     }
 
-    public LatLngBounds getBounds() {
-        return new LatLngBounds(new LatLng(this.SW_latitude, this.SW_longitude), new LatLng(this.NE_latitude, this.NE_latitude));
-    }
-
-    public static From findArea(LatLngBounds bounds, int type, long timeago) {
-        String whereClause = "DataType = " + type
-                + " AND " + areaContains(bounds);
-        if (timeago > 0){
-            whereClause += " AND " + oldCondition(timeago);
-        }
-        return new Select()
-                .from(MapAreaInfo.class)
-                .where(whereClause);
-    }
-    public static From findArea(LatLngBounds bounds, int type) {
-        return findArea(bounds, type, 0);
-    }
 }

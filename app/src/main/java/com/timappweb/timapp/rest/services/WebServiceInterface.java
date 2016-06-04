@@ -14,7 +14,7 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.PostAndPlaceRequest;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.rest.model.PaginatedResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.List;
@@ -38,10 +38,10 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     @GET("spots/reachable")
-    Call<PaginationResponse<Spot>> spotReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
+    Call<PaginatedResponse<Spot>> spotReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
 
     @GET("spots")
-    Call<PaginationResponse<SpotCategory>> spots();
+    Call<PaginatedResponse<Spot>> spots(@QueryMap Map<String, String> query);
 
     // ---------------------------------------------------------------------------------------------
     // Event
@@ -61,13 +61,13 @@ public interface WebServiceInterface {
     Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
 
     @GET("PlacesInvitations/sent/{placeId}.json")
-    Call<PaginationResponse<EventsInvitation>> invitesSent(@Path("placeId") long placeId);
+    Call<PaginatedResponse<EventsInvitation>> invitesSent(@Path("placeId") long placeId);
 
     //@GET("PlacesInvitations/sent.json")
-    //Call<PaginationResponse<EventsInvitation>> invitesSent();
+    //Call<PaginatedResponse<EventsInvitation>> invitesSent();
 
     @GET("PlacesInvitations/received.json")
-    Call<PaginationResponse<EventsInvitation>> inviteReceived();
+    Call<PaginatedResponse<EventsInvitation>> inviteReceived();
 
 
     // ---------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ public interface WebServiceInterface {
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
     @GET("users/friends.json")
-    Call<PaginationResponse<User>> friends();
+    Call<PaginatedResponse<User>> friends();
 
     @POST("users/edit.json")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);
@@ -133,7 +133,7 @@ public interface WebServiceInterface {
                               @Body RequestBody body);
 
     @GET("pictures/place/{id}.json")
-    Call<PaginationResponse<Picture>> viewPicturesForPlace(@Path("id") long id);
+    Call<PaginatedResponse<Picture>> viewPicturesForPlace(@Path("id") long id);
 
     // ---------------------------------------------------------------------------------------------
     // Places
@@ -229,10 +229,10 @@ public interface WebServiceInterface {
 
 
     @POST("PlacesUsers/place/{id}.json")
-    Call<PaginationResponse<UserEvent>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
+    Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
 
     @POST("PlacesUsers/place/{id}.json")
-    Call<PaginationResponse<UserEvent>> viewUsersForPlace(@Path("id") long placeId);
+    Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") long placeId);
 
     @POST("PlacesUsers/user.json")
     Call<List<UserEvent>> placeStatus();

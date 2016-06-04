@@ -1,26 +1,26 @@
 package com.timappweb.timapp.listeners;
 
-import com.timappweb.timapp.activities.TagActivity;
+import com.timappweb.timapp.activities.AddTagActivity;
 
 public class OnThreeQueriesTagListener extends OnBasicQueryTagListener {
 
-    private final TagActivity tagActivity;
+    private final AddTagActivity addTagActivity;
 
-    public OnThreeQueriesTagListener(TagActivity tagActivity) {
+    public OnThreeQueriesTagListener(AddTagActivity addTagActivity) {
         super();
-        this.tagActivity = tagActivity;
+        this.addTagActivity = addTagActivity;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         super.onQueryTextSubmit(query);
-        tagActivity.actionCounter();
+        addTagActivity.actionCounter();
         return true;
     }
 
     @Override
     public void addTag(String query) {
         super.addTag(query);
-        tagActivity.actionCounter();
+        addTagActivity.actionCounter();
     }
 }

@@ -11,7 +11,7 @@ import com.desmond.squarecamera.CameraActivity;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
-import com.timappweb.timapp.activities.DescriptionActivity;
+import com.timappweb.timapp.activities.AddTagActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.ErrorActivity;
@@ -27,10 +27,11 @@ import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
-import com.timappweb.timapp.activities.TagActivity;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.fragments.BaseFragment;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 public class IntentsUtils {
@@ -55,6 +56,8 @@ public class IntentsUtils {
     public static final String KEY_USER = "user";
     public static final String VIEW_PICTURE_POSITION = "position";
     public static final String VIEW_PICTURE_LIST = "pictures";
+    private static final String KEY_EVENT = "event";
+    public static final String KEY_SPOT = "spot";
 
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);
@@ -163,22 +166,15 @@ public class IntentsUtils {
         fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
-    public static void addTags(Activity activity, Event event, Post post) {
-        if (!requireLogin(activity))
+    public static void addTags(BaseFragment fragment, Event event) {
+        if (!requireLogin(fragment.getContext()))
             return;
 
-        Intent intent = new Intent(activity, TagActivity.class);
+        Intent intent = new Intent(fragment.getContext(), AddTagActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("event", event);          // TODO use constant
-        extras.putSerializable("post", post);          // TODO use constant
+        extras.putSerializable(IntentsUtils.KEY_EVENT, event);          // TODO use constant
         intent.putExtras(extras);
-        activity.startActivityForResult(intent, REQUEST_TAGS);
-/*
-        //TRY TRANSITION ... FAIL
-        // Following the documentation, right after starting the activity
-        // we override the transition
-        UserActivity activity  = (UserActivity) context;
-        activity.overridePendingTransition(R.anim.in_from_left, R.anim.in_from_left);*/
+        fragment.startActivityForResult(intent, REQUEST_TAGS);
     }
 
     public static void addPeople(Activity activity, Event event) {
@@ -256,6 +252,10 @@ public class IntentsUtils {
     }
 
     public static void pinSpot(Activity activity) {
+        IntentsUtils.pinSpot(activity, null);
+    }
+
+    public static void pinSpot(Activity activity, Spot spot) {
         if (!requireLogin(activity))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
@@ -263,8 +263,10 @@ public class IntentsUtils {
             return;
         }
         Intent intent = new Intent(activity, AddSpotActivity.class);
+        intent.putExtra(IntentsUtils.KEY_SPOT, spot);
         activity.startActivityForResult(intent, REQUEST_PICK_SPOT);
     }
+
     /**
      * Redirect to the last activity we attempt to go
      * before being redirected to the login activity
@@ -294,7 +296,7 @@ public class IntentsUtils {
         if (extras == null){
             return null;
         }
-        return (Event) extras.getSerializable("event");
+        return (Event) extras.getSerializable(IntentsUtils.KEY_EVENT);
     }
 
     public static String[] extractPicture(Intent intent) {
@@ -330,18 +332,6 @@ public class IntentsUtils {
         return extras.getInt(KEY_USER_ID, -1);
     }
 
-    public static void addTags(Activity activity, Event event) {
-        if (!requireLogin(activity))
-            return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_POST, true)){
-            //Toast.makeText(context, R.string.create_second_post_delay, Toast.LENGTH_LONG).show();
-            return;
-        }
-        Post post = new Post();
-        post.latitude = LocationManager.getLastLocation().getLatitude();
-        post.longitude = LocationManager.getLastLocation().getLongitude();
-        IntentsUtils.addTags(activity, event, post);
-    }
 
     public static boolean requireLogin(Context context){
         if (!MyApplication.isLoggedIn()){
@@ -359,6 +349,11 @@ public class IntentsUtils {
         return extras.getInt("place_id", Integer.valueOf(extras.getString("place_id", "-1"))); // usefull for notifications
     }
 
+    public static Spot extractSpot(Intent intent) {
+        Bundle extras = intent.getExtras();
+        return extras != null ? (Spot) extras.getSerializable(IntentsUtils.KEY_SPOT) : null;
+    }
+
     public static void exitDescriptionActivity(Activity activity, String description) {
         Intent intent = new Intent(activity, AddEventActivity.class);
         Bundle bundle = new Bundle();
@@ -366,4 +361,5 @@ public class IntentsUtils {
         intent.putExtras(bundle);
         activity.setResult(Activity.RESULT_OK, intent);
     }
+
 }

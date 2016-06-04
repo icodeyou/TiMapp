@@ -12,11 +12,11 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.SpotView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO must be reimplemented
 public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHolder> {
     private static final String TAG = "SpotsAdapter";
     private Context context;
@@ -32,7 +32,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHold
 
     @Override
     public SpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_spot, parent, false);
         return new SpotViewHolder(v);
     }
 
@@ -40,11 +40,6 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHold
     public void onBindViewHolder(SpotViewHolder holder, int position) {
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Spot spot = data.get(position);
-
-            holder.spotView.setSpot(spot);
-
-            //TODO : Make sure the condition is right
-            holder.spotView.setTagsVisible(spot.tags==null || spot.tags.size()==0);
 
             //OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
@@ -87,14 +82,11 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHold
     public class SpotViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
 
-
-        SpotView spotView;
         HorizontalTagsRecyclerView horizontalTagsRv;
 
         SpotViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            spotView = (SpotView) itemView.findViewById(R.id.spot_view);
             //horizontalTagsRv = spotView.getRvSpotTags();
         }
 

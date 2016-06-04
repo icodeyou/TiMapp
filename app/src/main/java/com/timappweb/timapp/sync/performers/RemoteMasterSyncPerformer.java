@@ -4,7 +4,7 @@ import android.content.SyncResult;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.rest.model.PaginatedResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +26,7 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
         super(remoteEntries, localEntries, syncResult);
     }
 
-    public RemoteMasterSyncPerformer(PaginationResponse<? extends SyncBaseModel> remoteEntries,
+    public RemoteMasterSyncPerformer(PaginatedResponse<? extends SyncBaseModel> remoteEntries,
                                      List<? extends SyncBaseModel> localEntries,
                                      SyncResult syncResult) {
         super(remoteEntries.items, localEntries, syncResult);

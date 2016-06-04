@@ -23,19 +23,23 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background_light"
             android:paddingBottom="10dp">
 
-            <include layout="@layout/event_user_interaction" bind:event="@{event}"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
-                <include layout="@layout/layout_spot"
-                    bind:spot="@{event.spot}"
-                    ></include>
-            </FrameLayout>
+            <include layout="@layout/event_user_interaction" bind:event="@{event}" />
+<!--
+            <TextView
+                style="@style/TextMute"
+                android:text="@string/event_organizer"
+                android:padding="@dimen/padding_small"
+                android:visibility="@{event.hasSpot() ? View.VISIBLE : View.GONE}"/>-->
+            <include layout="@layout/layout_spot"
+                bind:spot="@{event.spot}"
+                ></include>
+<!--
+            <TextView
+                style="@style/TextMute"
+                android:text="@string/event_popularity"
+                android:padding="@dimen/padding_small"/>-->
 
             <include layout="@layout/event_stats_people" bind:event="@{event}"></include>
             <!--<View style="@style/Divider"></View>-->
@@ -46,8 +50,12 @@
                 android:id="@+id/description_event"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
+                android:paddingLeft="@dimen/padding_small"
                 android:orientation="vertical">
+                <!--
+                <TextView
+                    style="@style/TextMute"
+                    android:text="@string/event_description"/>-->
                 <TextView
                     android:id="@+id/description_textview"
                     android:layout_width="match_parent"
@@ -83,11 +91,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-
-
-
-        <View style="@style/Divider"></View>
 
         <!--<TextView
             style="@style/title2"

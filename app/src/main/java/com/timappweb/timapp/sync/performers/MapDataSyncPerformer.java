@@ -7,7 +7,7 @@ import com.activeandroid.query.From;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.models.MapAreaInfo;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.rest.model.PaginatedResponse;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 /**
@@ -20,7 +20,7 @@ public class MapDataSyncPerformer implements SyncPerformer {
 
     }
 
-    private void performMapDataSync(LatLngBounds bounds, PaginationResponse<? extends SyncBaseModel> response, SyncResult syncResult){
+    private void performMapDataSync(LatLngBounds bounds, PaginatedResponse<? extends SyncBaseModel> response, SyncResult syncResult){
 
         if (LocationManager.hasFineLocation()){
             Location location = LocationManager.getLastLocation();

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
 
 /**
@@ -33,7 +34,7 @@ public class EventCategoryPagerAdapter extends PagerAdapter {
         TextView nameCategory = (TextView) layout.findViewById(R.id.category_name);
         ImageView imageCategory = (ImageView) layout.findViewById(R.id.category_image);
         try {
-            EventCategory eventCategory = MyApplication.getCategoryByIndex(position);
+            EventCategory eventCategory = ConfigurationProvider.eventCategories().get(position);
             String capitalizedName =
                     eventCategory.getName().substring(0, 1).toUpperCase() + eventCategory.getName().substring(1);
             nameCategory.setText(capitalizedName);
@@ -58,7 +59,7 @@ public class EventCategoryPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return MyApplication.getEventCategories().size();
+        return ConfigurationProvider.eventCategories().size();
     }
 
     @Override
@@ -69,7 +70,7 @@ public class EventCategoryPagerAdapter extends PagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         try {
-            EventCategory eventCategory = MyApplication.getCategoryByIndex(position);
+            EventCategory eventCategory = ConfigurationProvider.eventCategories().get(position);
             return mContext.getResources().getString(eventCategory.getTitleResId());
         } catch (IndexOutOfBoundsException e) {
             Log.e(TAG, "Unknown category at position: " + position);

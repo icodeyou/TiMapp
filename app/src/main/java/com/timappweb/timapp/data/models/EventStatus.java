@@ -90,7 +90,6 @@ public class EventStatus extends SyncBaseModel {
             eventStatus.status = status;
         }
         eventStatus.remote_id = remoteId;
-        event.setRemoteId(remoteId);
         eventStatus.mySave();
         return eventStatus;
     }

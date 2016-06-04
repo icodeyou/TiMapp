@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
     @Override
     public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
-        final EventCategory eventCategory = MyApplication.getEventCategories().get(position);
+        final EventCategory eventCategory = ConfigurationProvider.eventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
         icons.put(eventCategory.remote_id, categoryIcon);
     }
@@ -49,11 +50,11 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
     @Override
     public int getItemCount() {
-        return MyApplication.getEventCategories().size();
+        return ConfigurationProvider.eventCategories().size();
     }
 
     public EventCategory getCategory(int position) {
-        return MyApplication.getEventCategories().get(position);
+        return ConfigurationProvider.eventCategories().get(position);
     }
 
     class CategoriesViewHolder extends RecyclerView.ViewHolder {

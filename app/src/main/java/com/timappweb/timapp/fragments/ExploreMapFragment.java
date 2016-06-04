@@ -34,12 +34,11 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.map.PlaceClusterRenderer;
+import com.timappweb.timapp.map.EventClusterRenderer;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
@@ -357,7 +356,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         item.setTextAppearance(R.style.iconMapTagText);
         /*
         for (MapTag spotTag: mapTags){
-            //LatLng ll = spotTag.getLatLng();
+            //LatLng ll = spotTag.getLocation();
             //Bitmap iconBitmap = item.makeIcon(spotTag.name);
             //gMap.addMarker(new MarkerOptions().position(ll).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f));
             mClusterManagerTags.addItem(spotTag);
@@ -404,7 +403,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
         // Initialize the manager with the context and the map.
         mClusterManagerPost = new ClusterManager<>(getActivity(), gMap);
-        mClusterManagerPost.setRenderer(new PlaceClusterRenderer(getActivity(), gMap, mClusterManagerPost));
+        mClusterManagerPost.setRenderer(new EventClusterRenderer(getActivity(), gMap, mClusterManagerPost));
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
             @Override
             public boolean onClusterClick(Cluster<Event> cluster) {
@@ -444,7 +443,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         });
         gMap.setOnMarkerClickListener(mClusterManagerPost);
         gMap.setOnCameraChangeListener(new OnCameraChangeListener());
-
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);

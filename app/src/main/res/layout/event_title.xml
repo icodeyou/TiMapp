@@ -18,5 +18,6 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:text="@{event.name}"
+        android:textColor="@color/textLight"
         tools:text="My very great event name"/>
 </layout>

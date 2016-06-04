@@ -115,17 +115,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         UserSyncAdapter.syncImmediately(context);
     }
 
-    private static Location lastLocation = null;
-    public static ConfigurationProvider config;
-
-    public static List<EventCategory> getEventCategories() {
-        return config.eventCategories();
-    }
-
-    public static List<SpotCategory> getSpotCategories() {
-        return config.spotCategories();
-    }
-
     @Override
     public void onCreate(){
         super.onCreate();
@@ -207,16 +196,12 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static EventCategory getCategoryById(int id) throws UnknownCategoryException {
-        for (EventCategory c: config.eventCategories()){
+        for (EventCategory c: ConfigurationProvider.eventCategories()){
             if (c.remote_id == id){
                 return c;
             }
         }
         throw new UnknownCategoryException(id);
-    }
-
-    public static EventCategory getCategoryByIndex(int position) {
-        return getEventCategories().get(position);
     }
 
     public static void redirectLogin(Context currentContext){

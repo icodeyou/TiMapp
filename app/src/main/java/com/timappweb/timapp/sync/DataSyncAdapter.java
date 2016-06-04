@@ -24,11 +24,15 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.model.PaginatedResponse;
+import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
 import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
 import com.timappweb.timapp.sync.performers.PlacePictureSyncPerformer;
@@ -36,9 +40,12 @@ import com.timappweb.timapp.sync.performers.PlaceTagsSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
+import com.timappweb.timapp.utils.SerializeHelper;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
+
+import retrofit2.Response;
 
 /**
  * Define a merge adapter for the app.
@@ -57,6 +64,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     public static final String SYNC_ID_KEY = "data_sync_id";
     public static final String SYNC_LAST_TIME = "data_sync_time";
     public static final String SYNC_PARAM_EVENT_ID = "place_id";
+    public static final String SYNC_PARAM_MAP_BOUNDS = "map_bounds";
 
     public static final int SYNC_TYPE_FRIENDS = 1;
     public static final int SYNC_TYPE_EVENT_AROUD_USER = 2;
@@ -71,6 +79,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     public static final int SYNC_TYPE_EVENT_INVITED = 9;
     public static final int SYNC_TYPE_EVENT_PICTURE = 10;
     public static final int SYNC_TYPE_EVENT_TAGS = 11;
+    public static final int SYNC_TYPE_SPOT = 12;
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -117,6 +126,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                             syncResult).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_AROUD_USER:
+                    // TODO
                     break;
                 case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
                     new InvitationsSyncPerformer(
@@ -180,6 +190,22 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     id = extractRemoteId(extras);
                     new SingleEntrySyncPerformer(Event.class, id, RestClient.service().viewPlace(id).execute(), syncResult).perform();
                     break;
+                case DataSyncAdapter.SYNC_TYPE_SPOT:
+                    // TODO
+                    LatLngBounds bounds = extractMapBounds(extras);
+                    if (bounds != null){
+                        QueryCondition conditions = new QueryCondition().setBounds(bounds);
+                        Response<PaginatedResponse<Spot>> spots = RestClient.service().spots(conditions.toMap()).execute();
+                        // TODO check successful elsewhere
+                        if (spots.isSuccessful()){
+                            new RemoteMasterSyncPerformer(
+                                    spots.body(),
+                                    Spot.findInArea(bounds),
+                                    syncResult)
+                                    .perform();
+                        }
+                    }
+                    break;
                 default:
                     Log.e(TAG, "Invalid sync type id: " + syncTypeId);
                     return;
@@ -190,6 +216,10 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             e.printStackTrace();
         }
         Log.i(TAG, "--------------- Network synchronization complete for data----------------------");
+    }
+
+    private LatLngBounds extractMapBounds(Bundle extras) {
+        return SerializeHelper.unpack(extras.getString(SYNC_PARAM_MAP_BOUNDS), LatLngBounds.class);
     }
 
 

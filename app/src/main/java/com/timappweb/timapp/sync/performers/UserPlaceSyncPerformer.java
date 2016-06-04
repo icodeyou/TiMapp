@@ -5,7 +5,7 @@ import android.content.SyncResult;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserEvent;
-import com.timappweb.timapp.rest.model.PaginationResponse;
+import com.timappweb.timapp.rest.model.PaginatedResponse;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +17,7 @@ public class UserPlaceSyncPerformer extends RemoteMasterSyncPerformer{
 
     Event event;
 
-    public UserPlaceSyncPerformer(PaginationResponse<UserEvent> body, List<? extends SyncBaseModel> users, SyncResult syncResult, Event event) {
+    public UserPlaceSyncPerformer(PaginatedResponse<UserEvent> body, List<? extends SyncBaseModel> users, SyncResult syncResult, Event event) {
         super(body, users, syncResult);
         this.event = event;
     }

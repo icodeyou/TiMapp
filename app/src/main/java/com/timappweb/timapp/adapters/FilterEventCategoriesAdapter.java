@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.FilterActivity;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
 
 public class FilterEventCategoriesAdapter extends EventCategoriesAdapter {
@@ -31,7 +32,7 @@ public class FilterEventCategoriesAdapter extends EventCategoriesAdapter {
     @Override
     public void onBindViewHolder(EventCategoriesAdapter.CategoriesViewHolder holder, final int position) {
         super.onBindViewHolder(holder, position);
-        final EventCategory eventCategory = MyApplication.getEventCategories().get(position);
+        final EventCategory eventCategory = ConfigurationProvider.eventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
 
         //final List<EventCategory> categoriesSelected = filterActivity.getCategoriesSelected();

@@ -28,16 +28,19 @@ public class QueryCondition {
      * Set the view port
      * @param bounds
      */
-    public void setBounds(LatLngBounds bounds) {
+    public QueryCondition setBounds(LatLngBounds bounds) {
         queryMap.put("lat_ne", String.valueOf(bounds.northeast.latitude));
         queryMap.put("lat_sw", String.valueOf(bounds.southwest.latitude));
         queryMap.put("lon_ne", String.valueOf(bounds.northeast.longitude));
         queryMap.put("lon_sw", String.valueOf(bounds.southwest.longitude));
+        queryMap.put("bounds", bounds.southwest.latitude + "," + bounds.southwest.longitude + "," + bounds.northeast.latitude + "," + bounds.northeast.longitude);
+        return this;
     }
 
-    public void setUserLocation(LatLng latLng){
+    public QueryCondition setUserLocation(LatLng latLng){
         queryMap.put("latitude", String.valueOf(latLng.latitude));
         queryMap.put("longitude", String.valueOf(latLng.longitude));
+        return this;
     }
 
     public void setTimestampMin(int min) {

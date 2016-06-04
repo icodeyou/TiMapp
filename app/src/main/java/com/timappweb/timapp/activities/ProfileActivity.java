@@ -2,6 +2,8 @@ package com.timappweb.timapp.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -25,6 +27,7 @@ import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserTag;
+import com.timappweb.timapp.databinding.ActivityProfileBinding;
 import com.timappweb.timapp.listeners.ColorAllOnTouchListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -51,28 +54,22 @@ public class ProfileActivity extends BaseActivity  {
     private SimpleDraweeView profilePicture;
     private UserLoader mLoader;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ActivityProfileBinding mBinding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
 
         //Toolbar
         this.initToolbar(true);
 
-        //Initialize
-        tvUsername = (TextView) findViewById(R.id.tv_profile_username);
-        //tvAge = (TextView) findViewById(R.id.text_age);
-        tvCountTags = (TextView) findViewById(R.id.tags_counter);
-        tvCountPlaces = (TextView) findViewById(R.id.places_counter);
         tagsListView = (ListView) findViewById(R.id.listview_usertags);
         //loadingView = findViewById(R.remote_id.loading_view);
         noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
         profilePicture = (SimpleDraweeView) findViewById(R.id.profile_picture);
-
-
 
         initUserTagsAdapter();
 
@@ -122,14 +119,7 @@ public class ProfileActivity extends BaseActivity  {
     }
 
     private void updateView() {
-
-        Log.i(TAG, mUser + " loaded");
-        tvUsername.setText(mUser.username);
-   //     tvAge.setText("");
-        tvCountTags.setText(String.valueOf(mUser.count_posts));
-        tvCountTags.setVisibility(View.VISIBLE);
-        tvCountPlaces.setText(String.valueOf(mUser.count_places));
-        tvCountPlaces.setVisibility(View.VISIBLE);
+        mBinding.setUser(mUser);
 
         initUserTagsAdapter();
 

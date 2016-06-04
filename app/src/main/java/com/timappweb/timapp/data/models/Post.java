@@ -1,5 +1,7 @@
 package com.timappweb.timapp.data.models;
 
+import android.location.Location;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,6 +48,8 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     @Expose
     public boolean anonymous;
 
+    public Event event;
+
     // =============================================================================================
     // FIELDS
 
@@ -69,6 +73,10 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     public String route;
     public String street_number;
     public String address = "";
+
+    public Post(Event events) {
+        this.event = event;
+    }
 
 
     public void setTags(List<Tag> tags){
@@ -122,8 +130,13 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
         return p;
     }
 
-    public LatLng getLatLng() {
+    public LatLng getLocation() {
         return new LatLng(this.latitude, this.longitude);
+    }
+
+    public void setLocation(Location location){
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 
 
@@ -147,7 +160,7 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
 
     @Override
     public LatLng getPosition() {
-        return this.getLatLng();
+        return this.getLocation();
     }
 
 

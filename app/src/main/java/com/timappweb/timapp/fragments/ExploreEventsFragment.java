@@ -1,7 +1,5 @@
 package com.timappweb.timapp.fragments;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,7 +30,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
     private View newEventButton;
     private View progressView;
     private View noEventsView;
-    private RecyclerView rvPlaces;
+    private RecyclerView eventRecyclerView;
     private Button btnRequestNavigation;
     //private EachSecondTimerTask eachSecondTimerTask;
 
@@ -46,7 +44,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         drawerActivity = (DrawerActivity) exploreFragment.getActivity();
 
         //Views
-        rvPlaces = (RecyclerView) root.findViewById(R.id.list_places);
+        eventRecyclerView = (RecyclerView) root.findViewById(R.id.list_places);
         progressView = root.findViewById(R.id.loading_view);
         noEventsView = root.findViewById(R.id.no_events_view);
         newEventButton = root.findViewById(R.id.post_event_button);
@@ -58,6 +56,20 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         });
 
         return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        eventRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventsAdapter = new EventsAdapter(getContext());
+        eventRecyclerView.setAdapter(eventsAdapter);
+        eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                IntentsUtils.viewSpecifiedEvent(getContext(), eventsAdapter.getItem(position));
+            }
+        });
+
     }
 
     public void onResume(){
@@ -84,15 +96,12 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
     @Override
     public void onTabSelected() {
         Log.d(TAG, "ExploreEventsFragment is now selected");
-        if(eventsAdapter ==null) {
-            Log.d(TAG, "Initializing EventsAdapter");
-            initPlaceAdapter();
-        }
         Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");
         eventsAdapter.clear();
         ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
         List<Event> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
         eventsAdapter.setData(markers);
+
         if(eventsAdapter.getData().size()==0) {
             noEventsView.setVisibility(View.VISIBLE);
         } else {
@@ -100,18 +109,4 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         }
     }
 
-    private void initPlaceAdapter() {
-        //RV
-        rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //Adapter
-        eventsAdapter = new EventsAdapter(getContext());
-        rvPlaces.setAdapter(eventsAdapter);
-        eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                IntentsUtils.viewSpecifiedEvent(getContext(), eventsAdapter.getItem(position));
-            }
-        });
-    }
 }
