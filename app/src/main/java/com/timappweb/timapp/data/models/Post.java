@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Post")
-public class Post extends SyncBaseModel implements Serializable, MarkerValueInterface, PlaceUserInterface {
+public class Post extends SyncBaseModel implements MarkerValueInterface, PlaceUserInterface {
 
     private static final String TAG = "EntitySpot";
 
@@ -59,8 +59,12 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     @Expose(deserialize = false, serialize = true)
     public String tag_string;
 
+    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO_MANY,
+            joinModel = PostTag.class,
+            saveStrategy = ModelAssociation.SaveStrategy.REPLACE,
+            targetModel = Tag.class)
     @Expose
-    private List<Tag> tags;
+    public List<Tag> tags;
 
     // =============================================================================================
     // GETTERS

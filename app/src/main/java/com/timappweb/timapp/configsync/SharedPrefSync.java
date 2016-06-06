@@ -3,8 +3,6 @@ package com.timappweb.timapp.configsync;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.timappweb.timapp.rest.JsonConfDeserializer;
 import com.timappweb.timapp.rest.RestClient;
 
 /**

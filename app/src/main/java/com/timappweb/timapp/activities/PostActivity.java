@@ -11,7 +11,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class PostActivity extends BaseActivity {
 
     private void loadTagsForPost() {
         Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentPost.getMarkerId());
-        call.enqueue(new RestCallback<List<Tag>>(this) {
+        call.enqueue(new RestCallback<List<Tag>>() {
 
             @Override
             public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
@@ -85,7 +85,7 @@ public class PostActivity extends BaseActivity {
 
     private void loadPost(int postId) {
         Call<Post> call = RestClient.service().viewPost(currentPost.getMarkerId());
-        call.enqueue(new RestCallback<Post>(this) {
+        call.enqueue(new RestCallback<Post>() {
 
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {

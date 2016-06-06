@@ -46,9 +46,9 @@ import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.map.SpotClusterRenderer;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.rest.model.RestValidationErrors;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -56,8 +56,6 @@ import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.BackCatchEditText;
 
 import java.util.List;
-
-import retrofit2.Call;
 
 
 public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
@@ -214,26 +212,19 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void submitPlace(final Event event){
         Log.d(TAG, "Submit event " + event.toString());
-        Call call = RestClient.service().addPlace(event);
-        event.saveRemoteEntry(this, call, new RestFeedbackCallback(this){
 
-            @Override
-            public void onActionSuccess(RestFeedback feedback) {
-                IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
-            }
-
-            @Override
-            public void onActionFail(RestFeedback feedback) {
-                if (feedback == null) return;;
-                RestValidationErrors errors = feedback.getValidationErrors();
-                mBinding.setErrors(errors);
-            }
-
-            @Override
-            public void onFinish() {
-                setProgressView(false);
-            }
-        });
+        RestClient
+            .post(RestClient.API_KEY_EVENT, event)
+                .onResponse(new AutoMergeCallback(event))
+                .onResponse(new FormErrorsCallback(mBinding))
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void successful(Object feedback) {
+                        event.mySave();
+                        IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                    }
+                })
+                .perform();
 
     }
 
@@ -244,9 +235,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     //----------------------------------------------------------------------------------------------
     //Public methods
-    public RecyclerView getCategoriesRV() {
-        return categoriesRV;
-    }
 
     public ViewPager getViewPager() {
         return viewPager;
@@ -317,8 +305,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mSpotContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spot spot =  mBinding.getEvent().getSpot();
-                if (spot != null && spot.isNew()){
+                Spot spot = mBinding.getEvent().getSpot();
+                if (spot != null && spot.isNew()) {
                     IntentsUtils.pinSpot(AddEventActivity.this, spot);
                 }
             }
@@ -485,7 +473,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             super.onLoadFinished(loader, data);
             mClusterManagerSpot.clearItems();
             mClusterManagerSpot.addItems(data);
-            //mClusterManagerSpot.notify();
+            mClusterManagerSpot.cluster();
         }
 
 

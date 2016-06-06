@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest;
 
 import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.rest.callbacks.RestCallback;
 
 import retrofit2.Call;
 

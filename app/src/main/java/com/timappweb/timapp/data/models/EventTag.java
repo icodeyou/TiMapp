@@ -1,8 +1,14 @@
 package com.timappweb.timapp.data.models;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+import com.activeandroid.query.Update;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+
+import java.util.List;
 
 /**
  * Created by stephane on 5/8/2016.
@@ -51,4 +57,34 @@ public class EventTag extends MyModel {
     }
 
     public EventTag() {}
+
+    /**
+     * Increment the tag counter by one for each given tag in the list
+     * @param tags
+     */
+    public static void incrementCountRef(Event event, List<Tag> tags) {
+        if (!event.hasLocalId()){
+            throw new IllegalStateException();
+        }
+        ActiveAndroid.beginTransaction();
+        for (Tag tag: tags){
+            if (!tag.hasLocalId()) tag = (Tag) tag.mySave();
+            EventTag existingEventTag = new Select().from(EventTag.class)
+                    .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
+                    .executeSingle();
+            // Insert if does not exists
+            if (existingEventTag != null){
+                new Update(EventTag.class)
+                        .set("CountRef = CountRef + 1")
+                        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
+                        .execute();
+            }
+            // Update existing record
+            else{
+                new EventTag(event, tag, 1).mySave();
+            }
+        }
+        ActiveAndroid.setTransactionSuccessful();
+        ActiveAndroid.endTransaction();
+    }
 }

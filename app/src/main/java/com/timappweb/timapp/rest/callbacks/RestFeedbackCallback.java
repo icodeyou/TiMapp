@@ -1,10 +1,11 @@
-package com.timappweb.timapp.rest;
+package com.timappweb.timapp.rest.callbacks;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.rest.model.RestValidationErrors;
+import com.timappweb.timapp.rest.model.RestValidationError;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -22,7 +23,7 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
     private static final String TAG = "RestFeedbackCallback";
 
     public RestFeedbackCallback(Context context) {
-        super(context);
+        super();
     }
 
     public abstract void onActionSuccess(RestFeedback feedback);
@@ -38,7 +39,7 @@ public abstract class RestFeedbackCallback extends RestCallback<RestFeedback> {
         else if (response.code() == 400){
             if (response.errorBody() != null) {
                 Converter<ResponseBody, RestFeedback> errorConverter =
-                        RestClient.instance().getRetrofit().responseBodyConverter(RestFeedback.class, new Annotation[0]);
+                        RestClient.instance().getRetrofit().responseBodyConverter(RestValidationError.class, new Annotation[0]);
                 RestFeedback error = null;
                 try {
                     error = errorConverter.convert(response.errorBody());

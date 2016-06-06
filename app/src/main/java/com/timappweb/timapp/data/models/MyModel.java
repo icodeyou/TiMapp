@@ -9,6 +9,7 @@ import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +21,7 @@ import static com.timappweb.timapp.data.models.annotations.ModelAssociation.Type
 /**
  * Created by stephane on 5/10/2016.
  */
-public class MyModel extends Model implements Observable{
+public class MyModel extends Model implements Observable, Serializable{
     private static final String TAG = "MyModel";
 
     /**

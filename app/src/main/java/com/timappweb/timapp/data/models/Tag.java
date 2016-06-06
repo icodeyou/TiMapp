@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "Tag")
-public class Tag extends SyncBaseModel implements Serializable, SearchHistory.SearchableItem{
+public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
 
     public static final int MINLENGTH = 2;
     public static final int MAXLENGTH = 30;

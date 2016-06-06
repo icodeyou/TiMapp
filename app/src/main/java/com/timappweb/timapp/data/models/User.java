@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "User")
-public class User extends SyncBaseModel implements Serializable, PlaceUserInterface {
+public class User extends SyncBaseModel implements PlaceUserInterface {
     private static final String TAG = "UserEntity" ;
 
     // =============================================================================================

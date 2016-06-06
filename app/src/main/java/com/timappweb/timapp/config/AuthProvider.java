@@ -6,7 +6,7 @@ import android.util.Log;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.callbacks.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.KeyValueStorage;
 

@@ -45,8 +45,4 @@ public class RestFeedback extends RestResponse {
         }
     }
 
-    public RestValidationErrors getValidationErrors(){
-        return new RestValidationErrors(this.errors);
-    }
-
 }

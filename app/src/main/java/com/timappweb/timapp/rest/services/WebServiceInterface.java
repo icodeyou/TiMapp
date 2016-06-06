@@ -13,7 +13,6 @@ import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.model.PaginatedResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
@@ -80,10 +79,7 @@ public interface WebServiceInterface {
     Call<Post> viewPost(@Path("id") int id);
 
     @POST("posts/add.json")
-    Call<RestFeedback> addPost(@Body Post post);
-
-    @POST("posts/add.json")
-    Call<RestFeedback>  addPost(@Body PostAndPlaceRequest data);
+    Call<RestFeedback> addTags(@Body Post post);
 
     // ---------------------------------------------------------------------------------------------
     // USER

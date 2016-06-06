@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
@@ -19,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.google.android.gms.iid.InstanceID;
 import com.sromku.simple.fb.Permission;
@@ -31,7 +29,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.callbacks.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.ArrayList;

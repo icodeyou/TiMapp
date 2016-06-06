@@ -32,6 +32,7 @@ import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.fragments.BaseFragment;
+import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 public class IntentsUtils {
@@ -172,7 +173,7 @@ public class IntentsUtils {
 
         Intent intent = new Intent(fragment.getContext(), AddTagActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable(IntentsUtils.KEY_EVENT, event);          // TODO use constant
+        extras.putString(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         fragment.startActivityForResult(intent, REQUEST_TAGS);
     }
@@ -180,7 +181,7 @@ public class IntentsUtils {
     public static void addPeople(Activity activity, Event event) {
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("event", event);          // TODO use constant
+        extras.putSerializable(IntentsUtils.KEY_EVENT, event);          // TODO use constant
         intent.putExtras(extras);
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
@@ -214,7 +215,7 @@ public class IntentsUtils {
     public static Intent buildIntentViewPlace(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("event", event);          // TODO use constant
+        extras.putSerializable(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));          // TODO use constant
         intent.putExtras(extras);
         return intent;
     }
@@ -291,12 +292,12 @@ public class IntentsUtils {
         activity.overridePendingTransition(0, 0);
     }
 
-    public static Event extractPlace(Intent intent) {
+    public static Event extractEvent(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return null;
         }
-        return (Event) extras.getSerializable(IntentsUtils.KEY_EVENT);
+        return SerializeHelper.unpack(extras.getString(IntentsUtils.KEY_EVENT), Event.class);
     }
 
     public static String[] extractPicture(Intent intent) {

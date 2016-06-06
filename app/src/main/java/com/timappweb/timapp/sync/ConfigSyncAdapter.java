@@ -19,23 +19,19 @@ package com.timappweb.timapp.sync;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 

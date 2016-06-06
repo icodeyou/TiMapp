@@ -2,14 +2,23 @@ package com.timappweb.timapp.rest;
 
 import android.app.Application;
 import android.content.Intent;
+import android.gesture.Gesture;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RestFeedbackCallback;
+import com.timappweb.timapp.rest.controllers.HttpCallManager;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.services.RestInterface;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
 import com.timappweb.timapp.configsync.SyncConfig;
 
@@ -32,9 +41,13 @@ public class RestClient {
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
 
+    public static final String API_KEY_EVENT = "places";
+    public static final String API_KEY_EVENT_POST = "posts";
+
 
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
+    private static HttpCallback defaultHttpCallback;
     private final Application app;
     private final OkHttpClient httpClient;
     private final String baseUrl;
@@ -64,9 +77,21 @@ public class RestClient {
 
     public static void init(Application app, String ep, AuthProvider authProvider){
         conn = new RestClient(app, ep, authProvider);
+        defaultHttpCallback = new HttpCallback() {
+            @Override
+            public void error() {
+                Log.e(TAG, "Error ");
+            }
+
+            @Override
+            public void notFound() {
+                Log.e(TAG, "Not found ");
+            }
+        };
     }
 
     protected WebServiceInterface service;
+    protected RestInterface restService;
 
     private static Retrofit.Builder builder = null;
 
@@ -106,6 +131,7 @@ public class RestClient {
     public void createService(){
         this.retrofit = builder.build();
         this.service =  retrofit.create(WebServiceInterface.class);
+        this.restService = retrofit.create(RestInterface.class);
     }
 
     public <T> T createService(Class<T> service){
@@ -113,6 +139,9 @@ public class RestClient {
     }
 
 
+    public RestInterface getRestService(){
+        return this.restService;
+    }
 
     public WebServiceInterface getService(){
         return this.service;
@@ -161,6 +190,46 @@ public class RestClient {
         Log.i(TAG, "Checking user token...");
         Call<RestFeedback> call = this.service.checkToken();
         call.enqueue(callback);
+    }
+
+
+    public static RestInterface restService() {
+        return conn.getRestService();
+    }
+
+    public static HttpCallManager post(String url, JsonObject object) {
+        Call call = RestClient.restService().post(url, object);
+        return buildCall(call);
+    }
+
+    public static HttpCallManager post(String url, Object object) {
+        // TODO find a more efficient way to cast object in JsonObject
+        String str = instance().getGson().toJson(object);
+        return post(url, instance().getGson().fromJson(str, JsonObject.class));
+    }
+
+    /**
+     * Update the model
+     * @param url
+     * @param model
+     * @return
+     */
+    public static HttpCallManager updateModel(String url, final SyncBaseModel model) {
+        Call call = RestClient.restService().get(url, model.getRemoteId());
+        HttpCallManager manager = buildCall(call);
+        manager.onResponse(new AutoMergeCallback(model));
+        manager.onResponse(new HttpCallback<JsonObject>() {
+            @Override
+            public void successful(JsonObject feedback) {
+                model.deepSave();
+            }
+        });
+        return manager.perform();
+    }
+
+    public static HttpCallManager buildCall(Call call) {
+        return new HttpCallManager(call)
+                .onResponse(defaultHttpCallback);
     }
 
 

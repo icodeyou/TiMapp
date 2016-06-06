@@ -1,24 +1,11 @@
 package com.timappweb.timapp.config;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.util.Log;
-
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.configsync.RESTRemoteSync;
-import com.timappweb.timapp.configsync.RemotePersistenceManager;
-import com.timappweb.timapp.configsync.SharedPrefSync;
-import com.timappweb.timapp.configsync.SyncConfigManager;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.services.ConfigInterface;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**

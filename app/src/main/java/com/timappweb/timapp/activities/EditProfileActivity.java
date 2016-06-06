@@ -21,12 +21,9 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.callbacks.RestFeedbackCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 

@@ -1,6 +1,7 @@
 package com.timappweb.timapp.data.models;
 
 import android.databinding.Bindable;
+import android.location.Location;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -20,7 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "Spot")
-public class Spot extends SyncBaseModel implements Serializable, ClusterItem {
+public class Spot extends SyncBaseModel implements ClusterItem {
 
     // =============================================================================================
     // DATABASE
@@ -191,6 +192,11 @@ public class Spot extends SyncBaseModel implements Serializable, ClusterItem {
 
     public boolean isNew(){
         return !this.hasRemoteId();
+    }
+
+    public void setLocation(Location location) {
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 }
 

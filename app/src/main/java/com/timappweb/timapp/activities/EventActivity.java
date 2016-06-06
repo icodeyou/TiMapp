@@ -19,18 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.EventInformationFragment;
@@ -90,7 +87,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.event = IntentsUtils.extractPlace(getIntent());
+        this.event = IntentsUtils.extractEvent(getIntent());
         eventId = IntentsUtils.extractPlaceId(getIntent());
         if (event == null && eventId <= 0){
             Log.e(TAG, "Trying to view an invalid event --> redirect to home");

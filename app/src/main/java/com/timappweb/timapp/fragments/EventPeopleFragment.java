@@ -27,7 +27,7 @@ import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
@@ -132,7 +132,7 @@ public class EventPeopleFragment extends EventBaseFragment {
 
     private void loadPosts() {
         Call<List<Post>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
-        RestCallback callback = new RestCallback<List<Post>>(getContext()) {
+        RestCallback callback = new RestCallback<List<Post>>() {
             @Override
             public void onResponse200(Response<List<Post>> response) {
                 List<Post> list = response.body();

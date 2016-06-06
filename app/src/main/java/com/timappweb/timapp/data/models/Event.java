@@ -15,6 +15,7 @@ import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.BR;
@@ -35,14 +36,15 @@ import java.util.Date;
 import java.util.List;
 
 @Table(name = "Event")
-public class Event extends SyncBaseModel implements Serializable, MarkerValueInterface {
+public class Event extends SyncBaseModel implements MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
+    private static final String REST_URL = "places";
 
     // =============================================================================================
     // DATABASE
 
-    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
+    @ModelAssociation(joinModel = Spot.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "Spot", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("spot")
     @Expose
@@ -63,7 +65,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public String           description;
 
     @Column(name = "Created")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     public int              created;
 
     @Column(name = "Latitude")
@@ -74,9 +76,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose
     public double           longitude;
 
-    @Column(name = "CategoryId")
+    @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO)
+    @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
     @Expose
-    public int              category_id;
+    public EventCategory    event_category;
 
     @Column(name = "Points")
     @Expose(serialize = false, deserialize = true)
@@ -109,6 +112,9 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public Integer          spot_id  = null;
 
     public double           distance = -1;
+
+    @Expose
+    public int              category_id;
 
     // =============================================================================================
 
@@ -235,7 +241,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public EventCategory getCategory() throws UnknownCategoryException {
-        return MyApplication.getCategoryById(this.category_id);
+        if (event_category == null){
+            event_category = MyApplication.getCategoryById(this.category_id);
+        }
+        return event_category;
     }
 
     @Override
@@ -453,4 +462,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public boolean hasAddress(){
         return getAddress() != null;
     }
+
+    @Override
+    public String getRestUrl() {
+        return REST_URL;
+    }
+
 }

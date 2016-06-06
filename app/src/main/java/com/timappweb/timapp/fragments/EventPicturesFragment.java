@@ -3,7 +3,6 @@ package com.timappweb.timapp.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,11 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.desmond.squarecamera.ImageUtility;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
@@ -32,11 +30,12 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.LoadingListener;
-import com.timappweb.timapp.rest.ApiCallFactory;
-import com.timappweb.timapp.rest.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
@@ -50,7 +49,6 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class EventPicturesFragment extends EventBaseFragment {
@@ -239,36 +237,27 @@ public class EventPicturesFragment extends EventBaseFragment {
                             RequestBody.create(fileMimeType, file))
                     .build();
 
-            // finally, execute the request
-            Call<RestFeedback> call = RestClient.service().upload(eventActivity.getEventId(), body);
-            RestCallback callback = new RestCallback<RestFeedback>(eventActivity, pictureLoadListener) {
-                @Override
-                public void onResponse200(Response<RestFeedback> response) {
-                    RestFeedback feedback = response.body();
+            final Event event = eventActivity.getEvent();
+            final Picture picture = new Picture();
+            picture.setEvent(event);
+            picture.setUser(MyApplication.getCurrentUser());
 
-                    if (feedback.success) {
-                        Log.v(TAG, "SUCCESS UPLOAD IMAGE");
+            Call call = RestClient.instance().createService(PictureInterface.class).upload(event.getRemoteId(), body);
+            RestClient
+                .buildCall(call)
+                .onResponse(new AutoMergeCallback(picture))
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void successful(Object feedback) {
                         // Get the bitmap in according to the width of the device
-                        Bitmap bitmap = ImageUtility.decodeSampledBitmapFromPath(fileUri.getPath(), 1000, 1000);
                         getPicturesRv().smoothScrollToPosition(0);
                         QuotaManager.instance().add(QuotaType.ADD_PICTURE);
-                        // TODO add picture in local db...
-                    } else {
-                        Log.v(TAG, "FAILURE UPLOAD IMAGE: " + feedback.message);
+                        picture.mySave();
+                        Log.v(TAG, "New picture uploaded: " + picture);
                     }
-                    Toast.makeText(eventActivity, feedback.message, Toast.LENGTH_LONG).show();
-                }
 
-                @Override
-                public void onFailure(Call c, Throwable t) {
-                    Log.e(TAG, "Upload error:" + t.getMessage());
-                    Toast.makeText(context, "We cannot upload this image", Toast.LENGTH_LONG).show();
-                }
-
-            };
-
-
-            asynCalls.add(ApiCallFactory.build(call, callback, pictureLoadListener));
+                })
+                .perform();
 
         } catch (IOException e) {
             Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());

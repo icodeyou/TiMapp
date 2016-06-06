@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,26 +24,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
-import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.databinding.ActivityAddSpotBinding;
-import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.ApiCallFactory;
-import com.timappweb.timapp.rest.RestCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
 
@@ -204,6 +191,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         if (mAddressResultReceiver == null){
             mAddressResultReceiver = new AddressResultReceiver();
         }
+        mBinding.getSpot().setLocation(location);
         ReverseGeocodingHelper.request(AddSpotActivity.this, location, mAddressResultReceiver);
     }
     // =============================================================================================

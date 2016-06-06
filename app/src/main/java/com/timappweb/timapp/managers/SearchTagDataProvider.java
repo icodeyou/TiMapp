@@ -3,7 +3,7 @@ package com.timappweb.timapp.managers;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.SearchHistory;
 
@@ -37,7 +37,7 @@ public class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
     public void load(final String term) {
 
         Call<List<Tag>> call = RestClient.service().suggest(term);
-        call.enqueue(new RestCallback<List<Tag>>(manager.getActivity()) {
+        call.enqueue(new RestCallback<List<Tag>>() {
             @Override
             public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
                 super.onResponse(call, response);

@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,14 +22,12 @@ import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.QueryCondition;
-import com.timappweb.timapp.services.FetchAddressIntentService;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 
 import java.util.List;
 
@@ -177,7 +174,7 @@ public class LocateActivity extends BaseActivity{
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
 
         Call<List<Event>> call = RestClient.service().placeReachable(conditions.toMap());
-        call.enqueue(new RestCallback<List<Event>>(this) {
+        call.enqueue(new RestCallback<List<Event>>() {
 
             @Override
             public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {

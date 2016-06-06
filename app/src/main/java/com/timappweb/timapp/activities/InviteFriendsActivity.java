@@ -22,7 +22,7 @@ import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 public class InviteFriendsActivity extends BaseActivity {
 
@@ -57,7 +56,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        event = IntentsUtils.extractPlace(getIntent());
+        event = IntentsUtils.extractEvent(getIntent());
         if (event == null){
             IntentsUtils.home(this);
             finish();
@@ -165,15 +164,15 @@ public class InviteFriendsActivity extends BaseActivity {
             ids.add(user.remote_id);
         }
         Call<JsonArray> call = RestClient.service().sendInvite(event.remote_id, ids);
-        call.enqueue(new RestCallback<JsonArray>(this) {
-            @Override
-            public void onResponse200(Response<JsonArray> response) {
-                Toast.makeText(context, R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
-                finishActivityResult();
-            }
-
-        });
-        this.apiCalls.add(call);
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void successful(Object feedback) {
+                        Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
+                        finishActivityResult();
+                    }
+                })
+                .perform();
     }
 
     public List<User> getFriendsSelected() {

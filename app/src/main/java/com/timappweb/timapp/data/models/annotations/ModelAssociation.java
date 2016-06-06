@@ -2,12 +2,14 @@ package com.timappweb.timapp.data.models.annotations;
 
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.UserTag;
 
 /**
  * Created by stephane on 5/9/2016.
  */
 public @interface ModelAssociation {
+
 
     enum SaveStrategy {
         REPLACE,
@@ -24,5 +26,5 @@ public @interface ModelAssociation {
 
     Type type();
 
-
+    Class<?> targetModel() default Object.class;
 }

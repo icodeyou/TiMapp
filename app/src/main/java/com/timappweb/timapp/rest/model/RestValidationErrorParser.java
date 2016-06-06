@@ -7,13 +7,13 @@ import com.google.gson.JsonObject;
 /**
  * Created by stephane on 5/31/2016.
  */
-public class RestValidationErrors {
+public class RestValidationErrorParser {
 
     private JsonObject data;
 
     // =============================================================================================
 
-    public RestValidationErrors(JsonObject data) {
+    public RestValidationErrorParser(JsonObject data) {
         this.data = data;
     }
 

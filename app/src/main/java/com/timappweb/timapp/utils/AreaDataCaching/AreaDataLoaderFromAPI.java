@@ -9,7 +9,7 @@ import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.model.QueryCondition;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntPoint;
 
@@ -77,7 +77,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
 
         if (loadingListener!=null) loadingListener.onLoadStart();
-        call.enqueue(new RestCallback<List<Event>>(mContext) {
+        call.enqueue(new RestCallback<List<Event>>() {
 
             @Override
             public void onFailure(Call call, Throwable t) {

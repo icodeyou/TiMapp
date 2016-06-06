@@ -87,4 +87,12 @@ public class Picture extends SyncBaseModel {
                 ", user=" + user +
                 '}';
     }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
