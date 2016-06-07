@@ -22,13 +22,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
@@ -85,7 +83,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         if (lastLocation == null){
             centerMap(newLocation);
-            initMap();
+            updateMapData();
         }
     }
 
@@ -235,8 +233,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         Log.d(TAG, "Map is now ready!");
         gMap = googleMap;
         MapFactory.initMap(gMap);
+        setUpClusterer();
+        initAreaRequestHistory();
+        exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
+
         if (LocationManager.hasLastLocation()){
-            initMap();
+            centerMap(LocationManager.getLastLocation());
+            updateMapData();
         }
     }
 
@@ -267,37 +270,31 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #gMap} is not null.
-     */
-    private void initMap() {
-        Log.d(TAG, "Setting up the map... Please wait.");
-        setUpClusterer();
-        centerMap(LocationManager.getLastLocation());
-        initAreaRequestHistory();
-        exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
-        history.resizeArea(getMapBounds());
-        updateMapData();
-    }
 
     private void centerMap(Location location){
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP));
     }
 
+    /**
+     * TODO: check if we need to send back a copy instead ?
+     * @return
+     */
     public LatLngBounds getMapBounds(){
-        return mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
+        /*
+        LatLngBounds cpyBounds;
+        LatLngBounds bounds = mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
+        synchronized (bounds){
+            cpyBounds = new LatLngBounds(bounds.southwest, bounds.northeast);
+        }*/
+        return  mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
     }
 
     public void updateMapData(){
         final LatLngBounds bounds = getMapBounds();
-        if (bounds == null){
-            return;
-        }
-        Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
+        if (bounds == null) return;
+        Log.d(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 
-        if (currentZoomMode == ZoomType.OUT){
+        if (!history.isInitialized() || currentZoomMode == ZoomType.OUT){
             // Remove previous cache and all markers
             history.resizeArea(bounds);
         }

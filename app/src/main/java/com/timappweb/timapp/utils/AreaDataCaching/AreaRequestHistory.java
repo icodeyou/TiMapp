@@ -277,4 +277,8 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         }
         return result;
     }
+
+    public boolean isInitialized() {
+        return center != null;
+    }
 }

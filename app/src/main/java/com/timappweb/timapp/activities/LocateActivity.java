@@ -34,23 +34,18 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class LocateActivity extends BaseActivity{
+public class LocateActivity extends BaseActivity implements LocationManager.LocationListener {
 
     private static final double MIN_LOCATION_CHANGED_RELOAD_PLACE = 500.0;
     private String TAG = "LocateActivity";
 
     //Views
     private RecyclerView    rvPlaces;
-    private View            noPlaceView;
     private View            buttonAddPlace;
-    private TextView        textButtonAddPlace;
     private View            noConnectionView;
 
     // ProgressBar and ProgressDialog
     private View progressView;
-
-    // Location
-    private AddressResultReceiver       mResultReceiver;        // For reverse geocoding
 
     //others
     private InputMethodManager imm;
@@ -77,7 +72,6 @@ public class LocateActivity extends BaseActivity{
 
         // Init variables
         eventsLoaded = false;
-        mResultReceiver = new AddressResultReceiver(new Handler());
 
         setListeners();
         initAdapterPlaces();
@@ -85,6 +79,7 @@ public class LocateActivity extends BaseActivity{
         int colorRes = ContextCompat.getColor(this, R.color.colorPrimaryDark);
         initToolbar(false, colorRes);
 
+        mToolbar.setTitle(R.string.title_activity_locate);
     }
 
     @Override
@@ -143,16 +138,7 @@ public class LocateActivity extends BaseActivity{
     protected void onStart() {
         super.onStart();
 
-        LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
-            @Override
-            public void onLocationChanged(Location newLocation, Location lastLocation) {
-                // if not loaded yet or if user location changed too much we need to reload places
-                if (eventsLoaded == false || (lastLocation != null && DistanceHelper.distFrom(newLocation, lastLocation) > MIN_LOCATION_CHANGED_RELOAD_PLACE)) {
-                    loadPlaces(newLocation);
-                }
-                //ReverseGeocodingHelper.request(LocateActivity.this, newLocation, mResultReceiver);
-            }
-        });
+        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
     }
 
@@ -209,6 +195,14 @@ public class LocateActivity extends BaseActivity{
                 };
             }
         });
+    }
+
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        // if not loaded yet or if user location changed too much we need to reload places
+        if (eventsLoaded == false || (lastLocation != null && DistanceHelper.distFrom(newLocation, lastLocation) > MIN_LOCATION_CHANGED_RELOAD_PLACE)) {
+            loadPlaces(newLocation);
+        }
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -29,6 +29,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -38,7 +39,7 @@ import com.timappweb.timapp.views.controller.EventStateButtonController;
 import java.util.HashMap;
 
 
-public class EventInformationFragment extends EventBaseFragment {
+public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback {
 
     private float ZOOM_LEVEL_CENTER_MAP = 12.0f;
 
@@ -100,7 +101,9 @@ public class EventInformationFragment extends EventBaseFragment {
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
-        initMap();
+        mapView.onCreate(null);
+        mapView.getMapAsync(this);
+
         updateView();
     }
 
@@ -113,18 +116,15 @@ public class EventInformationFragment extends EventBaseFragment {
     }
 
 
-    private void initMap(){
-        mapView.onCreate(null);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "Map is now ready!");
-                gMap = googleMap;
-            }
-        });
-        loadMapIfNeeded();
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map is now ready!");
+        gMap = googleMap;
+        MapFactory.initMap(gMap);
+        Event event = eventActivity.getEvent();
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
+        gMap.addMarker(event.getMarkerOption());
     }
-
 
     @Override
     public void onPause() {
@@ -136,23 +136,6 @@ public class EventInformationFragment extends EventBaseFragment {
     public void onResume() {
         mapView.onResume();
         super.onResume();
-        Log.d(TAG, "ExploreMapFragment.onResume()");
-        this.loadMapIfNeeded();
-    }
-
-    private void loadMapIfNeeded() {
-        try {
-            if (gMap == null){
-                gMap = mapView.getMap();
-            }
-            gMap.setIndoorEnabled(true);
-            Event event = eventActivity.getEvent();
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
-            gMap.addMarker(event.getMarkerOption());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

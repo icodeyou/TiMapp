@@ -112,7 +112,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_no_internet">\"It is not my fucking fault if you do not have internet right now. Check your goddamn phone\"</string>
     <string name="hint_searchview_filter">Search</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
-    <string name="title_activity_locate">Where are you ?</string>
+    <string name="title_activity_locate">Around you</string>
     <string name="title_activity_publish">Check and send</string>
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
