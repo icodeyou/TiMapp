@@ -230,4 +230,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="event_organizer">Organised by</string>
     <string name="event_popularity">Popularity</string>
     <string name="event_description">Description</string>
+    <string name="profile_saved">Your profile has been saved</string>
+    <string name="cannot_save_your_profile">Your profile cannot be saved for now. Sorry...</string>
 </resources>

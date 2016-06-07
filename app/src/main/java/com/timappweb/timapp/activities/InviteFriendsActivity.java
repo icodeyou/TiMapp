@@ -18,12 +18,14 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
 import java.util.ArrayList;
@@ -165,6 +167,7 @@ public class InviteFriendsActivity extends BaseActivity {
         }
         Call<JsonArray> call = RestClient.service().sendInvite(event.remote_id, ids);
         RestClient.buildCall(call)
+                .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
                 .onResponse(new HttpCallback() {
                     @Override
                     public void successful(Object feedback) {

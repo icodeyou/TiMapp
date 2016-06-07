@@ -193,7 +193,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 case DataSyncAdapter.SYNC_TYPE_SPOT:
                     // TODO
                     LatLngBounds bounds = extractMapBounds(extras);
-                    if (bounds != null){
+                    if (bounds != null && bounds.northeast != null){
                         QueryCondition conditions = new QueryCondition().setBounds(bounds);
                         Response<PaginatedResponse<Spot>> spots = RestClient.service().spots(conditions.toMap()).execute();
                         // TODO check successful elsewhere

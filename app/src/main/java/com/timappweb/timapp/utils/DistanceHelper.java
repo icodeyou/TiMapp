@@ -10,15 +10,27 @@ import java.text.DecimalFormat;
  */
 public class DistanceHelper {
 
+    public static final double EARTH_RADIUS = 6371000; // Meters
+    public static final double METER_PER_LATITUDE = 110574;  // Meters
+
+    public static final double getMeterPerLongitude(double latitude){
+        return 111.320 * Math.cos(Math.toRadians(latitude));
+    }
+    public static double metersToLongitude(double meters, double latitude) {
+        return meters/getMeterPerLongitude(latitude);
+    }
+    public static double metersToLatitude(double meters) {
+        return meters/METER_PER_LATITUDE;
+    }
+
     public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
-        double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);
         double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(dLng/2) * Math.sin(dLng/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double dist = (float) (earthRadius * c);
+        double dist = (float) (EARTH_RADIUS * c);
 
         return dist;
     }
@@ -30,7 +42,7 @@ public class DistanceHelper {
     public static String prettyPrint(double dist) {
         String distString = String.valueOf(dist);
         if (dist < 30){
-            return "Next to you";
+            return "Next to you"; // TODO string resource
         }
         else if (dist<1000) {
             return distString + " m";

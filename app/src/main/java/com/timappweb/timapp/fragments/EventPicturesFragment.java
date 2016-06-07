@@ -35,6 +35,7 @@ import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
@@ -246,6 +247,7 @@ public class EventPicturesFragment extends EventBaseFragment {
             RestClient
                 .buildCall(call)
                 .onResponse(new AutoMergeCallback(picture))
+                .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.ADD_PICTURE))
                 .onResponse(new HttpCallback() {
                     @Override
                     public void successful(Object feedback) {

@@ -2,7 +2,6 @@ package com.timappweb.timapp.rest;
 
 import android.app.Application;
 import android.content.Intent;
-import android.gesture.Gesture;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -11,11 +10,9 @@ import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.data.entities.SocialProvider;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RestFeedbackCallback;
 import com.timappweb.timapp.rest.controllers.HttpCallManager;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.RestInterface;
@@ -161,20 +158,20 @@ public class RestClient {
 
         // Add new Flag to start new UserActivity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Call<RestFeedback> logoutCall = this.service.logout();
+        RestClient.buildCall(logoutCall)
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void notSuccessful() {
+                        Log.e(TAG, "Cannot logout user on server side...");
+                    }
 
-        Call<RestFeedback> call = this.service.logout();
-            call.enqueue(new RestFeedbackCallback(app.getApplicationContext()) {
-                @Override
-                public void onActionSuccess(RestFeedback feedback) {
-                    Log.d(TAG, "User logged out on server side");
-                }
-
-                @Override
-                public void onActionFail(RestFeedback feedback) {
-                    Log.e(TAG, "Cannot logout user on server side...");
-                }
-            });
-
+                    @Override
+                    public void successful(Object feedback) {
+                        Log.d(TAG, "User logged out on server side");
+                    }
+                })
+                .perform();
         // Staring Login UserActivity
         app.startActivity(i);
     }
@@ -186,10 +183,10 @@ public class RestClient {
     /**
      * Check login on the server side thanks to the token
      */
-    public void checkToken(RestFeedbackCallback callback) {
+    public HttpCallManager checkToken() {
         Log.i(TAG, "Checking user token...");
         Call<RestFeedback> call = this.service.checkToken();
-        call.enqueue(callback);
+        return RestClient.buildCall(call);
     }
 
 

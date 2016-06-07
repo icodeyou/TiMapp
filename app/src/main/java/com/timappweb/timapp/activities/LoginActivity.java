@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.iid.InstanceID;
 import com.sromku.simple.fb.Permission;
@@ -29,7 +30,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.callbacks.RestFeedbackCallback;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
 import java.util.ArrayList;
@@ -122,8 +124,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     private void setListeners() {
-
-        final Activity that = this;
         ImageButton loginButton = (ImageButton) findViewById(R.id.login_button);
         final OnLoginListener onLoginListener = new OnLoginListener() {
 
@@ -133,32 +133,44 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 setProgressVisibility(true);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
-                params.put("app_id", InstanceID.getInstance(that).getId());
+                params.put("app_id", InstanceID.getInstance(LoginActivity.this).getId());
 
                 Call<RestFeedback> call = RestClient.service().facebookLogin(params);
-                call.enqueue(new RestFeedbackCallback(that) {
-                    @Override
-                    public void onActionSuccess(RestFeedback feedback) {
-                        User user = new User("", "");
-                        String token = feedback.data.get("token");
-                        user.username = feedback.data.get("username");
-                        user.provider_uid = feedback.data.get("social_id");
-                        user.provider = SocialProvider.FACEBOOK;
-                        user.remote_id = Integer.parseInt(feedback.data.get("id"));
-                        user.app_id = InstanceID.getInstance(that).getId();
-                        //MyApplication.updateGoogleMessagingToken(that);
-                        Log.i(TAG, "Trying to login user: " + user);
-                        MyApplication.login(getApplicationContext(), user, token, accessToken);
-                        MyApplication.requestGcmToken(that);
-                        IntentsUtils.lastActivityBeforeLogin(that);
-                    }
+                RestClient.buildCall(call)
+                        //.onResponse(new AutoMergeCallback(user))
+                        .onResponse(new HttpCallback<RestFeedback>() {
+                            @Override
+                            public void successful(RestFeedback feedback) {
+                                try{
+                                    int userId = Integer.parseInt(feedback.data.get("id"));
+                                    User user = User.loadByRemoteId(User.class, userId);
+                                    if (user == null) user = new User();
 
-                    @Override
-                    public void onActionFail(RestFeedback feedback) {
-                        setProgressVisibility(false);
-                        Log.i(TAG, "User attempt to connect with wrong credential: server message: " + feedback.message);
-                    }
-                });
+                                    String token = feedback.data.get("token");
+                                    user.username = feedback.data.get("username");
+                                    user.provider_uid = feedback.data.get("social_id");
+                                    user.provider = SocialProvider.FACEBOOK;
+                                    user.remote_id = Integer.parseInt(feedback.data.get("id"));
+                                    user.app_id = InstanceID.getInstance(LoginActivity.this).getId();
+                                    //MyApplication.updateGoogleMessagingToken(LoginActivity.this);
+                                    Log.i(TAG, "Trying to login user: " + user);
+                                    MyApplication.login(getApplicationContext(), user, token, accessToken);
+                                    MyApplication.requestGcmToken(LoginActivity.this);
+                                    IntentsUtils.lastActivityBeforeLogin(LoginActivity.this);
+                                }
+                                catch (Exception ex){
+                                    Log.e(TAG, "Cannot parse server response for login: " + ex.getMessage());
+                                    Toast.makeText(LoginActivity.this, R.string.error_server_unavailable, Toast.LENGTH_LONG);
+                                }
+                            }
+
+                            @Override
+                            public void notSuccessful() {
+                                setProgressVisibility(false);
+                                Log.i(TAG, "User attempt to connect with wrong credential");
+                            }
+                        })
+                        .perform();
             }
 
             @Override

@@ -88,6 +88,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private Loader<List<Spot>> mSpotLoader;
     private View mSpotContainer;
     private AddressResultReceiver mAddressResultReceiver;
+    private LatLngBounds mSpotReachableBounds;
     //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
@@ -356,7 +357,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             if (gMap == null){
                 gMap = mapView.getMap();
             }
-            gMap.setIndoorEnabled(true);
             Location location = LocationManager.getLastLocation();
             if (location != null){
                 updateMapCenter(location);
@@ -369,6 +369,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void updateMapCenter(Location location){
+        mSpotReachableBounds = LocationManager.generateBoundsAroundLocation(location, ConfigurationProvider.rules().place_max_reachable);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
     }
 
@@ -436,6 +437,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         Log.v(TAG, "User location changed!");
+
         updateMapCenter(newLocation);
         requestReverseGeocoding(newLocation);
         if (mSpotLoader == null){
@@ -461,11 +463,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         public SpotAroundLoader(Context context) {
             super(context, 10, DataSyncAdapter.SYNC_TYPE_SPOT);
 
-            // TODO increase map bounds by 2*precision to be sure (=> prevent reloading when location change)
-            LatLngBounds bounds = gMap.getProjection().getVisibleRegion().latLngBounds;
-            this.query = Spot.queryByArea(bounds);
-            this.syncOption.getBundle()
-                    .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(bounds));
+            if (mSpotReachableBounds != null){
+                this.query = Spot.queryByArea(mSpotReachableBounds);
+                this.syncOption.getBundle()
+                        .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
+            }
         }
 
         @Override

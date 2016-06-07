@@ -6,7 +6,6 @@ import android.util.Log;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
-import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.callbacks.RestCallback;
@@ -56,12 +55,12 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     }
 
     public void clear(){
-        areaRequestHistory.clearAll();
+        if (areaRequestHistory != null) areaRequestHistory.clearAll();
     }
 
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
-        conditions.setTimeRange(ExploreMapFragment.getDataTimeRange());
+        conditions.setTimeRange(7200); // TODO cst
         conditions.setMainTags(true);
 
         if (filter != null){

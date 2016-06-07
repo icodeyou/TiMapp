@@ -391,16 +391,16 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
 
     public From getTagsQuery() {
         return new Select()
-                .from(Tag.class)
+                .from(EventTag.class)
                 .where("EventTag.Event = ?", this.getId())
-                .join(EventTag.class).on("Tag.Id = EventTag.Tag")
+                //.join(EventTag.class).on("Tag.Id = EventTag.Tag")
                 .orderBy("EventTag.CountRef DESC");
     }
     public void deleteTags() {
         new Delete().from(EventTag.class).where("EventTag.Event = ?", this.getId()).execute();
     }
 
-    public List<Tag> getTags() {
+    public List<EventTag> getTags() {
         return getTagsQuery().execute();
     }
 

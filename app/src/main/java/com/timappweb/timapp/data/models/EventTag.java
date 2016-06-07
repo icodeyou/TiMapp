@@ -41,7 +41,8 @@ public class EventTag extends MyModel {
     @Override
     public String toString() {
         return "EventTag{" +
-                "event=" + event +
+                "count_ref=" + count_ref +
+                ", event=" + event +
                 ", tag=" + tag +
                 '}';
     }
@@ -74,10 +75,12 @@ public class EventTag extends MyModel {
                     .executeSingle();
             // Insert if does not exists
             if (existingEventTag != null){
-                new Update(EventTag.class)
-                        .set("CountRef = CountRef + 1")
-                        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
-                        .execute();
+                existingEventTag.count_ref += 1;
+                existingEventTag.mySave();
+                //new Update(EventTag.class)
+                //        .set("CountRef = CountRef + 1")
+                //        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
+                //        .execute();
             }
             // Update existing record
             else{
@@ -86,5 +89,9 @@ public class EventTag extends MyModel {
         }
         ActiveAndroid.setTransactionSuccessful();
         ActiveAndroid.endTransaction();
+    }
+
+    public String getTagName() {
+        return tag != null ? tag.name : "";
     }
 }

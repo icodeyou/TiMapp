@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -31,6 +32,7 @@ import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.UserQuotaCallback;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -262,7 +264,7 @@ public class AddTagActivity extends BaseActivity{
             RestClient
                     .post(RestClient.API_KEY_EVENT_POST, eventPost)
                     .onResponse(new AutoMergeCallback(eventPost))
-                    .onResponse(new UserQuotaCallback(QuotaType.ADD_POST))
+                    .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
                     .onResponse(new HttpCallback() {
                         @Override
                         public void successful(Object feedback) {

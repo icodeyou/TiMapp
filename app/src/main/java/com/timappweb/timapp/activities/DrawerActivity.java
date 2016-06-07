@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.internal.NavigationMenuView;
@@ -17,6 +18,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,7 +36,7 @@ import com.timappweb.timapp.utils.location.LocationManager;
 //import android.support.design.widget.FloatingActionButton;
 
 
-public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, LocationManager.LocationListener {
     private static final String TAG = "DrawerActivity";
     /* ============================================================================================*/
     /* PROPERTIES */
@@ -47,14 +51,26 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private ExploreFragment exploreFragment;
 
     private SimpleFacebook mSimpleFacebook;
-    private OnLogoutListener onLogoutListener;
     private View fabContainer;
 
     private boolean backPressedOnce;
     private static int TIMELAPSE_BEFORE_BACK_EXIT = 2000;
+    private FrameLayout mFrame;
+    private View mWaitForLocationLayout = null;
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
+    }
+
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        if (mWaitForLocationLayout != null){
+            ((ViewGroup)mWaitForLocationLayout.getParent()).removeView(mWaitForLocationLayout);
+            mWaitForLocationLayout = null;
+        }
+        if (lastLocation == null){
+            //updateMapData();
+        }
     }
 
     enum FragmentId{
@@ -84,14 +100,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         //Import toolbar without calling function initToolbar, because of the toggle button
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        // mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        // Set up the ViewPager with the sections adapter.
-        //  mViewPager = (ViewPager) findViewById(R.remote_id.pager);
-        //  mViewPager.setAdapter(mSectionsPagerAdapter);
 
         // !important Init drawer
         this.initDrawer();
@@ -117,18 +127,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         //inflate header
         getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
 
-        // -----------------------------------------------------------------------------------------
-        setListeners();
-
-    }
-
-    private void setListeners() {
-        onLogoutListener = new OnLogoutListener() {
-            @Override
-            public void onLogout() {
-                Log.i(TAG, "You are logged out");
-            }
-        };
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
@@ -136,21 +135,30 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         super.onStart();
         LocationManager.start(this);
     }
+/*
+    private void updateMapData(){
+        if (LocationManager.hasLastLocation()){
+            if(exploreFragment != null && exploreFragment.getExploreMapFragment()!= null) {
+                exploreFragment.reloadMapData(); //Reload data
+                exploreFragment.getExploreMapFragment().updateFilterView(); //Set Filter view above map.
+            }
+        }
+    }*/
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        if(exploreFragment!=null && exploreFragment.getExploreMapFragment()!= null) {
-            exploreFragment.reloadMapData(); //Reload data
-            exploreFragment.getExploreMapFragment().updateFilterView(); //Set Filter view above map.
-        }
+        //updateMapData();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mSimpleFacebook = SimpleFacebook.getInstance(this);
+        if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
+            mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location, null);
+            mFrame.addView(mWaitForLocationLayout);
+        }
     }
 
     @Override
@@ -341,7 +349,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 break;
             case R.id.menu_item_logout:
                 IntentsUtils.logout(this);
-                mSimpleFacebook.logout(onLogoutListener);
+                mSimpleFacebook.logout(new OnLogoutListener() {
+                    @Override
+                    public void onLogout() {
+                        Log.i(TAG, "You are logged out");
+                    }
+                });
                 finish();
                 break;
             // DEV
@@ -394,9 +407,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         // Insert the fragment by replacing any existing fragment,
         // only if the asked fragment isn't the same as the current fragment
-        if (currentFragmentTAG != newFragmentTAG) {
+        //if (currentFragmentTAG != newFragmentTAG) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, newFragment, newFragmentTAG).commit();
-        }
+        //}
 
     }
 
