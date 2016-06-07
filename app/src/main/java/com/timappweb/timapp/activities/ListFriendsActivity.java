@@ -45,6 +45,7 @@ public class ListFriendsActivity extends BaseActivity{
         noFriendsView = findViewById(R.id.no_friends_layout);
         initAdapterListFriends();
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, new FriendsLoader());
+        mToolbar.setTitle(R.string.title_activity_list_friends);
     }
 
     private void initAdapterListFriends() {

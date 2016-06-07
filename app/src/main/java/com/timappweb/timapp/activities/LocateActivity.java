@@ -22,6 +22,7 @@ import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.QueryCondition;
@@ -42,7 +43,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     //Views
     private RecyclerView    rvPlaces;
     private View            buttonAddPlace;
-    private View            noConnectionView;
 
     // ProgressBar and ProgressDialog
     private View progressView;
@@ -63,12 +63,14 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
 
+        initToolbar(true);
+        mToolbar.setTitle(R.string.title_activity_locate);
+
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
         //noPlaceView = findViewById(R.id.layout_if_no_place);
         rvPlaces = (RecyclerView) findViewById(R.id.list_places);
         buttonAddPlace = findViewById(R.id.button_add_event);
-        noConnectionView = findViewById(R.id.no_connection_view);
 
         // Init variables
         eventsLoaded = false;
@@ -76,10 +78,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         setListeners();
         initAdapterPlaces();
 
-        int colorRes = ContextCompat.getColor(this, R.color.colorPrimaryDark);
-        initToolbar(false, colorRes);
-
-        mToolbar.setTitle(R.string.title_activity_locate);
     }
 
     @Override
@@ -160,41 +158,33 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         conditions.setUserLocation(location.getLatitude(), location.getLongitude());
 
         Call<List<Event>> call = RestClient.service().placeReachable(conditions.toMap());
-        call.enqueue(new RestCallback<List<Event>>() {
 
-            @Override
-            public void onResponse(Call<List<Event>> call, Response<List<Event>> response) {
-                super.onResponse(call, response);
-
-                if (response.isSuccessful()){
-                    List<Event> events = response.body();
-                    eventsLoaded = true;
-                    Log.d(TAG, "Loading " + events.size() + " viewPlace(s)");
-                    EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
-                    placeAdapter.clear();
-                    progressView.setVisibility(View.GONE);
-                    if (events.size() != 0) {
-                        placeAdapter.setData(events);
-                        //noPlaceView.setVisibility(View.GONE);
-                        rvPlaces.setVisibility(View.VISIBLE);
-                        buttonAddPlace.setVisibility(View.VISIBLE);
-                        placeAdapter.notifyDataSetChanged();
-                    } else {
-                        IntentsUtils.addPlace(LocateActivity.this);
-                        finish();
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback<List<Event>>() {
+                    @Override
+                    public void successful(List<Event> events) {
+                        eventsLoaded = true;
+                        Log.d(TAG, "Loading " + events.size() + " viewPlace(s)");
+                        EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
+                        placeAdapter.clear();
+                        if (events.size() != 0) {
+                            placeAdapter.setData(events);
+                            progressView.setVisibility(View.GONE);
+                            rvPlaces.setVisibility(View.VISIBLE);
+                            buttonAddPlace.setVisibility(View.VISIBLE);
+                            placeAdapter.notifyDataSetChanged();
+                        } else {
+                            IntentsUtils.addPlace(LocateActivity.this);
+                            finish();
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                super.onFailure(call, t);
-                if(!eventsLoaded) {
-                    progressView.setVisibility(View.GONE);
-                    noConnectionView.setVisibility(View.VISIBLE);
-                };
-            }
-        });
+                    @Override
+                    public void notSuccessful() {
+                        super.notSuccessful();
+                    }
+                })
+                .perform();
     }
 
     @Override

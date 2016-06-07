@@ -12,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
+// TODO DELETE THIS CLASS
 public class RestCallback<T> implements Callback<T> {
 
     private static final String TAG = "RestError";

@@ -234,7 +234,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void openAddPeopleActivity() {
-        IntentsUtils.addPeople(this, event);
+        IntentsUtils.inviteFriendToEvent(this, event);
     }
 
     private void initFragments() {

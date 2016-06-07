@@ -178,10 +178,10 @@ public class IntentsUtils {
         fragment.startActivityForResult(intent, REQUEST_TAGS);
     }
 
-    public static void addPeople(Activity activity, Event event) {
+    public static void inviteFriendToEvent(Activity activity, Event event) {
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable(IntentsUtils.KEY_EVENT, event);          // TODO use constant
+        extras.putSerializable(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }

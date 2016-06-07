@@ -26,12 +26,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class EventUsersAdapter
-        extends RecyclerView.Adapter<EventUsersAdapter.PlacePeopleViewHolder> {
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = "EventUsersAdapter";
 
     public class VIEW_TYPES {
-        public static final int UNDEFINED = 0;
+        public static final int PLACEHOLDER_TOP = 0;
         public static final int HERE = 1;
         public static final int COMING = 2;
         public static final int INVITED = 3;
@@ -65,52 +65,46 @@ public abstract class EventUsersAdapter
         return data.get(position);
     }
 
-
     public void clearSection(UserPlaceStatusEnum status) {
         this.data.clear(status);
     }
 
-
-
-    /*
-    public void addData(List<? extends PlaceUserInterface> data) {
-        for (PlaceUserInterface placeUser: data){
-            this.data.add(data.status, )
-        }
-    }*/
-
-
     @Override
-    public PlacePeopleViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_userplace, viewGroup, false);
-
         return new PlacePeopleViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final PlacePeopleViewHolder holder, final int position) {
-        Log.d(TAG, "::onBindViewHolder() -> " + position);
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        switch (getItemViewType(position)){
+            case VIEW_TYPES.COMING:
+            case VIEW_TYPES.HERE:
+            case VIEW_TYPES.INVITED:
+                PlacePeopleViewHolder peopleViewHolder = (PlacePeopleViewHolder) holder;
+                fillViewHolder(peopleViewHolder, (PlaceUserInterface) data.get(position));
+                break;
+        }
+    }
 
-        // switch (getItemViewType(position)){
-        // }
-        PlaceUserInterface placeUserInterface = data.get(position);
+    protected void fillViewHolder(PlacePeopleViewHolder peopleViewHolder, PlaceUserInterface placeUserInterface) {
         User user = placeUserInterface.getUser();
-        RecyclerView rvPostTags = holder.rvPostTags;
+        RecyclerView rvPostTags = peopleViewHolder.rvPostTags;
 
         if (user != null){
             Log.d(TAG, "User: " + user.getUsername());
             final String pic = user.getProfilePictureUrl();
-            if(pic !=null && holder.ivProfilePicture!=null) {
+            if(pic !=null && peopleViewHolder.ivProfilePicture!=null) {
                 Uri uri = Uri.parse(pic);
-                holder.ivProfilePicture.setImageURI(uri);
+                peopleViewHolder.ivProfilePicture.setImageURI(uri);
             }
 
             String username = user.getUsername();
-            holder.tvUsername.setText(username);
+            peopleViewHolder.tvUsername.setText(username);
         }
 
-        holder.tvTime.setText(placeUserInterface.getTimeCreated());
+        peopleViewHolder.tvTime.setText(placeUserInterface.getTimeCreated());
 
         if (placeUserInterface.getTags()==null) {
             rvPostTags.setVisibility(View.GONE);
@@ -125,9 +119,10 @@ public abstract class EventUsersAdapter
             rvPostTags.setAdapter(htAdapter);
 
             //Listener Horizontal Scroll View
+            /*
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                     new HorizontalTagsTouchListener(context, mItemClickListener, position);
-            rvPostTags.setOnTouchListener(mHorizontalTagsTouchListener);
+            rvPostTags.setOnTouchListener(mHorizontalTagsTouchListener);*/
 
             //Set LayoutManager
             GridLayoutManager manager_savedTags = new GridLayoutManager(context, 1, LinearLayoutManager.HORIZONTAL, false);
@@ -150,11 +145,9 @@ public abstract class EventUsersAdapter
         data.clear();
     }
 
-
     public void setOnItemClickListener(final OnItemAdapterClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
-
 
     public class PlacePeopleViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
