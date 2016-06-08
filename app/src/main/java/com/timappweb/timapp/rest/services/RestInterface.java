@@ -22,8 +22,8 @@ public interface RestInterface {
     @POST("/api/{model}/add.json")
     Call<JsonObject> post(@Path("model") String model, @Body JsonObject data);
 
-    @PUT("/api/{model}/edit.json")
-    Call<JsonObject> put(@Path("model") String model, @Body JsonObject data);
+    @PUT("/api/{model}/edit/{id}.json")
+    Call<JsonObject> put(@Path("model") String model, @Path("id") long id, @Body JsonObject data);
 
     @GET("/api/{model}.json")
     <T> Call<PaginatedResponse<T>> paginate(@Path("model") String model);
