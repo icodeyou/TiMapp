@@ -62,7 +62,7 @@ public class HttpCallbackManager<T> implements Callback<T> {
 
                     switch (response.code()){
                         case HttpURLConnection.HTTP_BAD_REQUEST:
-                            RestValidationError errors = (RestValidationError) parseErrorBody(response);
+                            RestValidationError errors = parseErrorBody(response, RestValidationError.class);
                             callback.badRequest(errors);
                             break;
                         case HttpURLConnection.HTTP_FORBIDDEN:
@@ -98,15 +98,16 @@ public class HttpCallbackManager<T> implements Callback<T> {
 
 
     // ---------------------------------------------------------------------------------------------
-    public static <T> T parseErrorBody(Response response){
+    public static <T> T parseErrorBody(Response response, Class<T> classOfT){
 
         if (response.errorBody() != null) {
             Converter<ResponseBody, T> errorConverter =
-                    RestClient.instance().getRetrofit().responseBodyConverter(RestValidationError.class, new Annotation[0]);
+                    RestClient.instance().getRetrofit().responseBodyConverter(classOfT, new Annotation[0]);
             try {
+                Log.v(TAG, "Received errorBody=" + response.errorBody().string());
                 return errorConverter.convert(response.errorBody());
             } catch (IOException e) {
-                Log.e(TAG, "Cannot convert error body from rest response");
+                Log.e(TAG, "Cannot convert error body from rest response: " + e.getMessage());
                 e.printStackTrace();
             }
         }

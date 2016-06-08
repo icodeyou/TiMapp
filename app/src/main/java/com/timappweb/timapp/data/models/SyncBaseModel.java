@@ -266,8 +266,4 @@ public abstract class SyncBaseModel extends MyModel {
 
     public boolean hasRemoteId() { return this.remote_id != null;}
 
-
-    public String getRestUrl() {
-        return "";
-    }
 }

@@ -22,18 +22,19 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
+import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
-import com.timappweb.timapp.rest.callbacks.UserQuotaCallback;
+import com.timappweb.timapp.rest.mappers.AddEventPostMapper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
@@ -55,7 +56,7 @@ public class AddTagActivity extends BaseActivity{
     //others
     private SearchAndSelectTagManager searchAndSelectTagManager;
     private View selectedTagsView;
-    private Post eventPost;
+    private EventPost eventEventPost;
     private Button confirmButton;
 
     @Override
@@ -63,8 +64,8 @@ public class AddTagActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
 
         this.currentEvent = IntentsUtils.extractEvent(getIntent());
-        this.eventPost = new Post();
-        this.eventPost.setLocation(LocationManager.getLastLocation());
+        this.eventEventPost = new EventPost();
+        this.eventEventPost.setLocation(LocationManager.getLastLocation());
 
         if (this.currentEvent == null){
             Log.d(TAG, "Event is null");
@@ -252,25 +253,25 @@ public class AddTagActivity extends BaseActivity{
     private class OnPostTagButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            eventPost.setTags(searchAndSelectTagManager.getSelectedTags());
-            eventPost.place_id = currentEvent.remote_id;
+            eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
+            eventEventPost.place_id = currentEvent.remote_id;
             // Validating user input
-            if (!eventPost.validateForSubmit()) {
+            if (!eventEventPost.validateForSubmit()) {
                 Toast.makeText(AddTagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
                 return;
             }
-            Log.d(TAG, "Submitting post: " + eventPost);
+            Log.d(TAG, "Submitting eventPost: " + eventEventPost);
 
             RestClient
-                    .post(RestClient.API_KEY_EVENT_POST, eventPost)
-                    .onResponse(new AutoMergeCallback(eventPost))
+                    .post(ResourceUrlMapping.MODEL_EVENT_POST, AddEventPostMapper.toJson(eventEventPost))
+                    .onResponse(new AutoMergeCallback(eventEventPost))
                     .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
                     .onResponse(new HttpCallback() {
                         @Override
                         public void successful(Object feedback) {
-                            Log.i(TAG, "Post has been saved with id: " + eventPost.remote_id);
-                            eventPost.deepSave();
-                            EventTag.incrementCountRef(currentEvent, eventPost.getTags());
+                            Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
+                            eventEventPost.deepSave();
+                            EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
                             setResult(RESULT_OK);
                             finish();
                         }

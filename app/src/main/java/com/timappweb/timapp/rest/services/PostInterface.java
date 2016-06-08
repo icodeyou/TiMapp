@@ -1,8 +1,6 @@
 package com.timappweb.timapp.rest.services;
 
-import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.Post;
-import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.EventPost;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,11 +12,11 @@ import retrofit2.http.PUT;
  */
 public interface PostInterface {
 
-    @POST("/api/posts/add.json")
-    Call<Post> post(@Body Post data);
+    @POST("/api/eventPosts/add.json")
+    Call<EventPost> post(@Body EventPost data);
 
-    @PUT("/api/posts/edit.json")
-    Call<Post> put(@Body Post data);
+    @PUT("/api/eventPosts/edit.json")
+    Call<EventPost> put(@Body EventPost data);
 
 
 }

@@ -30,6 +30,10 @@ public abstract class EventUsersAdapter
 
     private static final String TAG = "EventUsersAdapter";
 
+    public EventUsersAdapter() {
+
+    }
+
     public class VIEW_TYPES {
         public static final int PLACEHOLDER_TOP = 0;
         public static final int HERE = 1;
@@ -137,6 +141,7 @@ public abstract class EventUsersAdapter
 
     @Override
     public int getItemViewType(int position) {
+        if (!data.hasSection()) return -1;
         SectionItem sectionItem = (SectionItem) data.getSectionFromPosition(position);
         return sectionItem.getViewType();
     }

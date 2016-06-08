@@ -227,4 +227,8 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
     public UserQuota getQuota(int quotaTypeId) {
         return UserQuota.get(this.getId(), quotaTypeId);
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

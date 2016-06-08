@@ -20,13 +20,15 @@ public class FormErrorsCallback extends HttpCallback {
 
     @Override
     public void badRequest(RestValidationError validationError) {
-        RestValidationErrorParser errors = validationError.getErrors();
-        if (errors != null) {
-            try {
-                Method method = viewBinding.getClass().getMethod("setErrors", errors.getClass());
-                method.invoke(viewBinding, errors);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (validationError != null){
+            RestValidationErrorParser errors = validationError.getErrors();
+            if (errors != null) {
+                try {
+                    Method method = viewBinding.getClass().getMethod("setErrors", errors.getClass());
+                    method.invoke(viewBinding, errors);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

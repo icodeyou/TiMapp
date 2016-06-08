@@ -3,6 +3,7 @@ package com.timappweb.timapp.rest.callbacks;
 import android.util.Log;
 
 import com.activeandroid.Model;
+import com.google.common.reflect.Reflection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,6 +11,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.utils.ReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -57,7 +59,7 @@ public class AutoMergeCallback extends HttpCallback<JsonElement>{
         for (Map.Entry<String,JsonElement> entry: jsonObject.entrySet()){
             String fieldName = entry.getKey();
             // First we need to find the corresponding field in our model
-            Field field = getFieldRecursively(currentObject.getClass(), fieldName);
+            Field field = ReflectionHelper.getFieldRecursively(currentObject.getClass(), fieldName);
             // We did not find any field corresponding
             if (field == null){
                 Log.v(TAG, "Cannot find corresponding field: " + fieldName);
@@ -151,35 +153,6 @@ public class AutoMergeCallback extends HttpCallback<JsonElement>{
                 e.printStackTrace();
             }
         }
-    }
-
-    private static Field getFieldRecursively(Class type, String fieldName) {
-
-        try {
-            // Check if model has the corresponding field
-            Field field = type.getDeclaredField(fieldName);
-            Expose annotation = field.getAnnotation(Expose.class);
-            if (!annotation.deserialize()){
-                Log.v(TAG, "The field '" + type.getSimpleName() + "." + fieldName + "' is not exposed to deserialization");
-                return null;
-            }
-            return field;
-        } catch (NoSuchFieldException e) {
-            Log.v(TAG, "Field '" + type.getSimpleName() + "." + fieldName +"' does not exist -> searching annotations");
-            // Get by annotation
-            for (Field tmpField : type.getFields()) {
-                if (tmpField.isAnnotationPresent(SerializedName.class)) {
-                    if (tmpField.getAnnotation(SerializedName.class).value().equals(fieldName)){
-                        return tmpField;
-                    }
-                }
-            }
-        }
-        // Search in super class
-        if (type.getSuperclass() != null) {
-            return getFieldRecursively(type.getSuperclass(), fieldName);
-        }
-        return null;
     }
 
 }

@@ -5,14 +5,12 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
@@ -23,7 +21,6 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.DistanceHelper;
@@ -33,7 +30,6 @@ import com.timappweb.timapp.utils.location.LocationManager;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 public class LocateActivity extends BaseActivity implements LocationManager.LocationListener {
 
@@ -105,9 +101,9 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
                 }
                 // We know that lastLocation is define because places are loaded only when location is defined
                 Event event = eventsAdapter.getItem(position);
-                Post post = new Post();
-                post.longitude = MyApplication.getLastLocation().getLongitude();
-                post.latitude = MyApplication.getLastLocation().getLatitude();*/
+                EventPost eventPost = new EventPost();
+                eventPost.longitude = MyApplication.getLastLocation().getLongitude();
+                eventPost.latitude = MyApplication.getLastLocation().getLatitude();*/
                 Event event = eventsAdapter.getItem(position);
                 IntentsUtils.viewSpecifiedEvent(that, event);
             }

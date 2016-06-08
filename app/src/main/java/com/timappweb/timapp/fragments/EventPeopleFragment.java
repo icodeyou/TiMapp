@@ -23,11 +23,11 @@ import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.callbacks.RestCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
@@ -36,7 +36,6 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class EventPeopleFragment extends EventBaseFragment {
@@ -131,26 +130,20 @@ public class EventPeopleFragment extends EventBaseFragment {
 
 
     private void loadPosts() {
-        Call<List<Post>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
-        RestCallback callback = new RestCallback<List<Post>>() {
-            @Override
-            public void onResponse200(Response<List<Post>> response) {
-                List<Post> list = response.body();
-                placeUsersAdapter.addData(UserPlaceStatusEnum.HERE, list);
-            }
+        Call<List<EventPost>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback<List<EventPost>>() {
+                    @Override
+                    public void successful(List<EventPost> list) {
+                        placeUsersAdapter.addData(UserPlaceStatusEnum.HERE, list);
+                    }
 
-            @Override
-            public void onFailure(Call c, Throwable t) {
-                super.onFailure(c, t);
-                noConnectionView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
-            }
-        };
-        //asynCalls.add(ApiCallFactory.build(call, callback, this));
+                    @Override
+                    public void notSuccessful() {
+                        noConnectionView.setVisibility(View.VISIBLE);
+                    }
+                })
+                .perform();
     }
 
 

@@ -118,7 +118,7 @@ public class Spot extends SyncBaseModel implements ClusterItem {
      */
     public void setCategory(SpotCategory category) {
         this.category = category;
-        if (category != null){
+        if (category != null && category.remote_id != null){
             this.category_id = category.remote_id;
         }
     }
@@ -188,6 +188,9 @@ public class Spot extends SyncBaseModel implements ClusterItem {
 
     public boolean hasCategory(SpotCategory category) {
         return (this.category != null && this.category.equals(category)) || (this.category == null && category == null);
+    }
+    public boolean hasCategory() {
+        return this.category != null;
     }
 
     public boolean isNew(){

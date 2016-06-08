@@ -9,10 +9,10 @@ import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 public class PostTag extends MyModel {
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Post", uniqueGroups = "unique_tag",
+    @Column(name = "EventPost", uniqueGroups = "unique_tag",
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
-    public Post post;
+    public EventPost eventPost;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "Tag", uniqueGroups = "unique_tag",

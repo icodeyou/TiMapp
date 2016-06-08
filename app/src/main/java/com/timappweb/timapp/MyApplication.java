@@ -21,7 +21,6 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RestCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
@@ -127,7 +126,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
         AbstractSyncAdapter.initializeSyncAdapter(this);
 
-        RestCallback.init(getApplicationContext());
+        //RestCallback.init(getApplicationContext());
 
         ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
             @Override

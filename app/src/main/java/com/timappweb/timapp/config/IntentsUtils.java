@@ -28,12 +28,11 @@ import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.fragments.BaseFragment;
 import com.timappweb.timapp.utils.SerializeHelper;
-import com.timappweb.timapp.utils.location.LocationManager;
 
 public class IntentsUtils {
 
@@ -124,14 +123,14 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void viewPost(Activity activity, Post post) {
+    public static void viewPost(Activity activity, EventPost eventPost) {
         Intent intent = new Intent(activity, PostActivity.class);
-        intent.putExtra("post", post);          // TODO use constant
+        intent.putExtra("eventPost", eventPost);          // TODO use constant
         activity.startActivity(intent);
     }
     public static void viewPost(Context activity, int postId) {
         Intent intent = new Intent(activity, PostActivity.class);
-        intent.putExtra("post.id", postId);          // TODO use constant
+        intent.putExtra("eventPost.id", postId);          // TODO use constant
         activity.startActivity(intent);
     }
 
@@ -308,12 +307,12 @@ public class IntentsUtils {
         return extras.getStringArray(IntentsUtils.VIEW_PICTURE_LIST);
     }
 
-    public static Post extractPost(Intent intent) {
+    public static EventPost extractPost(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return null;
         }
-        return (Post) extras.getSerializable("post");
+        return (EventPost) extras.getSerializable("eventPost");
     }
 
     public static User extractUser(Intent intent) {

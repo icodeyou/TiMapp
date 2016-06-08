@@ -2,7 +2,7 @@ package com.timappweb.timapp.utils;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
@@ -161,7 +161,7 @@ public class DataLoaderTest {
         @Override
         public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
             System.out.println("Loading point " + point);
-            request.data.add(new Post());
+            request.data.add(new EventPost());
             countLoadCall++;
         }
 

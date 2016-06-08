@@ -1,7 +1,7 @@
 package com.timappweb.timapp.utils;
 
 
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
 
@@ -23,8 +23,8 @@ public class RestApiTest {
     @Test
     public void testViewPost() throws IOException {
         WebServiceInterface service = RestClient.service();
-        retrofit2.Call<Post> call = service.viewPost(1);
-        Response<Post> response = call.execute();
+        retrofit2.Call<EventPost> call = service.viewPost(1);
+        Response<EventPost> response = call.execute();
         assertNotEquals(response.body(), null);
 
     }

@@ -38,10 +38,6 @@ public class RestClient {
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
 
-    public static final String API_KEY_EVENT = "places";
-    public static final String API_KEY_EVENT_POST = "posts";
-
-
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
     private static HttpCallback defaultHttpCallback;
@@ -197,12 +193,6 @@ public class RestClient {
     public static HttpCallManager post(String url, JsonObject object) {
         Call call = RestClient.restService().post(url, object);
         return buildCall(call);
-    }
-
-    public static HttpCallManager post(String url, Object object) {
-        // TODO find a more efficient way to cast object in JsonObject
-        String str = instance().getGson().toJson(object);
-        return post(url, instance().getGson().fromJson(str, JsonObject.class));
     }
 
     /**

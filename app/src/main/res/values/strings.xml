@@ -33,7 +33,7 @@
     <!--<string name="city">Paris</string>
     <string name="country">France</string>-->
 
-    <!-- Add Post UserActivity -->
+    <!-- Add EventPost UserActivity -->
     <string name="add_comment_message">Type here</string>
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
@@ -129,7 +129,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_pic">There isn\'t any picture here yet.</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
-    <string name="text_last_post">Last post</string>
+    <string name="text_last_post">Last eventPost</string>
     <string name="button_add_tags">Tags</string>
     <string name="button_add_pic">Photos</string>
     <string name="button_add_people">People</string>
@@ -163,7 +163,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_load_posts">We cannot load the posts.\nCheck your internet connection.</string>
 
     <!-- TOASTS -->
-    <string name="cannot_add_coming_status">Coming Failed. Please Try again later</string><string name="create_second_post_delay">You\'ve already added a post a moment ago. Please wait before adding a new one!</string>
+    <string name="cannot_add_coming_status">Coming Failed. Please Try again later</string><string name="create_second_post_delay">You\'ve already added a eventPost a moment ago. Please wait before adding a new one!</string>
     <string name="create_second_place_delay">You\'ve already added a event a moment ago. Please wait before adding a new one!</string>
     <string name="cannot_add_more_friends">You can\'t add more than 10 friends</string>
 

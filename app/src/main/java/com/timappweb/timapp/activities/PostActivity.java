@@ -9,22 +9,21 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.rest.callbacks.RestCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class PostActivity extends BaseActivity {
 
     private static final String TAG = "PostActivity" ;
-    private Post currentPost = null;
+    private EventPost currentEventPost = null;
     private ArrayAdapter<String> tagsAdapter;
 
     @Override
@@ -41,24 +40,24 @@ public class PostActivity extends BaseActivity {
         listViewTags.setAdapter(tagsAdapter);
         //------------------------------------------------------------------------------------------
         // 2 cases:
-        //  - we gave the full post => we just display data
-        //  - we gave the post remote_id => we need to request the server to have extra informations
-        currentPost = (Post) getIntent().getSerializableExtra("post");
-        int postId = (int) getIntent().getExtras().getInt("post.id", -1);
+        //  - we gave the full eventPost => we just display data
+        //  - we gave the eventPost remote_id => we need to request the server to have extra informations
+        currentEventPost = (EventPost) getIntent().getSerializableExtra("eventPost");
+        int postId = (int) getIntent().getExtras().getInt("eventPost.id", -1);
 
-        if (currentPost == null && postId <= 0){
-            Log.e(TAG, "The post is null");
+        if (currentEventPost == null && postId <= 0){
+            Log.e(TAG, "The eventPost is null");
             IntentsUtils.home(this);
             return;
         }
         else if (postId > 0){
-            Log.d(TAG, "Loading post from post id " + postId);
+            Log.d(TAG, "Loading eventPost from eventPost id " + postId);
             this.loadPost(postId);
         }
         else {
-            Log.d(TAG, "Using post given in extras " + currentPost);
+            Log.d(TAG, "Using eventPost given in extras " + currentEventPost);
             this.fetchDataToView();
-            if (!currentPost.hasTagsLoaded()){
+            if (!currentEventPost.hasTags()){
                 this.loadTagsForPost();
             }
         }
@@ -68,35 +67,29 @@ public class PostActivity extends BaseActivity {
     }
 
     private void loadTagsForPost() {
-        Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentPost.getMarkerId());
-        call.enqueue(new RestCallback<List<Tag>>() {
-
-            @Override
-            public void onResponse(Call<List<Tag>> call, Response<List<Tag>> response) {
-                super.onResponse(call, response);
-                if (response.isSuccessful()){
-                    List<Tag> tags = response.body();
-                    currentPost.setTags(tags);
-                    fetchDataToView();
-                }
-            }
-        });
+        Call<List<Tag>> call = RestClient.service().loadTagsFromPost(currentEventPost.getMarkerId());
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback<List<Tag>>() {
+                    @Override
+                    public void successful(List<Tag> tags) {
+                        currentEventPost.setTags(tags);
+                        fetchDataToView();
+                    }
+                })
+                .perform();
     }
 
     private void loadPost(int postId) {
-        Call<Post> call = RestClient.service().viewPost(currentPost.getMarkerId());
-        call.enqueue(new RestCallback<Post>() {
-
-            @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
-                super.onResponse(call,response);
-                if (response.isSuccessful()){
-                    Post post = response.body();
-                    currentPost = post;
-                    fetchDataToView();
-                }
-            }
-        });
+        Call<EventPost> call = RestClient.service().viewPost(currentEventPost.getMarkerId());
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback<EventPost>() {
+                    @Override
+                    public void successful(EventPost eventPost) {
+                        currentEventPost = eventPost;
+                        fetchDataToView();
+                    }
+                })
+                .perform();
     }
 
     private void fetchDataToView(){
@@ -104,12 +97,12 @@ public class PostActivity extends BaseActivity {
         TextView textViewUsername = (TextView) findViewById(R.id.post_username);
         TextView textViewPostName = (TextView) findViewById(R.id.post_name);
 
-        textViewCreated.setText(currentPost.getPrettyTimeCreated());
-        textViewUsername.setText(currentPost.getUsername());
-        textViewPostName.setText(currentPost.getAddress());
+        textViewCreated.setText(currentEventPost.getPrettyTimeCreated());
+        textViewUsername.setText(currentEventPost.getUsername());
+        textViewPostName.setText(currentEventPost.getAddress());
 
-        if (currentPost.hasTagsLoaded()){
-            tagsAdapter.addAll(currentPost.getTagsToStringArray());
+        if (currentEventPost.hasTags()){
+            tagsAdapter.addAll(currentEventPost.getTagsToStringArray());
             tagsAdapter.notifyDataSetChanged();
         }
 
@@ -117,9 +110,9 @@ public class PostActivity extends BaseActivity {
 
     public void onProfileCLick(View view) {
         Log.d(TAG, "PostActivity.onProfileCLick()");
-        if (currentPost.user != null){
-            Log.d(TAG, "Viewing profile user: " + currentPost.user);
-            IntentsUtils.profile(this, currentPost.user);
+        if (currentEventPost.user != null){
+            Log.d(TAG, "Viewing profile user: " + currentEventPost.user);
+            IntentsUtils.profile(this, currentEventPost.user);
         }
     }
 }

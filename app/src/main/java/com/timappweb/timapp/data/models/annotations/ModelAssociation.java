@@ -10,6 +10,7 @@ import com.timappweb.timapp.data.models.UserTag;
  */
 public @interface ModelAssociation {
 
+    String remoteForeignKey() default ""; // TODO
 
     enum SaveStrategy {
         REPLACE,

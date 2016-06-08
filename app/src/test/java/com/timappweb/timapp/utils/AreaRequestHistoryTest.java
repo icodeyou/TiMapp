@@ -2,7 +2,7 @@ package com.timappweb.timapp.utils;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaIterator;
@@ -114,7 +114,7 @@ public class AreaRequestHistoryTest {
     public void hasInCache() throws Exception {
         LatLngBounds bounds = new LatLngBounds(new LatLng(-1, 3), new LatLng(2, 7));
 
-        LinkedList<Post> data = new LinkedList<>();
+        LinkedList<EventPost> data = new LinkedList<>();
         IntPoint p1 = new IntPoint(2, 4);
         history.areas.put(p1, new AreaRequestItem(10, data));
         assertEquals(true, history.areas.containsKey(p1));
