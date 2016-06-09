@@ -14,11 +14,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -251,7 +253,16 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
         //After set an adapter to the ViewPager
         mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
-
+        Drawable drawable = null;
+        try {
+            drawable = ResourcesCompat.getDrawable(getResources(), event.getCategory().getBigImageResId(), null);
+        } catch (UnknownCategoryException e) {
+            drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_else, null);
+        }
+        mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
+        mMaterialViewPager.setImageDrawable(drawable, 0);
+        /*
+        Change header image and color
         mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
@@ -280,7 +291,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
                 return null;
             }
-        });
+        });*/
 
         //initToolbar(false);
         Toolbar toolbar = mMaterialViewPager.getToolbar();
