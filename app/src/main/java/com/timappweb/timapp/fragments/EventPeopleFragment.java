@@ -183,7 +183,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         mPlaceUsersAdapter.setAnimationOnScrolling(true);
         mPlaceUsersAdapter.setAnimationOnReverseScrolling(true);
         mPlaceUsersAdapter.setAutoCollapseOnExpand(false);
-        mPlaceUsersAdapter.setAutoScrollOnExpand(true);
+        mPlaceUsersAdapter.setAutoScrollOnExpand(false);
         mPlaceUsersAdapter.setRemoveOrphanHeaders(false);
 
         mRecyclerView.setLayoutManager(new SmoothScrollLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
