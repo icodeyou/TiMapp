@@ -1,9 +1,8 @@
-package com.timappweb.timapp.rest.mappers;
+package com.timappweb.timapp.rest.io.serializers;
 
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.util.List;
 

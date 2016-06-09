@@ -80,9 +80,18 @@ public class ConfigurationProvider {
                 '}';
     }
 
-    public static SpotCategory findSpotCategoriesByRemoteId(int remoteId) {
+    public static SpotCategory getSpotCategoryByRemoteId(long remoteId) {
         for (SpotCategory category: spotCategories()){
             if (category.remote_id == remoteId){
+                return category;
+            }
+        }
+        return null;
+    }
+
+    public static EventCategory getEventCategoryByRemoteId(long id) {
+        for (EventCategory category: eventCategories()){
+            if (category.remote_id == id){
                 return category;
             }
         }

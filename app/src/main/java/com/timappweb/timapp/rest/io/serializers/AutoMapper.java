@@ -1,19 +1,17 @@
-package com.timappweb.timapp.rest.mappers;
+package com.timappweb.timapp.rest.io.serializers;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.ReflectionHelper;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * Created by stephane on 6/8/2016.
+ *
+ * NOT DONE.
  */
 public class AutoMapper {
 

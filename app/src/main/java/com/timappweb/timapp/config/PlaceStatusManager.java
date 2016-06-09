@@ -12,7 +12,7 @@ import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.controllers.HttpCallManager;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.utils.location.LocationManager;

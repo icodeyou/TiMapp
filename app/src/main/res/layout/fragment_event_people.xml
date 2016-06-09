@@ -20,13 +20,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.timappweb.timapp.views.RefreshableRecyclerView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_people"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:saveEnabled="false"/>
                 <!--android:listSelector="@android:color/transparent"-->
+
             </com.timappweb.timapp.views.SwipeRefreshLayout>
+
+            <include layout="@layout/sticky_header_layout"/>
 
             <TextView
                 style="@style/NoDataView"

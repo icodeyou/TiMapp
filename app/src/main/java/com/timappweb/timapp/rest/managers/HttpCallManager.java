@@ -1,7 +1,7 @@
-package com.timappweb.timapp.rest.controllers;
+package com.timappweb.timapp.rest.managers;
 
+import com.timappweb.timapp.rest.callbacks.HttpCallbackBase;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.HttpCallbackManager;
 import com.timappweb.timapp.rest.callbacks.RequestErrorCallback;
 
 import retrofit2.Call;
@@ -11,12 +11,12 @@ import retrofit2.Call;
  */
 public class HttpCallManager {
 
-    private final HttpCallbackManager<Object> callbackManager;
+    private final HttpCallbackBase<Object> callbackManager;
     private final Call call;
 
     public HttpCallManager(Call call) {
         this.call = call;
-        this.callbackManager = new HttpCallbackManager<>();
+        this.callbackManager = new HttpCallbackBase<>();
     }
 
     public HttpCallManager onResponse(HttpCallback httpCallback) {

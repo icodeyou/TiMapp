@@ -15,14 +15,11 @@ public class BaseFragment extends Fragment{
 
 
     private static final String TAG = "BaseFragment";
-    protected List<Call> asynCalls = new LinkedList<>();
+    protected static final String ARG_COLUMN_COUNT = "column_count";
 
     @Override
     public void onPause() {
         Log.d(TAG, "ExploreTagsFragment::onPause() -> cancelling api calls");
         super.onPause();
-        for(Call call: asynCalls){
-            call.cancel();
-        }
     }
 }

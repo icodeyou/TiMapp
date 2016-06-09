@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/adapters/SubItem.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/adapters/flexibleadataper/AbstractModelItem.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/Authenticator.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/AuthenticatorService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/ConfigSyncAdapter.java" charset="windows-1252" />
@@ -9,6 +11,8 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/DataSyncService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/UserSyncAdapter.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/timappweb/timapp/sync/UserSyncService.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/recycler_child_item.xml" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/recycler_expandable_header_item.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/authenticator.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_config.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/xml/syncadapter_data.xml" charset="windows-1252" />

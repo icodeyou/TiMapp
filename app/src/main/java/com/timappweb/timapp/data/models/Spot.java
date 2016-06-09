@@ -17,7 +17,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "Spot")
@@ -135,7 +134,7 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     public SpotCategory getCategory() {
         if (category == null){
             if (category_id != 0){
-                category = ConfigurationProvider.findSpotCategoriesByRemoteId(category_id);
+                category = ConfigurationProvider.getSpotCategoryByRemoteId(category_id);
             }
         }
         return category;
@@ -200,6 +199,10 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     public void setLocation(Location location) {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+    }
+
+    public void setCategory(long id) {
+        this.category = ConfigurationProvider.getSpotCategoryByRemoteId(id);
     }
 }
 

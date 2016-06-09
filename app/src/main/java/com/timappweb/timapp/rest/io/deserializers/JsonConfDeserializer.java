@@ -1,4 +1,4 @@
-package com.timappweb.timapp.rest;
+package com.timappweb.timapp.rest.io.deserializers;
 
 import android.util.Log;
 
@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
@@ -18,8 +17,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
-public class JsonConfDeserializer implements JsonDeserializer<SyncConfig>
-{
+public class JsonConfDeserializer implements JsonDeserializer<SyncConfig> {
 
     private static final String TAG = "JsonConfDeserializer";
 

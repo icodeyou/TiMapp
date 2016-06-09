@@ -10,10 +10,17 @@ import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.controllers.HttpCallManager;
+import com.timappweb.timapp.rest.io.interceptors.LogRequestInterceptor;
+import com.timappweb.timapp.rest.io.interceptors.SessionRequestInterceptor;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.rest.io.deserializers.EventDeserializer;
+import com.timappweb.timapp.rest.io.deserializers.JsonConfDeserializer;
+import com.timappweb.timapp.rest.io.deserializers.SpotDeserializer;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.RestInterface;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
@@ -37,6 +44,8 @@ public class RestClient {
 
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
+    private static final long HTTP_PARAM_READ_TIMEOUT = 40;
+    private static final long HTTP_PARAM_CONNECTION_TIMEOUT = 60;
 
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
@@ -97,14 +106,16 @@ public class RestClient {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
                 .addInterceptor(new SessionRequestInterceptor())
                 .addInterceptor(new LogRequestInterceptor())
-                .readTimeout(40, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS);
+                .readTimeout(HTTP_PARAM_READ_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(HTTP_PARAM_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
         this.httpClient = httpClientBuilder.build();
 
 
         this.gson =  new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
+                .registerTypeAdapter(Event.class, new EventDeserializer())
+                .registerTypeAdapter(Spot.class, new SpotDeserializer())
                 .create();
 
         builder = new Retrofit.Builder()

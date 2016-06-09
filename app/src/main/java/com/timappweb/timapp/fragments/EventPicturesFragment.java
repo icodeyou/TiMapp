@@ -3,6 +3,7 @@ package com.timappweb.timapp.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +31,6 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
@@ -40,6 +40,7 @@ import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.io.File;
@@ -52,7 +53,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 
 
-public class EventPicturesFragment extends EventBaseFragment {
+public class EventPicturesFragment extends EventBaseFragment implements LocationManager.LocationListener {
 
     private static final String TAG = "EventPicturesFragment";
 
@@ -71,7 +72,7 @@ public class EventPicturesFragment extends EventBaseFragment {
     private static final long MAX_UPDATE_DELAY = 3600 * 1000;
     
     private SwipeRefreshLayout mSwipeLayout;
-    private FloatingActionButton postButton;
+    private FloatingActionButton mPostButton;
     private RefreshableRecyclerView mRecyclerView;
     private RecyclerViewMaterialAdapter mAdapter;
 
@@ -90,9 +91,9 @@ public class EventPicturesFragment extends EventBaseFragment {
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(context, PICUTRE_GRID_COLUMN_NB));
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
-        postButton = (FloatingActionButton) root.findViewById(R.id.post_button);
+        mPostButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
-        postButton.setOnClickListener(new View.OnClickListener() {
+        mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_CAMERA);
@@ -267,6 +268,25 @@ public class EventPicturesFragment extends EventBaseFragment {
             return ;
         }
     }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocationManager.addOnLocationChangedListener(this);
+    }
+    @Override
+    public void onPause() {
+        super.onResume();
+        LocationManager.removeLocationListener(this);
+    }
+
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        mPostButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
+    }
+
 
 
 

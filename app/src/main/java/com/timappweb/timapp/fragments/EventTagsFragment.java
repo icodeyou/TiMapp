@@ -3,6 +3,7 @@ package com.timappweb.timapp.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.google.android.gms.maps.LocationSource;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
@@ -27,12 +29,13 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.util.List;
 
 
-public class EventTagsFragment extends EventBaseFragment {
+public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener {
 
     private static final String TAG = "EventTagsFragment";
     private static final long MAX_UPDATE_DELAY = 3600 * 1000;
@@ -100,6 +103,22 @@ public class EventTagsFragment extends EventBaseFragment {
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocationManager.addOnLocationChangedListener(this);
+    }
+    @Override
+    public void onPause() {
+        super.onResume();
+        LocationManager.removeLocationListener(this);
+    }
+
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        postButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
     // =============================================================================================

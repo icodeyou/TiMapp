@@ -1,10 +1,7 @@
 package com.timappweb.timapp.utils;
 
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.timappweb.timapp.configsync.SyncConfig;
-import com.timappweb.timapp.rest.JsonConfDeserializer;
 
 import java.lang.reflect.Modifier;
 

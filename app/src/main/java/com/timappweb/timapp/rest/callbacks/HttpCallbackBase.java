@@ -1,4 +1,4 @@
-package com.timappweb.timapp.rest;
+package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
 
@@ -21,9 +21,9 @@ import retrofit2.Response;
 /**
  * Created by stephane on 6/6/2016.
  */
-public class HttpCallbackManager<T> implements Callback<T> {
+public class HttpCallbackBase<T> implements Callback<T> {
 
-    private static final String TAG = "HttpCallbackManager";
+    private static final String TAG = "HttpCallbackBase";
     private List<HttpCallback<T>> callbacks = new LinkedList<>();
     private Response<T> response = null;
 

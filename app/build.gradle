@@ -44,6 +44,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
+        maven {url = "http://dl.bintray.com/davideas/maven" }
     }
 }
 
@@ -106,6 +107,9 @@ dependencies {
         transitive = true
     }
     compile 'com.github.ksoichiro:android-observablescrollview'
+
+    compile "eu.davidea:flipview:1.1.1"
+    compile 'eu.davidea:flexible-adapter:5.0.0-b6@aar'
 
 }
 

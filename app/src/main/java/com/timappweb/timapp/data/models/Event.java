@@ -444,4 +444,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     public boolean hasCategory() {
         return event_category != null;
     }
+
+    public void setCategory(long categoryId) {
+        this.event_category = ConfigurationProvider.getEventCategoryByRemoteId(categoryId);
+    }
 }
