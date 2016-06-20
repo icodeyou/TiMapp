@@ -8,12 +8,12 @@
     <!--<color name="colorAccent">#476e64</color>-->
     <color name="colorAccent">#d3655d</color>
     <!--<color name="colorSecondary">#ffefc6</color>-->
-    <color name="colorSecondary">#f4fbff</color>
+    <color name="colorSecondary">#2b3778</color>
     <color name="colorSecondaryDark">#2b3778</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
-    <color name="TEST">#F1E5DE</color>
+    <color name="TEST">#f44437</color>
     <color name="transparent">#00000000</color>
-    <color name="background">#f6fcff</color>
+    <color name="background">#fffffb</color>
     <!--<color name="background">#f6efef</color>-->
     <color name="background_secondary">#eff4f6</color>
     <color name="background_dark">#111111</color>
@@ -38,6 +38,7 @@
     <color name="category_selected_edges">#6a9898</color>
     <color name="grey_map">#e9e5dc</color>
     <color name="color_hint">#74bb302e</color>
+    <color name="color_hint_secondary">#e7e7e7</color>
     <color name="background_list_tags">#64ffffff</color>
     <color name="background_list_main_tags">#64fff5f4</color>
     <color name="usertag_text_color">#de5249</color>
@@ -53,6 +54,8 @@
     <color name="text_cluster">#b41e41</color>-->
     <color name="background_add_event_checked">#398c1e1e</color>
     <color name="background_add_event_unchecked">#298c1e1e</color>
+    <color name="form_title">@color/Black</color>
+    <color name="smoke">#3dffffff</color>
 
     <!-- Buttons -->
     <color name="background_top_invitation">#1d1d1d</color>

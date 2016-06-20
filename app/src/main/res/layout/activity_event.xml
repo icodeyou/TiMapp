@@ -33,7 +33,7 @@
             app:viewpager_pagerTitleStrip="@layout/event_pager_tabs"
             />
 
-        <!--<include layout="@layout/toolbar_transparent" />-->
+        <!--<include layout="@layout/toolbar_transparent_layout" />-->
 
 
     </RelativeLayout>

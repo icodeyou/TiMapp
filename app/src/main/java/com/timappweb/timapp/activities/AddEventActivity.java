@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.AddEventCategoriesAdapter;
+import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoryPagerAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
@@ -64,15 +65,16 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private static final float ZOOM_LEVEL_CENTER_MAP = 14.0f;
 
     private static final int LOADER_ID_SPOT_AROUND = 0;
+    private static final int NUMBER_OF_TOP_CATEGORIES = 3;
 
     private String TAG = "AddEventActivity";
 
     private InputMethodManager imm;
 
     //Views
-    private BackCatchEditText eventNameET;
-    RecyclerView categoriesRV;
-    AddEventCategoriesAdapter categoriesAdapter;
+    private EditText eventNameET;
+    private RecyclerView categoriesRV;
+    private EventCategoriesAdapter categoriesAdapter;
     private EventCategory eventCategorySelected;
     private View createButton;
     private View progressView;
@@ -85,7 +87,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private GoogleMap gMap;
     private ActivityAddEventBinding mBinding;
     //private View mButtonAddPicture;
-    private View mBtnAddSpot;
+    private Button mBtnAddSpot;
     private ClusterManager<Spot> mClusterManagerSpot;
     private Loader<List<Spot>> mSpotLoader;
     private View mSpotContainer;
@@ -101,11 +103,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_event);
 
         this.initToolbar(true);
+        this.setStatusBarColor(R.color.colorSecondary);
         this.extractSpot(savedInstanceState);
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        eventNameET = (BackCatchEditText) findViewById(R.id.event_name);
+        eventNameET = (EditText) findViewById(R.id.event_name);
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
         eventNameET.setFilters(filters);
@@ -129,7 +132,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         initKeyboard();
         setListeners();
         initAdapterAndManager();
-        initViewPager();
+        //initViewPager();
         initLocationListener();
         setButtonValidation();
         initEvents();
@@ -174,9 +177,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void initAdapterAndManager() {
-        categoriesAdapter = new AddEventCategoriesAdapter(this);
+        categoriesAdapter = new EventCategoriesAdapter(this);
         categoriesRV.setAdapter(categoriesAdapter);
-        GridLayoutManager manager = new SpanningGridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false);
+        GridLayoutManager manager = new GridLayoutManager(this,
+                NUMBER_OF_TOP_CATEGORIES,LinearLayoutManager.VERTICAL,false);
         categoriesRV.setLayoutManager(manager);
     }
 
@@ -192,7 +196,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void initViewPager() {
-        viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
+        //viewPager = (ViewPager) findViewById(R.id.addplace_viewpager);
         final EventCategoryPagerAdapter eventCategoryPagerAdapter = new EventCategoryPagerAdapter(this);
         viewPager.setAdapter(eventCategoryPagerAdapter);
         viewPager.setOffscreenPageLimit(1);
@@ -252,8 +256,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         return viewPager;
     }
 
-    // ----------------------------------------------------------------------------------------------
-    //Inner classes
+    public int getNumberOfTopCategories() {
+        return NUMBER_OF_TOP_CATEGORIES;
+    }
 
     //----------------------------------------------------------------------------------------------
     //GETTER and SETTERS
@@ -289,13 +294,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             }
         });
 
-        eventNameET.setHandleDismissingKeyboard(new BackCatchEditText.HandleDismissingKeyboard() {
+        /*eventNameET.setHandleDismissingKeyboard(new BackCatchEditText.HandleDismissingKeyboard() {
             @Override
             public void dismissKeyboard() {
                 imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
                 eventNameET.clearFocus();
             }
-        });
+        });*/
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,7 +373,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             if (gMap == null){
                 gMap = mapView.getMap();
             }
-            gMap.setIndoorEnabled(true);
             Location location = LocationManager.getLastLocation();
             if (location != null){
                 updateMapCenter(location);
@@ -390,6 +394,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         gMap = mapView.getMap();
         gMap.setIndoorEnabled(true);
         gMap.setMyLocationEnabled(true);
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);
+        gMap.getUiSettings().setScrollGesturesEnabled(false);
+        gMap.getUiSettings().setRotateGesturesEnabled(false);
+        gMap.getUiSettings().setTiltGesturesEnabled(false);
         setUpClusterer();
     }
 

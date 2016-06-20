@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
@@ -15,217 +16,138 @@
             name="address"
             type="String"></variable>
     </data>
-<ScrollView
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        tools:context=".AddSpotActivity"
-        android:background="@color/background_light">
-
-        <include layout="@layout/toolbar"></include>
-
-        <LinearLayout
-                style="@style/formGroup">
-                <LinearLayout
-                    style="@style/formLabelGroup">
-                    <ImageView
-                        style="@style/formIconGroup"
-                        android:src="@drawable/ic_title_dark"/>
-                    <TextView
-                        style="@style/formLabel"
-                        android:text="Category"/>
-                </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/addplace_viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="175dp"/>
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_marginTop="5dp"
-                        android:id="@+id/rv_categories"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp" />
-                </FrameLayout>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/formGroup">
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_title_dark"/>
-                <TextView
-                    style="@style/formLabel"
-                    android:text="Name"/>
-            </LinearLayout>
-            <com.timappweb.timapp.views.BackCatchEditText
-                android:id="@+id/event_name"
-                style="@style/formEditText"
-                android:hint="@string/hint_place_name"
-                android:text="@={event.name}"/>
-            <TextView
-                style="@style/RestErrorMessage"
-                android:visibility='@{errors.has("Places.name") ? View.VISIBLE : View.GONE}'
-                android:text='@{errors.get("Places.name")}'
-                tools:text="This name is not valid"/>
-        </LinearLayout>
-
-        <View style="@style/Divider"></View>
-
-        <LinearLayout
-            style="@style/formGroup">
-
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_comment_dark"/>
-
-                <TextView
-                    style="@style/formLabel"
-                    android:text="@string/formAddEventLabelDescription"/>
-            </LinearLayout>
-
-
-            <EditText
-                android:id="@+id/comment_edit_text"
-                style="@style/formMultilineText"
-                android:hint="@string/hint_write_description"
-                android:text="@={event.description}"/>
-
-            <TextView
-                style="@style/RestErrorMessage"
-                android:visibility='@{errors.has("Places.description") ? View.VISIBLE : View.GONE}'
-                android:text='@{errors.get("Places.description")}'
-                tools:text="This description is not valid"
-                />
-
-        </LinearLayout>
-        <View style="@style/Divider"></View>
-
-        <LinearLayout
-            style="@style/formGroup">
-
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_location"/>
-                <TextView
-                    style="@style/formLabel"
-                    android:text="Location"/>
-                <!--
-                <EditText
-                    android:id="@+id/event_location"
-                    style="@style/formEditText"
-                    android:hint="@string/hint_event_location"/>-->
-            </LinearLayout>
-
-            <include layout="@layout/layout_spot"
-                bind:spot="@{event.spot}"
-                android:id="@+id/spot_container"></include>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ProgressBar
-                    style="@style/imageIcon"
-                    android:layout_gravity="center"
-                    android:visibility="@{event.hasAddress() || address != null ? View.GONE : View.VISIBLE}"/>
-
-                <TextView
-                    style="@style/TextInfo"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:singleLine="false"
-                    android:text="@{event.hasAddress() ? event.getAddress() : (address != null ? address : @string/loading_address)}"
-                    tools:text="182 washington street, Manhatan, New York"/>
-            </LinearLayout>
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/map_min_height" />
-
-            <Button
-                android:id="@+id/button_add_spot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/formAddEventButtonAddSpot"/>
-        </LinearLayout>
-        <!--
-        <LinearLayout
-            style="@style/formGroup">
-
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_camera"/>
-                <TextView
-                    style="@style/formLabel"
-                    android:text="@string/formAddEventLabelPicture"/>
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/button_take_picture"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:src="@drawable/ic_camera"/>
-        </LinearLayout>
-        -->
-        <!--
-        <LinearLayout
-            style="@style/formGroup">
-            <ImageView
-                style="@style/formIconGroup"
-                android:src="@drawable/ic_clock"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    style="@style/formLabel"
-                    android:text="Dates"/>
-
-                <EditText
-                    android:id="@+id/hours_field"
-                    style="@style/formEditText"
-                    android:hint="Start and end date"/>
-            </LinearLayout>
-
-        </LinearLayout>-->
-
-        <LinearLayout
-            android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="gone"
+            android:scrollbars="none"
             android:background="@color/background">
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context=".AddSpotActivity">
 
-        <View style="@style/Divider"></View>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/colorSecondary">
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/event_name"
+                            style="@style/whiteFormEditText"
+                            app:met_base_color="@color/white"
+                            android:hint="@string/hint_place_name"
+                            android:text="@={event.name}"/>
+                    </android.support.v7.widget.Toolbar>
 
-        <Button
-            android:id="@+id/create_button"
-            style="@style/pageSubmitButton"
-            android:text="Post"/>
+                    <LinearLayout
+                        android:id="@+id/rv_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp">
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_marginTop="5dp"
+                            android:id="@+id/rv_categories"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"/>
+                        <ImageButton
+                            android:id="@+id/more_button"
+                            android:layout_width="80dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ellipsis"
+                            android:contentDescription="@string/more"
+                            android:drawablePadding="5dp"
+                            android:theme="@style/BlueButton"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/formGroup">
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/comment_edit_text"
+                        style="@style/formMultilineText"
+                        android:hint="@string/hint_write_description"
+                        android:text="@={event.description}"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/formGroup">
+
+                    <include layout="@layout/layout_spot"
+                        bind:spot="@{event.spot}"
+                        android:id="@+id/spot_container"></include>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/map_min_height">
+                        <com.google.android.gms.maps.MapView
+                            android:id="@+id/map"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:background="@color/smoke">
+                            <ProgressBar
+                                style="@style/imageIcon"
+                                android:layout_gravity="center"
+                                android:visibility="@{event.hasAddress() || address != null ? View.GONE : View.VISIBLE}"/>
+
+                            <TextView
+                                style="@style/TextInfo"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:singleLine="false"
+                                android:text="@{event.hasAddress() ? event.getAddress() : (address != null ? address : @string/loading_address)}"
+                                tools:text="182 washington street, Manhatan, New York"/>
+                        </LinearLayout>
+                        <Button
+                            android:id="@+id/button_add_spot"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:drawableLeft="@drawable/pin_white"
+                            android:drawableStart="@drawable/pin_white"
+                            android:text="@string/formAddEventButtonAddSpot"
+                            android:theme="@style/BlueButton"/>
+                    </RelativeLayout>
 
 
+                </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/progress_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:background="@color/background">
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/create_button"
+                    style="@style/pageSubmitButton"
+                    android:text="Post"/>
+
+            </LinearLayout>
+
+        </ScrollView>
     </LinearLayout>
-
-</ScrollView>
 </layout>

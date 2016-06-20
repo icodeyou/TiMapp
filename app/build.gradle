@@ -13,7 +13,7 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3 "
 
     defaultConfig {
         applicationId "com.timappweb.timapp"
@@ -106,6 +106,8 @@ dependencies {
         transitive = true
     }
     compile 'com.github.ksoichiro:android-observablescrollview'
+
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
 
 }
 

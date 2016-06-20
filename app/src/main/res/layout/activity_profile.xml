@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/toolbar"/>
+            <include layout="@layout/toolbar_layout"/>
 
             <include layout="@layout/no_connection_view"
                 android:background="@color/background"

@@ -206,7 +206,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
     <string name="unknown_category">Unknown category</string>
-    <string name="hint_write_description">Other information</string>
+    <string name="hint_write_description">Description</string>
     <string name="iamhere">I\'m here !</string>
     <string name="iamcoming">I\'m coming !</string>
     <string name="please_wait_location">Please wait while we get your location</string>
@@ -230,4 +230,5 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="event_organizer">Organised by</string>
     <string name="event_popularity">Popularity</string>
     <string name="event_description">Description</string>
+    <string name="more">More</string>
 </resources>

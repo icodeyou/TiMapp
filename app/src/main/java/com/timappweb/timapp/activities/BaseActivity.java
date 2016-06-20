@@ -3,8 +3,10 @@ package com.timappweb.timapp.activities;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -14,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
@@ -80,6 +84,14 @@ public class BaseActivity extends AppCompatActivity {
         //final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
         //upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         //getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    }
+
+    protected void setStatusBarColor(int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, color));
+        }
     }
 
     protected void setSearchview(Menu menu) {

@@ -9,7 +9,7 @@
     tools:context=".FilterActivity">
 
     <!-- TOOLBAR -->
-    <include layout="@layout/toolbar_transparent"/>
+    <include layout="@layout/toolbar_transparent_layout"/>
 
         <!-- Searchview is in Action Bar -->
 

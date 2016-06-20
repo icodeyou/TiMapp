@@ -51,9 +51,12 @@
             android:orientation="horizontal"
             android:gravity="left"
             android:visibility="visible">
+
             <ImageView
                 style="@style/imageIcon"
-                android:src="@drawable/ic_direction_light"/>
+                android:src="@drawable/distance"
+                android:id="@+id/imageView" />
+
             <ProgressBar
                 style="@style/formIconGroup"
                 android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}"/>

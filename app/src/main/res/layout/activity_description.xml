@@ -8,7 +8,7 @@
     android:background="@color/background">
 
     <!--<include android:remote_id="@+remote_id/toolbar_layout"
-        layout="@layout/toolbar" />-->
+        layout="@layout/toolbar_layout" />-->
 
     <EditText
         android:id="@+id/comment_edit_text"
