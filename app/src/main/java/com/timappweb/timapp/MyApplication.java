@@ -2,7 +2,6 @@ package com.timappweb.timapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -18,11 +17,10 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
@@ -30,14 +28,11 @@ import com.timappweb.timapp.sync.ConfigSyncAdapter;
 import com.timappweb.timapp.sync.UserSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
-import com.timappweb.timapp.utils.Util;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
-
-import java.util.List;
 
 import retrofit2.Call;
 
@@ -74,7 +69,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public void checkToken(){
-        auth.checkToken(this, new OnTokenListener() {
+        auth.checkToken(new OnTokenListener() {
             @Override
             public void onTokenValid() {
                 Log.i(TAG, "Token is still valid.");
@@ -130,6 +125,8 @@ public class MyApplication extends com.activeandroid.app.Application {
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
         AbstractSyncAdapter.initializeSyncAdapter(this);
+
+        //RestCallback.init(getApplicationContext());
 
         ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
             @Override
@@ -224,17 +221,19 @@ public class MyApplication extends com.activeandroid.app.Application {
     public static void updateGoogleMessagingToken(Context context, String token) {
         Log.i(TAG, "Updating token for GCM: " + token);
         Call<RestFeedback> call = RestClient.service().updateGoogleMessagingToken(token);
-        call.enqueue(new RestFeedbackCallback(context) {
-            @Override
-            public void onActionSuccess(RestFeedback feedback) {
-                Log.d(TAG, "Update token success");
-            }
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void successful(Object feedback) {
+                        Log.d(TAG, "Update token success");
+                    }
 
-            @Override
-            public void onActionFail(RestFeedback feedback) {
-                Log.d(TAG, "Update token fail");
-            }
-        });
+                    @Override
+                    public void notSuccessful() {
+                        Log.e(TAG, "Update token fail");
+                    }
+                })
+                .perform();
     }
 
     public static void requestGcmToken(Context context) {

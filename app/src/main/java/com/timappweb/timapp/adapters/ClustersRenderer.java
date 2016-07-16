@@ -827,7 +827,7 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
 //        markerOptions.icon(descriptor);
 //
 //        super.onBeforeClusterRendered(cluster, markerOptions);
-//        // Draw multiple posts.
+//        // Draw multiple eventPosts.
 //        // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
 //
 //

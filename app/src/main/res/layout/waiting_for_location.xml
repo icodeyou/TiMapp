@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:id="@+id/layout_waiting_for_location"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ProgressBar
+        android:layout_gravity="center"
+        android:layout_width="@dimen/loader_big"
+        android:layout_height="@dimen/loader_big" />
+    <TextView
+        style="@style/NoDataView"
+        android:text="@string/waiting_for_location"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:textColor="@color/textDark"
+        android:visibility="visible"/>
+</LinearLayout>

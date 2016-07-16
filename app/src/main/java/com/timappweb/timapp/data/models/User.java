@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "User")
-public class User extends SyncBaseModel implements Serializable, PlaceUserInterface {
+public class User extends SyncBaseModel implements PlaceUserInterface {
     private static final String TAG = "UserEntity" ;
 
     // =============================================================================================
@@ -226,5 +226,9 @@ public class User extends SyncBaseModel implements Serializable, PlaceUserInterf
 
     public UserQuota getQuota(int quotaTypeId) {
         return UserQuota.get(this.getId(), quotaTypeId);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -6,10 +6,23 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.io.interceptors.LogRequestInterceptor;
+import com.timappweb.timapp.rest.io.interceptors.SessionRequestInterceptor;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.rest.io.deserializers.EventDeserializer;
+import com.timappweb.timapp.rest.io.deserializers.JsonConfDeserializer;
+import com.timappweb.timapp.rest.io.deserializers.SpotDeserializer;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.services.RestInterface;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
 import com.timappweb.timapp.configsync.SyncConfig;
 
@@ -31,10 +44,12 @@ public class RestClient {
 
     private static final String TAG = "RestClient";
     private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
-
+    private static final long HTTP_PARAM_READ_TIMEOUT = 40;
+    private static final long HTTP_PARAM_CONNECTION_TIMEOUT = 60;
 
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
+    private static HttpCallback defaultHttpCallback;
     private final Application app;
     private final OkHttpClient httpClient;
     private final String baseUrl;
@@ -64,9 +79,21 @@ public class RestClient {
 
     public static void init(Application app, String ep, AuthProvider authProvider){
         conn = new RestClient(app, ep, authProvider);
+        defaultHttpCallback = new HttpCallback() {
+            @Override
+            public void error() {
+                Log.e(TAG, "Error ");
+            }
+
+            @Override
+            public void notFound() {
+                Log.e(TAG, "Not found ");
+            }
+        };
     }
 
     protected WebServiceInterface service;
+    protected RestInterface restService;
 
     private static Retrofit.Builder builder = null;
 
@@ -79,14 +106,16 @@ public class RestClient {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
                 .addInterceptor(new SessionRequestInterceptor())
                 .addInterceptor(new LogRequestInterceptor())
-                .readTimeout(40, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS);
+                .readTimeout(HTTP_PARAM_READ_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(HTTP_PARAM_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
         this.httpClient = httpClientBuilder.build();
 
 
         this.gson =  new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
+                .registerTypeAdapter(Event.class, new EventDeserializer())
+                .registerTypeAdapter(Spot.class, new SpotDeserializer())
                 .create();
 
         builder = new Retrofit.Builder()
@@ -106,6 +135,7 @@ public class RestClient {
     public void createService(){
         this.retrofit = builder.build();
         this.service =  retrofit.create(WebServiceInterface.class);
+        this.restService = retrofit.create(RestInterface.class);
     }
 
     public <T> T createService(Class<T> service){
@@ -113,6 +143,9 @@ public class RestClient {
     }
 
 
+    public RestInterface getRestService(){
+        return this.restService;
+    }
 
     public WebServiceInterface getService(){
         return this.service;
@@ -132,20 +165,20 @@ public class RestClient {
 
         // Add new Flag to start new UserActivity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Call<RestFeedback> logoutCall = this.service.logout();
+        RestClient.buildCall(logoutCall)
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void notSuccessful() {
+                        Log.e(TAG, "Cannot logout user on server side...");
+                    }
 
-        Call<RestFeedback> call = this.service.logout();
-            call.enqueue(new RestFeedbackCallback(app.getApplicationContext()) {
-                @Override
-                public void onActionSuccess(RestFeedback feedback) {
-                    Log.d(TAG, "User logged out on server side");
-                }
-
-                @Override
-                public void onActionFail(RestFeedback feedback) {
-                    Log.e(TAG, "Cannot logout user on server side...");
-                }
-            });
-
+                    @Override
+                    public void successful(Object feedback) {
+                        Log.d(TAG, "User logged out on server side");
+                    }
+                })
+                .perform();
         // Staring Login UserActivity
         app.startActivity(i);
     }
@@ -157,10 +190,44 @@ public class RestClient {
     /**
      * Check login on the server side thanks to the token
      */
-    public void checkToken(RestFeedbackCallback callback) {
+    public HttpCallManager checkToken() {
         Log.i(TAG, "Checking user token...");
         Call<RestFeedback> call = this.service.checkToken();
-        call.enqueue(callback);
+        return RestClient.buildCall(call);
+    }
+
+
+    public static RestInterface restService() {
+        return conn.getRestService();
+    }
+
+    public static HttpCallManager post(String url, JsonObject object) {
+        Call call = RestClient.restService().post(url, object);
+        return buildCall(call);
+    }
+
+    /**
+     * Update the model
+     * @param url
+     * @param model
+     * @return
+     */
+    public static HttpCallManager updateModel(String url, final SyncBaseModel model) {
+        Call call = RestClient.restService().get(url, model.getRemoteId());
+        HttpCallManager manager = buildCall(call);
+        manager.onResponse(new AutoMergeCallback(model));
+        manager.onResponse(new HttpCallback<JsonObject>() {
+            @Override
+            public void successful(JsonObject feedback) {
+                model.deepSave();
+            }
+        });
+        return manager.perform();
+    }
+
+    public static HttpCallManager buildCall(Call call) {
+        return new HttpCallManager(call)
+                .onResponse(defaultHttpCallback);
     }
 
 

@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -16,29 +15,30 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventTag;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
+import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
+import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
-
-import retrofit2.Call;
 
 public class AddTagActivity extends BaseActivity{
 
@@ -56,16 +56,16 @@ public class AddTagActivity extends BaseActivity{
     //others
     private SearchAndSelectTagManager searchAndSelectTagManager;
     private View selectedTagsView;
-    private Post currentPost;
+    private EventPost eventEventPost;
     private Button confirmButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.currentEvent = IntentsUtils.extractPlace(getIntent());
-        this.currentPost = new Post();
-        this.currentPost.setLocation(LocationManager.getLastLocation());
+        this.currentEvent = IntentsUtils.extractEvent(getIntent());
+        this.eventEventPost = new EventPost();
+        this.eventEventPost.setLocation(LocationManager.getLastLocation());
 
         if (this.currentEvent == null){
             Log.d(TAG, "Event is null");
@@ -248,53 +248,35 @@ public class AddTagActivity extends BaseActivity{
 
     //----------------------------------------------------------------------------------------------
     //Inner classes
-    private class AddPostCallback extends RestFeedbackCallback {
 
-        private Post post;
-        private Event event;
-        // TODO get post from server instead. (in case tags are in a black list)
-
-        AddPostCallback(Context context, Post post, Event event) {
-            super(context);
-            this.post = post;
-            this.event = event;
-        }
-
-        @Override
-        public void onActionSuccess(RestFeedback feedback) {
-            int id = Integer.valueOf(feedback.data.get("id"));
-            int placeId = Integer.valueOf(feedback.data.get("place_id"));
-            Log.i(TAG, "Post for event " + placeId + " has been saved with id: " + id);
-
-            // Caching data
-            post.place_id = placeId;
-            post.created = Util.getCurrentTimeSec();
-            QuotaManager.instance().add(QuotaType.ADD_POST);
-            setResult(RESULT_OK);
-            finish();
-        }
-
-        @Override
-        public void onActionFail(RestFeedback feedback) {
-            Toast.makeText(this.context, feedback.message, Toast.LENGTH_LONG).show();
-        }
-
-    }
 
     private class OnPostTagButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            currentPost.setTags(searchAndSelectTagManager.getSelectedTags());
-            currentPost.place_id = currentEvent.remote_id;
+            eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
+            eventEventPost.place_id = currentEvent.remote_id;
             // Validating user input
-            if (!currentPost.validateForSubmit()) {
+            if (!eventEventPost.validateForSubmit()) {
                 Toast.makeText(AddTagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
                 return;
             }
-            Log.d(TAG, "Submitting post: " + currentPost);
+            Log.d(TAG, "Submitting eventPost: " + eventEventPost);
 
-            Call<RestFeedback> call = RestClient.service().addPost(currentPost);
-            call.enqueue(new AddPostCallback(AddTagActivity.this, currentPost, currentEvent));
+            RestClient
+                    .post(ResourceUrlMapping.MODEL_EVENT_POST, AddEventPostMapper.toJson(eventEventPost))
+                    .onResponse(new AutoMergeCallback(eventEventPost))
+                    .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
+                    .onResponse(new HttpCallback() {
+                        @Override
+                        public void successful(Object feedback) {
+                            Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
+                            eventEventPost.deepSave();
+                            EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    })
+                    .perform();
         }
     }
 }

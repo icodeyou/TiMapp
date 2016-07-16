@@ -26,7 +26,7 @@ public class TwoDimArray<SectionType extends TwoDimArray.SectionItem> {
         }
     }
 
-    public void  create(SectionType item){
+    public void create(SectionType item){
         this.sections.add(item);
     }
 
@@ -38,7 +38,7 @@ public class TwoDimArray<SectionType extends TwoDimArray.SectionItem> {
         }
     }
 
-    public void addOne(Object key, Object data){
+    public <T> void addOne(Object key, T data){
         SectionItem item = getSection(key);
         if (item != null) item.add(data);
     }
@@ -88,6 +88,9 @@ public class TwoDimArray<SectionType extends TwoDimArray.SectionItem> {
         this.getSection(id).clear();
     }
 
+    public boolean hasSection() {
+        return sections != null && sections.size() != 0;
+    }
 
     public interface SectionItem<T>{
         T getItem(int position);

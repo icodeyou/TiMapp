@@ -1,24 +1,11 @@
 package com.timappweb.timapp.config;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.util.Log;
-
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.configsync.RESTRemoteSync;
-import com.timappweb.timapp.configsync.RemotePersistenceManager;
-import com.timappweb.timapp.configsync.SharedPrefSync;
-import com.timappweb.timapp.configsync.SyncConfigManager;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.services.ConfigInterface;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -93,9 +80,18 @@ public class ConfigurationProvider {
                 '}';
     }
 
-    public static SpotCategory findSpotCategoriesByRemoteId(int remoteId) {
+    public static SpotCategory getSpotCategoryByRemoteId(long remoteId) {
         for (SpotCategory category: spotCategories()){
             if (category.remote_id == remoteId){
+                return category;
+            }
+        }
+        return null;
+    }
+
+    public static EventCategory getEventCategoryByRemoteId(long id) {
+        for (EventCategory category: eventCategories()){
+            if (category.remote_id == id){
                 return category;
             }
         }

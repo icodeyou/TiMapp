@@ -45,12 +45,13 @@ public class ExploreFragment extends Fragment{
         return getExploreMapFragment().getHistory();
     }
 
+    /*
     public void reloadMapData(){
         if(getExploreMapFragment()!=null) {
             dataLoader.clear();
             getExploreMapFragment().updateMapData();
         }
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

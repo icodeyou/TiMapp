@@ -14,7 +14,7 @@ import java.io.Serializable;
  * Created by stephane on 4/5/2016.
  */
 @Table(name = "SpotCategory")
-public class SpotCategory extends SyncBaseModel implements Serializable {
+public class SpotCategory extends SyncBaseModel {
 
     // =============================================================================================
 

@@ -21,12 +21,9 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
@@ -118,13 +115,13 @@ public class EditProfileActivity extends BaseActivity{
             //OnEditorAction returns false if we close the keyboard
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId==EditorInfo.IME_ACTION_NEXT) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
                     String value = editText.getText().toString();
 
                     boolean isTagValid = horizontalTagsAdapter.tryAddData(value);
                     horizontalTagsAdapter.notifyDataSetChanged();
 
-                    if(isTagValid) {
+                    if (isTagValid) {
                         setViewsAndCounter();
                     }
                     return true;
@@ -137,19 +134,21 @@ public class EditProfileActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 Map<String, String> data = new HashMap<>();
+                // TODO
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
-                call.enqueue(new RestFeedbackCallback(context) {
-                    @Override
-                    public void onActionSuccess(RestFeedback feedback) {
-                        Toast.makeText(getApplicationContext(), "Your profile has been saved", Toast.LENGTH_LONG).show();
-                        finishActivityResult();
-                    }
+                RestClient.buildCall(call)
+                        .onResponse(new HttpCallback() {
+                            @Override
+                            public void successful(Object feedback) {
+                                Toast.makeText(getApplicationContext(), R.string.profile_saved, Toast.LENGTH_LONG).show();
+                                finishActivityResult();
+                            }
 
-                    @Override
-                    public void onActionFail(RestFeedback feedback) {
-                        Toast.makeText(getApplicationContext(), feedback.message, Toast.LENGTH_LONG).show();
-                    }
-                });
+                            @Override
+                            public void notSuccessful() {
+                                Toast.makeText(getApplicationContext(), R.string.cannot_save_your_profile, Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
 

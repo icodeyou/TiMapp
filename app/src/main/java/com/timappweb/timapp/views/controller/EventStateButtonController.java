@@ -9,6 +9,7 @@ import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.listeners.BinaryActionListener;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 /**
@@ -29,41 +30,37 @@ public class EventStateButtonController extends ActivableButtonController {
 
     @Override
     public boolean performActivate() {
-        PlaceStatusManager.instance().add(mContext, mEvent, mStatus, new BinaryActionListener() {
-            @Override
-            public void onSuccess() {
-                commitChange();
-            }
+        PlaceStatusManager.instance().add(mContext, mEvent, mStatus)
+            .onResponse(new HttpCallback() {
+                @Override
+                public void successful(Object feedback) {
+                    commitChange();
+                }
 
-            @Override
-            public void onFailure() {
-                rollbackChange();
-            }
+                @Override
+                public void notSuccessful() {
+                    rollbackChange();
+                }
 
-            @Override
-            public void onFinish() {}
-
-        });
+            });
         return true;
     }
 
     @Override
     public boolean cancelActivate() {
-        PlaceStatusManager.instance().add(mContext, mEvent, UserPlaceStatusEnum.HERE, new BinaryActionListener() {
-            @Override
-            public void onSuccess() {
-                commitChange();
-            }
+        PlaceStatusManager.instance().add(mContext, mEvent, UserPlaceStatusEnum.HERE)
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void successful(Object feedback) {
+                        commitChange();
+                    }
 
-            @Override
-            public void onFailure() {
-                rollbackChange();
-            }
+                    @Override
+                    public void notSuccessful() {
+                        rollbackChange();
+                    }
 
-            @Override
-            public void onFinish() {}
-
-        });
+                });
         return true;
     }
 

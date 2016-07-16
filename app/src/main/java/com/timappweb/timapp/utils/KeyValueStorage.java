@@ -3,7 +3,6 @@ package com.timappweb.timapp.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
-import com.timappweb.timapp.rest.RestClient;
 
 /**
  * Created by stephane on 4/21/2016.

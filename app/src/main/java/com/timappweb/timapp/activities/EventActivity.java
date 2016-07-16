@@ -14,23 +14,22 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.EventInformationFragment;
@@ -90,7 +89,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.event = IntentsUtils.extractPlace(getIntent());
+        this.event = IntentsUtils.extractEvent(getIntent());
         eventId = IntentsUtils.extractPlaceId(getIntent());
         if (event == null && eventId <= 0){
             Log.e(TAG, "Trying to view an invalid event --> redirect to home");
@@ -237,7 +236,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void openAddPeopleActivity() {
-        IntentsUtils.addPeople(this, event);
+        IntentsUtils.inviteFriendToEvent(this, event);
     }
 
     private void initFragments() {
@@ -254,7 +253,16 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
         //After set an adapter to the ViewPager
         mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
-
+        Drawable drawable = null;
+        try {
+            drawable = ResourcesCompat.getDrawable(getResources(), event.getCategory().getBigImageResId(), null);
+        } catch (UnknownCategoryException e) {
+            drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_else, null);
+        }
+        mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
+        mMaterialViewPager.setImageDrawable(drawable, 0);
+        /*
+        Change header image and color
         mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
@@ -283,7 +291,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
                 return null;
             }
-        });
+        });*/
 
         //initToolbar(false);
         Toolbar toolbar = mMaterialViewPager.getToolbar();

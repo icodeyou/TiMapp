@@ -6,37 +6,39 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.adapters.EventUsersHeaderAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
+import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
+import com.timappweb.timapp.adapters.flexibleadataper.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.UserEvent;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.views.RefreshableRecyclerView;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import eu.davidea.flexibleadapter.common.DividerItemDecoration;
+import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
+import eu.davidea.flipview.FlipView;
 import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class EventPeopleFragment extends EventBaseFragment {
@@ -46,16 +48,35 @@ public class EventPeopleFragment extends EventBaseFragment {
 
     private Context         context;
 
-    private EventUsersHeaderAdapter placeUsersAdapter;
+    private MyFlexibleAdapter mPlaceUsersAdapter;
 
     private View            progressView;
     private View            noPostsView;
     private View            noConnectionView;
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton postButton;
-    private RefreshableRecyclerView mRecyclerView;
-    private RecyclerViewMaterialAdapter mAdapter;
-    //private ObservableScrollView viewContainer;
+    private RecyclerView mRecyclerView;
+
+    private ExpandableHeaderItem mExpandableHere;
+    private ExpandableHeaderItem mExpandableComing;
+    private ExpandableHeaderItem mExpandableInvite;
+    private LinkedList mItems;
+
+    //private RecyclerViewMaterialAdapter mAdapter;
+
+    public static EventPeopleFragment newInstance(int columnCount) {
+        EventPeopleFragment fragment = new EventPeopleFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public EventPeopleFragment() {}
 
 
     @Nullable
@@ -69,20 +90,17 @@ public class EventPeopleFragment extends EventBaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        context= eventActivity.getBaseContext();
+        context = eventActivity.getBaseContext();
 
         // viewContainer = (ObservableScrollView) root.findViewById(R.id.scrollView);
         progressView = view.findViewById(R.id.progress_view);
         noPostsView = view.findViewById(R.id.no_posts_view);
         noConnectionView = view.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
-        mRecyclerView = (RefreshableRecyclerView) view.findViewById(R.id.list_people);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
         postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
-        initRecyclerView();
-
         getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
-
         if (MyApplication.isLoggedIn()){
             getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
         }
@@ -106,51 +124,21 @@ public class EventPeopleFragment extends EventBaseFragment {
 
     }
 
-    private void initRecyclerView() {
-
-        //Construct Adapter
-        placeUsersAdapter = new EventUsersHeaderAdapter(context);
-        placeUsersAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.v(TAG, "Accessing position: " + position);
-                PlaceUserInterface user = placeUsersAdapter.getData(position);
-                Log.d(TAG, "Viewing profile user: " + user.getUser());
-                IntentsUtils.profile(eventActivity, user.getUser());
-            }
-        });
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration(placeUsersAdapter));
-
-        mAdapter = new RecyclerViewMaterialAdapter(placeUsersAdapter);
-        mRecyclerView.setAdapter(mAdapter);
-
-
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
-    }
-
-
     private void loadPosts() {
-        Call<List<Post>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
-        RestCallback callback = new RestCallback<List<Post>>(getContext()) {
-            @Override
-            public void onResponse200(Response<List<Post>> response) {
-                List<Post> list = response.body();
-                placeUsersAdapter.addData(UserPlaceStatusEnum.HERE, list);
-            }
+        Call<List<EventPost>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
+        RestClient.buildCall(call)
+                .onResponse(new HttpCallback<List<EventPost>>() {
+                    @Override
+                    public void successful(List<EventPost> list) {
+                        //mPlaceUsersAdapter.addData(UserPlaceStatusEnum.HERE, list);
+                    }
 
-            @Override
-            public void onFailure(Call c, Throwable t) {
-                super.onFailure(c, t);
-                noConnectionView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
-            }
-        };
-        //asynCalls.add(ApiCallFactory.build(call, callback, this));
+                    @Override
+                    public void notSuccessful() {
+                        noConnectionView.setVisibility(View.VISIBLE);
+                    }
+                })
+                .perform();
     }
 
 
@@ -160,6 +148,79 @@ public class EventPeopleFragment extends EventBaseFragment {
         super.onResume();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //Settings for FlipView
+        FlipView.resetLayoutAnimationDelay(true, 1000L);
+
+        //Create New Database and Initialize RecyclerView
+        mItems = new LinkedList();
+        mItems.add(new PlaceHolderItem("PLACEHOLDER0"));
+        mExpandableHere = new ExpandableHeaderItem("HERE", context.getResources().getString(R.string.header_here));
+        mItems.add(mExpandableHere);
+
+        mExpandableComing = new ExpandableHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
+        mItems.add(mExpandableComing);
+
+        mExpandableInvite = new ExpandableHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
+        mItems.add(mExpandableInvite);
+
+        initializeRecyclerView(savedInstanceState);
+
+        //Settings for FlipView
+        FlipView.stopLayoutAnimation();
+    }
+
+    @SuppressWarnings({"ConstantConditions", "NullableProblems"})
+    private void initializeRecyclerView(Bundle savedInstanceState) {
+
+        //List<AbstractFlexibleItem> list = new LinkedList();
+        //list.add(new PlaceHolderItem("PLACEHOLDER0"));
+
+        mPlaceUsersAdapter = new MyFlexibleAdapter(mItems, getActivity());
+        //Experimenting NEW features (v5.0.0)
+        mPlaceUsersAdapter.setAnimationOnScrolling(true);
+        mPlaceUsersAdapter.setAnimationOnReverseScrolling(true);
+        mPlaceUsersAdapter.setAutoCollapseOnExpand(false);
+        mPlaceUsersAdapter.setAutoScrollOnExpand(false);
+        mPlaceUsersAdapter.setRemoveOrphanHeaders(false);
+
+        mRecyclerView.setLayoutManager(new SmoothScrollLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setAdapter(mPlaceUsersAdapter);
+        mRecyclerView.setHasFixedSize(true); //Size of RV will not change
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator() {
+            @Override
+            public boolean canReuseUpdatedViewHolder(RecyclerView.ViewHolder viewHolder) {
+                //NOTE: This allows to receive Payload objects when notifyItemChanged is called by the Adapter!!!
+                return true;
+            }
+        });
+        //mRecyclerView.setItemAnimator(new SlideInRightAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+                R.drawable.divider, 0));//Increase to add gap between sections (Works only with LinearLayout!)
+
+        //Add FastScroll to the RecyclerView, after the Adapter has been attached the RecyclerView!!!
+        //mPlaceUsersAdapter.setFastScroller((FastScroller) getActivity().findViewById(R.id.fast_scroller),
+        //        Utils.getColorAccent(getActivity()), (MainActivity) getActivity());
+
+        //Experimenting NEW features (v5.0.0)
+        //mPlaceUsersAdapter.setLongPressDragEnabled(true);//Enable long press to drag items
+
+        //Show Headers at startUp! (not necessary if Headers are also Expandable)
+        //mAdapter.setDisplayHeadersAtStartUp(true);
+        //Add sample item on the top (not belongs to the library)
+        //mPlaceUsersAdapter.addUserLearnedSelection(savedInstanceState == null);
+
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout_place_people);
+        //mListener.onFragmentChange(swipeRefreshLayout, mRecyclerView, SelectableAdapter.MODE_IDLE);
+
+        //mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        //mAdapter = new RecyclerViewMaterialAdapter(mPlaceUsersAdapter);
+        mRecyclerView.setAdapter(mPlaceUsersAdapter);
+        //mPlaceUsersAdapter.onAttachedToRecyclerView(mRecyclerView);
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+    }
 
     // =============================================================================================
 
@@ -174,11 +235,34 @@ public class EventPeopleFragment extends EventBaseFragment {
         @Override
         public void onLoadFinished(Loader<List<UserEvent>> loader, List<UserEvent> data) {
             super.onLoadFinished(loader, data);
-            placeUsersAdapter.clearSection(UserPlaceStatusEnum.COMING);
-            placeUsersAdapter.clearSection(UserPlaceStatusEnum.HERE);
-            placeUsersAdapter.addData(data);
-            mAdapter.notifyDataSetChanged();
-            noPostsView.setVisibility(placeUsersAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+            int herePosition = mItems.indexOf(mExpandableHere);
+            int comingPosition = mItems.indexOf(mExpandableComing);
+
+            mExpandableComing.removeSubItems();
+            mExpandableHere.removeSubItems();
+            // TODO clear
+            for (UserEvent userEvent: data){
+                UserItem item = new UserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
+                switch (userEvent.status){
+                    case COMING:
+                        item.setHeader(mExpandableComing);
+                        mExpandableComing.addSubItem(item);
+                        break;
+                    case HERE:
+                        item.setHeader(mExpandableHere);
+                        mExpandableHere.addSubItem(item);
+                        break;
+                    default:
+                        continue;
+                }
+            }
+
+            mExpandableHere.setExpanded(false);
+            mExpandableComing.setExpanded(false);
+            mPlaceUsersAdapter.notifyItemChanged(herePosition);
+            mPlaceUsersAdapter.notifyItemChanged(comingPosition);
+            mPlaceUsersAdapter.expand(herePosition);
+            mPlaceUsersAdapter.expand(comingPosition);
         }
 
     }
@@ -195,12 +279,18 @@ public class EventPeopleFragment extends EventBaseFragment {
         }
 
         @Override
-        public void onLoadFinished(Loader loader, List data) {
+        public void onLoadFinished(Loader<List<EventsInvitation>> loader, List<EventsInvitation> data) {
             super.onLoadFinished(loader, data);
-            placeUsersAdapter.clearSection(UserPlaceStatusEnum.INVITED);
-            placeUsersAdapter.addData(UserPlaceStatusEnum.INVITED, data);
-            mAdapter.notifyDataSetChanged();
-            noPostsView.setVisibility(placeUsersAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+            int position = mItems.indexOf(mExpandableInvite);
+
+            mExpandableInvite.removeSubItems();
+            for (EventsInvitation invitation: data){
+                UserItem item = new UserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInvite);
+                mExpandableInvite.addSubItem(item);
+            }
+            mExpandableInvite.setExpanded(false);
+            mPlaceUsersAdapter.notifyItemChanged(position);
+            mPlaceUsersAdapter.expand(position);
         }
 
     }

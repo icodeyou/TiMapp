@@ -29,12 +29,15 @@ import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.map.MapFactory;
+import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SimpleTimerView;
 import com.timappweb.timapp.views.controller.EventStateButtonController;
 
 
-public class EventInformationFragment extends EventBaseFragment {
+public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback {
 
     private static final int TIMELAPSE_HOT_ANIM = 2000;
     private float ZOOM_LEVEL_CENTER_MAP = 12.0f;
@@ -52,7 +55,7 @@ public class EventInformationFragment extends EventBaseFragment {
     private View mComingButton;
     private View btnRequestNavigation;
     private SimpleTimerView tvCountPoints;
-    
+
     private ValueAnimator   animator;
     private boolean         hotPoints = false;
 
@@ -129,7 +132,9 @@ public class EventInformationFragment extends EventBaseFragment {
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
-        initMap();
+        mapView.onCreate(null);
+        mapView.getMapAsync(this);
+
         updateView();
     }
 
@@ -142,18 +147,15 @@ public class EventInformationFragment extends EventBaseFragment {
     }
 
 
-    private void initMap(){
-        mapView.onCreate(null);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "Map is now ready!");
-                gMap = googleMap;
-            }
-        });
-        loadMapIfNeeded();
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map is now ready!");
+        gMap = googleMap;
+        MapFactory.initMap(gMap);
+        Event event = eventActivity.getEvent();
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
+        gMap.addMarker(event.getMarkerOption());
     }
-
 
     @Override
     public void onPause() {
@@ -166,10 +168,10 @@ public class EventInformationFragment extends EventBaseFragment {
         mapView.onResume();
         super.onResume();
         Log.d(TAG, "ExploreMapFragment.onResume()");
-        this.loadMapIfNeeded();
+        //this.loadMapIfNeeded();
     }
 
-    private void loadMapIfNeeded() {
+    /*private void loadMapIfNeeded() {
         try {
             if (gMap == null){
                 gMap = mapView.getMap();
@@ -182,7 +184,7 @@ public class EventInformationFragment extends EventBaseFragment {
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void updatePointsView(boolean increase) {
         /*if(increase && !hotPoints) {

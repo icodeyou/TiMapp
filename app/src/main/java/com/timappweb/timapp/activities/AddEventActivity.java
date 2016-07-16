@@ -50,19 +50,18 @@ import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.map.SpotClusterRenderer;
+import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.rest.model.RestValidationErrors;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 
 import java.util.List;
-
-import cdflynn.android.library.crossview.CrossView;
-import retrofit2.Call;
 
 
 public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
@@ -105,6 +104,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private Loader<List<Spot>> mSpotLoader;
     private View mSpotContainer;
     private AddressResultReceiver mAddressResultReceiver;
+    private LatLngBounds mSpotReachableBounds;
     private View.OnClickListener displayAllCategories;
     //private View eventLocation;
 
@@ -239,26 +239,19 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void submitPlace(final Event event){
         Log.d(TAG, "Submit event " + event.toString());
-        Call call = RestClient.service().addPlace(event);
-        event.saveRemoteEntry(this, call, new RestFeedbackCallback(this){
 
-            @Override
-            public void onActionSuccess(RestFeedback feedback) {
-                IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
-            }
-
-            @Override
-            public void onActionFail(RestFeedback feedback) {
-                if (feedback == null) return;;
-                RestValidationErrors errors = feedback.getValidationErrors();
-                mBinding.setErrors(errors);
-            }
-
-            @Override
-            public void onFinish() {
-                setProgressView(false);
-            }
-        });
+        RestClient
+            .post(ResourceUrlMapping.MODEL_EVENT, AddEventMapper.toJson(event))
+                .onResponse(new AutoMergeCallback(event))
+                .onResponse(new FormErrorsCallback(mBinding))
+                .onResponse(new HttpCallback() {
+                    @Override
+                    public void successful(Object feedback) {
+                        event.mySave();
+                        IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                    }
+                })
+                .perform();
 
     }
 
@@ -378,8 +371,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mSpotContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Spot spot =  mBinding.getEvent().getSpot();
-                if (spot != null && spot.isNew()){
+                Spot spot = mBinding.getEvent().getSpot();
+                if (spot != null && spot.isNew()) {
                     IntentsUtils.pinSpot(AddEventActivity.this, spot);
                 }
             }
@@ -442,6 +435,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void updateMapCenter(Location location){
+        mSpotReachableBounds = LocationManager.generateBoundsAroundLocation(location, ConfigurationProvider.rules().place_max_reachable);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
     }
 
@@ -513,6 +507,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         Log.v(TAG, "User location changed!");
+
         updateMapCenter(newLocation);
         requestReverseGeocoding(newLocation);
         if (mSpotLoader == null){
@@ -538,11 +533,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         public SpotAroundLoader(Context context) {
             super(context, 10, DataSyncAdapter.SYNC_TYPE_SPOT);
 
-            // TODO increase map bounds by 2*precision to be sure (=> prevent reloading when location change)
-            LatLngBounds bounds = gMap.getProjection().getVisibleRegion().latLngBounds;
-            this.query = Spot.queryByArea(bounds);
-            this.syncOption.getBundle()
-                    .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(bounds));
+            if (mSpotReachableBounds != null){
+                this.query = Spot.queryByArea(mSpotReachableBounds);
+                this.syncOption.getBundle()
+                        .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
+            }
         }
 
         @Override
@@ -550,7 +545,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             super.onLoadFinished(loader, data);
             mClusterManagerSpot.clearItems();
             mClusterManagerSpot.addItems(data);
-            //mClusterManagerSpot.notify();
+            mClusterManagerSpot.cluster();
         }
 
 

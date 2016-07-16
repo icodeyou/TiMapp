@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.EventTag;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,7 +18,7 @@ import java.util.List;
 public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCountersAdapter.ViewHolder>{
 
     private final Context context;
-    private final LinkedList<Tag> mData;
+    private final LinkedList<EventTag> mData;
 
     public TagsAndCountersAdapter(Context context) {
         this.mData = new LinkedList<>();
@@ -40,7 +40,7 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setTag(position, mData.get(position));
+        holder.setEventTag(position, mData.get(position));
     }
 
     public void addAll(List data) {
@@ -51,7 +51,7 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
         this.mData.clear();
     }
 
-    public void add(Tag tag) {
+    public void add(EventTag tag) {
         this.mData.add(tag);
     }
 
@@ -66,8 +66,8 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
             tagCounter = (TextView) itemView.findViewById(R.id.tv_tag_counter);
         }
 
-        public void setTag(int position, Tag tag) {
-            tagText.setText(tag.name);
+        public void setEventTag(int position, EventTag tag) {
+            tagText.setText(tag.getTagName());
             tagCounter.setText(String.valueOf(tag.count_ref));
             /*if (position % 2 == 1){
                 tagText.setBackgroundColor(context.getResources().getColor(R.color.white));

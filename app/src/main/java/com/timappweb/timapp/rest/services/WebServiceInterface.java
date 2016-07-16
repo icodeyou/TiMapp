@@ -4,16 +4,15 @@ import com.google.gson.JsonArray;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.Post;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.rest.PostAndPlaceRequest;
 import com.timappweb.timapp.rest.model.PaginatedResponse;
 import com.timappweb.timapp.rest.model.RestFeedback;
 
@@ -73,17 +72,14 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     // Posts
 
-    @GET("posts/posts.json")
-    Call<List<Post>> listPosts(@QueryMap Map<String, String> conditions);
+    @GET("eventPosts/eventPosts.json")
+    Call<List<EventPost>> listPosts(@QueryMap Map<String, String> conditions);
 
-    @GET("posts/view/{id}.json")
-    Call<Post> viewPost(@Path("id") int id);
+    @GET("eventPosts/view/{id}.json")
+    Call<EventPost> viewPost(@Path("id") int id);
 
-    @POST("posts/add.json")
-    Call<RestFeedback> addPost(@Body Post post);
-
-    @POST("posts/add.json")
-    Call<RestFeedback>  addPost(@Body PostAndPlaceRequest data);
+    @POST("eventPosts/add.json")
+    Call<RestFeedback> addTags(@Body EventPost eventPost);
 
     // ---------------------------------------------------------------------------------------------
     // USER
@@ -121,7 +117,7 @@ public interface WebServiceInterface {
     @GET("Tags/suggest/{term}.json")
     Call<List<Tag>>  suggest(@Path("term") String term);
 
-    @GET("SpotsTags/post/{id}.json")
+    @GET("SpotsTags/eventPost/{id}.json")
     Call<List<Tag>> loadTagsFromPost(@Path("id") int id);
 
 
@@ -139,11 +135,11 @@ public interface WebServiceInterface {
     // Places
 
     /**
-     * Get posts for a place
+     * Get eventPosts for a place
      * @param id
      */
-    @POST("posts/place/{id}.json")
-    Call<List<Post>> viewPostsForPlace(@Path("id") int id);
+    @POST("eventPosts/place/{id}.json")
+    Call<List<EventPost>> viewPostsForPlace(@Path("id") int id);
 
     /**
      * Get most popular tags for a place

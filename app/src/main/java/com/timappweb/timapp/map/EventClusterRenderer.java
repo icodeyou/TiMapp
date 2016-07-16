@@ -117,7 +117,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
     protected void onBeforeClusterRendered(Cluster<Event> cluster, MarkerOptions markerOptions) {
         // Draw multiple people.
         // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-        HashMap<Integer, Drawable> profilePhotos = new HashMap<>();
+        HashMap<Long, Drawable> profilePhotos = new HashMap<>();
         int width = mDimension;
         int height = mDimension;
 
@@ -125,16 +125,20 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         for (Event p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            if (!profilePhotos.containsKey(p.category_id)){
-                Drawable drawable = null;
-                try {
-                    drawable = ContextCompat.getDrawable(context, p.getCategory().getIconWhiteResId());
-                    drawable.setBounds(0, 0, width, height);
-                    profilePhotos.put(p.category_id, drawable);
-                } catch (UnknownCategoryException e) {
-                    e.printStackTrace();
-                    // TODO
+            try {
+                if (!profilePhotos.containsKey(p.getCategory().getRemoteId())){
+                    Drawable drawable = null;
+                    try {
+                        drawable = ContextCompat.getDrawable(context, p.getCategory().getIconWhiteResId());
+                        drawable.setBounds(0, 0, width, height);
+                        profilePhotos.put(p.getCategory().getRemoteId(), drawable);
+                    } catch (UnknownCategoryException e) {
+                        e.printStackTrace();
+                        // TODO
+                    }
                 }
+            } catch (UnknownCategoryException e) {
+                e.printStackTrace();
             }
         }
         // When there is no data because categories are not loaded correctly...

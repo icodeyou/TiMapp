@@ -11,12 +11,11 @@ import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "Post")
-public class Post extends SyncBaseModel implements Serializable, MarkerValueInterface, PlaceUserInterface {
+@Table(name = "EventPost")
+public class EventPost extends SyncBaseModel implements MarkerValueInterface, PlaceUserInterface {
 
     private static final String TAG = "EntitySpot";
 
@@ -56,11 +55,12 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     @Expose
     public int place_id;
 
-    @Expose(deserialize = false, serialize = true)
-    public String tag_string;
-
+    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO_MANY,
+            joinModel = PostTag.class,
+            saveStrategy = ModelAssociation.SaveStrategy.REPLACE,
+            targetModel = Tag.class)
     @Expose
-    private List<Tag> tags;
+    public List<Tag> tags;
 
     // =============================================================================================
     // GETTERS
@@ -74,48 +74,38 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     public String street_number;
     public String address = "";
 
-    public Post(Event events) {
+    public EventPost(Event events) {
         this.event = event;
     }
 
 
     public void setTags(List<Tag> tags){
-        this.tag_string = "";
-        if (tags.size() == 0){
-            this.tags = tags;
-            return;
-        }
-        for (int i = 0; i < tags.size() - 1; i++){
-            this.tag_string += tags.get(i).name + ",";
-        }
-        this.tag_string += tags.get(tags.size() -1).name;
         this.tags = tags;
     }
 
-    public Post() {
+    public EventPost() {
         this.tags = new ArrayList<>();
     }
 
-    public Post(LatLng ll) {
+    public EventPost(LatLng ll) {
         this.latitude = ll.latitude;
         this.longitude = ll.longitude;
         this.tags = new ArrayList<>();
     }
 
-    public Post(int id, double latitude, double longitude, int created, String tag_string) {
+    public EventPost(int id, double latitude, double longitude, int created) {
         this.remote_id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.created = created;
-        this.tag_string = tag_string;
         this.tags = new ArrayList<>();
     }
 
     private static int dummyIndice = 1;
 
-    public static Post createDummy() {
-        Post p = new Post(dummyIndice++, dummyIndice, dummyIndice, 0, "");
-        p.comment = "C'est le post numero: " + dummyIndice;
+    public static EventPost createDummy() {
+        EventPost p = new EventPost(dummyIndice++, dummyIndice, dummyIndice, 0);
+        p.comment = "C'est le eventPost numero: " + dummyIndice;
         p.tags.add(new Tag("Carrot", 0));
         p.tags.add(new Tag("Snow", 0));
         p.tags.add(new Tag("Choux", 0));
@@ -166,7 +156,7 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "EventPost{" +
                 "id=" + remote_id +
                 ", place_id=" + place_id +
                 ", user=" + user +
@@ -174,7 +164,7 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
                 ", longitude=" + longitude +
                 ", created=" + created +
                 ", tag_number=" + (tags != null ? tags.size(): 0) +
-                ", tag_string='" + tag_string + '\'' +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 
@@ -202,7 +192,7 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     }
 
     public boolean validateForSubmit() {
-        if (this.tag_string.length() == 0) {
+        if (this.hasTags()) {
             //mTvComment.setError("You must select at least one tag");
             return false;
         }
@@ -233,7 +223,7 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
         return user;
     }
 
-    public boolean hasTagsLoaded() {
+    public boolean hasTags() {
         return tags != null && tags.size() > 0;
     }
 
@@ -245,4 +235,5 @@ public class Post extends SyncBaseModel implements Serializable, MarkerValueInte
     public boolean isSync(SyncBaseModel model) {
         return false;
     }
+
 }

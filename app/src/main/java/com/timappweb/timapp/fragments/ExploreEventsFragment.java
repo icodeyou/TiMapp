@@ -95,6 +95,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
 
     @Override
     public void onTabSelected() {
+        if (eventsAdapter == null) return;
         Log.d(TAG, "ExploreEventsFragment is now selected");
         Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");
         eventsAdapter.clear();

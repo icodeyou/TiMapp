@@ -28,11 +28,11 @@ import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.Post;
+import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.fragments.BaseFragment;
-import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.SerializeHelper;
 
 public class IntentsUtils {
 
@@ -123,14 +123,14 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void viewPost(Activity activity, Post post) {
+    public static void viewPost(Activity activity, EventPost eventPost) {
         Intent intent = new Intent(activity, PostActivity.class);
-        intent.putExtra("post", post);          // TODO use constant
+        intent.putExtra("eventPost", eventPost);          // TODO use constant
         activity.startActivity(intent);
     }
     public static void viewPost(Context activity, int postId) {
         Intent intent = new Intent(activity, PostActivity.class);
-        intent.putExtra("post.id", postId);          // TODO use constant
+        intent.putExtra("eventPost.id", postId);          // TODO use constant
         activity.startActivity(intent);
     }
 
@@ -172,15 +172,15 @@ public class IntentsUtils {
 
         Intent intent = new Intent(fragment.getContext(), AddTagActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable(IntentsUtils.KEY_EVENT, event);          // TODO use constant
+        extras.putString(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         fragment.startActivityForResult(intent, REQUEST_TAGS);
     }
 
-    public static void addPeople(Activity activity, Event event) {
+    public static void inviteFriendToEvent(Activity activity, Event event) {
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("event", event);          // TODO use constant
+        extras.putSerializable(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
@@ -214,7 +214,7 @@ public class IntentsUtils {
     public static Intent buildIntentViewPlace(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("event", event);          // TODO use constant
+        extras.putSerializable(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));          // TODO use constant
         intent.putExtras(extras);
         return intent;
     }
@@ -291,12 +291,12 @@ public class IntentsUtils {
         activity.overridePendingTransition(0, 0);
     }
 
-    public static Event extractPlace(Intent intent) {
+    public static Event extractEvent(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return null;
         }
-        return (Event) extras.getSerializable(IntentsUtils.KEY_EVENT);
+        return SerializeHelper.unpack(extras.getString(IntentsUtils.KEY_EVENT), Event.class);
     }
 
     public static String[] extractPicture(Intent intent) {
@@ -307,12 +307,12 @@ public class IntentsUtils {
         return extras.getStringArray(IntentsUtils.VIEW_PICTURE_LIST);
     }
 
-    public static Post extractPost(Intent intent) {
+    public static EventPost extractPost(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return null;
         }
-        return (Post) extras.getSerializable("post");
+        return (EventPost) extras.getSerializable("eventPost");
     }
 
     public static User extractUser(Intent intent) {

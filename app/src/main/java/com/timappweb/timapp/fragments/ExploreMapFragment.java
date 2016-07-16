@@ -11,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,37 +20,35 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.ui.IconGenerator;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.MapTag;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
-import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.EventClusterRenderer;
+import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener {
+public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
-    private static LatLngBounds mapBounds;
+    enum ZoomType {IN, OUT, NONE};
+    private ZoomType currentZoomMode = ZoomType.NONE;
 
     // Declare a variable for the cluster manager.
     private ClusterManager<Event> mClusterManagerPost;
@@ -68,8 +64,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private HorizontalTagsRecyclerView filterTagsRv;
     private View filterTagsContainer;
 
-    private static HashMap<Marker, Event> mapMarkers;
-    private GoogleMap map;
     private Bundle mapBundle;
 
     private ExploreFragment exploreFragment;
@@ -78,33 +72,21 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private HorizontalTagsAdapter htAdapter;
     private FragmentExploreMapBinding mBinding;
     private float ZOOM_LEVEL_CENTER_MAP = 12.0f;
+    private AreaRequestHistory history;
     //private EachSecondTimerTask eachSecondTimerTask;
-
-    @Override
-    public void onTabSelected() {
-        Log.d(TAG, "ExploreMapFragment is now selected");
-        //drawerActivity.updateFabPosition(placeView);
-    }
 
     public AreaRequestHistory getHistory() {
         return history;
     }
 
-
-    enum ZoomType {IN, OUT, NONE};
-    private ZoomType currentZoomMode = ZoomType.NONE;
-
-    public static int getDataTimeRange(){
-        return 7200;        // TODO dynamic value
+    @Override
+    public void onLocationChanged(Location newLocation, Location lastLocation) {
+        if (lastLocation == null){
+            centerMap(newLocation);
+            updateMapData();
+        }
     }
 
-    /**
-     * When we click on a market we need to now the corresponding spot
-     */
-    //private HashMap<Marker, Post> markers = new HashMap<>();
-    //private HashMap<Post, Marker> mapSpotToMarker = new HashMap<>();
-
-    private AreaRequestHistory history;
 
     @Nullable
     @Override
@@ -128,7 +110,12 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.setVisibility(View.GONE);
         newEventbutton = root.findViewById(R.id.post_event_button);
 
-        setListeners();
+        newEventbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.locate(drawerActivity);
+            }
+        });
 
 
         if (savedInstanceState == null){
@@ -137,38 +124,36 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         else{
             Log.d(TAG, "Instance saved for map fragment");
         }
-        this.loadMapIfNeeded();
-
-        updateFilterView();
         initListeners();
 
         return root;
-    }
-
-    private void setListeners() {
-        Log.d(TAG, "Init add_spot_button button");
-        newEventbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.locate(drawerActivity);
-            }
-        });
     }
 
     @Override
     public void onPause() {
         mapView.onPause();
         super.onPause();
-
+        LocationManager.removeLocationListener(this);
         //eachSecondTimerTask.cancel();
     }
 
     @Override
     public void onResume() {
-        mapView.onResume();
         super.onResume();
-        Log.d(TAG, "ExploreMapFragment.onResume()");
+        mapView.onResume();
         this.loadMapIfNeeded();
+        updateFilterView();
+        LocationManager.addOnLocationChangedListener(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     public void setLoaderVisibility(boolean bool) {
@@ -205,10 +190,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             filterTagsContainer.setVisibility(View.VISIBLE);
             filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
             Log.d(TAG,"Number of tags filtered : " + MyApplication.searchFilter.tags.size());
-            gMap.setPadding(0,120,0,0);
+            mapView.getMap().setPadding(0, 120, 0, 0);
         } else {
             filterTagsContainer.setVisibility(View.GONE);
-            gMap.setPadding(0, 0, 0, 0);
+            mapView.getMap().setPadding(0, 0, 0, 0);
         }
         getActivity().invalidateOptionsMenu();
     }
@@ -229,7 +214,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             }
         });
 
-        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        mapView.getMap().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 hidePlace();
@@ -238,29 +223,24 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     private void loadMapIfNeeded() {
-        try {
-            if (gMap == null){
-                gMap = mapView.getMap();
-                loadMap();
-                mapMarkers = new HashMap<>();
-            }
-            gMap.setIndoorEnabled(true);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        if (gMap == null){
+            mapView.getMapAsync(this);
         }
     }
 
-    public void loadMap() {
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "Map is now ready!");
-                gMap = googleMap;
-                mapBounds = gMap.getProjection().getVisibleRegion().latLngBounds;
-                loadMapData();
-            }
-        });
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "Map is now ready!");
+        gMap = googleMap;
+        MapFactory.initMap(gMap);
+        setUpClusterer();
+        initAreaRequestHistory();
+        exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
+
+        if (LocationManager.hasLastLocation()){
+            centerMap(LocationManager.getLastLocation());
+            updateMapData();
+        }
     }
 
     public boolean isFilterActive() {
@@ -290,80 +270,36 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
 
+
+    private void centerMap(Location location){
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP));
+    }
+
     /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #gMap} is not null.
+     * TODO: check if we need to send back a copy instead ?
+     * @return
      */
-    private void loadMapData() {
-        Log.i(TAG, "Setting up the map... Please wait.");
-
-        // For showing a move to my loction button
-        gMap.setMyLocationEnabled(true);
-
-        try{
-            setUpClusterer();
-            //setUpMapEvents();
-            centerMap();
-
-            this.initAreaRequestHistory();
-            exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
-            history.resizeArea(getMapBounds());
-            this.updateMapData();
-
-        } catch (Exception ex){
-            Log.e(TAG, ex.toString());
-        }
-    }
-
-    private void centerMap(){
-        // Comme les unités sont en microdegrés, il faut multiplier par 1E6
-        MyLocationProvider locationProvider = new MyLocationProvider(getActivity(), new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.d(TAG, "LOCATION CHANGED ! name");
-            }
-        });
-
-        try{
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(locationProvider.getLastGPSLocation()), ZOOM_LEVEL_CENTER_MAP));
-        }
-        catch (NoLastLocationException ex){
-            Log.e(TAG, "Cannot center: no last name");
-        }
-    }
-
-    public static LatLngBounds getMapBounds(){
-        return mapBounds;
+    public LatLngBounds getMapBounds(){
+        /*
+        LatLngBounds cpyBounds;
+        LatLngBounds bounds = mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
+        synchronized (bounds){
+            cpyBounds = new LatLngBounds(bounds.southwest, bounds.northeast);
+        }*/
+        return  mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
     }
 
     public void updateMapData(){
-        //TODO Steph : This function doesn't update data when we click "clear filter" on Toolbar
         final LatLngBounds bounds = getMapBounds();
-        Log.i(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
+        if (bounds == null) return;
+        Log.d(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 
-        if (currentZoomMode == ZoomType.OUT){
+        if (!history.isInitialized() || currentZoomMode == ZoomType.OUT){
             // Remove previous cache and all markers
             history.resizeArea(bounds);
         }
 
         history.update(bounds);
-    }
-
-    private void addTagMarkers(List<MapTag> mapTags){
-        IconGenerator item = new IconGenerator(getActivity());
-        item.setTextAppearance(R.style.iconMapTagText);
-        /*
-        for (MapTag spotTag: mapTags){
-            //LatLng ll = spotTag.getLocation();
-            //Bitmap iconBitmap = item.makeIcon(spotTag.name);
-            //gMap.addMarker(new MarkerOptions().position(ll).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f));
-            mClusterManagerTags.addItem(spotTag);
-        }
-        mClusterManagerTags.addItems(mapTags);
-        mClusterManagerTags.cluster();
-        */
     }
 
     private void showMarkerDetail(MarkerValueInterface markerValue){
@@ -375,41 +311,24 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
     }
 
-    private void setUpMapEvents(){
-        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                MarkerValueInterface markerValue = mapMarkers.get(marker);
-                if (markerValue != null) {
-                    Log.i(TAG, "You clicked on a marker with viewEventFromId: " + markerValue.getMarkerId());
-                    showMarkerDetail(markerValue);
-                } else {
-                    Log.e(TAG, "Cannot load this marker");
-                    Toast.makeText(getActivity(), "Cannot load this marker", Toast.LENGTH_SHORT).show();
-                }
-
-                return true;
-            }
-        });
-    }
-
     public boolean isPlaceViewVisible() {
         return eventView.getVisibility()==View.VISIBLE;
     }
 
-
     private void setUpClusterer(){
         Log.i(TAG, "Setting up cluster!");
 
+        final GoogleMap map = mapView.getMap();
+
         // Initialize the manager with the context and the map.
-        mClusterManagerPost = new ClusterManager<>(getActivity(), gMap);
-        mClusterManagerPost.setRenderer(new EventClusterRenderer(getActivity(), gMap, mClusterManagerPost));
+        mClusterManagerPost = new ClusterManager<>(getActivity(), map);
+        mClusterManagerPost.setRenderer(new EventClusterRenderer(getActivity(), map, mClusterManagerPost));
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
             @Override
             public boolean onClusterClick(Cluster<Event> cluster) {
 
                 // If zoom level is too big, go to list (TODO global parameter)
-                if (currentZoomLevel > gMap.getMaxZoomLevel() - 2){
+                if (currentZoomLevel > map.getMaxZoomLevel() - 2){
                     ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                     return true;
                 }
@@ -421,14 +340,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                     builder.include(m.getPosition());
                 }
                 LatLngBounds bounds = builder.build();
-                // TODO jean : adapt padding according to screen
-                int padding = R.dimen.padding_zoom_fit_cluster;
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
-                gMap.animateCamera(cameraUpdate);
+                map.animateCamera(cameraUpdate);
 
                 hidePlace();
-                //gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), currentZoomLevel + 1));
-                //((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                 return true;
             }
         });
@@ -441,18 +356,17 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             }
 
         });
-        gMap.setOnMarkerClickListener(mClusterManagerPost);
-        gMap.setOnCameraChangeListener(new OnCameraChangeListener());
+        map.setOnMarkerClickListener(mClusterManagerPost);
+        map.setOnCameraChangeListener(new OnCameraChangeListener());
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
     }
 
     @Override
-    public void onDestroyView(){
-        mapView.onDestroy();
-        super.onDestroyView();
-        //RestClient.stopPendingRequest();
+    public void onTabSelected() {
+        Log.d(TAG, "ExploreMapFragment is now selected");
+        //drawerActivity.updateFabPosition(placeView);
     }
 
     private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{
@@ -474,8 +388,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
             previousZoomLevel = cameraPosition.zoom;
             mClusterManagerPost.onCameraChange(cameraPosition);
-            // Update bounds
-            mapBounds = gMap.getProjection().getVisibleRegion().latLngBounds;
 
             // Updating datas
             updateMapData();

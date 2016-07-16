@@ -1,10 +1,9 @@
 package com.timappweb.timapp.data.models;
 
 import android.content.Context;
-import android.databinding.Observable;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Delete;
@@ -13,13 +12,12 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.rest.RestFeedbackCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,7 +27,7 @@ import retrofit2.Call;
  *
  * Class representing data that need synchronisation from the remote server.
  */
-public abstract class SyncBaseModel extends MyModel implements Serializable {
+public abstract class SyncBaseModel extends MyModel {
 
     private static final String TAG = "SyncBaseModel";
     public static int SYNC_INTERVAL = 3600 * 1000;
@@ -145,53 +143,6 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
 
-    public void saveRemoteEntry(Context context, Call call){
-        saveRemoteEntry(context, call, null);
-    }
-
-    /**
-     * Saving remote entry
-     * @param context
-     * @param call
-     * @param callback
-     */
-    public void saveRemoteEntry(Context context, Call call, final RestFeedbackCallback callback){
-        // try {
-            call.enqueue(new RestFeedbackCallback(context) {
-                @Override
-                public void onActionSuccess(RestFeedback feedback) {
-                    if (feedback == null){
-                        Log.e(TAG, "Server returned a null response...");
-                        return;
-                    }
-                    int id = feedback.getIntData("id");
-                    if (id != -1) {
-                        setRemoteId(id);
-                    }
-                    SyncBaseModel.this.mySave();
-                    if (callback != null) callback.onActionSuccess(feedback);
-                }
-
-                @Override
-                public void onActionFail(RestFeedback feedback) {
-                    Log.e(TAG, "Cannot save entry on remote");
-                    if (feedback == null){
-                        Log.e(TAG, "Server returned a null response...");
-                        return;
-                    }
-                    if (feedback.message != null) {
-                        Toast.makeText(context, feedback.message, Toast.LENGTH_LONG).show();
-                    }
-                    if (callback != null) callback.onActionFail(feedback);
-                }
-
-                @Override
-                public void onFinish() {
-                    if (callback != null) callback.onFinish();
-                }
-            });
-    }
-
     /**
      * Request an immediate merge with the server to get data
      * @param classType The entry class type
@@ -252,7 +203,7 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
      * @param persist true if we save modification in db. If yes,
      */
     public void merge(SyncBaseModel model, boolean persist){
-        // For each deserialisable fields, we update the value if it is not null
+        // For each deserializable fields, we update the value if it is not null
         Class<? extends SyncBaseModel> clazz = this.getClass();
         for (Field field: clazz.getFields()){
             if (field.isAnnotationPresent(Expose.class)){
@@ -277,10 +228,11 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
         this.updateLastSyncTime();
 
         if (persist){
-            if (this.getId() == null){
-                Log.e(TAG,"Cannot persist a non existing model: " + this);
-                return;
-            }
+            //if (this.getId() == null){
+                //this.save();
+                //Log.e(TAG,"Cannot persist a non existing model: " + this);
+                //return;
+            //}
             this.deepSave();
         }
     }
@@ -313,6 +265,5 @@ public abstract class SyncBaseModel extends MyModel implements Serializable {
     }
 
     public boolean hasRemoteId() { return this.remote_id != null;}
-
 
 }

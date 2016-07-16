@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.fragments.ExploreMapFragment;
+import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.LinkedList;
@@ -62,10 +66,11 @@ public class LocationManager {
         mLocationListener = new com.google.android.gms.location.LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                for (LocationListener listener : listeners){
-                    listener.onLocationChanged(location, lastLocation);
-                }
+                Location tmpLocation = lastLocation;
                 setLastLocation(location);
+                for (LocationListener listener : listeners){
+                    listener.onLocationChanged(location, tmpLocation);
+                }
             }
         };
     }
@@ -82,7 +87,9 @@ public class LocationManager {
     }
 
     public static void addOnLocationChangedListener(LocationListener locationListener) {
-        listeners.add(locationListener);
+        if (!listeners.contains(locationListener)){
+            listeners.add(locationListener);
+        }
     }
 
 
@@ -100,6 +107,18 @@ public class LocationManager {
             locationProvider.disconnect();
         }
 
+    }
+
+    public static LatLngBounds generateBoundsAroundLocation(Location location, int size) {
+        double offsetLatitude = DistanceHelper.metersToLatitude(size) / 2;
+        double offsetLongitude = DistanceHelper.metersToLongitude(size, location.getLatitude()) / 2;
+        return new LatLngBounds(
+                new LatLng(location.getLatitude() - offsetLatitude, location.getLongitude() - offsetLongitude),
+                new LatLng(location.getLatitude() + offsetLatitude, location.getLongitude() + offsetLongitude));
+    }
+
+    public static void removeLocationListener(Object object) {
+        listeners.remove(object);
     }
 
     // =============================================================================================

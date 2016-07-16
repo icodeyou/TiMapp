@@ -112,10 +112,39 @@
     <dimen name="event_stats_height">80dp</dimen>
     <dimen name="height_header_event">200dp</dimen>
     <dimen name="header_additional_height">3dp</dimen>
+    <dimen name="loader_big">60dp</dimen>
     <integer name="slide_down_anim">90</integer>
     <integer name="slide_up_anim">-90</integer>
     <integer name="slide_event_bottom_map">200</integer>
     <integer name="slide_in_down">-1000</integer>
     <integer name="slide_out_up">100</integer>
+
+    <!-- ========================================================================================-->
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="margin_top">16dp</dimen>
+    <dimen name="margin_bottom">16dp</dimen>
+    <dimen name="margin_left">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_right">16dp</dimen>
+    <dimen name="margin_right_handle">22dp</dimen>
+    <dimen name="icon_width">40dp</dimen>
+    <dimen name="icon_height">40dp</dimen>
+    <dimen name="icon_touchable_component_mini">40dp</dimen>
+    <dimen name="icon_circular_width">24dp</dimen>
+    <dimen name="icon_circular_height">24dp</dimen>
+    <dimen name="butterbar_height">3dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="popup_button_min_height">48dp</dimen>
+    <dimen name="popup_max_height">290dp</dimen>
+    <dimen name="bottom_sheet_peek">312dp</dimen>
+
+    <dimen name="label_height">150dp</dimen>
+    <dimen name="dialog_padding_vertical">24dp</dimen>
+    <dimen name="dialog_padding_horizontal">24dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Navigation Drawer -->
+    <dimen name="nav_drawer_max_width">320dp</dimen>
 
 </resources>

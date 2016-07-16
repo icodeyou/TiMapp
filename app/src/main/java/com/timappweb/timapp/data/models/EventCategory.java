@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "EventCategory")
-public class EventCategory extends SyncBaseModel implements Serializable{
+public class EventCategory extends SyncBaseModel{
 
     private static final String TAG = "EventCategory";
 

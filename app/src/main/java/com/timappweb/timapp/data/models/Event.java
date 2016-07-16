@@ -2,11 +2,9 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.databinding.Bindable;
-import android.databinding.Observable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
-import android.widget.TextView;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -18,7 +16,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.BR;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
@@ -29,26 +26,25 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Table(name = "Event")
-public class Event extends SyncBaseModel implements Serializable, MarkerValueInterface {
+public class Event extends SyncBaseModel implements MarkerValueInterface {
 
     private static final String TAG = "PlaceEntity" ;
 
     // =============================================================================================
     // DATABASE
 
-    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
+    @ModelAssociation(joinModel = Spot.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "spot_id")
     @Column(name = "Spot", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("spot")
     @Expose
     public Spot             spot;
 
-    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
+    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "user_id")
     @Column(name = "User", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("user")
     @Expose(serialize = false, deserialize = true)
@@ -63,7 +59,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public String           description;
 
     @Column(name = "Created")
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     public int              created;
 
     @Column(name = "Latitude")
@@ -74,9 +70,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     @Expose
     public double           longitude;
 
-    @Column(name = "CategoryId")
+    @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
+    @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
     @Expose
-    public int              category_id;
+    public EventCategory    event_category;
 
     @Column(name = "Points")
     @Expose(serialize = false, deserialize = true)
@@ -103,10 +100,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public List<Tag>        tags;
 
     @Expose(serialize = false, deserialize = true)
-    public ArrayList<Post>  posts;
-
-    @Expose
-    public Integer          spot_id  = null;
+    public ArrayList<EventPost> eventPosts;
 
     public double           distance = -1;
 
@@ -123,7 +117,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         this.longitude = lng;
         this.name = name;
         this.count_posts = 0;
-        this.posts = new ArrayList<>();
+        this.eventPosts = new ArrayList<>();
         this.tags = new ArrayList<>();
     }
 
@@ -131,17 +125,14 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         this.loaded_time = Util.getCurrentTimeSec();
         this.setLocation(location);
         this.name = name;
-        this.category_id = eventCategory.remote_id;
+        this.event_category = eventCategory;
         this.description = description;
-        if (spot != null){
-            this.spot = spot;
-            this.spot_id = spot.remote_id;
-        }
+        this.spot = spot;
     }
 
-    public void addPost(Post post){
+    public void addPost(EventPost eventPost){
         this.count_posts++;
-        this.posts.add(post);
+        this.eventPosts.add(eventPost);
     }
 
     /**
@@ -162,10 +153,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     public static Event createDummy(){
         Event event = new Event(1, dummyIndice, dummyIndice, "Test");
         event.tags.add(Tag.createDummy());
-        event.addPost(Post.createDummy());
-        event.addPost(Post.createDummy());
-        event.addPost(Post.createDummy());
-        event.addPost(Post.createDummy());
+        event.addPost(EventPost.createDummy());
+        event.addPost(EventPost.createDummy());
+        event.addPost(EventPost.createDummy());
+        event.addPost(EventPost.createDummy());
         dummyIndice++;
         return event;
     }
@@ -179,8 +170,8 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
 
 
     public String getTime() {
-        if (this.posts != null && posts.size() > 0){
-            return posts.get(posts.size()-1).getPrettyTimeCreated();
+        if (this.eventPosts != null && eventPosts.size() > 0){
+            return eventPosts.get(eventPosts.size()-1).getPrettyTimeCreated();
         }
         return this.getPrettyTimeCreated();
     }
@@ -204,7 +195,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
                 ", latitude=" + latitude +
                 ", created=" + created +
                 ", longitude=" + longitude +
-                ", category_id=" + category_id +
+                ", category=" + event_category +
                 ", spot=" + (spot != null ? spot : "No spot") +
                 '}';
     }
@@ -226,16 +217,16 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         return count_here != null ? count_here.toString() : "0";
     }
 
-    public int getCategoryId() {
-        return category_id;
-    }
 
     public int getLevel(){
         return Event.computeLevel(this.getPoints());
     }
 
     public EventCategory getCategory() throws UnknownCategoryException {
-        return MyApplication.getCategoryById(this.category_id);
+        if (event_category == null){
+            throw new UnknownCategoryException(-1);
+        }
+        return event_category;
     }
 
     @Override
@@ -287,7 +278,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     /**
      * @param latitude
      * @param longitude
-     * @return true if the user can post in the event
+     * @return true if the user can eventPost in the event
      */
     public boolean isUserAround(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
@@ -323,12 +314,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         if (o == null) return false;
         Event event = (Event) o;
 
-        if (spot_id != event.spot_id) return false;
         if (created != event.created) return false;
         if (Double.compare(event.latitude, latitude) != 0) return false;
         if (Double.compare(event.longitude, longitude) != 0) return false;
         if (count_posts != event.count_posts) return false;
-        if (category_id != event.category_id) return false;
         if (points != event.points) return false;
         if (!name.equals(event.name)) return false;
         return !(description != null ? !description.equals(event.description) : event.description != null);
@@ -347,12 +336,10 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
         Event event = (Event) o;
 
         if (remote_id != event.remote_id) return false;
-        if (spot_id != event.spot_id) return false;
         if (created != event.created) return false;
         if (Double.compare(event.latitude, latitude) != 0) return false;
         if (Double.compare(event.longitude, longitude) != 0) return false;
         if (count_posts != event.count_posts) return false;
-        if (category_id != event.category_id) return false;
         if (points != event.points) return false;
         if (spot != null ? !spot.equals(event.spot) : event.spot != null) return false;
         if (!name.equals(event.name)) return false;
@@ -382,16 +369,16 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public From getTagsQuery() {
         return new Select()
-                .from(Tag.class)
+                .from(EventTag.class)
                 .where("EventTag.Event = ?", this.getId())
-                .join(EventTag.class).on("Tag.Id = EventTag.Tag")
+                //.join(EventTag.class).on("Tag.Id = EventTag.Tag")
                 .orderBy("EventTag.CountRef DESC");
     }
     public void deleteTags() {
         new Delete().from(EventTag.class).where("EventTag.Event = ?", this.getId()).execute();
     }
 
-    public List<Tag> getTags() {
+    public List<EventTag> getTags() {
         return getTagsQuery().execute();
     }
 
@@ -434,7 +421,7 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
     }
 
     public void setCategory(EventCategory category) {
-        this.category_id = (int) category.getRemoteId();
+        this.event_category = category;
     }
 
     public boolean isOver(){
@@ -452,5 +439,13 @@ public class Event extends SyncBaseModel implements Serializable, MarkerValueInt
 
     public boolean hasAddress(){
         return getAddress() != null;
+    }
+
+    public boolean hasCategory() {
+        return event_category != null;
+    }
+
+    public void setCategory(long categoryId) {
+        this.event_category = ConfigurationProvider.getEventCategoryByRemoteId(categoryId);
     }
 }
