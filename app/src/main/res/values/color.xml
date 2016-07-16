@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f44336</color>
+    <color name="colorPrimary">#D32F2F</color>
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorPrimaryVeryDark">#8c1e1e</color>
     <!--<color name="colorAccent">#ff8707</color>-->
     <!--<color name="colorAccent">#ADD8E6</color>-->
     <!--<color name="colorAccent">#476e64</color>-->
-    <color name="colorAccent">#d3655d</color>
+    <color name="colorAccent">#f44336</color>
     <!--<color name="colorSecondary">#ffefc6</color>-->
     <color name="colorSecondary">#2b3778</color>
     <color name="colorSecondaryDark">#2b3778</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
     <color name="TEST">#f44437</color>
     <color name="transparent">#00000000</color>
-    <color name="background">#fffffb</color>
-    <!--<color name="background">#f6efef</color>-->
-    <color name="background_secondary">#eff4f6</color>
-    <color name="background_dark">#111111</color>
-    <color name="backgroundLightlyDark2">#f4e8e8</color>
-    <color name="backgroundLightlyDark">#e3dbdb</color>
+    <color name="background">#f6f6f2</color>
+    <color name="background_dark">#f1f1ea</color>
     <color name="background_semi_transparent">#6ff6efef</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
     <color name="background_event_map">#e3000000</color>
-    <color name="background_event">@color/DarkGray</color>
+    <color name="background_event">#343f51</color>
     <color name="background_half_black">#80000000</color>
     <color name="background_transparent_white">#cdffffff</color>
     <color name="background_spot">@color/colorSecondaryDark</color>
@@ -55,7 +51,7 @@
     <color name="background_add_event_checked">#398c1e1e</color>
     <color name="background_add_event_unchecked">#298c1e1e</color>
     <color name="form_title">@color/Black</color>
-    <color name="smoke">#3dffffff</color>
+    <color name="smoke">#c8ffffff</color>
 
     <!-- Buttons -->
     <color name="background_top_invitation">#1d1d1d</color>
@@ -64,6 +60,8 @@
     <color name="background_selected_button">@color/colorAccent</color>
     <color name="background_selected_button_secondary">#ffefc6</color>
     <color name="text_selected_button_secondary">#ffefc6</color>
+    <color name="switch_button_thumb_off">#00BCD4</color>
+    <color name="switch_button_track_off">#6ecdd9</color>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- COLORS -->

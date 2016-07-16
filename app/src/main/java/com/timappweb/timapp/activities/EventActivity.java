@@ -267,16 +267,16 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 switch (page) {
                     case 0:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorPrimary, drawable);
+                                R.color.colorAccent, drawable);
                     case 1:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorPrimary, drawable);
+                                R.color.colorAccent, drawable);
                     case 2:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorPrimary, drawable);
+                                R.color.colorAccent, drawable);
                     case 3:
                         return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorPrimary, drawable);
+                                R.color.colorAccent, drawable);
                 }
 
                 //execute others actions if needed (ex : modify your header logo)

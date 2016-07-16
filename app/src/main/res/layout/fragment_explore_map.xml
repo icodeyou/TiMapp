@@ -59,7 +59,7 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/post_event_button"
-            style="@style/PostPlusButton"
+            style="@style/DarkFab"
             android:layout_alignParentRight="true"
             android:layout_above="@+id/event_view"
             android:layout_alignWithParentIfMissing="true"

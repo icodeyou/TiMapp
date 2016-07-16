@@ -80,10 +80,10 @@ public class ExploreFragment extends Fragment{
         PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
 
         //hide underline
-        pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
         pagerTabStrip.setDrawFullUnderline(true);
-        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
+        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
 
 
         return root;

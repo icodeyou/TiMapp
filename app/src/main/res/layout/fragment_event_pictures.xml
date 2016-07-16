@@ -78,7 +78,7 @@
         android:layout_gravity="right|bottom">
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/post_button"
-            style="@style/PostPlusButton"/>
+            style="@style/DarkFab"/>
     </RelativeLayout>
 
 

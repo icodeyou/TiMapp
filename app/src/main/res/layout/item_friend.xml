@@ -28,6 +28,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginEnd="16dp"
                     fresco:actualImageScaleType="fitCenter"
+                    fresco:roundWithOverlayColor="@color/colorPrimary"
                     fresco:placeholderImage="@drawable/placeholder_default"
                     fresco:roundAsCircle="true" />
 
@@ -54,7 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/height_small_rv_displayed_tags"
                         android:layout_gravity="center"
-                        myattrs:horizontal_tags_text_color="@color/colorAccent"
+                        myattrs:horizontal_tags_text_color="@color/colorPrimary"
                         myattrs:horizontal_tags_background_color="@color/background_card"
                         myattrs:horizontal_tags_is_bold="false"
                         myattrs:horizontal_tags_text_size="@dimen/text_tags_small" />

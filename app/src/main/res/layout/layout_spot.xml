@@ -14,7 +14,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/white"
     android:paddingBottom="5dp"
     android:paddingTop="5dp"
     android:visibility="@{spot == null ? View.GONE : View.VISIBLE}">
@@ -58,7 +57,7 @@
                     android:text="@{spot.name}"
                     tools:text="Le vertigo"
                     android:textSize="@dimen/text_big"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/colorPrimaryDark" />
 
             </LinearLayout>
 
@@ -73,7 +72,7 @@
                     android:src="@drawable/ic_category_highlight_else"/>-->
 
                 <TextView
-                    style="@style/TextDefault"
+                    style="@style/TextLightBackground"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

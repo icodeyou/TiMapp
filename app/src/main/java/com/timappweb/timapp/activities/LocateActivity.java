@@ -85,7 +85,7 @@ public class LocateActivity extends BaseActivity{
         setListeners();
         initAdapterPlaces();
 
-        int colorRes = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+        int colorRes = ContextCompat.getColor(this, R.color.colorPrimary);
         initToolbar(false, colorRes);
 
     }

@@ -18,29 +18,39 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-
         <!-- -->
         <item name="android:textColor">@color/textDark</item>
-        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/colorAccent</item>
 
         <!-- Material Theme -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorAccent</item> <!-- Toolbar -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
 
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <!--<item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>-->
 
 
         <!-- Toolbar Theme / Apply white arrow -->
-        <item name="colorControlNormal">@color/textLight</item>
+        <!--<item name="colorControlNormal">@color/textLight</item>-->
         <item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
 
 
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="21">true</item>-->
 
+    </style>
+
+    <style name="DefaultSwitch" parent="AppTheme">
+        <!-- active thumb & track color  -->
+        <item name="colorControlActivated">@color/colorPrimary</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/switch_button_thumb_off</item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/switch_button_thumb_off</item>
     </style>
 
     <style name="AppTheme.Button" parent="Base.Widget.AppCompat.Button">
@@ -119,14 +129,21 @@
     </style>
 
 
-    <style name="PostPlusButton">
+    <style name="DarkFab">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
         <item name="android:background">@color/colorPrimaryDark</item>
         <item name="android:src">@drawable/plus_button_white</item>
-        <item name="rippleColor">@color/colorPrimaryDark</item>
+        <item name="rippleColor">@color/colorPrimary</item>
         <item name="backgroundTint">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="LightFab">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="rippleColor">@color/colorAccent</item>
+        <item name="backgroundTint">@color/white</item>
     </style>
 
     <style name="TextInfo">
@@ -143,6 +160,14 @@
         <item name="android:paddingRight">5dp</item>
     </style>
 
+    <style name="TextInfoGray" parent="TextInfo">
+        <item name="android:textColor">@color/Gray</item>
+    </style>
+
+    <style name="TextInfoWhite" parent="TextInfo">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="TextDefault">
         <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:singleLine">true</item>
@@ -150,12 +175,30 @@
         <item name="android:textColor">@color/textDark</item>
         <item name="android:gravity">left|center</item>
     </style>
-    <style name="TextDefaultSecondary">
+
+    <style name="TextSmall">
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/textDark</item>
         <item name="android:gravity">left|center</item>
+    </style>
+
+    <style name="TextLightBackground" parent="TextDefault">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="SmallTextLightBackground" parent="TextSmall">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextBold" parent="TextDefault">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LabelInfo" parent="TextDefault">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextMute">
@@ -205,12 +248,24 @@
         <item name="android:background">@drawable/edittext_bottom_line</item>
         <item name="android:padding">4dp</item>
     </style>
+
     <style name="whiteFormEditText" parent="formEditText">
         <item name="met_primaryColor">@color/white</item>
         <item name="met_baseColor">@color/white</item>
-        <!--<item name="met_floatingLabel">normal</item>-->
         <item name="met_singleLineEllipsis">false</item>
         <item name="android:background">@drawable/edittext_white_bottom_line</item>
+    </style>
+
+    <style name="labeledFormEditText" parent="formEditText">
+        <item name="met_floatingLabel">highlight</item>
+    </style>
+
+    <style name="formLabeledMultilineText" parent="labeledFormEditText">
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:scrollHorizontally">false</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="met_baseColor">@color/colorSecondary</item>
+        <item name="met_primaryColor">@color/colorSecondary</item>
     </style>
 
     <style name="formGroup">
@@ -225,7 +280,15 @@
 
     <style name="formIconGroup">
         <item name="android:layout_width">50dp</item>
+        <item name="android:gravity">center</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="SmallFormIconGroup">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:gravity">center</item>
         <item name="android:paddingRight">10dp</item>
     </style>
 
@@ -272,14 +335,6 @@
         <item name="android:padding">3dp</item>
     </style>
 
-    <style name="formMultilineText" parent="formEditText">
-        <item name="android:inputType">textMultiLine</item>
-        <item name="android:scrollHorizontally">false</item>
-        <item name="android:scrollbars">vertical</item>
-        <!--<item name="android:lines">6</item>-->
-    </style>
-
-
     <style name="RestErrorMessage" parent="TextInfo">
         <item name="android:color">@color/colorAccent</item>
         <item name="android:singleLine">false</item>
@@ -293,9 +348,13 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
+    <style name="item_text_info" parent="SmallTextLightBackground">
+        <item name="android:layout_marginLeft">@dimen/margin_tabulation</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
 
     <color name="textMute">
-        #777777
+        @color/DarkGray
     </color>
 
 </resources>

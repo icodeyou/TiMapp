@@ -111,7 +111,7 @@
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/map_min_height" />
+                    android:layout_height="@dimen/map_height" />
 
             </LinearLayout>
 

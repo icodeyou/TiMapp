@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
-        android:divider="@drawable/bottom_layout_event"
+        android:divider="@drawable/gradient_bottom_view"
         android:dividerHeight="7dp"
         android:visibility="visible"/>
 
@@ -36,7 +36,7 @@
         />
 
     <android.support.design.widget.FloatingActionButton
-        style="@style/PostPlusButton"
+        style="@style/DarkFab"
         android:id="@+id/post_event_button"
         android:layout_alignParentRight="true"
         android:layout_above="@+id/event_view"

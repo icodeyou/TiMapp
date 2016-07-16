@@ -40,7 +40,7 @@
             android:visibility="gone">
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/post_event_button"
-                style="@style/PostPlusButton"/>
+                style="@style/DarkFab"/>
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>

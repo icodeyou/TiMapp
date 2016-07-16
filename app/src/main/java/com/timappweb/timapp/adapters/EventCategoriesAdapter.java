@@ -2,22 +2,22 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.HashMap;
 
 public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategoriesAdapter.CategoriesViewHolder> {
-
-    private static int NUMBER_TOP_CATEGORIES;
 
     protected LayoutInflater inflater;
     //protected List<EventCategory> eventCategories = Collections.emptyList();
@@ -25,14 +25,19 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
     private ImageView currentCategoryIcon;
 
+    private OnItemAdapterClickListener mClickListener;
+
+    protected static int NUMBER_MAIN_CATEGORIES;
+
     private Context context;
 
     public EventCategoriesAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         //this.eventCategories = MyApplication.getEventCategories();
         this.context = context;
+
         AddEventActivity addEventActivity = (AddEventActivity) context;
-        NUMBER_TOP_CATEGORIES = addEventActivity.getNumberOfTopCategories();
+        NUMBER_MAIN_CATEGORIES = addEventActivity.getNumberOfMainCategories();
     }
 
     @Override
@@ -46,9 +51,14 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
     @Override
     public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
-        final EventCategory eventCategory = ConfigurationProvider.eventCategories().get(position);
+        final EventCategory eventCategory;
+        eventCategory = ConfigurationProvider.eventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
+        final TextView categoryText = holder.categoryText;
         icons.put(eventCategory.remote_id, categoryIcon);
+
+        categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
+        categoryText.setText(eventCategory.getName());
 
         /*if (spotCategory.equals(addSpotActivity.getCategorySelected())) {
             holder.itemView.setBackgroundResource(R.color.silver);
@@ -63,24 +73,15 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
     @Override
     public int getItemCount() {
-        return NUMBER_TOP_CATEGORIES;
+        return ConfigurationProvider.eventCategories().size();
     }
 
     public EventCategory getCategory(int position) {
         return ConfigurationProvider.eventCategories().get(position);
     }
 
-    class CategoriesViewHolder extends RecyclerView.ViewHolder {
-        ImageView categoryIcon;
-
-        public CategoriesViewHolder(View view) {
-            super(view);
-            categoryIcon = (ImageView) view.findViewById(R.id.category_icon);
-        }
-
-        public View getItemView() {
-            return itemView;
-        }
+    public void setOnItemClickListener(OnItemAdapterClickListener onClickListener) {
+        this.mClickListener = onClickListener;
     }
 
     public void setIconNewCategory(AddEventActivity addEventActivity, EventCategory newEventCategory) {
@@ -100,6 +101,29 @@ public class EventCategoriesAdapter extends RecyclerView.Adapter<EventCategories
 
         //set selected category in AddEventActivity
         addEventActivity.setCategory(newEventCategory);
+    }
+
+    class CategoriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        ImageView categoryIcon;
+        TextView categoryText;
+
+        public CategoriesViewHolder(View view) {
+            super(view);
+            categoryIcon = (ImageView) view.findViewById(R.id.category_icon);
+            categoryText = (TextView) view.findViewById(R.id.category_name);
+            view.setOnClickListener(this);
+        }
+
+        public View getItemView() {
+            return itemView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mClickListener != null) {
+                mClickListener.onClick(getAdapterPosition());
+            }
+        }
     }
 
 }

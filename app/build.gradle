@@ -108,6 +108,7 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview'
 
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.github.cdflynn:crossview:v1.0.1'
 
 }
 

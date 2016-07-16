@@ -50,7 +50,7 @@
                         android:layout_marginRight="10dp"
                         android:maxLines="1"
                         android:text="Mr Anonymous #Hacker"
-                        android:textColor="@color/colorAccent"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_normal"
                         android:textStyle="bold"
                         android:gravity="center_vertical"
@@ -73,7 +73,7 @@
                     android:id="@+id/rv_horizontal_tags"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/height_small_rv_displayed_tags"
-                    myattrs:horizontal_tags_text_color="@color/colorAccent"
+                    myattrs:horizontal_tags_text_color="@color/colorPrimary"
                     myattrs:horizontal_tags_background_color="@color/background_card"
                     myattrs:horizontal_tags_is_bold="false"
                     myattrs:horizontal_tags_text_size="@dimen/text_tags_small"/>

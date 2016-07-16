@@ -37,7 +37,7 @@
 
         <com.timappweb.timapp.views.SelectableFloatingButton
             style="@style/EventShortcutButtons"
-            android:id="@+id/here_button"
+            android:id="@+id/rate_up_button"
             android:src="@drawable/match_red"
             app:backgroundTint="@color/white"
             app:rippleColor="@color/colorAccent"
@@ -55,7 +55,7 @@
 
         <Button
             style="@style/EventShortcutButtons"
-            android:id="@+id/request_gps_path"
+            android:id="@+id/button_nav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"

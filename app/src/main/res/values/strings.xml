@@ -231,4 +231,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="event_popularity">Popularity</string>
     <string name="event_description">Description</string>
     <string name="more">More</string>
+    <string name="pick_a_category">Pick a category</string>
+    <string name="tags">tags</string>
+    <string name="pics">pics</string>
 </resources>
