@@ -4,19 +4,25 @@
     <data>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
-    <TextView
-        android:id="@+id/title_event"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center|start"
-        android:ellipsize="end"
-        android:textStyle="bold"
-        android:textSize="@dimen/title_event_card"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="@{event.name}"
-        android:textColor="@color/textLight"
-        tools:text="My very great event name"/>
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/title_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textSize="@dimen/title_event_card"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@{event.name}"
+            android:textColor="@color/textLight"
+            tools:text="My very great event name"/>
+    </LinearLayout>
     <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

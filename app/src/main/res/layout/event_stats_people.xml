@@ -50,61 +50,56 @@
         </LinearLayout>-->
 
     <LinearLayout
+        android:id="@+id/white_points_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:id="@+id/white_points_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/event_stats_height"
-            android:padding="10dp"
+        android:layout_height="@dimen/event_stats_height"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/points_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/trending" />
+
+        <!--<LinearLayout
+            android:id="@+id/here_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:visibility="visible"
-            android:background="@color/background">
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/rate_down_button"
+                style="@style/LightFab"
+                android:src="@drawable/rate_down2"/>
 
             <ImageView
-                android:id="@+id/far_view"
-                style="@style/imageIconBig"
-                android:layout_marginTop="1dp"
-                android:src="@drawable/trending" />
-
-            <LinearLayout
-                android:id="@+id/here_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="gone">
-                <ImageView
-                    android:id="@+id/rate_down_button"
-                    style="@style/LightFab"
-                    android:src="@drawable/rate_down2"/>
-
-                <ImageView
-                    android:id="@+id/rate_up_button"
-                    style="@style/LightFab"
-                    android:src="@drawable/rate_up2"/>
-            </LinearLayout>
-
-            <!--<android.support.design.widget.FloatingActionButton
-                android:id="@+id/here_button"
+                android:id="@+id/rate_up_button"
                 style="@style/LightFab"
-                android:src="@drawable/fire_up_here"/>-->
+                android:src="@drawable/rate_up2"/>
+        </LinearLayout>-->
 
-            <com.timappweb.timapp.views.SimpleTimerView
-                android:id="@+id/white_points_text"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/text_huge"
-                android:gravity="bottom"
-                android:textStyle="italic"
-                android:layout_marginLeft="30dp"
-                android:layout_marginStart="30dp"
-                android:text="3602"/>
-            <!--android:text="@{event.isOver() ? @string/event_over_points : event.displayPoints()}"-->
-            <!---->
-        </LinearLayout>
+        <!--<android.support.design.widget.FloatingActionButton
+            android:id="@+id/here_button"
+            style="@style/LightFab"
+            android:src="@drawable/fire_up_here"/>-->
+
+        <com.timappweb.timapp.views.SimpleTimerView
+            android:id="@+id/white_points_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_huge"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:text="3602"/>
+        <!--android:text="@{event.isOver() ? @string/event_over_points : event.displayPoints()}"-->
+        <!---->
     </LinearLayout>
 
 

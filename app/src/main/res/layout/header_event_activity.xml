@@ -9,10 +9,9 @@
             type="com.timappweb.timapp.data.models.Event"></variable>
     </data>
     <FrameLayout
-    android:id="@+id/event_title_picture_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+        android:id="@+id/event_title_picture_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/black">
 <!--
         <com.facebook.drawee.view.SimpleDraweeView

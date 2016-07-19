@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
@@ -25,16 +24,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.map.MapFactory;
-import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SimpleTimerView;
-import com.timappweb.timapp.views.controller.EventStateButtonController;
 
 
 public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback {
@@ -63,6 +58,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private View rateButtons;
     private View flameView;
     private View mainLayout;
+    private TextView statusTv;
 
     @Nullable
     @Override
@@ -91,22 +87,16 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         //new EventStateButtonController(getContext(), mComingButton, event, UserPlaceStatusEnum.COMING).initState();
 
         mainLayout = view.findViewById(R.id.main_layout);
-        rateButtons = view.findViewById(R.id.here_view);
-        flameView = view.findViewById(R.id.far_view);
+        statusTv = (TextView) view.findViewById(R.id.status_text);
+        //rateButtons = view.findViewById(R.id.here_view);
+        flameView = view.findViewById(R.id.points_icon);
         switchButton = (SwitchCompat) view.findViewById(R.id.switch_button);
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 updatePointsView(isChecked);
-                if(isChecked) {
-                    rateButtons.setVisibility(View.VISIBLE);
-                    flameView.setVisibility(View.GONE);
-                    mainLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_dark));
-                } else {
-                    rateButtons.setVisibility(View.GONE);
-                    flameView.setVisibility(View.VISIBLE);
-                    mainLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background));
-                }
+                int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
+                statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
             }
         });
 

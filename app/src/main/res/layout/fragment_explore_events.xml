@@ -18,7 +18,6 @@
             android:layout_marginTop="20dp"/>
     </LinearLayout>
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_places"
         android:layout_width="match_parent"
@@ -35,11 +34,11 @@
         android:visibility="gone"
         />
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         style="@style/DarkFab"
         android:id="@+id/post_event_button"
         android:layout_alignParentRight="true"
         android:layout_above="@+id/event_view"
-        android:layout_alignWithParentIfMissing="true"/>
+        android:layout_alignWithParentIfMissing="true"/>-->
 
 </RelativeLayout>

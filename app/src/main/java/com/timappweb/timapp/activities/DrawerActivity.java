@@ -86,9 +86,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
 
     /* ============================================================================================*/
-    // Add spot button
-    FloatingActionButton addSpotFloatingButton = null;
-    /* ============================================================================================*/
 
      /* ============================================================================================*/
     /* ON CREATE */
@@ -212,24 +209,21 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
      * Create the button to add a spot
      */
     protected void initAddSpotButton() {
-        if (addSpotFloatingButton == null){
-            addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.post_event_button);
-            fabContainer = findViewById(R.id.fab_container);
-            final Activity that = this;
-            Log.d(TAG, "Init add_spot_button button");
-            addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.locate(that);
-                }
-            });
-        }
+        fabContainer = findViewById(R.id.fab_container);
+        final Activity that = this;
+        Log.d(TAG, "Init add_spot_button button");
+        fabContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.locate(that);
+            }
+        });
     }
     protected void hideAddSpotButton(){
-        addSpotFloatingButton.setVisibility(View.GONE);
+        fabContainer.setVisibility(View.GONE);
     }
     protected void showAddSpotButton(){
-        addSpotFloatingButton.setVisibility(View.VISIBLE);
+        fabContainer.setVisibility(View.VISIBLE);
     }
 
     @Override

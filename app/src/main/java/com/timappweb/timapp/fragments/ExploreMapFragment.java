@@ -108,14 +108,14 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         eventView = root.findViewById(R.id.event_view);
         eventView.setVisibility(View.GONE);
-        newEventbutton = root.findViewById(R.id.post_event_button);
+        /*newEventbutton = root.findViewById(R.id.post_event_button);
 
         newEventbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.locate(drawerActivity);
             }
-        });
+        });*/
 
 
         if (savedInstanceState == null){
@@ -173,14 +173,12 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mBinding.setEvent(event);
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
-        newEventbutton.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
     }
 
     public void hidePlace() {
         final Animation slideOut = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_out_down);
         eventView.startAnimation(slideOut);
-        //newEventbutton.startAnimation(slideOut);
         eventView.setVisibility(View.GONE);
     }
 

@@ -12,6 +12,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.ItemEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         final Event event = data.get(position);
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
         mBinding.setEvent(event);
+        int initialTime = event.getPoints();
+        viewHolder.tvCountPoints.initTimer(initialTime);
+        //TODO Steph : may be better to initialize the timer through databinding
     }
 
     @Override
@@ -81,9 +85,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     public class EventsViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
+        SimpleTimerView tvCountPoints;
 
         EventsViewHolder(View itemView) {
             super(itemView);
+            tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.white_points_text);
             itemView.setOnClickListener(this);
         }
 

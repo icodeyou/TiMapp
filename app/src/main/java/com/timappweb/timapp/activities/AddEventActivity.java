@@ -63,6 +63,8 @@ import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 
 import java.util.List;
 
+import cdflynn.android.library.crossview.CrossView;
+
 
 public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
     private static final float ZOOM_LEVEL_CENTER_MAP = 14.0f;

@@ -133,10 +133,9 @@
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
-        <item name="android:src">@drawable/plus_button_white</item>
-        <item name="rippleColor">@color/colorPrimary</item>
-        <item name="backgroundTint">@color/colorPrimaryDark</item>
+        <item name="android:src">@drawable/new_event_button</item>
+        <item name="rippleColor">@color/colorPrimaryDark</item>
+        <item name="backgroundTint">@color/colorSecondary</item>
     </style>
 
     <style name="LightFab">
