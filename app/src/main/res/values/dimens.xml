@@ -147,5 +147,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- Navigation Drawer -->
     <dimen name="nav_drawer_max_width">320dp</dimen>
+    <dimen name="height_stats_event_map">80dp</dimen>
 
 </resources>
