@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
+        <import type="com.timappweb.timapp.utils.DistanceHelper"/>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
     <RelativeLayout
@@ -81,27 +82,39 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp">
                     <TextView
-                        style="@style/TextLightBackgroundBold"
+                        style="@style/TextLightBackground"
                         android:id="@+id/title_event"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{event.name}"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
-                        android:layout_toLeftOf="@+id/distance_event"
-                        android:layout_toStartOf="@+id/distance_event"
+                        android:layout_toLeftOf="@+id/distance_layout"
+                        android:layout_toStartOf="@+id/distance_layout"
                         tools:text="Fete de la musique"/>
-                    <TextView
-                        style="@style/TextLightBackgroundBold"
-                        android:id="@+id/distance_event"
+
+                    <LinearLayout
+                        android:id="@+id/distance_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginStart="10dp"
-                        android:text="@{event.distance}"
-                        tools:text="120 km"
                         android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"
+                        android:orientation="horizontal">
+                        <ProgressBar
+                            style="@style/SmallFormIconGroup"
+                            android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}"
+                            android:id="@+id/progressBar2" />
+
+                        <TextView
+                            style="@style/TextLightBackground"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
+                            tools:text="120 km"
+                            android:id="@+id/textView" />
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <FrameLayout
