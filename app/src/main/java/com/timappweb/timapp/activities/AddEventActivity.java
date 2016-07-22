@@ -118,7 +118,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_event);
 
-        this.initToolbar(true);
+        this.initToolbar(true,R.color.white);
         this.setStatusBarColor(R.color.colorSecondary);
         this.extractSpot(savedInstanceState);
 

@@ -3,10 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LocateActivity"
-    android:background="@color/background_light">
-
-    <include layout="@layout/toolbar_layout"></include>
+    android:background="@color/background">
 
     <include layout="@layout/no_connection_view"
         android:id="@+id/no_connection_view"
@@ -25,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center|top"
+            android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible">
             <include layout="@layout/progress_view"
@@ -50,7 +47,8 @@
 
     </LinearLayout>
 
-    <include layout="@layout/toolbar_layout"></include>
+    <include android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_layout" />
 
     <!--<include
         layout="@layout/toolbar_transparent_layout" />-->

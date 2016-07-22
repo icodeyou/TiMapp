@@ -60,7 +60,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         setContentView(R.layout.activity_locate);
 
         initToolbar(true);
-        mToolbar.setTitle(R.string.title_activity_locate);
 
         //Initialize variables
         progressView = findViewById(R.id.progress_view);
