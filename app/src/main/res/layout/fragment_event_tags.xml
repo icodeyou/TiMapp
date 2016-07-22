@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_fragments_event"
         android:layout_gravity="center">
 
         <com.timappweb.timapp.views.SwipeRefreshLayout

@@ -6,7 +6,8 @@
     >
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_fragments_event">
 
         <!-- **********************************************************************-->
 
@@ -17,8 +18,7 @@
             <com.timappweb.timapp.views.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout_place_people"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp">
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_people"

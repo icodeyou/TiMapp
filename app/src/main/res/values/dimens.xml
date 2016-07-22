@@ -7,6 +7,7 @@
     <dimen name="activity_horizontal_margin">5dp</dimen>
     <dimen name="activity_vertical_margin">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_icon_size">24dp</dimen>
     <dimen name="fab_map_margin">10dp</dimen>
     <dimen name="usertags_margin">15dp</dimen>
     <dimen name="margin_labels_invitefriends">5dp</dimen>
@@ -148,5 +149,6 @@
     <!-- Navigation Drawer -->
     <dimen name="nav_drawer_max_width">320dp</dimen>
     <dimen name="height_stats_event_map">80dp</dimen>
+    <dimen name="margin_fragments_event">5dp</dimen>
 
 </resources>

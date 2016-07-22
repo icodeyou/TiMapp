@@ -42,7 +42,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             fab:fab_addButtonColorNormal="@color/white"
-            fab:fab_addButtonColorPressed="@color/colorSecondary"
+            fab:fab_addButtonColorPressed="@color/background"
             fab:fab_addButtonPlusIconColor="@color/colorPrimary"
             fab:fab_labelStyle="@style/FabLabels"
             android:layout_marginBottom="16dp"
@@ -51,20 +51,31 @@
             fab:fab_expandDirection="up">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/action_a"
+                android:id="@+id/action_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/white"
-                fab:fab_title="Action A"
-                fab:fab_colorPressed="@color/colorSecondary"/>
+                fab:fab_icon="@drawable/ic_camera_white"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/action_b"
+                android:id="@+id/action_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/white"
-                fab:fab_title="Action with a very long name that won\'t fit on the screen"
-                fab:fab_colorPressed="@color/colorSecondary"/>
+                fab:fab_icon="@drawable/ic_hashtag_white"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_invite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_people"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
