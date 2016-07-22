@@ -9,13 +9,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginTop="@dimen/height_header_event"
-            android:paddingTop="15dp"
-            android:src="@drawable/big_hashtag"/>
-
         <com.timappweb.timapp.views.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_place_tags"
             android:layout_width="match_parent"
@@ -26,8 +19,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="true"
-                android:saveEnabled="false"/>
-            <!--android:listSelector="@android:color/transparent"-->
+                android:saveEnabled="false"
+                android:listSelector="@color/DarkGray"/>
         </com.timappweb.timapp.views.SwipeRefreshLayout>
 
         <TextView
@@ -35,17 +28,6 @@
             android:id="@+id/no_tags_view"
             android:text="@string/no_tags"/>
 
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/fab_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom">
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/post_button"
-            style="@style/DarkFab"/>
     </RelativeLayout>
 
 

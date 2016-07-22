@@ -68,23 +68,28 @@
                 android:layout_toEndOf="@+id/textbox"
                 android:background="@drawable/gradient_right_view"/>
 
-            <TextView
-                android:id="@+id/tv_tag_counter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <FrameLayout
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_toRightOf="@+id/textbox"
                 android:layout_toEndOf="@id/textbox"
-                android:layout_marginLeft="-8dp"
-                android:layout_marginStart="-8dp"
-                android:gravity="center"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:text="15"
-                android:textSize="@dimen/text_tiny"
-                android:textColor="@color/white"
-                android:background="@drawable/circle_background_primary"/>
+                android:layout_marginLeft="-14dp"
+                android:layout_marginStart="-14dp"
+                android:background="@drawable/circle_background_primary">
+
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/tv_tag_counter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:ellipsize="start"
+                    android:maxLines="1"
+                    android:padding="3dp"
+                    android:text="122"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_tiny"
+                    android:textColor="@color/white"/>
+            </FrameLayout>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

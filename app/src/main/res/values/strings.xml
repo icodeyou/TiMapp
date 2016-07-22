@@ -237,7 +237,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="pics">pics</string>
     <string name="profile_saved">Your profile has been saved</string>
     <string name="cannot_save_your_profile">Your profile cannot be saved for now. Sorry...</string>
-
+    <string name="posts">posts</string>
 
 
     <plurals name="number_people_event">

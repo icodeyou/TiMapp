@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +116,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 event = event.deepSave();
             }
         }
+
+        initFabButton();
+    }
+
+    private void initFabButton() {
+
     }
 
     /**

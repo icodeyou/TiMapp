@@ -28,7 +28,7 @@
             android:gravity="center|top"
             android:orientation="vertical"
             android:visibility="visible">
-            <include layout="@layout/progressview"
+            <include layout="@layout/progress_view"
                 android:layout_height="@dimen/default_progressview"
                 android:layout_width="@dimen/default_progressview"/>
         </LinearLayout>

@@ -8,7 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <!-- **********************************************************************-->
 
         <FrameLayout
@@ -18,7 +17,8 @@
             <com.timappweb.timapp.views.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout_place_people"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_people"
@@ -37,17 +37,6 @@
                 android:text="@string/no_people"/>
 
         </FrameLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/fab_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom">
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/post_button"
-                style="@style/DarkFab"/>
-        </RelativeLayout>
 
     </FrameLayout>
 </layout>
