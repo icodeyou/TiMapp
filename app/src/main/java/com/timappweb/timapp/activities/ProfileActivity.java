@@ -101,8 +101,10 @@ public class ProfileActivity extends BaseActivity  {
         MenuItem item = menu.findItem(R.id.action_edit_profile);
 
         //Check that the user is loaded
-        if(mUser!=null) {
-            item.setVisible(true);
+        if (MyApplication.isLoggedIn()){
+            if (mUser != null && mUser.getRemoteId() == MyApplication.getCurrentUser().getRemoteId()) {
+                item.setVisible(true);
+            }
         }
         return true;
     }

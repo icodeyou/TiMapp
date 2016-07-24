@@ -231,4 +231,6 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
 }
