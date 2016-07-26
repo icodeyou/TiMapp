@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.internal.NavigationMenuView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -175,7 +173,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
             if (exploreFragment.getFragmentSelected() instanceof ExploreMapFragment
                     && exploreMapFragment.isPlaceViewVisible()) {
-                exploreMapFragment.hidePlace();
+                exploreMapFragment.hideEvent();
             }
             else{
                 if (backPressedOnce) {

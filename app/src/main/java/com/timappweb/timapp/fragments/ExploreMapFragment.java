@@ -11,15 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
@@ -167,7 +170,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
     }
 
-    private void displayPlace(Event event) {
+    private void displayEvent(Event event) {
         // TODO can be removed later when all data are synchronized localy...
         if (!event.hasLocalId()) event.mySave();
         mBinding.setEvent(event);
@@ -176,7 +179,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.setVisibility(View.VISIBLE);
     }
 
-    public void hidePlace() {
+    public void hideEvent() {
         final Animation slideOut = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_out_down);
         eventView.startAnimation(slideOut);
         eventView.setVisibility(View.GONE);
@@ -215,7 +218,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mapView.getMap().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                hidePlace();
+                hideEvent();
             }
         });
     }
@@ -296,7 +299,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             // Remove previous cache and all markers
             history.resizeArea(bounds);
         }
-
         history.update(bounds);
     }
 
@@ -305,7 +307,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         if(isPlaceViewVisible() && mBinding.getEvent() == event) {
             IntentsUtils.viewSpecifiedEvent(getActivity(), event);
         } else {
-            displayPlace(event);
+            MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
+
+            ImageView pin = new ImageView(getContext());
+            pin.setImageResource(R.drawable.pin);
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));
+
+            displayEvent(event);
         }
     }
 
@@ -341,7 +349,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
                 map.animateCamera(cameraUpdate);
 
-                hidePlace();
+                hideEvent();
                 return true;
             }
         });

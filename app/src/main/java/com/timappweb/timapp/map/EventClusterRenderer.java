@@ -31,6 +31,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
 
     //Big coef = small icon
     private static int ICON_SIZE_COEF = 12;
+    private static int PADDING_ICON = 70;
 
     private final int mDimension;
     private final ImageView mImageView;
@@ -65,6 +66,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
             // TODO
             return;
         }
+        categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
         categoryImage = MyApplication.setCategoryBackground(categoryImage, event.getLevel());
 
         categoryImage.setDrawingCacheEnabled(true);
