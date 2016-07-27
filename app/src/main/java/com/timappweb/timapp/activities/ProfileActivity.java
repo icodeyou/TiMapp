@@ -1,12 +1,9 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -23,14 +20,11 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.UserTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.SingleEntryLoaderCallback;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.databinding.ActivityProfileBinding;
-import com.timappweb.timapp.listeners.ColorAllOnTouchListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
 
@@ -149,8 +143,6 @@ public class ProfileActivity extends BaseActivity  {
 
 
     private void setTagsListeners() {
-        layoutTagsProfile.setOnTouchListener(new ColorAllOnTouchListener());
-
         layoutTagsProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

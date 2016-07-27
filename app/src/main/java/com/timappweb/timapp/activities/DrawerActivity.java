@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -104,6 +105,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         // !important Init AddButton
         this.initAddSpotButton();
 
+        this.initList();
+
         //init Variables
         backPressedOnce = false;
 
@@ -123,6 +126,16 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
 
         LocationManager.addOnLocationChangedListener(this);
+    }
+
+    private void initList() {
+        ImageView listIcon = (ImageView) findViewById(R.id.list_icon);
+        listIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override

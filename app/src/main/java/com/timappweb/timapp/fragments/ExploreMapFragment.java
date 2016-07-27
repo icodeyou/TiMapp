@@ -50,6 +50,8 @@ import java.util.List;
 public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
+    private static final int MARGIN_TOP_BUTTON_LOCATE_MAP = 120;
+
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
 
@@ -191,10 +193,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             filterTagsContainer.setVisibility(View.VISIBLE);
             filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
             Log.d(TAG,"Number of tags filtered : " + MyApplication.searchFilter.tags.size());
-            mapView.getMap().setPadding(0, 120, 0, 0);
+            //mapView.getMap().setPadding(0, MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
         } else {
             filterTagsContainer.setVisibility(View.GONE);
-            mapView.getMap().setPadding(0, 0, 0, 0);
+            //mapView.getMap().setPadding(0, 2*MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
         }
         getActivity().invalidateOptionsMenu();
     }

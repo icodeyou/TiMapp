@@ -7,6 +7,5 @@
     android:gravity="center"
     android:textStyle="bold"
     android:textColor="@color/usertag_text_color"
-    android:textSize="@dimen/text_big"
+    android:textSize="@dimen/text_huge"
     tools:text="#tag" />
-

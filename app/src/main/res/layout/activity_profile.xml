@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
@@ -15,7 +16,8 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,34 +31,33 @@
                 android:id="@+id/no_connection_view"/>
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:layout_marginBottom="5dp">
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/profile_picture"
-                    android:layout_width="@dimen/profile_picture_side"
-                    android:layout_height="@dimen/profile_picture_side"
-                    android:layout_margin="5dp"
-                    fresco:actualImageScaleType="fitCenter"
-                    fresco:placeholderImage="@drawable/placeholder_profile"
-                    fresco:roundAsCircle="true"/>
+                android:layout_marginBottom="10dp">
 
                 <me.grantland.widget.AutofitTextView
                     android:id="@+id/tv_profile_username"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
                     android:ellipsize="none"
                     android:maxLines="1"
                     android:textSize="@dimen/text_big"
-                    android:textColor="@color/textDark"
+                    android:textColor="@color/colorPrimaryDark"
                     android:gravity="center"
                     android:text="@{user.getUsername()}"
                     tools:text="Super Sayen"/>
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="@dimen/profile_picture_side"
+                    android:layout_height="@dimen/profile_picture_side"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    fresco:actualImageScaleType="fitCenter"
+                    fresco:placeholderImage="@drawable/placeholder_profile"
+                    fresco:roundAsCircle="true"/>
             </LinearLayout>
 
             <LinearLayout
@@ -86,12 +87,14 @@
                         android:layout_marginBottom="5dp"
                         android:text="@{NumberUtility.displayCount(user.count_posts)}"
                         tools:text="23"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/post_shared"
+                        android:text="@string/tags_shared"
                         android:textSize="@dimen/text_normal"
-                        android:textColor="@color/colorAccent"/>
+                        android:textColor="@color/colorAccent"
+                        android:id="@+id/textView3" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_weight="1"
@@ -118,7 +121,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/places_created"
+                        android:text="@string/events_created"
                         android:textSize="@dimen/text_normal"
                         android:layout_marginBottom="5dp"
                         android:textColor="@color/colorAccent"/>
@@ -132,11 +135,15 @@
                 android:id="@+id/layout_tags_profile">
                 <ListView
                     android:id="@+id/listview_usertags"
+                    android:scrollbars="none"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
+                    android:background="@drawable/clickable_background"
                     android:divider="@color/transparent"
+                    android:listSelector="@android:color/transparent"
+                    android:cacheColorHint="@android:color/transparent"
                     android:dividerHeight="10dp"/>
             </FrameLayout>
         </LinearLayout>

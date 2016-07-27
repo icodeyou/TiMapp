@@ -9,6 +9,7 @@
     <color name="colorAccent">#f44336</color>
     <!--<color name="colorSecondary">#ffefc6</color>-->
     <color name="colorSecondary">#2b3778</color>
+    <color name="colorSecondaryExtaLight">#f9faff</color>
     <color name="colorSecondaryDark">#2b3778</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
     <color name="TEST">#f44437</color>

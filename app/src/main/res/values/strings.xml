@@ -149,8 +149,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="text_tags_left_3">3 tags left</string>
     <string name="text_tags_left_2">2 tags left</string>
     <string name="text_tags_left_1">1 tag left</string>
-    <string name="post_shared">Posts shared</string>
-    <string name="places_created">Places created</string>
+    <string name="tags_shared">Tags shared</string>
+    <string name="events_created">Events created</string>
     <string name="edit_first_profile1">Well done.</string>
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
     <string name="place_removed">This event does not exists anymore</string>

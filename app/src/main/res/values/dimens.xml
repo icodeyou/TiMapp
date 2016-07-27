@@ -28,7 +28,8 @@
     <dimen name="height_big_header">150dp</dimen>
     <dimen name="height_small_header">60dp</dimen>
     <dimen name="profile_picture_side">90dp</dimen>
-    <dimen name="half_profile_picture_side">45dp</dimen>
+    <dimen name="positive_half_profile_picture_side">45dp</dimen>
+    <dimen name="negative_half_profile_picture_side">-45dp</dimen>
     <dimen name="last_post_box">5dp</dimen>
     <dimen name="height_small_rv_displayed_tags">24dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>

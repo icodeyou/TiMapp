@@ -4,65 +4,74 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/main_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/counter_box"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        android:elevation="@dimen/card_elevation"
+        android:layout_margin="3dp"
+        android:elevation="2dp"
         android:background="@drawable/background_card">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="1dp"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_normal"
-            android:textColor="@color/colorPrimary"
-            android:text="#"
-            android:id="@+id/textView2" />
-
-        <TextView
-            android:id="@+id/tv_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="nimportequoi"
-            android:textSize="@dimen/text_normal"
-            android:textColor="@color/colorPrimary"/>
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/counter_box"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_margin="10dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center"
-        android:background="@drawable/circle_background_primary">
-        <!--android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"-->
-
-        <me.grantland.widget.AutofitTextView
-            android:id="@+id/tv_tag_counter"
+        <LinearLayout
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/counter_box"
+            android:layout_toStartOf="@+id/counter_box"
             android:gravity="center"
-            android:ellipsize="start"
-            android:maxLines="1"
-            android:padding="3dp"
-            android:text="122"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_tiny"
-            android:textColor="@color/white"/>
-    </FrameLayout>
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="1dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/colorPrimary"
+                android:text="#"
+                android:id="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/tv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="left"
+                android:text="nimportequoi"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/counter_box"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="5dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_background_primary">
+            <!--android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"-->
+
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/tv_tag_counter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:maxLines="1"
+                android:padding="3dp"
+                android:text="122"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_tiny"
+                android:textColor="@color/white"/>
+        </FrameLayout>
+    </RelativeLayout>
 </RelativeLayout>
 

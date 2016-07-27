@@ -41,7 +41,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            fab:fab_addButtonColorNormal="@color/white"
+            fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
             fab:fab_addButtonColorPressed="@color/background"
             fab:fab_addButtonPlusIconColor="@color/colorPrimary"
             fab:fab_labelStyle="@style/FabLabels"

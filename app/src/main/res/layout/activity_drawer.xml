@@ -29,7 +29,16 @@
             tools:context=".ExploreActivity" />
 
         <!-- TOOLBAR -->
-        <include layout="@layout/toolbar_layout"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height">
+            <ImageView
+                android:id="@+id/list_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/list_icon"/>
+        </android.support.v7.widget.Toolbar>
 
         <!-- FLOATING ACTION BUTTON -->
         <LinearLayout

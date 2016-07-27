@@ -91,6 +91,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private View selectedCategoryView;
     private ImageView imageSelectedCategory;
     private TextView textSelectedCategory;
+    private EditText descriptionET;
     //private View pinView;
     //private SpotView spotView;
 
