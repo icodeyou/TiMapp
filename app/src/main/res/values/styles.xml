@@ -69,7 +69,7 @@
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
-        <item name="color">@color/drawerArrowColor</item>
+        <item name="color">@color/colorPrimary</item>
     </style>
 
     <style name="EditProfileTheme" parent="AppTheme">

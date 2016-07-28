@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -32,6 +34,8 @@ public class ExploreFragment extends Fragment{
     private ViewPager viewPager;
     private AreaDataLoaderFromAPI dataLoader;
     private MyOnPageChangeListener onPageChangeListener;
+    private View fakeListView;
+    private View blurBackground;
 
     public ExploreMapFragment getExploreMapFragment(){
         return tabsAdapter.getExploreMapFragment();
@@ -59,6 +63,9 @@ public class ExploreFragment extends Fragment{
 
         /** Important: Must use the child FragmentManager or you will see side effects. */
         tabsAdapter = new TabsAdapter(getContext(), getChildFragmentManager());
+
+        fakeListView = root.findViewById(R.id.fake_list_view);
+        blurBackground = root.findViewById(R.id.blur_background);
 
         viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
         onPageChangeListener =new MyOnPageChangeListener();
@@ -101,6 +108,24 @@ public class ExploreFragment extends Fragment{
 
     public ViewPager getViewPager() {
         return viewPager;
+    }
+
+    public void updateList() {
+        if(fakeListView.getVisibility()==View.GONE) {
+            Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down_all);
+            Animation appear = AnimationUtils.loadAnimation(getContext(), R.anim.appear);
+            blurBackground.startAnimation(appear);
+            fakeListView.startAnimation(slideIn);
+            fakeListView.setVisibility(View.VISIBLE);
+            blurBackground.setVisibility(View.VISIBLE);
+        } else {
+            Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_righ);
+            Animation disappear = AnimationUtils.loadAnimation(getContext(), R.anim.disappear);
+            blurBackground.startAnimation(disappear);
+            fakeListView.startAnimation(slideOut);
+            fakeListView.setVisibility(View.GONE);
+            blurBackground.setVisibility(View.GONE);
+        }
     }
 
     public static class TabsAdapter extends FragmentPagerAdapter {

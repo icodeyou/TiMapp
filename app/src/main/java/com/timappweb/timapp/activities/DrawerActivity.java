@@ -98,7 +98,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        setStatusBarColor(R.color.status_bar_map);
         // !important Init drawer
         this.initDrawer();
 
@@ -133,7 +135,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         listIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                exploreFragment.updateList();
             }
         });
     }

@@ -16,7 +16,7 @@
     <color name="transparent">#00000000</color>
     <color name="background">#f6f6f2</color>
     <color name="background_dark">#f1f1ea</color>
-    <color name="background_semi_transparent">#6ff6efef</color>
+    <color name="background_semi_transparent">#9be3dddd</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
     <color name="background_event_map">#e3000000</color>
@@ -27,6 +27,7 @@
     <color name="background_spot_transparent">#fff</color>
     <color name="background_spot_very_transparent">#602e468a</color>
     <color name="background_activity_event">@color/background_spot_transparent</color>
+    <color name="status_bar_map">#df5f5f</color>
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>

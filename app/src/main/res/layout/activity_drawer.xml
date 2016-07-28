@@ -32,12 +32,22 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height">
-            <ImageView
-                android:id="@+id/list_icon"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_marginRight="@dimen/width_locate_button_googlemap"
+            android:layout_marginEnd="60dp"
+            android:background="@color/background_semi_transparent"
+            android:gravity="right">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/list_icon"/>
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/list_icon"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:padding="15dp"
+                    android:src="@drawable/list_icon"/>
+            </FrameLayout>
         </android.support.v7.widget.Toolbar>
 
         <!-- FLOATING ACTION BUTTON -->

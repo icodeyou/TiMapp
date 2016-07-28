@@ -115,6 +115,7 @@ dependencies {
     compile 'eu.davidea:flexible-adapter:5.0.0-b6@aar'
 
     compile 'com.getbase:floatingactionbutton:1.10.1'
+    compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
 
 }
 

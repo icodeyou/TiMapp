@@ -18,6 +18,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.twotoasters.jazzylistview.effects.FlyEffect;
+import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
 import java.util.List;
 
@@ -69,6 +71,11 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
                 IntentsUtils.viewSpecifiedEvent(getContext(), eventsAdapter.getItem(position));
             }
         });
+
+        //set Jazzy Effect on Recycler View
+        JazzyRecyclerViewScrollListener jazzyRecyclerViewScrollListener = new JazzyRecyclerViewScrollListener();
+        jazzyRecyclerViewScrollListener.setTransitionEffect(new FlyEffect());
+        eventRecyclerView.addOnScrollListener(jazzyRecyclerViewScrollListener);
 
     }
 
