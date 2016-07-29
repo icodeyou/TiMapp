@@ -33,8 +33,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
-            android:layout_marginRight="@dimen/width_locate_button_googlemap"
-            android:layout_marginEnd="60dp"
             android:background="@color/background_semi_transparent"
             android:gravity="right">
             <FrameLayout

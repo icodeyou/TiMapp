@@ -193,10 +193,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             filterTagsContainer.setVisibility(View.VISIBLE);
             filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
             Log.d(TAG,"Number of tags filtered : " + MyApplication.searchFilter.tags.size());
-            //mapView.getMap().setPadding(0, MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
+            mapView.getMap().setPadding(0, MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
         } else {
             filterTagsContainer.setVisibility(View.GONE);
-            //mapView.getMap().setPadding(0, 2*MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
+            mapView.getMap().setPadding(0, 2*MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
         }
         getActivity().invalidateOptionsMenu();
     }

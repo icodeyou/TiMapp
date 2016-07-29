@@ -18,7 +18,13 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.twotoasters.jazzylistview.effects.CardsEffect;
+import com.twotoasters.jazzylistview.effects.FadeEffect;
 import com.twotoasters.jazzylistview.effects.FlyEffect;
+import com.twotoasters.jazzylistview.effects.SlideInEffect;
+import com.twotoasters.jazzylistview.effects.TiltEffect;
+import com.twotoasters.jazzylistview.effects.WaveEffect;
+import com.twotoasters.jazzylistview.effects.ZipperEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
 import java.util.List;
@@ -73,10 +79,10 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         });
 
         //set Jazzy Effect on Recycler View
+        //Best effects : CardsEffect(), TiltEffect(), ZipperEffect().
         JazzyRecyclerViewScrollListener jazzyRecyclerViewScrollListener = new JazzyRecyclerViewScrollListener();
-        jazzyRecyclerViewScrollListener.setTransitionEffect(new FlyEffect());
+        jazzyRecyclerViewScrollListener.setTransitionEffect(new TiltEffect());
         eventRecyclerView.addOnScrollListener(jazzyRecyclerViewScrollListener);
-
     }
 
     public void onResume(){

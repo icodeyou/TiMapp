@@ -47,8 +47,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
         mBinding.setEvent(event);
         int initialTime = event.getPoints();
-        viewHolder.tvCountPoints.initTimer(initialTime);
-        //TODO Steph : may be better to initialize the timer through databinding
+        viewHolder.tvCountPoints.initTimer(initialTime*1000);
+        //TODO Steph : might be better to initialize the timer through databinding
     }
 
     @Override
