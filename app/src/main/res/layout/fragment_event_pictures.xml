@@ -5,6 +5,7 @@
     android:padding="@dimen/margin_fragments_event">
 
     <com.timappweb.timapp.views.SwipeRefreshLayout
+        android:layout_marginTop="@dimen/margin_fragments_event_additional_top"
         android:id="@+id/swipe_refresh_layout_place_picture"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -32,11 +32,16 @@
                     android:padding="@dimen/margin_fragments_event"
                     android:background="@color/background"
                     android:layout_marginTop="3dp">
-                    <include
-                        layout="@layout/event_stats_people"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        bind:event="@{event}" />
+                        android:layout_height="wrap_content"
+                        android:padding="10dp">
+                        <include
+                            layout="@layout/event_stats_people"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            bind:event="@{event}" />
+                    </FrameLayout>
 
                     <View
                         android:layout_width="match_parent"

@@ -121,6 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
+
                     <include layout="@layout/layout_spot_minimized"
                         bind:spot="@{event.spot}"></include>
                 </FrameLayout>

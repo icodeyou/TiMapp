@@ -14,7 +14,7 @@
     <dimen name="padding_fragments_place">5dp</dimen>
     <dimen name="margin_tags">10dp</dimen>
 
-    <dimen name="toolbarHeight">50dp</dimen>
+    <dimen name="toolbarHeight">56dp</dimen>
 
     <!-- Cards -->
     <dimen name="card_elevation">4dp</dimen>
@@ -150,7 +150,8 @@
     <!-- Navigation Drawer -->
     <dimen name="nav_drawer_max_width">320dp</dimen>
     <dimen name="height_stats_event_map">80dp</dimen>
-    <dimen name="margin_fragments_event">5dp</dimen>
+    <dimen name="margin_fragments_event">1dp</dimen>
+    <dimen name="margin_fragments_event_additional_top">2dp</dimen>
     <dimen name="width_locate_button_googlemap">60dp</dimen>
 
 </resources>

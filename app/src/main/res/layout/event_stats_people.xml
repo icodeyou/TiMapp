@@ -52,8 +52,7 @@
     <LinearLayout
         android:id="@+id/white_points_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/event_stats_height"
-        android:padding="10dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
         android:visibility="visible">
@@ -62,7 +61,6 @@
             android:id="@+id/points_icon"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="2dp"
             android:src="@drawable/trending" />
 
         <!--<LinearLayout
