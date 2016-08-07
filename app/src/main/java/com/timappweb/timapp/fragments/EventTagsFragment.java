@@ -69,7 +69,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         noTagsView = view.findViewById(R.id.no_tags_view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
-        postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
+        //postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
@@ -79,12 +79,12 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
 
 
-        postButton.setOnClickListener(new View.OnClickListener() {
+        /*postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             IntentsUtils.addTags(EventTagsFragment.this, eventActivity.getEvent());
             }
-        });
+        });*/
 
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
@@ -118,7 +118,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
-        postButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
+        //postButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
     // =============================================================================================

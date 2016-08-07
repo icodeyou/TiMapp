@@ -10,6 +10,7 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_explore">Explore</string>
     <string name="title_activity_post">Post</string>
     <string name="title_activity_place">Event</string>
     <string name="title_activity_incoming">Incoming</string>
@@ -112,7 +113,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_no_internet">\"It is not my fucking fault if you do not have internet right now. Check your goddamn phone\"</string>
     <string name="hint_searchview_filter">Search</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
-    <string name="title_activity_locate">Around you</string>
+    <string name="title_activity_locate">Where are you ?</string>
     <string name="title_activity_publish">Check and send</string>
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
@@ -148,8 +149,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="text_tags_left_3">3 tags left</string>
     <string name="text_tags_left_2">2 tags left</string>
     <string name="text_tags_left_1">1 tag left</string>
-    <string name="post_shared">Posts shared</string>
-    <string name="places_created">Places created</string>
+    <string name="tags_shared">Tags shared</string>
+    <string name="events_created">Events created</string>
     <string name="edit_first_profile1">Well done.</string>
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
     <string name="place_removed">This event does not exists anymore</string>
@@ -207,7 +208,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
     <string name="unknown_category">Unknown category</string>
-    <string name="hint_write_description">Other information</string>
+    <string name="hint_write_description">Description</string>
     <string name="iamhere">I\'m here !</string>
     <string name="iamcoming">I\'m coming !</string>
     <string name="please_wait_location">Please wait while we get your location</string>
@@ -231,9 +232,15 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="event_organizer">Organised by</string>
     <string name="event_popularity">Popularity</string>
     <string name="event_description">Description</string>
+    <string name="more">More</string>
+    <string name="pick_a_category">Pick a category</string>
+    <string name="tags">tags</string>
+    <string name="pics">pics</string>
     <string name="profile_saved">Your profile has been saved</string>
     <string name="cannot_save_your_profile">Your profile cannot be saved for now. Sorry...</string>
-
+    <string name="posts">posts</string>
+    <string name="fatal_error_unknown_reason_title">Something bad happened...</string>
+    <string name="fatal_error_unknown_reason_message">Sorry, but something went wrong. You need to restart your application. If this message appear again, try updating your application.</string>
 
 
     <plurals name="number_people_event">

@@ -1,37 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cv"
-    android:layout_marginBottom="@dimen/margin_bottom_card"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp"
-    android:elevation="@dimen/card_elevation"
-    android:background="@drawable/background_card">
+    android:layout_height="wrap_content">
 
-
-        <me.grantland.widget.AutofitTextView
-            android:id="@+id/tv_tag"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:elevation="2dp"
+        android:background="@drawable/background_card">
+        <LinearLayout
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/counter_box"
+            android:layout_toStartOf="@+id/counter_box"
             android:gravity="center"
-            android:textStyle="bold"
-            tools:text="#nimportequoi"
-            android:textSize="@dimen/text_lv_base"
-            android:textColor="@color/colorAccent"
-            />
+            android:orientation="horizontal"
+            android:padding="5dp">
 
-        <TextView
-            android:id="@+id/tv_tag_counter"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            tools:text="2"
-            android:textSize="@dimen/text_big"
-            android:textColor="@color/textDark"/>
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="1dp"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/colorPrimary"
+                android:text="#"
+                android:id="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/tv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="left"
+                android:text="nimportequoi"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/counter_box"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_margin="5dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_background_primary">
+            <!--android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"-->
+
+            <me.grantland.widget.AutofitTextView
+                android:id="@+id/tv_tag_counter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:ellipsize="start"
+                android:maxLines="1"
+                android:padding="3dp"
+                android:text="122"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_tiny"
+                android:textColor="@color/white"/>
+        </FrameLayout>
+    </RelativeLayout>
+</RelativeLayout>
+

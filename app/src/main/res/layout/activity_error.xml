@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tv_error_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="SERVER ERROR"
-        android:textAlignment="center"
-        android:textSize="20dp"/>
+        android:layout_height="wrap_content"
+        style="@style/title1"
+        tools:text="Error title"/>
+
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="This text view can display error message ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! "/>
 
 </LinearLayout>

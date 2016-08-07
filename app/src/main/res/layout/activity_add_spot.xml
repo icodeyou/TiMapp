@@ -12,118 +12,114 @@
             name="spot"
             type="com.timappweb.timapp.data.models.Spot"></variable>
     </data>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-    android:background="@color/background">
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
 
-        <include
-            android:id="@+id/toolbar_layout"
-            layout="@layout/toolbar" />
-
+        android:background="@color/background">
         <LinearLayout
-            style="@style/formGroup">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar_layout"
+                layout="@layout/toolbar_layout" />
+
             <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_title_dark"/>
+                style="@style/formGroup">
+                <LinearLayout
+                    style="@style/formLabelGroup">
+                    <ImageView
+                        style="@style/formIconGroup"
+                        android:src="@drawable/ic_title_dark"/>
+                    <TextView
+                        style="@style/formLabel"
+                        android:text="@string/label_spot_name"/>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edittext"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_spot_name"
+                    android:text="@={spot.name}"/>
+
                 <TextView
-                    style="@style/formLabel"
-                    android:text="@string/label_spot_name"/>
+                    style="@style/RestErrorMessage"
+                    android:visibility='@{errors.has("Spot.name") ? View.VISIBLE : View.GONE}'
+                    android:text='@{errors.get("Spot.name")}'
+                    tools:text="This name is not valid"/>
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/edittext"
-                style="@style/formEditText"
-                android:hint="@string/hint_spot_name"
-                android:text="@={spot.name}"/>
+            <View style="@style/Divider"></View>
 
-            <TextView
-                style="@style/RestErrorMessage"
-                android:visibility='@{errors.has("Spot.name") ? View.VISIBLE : View.GONE}'
-                android:text='@{errors.get("Spot.name")}'
-                tools:text="This name is not valid"/>
+            <LinearLayout
+                style="@style/formGroup">
+                <LinearLayout
+                    style="@style/formLabelGroup">
+                    <ImageView
+                        style="@style/formIconGroup"
+                        android:src="@drawable/ic_tag_dark"/>
+                    <TextView
+                        style="@style/formLabel"
+                        android:text="@string/label_category_name"/>
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/spot_categories_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/formGroup">
+
+                <LinearLayout
+                    style="@style/formLabelGroup">
+                    <ImageView
+                        style="@style/formIconGroup"
+                        android:src="@drawable/ic_location"/>
+                    <TextView
+                        style="@style/formLabel"
+                        android:text="Location"/>
+                </LinearLayout>
+                <!--
+                <EditText
+                    android:id="@+id/event_location"
+                    style="@style/formEditText"
+                    android:hint="@string/hint_event_location"
+                    android:visibility="@{spot.hasAddress() ? View.VISIBLE : View.GONE}"/>-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ProgressBar
+                        style="@style/imageIcon"
+                        android:layout_gravity="center"
+                        android:visibility="@{spot.hasAddress() ? View.GONE : View.VISIBLE}"/>
+
+                    <TextView
+                        style="@style/TextInfo"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:singleLine="false"
+                        android:text="@{spot.hasAddress() ? spot.address : @string/loading_address}"
+                        tools:text="182 washington street, Manhatan, New York"/>
+                </LinearLayout>
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/map_height" />
+
+            </LinearLayout>
+
+            <Button
+                style="@style/pageSubmitButton"
+                android:id="@+id/create_spot_button"
+                android:text="@string/btn_submit_new_spot"/>
+
         </LinearLayout>
-
-        <View style="@style/Divider"></View>
-
-        <LinearLayout
-            style="@style/formGroup">
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_tag_dark"/>
-                <TextView
-                    style="@style/formLabel"
-                    android:text="@string/label_category_name"/>
-            </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/spot_categories_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-
-        <View style="@style/Divider"></View>
-
-        <LinearLayout
-            style="@style/formGroup">
-
-            <LinearLayout
-                style="@style/formLabelGroup">
-                <ImageView
-                    style="@style/formIconGroup"
-                    android:src="@drawable/ic_location"/>
-                <TextView
-                    style="@style/formLabel"
-                    android:text="Location"/>
-            </LinearLayout>
-            <!--
-            <EditText
-                android:id="@+id/event_location"
-                style="@style/formEditText"
-                android:hint="@string/hint_event_location"
-                android:visibility="@{spot.hasAddress() ? View.VISIBLE : View.GONE}"/>-->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ProgressBar
-                    style="@style/imageIcon"
-                    android:layout_gravity="center"
-                    android:visibility="@{spot.hasAddress() ? View.GONE : View.VISIBLE}"/>
-
-                <TextView
-                    style="@style/TextInfo"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:singleLine="false"
-                    android:text="@{spot.hasAddress() ? spot.address : @string/loading_address}"
-                    tools:text="182 washington street, Manhatan, New York"/>
-            </LinearLayout>
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/map_min_height" />
-
-        </LinearLayout>
-
-        <View style="@style/Divider"></View>
-
-        <Button
-            style="@style/pageSubmitButton"
-            android:id="@+id/create_spot_button"
-            android:text="@string/btn_submit_new_spot"/>
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
 </layout>

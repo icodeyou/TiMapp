@@ -1,85 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/margin_fragments_event">
 
-    <LinearLayout
+    <com.timappweb.timapp.views.SwipeRefreshLayout
+        android:layout_marginTop="@dimen/margin_fragments_event_additional_top"
+        android:id="@+id/swipe_refresh_layout_place_picture"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <!-- List View -->
-        <!-- **********************************************************************-->
-
-        <FrameLayout
+        <com.timappweb.timapp.views.RefreshableRecyclerView
+            android:id="@+id/pictures_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="true"
+            android:saveEnabled="false"/>
+        <!--android:listSelector="@android:color/transparent"-->
+    </com.timappweb.timapp.views.SwipeRefreshLayout>
 
-            <com.timappweb.timapp.views.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_layout_place_picture"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.timappweb.timapp.views.RefreshableRecyclerView
-                    android:id="@+id/pictures_rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:clipToPadding="true"
-                    android:saveEnabled="false"/>
-                <!--android:listSelector="@android:color/transparent"-->
-            </com.timappweb.timapp.views.SwipeRefreshLayout>
-
-            <TextView
-                style="@style/NoDataView"
-                android:id="@+id/no_pictures_view"
-                android:text="@string/no_pic"/>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
+    <TextView
+        style="@style/NoDataView"
+        android:id="@+id/no_pictures_view"
+        android:text="@string/no_pic"/>
 
     <!-- Uploading view-->
     <!-- **********************************************************************-->
     <LinearLayout
         android:id="@+id/upload_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
         android:gravity="center"
+        android:background="@drawable/background_uploading"
+        android:alpha="0.7"
+        android:layout_centerInParent="true"
         android:visibility="gone">
-        <LinearLayout
+        <include layout="@layout/progress_view"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="@dimen/upload_tags_margin"/>
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@drawable/background_uploading"
-            android:alpha="0.7">
-            <include layout="@layout/progressview"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginRight="@dimen/upload_tags_margin"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/uploading_pic"
-                android:textColor="@color/Black"
-                android:textSize="@dimen/text_normal"/>
-        </LinearLayout>
+            android:text="@string/uploading_pic"
+            android:textColor="@color/Black"
+            android:textSize="@dimen/text_normal"/>
     </LinearLayout>
 
 
-
-    <RelativeLayout
-        android:id="@+id/fab_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom">
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/post_button"
-            style="@style/PostPlusButton"/>
-    </RelativeLayout>
-
-
-</FrameLayout>
+</RelativeLayout>

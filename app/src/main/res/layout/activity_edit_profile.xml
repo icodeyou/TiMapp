@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    <include layout="@layout/toolbar_transparent" />
+    <include layout="@layout/toolbar_transparent_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"

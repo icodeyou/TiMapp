@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:gravity="center">
+    android:layout_height="wrap_content" android:gravity="center">
     <ImageView
         android:id="@+id/category_icon"
         android:layout_width="@dimen/ic_place"
         android:layout_height="@dimen/ic_place"
-        android:padding="5dp"
+        android:padding="10dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_category_music"/>
-</RelativeLayout>
+        android:src="@drawable/ic_category_highlight_nightclub"/>
+    <TextView
+        android:id="@+id/category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="Music"
+        android:paddingBottom="15dp"/>
+</LinearLayout>

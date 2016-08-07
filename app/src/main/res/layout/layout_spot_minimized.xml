@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.graphics.drawable.Drawable"/>
+        <variable
+            name="spot"
+            type="com.timappweb.timapp.data.models.Spot"></variable>
+    </data>
+<LinearLayout
+    android:id="@+id/layout_spot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="5dp"
+    android:visibility="@{spot == null ? View.GONE : View.VISIBLE}">
+
+    <ImageView
+        style="@style/imageIcon"
+        android:id="@+id/spot_category_icon"
+        android:src="@drawable/ic_category_bar"/>
+
+    <TextView
+        style="@style/TextLightBackgroundBold"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:text="Bar"
+        android:text="@{spot.getCategory().name}"/>
+
+    <ImageView
+        style="@style/imageIcon"
+        android:gravity="center"
+        android:padding="12dp"
+        android:src="@drawable/dot_separator"/>
+
+    <me.grantland.widget.AutofitTextView
+        style="@style/TextLightBackgroundBold"
+        android:id="@+id/title_spot"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:maxLines="1"
+        tools:text="Le Vertigo"/>
+</LinearLayout>
+</layout>

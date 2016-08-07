@@ -98,7 +98,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         noConnectionView = view.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
-        postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
+        //postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
         if (MyApplication.isLoggedIn()){
@@ -115,12 +115,12 @@ public class EventPeopleFragment extends EventBaseFragment {
             }
         });
 
-        postButton.setOnClickListener(new View.OnClickListener() {
+        /*postButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_PEOPLE);
             }
-        });
+        });*/
 
     }
 

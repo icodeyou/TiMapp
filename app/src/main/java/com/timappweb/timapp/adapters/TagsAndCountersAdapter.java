@@ -2,10 +2,13 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
@@ -59,22 +62,27 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
         private final TextView tagText;
         private final TextView tagCounter;
+        private final LinearLayout mainLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tagText = (TextView) itemView.findViewById(R.id.tv_tag);
             tagCounter = (TextView) itemView.findViewById(R.id.tv_tag_counter);
+            mainLayout = (LinearLayout) itemView.findViewById(R.id.main_layout);
         }
 
-        public void setEventTag(int position, EventTag tag) {
+        void setEventTag(int position, EventTag tag) {
             tagText.setText(tag.getTagName());
             tagCounter.setText(String.valueOf(tag.count_ref));
+
+            /*RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mainLayout.getLayoutParams();
             if (position % 2 == 1){
-                itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             }
             else {
-                itemView.setBackgroundColor(context.getResources().getColor(R.color.background_light));
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             }
+            mainLayout.setLayoutParams(params);*/
         }
     }
 }

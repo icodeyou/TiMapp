@@ -3,38 +3,81 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     >
     <RelativeLayout
         android:id="@+id/activity_event_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".PlaceActivity"
-        android:background="@color/background_light"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/background">
 
         <com.github.florent37.materialviewpager.MaterialViewPager
             android:id="@+id/event_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:viewpager_logo="@layout/event_title"
-            app:viewpager_logoMarginTop="100dp"
+            app:viewpager_logoMarginTop="70dp"
             app:viewpager_color="@color/textLight"
-            app:viewpager_headerHeight="200dp"
-            app:viewpager_headerAlpha="0.8"
+            app:viewpager_headerHeight="@dimen/height_header_event"
+            app:viewpager_headerAlpha="0.7"
             app:viewpager_hideLogoWithFade="false"
-            app:viewpager_hideToolbarAndTitle="true"
+            app:viewpager_hideToolbarAndTitle="false"
             app:viewpager_enableToolbarElevation="true"
-            app:viewpager_parallaxHeaderFactor="1.5"
-            app:viewpager_headerAdditionalHeight="20dp"
-            app:viewpager_displayToolbarWhenSwipe="true"
+            app:viewpager_parallaxHeaderFactor="1"
+            app:viewpager_headerAdditionalHeight="@dimen/header_additional_height"
+            app:viewpager_displayToolbarWhenSwipe="false"
             app:viewpager_transparentToolbar="false"
-            app:viewpager_animatedHeaderImage="false"
+            app:viewpager_animatedHeaderImage="true"
             app:viewpager_disableToolbar="false"
             app:viewpager_pagerTitleStrip="@layout/event_pager_tabs"
             />
 
-        <!--<include layout="@layout/toolbar_transparent" />-->
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/multiple_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
+            fab:fab_addButtonColorPressed="@color/background"
+            fab:fab_addButtonPlusIconColor="@color/colorPrimary"
+            fab:fab_labelStyle="@style/FabLabels"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            fab:fab_expandDirection="up">
 
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_camera_white"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_hashtag_white"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_invite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_icon="@drawable/ic_people"
+                fab:fab_size="mini"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     </RelativeLayout>
 </layout>

@@ -22,7 +22,7 @@
     </declare-styleable>-->
 
 
-    <declare-styleable name="EventView">
+    <!--<declare-styleable name="EventView">
         <attr name="tags_visible" />
         <attr name="bottom_shadow" />
         <attr name="top_shadow" />
@@ -35,7 +35,7 @@
         <attr name="color_spot" format="boolean" />
         <attr name="color_event" format="boolean" />
         <attr name="is_description" format="boolean" />
-    </declare-styleable>
+    </declare-styleable>-->
 
     <declare-styleable name="SpotView">
         <attr name="tags_visible" />

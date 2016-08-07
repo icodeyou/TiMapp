@@ -4,7 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:id="@+id/layout_waiting_for_location"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:visibility="gone">
+
+    <!--TODO Steph : make it visible, and fix bug (layout is always shown)-->
+
     <ProgressBar
         android:layout_gravity="center"
         android:layout_width="@dimen/loader_big"

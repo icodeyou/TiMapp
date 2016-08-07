@@ -91,14 +91,14 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(context, PICUTRE_GRID_COLUMN_NB));
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
-        mPostButton = (FloatingActionButton) root.findViewById(R.id.post_button);
+        //mPostButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
-        mPostButton.setOnClickListener(new View.OnClickListener() {
+        /*mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_CAMERA);
             }
-        });
+        });*/
         initAdapter();
         //this.loadData();
 
@@ -284,7 +284,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
-        mPostButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
+        //mPostButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
 

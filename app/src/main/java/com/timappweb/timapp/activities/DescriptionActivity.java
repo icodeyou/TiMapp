@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -28,7 +27,7 @@ public class DescriptionActivity extends BaseActivity {
 
         //this.initToolbar(true);
 
-        commentEt = (EditText) findViewById(R.id.comment_edit_text);
+        commentEt = (EditText) findViewById(R.id.description_edit_text);
         saveButton = findViewById(R.id.save_button);
 
         initEt();

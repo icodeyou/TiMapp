@@ -6,14 +6,15 @@
     >
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_fragments_event">
 
         <!-- **********************************************************************-->
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_fragments_event_additional_top">
 
             <com.timappweb.timapp.views.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout_place_people"
@@ -37,17 +38,6 @@
                 android:text="@string/no_people"/>
 
         </FrameLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/fab_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom">
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/post_button"
-                style="@style/PostPlusButton"/>
-        </RelativeLayout>
 
     </FrameLayout>
 </layout>

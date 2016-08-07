@@ -172,6 +172,6 @@
     </RelativeLayout>
 
 
-    <include layout="@layout/toolbar_transparent" />
+    <include layout="@layout/toolbar_transparent_layout" />
 
 </RelativeLayout>

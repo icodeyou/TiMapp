@@ -11,15 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
@@ -47,6 +50,8 @@ import java.util.List;
 public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
     private static final String TAG = "GoogleMapFragment";
     private static final long TIME_WAIT_MAP_VIEW = 500;
+    private static final int MARGIN_TOP_BUTTON_LOCATE_MAP = 120;
+
     enum ZoomType {IN, OUT, NONE};
     private ZoomType currentZoomMode = ZoomType.NONE;
 
@@ -108,14 +113,14 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         eventView = root.findViewById(R.id.event_view);
         eventView.setVisibility(View.GONE);
-        newEventbutton = root.findViewById(R.id.post_event_button);
+        /*newEventbutton = root.findViewById(R.id.post_event_button);
 
         newEventbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.locate(drawerActivity);
             }
-        });
+        });*/
 
 
         if (savedInstanceState == null){
@@ -167,20 +172,18 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
     }
 
-    private void displayPlace(Event event) {
+    private void displayEvent(Event event) {
         // TODO can be removed later when all data are synchronized localy...
         if (!event.hasLocalId()) event.mySave();
         mBinding.setEvent(event);
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
-        newEventbutton.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
     }
 
-    public void hidePlace() {
+    public void hideEvent() {
         final Animation slideOut = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_out_down);
         eventView.startAnimation(slideOut);
-        //newEventbutton.startAnimation(slideOut);
         eventView.setVisibility(View.GONE);
     }
 
@@ -190,10 +193,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             filterTagsContainer.setVisibility(View.VISIBLE);
             filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
             Log.d(TAG,"Number of tags filtered : " + MyApplication.searchFilter.tags.size());
-            mapView.getMap().setPadding(0, 120, 0, 0);
+            mapView.getMap().setPadding(0, MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
         } else {
             filterTagsContainer.setVisibility(View.GONE);
-            mapView.getMap().setPadding(0, 0, 0, 0);
+            mapView.getMap().setPadding(0, 2*MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
         }
         getActivity().invalidateOptionsMenu();
     }
@@ -217,7 +220,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mapView.getMap().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                hidePlace();
+                hideEvent();
             }
         });
     }
@@ -298,7 +301,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             // Remove previous cache and all markers
             history.resizeArea(bounds);
         }
-
         history.update(bounds);
     }
 
@@ -307,7 +309,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         if(isPlaceViewVisible() && mBinding.getEvent() == event) {
             IntentsUtils.viewSpecifiedEvent(getActivity(), event);
         } else {
-            displayPlace(event);
+            MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
+
+            ImageView pin = new ImageView(getContext());
+            pin.setImageResource(R.drawable.pin);
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));
+
+            displayEvent(event);
         }
     }
 
@@ -343,7 +351,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
                 map.animateCamera(cameraUpdate);
 
-                hidePlace();
+                hideEvent();
                 return true;
             }
         });

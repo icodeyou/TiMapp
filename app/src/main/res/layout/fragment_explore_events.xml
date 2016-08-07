@@ -12,19 +12,18 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:visibility="gone">
-        <include layout="@layout/progressview"
+        <include layout="@layout/progress_view"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"/>
     </LinearLayout>
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_places"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
-        android:divider="@drawable/bottom_layout_event"
+        android:divider="@drawable/gradient_bottom_view"
         android:dividerHeight="7dp"
         android:visibility="visible"/>
 
@@ -35,11 +34,11 @@
         android:visibility="gone"
         />
 
-    <android.support.design.widget.FloatingActionButton
-        style="@style/PostPlusButton"
+    <!--<android.support.design.widget.FloatingActionButton
+        style="@style/DarkFab"
         android:id="@+id/post_event_button"
         android:layout_alignParentRight="true"
         android:layout_above="@+id/event_view"
-        android:layout_alignWithParentIfMissing="true"/>
+        android:layout_alignWithParentIfMissing="true"/>-->
 
 </RelativeLayout>

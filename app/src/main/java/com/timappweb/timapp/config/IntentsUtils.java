@@ -58,6 +58,8 @@ public class IntentsUtils {
     public static final String VIEW_PICTURE_LIST = "pictures";
     private static final String KEY_EVENT = "event";
     public static final String KEY_SPOT = "spot";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_TITLE = "title";
 
     public static void login(Context context){
         Intent intent = new Intent(context, LoginActivity.class);

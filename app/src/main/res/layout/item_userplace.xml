@@ -8,76 +8,69 @@
         android:id="@+id/cv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/margin_bottom_card"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_margin="@dimen/margin_bottom_card"
         android:elevation="@dimen/card_elevation"
-        android:background="@drawable/background_card">
+        android:background="@color/background_card">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_picture"
+            android:layout_width="@dimen/width_pic_card"
+            android:layout_height="@dimen/width_pic_card"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            fresco:placeholderImage="@drawable/placeholder_profile"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding_card"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:gravity="center_vertical">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_picture"
-                android:layout_width="@dimen/width_pic_card"
-                android:layout_height="@dimen/width_pic_card"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                fresco:placeholderImage="@drawable/placeholder_profile"
-                fresco:actualImageScaleType="fitCenter"
-                fresco:roundAsCircle="true"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_vertical">
-                    <me.grantland.widget.AutofitTextView
-                        android:id="@+id/tv_username"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/height_name_card"
-                        android:layout_marginRight="10dp"
-                        android:maxLines="1"
-                        android:text="Mr Anonymous #Hacker"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/text_normal"
-                        android:textStyle="bold"
-                        android:gravity="center_vertical"
-                        android:singleLine="true"
-                        android:ellipsize="end"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical">
+                <me.grantland.widget.AutofitTextView
+                    android:id="@+id/tv_username"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/height_name_card"
+                    android:layout_marginRight="10dp"
+                    android:maxLines="1"
+                    android:text="Mr Anonymous #Hacker"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_normal"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"/>
 
-                    <TextView
-                        android:id="@+id/tv_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="0dp"
-                        android:gravity="center_vertical"
-                        android:textSize="@dimen/text_small"
-                        android:text="60min ago"
-                        android:textColor="@color/Gray"/>
-                </LinearLayout>
-
-                <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                    xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
-                    android:id="@+id/rv_horizontal_tags"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_small_rv_displayed_tags"
-                    myattrs:horizontal_tags_text_color="@color/colorAccent"
-                    myattrs:horizontal_tags_background_color="@color/background_card"
-                    myattrs:horizontal_tags_is_bold="false"
-                    myattrs:horizontal_tags_text_size="@dimen/text_tags_small"/>
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/text_small"
+                    android:text="60min ago"
+                    android:textColor="@color/Gray"/>
             </LinearLayout>
+
+            <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+                xmlns:myattrs="http://schemas.android.com/apk/res/com.timappweb.timapp"
+                android:id="@+id/rv_horizontal_tags"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_small_rv_displayed_tags"
+                myattrs:horizontal_tags_text_color="@color/colorPrimary"
+                myattrs:horizontal_tags_background_color="@color/background_card"
+                myattrs:horizontal_tags_is_bold="false"
+                myattrs:horizontal_tags_text_size="@dimen/text_tags_small"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

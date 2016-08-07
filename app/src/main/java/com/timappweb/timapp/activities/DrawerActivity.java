@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.internal.NavigationMenuView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -86,9 +85,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
 
     /* ============================================================================================*/
-    // Add spot button
-    FloatingActionButton addSpotFloatingButton = null;
-    /* ============================================================================================*/
 
      /* ============================================================================================*/
     /* ON CREATE */
@@ -102,12 +98,16 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        setStatusBarColor(R.color.status_bar_map);
         // !important Init drawer
         this.initDrawer();
 
         // !important Init AddButton
         this.initAddSpotButton();
+
+        this.initList();
 
         //init Variables
         backPressedOnce = false;
@@ -128,6 +128,16 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
 
         LocationManager.addOnLocationChangedListener(this);
+    }
+
+    private void initList() {
+        ImageView listIcon = (ImageView) findViewById(R.id.list_icon);
+        listIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exploreFragment.updateList();
+            }
+        });
     }
 
     @Override
@@ -178,7 +188,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
             if (exploreFragment.getFragmentSelected() instanceof ExploreMapFragment
                     && exploreMapFragment.isPlaceViewVisible()) {
-                exploreMapFragment.hidePlace();
+                exploreMapFragment.hideEvent();
             }
             else{
                 if (backPressedOnce) {
@@ -212,24 +222,21 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
      * Create the button to add a spot
      */
     protected void initAddSpotButton() {
-        if (addSpotFloatingButton == null){
-            addSpotFloatingButton = (FloatingActionButton) findViewById(R.id.post_event_button);
-            fabContainer = findViewById(R.id.fab_container);
-            final Activity that = this;
-            Log.d(TAG, "Init add_spot_button button");
-            addSpotFloatingButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.locate(that);
-                }
-            });
-        }
+        fabContainer = findViewById(R.id.fab_container);
+        final Activity that = this;
+        Log.d(TAG, "Init add_spot_button button");
+        fabContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.locate(that);
+            }
+        });
     }
     protected void hideAddSpotButton(){
-        addSpotFloatingButton.setVisibility(View.GONE);
+        fabContainer.setVisibility(View.GONE);
     }
     protected void showAddSpotButton(){
-        addSpotFloatingButton.setVisibility(View.VISIBLE);
+        fabContainer.setVisibility(View.VISIBLE);
     }
 
     @Override

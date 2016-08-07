@@ -308,7 +308,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     }
 
     // =============================================================================================
-
     @Override
     public boolean isSync(SyncBaseModel o) {
         if (o == null) return false;
