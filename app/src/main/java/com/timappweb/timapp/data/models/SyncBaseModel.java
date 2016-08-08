@@ -211,7 +211,7 @@ public abstract class SyncBaseModel extends MyModel {
                 if (annotation.deserialize()){
                     try {
                         Object newValue =  model.getClass().getField(field.getName()).get(model);
-                        // TODO [Sync,Stef] check if field is set of not. Currently, in the case we want to set to null a field
+                        // TODO [Sync,Stef] check if field is set or not. Currently, in the case we want to set to null a field
                         // (thanks to a json response from the server), it does not work
                         if (newValue != null){
                             Log.v(TAG, "Updating field " + field.getName() + " with value " + newValue);

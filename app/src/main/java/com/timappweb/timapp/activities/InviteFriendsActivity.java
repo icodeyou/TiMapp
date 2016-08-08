@@ -56,6 +56,10 @@ public class InviteFriendsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
 
+        if (!IntentsUtils.requireLogin(this, false)) {
+            return;
+        }
+
         //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         event = IntentsUtils.extractEvent(getIntent());
@@ -77,7 +81,7 @@ public class InviteFriendsActivity extends BaseActivity {
         //initAutoLabel();
         initInviteButton();
 
-        mLoader = new FriendsLoader();
+        mLoader = new FriendsLoader(MyApplication.getCurrentUser());
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
     }
 
@@ -197,8 +201,8 @@ public class InviteFriendsActivity extends BaseActivity {
     class FriendsLoader extends MultipleEntryLoaderCallback
     {
 
-        public FriendsLoader() {
-            super(InviteFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
+        public FriendsLoader(User user) {
+            super(InviteFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, user.getFriendsQuery());
             this.setSwipeAndRefreshLayout((SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout));
         }
 

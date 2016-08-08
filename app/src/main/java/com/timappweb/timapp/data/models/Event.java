@@ -447,4 +447,12 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     public void setCategory(long categoryId) {
         this.event_category = ConfigurationProvider.getEventCategoryByRemoteId(categoryId);
     }
+
+    public User getAuthor() {
+        return user;
+    }
+
+    public void setAuthor(User user){
+        this.user = user;
+    }
 }

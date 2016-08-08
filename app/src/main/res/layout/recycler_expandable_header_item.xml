@@ -4,7 +4,8 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="?android:attr/listPreferredItemHeightSmall"
-	android:background="@color/background">
+	android:background="@color/colorPrimary"
+	android:paddingBottom="@dimen/padding_card">
 
 	<LinearLayout
 		android:id="@+id/title_container"
@@ -24,6 +25,7 @@
 			android:ellipsize="end"
 			android:maxLines="1"
 			android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+			android:textColor="@color/textLight"
 			tools:text="Header"/>
 
 		<TextView
@@ -34,7 +36,7 @@
 			android:ellipsize="end"
 			android:maxLines="1"
 			android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-			android:textColor="@color/textDark"
+			android:textColor="@color/textLight"
 			tools:text="Subtitle"/>
 	</LinearLayout>
 

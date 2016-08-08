@@ -2,6 +2,7 @@ package com.timappweb.timapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
@@ -22,7 +23,6 @@ import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.UserItem;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
@@ -32,11 +32,15 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.common.DividerItemDecoration;
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
+import eu.davidea.flexibleadapter.items.IFlexible;
+import eu.davidea.flexibleadapter.items.IHeader;
 import eu.davidea.flipview.FlipView;
 import retrofit2.Call;
 
@@ -57,10 +61,9 @@ public class EventPeopleFragment extends EventBaseFragment {
     private FloatingActionButton postButton;
     private RecyclerView mRecyclerView;
 
-    private ExpandableHeaderItem mExpandableHere;
-    private ExpandableHeaderItem mExpandableComing;
-    private ExpandableHeaderItem mExpandableInvite;
-    private LinkedList mItems;
+    private ExpandableHeaderItem mExpandableHereHeader;
+    private ExpandableHeaderItem mExpandableComingHeader;
+    private ExpandableHeaderItem mExpandableInviteHeader;
 
     //private RecyclerViewMaterialAdapter mAdapter;
 
@@ -146,17 +149,21 @@ public class EventPeopleFragment extends EventBaseFragment {
         //Settings for FlipView
         FlipView.resetLayoutAnimationDelay(true, 1000L);
 
-        //Create New Database and Initialize RecyclerView
-        mItems = new LinkedList();
-        mItems.add(new PlaceHolderItem("PLACEHOLDER0"));
-        mExpandableHere = new ExpandableHeaderItem("HERE", context.getResources().getString(R.string.header_here));
-        mItems.add(mExpandableHere);
+        mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
+        mPlaceUsersAdapter.setPermanentDelete(true);
 
-        mExpandableComing = new ExpandableHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
-        mItems.add(mExpandableComing);
 
-        mExpandableInvite = new ExpandableHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
-        mItems.add(mExpandableInvite);
+        mExpandableHereHeader = new ExpandableHeaderItem("HERE", context.getResources().getString(R.string.header_here));
+        mPlaceUsersAdapter.addSection(mExpandableHereHeader);
+
+        mExpandableComingHeader = new ExpandableHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
+        mPlaceUsersAdapter.addSection(mExpandableComingHeader);
+
+        mExpandableInviteHeader = new ExpandableHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
+        mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
+
+
+        mPlaceUsersAdapter.addItem(0, new PlaceHolderItem("PLACEHOLDER0"));
 
         initializeRecyclerView(savedInstanceState);
 
@@ -168,9 +175,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     private void initializeRecyclerView(Bundle savedInstanceState) {
 
         //List<AbstractFlexibleItem> list = new LinkedList();
-        //list.add(new PlaceHolderItem("PLACEHOLDER0"));
 
-        mPlaceUsersAdapter = new MyFlexibleAdapter(mItems, getActivity());
         //Experimenting NEW features (v5.0.0)
         mPlaceUsersAdapter.setAnimationOnScrolling(true);
         mPlaceUsersAdapter.setAnimationOnReverseScrolling(true);
@@ -179,7 +184,6 @@ public class EventPeopleFragment extends EventBaseFragment {
         mPlaceUsersAdapter.setRemoveOrphanHeaders(false);
 
         mRecyclerView.setLayoutManager(new SmoothScrollLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(mPlaceUsersAdapter);
         mRecyclerView.setHasFixedSize(true); //Size of RV will not change
         mRecyclerView.setItemAnimator(new DefaultItemAnimator() {
             @Override
@@ -204,7 +208,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         //Add sample item on the top (not belongs to the library)
         //mPlaceUsersAdapter.addUserLearnedSelection(savedInstanceState == null);
 
-        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout_place_people);
+        //SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout_place_people);
         //mListener.onFragmentChange(swipeRefreshLayout, mRecyclerView, SelectableAdapter.MODE_IDLE);
 
         //mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -227,34 +231,24 @@ public class EventPeopleFragment extends EventBaseFragment {
         @Override
         public void onLoadFinished(Loader<List<UserEvent>> loader, List<UserEvent> data) {
             super.onLoadFinished(loader, data);
-            int herePosition = mItems.indexOf(mExpandableHere);
-            int comingPosition = mItems.indexOf(mExpandableComing);
 
-            mExpandableComing.removeSubItems();
-            mExpandableHere.removeSubItems();
-            // TODO clear
+            mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
+            mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
             for (UserEvent userEvent: data){
                 UserItem item = new UserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
                 switch (userEvent.status){
                     case COMING:
-                        item.setHeader(mExpandableComing);
-                        mExpandableComing.addSubItem(item);
+                        mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);
                         break;
                     case HERE:
-                        item.setHeader(mExpandableHere);
-                        mExpandableHere.addSubItem(item);
+                        mPlaceUsersAdapter.addSubItem(mExpandableHereHeader, item);
                         break;
                     default:
                         continue;
                 }
             }
-
-            mExpandableHere.setExpanded(false);
-            mExpandableComing.setExpanded(false);
-            mPlaceUsersAdapter.notifyItemChanged(herePosition);
-            mPlaceUsersAdapter.notifyItemChanged(comingPosition);
-            mPlaceUsersAdapter.expand(herePosition);
-            mPlaceUsersAdapter.expand(comingPosition);
+            mPlaceUsersAdapter.expand(mExpandableHereHeader);
+            mPlaceUsersAdapter.expand(mExpandableComingHeader);
         }
 
     }
@@ -273,16 +267,17 @@ public class EventPeopleFragment extends EventBaseFragment {
         @Override
         public void onLoadFinished(Loader<List<EventsInvitation>> loader, List<EventsInvitation> data) {
             super.onLoadFinished(loader, data);
-            int position = mItems.indexOf(mExpandableInvite);
 
-            mExpandableInvite.removeSubItems();
+
+            mPlaceUsersAdapter.removeItems(mExpandableInviteHeader);
+            //mExpandableInviteHeader.removeSubItems();
+            int i = 0;
             for (EventsInvitation invitation: data){
-                UserItem item = new UserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInvite);
-                mExpandableInvite.addSubItem(item);
+                UserItem item = new UserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
+                //mExpandableInviteHeader.addSubItem(item);
+                mPlaceUsersAdapter.addSubItem(mExpandableInviteHeader, item);
             }
-            mExpandableInvite.setExpanded(false);
-            mPlaceUsersAdapter.notifyItemChanged(position);
-            mPlaceUsersAdapter.expand(position);
+            mPlaceUsersAdapter.expand(mExpandableInviteHeader);
         }
 
     }

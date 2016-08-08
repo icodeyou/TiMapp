@@ -73,6 +73,7 @@ public class EventStatus extends SyncBaseModel {
         return new Select()
                 .from(EventStatus.class)
                 .where("User = ? AND Event = ?", userId, placeId)
+                .orderBy("Created DESC")
                 .executeSingle();
     }
     public static EventStatus setStatus(User user, Event event, UserPlaceStatusEnum status, int remoteId){

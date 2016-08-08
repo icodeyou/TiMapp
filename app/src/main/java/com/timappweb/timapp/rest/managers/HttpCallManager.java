@@ -5,6 +5,8 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -16,9 +18,12 @@ public class HttpCallManager {
 
     private final HttpCallbackBase<Object> callbackBase;
     private final Call call;
+    private long callDelay;
+    private Timer timer;
 
     public HttpCallManager(Call call) {
         this.call = call;
+        this.callDelay = 0;
         this.callbackBase = new HttpCallbackBase<>();
     }
 
@@ -46,7 +51,14 @@ public class HttpCallManager {
      * @return
      */
     public HttpCallManager perform(){
-        this.call.enqueue(this.callbackBase);
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                HttpCallManager.this.call.enqueue(HttpCallManager.this.callbackBase);
+            }
+        }, this.callDelay);
+
         return this;
     }
 
@@ -67,6 +79,9 @@ public class HttpCallManager {
     }
 
     public void cancel(){
+        if (timer != null)
+            timer.cancel();
+
         this.call.cancel();
     }
 
@@ -84,5 +99,10 @@ public class HttpCallManager {
 
     public Call getCall() {
         return call;
+    }
+
+    public HttpCallManager setCallDelay(long callDelay) {
+        this.callDelay = callDelay;
+        return this;
     }
 }

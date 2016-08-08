@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.adapters.MainEventCategoriesAdapter;
@@ -47,6 +48,7 @@ import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
@@ -284,6 +286,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     @Override
                     public void successful(Object feedback) {
                         Log.d(TAG, "Event has been successfully added");
+                        event.setAuthor(MyApplication.getCurrentUser());
                         event.mySave();
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                     }

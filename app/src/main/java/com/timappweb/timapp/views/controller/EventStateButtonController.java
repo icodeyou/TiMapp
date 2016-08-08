@@ -10,6 +10,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 /**
@@ -48,7 +49,8 @@ public class EventStateButtonController extends ActivableButtonController {
 
     @Override
     public boolean cancelActivate() {
-        PlaceStatusManager.instance().add(mContext, mEvent, UserPlaceStatusEnum.HERE)
+        PlaceStatusManager.instance()
+                .add(mContext, mEvent, mStatus)
                 .onResponse(new HttpCallback() {
                     @Override
                     public void successful(Object feedback) {
@@ -60,6 +62,12 @@ public class EventStateButtonController extends ActivableButtonController {
                         rollbackChange();
                     }
 
+                })
+                .onError(new RequestFailureCallback(){
+                    @Override
+                    public void onError(Throwable error) {
+                        rollbackChange();
+                    }
                 });
         return true;
     }

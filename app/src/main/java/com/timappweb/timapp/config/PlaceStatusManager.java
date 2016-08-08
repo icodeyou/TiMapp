@@ -27,6 +27,14 @@ public class PlaceStatusManager {
     private static final String TAG = "PlaceStatusManager";
     private static PlaceStatusManager _instance = null;
 
+
+    private class LastCallInfo{
+        public HttpCallManager httpCallManager;
+        public UserPlaceStatusEnum status;
+        public long eventId;
+    }
+    private static LastCallInfo lastCallInfo;
+
     public static PlaceStatusManager instance(){
         if (_instance == null){
             _instance = new PlaceStatusManager();
@@ -38,15 +46,24 @@ public class PlaceStatusManager {
     private PlaceStatusManager() {
     }
 
+    public HttpCallManager add(final Context context, final Event event, final UserPlaceStatusEnum status) {
+        return add(context, event, status, 0L);
+    }
     /**
      * @param context
      * @param event
      * @param status
      */
-    public HttpCallManager add(final Context context, final Event event, final UserPlaceStatusEnum status) {
+    public HttpCallManager add(final Context context, final Event event, final UserPlaceStatusEnum status, long callDelay) {
+
+        if (this.isDuplicateRequest(event, status)){
+            return null;
+        }
+        Log.d(TAG, "Initialize request to set status=" + status + " for event=" + event);
+
         Call<RestFeedback> call;
         // TODO call must be cancelable
-        switch (status){
+        switch (status) {
             case COMING:
                 call = RestClient.service().notifyPlaceComing(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
@@ -60,14 +77,22 @@ public class PlaceStatusManager {
                 Log.v(TAG, "Nothing to do on remote for status: " + status);
                 throw new UnsupportedOperationException();
         }
-        return RestClient.buildCall(call)
+
+        if (lastCallInfo == null){
+            lastCallInfo = new LastCallInfo();
+        }
+        lastCallInfo.eventId = event.getRemoteId();
+        lastCallInfo.status = status;
+        lastCallInfo.httpCallManager = RestClient.buildCall(call)
+                .setCallDelay(callDelay)
                 .onResponse(new HttpCallback<RestFeedback>() {
                     @Override
                     public void successful(RestFeedback feedback) {
                         Log.d(TAG, "Success register status=" + status + " for user on event: " + event);
                         EventStatus.setStatus(MyApplication.getCurrentUser(),
                                 event,
-                                status, feedback.getIntData("id"));
+                                status,
+                                feedback.getIntData("id"));
                         QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
                     }
 
@@ -78,7 +103,7 @@ public class PlaceStatusManager {
                     }
                 })
                 .perform();
-
+        return lastCallInfo.httpCallManager;
     }
     /**
      *  @param context
@@ -144,5 +169,37 @@ public class PlaceStatusManager {
         return EventStatus.hasStatus(user.getId(), placeId, status);
     }
 
+    public boolean isDuplicateRequest(Event event, UserPlaceStatusEnum status) {
+        EventStatus currentStatus = getStatus(event);
 
+        // Cancel pending request if needed
+        if (lastCallInfo != null){
+            Log.d(TAG, "There are pending request '" + lastCallInfo.status+"' for event id '" + event.getRemoteId() + "'");
+            if (!lastCallInfo.httpCallManager.getCall().isExecuted() && event.getRemoteId() == lastCallInfo.eventId){
+                switch (status){
+                    case COMING:
+                    case HERE:
+                        if (lastCallInfo.status == UserPlaceStatusEnum.GONE){
+                            lastCallInfo.httpCallManager.cancel();
+                            Log.i(TAG, "Cancelling request " +lastCallInfo.status+ " du to the opposite add " + status);
+                            return true;
+                        }
+                        break;
+                    case GONE:
+                        if (lastCallInfo.status == UserPlaceStatusEnum.HERE || lastCallInfo.status == UserPlaceStatusEnum.COMING){
+                            lastCallInfo.httpCallManager.cancel();
+                            Log.i(TAG, "Cancelling request " +lastCallInfo.status+ " du to the opposite add " + status);
+                            return true;
+                        }
+                }
+            }
+        }
+
+        if (currentStatus != null && currentStatus.status == status){
+            Log.d(TAG, "Trying to set the same status twice '"+status+"'... Skip task");
+            return true;
+        }
+
+        return false;
+    }
 }
