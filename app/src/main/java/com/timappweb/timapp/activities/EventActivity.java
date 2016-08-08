@@ -20,13 +20,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.florent37.materialviewpager.MaterialViewPager;
-import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -83,6 +82,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private EventPagerAdapter mFragmentAdapter;
     private TextView pageTitle;
     private ViewDataBinding mBinding;
+    private FloatingActionButton btnActionCamera;
+    private FloatingActionButton btnActionTag;
+    private FloatingActionButton btnActionInvite;
 
     //Override methods
     //////////////////////////////////////////////////////////////////////////////
@@ -105,7 +107,10 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
 
         pageTitle = (TextView) findViewById(R.id.title_event);
-        //eventButtons = (EventButtonsView) findViewById(R.id.event_buttons_view);
+        btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
+        btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
+        btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
+
 
         getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
 
@@ -117,10 +122,29 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             }
         }
 
-        initFabButton();
+        initListeners();
     }
 
-    private void initFabButton() {
+    private void initListeners() {
+
+        btnActionTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
+            }
+        });
+        btnActionCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
+            }
+        });
+        btnActionInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_PEOPLE);
+            }
+        });
 
     }
 

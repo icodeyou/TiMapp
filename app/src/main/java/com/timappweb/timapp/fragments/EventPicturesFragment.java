@@ -93,12 +93,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
         //mPostButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
-        /*mPostButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_CAMERA);
-            }
-        });*/
+        /*mPostButton.setOnClickListener();*/
         initAdapter();
         //this.loadData();
 

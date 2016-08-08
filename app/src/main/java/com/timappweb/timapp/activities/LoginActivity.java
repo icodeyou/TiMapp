@@ -160,7 +160,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                                 }
                                 catch (Exception ex){
                                     Log.e(TAG, "Cannot parse server response for login: " + ex.getMessage());
-                                    Toast.makeText(LoginActivity.this, R.string.error_server_unavailable, Toast.LENGTH_LONG);
+                                    ex.printStackTrace();
+                                    Toast.makeText(LoginActivity.this, R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
+                                    setProgressVisibility(false);
                                 }
                             }
 

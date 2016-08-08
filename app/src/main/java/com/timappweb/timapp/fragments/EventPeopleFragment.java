@@ -114,14 +114,6 @@ public class EventPeopleFragment extends EventBaseFragment {
                 }
             }
         });
-
-        /*postButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), eventActivity.getEvent(), IntentsUtils.ACTION_PEOPLE);
-            }
-        });*/
-
     }
 
     private void loadPosts() {
