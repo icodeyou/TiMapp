@@ -100,9 +100,9 @@ public class ConfigurationProvider {
                     }
                 });
         callManager.addCall(CALL_ID_SPOT_CATEGORIES, RestClient.service().spotCategories())
-                .onResponse(new RemoteMasterSyncCallback(SpotCategory.class, new Select().from(Spot.class)));
+                .onResponse(new RemoteMasterSyncCallback(SpotCategory.class, new Select().from(SpotCategory.class)));
         callManager.addCall(CALL_ID_EVENT_CATEGORIES, RestClient.service().eventCategories())
-                .onResponse(new RemoteMasterSyncCallback(EventCategory.class, new Select().from(Event.class)));;
+                .onResponse(new RemoteMasterSyncCallback(EventCategory.class, new Select().from(EventCategory.class)));;
         return callManager;
     }
 

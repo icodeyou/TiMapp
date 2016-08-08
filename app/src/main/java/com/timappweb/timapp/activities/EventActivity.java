@@ -403,6 +403,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
 
+
     // =============================================================================================
 
     class EventLoader implements LoaderManager.LoaderCallbacks<List<Event>>{
