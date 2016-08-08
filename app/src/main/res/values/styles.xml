@@ -229,6 +229,20 @@
     </style>
 
     <style name="pageSubmitButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:radius">0dp</item>
+    </style>
+
+    <!--<style name="pageSubmitButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
@@ -240,7 +254,7 @@
         <item name="android:textColor">@color/textLight</item>
         <item name="android:textSize">@dimen/text_big</item>
         <item name="android:radius">0dp</item>
-    </style>
+    </style>-->
 
     <style name="formLabel">
         <item name="android:layout_width">0dp</item>

@@ -88,12 +88,13 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="category_unknown">Else</string>
 
     <!-- Buttons -->
-    <string name="button_add_place">New Event</string>
+    <string name="button_add_place">skip</string>
     <string name="create_button">Create</string>
     <string name="search_button">Validate</string>
     <string name="search_button_empty">Clear Filter</string>
     <string name="invite_button">Invite</string>
 
+    <string name="text_activity_locate">If your event doesn\'t appear on the list, hit the skip button below.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_drawer">Menu</string>
     <string name="drawer_open">Drawer Open</string>
