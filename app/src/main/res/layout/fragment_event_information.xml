@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
             android:id="@+id/scrollView"
             android:scrollbars="none"
@@ -137,6 +138,7 @@
                                         <ImageView
                                             style="@style/imageIcon"
                                             android:src="@drawable/distance_black"
+                                            android:visibility="@{event.hasDistanceFromUser() ? View.VISIBLE : View.GONE}"
                                             android:id="@+id/imageView" />
 
                                         <ProgressBar
@@ -219,15 +221,15 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_margin="@dimen/fab_map_margin"
-                            android:layout_below="@+id/button_display_map"
                             android:src="@drawable/nav_white"/>
+                        <!--android:layout_below="@+id/button_display_map"-->
 
-                        <android.support.design.widget.FloatingActionButton
+                        <!--<android.support.design.widget.FloatingActionButton
                             android:id="@+id/button_display_map"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_margin="@dimen/fab_map_margin"
-                            android:src="@drawable/ic_map_light"/>
+                            android:src="@drawable/ic_map_light"/>-->
 
                     </RelativeLayout>
 
@@ -247,57 +249,56 @@
         </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
 
 
+        <!--
+        TEST BOTTOM BUTTONS
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_top_gradient_view"
+                android:background="@drawable/top_layout_event" />
+            <LinearLayout
+                android:id="@+id/here_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@color/white">
 
-    <!--
-    TEST BOTTOM BUTTONS
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_top_gradient_view"
-            android:background="@drawable/top_layout_event" />
-        <LinearLayout
-            android:id="@+id/here_button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:background="@color/white">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_hot"
+                    android:id="@+id/imageView3" />
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_hot"
-                android:id="@+id/imageView3" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_normal"
-                android:text="Fire Up"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/coming_button"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:background="@color/white">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_hot"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:textAllCaps="true"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_normal"
-                android:text="Join"/>
-        </LinearLayout>-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_normal"
+                    android:text="Fire Up"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/coming_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:background="@color/white">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_hot"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_normal"
+                    android:text="Join"/>
+            </LinearLayout>-->
     </LinearLayout>
 </layout>

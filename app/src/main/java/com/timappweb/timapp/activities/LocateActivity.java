@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -38,7 +39,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
     //Views
     private RecyclerView    rvPlaces;
-    private View            buttonAddPlace;
 
     // ProgressBar and ProgressDialog
     private View progressView;
@@ -65,12 +65,10 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         progressView = findViewById(R.id.progress_view);
         //noPlaceView = findViewById(R.id.layout_if_no_place);
         rvPlaces = (RecyclerView) findViewById(R.id.list_places);
-        buttonAddPlace = findViewById(R.id.button_add_event);
 
         // Init variables
         eventsLoaded = false;
 
-        setListeners();
         initAdapterPlaces();
 
         //int colorRes = ContextCompat.getColor(this, R.color.colorPrimary);
@@ -81,6 +79,23 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_locate, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_skip:
+                IntentsUtils.addPlace(LocateActivity.this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initAdapterPlaces() {
@@ -111,17 +126,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
             }
 
         });
-    }
-
-    private void setListeners() {
-
-        buttonAddPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.addPlace(LocateActivity.this);
-            }
-        });
-        //buttonAddPlace.setOnTouchListener(new ColorTopRadiusOnTouchListener(this, textButtonAddPlace));
     }
 
     @Override
@@ -169,7 +173,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
                             placeAdapter.setData(events);
                             progressView.setVisibility(View.GONE);
                             rvPlaces.setVisibility(View.VISIBLE);
-                            buttonAddPlace.setVisibility(View.VISIBLE);
                             placeAdapter.notifyDataSetChanged();
                         } else {
                             IntentsUtils.addPlace(LocateActivity.this);

@@ -105,6 +105,7 @@
     <dimen name="header_height">250dp</dimen>
     <dimen name="tab_height">50dp</dimen>
     <dimen name="min_header_height">150dp</dimen>
+    <dimen name="spot_height_add_event">100dp</dimen>
     <dimen name="map_height">250dp</dimen>
     <dimen name="paddingBottomDefault">6dp</dimen>
     <dimen name="cardMarginBottom">10dp</dimen>
@@ -137,7 +138,6 @@
     <dimen name="icon_circular_width">24dp</dimen>
     <dimen name="icon_circular_height">24dp</dimen>
     <dimen name="butterbar_height">3dp</dimen>
-    <dimen name="toolbar_height">56dp</dimen>
     <dimen name="popup_button_min_height">48dp</dimen>
     <dimen name="popup_max_height">290dp</dimen>
     <dimen name="bottom_sheet_peek">312dp</dimen>

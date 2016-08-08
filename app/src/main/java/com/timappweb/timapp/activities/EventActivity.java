@@ -203,7 +203,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case R.id.action_share:
                 setDefaultShareIntent();
                 return true;

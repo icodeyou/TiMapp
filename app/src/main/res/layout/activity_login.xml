@@ -140,7 +140,7 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@color/transparent"
-            android:text="@string/action_skip_loggin"
+            android:text="@string/skip"
             android:textStyle="bold"
             android:layout_alignParentBottom="true"/>
     </LinearLayout>

@@ -94,7 +94,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="search_button_empty">Clear Filter</string>
     <string name="invite_button">Invite</string>
 
-    <string name="text_activity_locate">If your event doesn\'t appear on the list, hit the skip button below.</string>
+    <string name="text_activity_locate">Does your event already exist ?</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_drawer">Menu</string>
     <string name="drawer_open">Drawer Open</string>
@@ -107,14 +107,14 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="hashtag">#</string>
     <string name="please_wait">Please wait ...</string>
     <string name="waiting_for_location">Getting your location...</string>
-    <string name="action_skip_loggin">Skip</string>
+    <string name="skip">Skip</string>
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>
     <string name="error_unkown">Unkown error occured</string>
     <string name="error_no_internet">\"It is not my fucking fault if you do not have internet right now. Check your goddamn phone\"</string>
     <string name="hint_searchview_filter">Search</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
-    <string name="title_activity_locate">Where are you ?</string>
+    <string name="title_activity_locate">Checking around</string>
     <string name="title_activity_publish">Check and send</string>
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
@@ -249,6 +249,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="fatal_error_no_network_message">You don\'t have a network access.</string>
     <string name="fatal_error_cannot_sync_title">Cannot sync application</string>
     <string name="fatal_error_cannot_sync_message">Sorry but we cannot reach our server to sync your application. We will be back very soon, try again later.</string>
+    <string name="done">Done</string>
+    <string name="post">Post</string>
 
 
     <plurals name="number_people_event">

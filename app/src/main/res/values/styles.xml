@@ -15,6 +15,7 @@
         <!-- TOOLBAR -->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -65,6 +66,12 @@
     <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!-- White arrow -->
         <item name="colorControlNormal">@android:color/white</item>
+        <!--Text Style -->
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.Text</item>
+    </style>
+
+    <style name="AppTheme.ActionBar.Text" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -84,6 +91,10 @@
 
     <style name="AppTheme.TransparentPopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="MyToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">#ffffff</item>
     </style>
 
 
@@ -290,14 +301,14 @@
 
     <style name="labeledFormEditText" parent="formEditText">
         <item name="met_floatingLabel">highlight</item>
+        <item name="met_baseColor">@color/colorSecondary</item>
+        <item name="met_primaryColor">@color/colorSecondary</item>
     </style>
 
     <style name="formLabeledMultilineText" parent="labeledFormEditText">
         <item name="android:inputType">textMultiLine</item>
         <item name="android:scrollHorizontally">false</item>
         <item name="android:scrollbars">vertical</item>
-        <item name="met_baseColor">@color/colorSecondary</item>
-        <item name="met_primaryColor">@color/colorSecondary</item>
     </style>
 
     <style name="formGroup">

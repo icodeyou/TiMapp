@@ -5,30 +5,30 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <include layout="@layout/no_connection_view"
-        android:id="@+id/no_connection_view"
-        android:background="@color/background"/>
+    <include android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:layout_below="@+id/toolbar_layout"
         android:visibility="visible"
         android:orientation="vertical"
-        android:layout_below="@+id/toolbar_layout">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-        <LinearLayout
-            android:id="@+id/progress_view"
+        <include layout="@layout/no_connection_view"
+            android:id="@+id/no_connection_view"
+            android:background="@color/background"/>
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_horizontal_padding"
+            android:textSize="@dimen/text_normal"
             android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="visible">
-            <include layout="@layout/progress_view"
-                android:layout_height="@dimen/default_progressview"
-                android:layout_width="@dimen/default_progressview"/>
-        </LinearLayout>
+            android:text="@string/text_activity_locate"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_places"
@@ -40,25 +40,19 @@
             android:dividerHeight="1dp"
             android:visibility="gone"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_horizontal_padding"
-            android:textSize="@dimen/text_normal"
-            android:gravity="center"
-            android:text="@string/text_activity_locate"/>
-
-        <Button
-            android:id="@+id/button_add_event"
-            style="@style/pageSubmitButton"
-            android:text="@string/button_add_place"/>
-
     </LinearLayout>
 
-    <include android:id="@+id/toolbar_layout"
-        layout="@layout/toolbar_layout" />
-
-    <!--<include
-        layout="@layout/toolbar_transparent_layout" />-->
+    <LinearLayout
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <include layout="@layout/progress_view"
+            android:layout_height="@dimen/default_progressview"
+            android:layout_width="@dimen/default_progressview"/>
+    </LinearLayout>
 
 </RelativeLayout>

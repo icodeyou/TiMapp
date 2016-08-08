@@ -145,6 +145,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         Event event = eventActivity.getEvent();
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
         gMap.addMarker(event.getMarkerOption());
+        gMap.setMyLocationEnabled(false);
     }
 
     @Override

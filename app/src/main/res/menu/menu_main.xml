@@ -5,6 +5,7 @@
         android:title="@string/action_filter"
         android:icon="@drawable/magnifier"
         android:orderInCategory="110"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_clear_filter"

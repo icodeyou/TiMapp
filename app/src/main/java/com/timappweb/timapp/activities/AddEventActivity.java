@@ -17,12 +17,13 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -102,13 +103,15 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private GoogleMap gMap;
     private ActivityAddEventBinding mBinding;
     //private View mButtonAddPicture;
-    private Button mBtnAddSpot;
+    private View mBtnAddSpot;
     private ClusterManager<Spot> mClusterManagerSpot;
     private Loader<List<Spot>> mSpotLoader;
     private View mSpotContainer;
     private AddressResultReceiver mAddressResultReceiver;
     private LatLngBounds mSpotReachableBounds;
-    private View.OnClickListener displayAllCategories;
+    private View.OnClickListener displayHideCategories;
+
+    private Menu menu;
     //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
@@ -119,12 +122,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_event);
 
-        this.initToolbar(true,R.color.white);
-        this.setStatusBarColor(R.color.colorSecondary);
+        this.initToolbar(true);
+        //this.setStatusBarColor(R.color.colorSecondary);
         this.extractSpot(savedInstanceState);
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        descriptionET = (EditText)  findViewById(R.id.description_edit_text);
         eventNameET = (EditText) findViewById(R.id.event_name);
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
@@ -140,12 +144,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         imageSelectedCategory = (ImageView) findViewById(R.id.image_category_selected);
         textSelectedCategory = (TextView) findViewById(R.id.text_category_selected);
 
-        createButton = findViewById(R.id.create_button);
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
         mapView = (MapView) findViewById(R.id.map);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
-        mBtnAddSpot = (Button) findViewById(R.id.button_add_spot);
+        mBtnAddSpot = findViewById(R.id.button_add_spot);
         mSpotContainer = findViewById(R.id.spot_container);
 
         Event event = new Event();
@@ -159,7 +162,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         setListeners();
         //initViewPager();
         initLocationListener();
-        setButtonValidation();
         initEvents();
         initMap();
     }
@@ -193,6 +195,37 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     protected void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_event, menu);
+        this.menu = menu;
+        setButtonValidation();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_post:
+                if (LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
+                    setProgressView(true);
+                    Event event = mBinding.getEvent();
+                    event.setCategory(eventCategorySelected);
+                    submitPlace(event);
+                } else if (LocationManager.hasLastLocation()) {
+                    Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
+                } else {
+                    Log.d(TAG, "Click on add event before having a user location");
+                    Toast.makeText(getBaseContext(), R.string.waiting_for_location, Toast.LENGTH_LONG).show();
+                }
+                return true;
+            case android.R.id.home:
+                //Action to do in case of home button pressed
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initKeyboard() {
@@ -262,7 +295,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public void setButtonValidation() {
         String textAfterChange = eventNameET.getText().toString().trim();
         boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange);
-        createButton.setEnabled(isValid);
+        menu.findItem(R.id.action_post).setEnabled(isValid);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -288,7 +321,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         textSelectedCategory.setText(eventCategory.getName());
         selectedCategoryView.setVisibility(View.VISIBLE);
         if(allCategoriesRV.getVisibility()==View.VISIBLE) {
-            displayAllCategories.onClick(moreBtn);
+            displayHideCategories.onClick(moreBtn);
             //TODO Question Steph : Is it better to do : moreBtn.callOnClick(); ?
         } else {
             mainCategoriesRV.setVisibility(View.GONE);
@@ -301,9 +334,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void setListeners() {
-        displayAllCategories = new View.OnClickListener() {
+        displayHideCategories = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
                 moreBtn.toggle();
                 if(allCategoriesRV.getVisibility()==View.GONE) {
                     final Animation slideIn = AnimationUtils.loadAnimation(AddEventActivity.this, R.anim.slide_in_down_all);
@@ -323,8 +357,19 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             }
         } ;
 
-        moreBtn.setOnClickListener(displayAllCategories);
-        selectedCategoryView.setOnClickListener(displayAllCategories);
+        moreBtn.setOnClickListener(displayHideCategories);
+        selectedCategoryView.setOnClickListener(displayHideCategories);
+
+        View.OnClickListener onEditTextClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(allCategoriesRV.getVisibility()==View.VISIBLE) {
+                    displayHideCategories.onClick(v);
+                }
+            }
+        };
+        eventNameET.setOnClickListener(onEditTextClick);
+        descriptionET.setOnClickListener(onEditTextClick);
 
         mBtnAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,23 +400,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 eventNameET.clearFocus();
             }
         });*/
-
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
-                    setProgressView(true);
-                    Event event = mBinding.getEvent();
-                    event.setCategory(eventCategorySelected);
-                    submitPlace(event);
-                } else if (LocationManager.hasLastLocation()) {
-                    Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
-                } else {
-                    Log.d(TAG, "Click on add event before having a user location");
-                    Toast.makeText(getBaseContext(), R.string.waiting_for_location, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
         mSpotContainer.setOnClickListener(new View.OnClickListener() {
             @Override
