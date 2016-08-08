@@ -40,6 +40,14 @@
             android:dividerHeight="1dp"
             android:visibility="gone"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_horizontal_padding"
+            android:textSize="@dimen/text_normal"
+            android:gravity="center"
+            android:text="@string/text_activity_locate"/>
+
         <Button
             android:id="@+id/button_add_event"
             style="@style/pageSubmitButton"
