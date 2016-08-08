@@ -78,13 +78,15 @@ public class IntentsUtils {
         Intent intent = new Intent(activity, DrawerActivity.class);
         activity.startActivity(intent);
     }
-    public static void serverError(Context context) {
+    public static void fatalError(Context context, int idTitle, int idMessage) {
         Intent intent = new Intent(context, ErrorActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(IntentsUtils.KEY_TITLE, context.getResources().getString(idTitle));
+        intent.putExtra(IntentsUtils.KEY_MESSAGE, context.getResources().getString(idMessage));
         context.startActivity(intent);
     }
-    public static void error(Context context) {
-        IntentsUtils.serverError(context);
+    public static void error(Context context, int idTitle, int idMessage) {
+        IntentsUtils.fatalError(context, idTitle, idMessage);
     }
 
     public static void profile(Context context){

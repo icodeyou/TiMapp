@@ -126,8 +126,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
         AbstractSyncAdapter.initializeSyncAdapter(this);
 
-        //RestCallback.init(getApplicationContext());
-
         ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
             @Override
             public void onLoaded(String key) {
@@ -137,7 +135,7 @@ public class MyApplication extends com.activeandroid.app.Application {
             @Override
             public void onFail(String key) {
                 Log.e(TAG, "Cannot load server configuration");
-                IntentsUtils.error(MyApplication.this);
+                IntentsUtils.error(MyApplication.this, R.string.fatal_error_server_down_title, R.string.fatal_error_unknown_reason_message);
             }
         });
 

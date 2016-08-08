@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 
 import org.jdeferred.DoneCallback;
@@ -49,7 +50,7 @@ public class SplashActivity extends BaseActivity {
                 .fail(new FailCallback() {
                     @Override
                     public void onFail(Object result) {
-                        IntentsUtils.error(context);
+                        IntentsUtils.error(context, R.string.fatal_error_server_down_title, R.string.fatal_error_server_down_message);
                         finish();
                     }
                 });
