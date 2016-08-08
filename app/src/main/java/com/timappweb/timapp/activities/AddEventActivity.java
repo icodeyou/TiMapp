@@ -242,7 +242,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void submitPlace(final Event event){
         Log.d(TAG, "Submit event " + event.toString());
-
+        // TODO add loader
         RestClient
             .post(ResourceUrlMapping.MODEL_EVENT, AddEventMapper.toJson(event))
                 .onResponse(new AutoMergeCallback(event))
@@ -250,6 +250,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 .onResponse(new HttpCallback() {
                     @Override
                     public void successful(Object feedback) {
+                        Log.d(TAG, "Event has been successfully added");
                         event.mySave();
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                     }
@@ -260,7 +261,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     public void setButtonValidation() {
         String textAfterChange = eventNameET.getText().toString().trim();
-        createButton.setEnabled(eventCategorySelected != null && Event.isValidName(textAfterChange));
+        boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange);
+        createButton.setEnabled(isValid);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -291,7 +293,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         } else {
             mainCategoriesRV.setVisibility(View.GONE);
         }
-
+        setButtonValidation();
     }
 
     public EventCategory getEventCategorySelected() {
@@ -363,10 +365,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     event.setCategory(eventCategorySelected);
                     submitPlace(event);
                 } else if (LocationManager.hasLastLocation()) {
-                    Toast.makeText(getBaseContext(), "We don't have a fine location. Make sure your gps is enabled.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "Click on add event before having a user location");
-                    Toast.makeText(getBaseContext(), R.string.please_wait_location, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.waiting_for_location, Toast.LENGTH_LONG).show();
                 }
             }
         });

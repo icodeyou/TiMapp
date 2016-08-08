@@ -241,6 +241,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="posts">posts</string>
     <string name="fatal_error_unknown_reason_title">Something bad happened...</string>
     <string name="fatal_error_unknown_reason_message">Sorry, but something went wrong. You need to restart your application. If this message appear again, try updating your application.</string>
+    <string name="no_fine_location">We don\'t have a fine location. Make sure your gps is enabled.</string>
 
 
     <plurals name="number_people_event">
