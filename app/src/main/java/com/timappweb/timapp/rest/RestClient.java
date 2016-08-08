@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.data.entities.SocialProvider;
@@ -15,12 +16,14 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.interceptors.LogRequestInterceptor;
 import com.timappweb.timapp.rest.io.interceptors.SessionRequestInterceptor;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.deserializers.EventDeserializer;
 import com.timappweb.timapp.rest.io.deserializers.JsonConfDeserializer;
 import com.timappweb.timapp.rest.io.deserializers.SpotDeserializer;
+import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.rest.services.RestInterface;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
@@ -187,15 +190,6 @@ public class RestClient {
         return httpClient;
     }
 
-    /**
-     * Check login on the server side thanks to the token
-     */
-    public HttpCallManager checkToken() {
-        Log.i(TAG, "Checking user token...");
-        Call<RestFeedback> call = this.service.checkToken();
-        return RestClient.buildCall(call);
-    }
-
 
     public static RestInterface restService() {
         return conn.getRestService();
@@ -230,6 +224,9 @@ public class RestClient {
                 .onResponse(defaultHttpCallback);
     }
 
+    public static MultipleHttpCallManager mulipleCallsManager() {
+        return new MultipleHttpCallManager();
+    }
 
 }
 

@@ -11,7 +11,6 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
-import com.timappweb.timapp.config.AuthProvider.OnTokenListener;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
@@ -21,10 +20,12 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.model.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
-import com.timappweb.timapp.sync.ConfigSyncAdapter;
 import com.timappweb.timapp.sync.UserSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
@@ -39,12 +40,7 @@ import retrofit2.Call;
 public class MyApplication extends com.activeandroid.app.Application {
 
     private static final String TAG = "MyApplication";
-    private static final int TOKEN_CHECK_DELAY = 3600; // Check token every 1 hour
-
     public static SearchFilter searchFilter = new SearchFilter();
-    private static DeferredObject deferred;
-    private int notifyCount = 0;
-
     public static AuthProvider auth;
 
     @Override
@@ -68,39 +64,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         return MyApplication.isCurrentUser(mUser.remote_id);
     }
 
-    public void checkToken(){
-        auth.checkToken(new OnTokenListener() {
-            @Override
-            public void onTokenValid() {
-                Log.i(TAG, "Token is still valid.");
-                notifyLoadingState("Token is still valid");
-            }
-
-            @Override
-            public void onTokenOutdated() {
-                Log.i(TAG, "Token is not valid anymore. Login out");
-                notifyLoadingState("User token is not valid");
-            }
-
-            @Override
-            public void onTokenFailure() {
-                notifyLoadingState("Cannot get user token");
-            }
-        });
-
-    }
-
-    private void notifyLoadingState(String s) {
-        notifyCount++;
-        Log.i(TAG, "Notify loading state " + notifyCount + "/2 : " + s);
-        if (deferred.isPending()){
-            deferred.notify(s);
-            if (notifyCount == 2){
-                deferred.resolve(null);
-            }
-        }
-    }
-
     public static User getCurrentUser(){
         return auth.getCurrentUser();
     }
@@ -113,7 +76,6 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        this.deferred = new DeferredObject();
 
         //this.deleteDatabase(getString(R.string.db_name));
 
@@ -126,29 +88,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
         AbstractSyncAdapter.initializeSyncAdapter(this);
 
-        ConfigurationProvider.init(new ConfigurationProvider.OnConfigurationLoadedListener() {
-            @Override
-            public void onLoaded(String key) {
-                notifyLoadingState("Server configuration loaded");
-            }
-
-            @Override
-            public void onFail(String key) {
-                Log.e(TAG, "Cannot load server configuration");
-                IntentsUtils.error(MyApplication.this, R.string.fatal_error_server_down_title, R.string.fatal_error_unknown_reason_message);
-            }
-        });
-
-        // If first start we need to wait for configuration from the server
-        if (ConfigurationProvider.hasFullConfiguration()){
-            notifyLoadingState("Server configuration loaded");
-        }
-        else{
-            // If new installed app, this will be triggered two times... Not good
-            ConfigSyncAdapter.syncImmediately(this);
-        }
-
-        checkToken();
     }
 
 
@@ -167,6 +106,12 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
 
+    /**
+     * TODO reim
+     * @param i
+     * @param level
+     * @return
+     */
     public static ImageView setCategoryBackground(ImageView i, int level) {
         switch (level) {
             case 0:
@@ -211,11 +156,6 @@ public class MyApplication extends com.activeandroid.app.Application {
             RestClient.instance().logoutUser();
         }
     }
-
-    public static Promise ready() {
-        return deferred.promise();
-    }
-
     public static void updateGoogleMessagingToken(Context context, String token) {
         Log.i(TAG, "Updating token for GCM: " + token);
         Call<RestFeedback> call = RestClient.service().updateGoogleMessagingToken(token);

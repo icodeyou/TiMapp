@@ -155,7 +155,7 @@ public class ExploreFragment extends Fragment{
          */
         @Override
         public Fragment getItem(int position) {
-            Log.d(TAG, "TabsAdapter init position " + position);
+            Log.d(TAG, "TabsAdapter load position " + position);
             if (position == 0) {
                 if (exploreMapFragment == null) exploreMapFragment = new ExploreMapFragment();
                 return exploreMapFragment;

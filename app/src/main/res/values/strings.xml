@@ -244,6 +244,10 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_fine_location">We don\'t have a fine location. Make sure your gps is enabled.</string>
     <string name="fatal_error_server_down_message">Sorry we cannot reach our server for now. Try again later.</string>
     <string name="fatal_error_server_down_title">Cannot reach servers</string>
+    <string name="fatal_error_no_network_title">No network available</string>
+    <string name="fatal_error_no_network_message">You don\'t have a network access.</string>
+    <string name="fatal_error_cannot_sync_title">Cannot sync application</string>
+    <string name="fatal_error_cannot_sync_message">Sorry but we cannot reach our server to sync your application. We will be back very soon, try again later.</string>
 
 
     <plurals name="number_people_event">

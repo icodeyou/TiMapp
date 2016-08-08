@@ -109,7 +109,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         this.initList();
 
-        //init Variables
+        //load Variables
         backPressedOnce = false;
 
         if (savedInstanceState == null) {

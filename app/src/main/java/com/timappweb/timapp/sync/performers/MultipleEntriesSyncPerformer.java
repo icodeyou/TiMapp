@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by stephane on 5/5/2016.
  *
- * Performs match when data from server the actual master data.
+ * Performs match when data from server are the actual master data.
  *  - All local data will be overwritten.
  *  - Missing corresponding data will be removed
  */

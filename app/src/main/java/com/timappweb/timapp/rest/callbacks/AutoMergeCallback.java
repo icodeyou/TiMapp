@@ -20,6 +20,8 @@ import java.util.Map;
 
 /**
  * Created by stephane on 6/6/2016.
+ *
+ * Merge single entry in database
  */
 public class AutoMergeCallback extends HttpCallback<JsonElement>{
 
@@ -49,6 +51,17 @@ public class AutoMergeCallback extends HttpCallback<JsonElement>{
         }
     }
 
+    /**
+     *
+     * @param currentObject
+     * @param jsonObject
+    public void merge(List<Object> currentObject, JsonArray jsonArray){
+
+        for (JsonElement elem: jsonArray){
+            this.merge(currentObject);
+        }
+    }
+     */
 
     /**
      * Copy data of jsonObject inside current object

@@ -37,7 +37,7 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
         if (!remoteModel.isSync(localModel)){
             localModel.merge(remoteModel);
-            syncResult.stats.numUpdates++;
+            if (syncResult != null) syncResult.stats.numUpdates++;
             Log.i(TAG, "Updating: " + localModel.toString());
         }
         else{
@@ -50,13 +50,13 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
         for (SyncBaseModel m : values) {
             Log.i(TAG, "Scheduling insert: " + m.toString());
             m.deepSave();
-            syncResult.stats.numInserts++;
+            if (syncResult != null) syncResult.stats.numInserts++;
         }
     }
 
     public void onLocalOnly(SyncBaseModel localModel) {
         Log.i(TAG, "Deleting: " + localModel.toString());
         localModel.delete();
-        syncResult.stats.numDeletes++;
+        if (syncResult != null) syncResult.stats.numDeletes++;
     }
 }

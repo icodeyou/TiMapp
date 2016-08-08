@@ -95,37 +95,44 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "--------------- Beginning network synchronization -----------------------------");
         // TODO paralelize this
-        this.syncApplicationRules();
-        this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
-        this.performModelSync(EventCategory.class, RestClient.service().eventCategories(), syncResult);
+        try {
+            Response response = this.syncApplicationRules();
+            if (response.isSuccessful())
+                response = this.performModelSync(EventCategory.class, RestClient.service().eventCategories(), syncResult);
+            if (response.isSuccessful())
+                response = this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
+
+            ConfigurationProvider.onSyncResponse(response);
+
+        } catch (Throwable e) {
+            Log.e(TAG, "Cannot load application rules: " + e.getMessage());
+            e.printStackTrace();
+            ConfigurationProvider.onSyncError(e);
+        }
+
+
         Log.i(TAG, "--------------- Network synchronization complete -------------------------------");
     }
 
-    public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult){
+    public static Response performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult) throws IOException {
         Log.i(TAG, "Performing model sync for " + classType.getCanonicalName() + "...");
         From localQuery = new Select().from(classType);
-        try {
-            Response response = remoteQuery.execute();
-            if (response.isSuccessful()){
-                List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
-                new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
-            }
+        Response response = remoteQuery.execute();
+        if (response.isSuccessful()){
+            List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
+            new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
         }
-        catch (IOException e) {
-            Log.e(TAG, "Error performing sync for " + classType + ": " + e.getMessage());
-            e.printStackTrace();
-        }
+        return response;
     }
 
-    private void syncApplicationRules() {
-        try {
-            Log.i(TAG, "Sync application rules...");
-            ApplicationRules rules = RestClient.service().applicationRules().execute().body();
+    private Response syncApplicationRules() throws IOException {
+        Log.i(TAG, "Sync application rules...");
+        Response<ApplicationRules> response = RestClient.service().applicationRules().execute();
+        if (response.isSuccessful()){
+            ApplicationRules rules = response.body();
             ConfigurationProvider.setApplicationRules(rules);
-        } catch (IOException e) {
-            Log.e(TAG, "Cannot load application rules: " + e.getMessage());
-            e.printStackTrace();
         }
+        return response;
     }
 
     public static void syncImmediately(Context context) {
