@@ -1,7 +1,10 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,35 +30,65 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 //import android.support.design.widget.FloatingActionButton;
 
 
 public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, LocationManager.LocationListener {
-    private static final String TAG = "DrawerActivity";
-    /* ============================================================================================*/
+
+    private static final String         TAG                                 = "DrawerActivity";
+    private static int                  TIMELAPSE_BEFORE_BACK_EXIT          = 2000;
+
+    // ---------------------------------------------------------------------------------------------
     /* PROPERTIES */
-    /* =========================================
-    ===================================================*/
-    // Drawer
-    private DrawerLayout mDrawerLayout;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    ActionBarDrawerToggle mDrawerToggle;
-    private Toolbar toolbar;
-    private ExploreFragment exploreFragment;
 
-    private SimpleFacebook mSimpleFacebook;
-    private View fabContainer;
+    private DrawerLayout                mDrawerLayout;
+    private CharSequence                mDrawerTitle;
+    private CharSequence                mTitle;
+    ActionBarDrawerToggle               mDrawerToggle;
+    private Toolbar                     toolbar;
+    private ExploreFragment             exploreFragment;
 
-    private boolean backPressedOnce;
-    private static int TIMELAPSE_BEFORE_BACK_EXIT = 2000;
-    private FrameLayout mFrame;
-    private View mWaitForLocationLayout = null;
+    private SimpleFacebook              mSimpleFacebook;
+    private View                        fabContainer;
+
+    private boolean                     backPressedOnce;
+    private FrameLayout                 mFrame;
+    private View                        mWaitForLocationLayout;
+
+    // ---------------------------------------------------------------------------------------------
+
+    private static IntentFilter         syncIntentFilter            = new IntentFilter(DataSyncAdapter.ACTION_SYNC_EVENT_FINISHED);
+    private BroadcastReceiver           syncBroadcastReceiver       = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // An event has been updated
+            Log.d(TAG, "Sync finished, should refresh nao!!");
+            EventStatusManager.updateCurrentEventStatus();
+        }
+    };
+
+    // ---------------------------------------------------------------------------------------------
+
+    enum FragmentId{
+        Explore(0), Settings(1);
+        private final int value;
+        private FragmentId(int value) {
+            this.value = value;
+        }
+        public int getValue() {
+            return value;
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
 
     public void onDrawerTopClick(View view) {
         IntentsUtils.profile(this);
@@ -72,23 +105,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
     }
 
-    enum FragmentId{
-        Explore(0), Settings(1);
-        private final int value;
-        private FragmentId(int value) {
-            this.value = value;
-        }
+    // -----------------------------------------------------------------------------------------
+    // LIFE CALLBACKS
 
-        public int getValue() {
-            return value;
-        }
-    }
 
-    /* ============================================================================================*/
-
-     /* ============================================================================================*/
-    /* ON CREATE */
-    /* ============================================================================================*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,24 +119,15 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         setStatusBarColor(R.color.status_bar_map);
-        // !important Init drawer
         this.initDrawer();
-
-        // !important Init AddButton
         this.initAddSpotButton();
-
         this.initList();
-
-        //load Variables
         backPressedOnce = false;
 
         if (savedInstanceState == null) {
             changeCurrentFragment(FragmentId.Explore);
         }
-
-        // -----------------------------------------------------------------------------------------
 
         NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
         //hide scrollbar in drawer
@@ -126,18 +137,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
         //inflate header
         getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
-
         LocationManager.addOnLocationChangedListener(this);
-    }
-
-    private void initList() {
-        ImageView listIcon = (ImageView) findViewById(R.id.list_icon);
-        listIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exploreFragment.updateList();
-            }
-        });
     }
 
     @Override
@@ -164,6 +164,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver(syncBroadcastReceiver, syncIntentFilter);
         mSimpleFacebook = SimpleFacebook.getInstance(this);
         if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
             mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location, null);
@@ -172,9 +173,28 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
 
     @Override
+    protected void onPause() {
+        unregisterReceiver(syncBroadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
     }
+
+    // -----------------------------------------------------------------------------------------
+
+    private void initList() {
+        ImageView listIcon = (ImageView) findViewById(R.id.list_icon);
+        listIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exploreFragment.updateList();
+            }
+        });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -284,7 +304,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_my_invitations).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_share).setVisible(isLoggedIn);
 
-
         MenuItem item = menu.findItem(R.id.action_clear_filter);
         if(exploreFragment != null) {
             if(exploreFragment.getExploreMapFragment()!=null) {
@@ -359,7 +378,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 mSimpleFacebook.logout(new OnLogoutListener() {
                     @Override
                     public void onLogout() {
-                        Log.i(TAG, "You are logged out");
+                    Log.i(TAG, "You are logged out");
                     }
                 });
                 finish();
@@ -417,7 +436,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         //if (currentFragmentTAG != newFragmentTAG) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, newFragment, newFragmentTAG).commit();
         //}
-
     }
 
 
@@ -448,15 +466,5 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         fabContainer.setPadding(0,0,0,0);
     }
 
-    /////////////////////////////////////////////////////////
-    //////////////// FRAGMENTS /////////////////////////////
-
-    // MoodFragment /////////////////////////
- /*
-    public void onMoodLocationClick(View view) {
-        Intent chooseLocation = new Intent(this, MoodLocationActivity.class);
-        startActivity(chooseLocation);
-    }
-*/
 
 }

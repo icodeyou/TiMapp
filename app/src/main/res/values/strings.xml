@@ -257,6 +257,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_internet_connection_message">Sorry, we couldn\'t find any internet connection. Please make sure you have a good connection, and then restart the app. Thank you.</string>
     <string name="action_performed_not_successful">Sorry but it didn\'t work...</string>
     <string name="form_invalid_input">Please correct required fields before submitting.</string>
+    <string name="user_message_should_be_around_event_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
 
 
     <plurals name="number_people_event">

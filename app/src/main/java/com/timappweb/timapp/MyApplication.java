@@ -1,5 +1,6 @@
 package com.timappweb.timapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -42,6 +43,11 @@ public class MyApplication extends com.activeandroid.app.Application {
     private static final String TAG = "MyApplication";
     public static SearchFilter searchFilter = new SearchFilter();
     public static AuthProvider auth;
+    private static Context _appContext;
+
+    public static Context getApplicationBaseContext(){
+        return _appContext;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -78,6 +84,8 @@ public class MyApplication extends com.activeandroid.app.Application {
         super.onCreate();
 
         //this.deleteDatabase(getString(R.string.db_name));
+
+        _appContext = getApplicationContext();
 
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         MyApplication.auth = new AuthProvider();

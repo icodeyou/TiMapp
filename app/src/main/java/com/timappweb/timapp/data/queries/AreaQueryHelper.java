@@ -5,12 +5,28 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 /**
  * Created by stephane on 6/2/2016.
+ *
+ * SQL query helper for areas
+ * Implementation is base on Android implementation LatLngBounds::contain()
+ *
  */
 public class AreaQueryHelper {
 
 
     /**
      * Create a condition to get all locations that are in the area bounds
+     *
+     *  -           -
+     *       ________________________
+     *      |                        |
+     *      |  X         X           |
+     *      |                        |     -
+     *      |      X                 |
+     *      |                 X      |
+     *      |________________________|
+     *                  - -
+     *      -
+     *
      * @param bounds
      * @return
      */

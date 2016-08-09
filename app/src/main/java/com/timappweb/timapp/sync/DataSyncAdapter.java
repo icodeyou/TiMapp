@@ -20,6 +20,7 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,28 +59,36 @@ import retrofit2.Response;
  */
 public class DataSyncAdapter extends AbstractSyncAdapter {
 
-    public static final String TAG = "DataSyncAdapter";
+    public static final String TAG                      = "DataSyncAdapter";
 
-    public static final String SYNC_TYPE_KEY = "data_sync_type";
-    public static final String SYNC_ID_KEY = "data_sync_id";
-    public static final String SYNC_LAST_TIME = "data_sync_time";
-    public static final String SYNC_PARAM_EVENT_ID = "place_id";
-    public static final String SYNC_PARAM_MAP_BOUNDS = "map_bounds";
+    // ---------------------------------------------------------------------------------------------
 
-    public static final int SYNC_TYPE_FRIENDS = 1;
-    public static final int SYNC_TYPE_EVENT_AROUD_USER = 2;
-    public static final int SYNC_TYPE_USER = 3;
+    public static final String SYNC_TYPE_KEY            = "data_sync_type";
+    public static final String SYNC_ID_KEY              = "data_sync_id";
+    public static final String SYNC_LAST_TIME           = "data_sync_time";
+    public static final String SYNC_PARAM_EVENT_ID      = "place_id";
+    public static final String SYNC_PARAM_MAP_BOUNDS    = "map_bounds";
 
-    public static final int SYNC_TYPE_EVENT = 4;
-    public static final int SYNC_TYPE_EVENT_USERS = 8;
+    // ---------------------------------------------------------------------------------------------
 
-    private static final int SYNC_TYPE_EVENT_STATUS = 5;
-    public static final int SYNC_TYPE_INVITE_SENT = 6;
-    public static final int SYNC_TYPE_INVITE_RECEIVED = 7;
-    public static final int SYNC_TYPE_EVENT_INVITED = 9;
-    public static final int SYNC_TYPE_EVENT_PICTURE = 10;
-    public static final int SYNC_TYPE_EVENT_TAGS = 11;
-    public static final int SYNC_TYPE_SPOT = 12;
+    public static final int SYNC_TYPE_FRIENDS           = 1;
+    public static final int SYNC_TYPE_EVENT_AROUD_USER  = 2;
+    public static final int SYNC_TYPE_USER              = 3;
+    public static final int SYNC_TYPE_EVENT             = 4;
+    public static final int SYNC_TYPE_EVENT_USERS       = 8;
+    private static final int SYNC_TYPE_EVENT_STATUS     = 5;
+    public static final int SYNC_TYPE_INVITE_SENT       = 6;
+    public static final int SYNC_TYPE_INVITE_RECEIVED   = 7;
+    public static final int SYNC_TYPE_EVENT_INVITED     = 9;
+    public static final int SYNC_TYPE_EVENT_PICTURE     = 10;
+    public static final int SYNC_TYPE_EVENT_TAGS        = 11;
+    public static final int SYNC_TYPE_SPOT              = 12;
+
+    // ---------------------------------------------------------------------------------------------
+
+    public static final String ACTION_SYNC_EVENT_FINISHED  = "com.timappweb.timapp.ACTION_SYNC_EVENT_FINISHED";
+
+    // ---------------------------------------------------------------------------------------------
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -189,6 +198,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 case DataSyncAdapter.SYNC_TYPE_EVENT:
                     id = extractRemoteId(extras);
                     new SingleEntrySyncPerformer(Event.class, id, RestClient.service().viewPlace(id).execute(), syncResult).perform();
+                    getContext().sendBroadcast(new Intent(ACTION_SYNC_EVENT_FINISHED));
                     break;
                 case DataSyncAdapter.SYNC_TYPE_SPOT:
                     // TODO

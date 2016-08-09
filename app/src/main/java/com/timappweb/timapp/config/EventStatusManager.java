@@ -11,6 +11,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.rest.RestClient;
@@ -18,6 +19,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import retrofit2.Call;
@@ -29,6 +31,9 @@ public class EventStatusManager {
 
     private static final String TAG = "EventStatusManager";
     private static EventStatusManager _instance = null;
+    private static Event currentEvent;
+
+
 
     private class LastCallInfo{
         public HttpCallManager httpCallManager;
@@ -96,6 +101,10 @@ public class EventStatusManager {
                                 status,
                                 feedback.getIntData("id"));
                         QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
+
+                        if (status == UserPlaceStatusEnum.HERE){
+                            EventStatusManager.setCurrentEvent(event);
+                        }
                     }
 
                     @Override
@@ -217,16 +226,42 @@ public class EventStatusManager {
         return (EventStatus) eventStatus.mySave();
     }
 
-    public Event getCurrentEvent(){
+    // ---------------------------------------------------------------------------------------------
+
+    public static Event getCurrentEvent(){
+        if (currentEvent != null){
+            return currentEvent;
+        }
         UserEvent lastHereStatus = new Select()
                 .from(EventStatus.class)
-                .where("status = ?", UserPlaceStatusEnum.HERE)
-                .orderBy("created DESC")
+                .where("Status = ?", UserPlaceStatusEnum.HERE)
+                .orderBy("Created DESC")
                 .executeSingle();
         if (lastHereStatus == null){
             return null;
         }
-        return lastHereStatus.event;
+        Event event = lastHereStatus.event;
+        // If event is hover but we didn't updated the data when it was done
+        if (event.isOver() && (event.getLastSync() < event.getTimestampPoints()) ){
+            event.requestSync();
+        }
+        else{
+            Log.i(TAG, "Current event is now hover...");
+        }
+        return event;
+    }
+
+    public static Event updateCurrentEventStatus(){
+        currentEvent = null;
+        return getCurrentEvent();
+    }
+
+    public static boolean hasCurrentEvent(){
+        return getCurrentEvent() != null;
+    }
+
+    public static void setCurrentEvent(Event currentEvent) {
+        EventStatusManager.currentEvent = currentEvent;
     }
 
 }

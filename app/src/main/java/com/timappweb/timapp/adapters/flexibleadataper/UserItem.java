@@ -1,5 +1,6 @@
 package com.timappweb.timapp.adapters.flexibleadataper;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
@@ -35,13 +38,15 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 		implements ISectionable<UserItem.UserViewHolder, IHeader>, IFilterable {
 
-	private static final long serialVersionUID = 2519281529221244211L;
+	private static final long 		serialVersionUID 		= 2519281529221244211L;
+	private static final String 	TAG 					= "UserItem";
 
-	private User user;
-	/**
-	 * The header of this item
-	 */
-	IHeader header;
+	// ---------------------------------------------------------------------------------------------
+
+	private User 					user;
+	IHeader 						header;
+
+	// ---------------------------------------------------------------------------------------------
 
 	public UserItem(String id, User user) {
 		super(id);
@@ -62,7 +67,6 @@ public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 	public void setHeader(IHeader header) {
 		this.header = header;
 	}
-
 
 	@Override
 	public int getLayoutRes() {
@@ -91,14 +95,17 @@ public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 			holder.ivProfilePicture.setImageURI(uri);
 		}
 		holder.tvTime.setText(user.getTimeCreated());
+		holder.user = user;
 
 		//This "if-else" is just an example of what you can do with item animation
+		/*
 		if (adapter.isSelected(position)) {
 			adapter.animateView(holder.itemView, position, true);
 		} else {
 			adapter.animateView(holder.itemView, position, false);
-		}
+		}*/
 	}
+
 
 
 	@Override
@@ -106,20 +113,25 @@ public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 		return user.getUsername() != null && user.getUsername().toLowerCase().trim().contains(constraint);
 	}
 
+	@Override
+	public String toString() {
+		return "SubItem[" + super.toString() + "]";
+	}
 
 	public class UserViewHolder extends FlexibleViewHolder{
 
-		View cv;
-		TextView tvUsername;
-		TextView tvTime;
-		RecyclerView rvPostTags;
-		SimpleDraweeView ivProfilePicture;
+		User 							user;
+		View 							cv;
+		TextView 						tvUsername;
+		TextView 						tvTime;
+		RecyclerView 					rvPostTags;
+		SimpleDraweeView 				ivProfilePicture;
+
+		// ---------------------------------------------------------------------------------------------
 
 		UserViewHolder(View view, FlexibleAdapter adapter) {
 			super(view, adapter);
 			itemView.setOnClickListener(this);
-
-			// Get text views from item_post.xml
 			cv = itemView.findViewById(R.id.cv);
 			tvUsername = (TextView) itemView.findViewById(R.id.tv_username);
 			tvTime = (TextView) itemView.findViewById(R.id.tv_time);
@@ -132,12 +144,12 @@ public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 			return Utils.dpToPx(itemView.getContext(), 4f);
 		}
 
-	}
-
-
-	@Override
-	public String toString() {
-		return "SubItem[" + super.toString() + "]";
+		@Override
+		public void onClick(View view) {
+			super.onClick(view);
+			Log.v(TAG, "Click on user item: " + user);
+			IntentsUtils.profile(user);
+		}
 	}
 
 }

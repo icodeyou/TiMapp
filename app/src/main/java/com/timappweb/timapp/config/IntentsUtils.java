@@ -102,11 +102,20 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void profile(Activity activity, User user) {
-        Intent intent = new Intent(activity, ProfileActivity.class);
+    public static void profile(Context context, User user) {
+        Intent intent = new Intent(context, ProfileActivity.class);
         intent.putExtra(KEY_USER_ID, user.remote_id);
         Log.d(TAG, "Intent to view profile: " + user.remote_id);
-        activity.startActivity(intent);
+        context.startActivity(intent);
+    }
+
+    public static void profile(User user) {
+        Context context = MyApplication.getApplicationBaseContext();
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra(KEY_USER_ID, user.remote_id);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Log.d(TAG, "Intent to view profile: " + user.remote_id);
+        context.startActivity(intent);
     }
 
 

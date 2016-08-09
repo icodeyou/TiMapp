@@ -16,10 +16,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.BR;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -168,6 +170,9 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
         return new LatLng(this.latitude, this.longitude);
     }
 
+    public long getTimestampPoints() {
+        return points;
+    }
 
     public String getTime() {
         if (this.eventPosts != null && eventPosts.size() > 0){
@@ -454,5 +459,9 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
 
     public void setAuthor(User user){
         this.user = user;
+    }
+
+    public void requestSync() {
+        super.requestSync(MyApplication.getApplicationBaseContext(), DataSyncAdapter.SYNC_TYPE_EVENT);
     }
 }

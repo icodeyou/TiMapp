@@ -99,6 +99,10 @@ public abstract class SyncBaseModel extends MyModel {
         return (System.currentTimeMillis() - this._last_sync) < SYNC_INTERVAL;
     }
 
+    public long getLastSync(){
+        return this._last_sync;
+    }
+
     /**
      *
      * @param classType
@@ -156,6 +160,14 @@ public abstract class SyncBaseModel extends MyModel {
         Bundle bundle = new Bundle();
         bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
         bundle.putInt(DataSyncAdapter.SYNC_ID_KEY, key);
+        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
+    }
+
+    public void requestSync(Context context, int syncType) {
+        Log.i(TAG, "Request sync update for: " + this);
+        Bundle bundle = new Bundle();
+        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
+        bundle.putInt(DataSyncAdapter.SYNC_ID_KEY, (int) this.getRemoteId());
         DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
     }
 

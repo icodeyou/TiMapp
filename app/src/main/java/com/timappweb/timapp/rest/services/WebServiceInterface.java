@@ -47,6 +47,7 @@ public interface WebServiceInterface {
     @POST("places/add")
     Call<RestFeedback> addPlace(@Body Event event);
 
+
     // ---------------------------------------------------------------------------------------------
     // Event invites
     @FormUrlEncoded

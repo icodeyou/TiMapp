@@ -45,12 +45,12 @@ import java.util.List;
 
 public class EventActivity extends BaseActivity implements LocationManager.LocationListener{
 
-    private static final int PAGER_INFO = 0;
-    public static final int PAGER_PICTURE = 1;
-    private static final int PAGER_TAG = 2;
-    private static final int PAGER_PEOPLE = 3;
-
     private String          TAG                     = "EventActivity";
+
+    private static final int PAGER_INFO             = 0;
+    public static final int PAGER_PICTURE          = 1;
+    private static final int PAGER_TAG              = 2;
+    private static final int PAGER_PEOPLE           = 3;
 
     private static final int INITIAL_FRAGMENT_PAGE  = 0;
     private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 2;
@@ -63,31 +63,28 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private static final int REQUEST_CAMERA         = 0;
 
-    // =============================================================================================
-    //private EventActivityBinding binding;
-    private Event event;
-    private int eventId;
+    // ---------------------------------------------------------------------------------------------
 
-    //Views
-    private EventPicturesFragment fragmentPictures;
-    private EventTagsFragment fragmentTags;
-    private EventPeopleFragment fragmentPeople;
-    private EventInformationFragment fragmentInformation;
+    private Event                       event;
+    private int                         eventId;
 
-    //Listeners
+    private EventPicturesFragment       fragmentPictures;
+    private EventTagsFragment           fragmentTags;
+    private EventPeopleFragment         fragmentPeople;
+    private EventInformationFragment    fragmentInformation;
 
-    private boolean isEventLoaded = false;
-    private FragmentGroup mFragmentGroup;
-    private MaterialViewPager mMaterialViewPager;
-    private EventPagerAdapter mFragmentAdapter;
-    private TextView pageTitle;
-    private ViewDataBinding mBinding;
-    private FloatingActionButton btnActionCamera;
-    private FloatingActionButton btnActionTag;
-    private FloatingActionButton btnActionInvite;
+    private boolean                     isEventLoaded               = false;
+    private FragmentGroup               mFragmentGroup;
+    private MaterialViewPager           mMaterialViewPager;
+    private EventPagerAdapter           mFragmentAdapter;
+    private TextView                    pageTitle;
+    private ViewDataBinding             mBinding;
+    private FloatingActionButton        btnActionCamera;
+    private FloatingActionButton        btnActionTag;
+    private FloatingActionButton        btnActionInvite;
 
-    //Override methods
-    //////////////////////////////////////////////////////////////////////////////
+    // ---------------------------------------------------------------------------------------------
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,12 +127,20 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         btnActionTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!event.isUserAround()){
+                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
             }
         });
         btnActionCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!event.isUserAround()){
+                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
             }
         });

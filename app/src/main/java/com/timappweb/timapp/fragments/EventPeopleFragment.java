@@ -120,24 +120,6 @@ public class EventPeopleFragment extends EventBaseFragment {
         });
     }
 
-    private void loadPosts() {
-        Call<List<EventPost>> call = RestClient.service().viewPostsForPlace(eventActivity.getEventId());
-        RestClient.buildCall(call)
-                .onResponse(new HttpCallback<List<EventPost>>() {
-                    @Override
-                    public void successful(List<EventPost> list) {
-                        //mPlaceUsersAdapter.addData(UserPlaceStatusEnum.HERE, list);
-                    }
-
-                    @Override
-                    public void notSuccessful() {
-                        noConnectionView.setVisibility(View.VISIBLE);
-                    }
-                })
-                .perform();
-    }
-
-
     @Override
     public void onResume() {
         Log.v(TAG, "onResume()");
@@ -153,18 +135,17 @@ public class EventPeopleFragment extends EventBaseFragment {
         mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
         mPlaceUsersAdapter.setPermanentDelete(true);
 
-
-        mExpandableHereHeader = new ExpandableHeaderItem("HERE", context.getResources().getString(R.string.header_here));
-        mPlaceUsersAdapter.addSection(mExpandableHereHeader);
+        mExpandableInviteHeader = new ExpandableHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
+        mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
 
         mExpandableComingHeader = new ExpandableHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
         mPlaceUsersAdapter.addSection(mExpandableComingHeader);
 
-        mExpandableInviteHeader = new ExpandableHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
-        mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
-
+        mExpandableHereHeader = new ExpandableHeaderItem("HERE", context.getResources().getString(R.string.header_here));
+        mPlaceUsersAdapter.addSection(mExpandableHereHeader);
 
         mPlaceUsersAdapter.addItem(0, new PlaceHolderItem("PLACEHOLDER0"));
+
 
         initializeRecyclerView(savedInstanceState);
 
@@ -178,7 +159,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         //List<AbstractFlexibleItem> list = new LinkedList();
 
         //Experimenting NEW features (v5.0.0)
-        mPlaceUsersAdapter.setAnimationOnScrolling(true);
+        mPlaceUsersAdapter.setAnimationOnScrolling(false);
         mPlaceUsersAdapter.setAnimationOnReverseScrolling(true);
         mPlaceUsersAdapter.setAutoCollapseOnExpand(false);
         mPlaceUsersAdapter.setAutoScrollOnExpand(false);
@@ -212,10 +193,7 @@ public class EventPeopleFragment extends EventBaseFragment {
         //SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout_place_people);
         //mListener.onFragmentChange(swipeRefreshLayout, mRecyclerView, SelectableAdapter.MODE_IDLE);
 
-        //mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        //mAdapter = new RecyclerViewMaterialAdapter(mPlaceUsersAdapter);
         mRecyclerView.setAdapter(mPlaceUsersAdapter);
-        //mPlaceUsersAdapter.onAttachedToRecyclerView(mRecyclerView);
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
