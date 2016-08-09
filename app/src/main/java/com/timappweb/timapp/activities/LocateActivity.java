@@ -144,6 +144,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
     @Override
     protected void onStop() {
+        LocationManager.stop();
         super.onStop();
     }
 

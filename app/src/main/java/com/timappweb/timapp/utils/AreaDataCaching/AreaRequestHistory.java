@@ -42,21 +42,21 @@ import java.util.Map;
 public class AreaRequestHistory<T extends MarkerValueInterface>{
 
 
-    private static final String TAG                     = "AreaRequestHistory";
-    public static int MAXIMUM_ORIGIN_DISTANCE           = 10;       // Means a 10*10 square from the origin point
-    public static final int MAXIMUM_GRID_SIZE_ON_VIEW   = 2;        // Reset request history if we can put more than X area square on one screen
-    public static int DELAY_BEFORE_UPDATE_REQUEST       = 60;       // seconds before checking for new tag again (0 = INFINITE)
-    public static final int AREA_FACTOR_WIDTH           = 150;      // In percents
-    public static final int AREA_FACTOR_HEIGHT          = 150;      // In percents
-    public static final double MINIMUM_AREA_WIDTH       = 0.001;    // minimum area width in degrees
-    public static final double MINIMUM_AREA_HEIGHT      = 0.001;    // minimum area width in degrees
+    private static final String     TAG                         = "AreaRequestHistory";
+    public static int               MAXIMUM_ORIGIN_DISTANCE     = 10;       // Means a 10*10 square from the origin point
+    public static final int         MAXIMUM_GRID_SIZE_ON_VIEW   = 2;        // Reset request history if we can put more than X area square on one screen
+    public static int               DELAY_BEFORE_UPDATE_REQUEST = 60;       // seconds before checking for new tag again (0 = INFINITE)
+    public static final int         AREA_FACTOR_WIDTH           = 150;      // In percents
+    public static final int         AREA_FACTOR_HEIGHT          = 150;      // In percents
+    public static final double      MINIMUM_AREA_WIDTH          = 0.001;    // minimum area width in degrees
+    public static final double      MINIMUM_AREA_HEIGHT         = 0.001;    // minimum area width in degrees
 
     // ---------------------------------------------------------------------------------------------
 
-    public int areaWidth;                                           // En degré (1 degré ~= 100 km)
-    public int areaHeight;                                          // En degré
+    public int                      areaWidth;                     // En degré (1 degré ~= 100 km)
+    public int                      areaHeight;                                          // En degré
     public HashMap<IntPoint, AreaRequestItem<T>> areas;
-    private IntLatLng center;
+    private IntLatLng               center;
     private AreaDataLoaderInterface dataLoader = null;
     private AreaRequestItemFactory<T> areaRequestItemFactory = null;
 

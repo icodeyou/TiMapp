@@ -64,7 +64,6 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        LocationManager.stop();
         super.onStop();
     }
 

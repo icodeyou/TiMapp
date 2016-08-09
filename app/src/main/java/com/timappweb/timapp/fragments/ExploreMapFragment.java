@@ -78,6 +78,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private AreaRequestHistory              history;
     private Bundle                          mapBundle;
 
+
+    private boolean                         needCenterMap           = true;
     // ---------------------------------------------------------------------------------------------
 
     public AreaRequestHistory getHistory() {
@@ -86,9 +88,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
-        if (lastLocation == null){
+        if (needCenterMap){
             centerMap(newLocation);
-            updateMapData();
         }
     }
 
@@ -96,6 +97,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     public void onTabSelected() {
 
     }
+
     // ---------------------------------------------------------------------------------------------
 
     @Nullable
@@ -219,7 +221,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
         if (LocationManager.hasLastLocation()){
             centerMap(LocationManager.getLastLocation());
-            updateMapData();
         }
     }
 
@@ -248,7 +249,11 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
 
     private void centerMap(Location location){
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP));
+        centerMap(location, null);
+    }
+    private void centerMap(Location location,  GoogleMap.CancelableCallback  callback){
+        needCenterMap = false;
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP), callback);
     }
 
     /**

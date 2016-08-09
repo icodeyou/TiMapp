@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.exceptions.NoLastLocationException;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
@@ -40,8 +41,12 @@ public class LocationManager {
      * @return
      */
     public static boolean hasLastLocation() {
+        return lastLocation != null;
+    }
+
+    public static boolean hasUpToDateLastLocation(){
         return lastLocation != null &&
-                (lastLocation.getTime() - System.currentTimeMillis()) < ConfigurationProvider.rules().gps_min_time_delay;
+            (System.currentTimeMillis() - lastLocation.getTime()) < ConfigurationProvider.rules().gps_min_time_delay;
     }
 
     /**
@@ -98,6 +103,11 @@ public class LocationManager {
         initLocationListener();
         initLocationProvider(activity);
         locationProvider.connect();
+        try {
+            lastLocation = locationProvider.getLastLocation();
+        } catch (NoLastLocationException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void stop(){

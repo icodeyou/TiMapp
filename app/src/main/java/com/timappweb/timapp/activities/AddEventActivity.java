@@ -154,6 +154,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     @Override
+    protected void onStop() {
+        LocationManager.stop();
+        super.onStop();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_event, menu);
         this.menu = menu;

@@ -142,13 +142,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         }
         //inflate header
         getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
-        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         LocationManager.start(this);
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
@@ -174,6 +174,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             });
             mFrame.addView(mWaitForLocationLayout);
         }
+        else if (LocationManager.hasLastLocation() && mWaitForLocationLayout != null){
+            removeWaitForLocationLayout();
+        }
     }
 
     @Override
@@ -184,6 +187,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     protected void onStop() {
+        LocationManager.stop();
         super.onStop();
     }
 
