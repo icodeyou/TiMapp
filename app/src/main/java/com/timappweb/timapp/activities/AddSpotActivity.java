@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -67,6 +68,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private Menu menu;
     private Loader<List<Spot>> mSpotLoader;
     private LatLngBounds mSpotReachableBounds;
+    private SpotsAdapter spotsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,9 +129,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotCategoriesAdapter.addAll(ConfigurationProvider.spotCategories());
 
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
-        SpotsAdapter spotsAdapter = new SpotsAdapter(this);
-        List<Spot> list = new ArrayList<>();
-        spotsAdapter.setData(list);
+        spotsAdapter = new SpotsAdapter(this);
         spotsRv.setAdapter(spotsAdapter);
     }
 
@@ -287,11 +287,8 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         @Override
         public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
             super.onLoadFinished(loader, data);
-
-            // TODO jack update data HERE
+            spotsAdapter.setData(data);
         }
-
-
     }
 
 }

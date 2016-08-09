@@ -7,8 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -67,16 +65,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private InputMethodManager          imm;
     private EditText                    eventNameET;
-    private RecyclerView                mainCategoriesRV;
-    private RecyclerView                allCategoriesRV;
     private EventCategory               eventCategorySelected;
     private View                        progressView;
-    private TextView                    nameCategoryTV;
-    private TextView                    pickTv;
-    private CrossView                   moreBtn;
-    private View                        selectedCategoryView;
-    private ImageView                   imageSelectedCategory;
-    private TextView                    textSelectedCategory;
     private EditText                    descriptionET;
     // Data
     private MapView                     mapView = null;
@@ -88,6 +78,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private View.OnClickListener        displayHideCategories;
 
     private Menu                        menu;
+    private CategorySelectorView        categorySelector;
     //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
@@ -113,10 +104,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         eventNameET.requestFocus();
 
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
-        mainCategoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
 
         progressView = findViewById(R.id.progress_view);
-        nameCategoryTV = (TextView) findViewById(R.id.category_name);
         mapView = (MapView) findViewById(R.id.map);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
