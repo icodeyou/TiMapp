@@ -173,7 +173,8 @@ public class FilterActivity extends BaseActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                IntentsUtils.home(this);
+                //IntentsUtils.home(this);
+                finish();
                 return true;
             case R.id.action_search:
                 /////Handle search actions here

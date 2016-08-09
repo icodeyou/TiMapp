@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -19,16 +17,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -37,8 +32,6 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.databinding.ActivityAddSpotBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.SerializeHelper;
@@ -46,9 +39,6 @@ import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
 
-import java.util.List;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
@@ -60,54 +50,49 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     // ---------------------------------------------------------------------------------------------
 
-    private EditText                        etCustomPlace;
-    private RecyclerView                    spotsRv;
-    private CategorySelectorView            categorySelector;
+    private InputMethodManager imm;
 
-    private SpotCategoriesAdapter           spotCategoriesAdapter;
-    private GoogleMap                       gMap;
-    private ActivityAddSpotBinding          mBinding;
-    private AddressResultReceiver           mAddressResultReceiver;
-    private Menu                            menu;
-    private Loader<List<Spot>>              mSpotLoader;
-    private LatLngBounds                    mSpotReachableBounds;
-    private SpotsAdapter                    spotsAdapter;
-    private SpotCategory                    categorySelected;
+    private Spot currentSpot;
+
+    //private ImageView showCategoriesButton;
+    private EditText etCustomPlace;
+    private RecyclerView spotsRv;
+    private CategorySelectorView categorySelector;
+    private GoogleMap gMap;
+    private AddressResultReceiver mAddressResultReceiver;
+    private Menu menu;
+    private Loader<List<Spot>> mSpotLoader;
+    private LatLngBounds mSpotReachableBounds;
+    private SpotsAdapter spotsAdapter;
+    private SpotCategory categorySelected;
 
     // ---------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_spot);
+        setContentView(R.layout.activity_add_spot);
 
         //Toolbar
         this.initToolbar(true);
 
         //Initialize
-        //showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etCustomPlace = (EditText) findViewById(R.id.name_spot);
 
-        initEt();
         initAdapters();
         setListeners();
+        initEt();
         LocationManager.addOnLocationChangedListener(this);
-
-        mBinding.setSpot(IntentsUtils.extractSpot(getIntent()));
-        if (mBinding.getSpot() == null){
-            mBinding.setSpot(new Spot());
-        }
-        if (LocationManager.hasLastLocation()){
-            requestReverseGeocoding(LocationManager.getLastLocation());
-        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_add_spot, menu);
+        getSpotAndBind(); //Method called here because it causes menu button validation in EditText Listener
         setButtonValidation();
         return true;
     }
@@ -115,17 +100,35 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.action_create:
-                finishActivityResult(mBinding.getSpot());
+                finishActivityResult(currentSpot);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void getSpotAndBind() {
+        currentSpot = IntentsUtils.extractSpot(getIntent());
+        if (currentSpot == null){
+            currentSpot = new Spot();
+        } else {
+            categorySelector.selectCategoryUI(currentSpot.name, currentSpot.getCategory().getIconWhiteResId());
+            etCustomPlace.setText(currentSpot.name);
+            etCustomPlace.setSelection(currentSpot.name.length());
+        }
+        if (LocationManager.hasLastLocation()){
+            requestReverseGeocoding(LocationManager.getLastLocation());
+        }
+    }
+
     private void initEt() {
         etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT |
                 InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        etCustomPlace.clearFocus();
     }
 
     private void initAdapters() {
@@ -156,9 +159,10 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
     private void setCategory(SpotCategory spotCategory) {
-        Spot spot = mBinding.getSpot();
+        Spot spot = currentSpot;
         spot.setCategory(spotCategory);
         categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getIconWhiteResId());
+        etCustomPlace.requestFocus();
     }
 
     private void setListeners() {
@@ -174,6 +178,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
             @Override
             public void afterTextChanged(Editable s) {
+                currentSpot.setName(s.toString());
                 setButtonValidation();
             }
         });
@@ -188,7 +193,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
     private void setButtonValidation() {
-        menu.findItem(R.id.action_create).setEnabled(mBinding.getSpot().isValid());
+        menu.findItem(R.id.action_create).setEnabled(currentSpot.isValid());
     }
 
     public int getNumberOfMainCategories() {
@@ -242,7 +247,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         if (mAddressResultReceiver == null){
             mAddressResultReceiver = new AddressResultReceiver();
         }
-        mBinding.getSpot().setLocation(location);
+        currentSpot.setLocation(location);
         ReverseGeocodingHelper.request(AddSpotActivity.this, location, mAddressResultReceiver);
     }
     // =============================================================================================
@@ -278,7 +283,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             Log.i(TAG, "Receive result from service: " + resultCode);
             if (resultCode == Constants.SUCCESS_RESULT) {
                 String addressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-                mBinding.getSpot().setAddress(addressOutput);
+                currentSpot.setAddress(addressOutput);
             }
         }
     }

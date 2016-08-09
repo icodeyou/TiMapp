@@ -96,7 +96,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
         eventNameET.setFilters(filters);
-        eventNameET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         eventNameET.requestFocus();
 
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
@@ -113,7 +112,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         }
         mBinding.setEvent(event);
 
-        initKeyboard();
+        initEts();
         initAdapterAndManager();
         setListeners();
         //initViewPager();
@@ -190,10 +189,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         }
     }
 
-    private void initKeyboard() {
-        eventNameET.setInputType(InputType.TYPE_CLASS_TEXT |
-                InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD |
-                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+    private void initEts() {
+        eventNameET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        eventNameET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        //To remove words suggestions, add InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+
+        descriptionET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 
     private void initAdapterAndManager() {
@@ -367,8 +368,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         if(bundle!=null) {
             Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
             mBinding.getEvent().setSpot(spot);
-            mBinding.notifyChange();
-
+            mBtnAddSpot.setVisibility(View.GONE);
+            mSpotContainer.setVisibility(View.VISIBLE);
             //mClusterManagerSpot.addItem(spot);
             //mClusterManagerSpot.cluster();
         }
@@ -412,13 +413,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void initMap(){
         mapView.onCreate(null);
         mapView.getMapAsync(this);
-        gMap = mapView.getMap();
-        gMap.setIndoorEnabled(true);
-        gMap.setMyLocationEnabled(true);
-        gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        gMap.getUiSettings().setScrollGesturesEnabled(false);
-        gMap.getUiSettings().setRotateGesturesEnabled(false);
-        gMap.getUiSettings().setTiltGesturesEnabled(false);
+        super.initMapUI(mapView.getMap(), false);
+
         //setUpClusterer();
     }
 /*

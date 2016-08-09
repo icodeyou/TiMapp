@@ -19,7 +19,7 @@
     <!-- Cards -->
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="margin_bottom_card">5dp</dimen>
-    <dimen name="height_name_card">25dp</dimen>
+    <dimen name="height_name_card">26dp</dimen>
     <dimen name="height_title_spot_card">50dp</dimen>
     <dimen name="padding_card">5dp</dimen>
     <dimen name="padding_card_minus_two">3dp</dimen>
@@ -31,7 +31,7 @@
     <dimen name="positive_half_profile_picture_side">45dp</dimen>
     <dimen name="negative_half_profile_picture_side">-45dp</dimen>
     <dimen name="last_post_box">5dp</dimen>
-    <dimen name="height_small_rv_displayed_tags">24dp</dimen>
+    <dimen name="height_small_rv_displayed_tags">25dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>

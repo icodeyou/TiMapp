@@ -30,7 +30,7 @@
 
         <!-- TOOLBAR -->
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_id"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbarHeight"
             android:background="@color/background_semi_transparent"
