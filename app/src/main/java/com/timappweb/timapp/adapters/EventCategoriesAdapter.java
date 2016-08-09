@@ -60,7 +60,7 @@ public class EventCategoriesAdapter extends CategoriesAdapter {
         if(!isLegend) {
             return NUMBER_MAIN_CATEGORIES;
         } else {
-            return super.getItemCount();
+            return ConfigurationProvider.eventCategories().size();
         }
     }
 

@@ -44,6 +44,7 @@ import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
+import com.timappweb.timapp.views.CategorySelectorView;
 
 import java.util.List;
 
@@ -55,11 +56,12 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private static final String TAG = "AddSpotActivity";
     private static final float ZOOM_LEVEL_CENTER_MAP = 15.0f;
     private static final int LOADER_ID_SPOT_AROUND = 0;
+    private static final int NUMBER_OF_MAIN_CATEGORIES = 4;
 
     //private ImageView showCategoriesButton;
     private EditText etCustomPlace;
     private RecyclerView spotsRv;
-    private RecyclerView spotCategoriesRv;
+    private CategorySelectorView categorySelector;
 
     private SpotCategoriesAdapter spotCategoriesAdapter;
     private GoogleMap gMap;
@@ -69,6 +71,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private Loader<List<Spot>> mSpotLoader;
     private LatLngBounds mSpotReachableBounds;
     private SpotsAdapter spotsAdapter;
+    private SpotCategory categorySelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         //Initialize
         //showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
-        spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
+        categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etCustomPlace = (EditText) findViewById(R.id.name_spot);
 
         initEt();
@@ -123,14 +126,26 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
     private void initAdapters() {
-        spotCategoriesRv.setLayoutManager(new GridLayoutManager(this, 3));
-        spotCategoriesAdapter = new SpotCategoriesAdapter(this);
-        spotCategoriesRv.setAdapter(spotCategoriesAdapter);
-        spotCategoriesAdapter.addAll(ConfigurationProvider.spotCategories());
+        final SpotCategoriesAdapter spotCategoriesAdapterMain = new SpotCategoriesAdapter(this,false);
+        SpotCategoriesAdapter spotCategoriesAdapterAll = new SpotCategoriesAdapter(this,true);
+        categorySelector.setAdapters(spotCategoriesAdapterMain, spotCategoriesAdapterAll);
+
+        spotCategoriesAdapterMain.setOnItemClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                setCategory(spotCategoriesAdapterMain.getCategory(position));
+            }
+        });
 
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
         spotsAdapter = new SpotsAdapter(this);
         spotsRv.setAdapter(spotsAdapter);
+    }
+
+    private void setCategory(SpotCategory spotCategory) {
+        Spot spot = mBinding.getSpot();
+        spot.setCategory(spotCategory);
+        setButtonValidation();
     }
 
     private void setListeners() {
@@ -149,20 +164,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 setButtonValidation();
             }
         });
-
-        spotCategoriesAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                Spot spot = mBinding.getSpot();
-                if (spot.hasCategory(spotCategoriesAdapter.getCategory(position))) {
-                    spot.setCategory(null);
-                } else {
-                    spot.setCategory(spotCategoriesAdapter.getCategory(position));
-                }
-                setButtonValidation();
-                spotCategoriesAdapter.notifyDataSetChanged();
-            }
-        });
     }
 
     private void finishActivityResult(Spot spot){
@@ -177,6 +178,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         menu.findItem(R.id.action_create).setEnabled(mBinding.getSpot().isValid());
     }
 
+    public int getNumberOfMainCategories() {
+        return NUMBER_OF_MAIN_CATEGORIES;
+    }
 
     @Override
     public void onPause() {
@@ -247,10 +251,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         }
     }
 
-    public SpotCategory getCategorySelected() {
-        return mBinding.getSpot().getCategory();
-    }
-
 
     // =============================================================================================
 
@@ -290,5 +290,4 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             spotsAdapter.setData(data);
         }
     }
-
 }

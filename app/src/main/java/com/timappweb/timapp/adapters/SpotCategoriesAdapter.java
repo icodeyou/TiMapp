@@ -1,108 +1,71 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
-public class SpotCategoriesAdapter extends RecyclerView.Adapter<SpotCategoriesAdapter.SpotCategoriesViewHolder> {
-    private static final String TAG = "SpotCategoriesAdapter";
-    private final AddSpotActivity addSpotActivity;
-    private Context context;
+public class SpotCategoriesAdapter extends CategoriesAdapter {
 
-    private List<SpotCategory> data;
+    protected LayoutInflater inflater;
+    //protected List<EventCategory> eventCategories = Collections.emptyList();
+    protected HashMap<Integer, ImageView> icons = new HashMap<>();
+
     private ImageView currentCategoryIcon;
-    private OnItemAdapterClickListener itemAdapterClickListener;
 
-    public SpotCategoriesAdapter(Context context) {
-        this.data = new ArrayList<>();
+    private OnItemAdapterClickListener mClickListener;
+
+    protected static int NUMBER_MAIN_CATEGORIES;
+
+    private Context context;
+    private static final String TAG = "SpotCategoriesAdapter";
+
+    public SpotCategoriesAdapter(Context context, boolean isLegend) {
+        super(context,isLegend);
         this.context = context;
-        this.addSpotActivity = (AddSpotActivity) context;
+
+        AddSpotActivity addSpotActivity = (AddSpotActivity) context;
+        NUMBER_MAIN_CATEGORIES = addSpotActivity.getNumberOfMainCategories();
     }
 
     @Override
-    public SpotCategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_spot_category, parent, false);
-        return new SpotCategoriesViewHolder(v);
-    }
-
-    @Override
-    public void onBindViewHolder(SpotCategoriesViewHolder holder, int position) {
+    public void onBindViewHolder(CategoriesViewHolder holder, final int position) {
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
+        Log.d(TAG,String.valueOf(isLegend));
         final SpotCategory spotCategory = ConfigurationProvider.spotCategories().get(position);
-        holder.tvCategory.setText(spotCategory.name);
+        final ImageView categoryIcon = holder.categoryIcon;
+        final TextView categoryText = holder.categoryText;
+        icons.put(spotCategory.remote_id, categoryIcon);
 
-        if (spotCategory.equals(addSpotActivity.getCategorySelected())) {
-            holder.itemView.setBackgroundResource(R.color.silver);
+        categoryIcon.setImageResource(spotCategory.getIconWhiteResId());
+        if(isLegend) {
+            categoryText.setText(spotCategory.name);
         } else {
-            holder.itemView.setBackground(null);
+            categoryText.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return ConfigurationProvider.spotCategories().size();
-    }
-
-    public List<SpotCategory> getData() {
-        return ConfigurationProvider.spotCategories();
+        if(!isLegend) {
+            return NUMBER_MAIN_CATEGORIES;
+        } else {
+            return ConfigurationProvider.spotCategories().size();
+        }
     }
 
     public SpotCategory getCategory(int position) {
         return ConfigurationProvider.spotCategories().get(position);
-    }
-
-    public void add(SpotCategory spotCategory) {
-        this.data.add(spotCategory);
-        notifyDataSetChanged();
-    }
-
-    public void clear() {
-        data.clear();
-        notifyDataSetChanged();
-    }
-
-    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
-        this.itemAdapterClickListener = itemAdapterClickListener;
-    }
-
-    public void addAll(List<SpotCategory> spotCategories) {
-        this.data.addAll(spotCategories);
-    }
-
-    public class SpotCategoriesViewHolder extends RecyclerView.ViewHolder implements
-            View.OnClickListener {
-
-        TextView tvCategory;
-        ImageView icCategory;
-
-        SpotCategoriesViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            tvCategory = (TextView) itemView.findViewById(R.id.text);
-            icCategory = (ImageView) itemView.findViewById(R.id.icon);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (itemAdapterClickListener != null) {
-                itemAdapterClickListener.onClick(getAdapterPosition());
-            }
-        }
     }
 }

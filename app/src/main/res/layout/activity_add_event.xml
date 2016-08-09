@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
@@ -26,6 +27,18 @@
         <include
             layout="@layout/toolbar_layout_secondary" />
 
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone"
+            android:background="@color/background">
+            <include layout="@layout/progress_view_secondary"
+                android:layout_width="@dimen/default_progressview"
+                android:layout_height="@dimen/default_progressview"/>
+        </LinearLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -36,6 +49,7 @@
 
                 <com.timappweb.timapp.views.CategorySelectorView
                     android:id="@+id/category_selector"
+                    app:color_background="@color/colorSecondary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <!--<FrameLayout
@@ -103,15 +117,6 @@
                             bind:spot="@{event.spot}"/>
                     </LinearLayout>
                 </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/progress_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    android:background="@color/background">
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

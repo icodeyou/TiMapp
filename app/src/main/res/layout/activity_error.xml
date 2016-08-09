@@ -1,21 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_error_activity"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_message"
+        android:orientation="vertical"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv_error_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            style="@style/title1"
+            tools:text="Error title"/>
+
+        <me.grantland.widget.AutofitTextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="@dimen/text_small"
+            android:maxLines="15"
+            android:gravity="center"
+            tools:text="This text view can display error messacan display error message !This text view can display error message !This text view can display error message !This text view can display error message !This text view can display error message !This text view can display error message !This text view can display error message ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Indeed."/>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_error_title"
+        android:id="@+id/bottom_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/title1"
-        tools:text="Error title"/>
+        android:padding="20dp"
+        android:textSize="@dimen/text_normal"
+        android:gravity="center"
+        tools:text="We are sorry for any trouble this unfortunate even has caused you. Please accept our deepest apologies."
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <TextView
-        android:id="@+id/tv_error_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="This text view can display error message ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! "/>
-
-</LinearLayout>
+</RelativeLayout>
