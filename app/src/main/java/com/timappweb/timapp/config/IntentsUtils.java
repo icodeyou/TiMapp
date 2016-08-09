@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.desmond.squarecamera.CameraActivity;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.activities.AddTagActivity;
@@ -62,13 +64,17 @@ public class IntentsUtils {
     public static final String KEY_TITLE = "title";
 
     public static void login(Context context){
+        login(context, true);
+    }
+    public static void login(Context context, boolean clear){
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if (clear)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
 
     public static void share(Activity activity){
-        if (!requireLogin(activity))
+        if (!requireLogin(activity, false))
             return;
         Intent intent = new Intent(activity, ShareActivity.class);
         activity.startActivity(intent);
@@ -90,7 +96,7 @@ public class IntentsUtils {
     }
 
     public static void profile(Context context){
-        if (!requireLogin(context))
+        if (!requireLogin(context, false))
             return;
         Intent intent = new Intent(context, ProfileActivity.class);
         context.startActivity(intent);
@@ -105,7 +111,7 @@ public class IntentsUtils {
 
 
     public static void editProfile(ProfileActivity activity, User user) {
-        if (!requireLogin(activity))
+        if (!requireLogin(activity, false))
             return;
 
         Intent intent = new Intent(activity, EditProfileActivity.class);
@@ -114,7 +120,7 @@ public class IntentsUtils {
     }
 
     public static void logout(Activity activity) {
-        if (!requireLogin(activity))
+        if (!requireLogin(activity, true))
             return;
         MyApplication.logout();
         Intent intent = new Intent(activity, LoginActivity.class);
@@ -140,7 +146,7 @@ public class IntentsUtils {
 
 
     public static void locate(Context context) {
-        if (!requireLogin(context))
+        if (!requireLogin(context, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_POST, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
@@ -170,15 +176,15 @@ public class IntentsUtils {
         fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
-    public static void addTags(BaseFragment fragment, Event event) {
-        if (!requireLogin(fragment.getContext()))
+    public static void addTags(Activity activity, Event event) {
+        if (!requireLogin(activity, false))
             return;
 
-        Intent intent = new Intent(fragment.getContext(), AddTagActivity.class);
+        Intent intent = new Intent(activity, AddTagActivity.class);
         Bundle extras = new Bundle();
         extras.putString(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
-        fragment.startActivityForResult(intent, REQUEST_TAGS);
+        activity.startActivityForResult(intent, REQUEST_TAGS);
     }
 
     public static void inviteFriendToEvent(Activity activity, Event event) {
@@ -231,7 +237,7 @@ public class IntentsUtils {
     }
 
     public static void addPlace(Context context) {
-        if (!requireLogin(context))
+        if (!requireLogin(context, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
@@ -260,7 +266,7 @@ public class IntentsUtils {
     }
 
     public static void pinSpot(Activity activity, Spot spot) {
-        if (!requireLogin(activity))
+        if (!requireLogin(activity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
@@ -281,7 +287,7 @@ public class IntentsUtils {
     }
 
     public static void settings(Context context) {
-        if (!requireLogin(context))
+        if (!requireLogin(context, false))
             return;
         Intent intent = new Intent(context,SettingsActivity.class);
         context.startActivity(intent);
@@ -337,9 +343,10 @@ public class IntentsUtils {
     }
 
 
-    public static boolean requireLogin(Context context){
+    public static boolean requireLogin(Context context, boolean clear){
         if (!MyApplication.isLoggedIn()){
-            IntentsUtils.login(context);
+            Toast.makeText(context, R.string.error_require_login, Toast.LENGTH_LONG).show();
+            IntentsUtils.login(context, clear);
             return false;
         }
         return true;

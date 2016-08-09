@@ -4,16 +4,20 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.View;
 
 import com.timappweb.timapp.R;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.flexibleadapter.items.IFlexible;
+import eu.davidea.flexibleadapter.items.IHeader;
 
 /**
  * NOTE: AbstractModelItem is for example purpose only. I wanted to have in common
@@ -31,42 +35,11 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	private Context mContext;//this should not be necessary for view holders
 
 
-	public MyFlexibleAdapter(List items, Activity activity) {
-		super(items, activity);
+	public MyFlexibleAdapter(FragmentActivity activity) {
+		super(new LinkedList<AbstractFlexibleItem>(), activity);
 		mContext = activity;
-
-		//NEW! We have highlighted text while filtering, so let's enable this feature
-		//to be consistent with the active filter
 		setNotifyChangeOfUnfilteredItems(true);
 	}
-
-	@Override
-	public void updateDataSet(List<AbstractFlexibleItem> items) {
-		super.updateDataSet(items);
-		//Overwrite the list and fully notify the change
-		//Watch out! The original list must a copy
-		//TODO: We may create calls like removeAll, addAll or refreshList in order to animate changes
-		//Add example view
-		//addUserLearnedSelection(true);
-	}
-
-	/*
-	 * HEADER/FOOTER VIEW
-	 * This method show how to add Header/Footer View as it was for ListView.
-	 * The secret is the position! 0 for Header; itemCount for Footer ;-)
-	 * The view is represented by a custom Item type to better represent any dynamic content.
-	 */
-	/*
-	public void addUserLearnedSelection(boolean scrollToPosition) {
-		if (!DatabaseService.userLearnedSelection && !hasSearchText() && !(getItem(0) instanceof ULSItem)) {
-			//Define Example View
-			final ULSItem item = new ULSItem("ULS");
-			item.setTitle(mContext.getString(R.string.uls_title));
-			item.setSubtitle(mContext.getString(R.string.uls_subtitle));
-			addItemWithDelay(0, item, 1700L, scrollToPosition);
-		}
-	}
-	*/
 
 	@Override
 	public synchronized void filterItems(@NonNull List<AbstractFlexibleItem> unfilteredItems) {
@@ -120,4 +93,43 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 
 
+	/**
+	 +	 * Provides all the item positions that belongs to the section represented by the specified header.
+	 +	 *
+	 +	 * @param header the header that represents the section
+	 +	 * @return NonNull list of all item positions in the specified section.
+	 */
+	public int getEndHeaderPosition(@NonNull IHeader header) {
+		int startPosition = getGlobalPositionOf(header);
+		while (getItem(++startPosition) != null && !hasSameHeader(getItem(startPosition), header)) {
+		}
+		return startPosition;
+	}
+
+
+	public int removeItems(ExpandableHeaderItem headerItem) {
+		int headerPosition = getGlobalPositionOf(headerItem);
+		int size = headerItem.getSubItems() != null ? headerItem.getSubItems().size() : 0;
+		if (size > 0) {
+			if (headerItem.isExpanded()) {
+				removeRange(headerPosition + 1, size);
+			}
+			headerItem.removeSubItems();
+		}
+		return size;
+	}
+
+	public void addSubItem(ExpandableHeaderItem headerItem, UserItem item) {
+		int size = headerItem.getSubItems() != null ? headerItem.getSubItems().size(): 0;
+		if (headerItem.isExpanded()){
+			addItemToSection(item, headerItem, size);
+		}
+		headerItem.addSubItem(item);
+		notifyItemChanged(getGlobalPositionOf(headerItem));
+	}
+
+	public void expand(ExpandableHeaderItem headerItem) {
+		if (headerItem.isExpanded()) return;
+		this.expand(getGlobalPositionOf(headerItem));
+	}
 }

@@ -110,6 +110,7 @@ public class MultipleHttpCallManager {
 
     public boolean isSuccess(String id) {
         HttpCallManager manager = callsManager.get(id);
+        if (manager == null) return true;
         return !manager.hasError() && manager.hasResponse() && manager.getResponse().isSuccessful();
     }
 

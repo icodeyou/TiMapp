@@ -112,7 +112,7 @@ dependencies {
     compile 'com.github.cdflynn:crossview:v1.0.1'
 
     compile "eu.davidea:flipview:1.1.1"
-    compile 'eu.davidea:flexible-adapter:5.0.0-b6@aar'
+    compile 'eu.davidea:flexible-adapter:5.0.0-b6'
 
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'

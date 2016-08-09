@@ -251,6 +251,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="fatal_error_cannot_sync_message">Sorry but we cannot reach our server to sync your application. We will be back very soon, try again later.</string>
     <string name="done">Done</string>
     <string name="post">Post</string>
+    <string name="i_am_here">I\'m here</string>
+    <string name="i_am_coming">I\'m coming</string>
 
 
     <plurals name="number_people_event">

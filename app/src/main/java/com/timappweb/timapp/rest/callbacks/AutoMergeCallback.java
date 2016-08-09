@@ -3,6 +3,7 @@ package com.timappweb.timapp.rest.callbacks;
 import android.util.Log;
 
 import com.activeandroid.Model;
+import com.google.common.collect.ObjectArrays;
 import com.google.common.reflect.Reflection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,7 +22,15 @@ import java.util.Map;
 /**
  * Created by stephane on 6/6/2016.
  *
- * Merge single entry in database
+ * Copy data returned by the request into the model given in constructor
+ * Example:
+ *      Response body: {"fieldA": "valeur", "fieldB": {"fieldB":"valeur2"}}
+ *      It will execute the following statements
+ *          model.fieldA = "valeur"
+ *          model.fieldB = new Object(fieldB = "valeur2")
+ *
+ *
+ *  @warning: Given objects must have a default constructor
  */
 public class AutoMergeCallback extends HttpCallback<JsonElement>{
 
@@ -51,23 +60,18 @@ public class AutoMergeCallback extends HttpCallback<JsonElement>{
         }
     }
 
-    /**
-     *
-     * @param currentObject
-     * @param jsonObject
-    public void merge(List<Object> currentObject, JsonArray jsonArray){
-
-        for (JsonElement elem: jsonArray){
-            this.merge(currentObject);
-        }
-    }
-     */
 
     /**
      * Copy data of jsonObject inside current object
      */
     public void merge(Object currentObject, JsonObject jsonObject){
         if (jsonObject == null) return;
+        if (currentObject == null){
+            // For recursive merge, we need to create the model
+            // But we don't know the object class at runtime...
+            // So abort for now
+            return ;
+        }
 
         for (Map.Entry<String,JsonElement> entry: jsonObject.entrySet()){
             String fieldName = entry.getKey();
@@ -108,6 +112,11 @@ public class AutoMergeCallback extends HttpCallback<JsonElement>{
                 }
                 // Recursive merge
                 else if (value.isJsonObject()){
+                    Object fieldObject = field.get(currentObject);
+                    if (fieldObject == null){
+                        fieldObject = field.getType().newInstance();
+                        field.set(currentObject, fieldObject);
+                    }
                     this.merge(field.get(currentObject), value.getAsJsonObject());
                 }
                 else if (value.isJsonNull()){

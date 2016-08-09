@@ -19,52 +19,61 @@ import android.widget.TextView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.PlaceStatusManager;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.map.MapFactory;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SimpleTimerView;
+import com.timappweb.timapp.views.controller.EventStateButtonController;
+import com.timappweb.timapp.views.controller.UserEventActionController;
+
+import retrofit2.Call;
 
 
 public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback {
 
-    private static final int TIMELAPSE_HOT_ANIM = 2000;
-    private float ZOOM_LEVEL_CENTER_MAP = 12.0f;
+    private static final int            TIMELAPSE_HOT_ANIM      = 2000;
+    private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 2 * 1000;
+    private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;
 
-    private static final String TAG = "EventInformationFrag";
-    private ObservableScrollView mScrollView;
-    private TextView distanceText;
-    private ImageView smallCategoryIcon;
+    private static final String         TAG                     = "EventInformationFrag";
+    private ObservableScrollView        mScrollView;
+    private TextView                    distanceText;
+    private ImageView                   smallCategoryIcon;
 
-    private MapView mapView = null;
-    private GoogleMap gMap;
-    private ImageView eventCategoryIcon;
+    private MapView                     mapView                 = null;
+    private GoogleMap                   gMap;
+    private ImageView                   eventCategoryIcon;
     private FragmentEventInformationBinding mBinding;
-    private View mHereButton;
-    private View mComingButton;
-    private View btnRequestNavigation;
-    private SimpleTimerView tvCountPoints;
+    private View                        btnRequestNavigation;
+    private SimpleTimerView             tvCountPoints;
 
-    private ValueAnimator   animator;
-    private boolean         hotPoints = false;
+    private ValueAnimator               animator;
+    private boolean                     hotPoints               = false;
 
-    private SwitchCompat switchButton;
-    private View rateButtons;
-    private View flameView;
-    private View mainLayout;
-    private TextView statusTv;
+    private SwitchCompat                switchButton;
+    private View                        rateButtons;
+    private View                        flameView;
+    private View                        mainLayout;
+    private TextView                    statusTv;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        //return inflater.inflate(R.layout.fragment_event_information, container, false);
         mBinding  = DataBindingUtil.inflate(inflater, R.layout.fragment_event_information, container, false);
         return mBinding.getRoot();
     }
@@ -80,23 +89,43 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         distanceText = (TextView) view.findViewById(R.id.distance_text);
         eventCategoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
 
-        Event event = eventActivity.getEvent();
-        //mHereButton = view.findViewById(R.id.rate_up_button); //TODO : NullPointerException
-        //new EventStateButtonController(getContext(), mHereButton, event, UserPlaceStatusEnum.HERE).initState();
-        //mComingButton = view.findViewById(R.id.coming_button);
-        //new EventStateButtonController(getContext(), mComingButton, event, UserPlaceStatusEnum.COMING).initState();
+        final Event event = eventActivity.getEvent();
+
 
         mainLayout = view.findViewById(R.id.main_layout);
         statusTv = (TextView) view.findViewById(R.id.status_text);
         //rateButtons = view.findViewById(R.id.here_view);
         flameView = view.findViewById(R.id.points_icon);
         switchButton = (SwitchCompat) view.findViewById(R.id.switch_button);
+
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 updatePointsView(isChecked);
                 int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
                 statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
+
+                UserPlaceStatusEnum newStatus = isChecked
+                        ? (event.isUserAround() ? UserPlaceStatusEnum.HERE : UserPlaceStatusEnum.COMING)
+                        :  UserPlaceStatusEnum.GONE;
+
+                HttpCallManager manager = PlaceStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
+                if (manager != null){
+                    manager.onResponse(new HttpCallback() {
+                            @Override
+                            public void notSuccessful() {
+                                // TODO revert status changed
+                            }
+
+                        })
+                        .onError(new RequestFailureCallback(){
+                            @Override
+                            public void onError(Throwable error) {
+                                // TODO cancel
+                                switchButton.setChecked(!isChecked);
+                            }
+                        });
+                }
             }
         });
 
@@ -109,13 +138,8 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             @Override
             public void onClick(View v) {
                 Event event = eventActivity.getEvent();
-                Location location = LocationManager.getLastLocation();
-                String destinationAddr = "";
-                //if (location != null){
-                //    destinationAddr = "&saddr=" + location.getLatitude() + "," + location.getLongitude();
-                //}
                 Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?daddr=" + event.latitude + "," + event.longitude + destinationAddr));
+                        Uri.parse("http://maps.google.com/maps?daddr=" + event.latitude + "," + event.longitude));
                 startActivity(intent);
             }
         });
@@ -126,6 +150,30 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         mapView.getMapAsync(this);
 
         updateView();
+
+        updateUserStatusButton();
+        LocationManager.addOnLocationChangedListener(new LocationManager.LocationListener() {
+            @Override
+            public void onLocationChanged(Location newLocation, Location lastLocation) {
+                updateUserStatusButton();
+                mBinding.notifyChange();
+            }
+        });
+    }
+
+    public void updateUserStatusButton(){
+        Event event = eventActivity.getEvent();
+        EventStatus statusInfo = PlaceStatusManager.getStatus(event);
+        if (event.isUserAround()){
+            statusTv.setText(getContext().getResources().getString(R.string.i_am_here));
+            if (statusInfo != null ){
+                switchButton.setChecked(statusInfo.status == UserPlaceStatusEnum.HERE);
+            }
+        }
+        else{
+            statusTv.setText(getContext().getResources().getString(R.string.i_am_coming));
+            switchButton.setChecked(statusInfo != null && statusInfo.status == UserPlaceStatusEnum.COMING);
+        }
     }
 
     public void updateView(){
@@ -222,4 +270,5 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             tvCountPoints.initTimer(finalPoints*1000 + TIMELAPSE_HOT_ANIM);
         }
     }
+
 }

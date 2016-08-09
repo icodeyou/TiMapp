@@ -243,6 +243,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     Log.d(TAG, "Result OK from InviteFriendsActivity");
                 }
                 break;
+            case IntentsUtils.REQUEST_CAMERA:
+                if(resultCode==RESULT_OK) {
+                    setCurrentPageSelected(PAGER_PICTURE);
+                    Log.d(TAG, "Result OK from InviteFriendsActivity");
+                }
+                break;
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
@@ -258,7 +264,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
             return;
         }
-        IntentsUtils.addTags(fragmentTags, event);
+        IntentsUtils.addTags(EventActivity.this, event);
     }
 
     private void openAddPictureActivity() {
