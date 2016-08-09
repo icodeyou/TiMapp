@@ -205,8 +205,9 @@ public class PlaceStatusManager {
 
 
 
-    public EventStatus addLocally(Event event, UserPlaceStatusEnum status) {
+    public EventStatus addLocally(long syncId, Event event, UserPlaceStatusEnum status) {
         EventStatus eventStatus = new EventStatus();
+        eventStatus.setRemoteId(syncId);
         eventStatus.status = status;
         eventStatus.user = MyApplication.getCurrentUser();
         eventStatus.created = (int)(System.currentTimeMillis()/1000);

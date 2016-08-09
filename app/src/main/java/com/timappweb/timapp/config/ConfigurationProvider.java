@@ -126,15 +126,9 @@ public class ConfigurationProvider {
      * @return
      */
     public static boolean hasFullConfiguration(){
-        try{
-            eventCategories();
-            spotCategories();
-            return rules().places_max_name_length > 0;
-        }
-        catch (IncompleteConfigurationException ex){
-            return false;
-        }
+        return hasRulesConfig() && hasEventCategoriesConfig() && hasSpotCategoriesConfig();
     }
+
 
     public static void setApplicationRules(ApplicationRules applicationRules) {
         ConfigurationProvider.applicationRules = applicationRules;
@@ -176,6 +170,35 @@ public class ConfigurationProvider {
 
     public static void onSyncResponse(Response response) {
         HttpCallbackBase.dispatchResponse(response, ConfigurationProvider.callback);
+    }
+
+    public static boolean hasRulesConfig() {
+        try{
+            return rules().places_max_name_length > 0;
+        }
+        catch (IncompleteConfigurationException ex){
+            return false;
+        }
+    }
+
+    public static boolean hasSpotCategoriesConfig() {
+        try{
+            spotCategories();
+            return true;
+        }
+        catch (IncompleteConfigurationException ex){
+            return false;
+        }
+    }
+
+    public static boolean hasEventCategoriesConfig() {
+        try{
+            eventCategories();
+            return true;
+        }
+        catch (IncompleteConfigurationException ex){
+            return false;
+        }
     }
 
     private static class IncompleteConfigurationException extends Error {

@@ -41,6 +41,15 @@ public class SplashActivity extends BaseActivity {
                     public void onPostExecute() {
                         if (!ConfigurationProvider.hasFullConfiguration()){
                             Log.e(TAG, "Cannot load server configuration");
+                            if (!ConfigurationProvider.hasRulesConfig()) {
+                                Log.e(TAG, "    - No rules configuration");
+                            }
+                            if (!ConfigurationProvider.hasSpotCategoriesConfig()) {
+                                Log.e(TAG, "    - No spot categories configuration");
+                            }
+                            if (!ConfigurationProvider.hasEventCategoriesConfig()) {
+                                Log.e(TAG, "    - No event categories configuration");
+                            }
                             IntentsUtils.fatalError(SplashActivity.this, R.string.fatal_error_no_network_title, R.string.fatal_error_no_network_message);
                         }
                         else{

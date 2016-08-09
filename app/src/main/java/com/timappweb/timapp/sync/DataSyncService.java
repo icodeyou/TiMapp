@@ -7,13 +7,13 @@ import android.util.Log;
 
 /** Service to handle merge requests.
  *
- * <p>This service is invoked in response to Intents with action android.content.ConfigSyncAdapter, and
- * returns a Binder connection to ConfigSyncAdapter.
+ * <p>This service is invoked in response to Intents with action android.content.DataSyncAdapter, and
+ * returns a Binder connection to DataSyncAdapter.
  *
  * <p>For performance, only one merge adapter will be initialized within this application's context.
  *
  * <p>Note: The ConfigSyncService itself is not notified when a new merge occurs. It's role is to
- * manage the lifecycle of our {@link ConfigSyncAdapter} and provide a handle to said ConfigSyncAdapter to the
+ * manage the lifecycle of our {@link DataSyncAdapter} and provide a handle to said DataSyncAdapter to the
  * OS on request.
  */
 public class DataSyncService extends Service {
@@ -23,7 +23,7 @@ public class DataSyncService extends Service {
     private static DataSyncAdapter sDataSyncAdapter = null;
 
     /**
-     * Thread-safe constructor, creates static {@link ConfigSyncAdapter} instance.
+     * Thread-safe constructor, creates static {@link DataSyncAdapter} instance.
      */
     @Override
     public void onCreate() {
@@ -46,12 +46,12 @@ public class DataSyncService extends Service {
     }
 
     /**
-     * Return Binder handle for IPC communication with {@link ConfigSyncAdapter}.
+     * Return Binder handle for IPC communication with {@link DataSyncAdapter}.
      *
-     * <p>New merge requests will be sent directly to the ConfigSyncAdapter using this channel.
+     * <p>New merge requests will be sent directly to the DataSyncAdapter using this channel.
      *
      * @param intent Calling intent
-     * @return Binder handle for {@link ConfigSyncAdapter}
+     * @return Binder handle for {@link DataSyncAdapter}
      */
     @Override
     public IBinder onBind(Intent intent) {

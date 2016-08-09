@@ -55,8 +55,8 @@ public abstract class SyncBaseModel extends MyModel {
         return this.remote_id;
     }
 
-    public void setRemoteId(int remoteId) {
-        this.remote_id = remoteId;
+    public void setRemoteId(long remoteId) {
+        this.remote_id = (int) remoteId;
     }
     /**
      *
@@ -96,7 +96,7 @@ public abstract class SyncBaseModel extends MyModel {
      * @return
      */
     public boolean isUpToDate() {
-        return (this._last_sync - System.currentTimeMillis()) < SYNC_INTERVAL;
+        return (System.currentTimeMillis() - this._last_sync) < SYNC_INTERVAL;
     }
 
     /**

@@ -24,12 +24,14 @@ import java.util.List;
 public class InvitationsActivity extends BaseActivity{
 
     private static final long SYNC_UPDATE_DELAY = 6 * 3600 * 1000;
+    private static final int LOADER_ID_FRIENDS_LIST = 0;
 
     private String TAG = "ListFriendsActivity";
     private List<EventsInvitation> invitations;
     private RecyclerView recyclerView;
     private InvitationsAdapter adapter;
     private View noInvitationsView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
@@ -41,10 +43,17 @@ public class InvitationsActivity extends BaseActivity{
 
         recyclerView = (RefreshableRecyclerView) findViewById(R.id.recyclerView);
         noInvitationsView = findViewById(R.id.no_invitations_view);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         initAdapterListFriends();
 
-        getSupportLoaderManager().initLoader(0, null, new InvitationLoader());
+        getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, new InvitationLoader());
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS_LIST).forceLoad();
+            }
+        });
     }
 
     private void initAdapterListFriends() {
@@ -90,7 +99,7 @@ public class InvitationsActivity extends BaseActivity{
                     SYNC_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED,
                     MyApplication.getCurrentUser().getInviteReceivedQuery());
-            this.setSwipeAndRefreshLayout((SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout));
+            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 
         @Override

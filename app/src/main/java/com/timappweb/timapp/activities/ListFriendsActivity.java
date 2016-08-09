@@ -35,6 +35,7 @@ public class ListFriendsActivity extends BaseActivity{
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
     private View noFriendsView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,19 @@ public class ListFriendsActivity extends BaseActivity{
         this.initToolbar(true);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         initAdapterListFriends();
+
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, new FriendsLoader());
         mToolbar.setTitle(R.string.title_activity_list_friends);
+
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS).forceLoad();
+            }
+        });
     }
 
     private void initAdapterListFriends() {
@@ -69,8 +80,7 @@ public class ListFriendsActivity extends BaseActivity{
 
         public FriendsLoader() {
             super(ListFriendsActivity.this, SYNC_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
-            final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-            this.setSwipeAndRefreshLayout(swipeRefreshLayout);
+            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 
         @Override
@@ -83,11 +93,12 @@ public class ListFriendsActivity extends BaseActivity{
             noFriendsView.setVisibility(data.size() > 0 ? View.GONE : View.VISIBLE);
         }
 
+        /*
         @Override
         public void onLoaderReset(Loader loader) {
             super.onLoaderReset(loader);
             adapter.clear();
             adapter.notifyDataSetChanged();
-        }
+        }*/
     }
 }

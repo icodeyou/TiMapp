@@ -38,7 +38,6 @@ public class InviteFriendsActivity extends BaseActivity {
     private String              TAG                         = "InviteFriendsActivity";
     private static final int    LOADER_ID_FRIENDS_LIST      = 0;
 
-    //private AutoLabelUI                 mAutoLabel;
     private RecyclerView                recyclerView;
     private SelectFriendsAdapter        adapter;
 
@@ -50,6 +49,7 @@ public class InviteFriendsActivity extends BaseActivity {
     private Event event;
     private FriendsLoader               mLoader;
     private ContentResolver             mResolver;
+    private SwipeRefreshLayout          mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
         inviteButton = findViewById(R.id.invite_button);
         noFriendsView = findViewById(R.id.no_friends_view);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         //mAutoLabel = (AutoLabelUI) findViewById(R.remote_id.label_view);
         //mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -83,6 +84,13 @@ public class InviteFriendsActivity extends BaseActivity {
 
         mLoader = new FriendsLoader(MyApplication.getCurrentUser());
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS_LIST).forceLoad();
+            }
+        });
     }
 
     private void initSelectedFriends() {
@@ -178,6 +186,11 @@ public class InviteFriendsActivity extends BaseActivity {
                         Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
                         finishActivityResult();
                     }
+
+                    @Override
+                    public void notSuccessful() {
+                        Toast.makeText(getApplicationContext(), R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+                    }
                 })
                 .perform();
     }
@@ -203,7 +216,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
         public FriendsLoader(User user) {
             super(InviteFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, user.getFriendsQuery());
-            this.setSwipeAndRefreshLayout((SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout));
+            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 
         @Override

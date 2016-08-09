@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
@@ -233,14 +234,20 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             .post(ResourceUrlMapping.MODEL_EVENT, AddEventMapper.toJson(event))
                 .onResponse(new AutoMergeCallback(event))
                 .onResponse(new FormErrorsCallback(mBinding))
-                .onResponse(new HttpCallback() {
+                .onResponse(new HttpCallback<JsonObject>() {
                     @Override
-                    public void successful(Object feedback) {
+                    public void successful(JsonObject feedback) {
                         Log.d(TAG, "Event has been successfully added");
                         event.setAuthor(MyApplication.getCurrentUser());
                         event.mySave();
                         if (event.hasLocalId()){
-                            PlaceStatusManager.instance().addLocally(event, UserPlaceStatusEnum.HERE);
+                            try{
+                                long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
+                                PlaceStatusManager.instance().addLocally(syncId, event, UserPlaceStatusEnum.HERE);
+                            }
+                            catch (Exception ex){
+                                Log.e(TAG, "Cannot get EventUser id from server response");
+                            }
                         }
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                     }

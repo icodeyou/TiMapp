@@ -113,7 +113,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        Log.i(TAG, "--------------- Beginning network synchronization for data---------------------");
+        Log.v(TAG, "--------------- Beginning network synchronization for data---------------------");
 
         int syncTypeId = extras.getInt(DataSyncAdapter.SYNC_TYPE_KEY, -1);
         Log.i(TAG, "onPerformSync with type=" + syncTypeId);
@@ -213,9 +213,10 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             SyncHistory.updateSync(syncTypeId);
 
         } catch (IOException e) {
+            Log.e(TAG, "IOException while performing sync. Do you have a network access ? Message: " + e.toString());
             e.printStackTrace();
         }
-        Log.i(TAG, "--------------- Network synchronization complete for data----------------------");
+        Log.v(TAG, "--------------- Network synchronization complete for data----------------------");
     }
 
     private LatLngBounds extractMapBounds(Bundle extras) {

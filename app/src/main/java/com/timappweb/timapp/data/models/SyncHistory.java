@@ -1,5 +1,7 @@
 package com.timappweb.timapp.data.models;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -12,6 +14,7 @@ import com.timappweb.timapp.MyApplication;
  */
 @Table(name = "SyncHistory")
 public class SyncHistory extends MyModel {
+    private static final String TAG = "SyncHistory";
 
     //@Column(name = "User", uniqueGroups = "uniqueHistoryPerUser")
     //User user;
@@ -29,6 +32,7 @@ public class SyncHistory extends MyModel {
     // =============================================================================================
 
     public static void updateSync(int type){
+        Log.d(TAG, "Updating update sync date for type=" + type);
         SyncHistory history = getByType(type);
         if (history == null){
             history = new SyncHistory();
