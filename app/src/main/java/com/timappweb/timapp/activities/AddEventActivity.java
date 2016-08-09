@@ -361,8 +361,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         if(bundle!=null) {
             Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
             mBinding.getEvent().setSpot(spot);
-            mBinding.notifyChange();
-
+            mBtnAddSpot.setVisibility(View.GONE);
+            mSpotContainer.setVisibility(View.VISIBLE);
             //mClusterManagerSpot.addItem(spot);
             //mClusterManagerSpot.cluster();
         }

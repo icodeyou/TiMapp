@@ -128,7 +128,7 @@ public class Spot extends SyncBaseModel implements ClusterItem {
         }
     }
 
-    public int getItemPicture(){
+    public int getItemIcon(){
         return R.drawable.image_bar;
     }
 

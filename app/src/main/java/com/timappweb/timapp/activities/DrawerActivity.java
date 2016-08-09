@@ -34,7 +34,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.DataSyncAdapter;
@@ -120,7 +119,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         setContentView(R.layout.activity_drawer);
 
         //Import toolbar without calling function initToolbar, because of the toggle button
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);

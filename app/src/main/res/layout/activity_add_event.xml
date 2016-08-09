@@ -88,7 +88,7 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:gravity="center"
-                        android:visibility="@{event.hasSpot() ? View.GONE : View.VISIBLE}"
+                        android:visibility="visible"
                         android:background="@color/smoke">
 
                         <ImageView
@@ -107,17 +107,19 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/spot_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:background="@color/smoke">
+                        <include layout="@layout/layout_spot"
+                            bind:spot="@{event.spot}"/>
+                    </LinearLayout>
+
                 </RelativeLayout>
-                <LinearLayout
-                    android:id="@+id/spot_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:visibility="visible"
-                    android:background="@color/smoke">
-                    <include layout="@layout/layout_spot"
-                        bind:spot="@{event.spot}"/>
-                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

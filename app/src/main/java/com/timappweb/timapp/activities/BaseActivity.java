@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -69,7 +67,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void initToolbar(boolean showTitle){
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
