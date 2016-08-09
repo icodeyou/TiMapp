@@ -27,13 +27,12 @@ import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.listeners.OnThreeQueriesTagListener;
+import com.timappweb.timapp.listeners.OnAddTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
-import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
@@ -49,7 +48,7 @@ public class AddTagActivity extends BaseActivity{
     // ---------------------------------------------------------------------------------------------
     //Views
     private HorizontalTagsRecyclerView              selectedTagsRV;
-    private ProgressBar                             progressBarView;
+    private ProgressBar progressStartView;
     private Event                                   currentEvent = null;
 
     // @Bind(R.remote_id.hashtags1)
@@ -85,7 +84,7 @@ public class AddTagActivity extends BaseActivity{
         selectedTagsView = findViewById(R.id.rv_selected_tags);
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
-        progressBarView = (ProgressBar) findViewById(R.id.progress_view);
+        progressStartView = (ProgressBar) findViewById(R.id.progress_view);
         progressEndView = findViewById(R.id.progress_end);
         confirmButton = (Button) findViewById(R.id.confirm_button);
 
@@ -108,7 +107,7 @@ public class AddTagActivity extends BaseActivity{
         initListTags();
 
         //set hint for searchview
-        final OnBasicQueryTagListener onBasicQueryTagListener = new OnThreeQueriesTagListener(this);
+        final OnBasicQueryTagListener onBasicQueryTagListener = new OnAddTagListener(this);
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                 searchView,
                 suggestedTagsView,
@@ -117,7 +116,7 @@ public class AddTagActivity extends BaseActivity{
                 new SearchTagDataProvider() {
                     @Override
                     public void onLoadEnds() {
-                        progressBarView.setVisibility(View.GONE);
+                        progressStartView.setVisibility(View.GONE);
                     }
                 }
         );
@@ -191,28 +190,16 @@ public class AddTagActivity extends BaseActivity{
     }
 
     public void actionCounter() {
-        switch (searchAndSelectTagManager.getSelectedTags().size()) {
-            case 0:
-                setSelectedTagsViewGone();
-                searchView.setQueryHint(getResources().getString(R.string.searchview_hint_3));
-                break;
-            case 1:
-                setSelectedTagsViewVisible();
-                searchView.setQueryHint(getResources().getString(R.string.searchview_hint_2));
-                searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-                break;
-            case 2:
-                searchView.setQueryHint(getResources().getString(R.string.searchview_hint_1));
-                searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                break;
-            case 3:
-                searchView.clearFocus();
-                suggestedTagsView.setVisibility(View.GONE);
-                confirmButton.setVisibility(View.VISIBLE);
-                break;
-
-            default:
-                break;
+        if(searchAndSelectTagManager.getSelectedTags().size()==0) {
+            setSelectedTagsViewGone();
+            searchView.setQueryHint(getResources().getString(R.string.searchview_hint_no_tags));
+        }
+        else {
+            setSelectedTagsViewVisible();
+            searchView.setQueryHint(getResources().getString(R.string.searchview_hint_few_tags));
+        }
+        if(searchAndSelectTagManager.getSelectedTags().size()==10) {
+            searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }
     }
 

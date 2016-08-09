@@ -127,8 +127,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     private void initAdapters() {
         final SpotCategoriesAdapter spotCategoriesAdapterMain = new SpotCategoriesAdapter(this,false);
-        SpotCategoriesAdapter spotCategoriesAdapterAll = new SpotCategoriesAdapter(this,true);
-        categorySelector.setAdapters(spotCategoriesAdapterMain, spotCategoriesAdapterAll);
+        final SpotCategoriesAdapter spotCategoriesAdapterAll = new SpotCategoriesAdapter(this,true);
 
         spotCategoriesAdapterMain.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
@@ -136,6 +135,15 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 setCategory(spotCategoriesAdapterMain.getCategory(position));
             }
         });
+
+        spotCategoriesAdapterAll.setOnItemClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                setCategory(spotCategoriesAdapterAll.getCategory(position));
+            }
+        });
+
+        categorySelector.setAdapters(spotCategoriesAdapterMain, spotCategoriesAdapterAll);
 
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
         spotsAdapter = new SpotsAdapter(this);

@@ -21,6 +21,7 @@ import java.util.List;
 
 public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAdapter.MyViewHolder> {
     private String TAG = "HorizontalTagsAdapter";
+    private static final int NUMBER_MAX_TAGS = 10;
 
     protected LayoutInflater inflater;
     private List<Tag> mDataTags;
@@ -101,6 +102,9 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         Tag newTag = new Tag(selectedTag, 0);
         if (this.mDataTags.contains(newTag)) {
             Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if(mDataTags.size()>=NUMBER_MAX_TAGS) {
+            Toast.makeText(context, R.string.toast_too_many_tags, Toast.LENGTH_SHORT).show();
             return false;
         }
         else if(newTag.getName().isEmpty()) {
