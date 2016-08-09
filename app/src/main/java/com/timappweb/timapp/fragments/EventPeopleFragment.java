@@ -256,19 +256,4 @@ public class EventPeopleFragment extends EventBaseFragment {
 
     }
 
-    /**
-     +	 * Provides all the item positions that belongs to the section represented by the specified header.
-     +	 *
-     +	 * @param header the header that represents the section
-     +	 * @return NonNull list of all item positions in the specified section.
-     +	 */
-    @NonNull
-    public <T extends IFlexible> List<Integer> getSectionItemPositions(@NonNull FlexibleAdapter adapter, @NonNull IHeader header) {
-        List<Integer> sectionItemPositions = new ArrayList<Integer>();
-        int startPosition = adapter.getGlobalPositionOf(header);
-        while (adapter.hasSameHeader(adapter.getItem(++startPosition), header)) {
-            sectionItemPositions.add(startPosition);
-        }
-        return sectionItemPositions;
-    }
 }

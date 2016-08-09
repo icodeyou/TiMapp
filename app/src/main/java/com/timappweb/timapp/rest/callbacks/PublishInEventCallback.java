@@ -23,7 +23,5 @@ public class PublishInEventCallback extends HttpCallback {
     @Override
     public void forbidden() {
         // TODO set quota..
-
-        // Above quota ??? TODO
     }
 }

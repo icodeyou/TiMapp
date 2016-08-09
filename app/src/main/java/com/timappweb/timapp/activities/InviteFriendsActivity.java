@@ -14,15 +14,20 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
+import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.MyModel;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
@@ -50,6 +55,8 @@ public class InviteFriendsActivity extends BaseActivity {
     private FriendsLoader               mLoader;
     private ContentResolver             mResolver;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
+
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,44 +130,7 @@ public class InviteFriendsActivity extends BaseActivity {
             }
         });
     }
-/*
-    private void initAutoLabel() {
-        int maxLabels = ConfigurationProvider.rules().max_invite_per_request;
-        //TODO : Replace 20 by maxLabels;
-        mAutoLabel.setMaxLabels(20);
-        Log.d(TAG, "Max labels : " + maxLabels);
 
-        mAutoLabel.setOnLabelsCompletedListener(new AutoLabelUI.OnLabelsCompletedListener() {
-            @Override
-            public void onLabelsCompleted() {
-                Toast.makeText(InviteFriendsActivity.this, R.string.cannot_add_more_friends,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mAutoLabel.setOnRemoveLabelListener(new AutoLabelUI.OnRemoveLabelListener() {
-            @Override
-            public void onRemoveLabel(View view, int position) {
-                friendsSelected.remove(position);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        mAutoLabel.setOnLabelsEmptyListener(new AutoLabelUI.OnLabelsEmptyListener() {
-            @Override
-            public void onLabelsEmpty() {
-                updateButtonVisibility();
-            }
-        });
-
-        mAutoLabel.setOnLabelClickListener(new AutoLabelUI.OnLabelClickListener() {
-            @Override
-            public void onClickLabel(View v) {
-
-            }
-        });
-    }
-*/
     private void initInviteButton() {
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,10 +150,21 @@ public class InviteFriendsActivity extends BaseActivity {
         Call<JsonArray> call = RestClient.service().sendInvite(event.remote_id, ids);
         RestClient.buildCall(call)
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
-                .onResponse(new HttpCallback() {
+                .onResponse(new HttpCallback<List<UserInvitationFeedback>>() {
                     @Override
-                    public void successful(Object feedback) {
+                    public void successful(List<UserInvitationFeedback> feedbackList) {
                         Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
+                        /*
+                        for (UserInvitationFeedback feedback: feedbackList){
+                            if (feedback.success){
+                                if (feedback.invitation != null){
+                                    MyModel savedModel = feedback.invitation.mySave();
+                                }
+                            }
+                            else{
+                                Log.e(TAG, "Cannot invite user=" + feedback.user_id);
+                            }
+                        }*/
                         finishActivityResult();
                     }
 
@@ -226,9 +207,7 @@ public class InviteFriendsActivity extends BaseActivity {
             adapter.clear();
             adapter.setData(data);
             adapter.notifyDataSetChanged();
-            //setProgressBarIndeterminateVisibility(false);
-            Log.i(TAG, "Loaded " + data.size() + " friends for the user");
-            //noFriendsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+            Log.d(TAG, "Loaded " + data.size() + " friends for the user");
         }
 
         @Override
