@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.greenfrvr.hashtagview.HashtagView;
@@ -32,6 +33,7 @@ import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
@@ -44,20 +46,23 @@ public class AddTagActivity extends BaseActivity{
 
     private String TAG = "AddTagActivity";
 
+    // ---------------------------------------------------------------------------------------------
     //Views
-    private HorizontalTagsRecyclerView selectedTagsRV;
-    private View progressBarView;
-    private Event currentEvent = null;
-    private View progressEndView;
+    private HorizontalTagsRecyclerView              selectedTagsRV;
+    private ProgressBar                             progressBarView;
+    private Event                                   currentEvent = null;
 
     // @Bind(R.remote_id.hashtags1)
-    protected HashtagView suggestedTagsView;
+    protected HashtagView                           suggestedTagsView;
 
     //others
-    private SearchAndSelectTagManager searchAndSelectTagManager;
-    private View selectedTagsView;
-    private EventPost eventEventPost;
-    private Button confirmButton;
+    private SearchAndSelectTagManager               searchAndSelectTagManager;
+    private View                                    selectedTagsView;
+    private EventPost                               eventEventPost;
+    private Button                                  confirmButton;
+    private View                                    progressEndView;
+
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +78,14 @@ public class AddTagActivity extends BaseActivity{
             return;
         }
 
-        setContentView(R.layout.activity_tag);
+        setContentView(R.layout.activity_add_tag);
         this.initToolbar(false);
 
         //Initialize variables
         selectedTagsView = findViewById(R.id.rv_selected_tags);
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
-        progressBarView = findViewById(R.id.progress_view);
+        progressBarView = (ProgressBar) findViewById(R.id.progress_view);
         progressEndView = findViewById(R.id.progress_end);
         confirmButton = (Button) findViewById(R.id.confirm_button);
 
@@ -112,7 +117,7 @@ public class AddTagActivity extends BaseActivity{
                 new SearchTagDataProvider() {
                     @Override
                     public void onLoadEnds() {
-                        getProgressBarView().setVisibility(View.GONE);
+                        progressBarView.setVisibility(View.GONE);
                     }
                 }
         );
@@ -238,15 +243,6 @@ public class AddTagActivity extends BaseActivity{
 
 
     //----------------------------------------------------------------------------------------------
-    //GETTER and SETTERS
-
-    public View getProgressBarView() {
-        return progressBarView;
-    }
-
-
-
-    //----------------------------------------------------------------------------------------------
     //Inner classes
 
 
@@ -257,7 +253,7 @@ public class AddTagActivity extends BaseActivity{
             eventEventPost.place_id = currentEvent.remote_id;
             // Validating user input
             if (!eventEventPost.validateForSubmit()) {
-                Toast.makeText(AddTagActivity.this, "Invalid inputs", Toast.LENGTH_LONG).show(); // TODO proper message
+                Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
                 return;
             }
             Log.d(TAG, "Submitting eventPost: " + eventEventPost);
@@ -274,6 +270,11 @@ public class AddTagActivity extends BaseActivity{
                             EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
                             setResult(RESULT_OK);
                             finish();
+                        }
+
+                        @Override
+                        public void notSuccessful() {
+                            Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
                         }
                     })
                     .perform();

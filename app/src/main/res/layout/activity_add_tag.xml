@@ -76,24 +76,13 @@
 
         <!-- Progress View -->
         <!-- **********************************************************************-->
-        <LinearLayout
+        <ProgressBar
+            android:gravity="center"
             android:id="@+id/progress_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/tags_upcoming"
-                android:textSize="@dimen/text_normal"/>
-        </LinearLayout>
+            android:layout_gravity="center"/>
 
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->

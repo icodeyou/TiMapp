@@ -19,13 +19,12 @@ import android.widget.TextView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.config.PlaceStatusManager;
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -37,10 +36,6 @@ import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SimpleTimerView;
-import com.timappweb.timapp.views.controller.EventStateButtonController;
-import com.timappweb.timapp.views.controller.UserEventActionController;
-
-import retrofit2.Call;
 
 
 public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback {
@@ -109,7 +104,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                         ? (event.isUserAround() ? UserPlaceStatusEnum.HERE : UserPlaceStatusEnum.COMING)
                         :  UserPlaceStatusEnum.GONE;
 
-                HttpCallManager manager = PlaceStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
+                HttpCallManager manager = EventStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
                 if (manager != null){
                     manager.onResponse(new HttpCallback() {
                             @Override
@@ -163,7 +158,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     public void updateUserStatusButton(){
         Event event = eventActivity.getEvent();
-        EventStatus statusInfo = PlaceStatusManager.getStatus(event);
+        EventStatus statusInfo = EventStatusManager.getStatus(event);
         if (event.isUserAround()){
             statusTv.setText(getContext().getResources().getString(R.string.i_am_here));
             if (statusInfo != null ){

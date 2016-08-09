@@ -192,7 +192,7 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface, Pl
     }
 
     public boolean validateForSubmit() {
-        if (this.hasTags()) {
+        if (!this.hasTags()) {
             //mTvComment.setError("You must select at least one tag");
             return false;
         }

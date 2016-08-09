@@ -3,12 +3,10 @@ package com.timappweb.timapp.views.controller;
 import android.content.Context;
 import android.view.View;
 
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.PlaceStatusManager;
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventStatus;
-import com.timappweb.timapp.listeners.BinaryActionListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -31,7 +29,7 @@ public class EventStateButtonController extends ActivableButtonController {
 
     @Override
     public boolean performActivate() {
-        PlaceStatusManager.instance().add(mContext, mEvent, mStatus)
+        EventStatusManager.instance().add(mContext, mEvent, mStatus)
             .onResponse(new HttpCallback() {
                 @Override
                 public void successful(Object feedback) {
@@ -49,7 +47,7 @@ public class EventStateButtonController extends ActivableButtonController {
 
     @Override
     public boolean cancelActivate() {
-        PlaceStatusManager.instance()
+        EventStatusManager.instance()
                 .add(mContext, mEvent, mStatus)
                 .onResponse(new HttpCallback() {
                     @Override
@@ -75,7 +73,7 @@ public class EventStateButtonController extends ActivableButtonController {
     @Override
     public void initState() {
         if (!mEvent.isOver()){
-            EventStatus eventStatus = PlaceStatusManager.getStatus(mEvent);
+            EventStatus eventStatus = EventStatusManager.getStatus(mEvent);
             // Has status
             if (eventStatus != null){
                 if (eventStatus.status == mStatus){

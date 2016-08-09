@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -19,8 +18,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,12 +32,11 @@ import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.PlaceStatusManager;
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
@@ -52,8 +48,6 @@ import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
-
-import cdflynn.android.library.crossview.CrossView;
 
 
 public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
@@ -244,7 +238,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         if (event.hasLocalId()){
                             try{
                                 long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                                PlaceStatusManager.instance().addLocally(syncId, event, UserPlaceStatusEnum.HERE);
+                                EventStatusManager.instance().addLocally(syncId, event, UserPlaceStatusEnum.HERE);
                             }
                             catch (Exception ex){
                                 Log.e(TAG, "Cannot get EventUser id from server response");

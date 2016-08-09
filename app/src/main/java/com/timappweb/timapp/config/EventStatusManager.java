@@ -4,13 +4,15 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.activeandroid.Model;
+import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
-import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
@@ -23,10 +25,10 @@ import retrofit2.Call;
 /**
  * Created by stephane on 4/6/2016.
  */
-public class PlaceStatusManager {
+public class EventStatusManager {
 
-    private static final String TAG = "PlaceStatusManager";
-    private static PlaceStatusManager _instance = null;
+    private static final String TAG = "EventStatusManager";
+    private static EventStatusManager _instance = null;
 
     private class LastCallInfo{
         public HttpCallManager httpCallManager;
@@ -35,15 +37,15 @@ public class PlaceStatusManager {
     }
     private static LastCallInfo lastCallInfo;
 
-    public static PlaceStatusManager instance(){
+    public static EventStatusManager instance(){
         if (_instance == null){
-            _instance = new PlaceStatusManager();
+            _instance = new EventStatusManager();
         }
         return _instance;
     }
 
 
-    private PlaceStatusManager() {
+    private EventStatusManager() {
     }
 
     public HttpCallManager add(final Context context, final Event event, final UserPlaceStatusEnum status) {
@@ -213,6 +215,18 @@ public class PlaceStatusManager {
         eventStatus.created = (int)(System.currentTimeMillis()/1000);
         eventStatus.event = event;
         return (EventStatus) eventStatus.mySave();
+    }
+
+    public Event getCurrentEvent(){
+        UserEvent lastHereStatus = new Select()
+                .from(EventStatus.class)
+                .where("status = ?", UserPlaceStatusEnum.HERE)
+                .orderBy("created DESC")
+                .executeSingle();
+        if (lastHereStatus == null){
+            return null;
+        }
+        return lastHereStatus.event;
     }
 
 }

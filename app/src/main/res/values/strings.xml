@@ -254,6 +254,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="i_am_here">I\'m here</string>
     <string name="i_am_coming">I\'m coming</string>
     <string name="action_performed_not_successful">Sorry but it didn\'t work...</string>
+    <string name="form_invalid_input">Please correct required fields before submitting.</string>
 
 
     <plurals name="number_people_event">
