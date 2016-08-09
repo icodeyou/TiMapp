@@ -2,6 +2,7 @@ package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonArray;
 import com.timappweb.timapp.data.entities.ApplicationRules;
+import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.EventPost;
@@ -52,7 +53,7 @@ public interface WebServiceInterface {
     // Event invites
     @FormUrlEncoded
     @POST("PlacesInvitations/invite/{placeId}.json")
-    Call<JsonArray> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Integer> ids);
+    Call<List<UserInvitationFeedback>> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Integer> ids);
 
     @GET("PlacesInvitations/accept/{inviteId}.json")
     Call<RestFeedback> acceptInvite(@Path("inviteId") int inviteId);

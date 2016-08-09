@@ -14,20 +14,20 @@ import retrofit2.Response;
 /**
  * Created by stephane on 6/6/2016.
  */
-public class HttpCallManager {
+public class HttpCallManager<T> {
 
-    private final HttpCallbackBase<Object> callbackBase;
-    private final Call call;
+    private final HttpCallbackBase<T> callbackBase;
+    private final Call<T> call;
     private long callDelay;
     private Timer timer;
 
-    public HttpCallManager(Call call) {
+    public HttpCallManager(Call<T> call) {
         this.call = call;
         this.callDelay = 0;
         this.callbackBase = new HttpCallbackBase<>();
     }
 
-    public HttpCallManager onResponse(HttpCallback httpCallback) {
+    public HttpCallManager<T> onResponse(HttpCallback<T> httpCallback) {
         if (this.callbackBase.isDone()){
             this.callbackBase.onResponse(call);
         }
@@ -36,7 +36,7 @@ public class HttpCallManager {
         }
         return this;
     }
-    public HttpCallManager onError(RequestFailureCallback requestFailureCallback) {
+    public HttpCallManager<T> onError(RequestFailureCallback requestFailureCallback) {
         if (this.callbackBase.isDone()){
             this.callbackBase.onFailure(call);
         }
@@ -50,7 +50,7 @@ public class HttpCallManager {
      * ASYNC execute
      * @return
      */
-    public HttpCallManager perform(){
+    public HttpCallManager<T> perform(){
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -66,7 +66,7 @@ public class HttpCallManager {
      * SYNC execute
      * @return
      */
-    public Response execute() throws IOException {
+    public Response<T> execute() throws IOException {
         try{
             Response response = this.call.execute();
             this.callbackBase.onResponse(this.call, response);
@@ -85,7 +85,7 @@ public class HttpCallManager {
         this.call.cancel();
     }
 
-    public Response getResponse() {
+    public Response<T> getResponse() {
         return this.callbackBase.getResponse();
     }
 
@@ -97,11 +97,11 @@ public class HttpCallManager {
         return this.callbackBase.getResponse() != null;
     }
 
-    public Call getCall() {
+    public Call<T> getCall() {
         return call;
     }
 
-    public HttpCallManager setCallDelay(long callDelay) {
+    public HttpCallManager<T> setCallDelay(long callDelay) {
         this.callDelay = callDelay;
         return this;
     }

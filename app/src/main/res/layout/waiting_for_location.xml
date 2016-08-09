@@ -1,23 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
     android:id="@+id/layout_waiting_for_location"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:visibility="gone">
+    android:background="@color/colorWhiteTransparent50">
 
-    <!--TODO Steph : make it visible, and fix bug (layout is always shown)-->
-
-    <ProgressBar
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_card"
         android:layout_gravity="center"
-        android:layout_width="@dimen/loader_big"
-        android:layout_height="@dimen/loader_big" />
-    <TextView
-        style="@style/NoDataView"
-        android:text="@string/waiting_for_location"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:textColor="@color/textDark"
-        android:visibility="visible"/>
-</LinearLayout>
+        android:background="@color/colorPrimaryDarkTransparent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/margin_small">
+            <ProgressBar
+                android:layout_gravity="center"
+                android:layout_width="@dimen/loader_big"
+                android:layout_height="@dimen/loader_big"/>
+            <TextView
+                style="@style/NoDataView"
+                android:text="@string/waiting_for_location"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:textColor="@color/textLight"
+                android:visibility="visible"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/action_skip"
+            style="@style/pageSubmitButton"
+            android:text="@string/skip"/>
+    </LinearLayout>
+</FrameLayout>

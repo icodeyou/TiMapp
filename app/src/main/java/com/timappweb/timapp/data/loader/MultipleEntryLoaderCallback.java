@@ -22,15 +22,15 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
 
     private static final String TAG = "MultipleEntriesCallback";
 
-    // =============================================================================================
+    // ---------------------------------------------------------------------------------------------
 
-    private final long syncDelay;
-    protected From query;
-    protected SyncAdapterOption syncOption;
-    private SwipeRefreshLayout mSwipeRefreshLayout = null;
-    private Context context;
+    private final   long                            syncDelay;
+    protected       From                            query;
+    protected       SyncAdapterOption               syncOption;
+    private         SwipeRefreshLayout              mSwipeRefreshLayout;
+    private         Context                         context;
 
-    // =============================================================================================
+    // ---------------------------------------------------------------------------------------------
 
     public MultipleEntryLoaderCallback(Context context,
                                        long syncDelay,
@@ -47,6 +47,8 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
                                        int syncType) {
         this(context, syncDelay, syncType, null);
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {

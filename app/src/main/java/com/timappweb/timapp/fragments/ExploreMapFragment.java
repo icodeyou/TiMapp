@@ -48,37 +48,37 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import java.util.List;
 
 public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
-    private static final String TAG = "GoogleMapFragment";
-    private static final long TIME_WAIT_MAP_VIEW = 500;
-    private static final int MARGIN_TOP_BUTTON_LOCATE_MAP = 120;
+
+    private static final String             TAG                             = "GoogleMapFragment";
+    private static final long               TIME_WAIT_MAP_VIEW              = 500;
+    private static final int                MARGIN_TOP_BUTTON_LOCATE_MAP    = 120;
+    private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
+
+    // ---------------------------------------------------------------------------------------------
 
     enum ZoomType {IN, OUT, NONE};
-    private ZoomType currentZoomMode = ZoomType.NONE;
+    private ZoomType                        currentZoomMode                 = ZoomType.NONE;
+    private float                           previousZoomLevel = -1;
+    private float                           currentZoomLevel = -1;
 
     // Declare a variable for the cluster manager.
-    private ClusterManager<Event> mClusterManagerPost;
-    private GoogleMap gMap = null;
-    private MapView mapView = null;
-    private float previousZoomLevel = -1;
-    private float currentZoomLevel = -1;
+    private ClusterManager<Event>           mClusterManagerPost;
+    private GoogleMap                       gMap = null;
+    private MapView                         mapView = null;
 
-    //Views
-    private View root;
-    private View eventView;
-    private View progressView;
-    private HorizontalTagsRecyclerView filterTagsRv;
-    private View filterTagsContainer;
+    private View                            root;
+    private View                            eventView;
+    private View                            progressView;
+    private HorizontalTagsRecyclerView      filterTagsRv;
+    private View                            filterTagsContainer;
 
-    private Bundle mapBundle;
+    private ExploreFragment                 exploreFragment;
+    private DrawerActivity                  drawerActivity;
+    private FragmentExploreMapBinding       mBinding;
+    private AreaRequestHistory              history;
+    private Bundle                          mapBundle;
 
-    private ExploreFragment exploreFragment;
-    private DrawerActivity drawerActivity;
-    private View newEventbutton;
-    private HorizontalTagsAdapter htAdapter;
-    private FragmentExploreMapBinding mBinding;
-    private float ZOOM_LEVEL_CENTER_MAP = 12.0f;
-    private AreaRequestHistory history;
-    //private EachSecondTimerTask eachSecondTimerTask;
+    // ---------------------------------------------------------------------------------------------
 
     public AreaRequestHistory getHistory() {
         return history;
@@ -92,20 +92,21 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
     }
 
+    @Override
+    public void onTabSelected() {
+
+    }
+    // ---------------------------------------------------------------------------------------------
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
-
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_explore_map, container, false);
         root = mBinding.getRoot();
-
         exploreFragment = (ExploreFragment) getParentFragment();
         drawerActivity = (DrawerActivity) exploreFragment.getActivity();
-
         setHasOptionsMenu(true);
-
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(mapBundle);
         progressView = root.findViewById(R.id.progress_view);
@@ -113,24 +114,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         eventView = root.findViewById(R.id.event_view);
         eventView.setVisibility(View.GONE);
-        /*newEventbutton = root.findViewById(R.id.post_event_button);
-
-        newEventbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.locate(drawerActivity);
-            }
-        });*/
-
-
-        if (savedInstanceState == null){
-            // TODO what happens with instance
-        }
-        else{
-            Log.d(TAG, "Instance saved for map fragment");
-        }
         initListeners();
-
         return root;
     }
 
@@ -139,27 +123,20 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mapView.onPause();
         super.onPause();
         LocationManager.removeLocationListener(this);
-        //eachSecondTimerTask.cancel();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        this.loadMapIfNeeded();
+        if (gMap == null){
+            mapView.getMapAsync(this);
+        }
         updateFilterView();
         LocationManager.addOnLocationChangedListener(this);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+    // ---------------------------------------------------------------------------------------------
 
     public void setLoaderVisibility(boolean bool) {
         if(progressView!=null) {
@@ -201,6 +178,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         getActivity().invalidateOptionsMenu();
     }
 
+    public boolean isFilterActive() {
+        return MyApplication.searchFilter.tags!=null && MyApplication.searchFilter.tags.size()!=0;
+    }
 
     private void initListeners() {
         eventView.setOnClickListener(new View.OnClickListener() {
@@ -225,11 +205,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         });
     }
 
-    private void loadMapIfNeeded() {
-        if (gMap == null){
-            mapView.getMapAsync(this);
-        }
-    }
+
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -246,9 +223,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         }
     }
 
-    public boolean isFilterActive() {
-        return MyApplication.searchFilter.tags!=null && MyApplication.searchFilter.tags.size()!=0;
-    }
 
     private void initAreaRequestHistory(){
         history = new AreaRequestHistory(exploreFragment.getDataLoader());
@@ -271,7 +245,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             }
         });
     }
-
 
 
     private void centerMap(Location location){
@@ -302,25 +275,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             history.resizeArea(bounds);
         }
         history.update(bounds);
-    }
-
-    private void showMarkerDetail(MarkerValueInterface markerValue){
-        Event event = (Event) markerValue;
-        if(isPlaceViewVisible() && mBinding.getEvent() == event) {
-            IntentsUtils.viewSpecifiedEvent(getActivity(), event);
-        } else {
-            MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
-
-            ImageView pin = new ImageView(getContext());
-            pin.setImageResource(R.drawable.pin);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));
-
-            displayEvent(event);
-        }
-    }
-
-    public boolean isPlaceViewVisible() {
-        return eventView.getVisibility()==View.VISIBLE;
     }
 
     private void setUpClusterer(){
@@ -371,10 +325,25 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
     }
 
-    @Override
-    public void onTabSelected() {
-        Log.d(TAG, "ExploreMapFragment is now selected");
-        //drawerActivity.updateFabPosition(placeView);
+    // ---------------------------------------------------------------------------------------------
+
+    private void showMarkerDetail(MarkerValueInterface markerValue){
+        Event event = (Event) markerValue;
+        if(isPlaceViewVisible() && mBinding.getEvent() == event) {
+            IntentsUtils.viewSpecifiedEvent(getActivity(), event);
+        } else {
+            MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
+
+            ImageView pin = new ImageView(getContext());
+            pin.setImageResource(R.drawable.pin);
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));
+
+            displayEvent(event);
+        }
+    }
+
+    public boolean isPlaceViewVisible() {
+        return eventView.getVisibility()==View.VISIBLE;
     }
 
     private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{

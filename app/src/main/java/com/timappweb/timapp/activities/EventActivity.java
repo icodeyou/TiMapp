@@ -48,7 +48,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private String          TAG                     = "EventActivity";
 
     private static final int PAGER_INFO             = 0;
-    public static final int PAGER_PICTURE          = 1;
+    public static final int PAGER_PICTURE           = 1;
     private static final int PAGER_TAG              = 2;
     private static final int PAGER_PEOPLE           = 3;
 

@@ -157,7 +157,13 @@ public class MyLocationProvider implements
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        NavUtils.navigateUpFromSameTask(activity);
+                        /*
+                        try{
+                            NavUtils.navigateUpFromSameTask(activity);
+                        }
+                        catch (IllegalArgumentException ex){
+                            // If there is no up task, do nothing
+                        }*/
                     }
                 });
         AlertDialog alert = alertDialogBuilder.create();

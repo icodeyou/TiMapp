@@ -278,4 +278,22 @@ public abstract class SyncBaseModel extends MyModel {
 
     public boolean hasRemoteId() { return this.remote_id != null;}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SyncBaseModel that = (SyncBaseModel) o;
+
+        return remote_id != null ? remote_id.equals(that.remote_id) : that.remote_id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (remote_id != null ? remote_id.hashCode() : 0);
+        return result;
+    }
 }

@@ -53,25 +53,28 @@ import java.util.List;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
 
-    private static final String TAG = "AddSpotActivity";
-    private static final float ZOOM_LEVEL_CENTER_MAP = 15.0f;
-    private static final int LOADER_ID_SPOT_AROUND = 0;
-    private static final int NUMBER_OF_MAIN_CATEGORIES = 4;
+    private static final String         TAG = "AddSpotActivity";
+    private static final float          ZOOM_LEVEL_CENTER_MAP = 15.0f;
+    private static final int            LOADER_ID_SPOT_AROUND = 0;
+    private static final int            NUMBER_OF_MAIN_CATEGORIES = 4;
 
-    //private ImageView showCategoriesButton;
-    private EditText etCustomPlace;
-    private RecyclerView spotsRv;
-    private CategorySelectorView categorySelector;
+    // ---------------------------------------------------------------------------------------------
 
-    private SpotCategoriesAdapter spotCategoriesAdapter;
-    private GoogleMap gMap;
-    private ActivityAddSpotBinding mBinding;
-    private AddressResultReceiver mAddressResultReceiver;
-    private Menu menu;
-    private Loader<List<Spot>> mSpotLoader;
-    private LatLngBounds mSpotReachableBounds;
-    private SpotsAdapter spotsAdapter;
-    private SpotCategory categorySelected;
+    private EditText                        etCustomPlace;
+    private RecyclerView                    spotsRv;
+    private CategorySelectorView            categorySelector;
+
+    private SpotCategoriesAdapter           spotCategoriesAdapter;
+    private GoogleMap                       gMap;
+    private ActivityAddSpotBinding          mBinding;
+    private AddressResultReceiver           mAddressResultReceiver;
+    private Menu                            menu;
+    private Loader<List<Spot>>              mSpotLoader;
+    private LatLngBounds                    mSpotReachableBounds;
+    private SpotsAdapter                    spotsAdapter;
+    private SpotCategory                    categorySelected;
+
+    // ---------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,8 +292,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
             if (mSpotReachableBounds != null){
                 this.query = Spot.queryByArea(mSpotReachableBounds);
-                this.syncOption.getBundle()
-                        .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
+                this.syncOption.getBundle().putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
             }
         }
 

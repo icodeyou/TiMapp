@@ -260,6 +260,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="form_invalid_input">Please correct required fields before submitting.</string>
     <string name="no_friends">You don\'t have any friends using TiMapp. Share the app with them to get the best experience !</string>
     <string name="user_message_should_be_around_event_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
+    <string name="friend_already_invited">Invitation already sent!</string>
 
 
     <plurals name="number_people_event">

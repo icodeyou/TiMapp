@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -13,8 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
@@ -23,11 +20,10 @@ import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.MyModel;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
@@ -35,6 +31,7 @@ import com.timappweb.timapp.sync.DataSyncAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 
@@ -43,17 +40,13 @@ public class InviteFriendsActivity extends BaseActivity {
     private String              TAG                         = "InviteFriendsActivity";
     private static final int    LOADER_ID_FRIENDS_LIST      = 0;
 
+    // ---------------------------------------------------------------------------------------------
+
     private RecyclerView                recyclerView;
     private SelectFriendsAdapter        adapter;
-
     private View                        inviteButton;
-    private View                        noFriendsView;
-
-    private List<User>                  friendsSelected;
-    private List<User>                  allFbFriends;
-    private Event event;
+    private Event                       event;
     private FriendsLoader               mLoader;
-    private ContentResolver             mResolver;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
 
     // ---------------------------------------------------------------------------------------------
@@ -66,9 +59,6 @@ public class InviteFriendsActivity extends BaseActivity {
         if (!IntentsUtils.requireLogin(this, false)) {
             return;
         }
-
-        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         event = IntentsUtils.extractEvent(getIntent());
         if (event == null){
             IntentsUtils.home(this);
@@ -78,15 +68,10 @@ public class InviteFriendsActivity extends BaseActivity {
         this.initToolbar(true);
 
         inviteButton = findViewById(R.id.invite_button);
-        noFriendsView = findViewById(R.id.no_friends_view);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        //mAutoLabel = (AutoLabelUI) findViewById(R.remote_id.label_view);
-        //mAutoLabel.setBackgroundResource(R.drawable.round_corner_background);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        initSelectedFriends();
         initAdapterListFriends();
-        //initAutoLabel();
         initInviteButton();
 
         mLoader = new FriendsLoader(MyApplication.getCurrentUser());
@@ -100,42 +85,46 @@ public class InviteFriendsActivity extends BaseActivity {
         });
     }
 
-    private void initSelectedFriends() {
-        friendsSelected = new ArrayList<>();
-        //TODO : Get invited users from placeActivity and add them to the list
-    }
-
     private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(llm);
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendsAdapter(this);
         recyclerView.setAdapter(adapter);
+
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                User friend = allFbFriends.get(position);
-                boolean success;
-                if (friendsSelected.contains(friend)) {
-                    success = true;//mAutoLabel.removeLabel(position);
-                    friendsSelected.remove(friend);
-                } else {
-                    success = true;// mAutoLabel.addLabel(friend.getUsername(), position);
-                    friendsSelected.add(friend);
-                }
+                User friend = adapter.getData().get(position);
+                SelectFriendsAdapter.InviteInfo info = adapter.getInviteInfo(friend);
 
-                inviteButton.setVisibility(friendsSelected.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+                if (info == null){
+                    adapter.setSelected(friend, true);
+                }
+                else if (!info.editable){
+                    if (info.selected){
+                        Toast.makeText(InviteFriendsActivity.this, R.string.friend_already_invited, Toast.LENGTH_LONG).show();
+                    }
+                    // not editable, do nothing
+                }
+                else {
+                    adapter.setSelected(friend, !info.selected);
+                }
+                inviteButton.setVisibility(adapter.count(true, true) > 0 ? View.VISIBLE : View.INVISIBLE);
                 adapter.notifyDataSetChanged();
             }
         });
+
+        List<EventsInvitation> invitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
+        for (EventsInvitation invitation: invitations){
+            adapter.setSelected(invitation.user_target, true);
+            adapter.setEditable(invitation.user_target, false);
+        }
     }
 
     private void initInviteButton() {
         inviteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Number of friends invited : " + friendsSelected.size());
                 sendInvites();
             }
         });
@@ -144,17 +133,18 @@ public class InviteFriendsActivity extends BaseActivity {
     private void sendInvites(){
         // Encoding data:
         ArrayList<Integer> ids = new ArrayList<>();
-        for (User user: friendsSelected){
-            ids.add(user.remote_id);
+        for (Map.Entry<User, SelectFriendsAdapter.InviteInfo> friendEntry: adapter.getInviteInfo().entrySet()){
+            if (friendEntry.getValue().selected && friendEntry.getValue().editable){
+                ids.add(friendEntry.getKey().remote_id);
+            }
         }
-        Call<JsonArray> call = RestClient.service().sendInvite(event.remote_id, ids);
+        Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.remote_id, ids);
         RestClient.buildCall(call)
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
                 .onResponse(new HttpCallback<List<UserInvitationFeedback>>() {
                     @Override
                     public void successful(List<UserInvitationFeedback> feedbackList) {
                         Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
-                        /*
                         for (UserInvitationFeedback feedback: feedbackList){
                             if (feedback.success){
                                 if (feedback.invitation != null){
@@ -164,7 +154,7 @@ public class InviteFriendsActivity extends BaseActivity {
                             else{
                                 Log.e(TAG, "Cannot invite user=" + feedback.user_id);
                             }
-                        }*/
+                        }
                         finishActivityResult();
                     }
 
@@ -175,11 +165,6 @@ public class InviteFriendsActivity extends BaseActivity {
                 })
                 .perform();
     }
-
-    public List<User> getFriendsSelected() {
-        return friendsSelected;
-    }
-
 
     private void finishActivityResult(){
         Intent intent = NavUtils.getParentActivityIntent(this);
@@ -203,7 +188,6 @@ public class InviteFriendsActivity extends BaseActivity {
         @Override
         public void onLoadFinished(Loader loader, List data) {
             super.onLoadFinished(loader, data);
-            allFbFriends = data;
             adapter.clear();
             adapter.setData(data);
             adapter.notifyDataSetChanged();

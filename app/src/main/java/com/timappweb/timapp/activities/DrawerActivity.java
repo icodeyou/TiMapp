@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -97,12 +98,16 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         if (mWaitForLocationLayout != null){
-            ((ViewGroup)mWaitForLocationLayout.getParent()).removeView(mWaitForLocationLayout);
-            mWaitForLocationLayout = null;
+            removeWaitForLocationLayout();
         }
         if (lastLocation == null){
             //updateMapData();
         }
+    }
+
+    private void removeWaitForLocationLayout() {
+        ((ViewGroup)mWaitForLocationLayout.getParent()).removeView(mWaitForLocationLayout);
+        mWaitForLocationLayout = null;
     }
 
     // -----------------------------------------------------------------------------------------
@@ -120,7 +125,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setStatusBarColor(R.color.status_bar_map);
-        this.initDrawer();
+        initDrawer();
         this.initAddSpotButton();
         this.initList();
         backPressedOnce = false;
@@ -145,15 +150,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         super.onStart();
         LocationManager.start(this);
     }
-/*
-    private void updateMapData(){
-        if (LocationManager.hasLastLocation()){
-            if(exploreFragment != null && exploreFragment.getExploreMapFragment()!= null) {
-                exploreFragment.reloadMapData(); //Reload data
-                exploreFragment.getExploreMapFragment().updateFilterView(); //Set Filter view above map.
-            }
-        }
-    }*/
 
     @Override
     protected void onRestart() {
@@ -168,6 +164,14 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         mSimpleFacebook = SimpleFacebook.getInstance(this);
         if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
             mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location, null);
+            Button skipLocation = (Button) mWaitForLocationLayout.findViewById(R.id.action_skip);
+            skipLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.v(TAG, "User skip location");
+                    removeWaitForLocationLayout();
+                }
+            });
             mFrame.addView(mWaitForLocationLayout);
         }
     }

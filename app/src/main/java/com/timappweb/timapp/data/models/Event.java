@@ -464,4 +464,16 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     public void requestSync() {
         super.requestSync(MyApplication.getApplicationBaseContext(), DataSyncAdapter.SYNC_TYPE_EVENT);
     }
+
+    /**
+     * Get invitation sent user
+     * @param currentUser
+     */
+    public List<EventsInvitation> getSentInvitationsByUser(User currentUser) {
+        List<EventsInvitation> invitations = new Select()
+                .from(EventsInvitation.class)
+                .where("Event = ? AND UserSource = ?", this.getId(), currentUser.getId())
+                .execute();
+        return invitations;
+    }
 }

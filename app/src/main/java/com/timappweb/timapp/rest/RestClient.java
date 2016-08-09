@@ -219,8 +219,8 @@ public class RestClient {
         return manager.perform();
     }
 
-    public static HttpCallManager buildCall(Call call) {
-        return new HttpCallManager(call)
+    public static <T> HttpCallManager buildCall(Call<T> call) {
+        return new HttpCallManager<>(call)
                 .onResponse(defaultHttpCallback);
     }
 
