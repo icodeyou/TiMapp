@@ -13,6 +13,7 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.HashMap;
 
@@ -50,7 +51,8 @@ public class SpotCategoriesAdapter extends CategoriesAdapter {
 
         categoryIcon.setImageResource(spotCategory.getIconWhiteResId());
         if(isLegend) {
-            categoryText.setText(spotCategory.name);
+            String nameCapitalized = Util.capitalize(spotCategory.name);
+            categoryText.setText(nameCapitalized);
         } else {
             categoryText.setVisibility(View.GONE);
         }

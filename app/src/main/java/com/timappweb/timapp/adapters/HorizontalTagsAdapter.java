@@ -21,7 +21,7 @@ import java.util.List;
 
 public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAdapter.MyViewHolder> {
     private String TAG = "HorizontalTagsAdapter";
-    private static final int NUMBER_MAX_TAGS = 10;
+    private static final int NUMBER_MAX_TAGS = 3;
 
     protected LayoutInflater inflater;
     private List<Tag> mDataTags;
@@ -157,6 +157,10 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     public void settextSize(Float textSize) {
         this.textSize = textSize;
+    }
+
+    public int getMaxTags() {
+        return NUMBER_MAX_TAGS;
     }
 
     /*

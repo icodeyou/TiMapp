@@ -14,6 +14,7 @@ import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.HashMap;
 
@@ -49,7 +50,8 @@ public class EventCategoriesAdapter extends CategoriesAdapter {
 
         categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
         if(isLegend) {
-            categoryText.setText(eventCategory.getName());
+            String capitalizedName = Util.capitalize(eventCategory.getName());
+            categoryText.setText(capitalizedName);
         } else {
             categoryText.setVisibility(View.GONE);
         }

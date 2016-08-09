@@ -153,5 +153,6 @@
     <dimen name="margin_fragments_event">1dp</dimen>
     <dimen name="margin_fragments_event_additional_top">2dp</dimen>
     <dimen name="width_locate_button_googlemap">60dp</dimen>
+    <dimen name="width_icon_pick_category">80dp</dimen>
 
 </resources>

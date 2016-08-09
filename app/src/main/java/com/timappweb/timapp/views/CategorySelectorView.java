@@ -23,6 +23,7 @@ import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.utils.Util;
 
 import cdflynn.android.library.crossview.CrossView;
 
@@ -84,6 +85,7 @@ public class CategorySelectorView extends LinearLayout {
     private void initBackground() {
         mainLayout.setBackgroundColor(colorBackground);
         pickTv.setBackgroundColor(colorBackground);
+        imageSelectedCategory.setBackgroundColor(colorBackground);
     }
 
     private void initListeners() {
@@ -92,20 +94,9 @@ public class CategorySelectorView extends LinearLayout {
             public void onClick(View v) {
                 moreBtn.toggle();
                 if(!isExpandedView()) {
-                    final Animation slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_all);
-                    rvAllCategories.startAnimation(slideIn);
-                    pickTv.setVisibility(View.VISIBLE);
-                    rvAllCategories.setVisibility(View.VISIBLE);
-                    rvMainCategories.setVisibility(View.GONE);
-                    imm.hideSoftInputFromWindow(getWindowToken(), 0);   //Hide keyboard
+                    expandView();
                 } else {
-                    pickTv.setVisibility(View.GONE);
-                    rvAllCategories.setVisibility(View.GONE);
-                    if(selectedCategoryView.getVisibility()==GONE) {
-                        final Animation slideMainIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_main);
-                        rvMainCategories.startAnimation(slideMainIn);
-                        rvMainCategories.setVisibility(View.VISIBLE);
-                    }
+                    lowerView();
                 }
             }
         } ;
@@ -136,18 +127,33 @@ public class CategorySelectorView extends LinearLayout {
     }
 
     public void expandView() {
-
+        final Animation slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_all);
+        rvAllCategories.startAnimation(slideIn);
+        pickTv.setVisibility(View.VISIBLE);
+        rvAllCategories.setVisibility(View.VISIBLE);
+        rvMainCategories.setVisibility(View.GONE);
+        imm.hideSoftInputFromWindow(getWindowToken(), 0);   //Hide keyboard
     }
 
     public void lowerView() {
-
+        pickTv.setVisibility(View.GONE);
+        rvAllCategories.setVisibility(View.GONE);
+        if(selectedCategoryView.getVisibility()==GONE) {
+            final Animation slideMainIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_main);
+            rvMainCategories.startAnimation(slideMainIn);
+            rvMainCategories.setVisibility(View.VISIBLE);
+        }
     }
 
     public void selectCategoryUI(String name, int iconResId) {
         imageSelectedCategory.setImageResource(iconResId);
-        textSelectedCategory.setText(name);
+        String capitalizedName = Util.capitalize(name);
+        textSelectedCategory.setText(capitalizedName);
         selectedCategoryView.setVisibility(View.VISIBLE);
         rvMainCategories.setVisibility(View.GONE);
+        if(isExpandedView()) {
+            lowerView();
+        }
     }
 
 }

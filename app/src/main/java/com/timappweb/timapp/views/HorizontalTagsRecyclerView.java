@@ -72,6 +72,10 @@ public class HorizontalTagsRecyclerView extends RecyclerView {
         return horizontalTagsAdapter;
     }
 
+    public int getMaxTags() {
+        return horizontalTagsAdapter.getMaxTags();
+    }
+
 
     //Methods
 

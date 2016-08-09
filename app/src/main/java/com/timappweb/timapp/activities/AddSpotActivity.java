@@ -133,6 +133,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             @Override
             public void onClick(int position) {
                 setCategory(spotCategoriesAdapterMain.getCategory(position));
+                setButtonValidation();
             }
         });
 
@@ -140,6 +141,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             @Override
             public void onClick(int position) {
                 setCategory(spotCategoriesAdapterAll.getCategory(position));
+                setButtonValidation();
             }
         });
 
@@ -153,7 +155,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private void setCategory(SpotCategory spotCategory) {
         Spot spot = mBinding.getSpot();
         spot.setCategory(spotCategory);
-        setButtonValidation();
+        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getIconWhiteResId());
     }
 
     private void setListeners() {

@@ -8,7 +8,6 @@
         android:layout_margin="5dp"
         android:elevation="@dimen/card_elevation"
         android:background="@color/white"
-        android:visibility="gone"
         android:id="@+id/cv">
 
         <RelativeLayout
@@ -29,7 +28,6 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginEnd="16dp"
                     fresco:actualImageScaleType="fitCenter"
-                    fresco:roundWithOverlayColor="@color/colorPrimary"
                     fresco:placeholderImage="@drawable/placeholder_default"
                     fresco:roundAsCircle="true" />
 

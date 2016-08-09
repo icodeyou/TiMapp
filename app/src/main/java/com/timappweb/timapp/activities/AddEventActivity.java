@@ -265,9 +265,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     public void setCategory(EventCategory eventCategory) {
         eventCategorySelected = eventCategory;
-        hideCategories();
-        setButtonValidation();
         categorySelector.selectCategoryUI(eventCategory.getName(),eventCategory.getIconWhiteResId());
+        setButtonValidation();
     }
 
     public EventCategory getEventCategorySelected() {
@@ -362,6 +361,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         if(bundle!=null) {
             Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
             mBinding.getEvent().setSpot(spot);
+            mBinding.notifyChange();
+
             //mClusterManagerSpot.addItem(spot);
             //mClusterManagerSpot.cluster();
         }

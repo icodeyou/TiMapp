@@ -26,7 +26,7 @@
         <TextView
             style="@style/NoDataView"
             android:id="@+id/no_friends_layout"
-            android:text="You have no friends"/>
+            android:text="@string/no_friends"/>
 
     </FrameLayout>
 

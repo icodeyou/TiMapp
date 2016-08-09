@@ -217,7 +217,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="please_wait_location">Please wait while we get your location</string>
     <string name="event_over_change_status">The event is finished, you can\'t change your status !</string>
     <string name="cannot_notify_status">Sorry, you cannot notify your status for now</string>
-    <string name="no_friends">You have no friends</string>
     <string name="hint_event_location">Event location</string>
     <string name="btn_start_navigation">Start navigation</string>
     <string name="title_event_location">Location</string>
@@ -259,6 +258,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_internet_connection_message">Sorry, we couldn\'t find any internet connection. Please make sure you have a good connection, and then restart the app. Thank you.</string>
     <string name="action_performed_not_successful">Sorry but it didn\'t work...</string>
     <string name="form_invalid_input">Please correct required fields before submitting.</string>
+    <string name="no_friends">You don\'t have any friends using TiMapp. Share the app with them to get the best experience !</string>
     <string name="user_message_should_be_around_event_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
 
 
