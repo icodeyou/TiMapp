@@ -1,12 +1,15 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -22,22 +25,32 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.clustering.ClusterManager;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.databinding.ActivityAddSpotBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
+
+import java.util.List;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
 
     private static final String TAG = "AddSpotActivity";
     private static final float ZOOM_LEVEL_CENTER_MAP = 15.0f;
+    private static final int LOADER_ID_SPOT_AROUND = 0;
 
     //private ImageView showCategoriesButton;
     private View createPlaceButton;
@@ -50,6 +63,8 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private GoogleMap gMap;
     private ActivityAddSpotBinding mBinding;
     private AddressResultReceiver mAddressResultReceiver;
+    private Loader<List<Spot>> mSpotLoader;
+    private LatLngBounds mSpotReachableBounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,16 +214,24 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         requestReverseGeocoding(newLocation);
+        if (mSpotLoader == null){
+            mSpotReachableBounds = LocationManager.generateBoundsAroundLocation(newLocation, ConfigurationProvider.rules().place_max_reachable);
+            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+        if (LocationManager.hasLastLocation()){
+            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
+        }
     }
 
     public SpotCategory getCategorySelected() {
         return mBinding.getSpot().getCategory();
     }
+
 
     // =============================================================================================
 
@@ -226,6 +249,30 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 mBinding.getSpot().setAddress(addressOutput);
             }
         }
+    }
+
+    // =============================================================================================
+
+    class SpotAroundLoader extends MultipleEntryLoaderCallback<Spot> {
+
+        public SpotAroundLoader(Context context) {
+            super(context, 10, DataSyncAdapter.SYNC_TYPE_SPOT);
+
+            if (mSpotReachableBounds != null){
+                this.query = Spot.queryByArea(mSpotReachableBounds);
+                this.syncOption.getBundle()
+                        .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
+            }
+        }
+
+        @Override
+        public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
+            super.onLoadFinished(loader, data);
+
+            // TODO jack update data HERE
+        }
+
+
     }
 
 }

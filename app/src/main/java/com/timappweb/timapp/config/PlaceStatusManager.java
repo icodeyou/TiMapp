@@ -9,6 +9,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -26,7 +27,6 @@ public class PlaceStatusManager {
 
     private static final String TAG = "PlaceStatusManager";
     private static PlaceStatusManager _instance = null;
-
 
     private class LastCallInfo{
         public HttpCallManager httpCallManager;
@@ -202,4 +202,16 @@ public class PlaceStatusManager {
 
         return false;
     }
+
+
+
+    public EventStatus addLocally(Event event, UserPlaceStatusEnum status) {
+        EventStatus eventStatus = new EventStatus();
+        eventStatus.status = status;
+        eventStatus.user = MyApplication.getCurrentUser();
+        eventStatus.created = (int)(System.currentTimeMillis()/1000);
+        eventStatus.event = event;
+        return (EventStatus) eventStatus.mySave();
+    }
+
 }

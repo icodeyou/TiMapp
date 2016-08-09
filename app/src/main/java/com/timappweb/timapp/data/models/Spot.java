@@ -16,6 +16,7 @@ import com.timappweb.timapp.BR;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
+import com.timappweb.timapp.utils.DistanceHelper;
 
 import java.util.List;
 

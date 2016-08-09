@@ -7,8 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,9 +32,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
@@ -44,76 +39,57 @@ import com.timappweb.timapp.adapters.MainEventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.config.PlaceStatusManager;
+import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
-import com.timappweb.timapp.map.SpotClusterRenderer;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
-import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
-
-import java.util.List;
 
 import cdflynn.android.library.crossview.CrossView;
 
 
 public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
-    private static final float ZOOM_LEVEL_CENTER_MAP = 14.0f;
 
-    private static final int LOADER_ID_SPOT_AROUND = 0;
-    private static final int NUMBER_OF_MAIN_CATEGORIES = 4;
-    private static final int CATEGORIES_COLUMNS = 4;
+    private String                  TAG                                 = "AddEventActivity";
+    private static final float      ZOOM_LEVEL_CENTER_MAP               = 14.0f;
+    private static final int        NUMBER_OF_MAIN_CATEGORIES           = 4;
+    private static final int        CATEGORIES_COLUMNS                  = 4;
 
-    private String TAG = "AddEventActivity";
+    //----------------------------------------------------------------------------------------------
 
-    private InputMethodManager imm;
-
-    //Views
-    private EditText eventNameET;
-    private RecyclerView mainCategoriesRV;
-    private RecyclerView allCategoriesRV;
-    private EventCategoriesAdapter categoriesAdapter;
-    private EventCategory eventCategorySelected;
-    private View createButton;
-    private View progressView;
-    private TextView nameCategoryTV;
-    private TextView pickTv;
-    private CrossView moreBtn;
-    private View selectedCategoryView;
-    private ImageView imageSelectedCategory;
-    private TextView textSelectedCategory;
-    private EditText descriptionET;
-    //private View pinView;
-    //private SpotView spotView;
-
-
-    private ViewPager viewPager;
+    private InputMethodManager          imm;
+    private EditText                    eventNameET;
+    private RecyclerView                mainCategoriesRV;
+    private RecyclerView                allCategoriesRV;
+    private EventCategory               eventCategorySelected;
+    private View                        progressView;
+    private TextView                    nameCategoryTV;
+    private TextView                    pickTv;
+    private CrossView                   moreBtn;
+    private View                        selectedCategoryView;
+    private ImageView                   imageSelectedCategory;
+    private TextView                    textSelectedCategory;
+    private EditText                    descriptionET;
     // Data
-    private MapView mapView = null;
-    private GoogleMap gMap;
-    private ActivityAddEventBinding mBinding;
-    //private View mButtonAddPicture;
-    private View mBtnAddSpot;
-    private ClusterManager<Spot> mClusterManagerSpot;
-    private Loader<List<Spot>> mSpotLoader;
-    private View mSpotContainer;
-    private AddressResultReceiver mAddressResultReceiver;
-    private LatLngBounds mSpotReachableBounds;
-    private View.OnClickListener displayHideCategories;
+    private MapView                     mapView = null;
+    private GoogleMap                   gMap;
+    private ActivityAddEventBinding     mBinding;
+    private View                        mBtnAddSpot;
+    private View                        mSpotContainer;
+    private AddressResultReceiver       mAddressResultReceiver;
+    private View.OnClickListener        displayHideCategories;
 
-    private Menu menu;
+    private Menu                        menu;
     //private View eventLocation;
 
     //----------------------------------------------------------------------------------------------
@@ -215,7 +191,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     setProgressView(true);
                     Event event = mBinding.getEvent();
                     event.setCategory(eventCategorySelected);
-                    submitPlace(event);
+                    submitEvent(event);
                 } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
                 } else {
@@ -275,7 +251,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         }
     }
 
-    private void submitPlace(final Event event){
+    private void submitEvent(final Event event){
         Log.d(TAG, "Submit event " + event.toString());
         // TODO add loader
         RestClient
@@ -288,6 +264,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         Log.d(TAG, "Event has been successfully added");
                         event.setAuthor(MyApplication.getCurrentUser());
                         event.mySave();
+                        if (event.hasLocalId()){
+                            PlaceStatusManager.instance().addLocally(event, UserPlaceStatusEnum.HERE);
+                        }
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                     }
                 })
@@ -305,10 +284,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     //Public methods
     public RecyclerView getMainCategoriesRV() {
         return mainCategoriesRV;
-    }
-
-    public ViewPager getViewPager() {
-        return viewPager;
     }
 
     public int getNumberOfMainCategories() {
@@ -434,8 +409,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         if(bundle!=null) {
             Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
             mBinding.getEvent().setSpot(spot);
-            mClusterManagerSpot.addItem(spot);
-            mClusterManagerSpot.cluster();
         }
     }
 
@@ -471,7 +444,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void updateMapCenter(Location location){
-        mSpotReachableBounds = LocationManager.generateBoundsAroundLocation(location, ConfigurationProvider.rules().place_max_reachable);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
     }
 
@@ -485,9 +457,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         gMap.getUiSettings().setScrollGesturesEnabled(false);
         gMap.getUiSettings().setRotateGesturesEnabled(false);
         gMap.getUiSettings().setTiltGesturesEnabled(false);
-        setUpClusterer();
+        //setUpClusterer();
     }
-
+/*
 
     private void setUpClusterer(){
         Log.i(TAG, "Setting up cluster!");
@@ -513,7 +485,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         });
         mClusterManagerSpot.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Spot>());
         gMap.setOnMarkerClickListener(mClusterManagerSpot);
-    }
+    }*/
 
 
     @Override
@@ -543,12 +515,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         Log.v(TAG, "User location changed!");
-
         updateMapCenter(newLocation);
         requestReverseGeocoding(newLocation);
-        if (mSpotLoader == null){
-            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
-        }
     }
 
     @Override
@@ -558,33 +526,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
         if (LocationManager.hasLastLocation()){
             updateMapCenter(LocationManager.getLastLocation());
-            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
         }
-    }
-
-    // =============================================================================================
-
-    class SpotAroundLoader extends MultipleEntryLoaderCallback<Spot> {
-
-        public SpotAroundLoader(Context context) {
-            super(context, 10, DataSyncAdapter.SYNC_TYPE_SPOT);
-
-            if (mSpotReachableBounds != null){
-                this.query = Spot.queryByArea(mSpotReachableBounds);
-                this.syncOption.getBundle()
-                        .putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
-            }
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
-            super.onLoadFinished(loader, data);
-            mClusterManagerSpot.clearItems();
-            mClusterManagerSpot.addItems(data);
-            mClusterManagerSpot.cluster();
-        }
-
-
     }
 
     // =============================================================================================
