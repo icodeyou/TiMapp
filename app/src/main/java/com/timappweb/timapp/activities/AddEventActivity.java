@@ -20,8 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -39,7 +37,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
-import com.timappweb.timapp.adapters.MainEventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -61,6 +58,7 @@ import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
+import com.timappweb.timapp.views.CategorySelectorView;
 
 import java.util.List;
 
@@ -81,18 +79,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     //Views
     private EditText eventNameET;
     private RecyclerView mainCategoriesRV;
-    private RecyclerView allCategoriesRV;
     private EventCategoriesAdapter categoriesAdapter;
     private EventCategory eventCategorySelected;
     private View createButton;
     private View progressView;
     private TextView nameCategoryTV;
-    private TextView pickTv;
-    private CrossView moreBtn;
-    private View selectedCategoryView;
-    private ImageView imageSelectedCategory;
-    private TextView textSelectedCategory;
     private EditText descriptionET;
+    private CategorySelectorView categorySelector;
     //private View pinView;
     //private SpotView spotView;
 
@@ -123,7 +116,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_event);
 
         this.initToolbar(true);
-        //this.setStatusBarColor(R.color.colorSecondary);
+        this.setStatusBarColor(R.color.colorSecondaryDark);
         this.extractSpot(savedInstanceState);
 
         //Initialize
@@ -136,13 +129,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         eventNameET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         eventNameET.requestFocus();
 
+        categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         mainCategoriesRV = (RecyclerView) findViewById(R.id.rv_categories);
-        allCategoriesRV = (RecyclerView) findViewById(R.id.rv_all_categories);
-        selectedCategoryView = findViewById(R.id.selected_category);
-        pickTv = (TextView) findViewById(R.id.pick_tv);
-        moreBtn = (CrossView) findViewById(R.id.more_button);
-        imageSelectedCategory = (ImageView) findViewById(R.id.image_category_selected);
-        textSelectedCategory = (TextView) findViewById(R.id.text_category_selected);
 
         progressView = findViewById(R.id.progress_view);
         nameCategoryTV = (TextView) findViewById(R.id.category_name);
@@ -236,30 +224,23 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void initAdapterAndManager() {
         //Main categories
-        final MainEventCategoriesAdapter mainAdapter = new MainEventCategoriesAdapter(this);
+        final EventCategoriesAdapter mainAdapter = new EventCategoriesAdapter(this,false);
+        final EventCategoriesAdapter allAdapter = new EventCategoriesAdapter(this,true);
+
         mainAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 setCategory(mainAdapter.getCategory(position));
             }
         });
-        mainCategoriesRV.setAdapter(mainAdapter);
-        GridLayoutManager mainManager = new GridLayoutManager(this,
-                NUMBER_OF_MAIN_CATEGORIES,LinearLayoutManager.VERTICAL,false);
-        mainCategoriesRV.setLayoutManager(mainManager);
-
-        //All categories
-        final EventCategoriesAdapter allAdapter = new EventCategoriesAdapter(this);
         allAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 setCategory(allAdapter.getCategory(position));
             }
         });
-        allCategoriesRV.setAdapter(allAdapter);
-        GridLayoutManager allManager = new GridLayoutManager(this,
-                CATEGORIES_COLUMNS,LinearLayoutManager.VERTICAL,false);
-        allCategoriesRV.setLayoutManager(allManager);
+
+        categorySelector.setAdapters(mainAdapter, allAdapter);
     }
 
     private void setProgressView(boolean bool) {
@@ -289,19 +270,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     }
                 })
                 .perform();
-
     }
 
     public void setButtonValidation() {
         String textAfterChange = eventNameET.getText().toString().trim();
         boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange);
         menu.findItem(R.id.action_post).setEnabled(isValid);
-    }
-
-    //----------------------------------------------------------------------------------------------
-    //Public methods
-    public RecyclerView getMainCategoriesRV() {
-        return mainCategoriesRV;
     }
 
     public ViewPager getViewPager() {
@@ -317,16 +291,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     public void setCategory(EventCategory eventCategory) {
         eventCategorySelected = eventCategory;
-        imageSelectedCategory.setImageResource(eventCategory.getIconWhiteResId());
-        textSelectedCategory.setText(eventCategory.getName());
-        selectedCategoryView.setVisibility(View.VISIBLE);
-        if(allCategoriesRV.getVisibility()==View.VISIBLE) {
-            displayHideCategories.onClick(moreBtn);
-            //TODO Question Steph : Is it better to do : moreBtn.callOnClick(); ?
-        } else {
-            mainCategoriesRV.setVisibility(View.GONE);
-        }
+        hideCategories();
         setButtonValidation();
+        categorySelector.selectCategoryUI(eventCategory.getName(),eventCategory.getIconWhiteResId());
     }
 
     public EventCategory getEventCategorySelected() {
@@ -334,42 +301,25 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void setListeners() {
-        displayHideCategories = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
-                moreBtn.toggle();
-                if(allCategoriesRV.getVisibility()==View.GONE) {
-                    final Animation slideIn = AnimationUtils.loadAnimation(AddEventActivity.this, R.anim.slide_in_down_all);
-                    allCategoriesRV.startAnimation(slideIn);
-                    pickTv.setVisibility(View.VISIBLE);
-                    allCategoriesRV.setVisibility(View.VISIBLE);
-                    mainCategoriesRV.setVisibility(View.GONE);
-                } else {
-                    pickTv.setVisibility(View.GONE);
-                    allCategoriesRV.setVisibility(View.GONE);
-                    if(eventCategorySelected==null) {
-                        final Animation slideOut = AnimationUtils.loadAnimation(AddEventActivity.this, R.anim.slide_in_down_main);
-                        mainCategoriesRV.startAnimation(slideOut);
-                        mainCategoriesRV.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        } ;
 
-        moreBtn.setOnClickListener(displayHideCategories);
-        selectedCategoryView.setOnClickListener(displayHideCategories);
-
-        View.OnClickListener onEditTextClick = new View.OnClickListener() {
+        //If click on editText when Not Focused
+        View.OnFocusChangeListener onEtFocus = new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(allCategoriesRV.getVisibility()==View.VISIBLE) {
-                    displayHideCategories.onClick(v);
-                }
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideCategories();
             }
         };
-        eventNameET.setOnClickListener(onEditTextClick);
-        descriptionET.setOnClickListener(onEditTextClick);
+        //If click on editText when Focused
+        View.OnClickListener onEtClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideCategories();
+            }
+        };
+        eventNameET.setOnFocusChangeListener(onEtFocus);
+        eventNameET.setOnClickListener(onEtClick);
+        descriptionET.setOnFocusChangeListener(onEtFocus);
+        descriptionET.setOnClickListener(onEtClick);
 
         mBtnAddSpot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -427,12 +377,19 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         });*/
     }
 
+    private void hideCategories() {
+        if(categorySelector.isExpandedView()) {
+            categorySelector.lowerView();
+            //TODO : Nettoyer ça : supprimer cette fonction et uniquement appeler la methode lowerview
+        }
+    }
+
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {
             Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
             mBinding.getEvent().setSpot(spot);
-            mClusterManagerSpot.addItem(spot);
-            mClusterManagerSpot.cluster();
+            //mClusterManagerSpot.addItem(spot);
+            //mClusterManagerSpot.cluster();
         }
     }
 
@@ -482,7 +439,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         gMap.getUiSettings().setScrollGesturesEnabled(false);
         gMap.getUiSettings().setRotateGesturesEnabled(false);
         gMap.getUiSettings().setTiltGesturesEnabled(false);
-        setUpClusterer();
+        //setUpClusterer();
     }
 
 
@@ -576,9 +533,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         @Override
         public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
             super.onLoadFinished(loader, data);
-            mClusterManagerSpot.clearItems();
-            mClusterManagerSpot.addItems(data);
-            mClusterManagerSpot.cluster();
+            //mClusterManagerSpot.clearItems();
+            //.addItems(data);
+            //mClusterManagerSpot.cluster();
         }
 
 

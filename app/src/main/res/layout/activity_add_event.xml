@@ -24,157 +24,95 @@
         android:background="@color/background">
 
         <include
-            layout="@layout/toolbar_layout" />
+            layout="@layout/toolbar_layout_secondary" />
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/colorSecondary">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/rv_layout"
+                <com.timappweb.timapp.views.CategorySelectorView
+                    android:id="@+id/category_selector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <!--<FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:background="@color/colorSecondary">
+                    style="@style/whiteFormEditText"
+                </FrameLayout>-->
 
-                    <RelativeLayout
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rv_categories"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:visibility="visible"/>
-                        <LinearLayout
-                            android:id="@+id/selected_category"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
-                            <ImageView
-                                android:id="@+id/image_category_selected"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:padding="10dp"
-                                android:background="@color/colorSecondary"
-                                android:src="@drawable/ic_category_highlight_else"/>
-                            <TextView
-                                android:id="@+id/text_category_selected"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                style="@style/TextInfoWhite"
-                                android:text="Restaurant"/>
-                        </LinearLayout>
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    xmlns:app="http://schemas.android.com/tools"
+                    android:id="@+id/event_name"
+                    style="@style/labeledFormEditText"
+                    android:hint="@string/hint_event_name"
+                    android:nextFocusForward="@+id/description_edit_text"
+                    android:text="@={event.name}"/>
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    xmlns:app="http://schemas.android.com/tools"
+                    android:id="@+id/description_edit_text"
+                    style="@style/formLabeledMultilineText"
+                    android:hint="@string/hint_write_description"
+                    android:text="@={event.description}"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spot_height_add_event"
+                    android:layout_margin="10dp">
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                    <LinearLayout
+                        android:id="@+id/button_add_spot"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:visibility="@{event.hasSpot() ? View.GONE : View.VISIBLE}"
+                        android:background="@color/smoke">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:padding="10dp"
+                            android:src="@drawable/plus_grey"/>
+
                         <TextView
-                            android:id="@+id/pick_tv"
-                            android:layout_width="match_parent"
+                            style="@style/TextInfoGray"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:padding="20dp"
                             android:gravity="center"
-                            android:textColor="@color/smoke"
-                            android:textSize="@dimen/text_normal"
-                            android:text="@string/pick_a_category"
-                            android:background="@color/colorSecondary"
-                            android:visibility="gone"/>
-                    </RelativeLayout>
+                            android:text="Attach a place"/>
 
-                    <cdflynn.android.library.crossview.CrossView
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/more_button"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:padding="15dp"
-                        android:layout_gravity="center"
-                        app:lineColor="@color/white"
-                        android:contentDescription="@string/more"
-                        android:drawablePadding="5dp"/>
-                    <!--android:layout_width="80dp"
-                        android:layout_height="60dp"
-                    android:paddingRight="25dp"
-                    android:paddingLeft="25dp"
-                    android:paddingTop="15dp"
-                    android:paddingBottom="15dp"-->
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:id="@+id/spot_container"
+                        android:visibility="@{event.hasSpot() ? View.VISIBLE : View.GONE}"
+                        android:background="@color/smoke">
+                        <include layout="@layout/layout_spot"
+                            bind:spot="@{event.spot}"/>
+                    </LinearLayout>
+                </RelativeLayout>
 
-                </LinearLayout>
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_all_categories"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"/>
-            </LinearLayout>
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                xmlns:app="http://schemas.android.com/tools"
-                android:id="@+id/event_name"
-                style="@style/labeledFormEditText"
-                android:hint="@string/hint_place_name"
-                android:nextFocusForward="@+id/description_edit_text"
-                android:text="@={event.name}"/>
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                xmlns:app="http://schemas.android.com/tools"
-                android:id="@+id/description_edit_text"
-                style="@style/formLabeledMultilineText"
-                android:hint="@string/hint_write_description"
-                android:text="@={event.description}"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/spot_height_add_event"
-                android:layout_margin="10dp">
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/map"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
                 <LinearLayout
-                    android:id="@+id/button_add_spot"
+                    android:id="@+id/progress_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="@{event.hasSpot() ? View.GONE : View.VISIBLE}"
-                    android:background="@color/smoke">
-
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:padding="10dp"
-                        android:src="@drawable/plus_grey"/>
-
-                    <TextView
-                        style="@style/TextInfoGray"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:padding="20dp"
-                        android:gravity="center"
-                        android:text="Attach a place"/>
-
+                    android:visibility="gone"
+                    android:background="@color/background">
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:id="@+id/spot_container"
-                    android:visibility="@{event.hasSpot() ? View.VISIBLE : View.GONE}"
-                    android:background="@color/smoke">
-                    <include layout="@layout/layout_spot"
-                        bind:spot="@{event.spot}"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/progress_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:background="@color/background">
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </layout>

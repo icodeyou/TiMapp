@@ -201,6 +201,17 @@
 
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/description_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:gravity="left"
+                        android:textColor="@color/DarkGray"
+                        android:textSize="@dimen/text_small"
+                        android:text="@{event.description}"
+                        tools:text="This is the description of the event. The event is beautiful. The event is magical. The event is free. Come. Come here if you want to spend a wonderful time."/>
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/map_height">
@@ -232,16 +243,6 @@
                             android:src="@drawable/ic_map_light"/>-->
 
                     </RelativeLayout>
-
-                    <TextView
-                        android:id="@+id/description_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:gravity="left"
-                        android:textColor="@color/DarkGray"
-                        android:text="@{event.description}"
-                        tools:text="This is the description of the event. The event is beautiful. The event is magical. The event is free. Come. Come here if you want to spend a wonderful time."/>
                 </LinearLayout>
 
             </LinearLayout>

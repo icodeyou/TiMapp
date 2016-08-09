@@ -118,7 +118,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="title_activity_publish">Check and send</string>
     <string name="main_text_publish_activity">CONFIRM</string>
     <string name="text_anonymous">Anonymous</string>
-    <string name="hint_place_name">Event name</string>
+    <string name="hint_event_name">Event name</string>
+    <string name="hint_spot_name">Name of the place</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
     <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
     <string name="searchview_hint_3">Choose 3 tags</string>
@@ -199,7 +200,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="no_place_attach">Pin a place</string>
     <string name="add_spot">Add a place</string>
     <string name="where_are_you">Where are you ?</string>
-    <string name="hint_spot_name">Name</string>
 
 
     <string name="sync_account_type">timapp.timappweb.com</string>

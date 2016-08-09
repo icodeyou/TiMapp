@@ -91,6 +91,11 @@ public class Spot extends SyncBaseModel implements ClusterItem {
         }
     }
 
+    public static Spot createDummy() {
+        SpotCategory spotCategory = new SpotCategory("Dummy category");
+        return new Spot("Dummy spot",spotCategory);
+    }
+
     // =============================================================================================
 
     @Override

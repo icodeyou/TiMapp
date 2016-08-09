@@ -12,7 +12,7 @@ import com.timappweb.timapp.data.models.EventCategory;
 public class MainEventCategoriesAdapter extends EventCategoriesAdapter {
 
     public MainEventCategoriesAdapter(Context context) {
-        super(context);
+        super(context,false);
     }
 
     @Override
@@ -26,6 +26,5 @@ public class MainEventCategoriesAdapter extends EventCategoriesAdapter {
         final TextView categoryText = holder.categoryText;
         categoryText.setVisibility(View.GONE);
     }
-
 
 }

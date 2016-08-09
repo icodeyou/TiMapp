@@ -8,22 +8,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
+import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -34,22 +33,24 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
 
     private static final String TAG = "AddSpotActivity";
     private static final float ZOOM_LEVEL_CENTER_MAP = 15.0f;
 
     //private ImageView showCategoriesButton;
-    private View createPlaceButton;
     private EditText etCustomPlace;
+    private RecyclerView spotsRv;
     private RecyclerView spotCategoriesRv;
 
     private SpotCategoriesAdapter spotCategoriesAdapter;
-    private InputMethodManager imm;
-    private MapView mapView;
     private GoogleMap gMap;
     private ActivityAddSpotBinding mBinding;
     private AddressResultReceiver mAddressResultReceiver;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +62,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
         //Initialize
         //showCategoriesButton = (ImageView) findViewById(R.id.button_show_categories_spot);
-        createPlaceButton = findViewById(R.id.create_spot_button);
+        spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         spotCategoriesRv = (RecyclerView) findViewById(R.id.spot_categories_rv);
-        etCustomPlace = (EditText) findViewById(R.id.edittext);
-        mapView = (MapView) findViewById(R.id.map);
+        etCustomPlace = (EditText) findViewById(R.id.name_spot);
 
         initEt();
         initAdapters();
         setListeners();
-        initMap();
         LocationManager.addOnLocationChangedListener(this);
 
         mBinding.setSpot(IntentsUtils.extractSpot(getIntent()));
@@ -78,6 +77,25 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         }
         if (LocationManager.hasLastLocation()){
             requestReverseGeocoding(LocationManager.getLastLocation());
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_add_spot, menu);
+        setButtonValidation();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_create:
+                finishActivityResult(mBinding.getSpot());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -91,15 +109,15 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotCategoriesAdapter = new SpotCategoriesAdapter(this);
         spotCategoriesRv.setAdapter(spotCategoriesAdapter);
         spotCategoriesAdapter.addAll(ConfigurationProvider.spotCategories());
+
+        spotsRv.setLayoutManager(new LinearLayoutManager(this));
+        SpotsAdapter spotsAdapter = new SpotsAdapter(this);
+        List<Spot> list = new ArrayList<>();
+        spotsAdapter.setData(list);
+        spotsRv.setAdapter(spotsAdapter);
     }
 
     private void setListeners() {
-        createPlaceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishActivityResult(mBinding.getSpot());
-            }
-        });
 
         etCustomPlace.addTextChangedListener(new TextWatcher() {
             @Override
@@ -140,25 +158,25 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
     private void setButtonValidation() {
-        createPlaceButton.setActivated(mBinding.getSpot().isValid());
+        menu.findItem(R.id.action_create).setEnabled(mBinding.getSpot().isValid());
     }
 
 
     @Override
     public void onPause() {
-        mapView.onPause();
+        //mapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        mapView.onResume();
+        //mapView.onResume();
         super.onResume();
         Log.d(TAG, "ExploreMapFragment.onResume()");
-        this.loadMapIfNeeded();
+        //this.loadMapIfNeeded();
     }
 
-    private void loadMapIfNeeded() {
+/*    private void loadMapIfNeeded() {
         try {
             if (gMap == null){
                 gMap = mapView.getMap();
@@ -184,7 +202,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     private void updateMapCenter(Location location){
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
-    }
+    }*/
 
 
     private void requestReverseGeocoding(Location location){
