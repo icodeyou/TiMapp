@@ -41,8 +41,6 @@ public class ConfigurationProvider {
     private static ApplicationRules applicationRules;
     private static List<EventCategory> eventCategories = null;
     private static List<SpotCategory> spotCategories = null;
-    private static HttpCallback callback;
-    private static RequestFailureCallback errorCallback;
 
 
     public static List<EventCategory> eventCategories(){
@@ -164,13 +162,6 @@ public class ConfigurationProvider {
         return null;
     }
 
-    public static void onSyncError(Throwable e) {
-        HttpCallbackBase.dispatchError(e, ConfigurationProvider.errorCallback);
-    }
-
-    public static void onSyncResponse(Response response) {
-        HttpCallbackBase.dispatchResponse(response, ConfigurationProvider.callback);
-    }
 
     public static boolean hasRulesConfig() {
         try{

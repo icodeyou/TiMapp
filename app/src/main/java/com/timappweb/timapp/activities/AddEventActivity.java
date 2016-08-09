@@ -40,6 +40,7 @@ import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
@@ -464,7 +465,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             case IntentsUtils.ACTION_ADD_EVENT_PICTURE:
                 if(resultCode==RESULT_OK) {
                     // TODO
-                    Log.d(TAG, "Result OK from AddTagActivity");
+                    Log.d(TAG, "Result OK from AddEventPicture");
                 }
                 break;
             default:

@@ -55,26 +55,28 @@ import retrofit2.Call;
 
 public class EventPicturesFragment extends EventBaseFragment implements LocationManager.LocationListener {
 
-    private static final String TAG = "EventPicturesFragment";
+    private static final String         TAG                             = "EventPicturesFragment";
+    public static int                   PICUTRE_GRID_COLUMN_NB          =  2;
+    private static final long           MAX_UPDATE_DELAY                = 3600 * 1000;
 
-    private EventActivity eventActivity;
-    private Context context;
+    // ---------------------------------------------------------------------------------------------
+
+    private EventActivity               eventActivity;
+    private Context                     context;
 
     //Views
-    //private View                    progressView;
-    private View                    noPicView;
-    private View                    noConnectionView;
-    private View                    uploadView;
+    //private View                      progressView;
+    private View                        noPicView;
+    private View                        noConnectionView;
+    private View                        uploadView;
 
-    private PicturesAdapter         picturesAdapter;
-
-    public static int PICUTRE_GRID_COLUMN_NB =  2;
-    private static final long MAX_UPDATE_DELAY = 3600 * 1000;
-    
-    private SwipeRefreshLayout mSwipeLayout;
-    private FloatingActionButton mPostButton;
-    private RefreshableRecyclerView mRecyclerView;
+    private PicturesAdapter             picturesAdapter;
+    private SwipeRefreshLayout          mSwipeRefreshLayout;
+    private FloatingActionButton        mPostButton;
+    private RefreshableRecyclerView     mRecyclerView;
     private RecyclerViewMaterialAdapter mAdapter;
+
+    // ---------------------------------------------------------------------------------------------
 
     @Nullable
     @Override
@@ -90,7 +92,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         uploadView = root.findViewById(R.id.upload_view);
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(context, PICUTRE_GRID_COLUMN_NB));
-        mSwipeLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
         //mPostButton = (FloatingActionButton) root.findViewById(R.id.post_button);
 
         /*mPostButton.setOnClickListener();*/
@@ -101,6 +103,12 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
         startPictureActivity();
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLoaderManager().getLoader(EventActivity.LOADER_ID_PICTURE).forceLoad();
+            }
+        });
         return root;
     }
 
@@ -295,7 +303,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         public PictureLoader(Context context, Event event) {
             super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, event.getPicturesQuery());
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
-            this.setSwipeAndRefreshLayout(mSwipeLayout);
+            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 
         @Override

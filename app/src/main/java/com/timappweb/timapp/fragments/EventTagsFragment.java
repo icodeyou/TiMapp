@@ -39,16 +39,21 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
     private static final String TAG = "EventTagsFragment";
     private static final long MAX_UPDATE_DELAY = 3600 * 1000;
-    private TagsAndCountersAdapter  tagsAndCountersAdapter;
+
+    // ---------------------------------------------------------------------------------------------
+
+    private TagsAndCountersAdapter          tagsAndCountersAdapter;
 
     //Views
-    private View                    noTagsView;
-    //private EventView               eventView;
-    private SwipeRefreshLayout      mSwipeLayout;
-    private FloatingActionButton postButton;
-    private RecyclerView mRecyclerView;
-    private RecyclerViewMaterialAdapter mAdapter;
-    private Loader<List<EventTag>> mTagLoader;
+    private View                            noTagsView;
+    //private EventView                     eventView;
+    private FloatingActionButton            postButton;
+    private RecyclerView                    mRecyclerView;
+    private RecyclerViewMaterialAdapter     mAdapter;
+    private Loader<List<EventTag>>          mTagLoader;
+    private SwipeRefreshLayout              mSwipeRefreshLayout;
+
+    // ---------------------------------------------------------------------------------------------
 
     @Nullable
     @Override
@@ -68,8 +73,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         mRecyclerView.setHasFixedSize(true);
 
         noTagsView = view.findViewById(R.id.no_tags_view);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
-        //postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
 
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
@@ -88,6 +92,12 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mTagLoader.forceLoad();
+            }
+        });
     }
 
     @Override
@@ -133,7 +143,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
                     event.getTagsQuery());
 
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
-            this.setSwipeAndRefreshLayout(mSwipeLayout);
+            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 
         @Override

@@ -94,7 +94,7 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "--------------- Beginning network synchronization -----------------------------");
-        // TODO paralelize this
+        // TODO paralelize this REMOVE
         try {
             Response response = this.syncApplicationRules();
             if (response.isSuccessful())
@@ -102,12 +102,10 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
             if (response.isSuccessful())
                 response = this.performModelSync(SpotCategory.class,  RestClient.service().spotCategories(), syncResult);
 
-            ConfigurationProvider.onSyncResponse(response);
 
         } catch (Throwable e) {
             Log.e(TAG, "Cannot load application rules: " + e.getMessage());
             e.printStackTrace();
-            ConfigurationProvider.onSyncError(e);
         }
 
 

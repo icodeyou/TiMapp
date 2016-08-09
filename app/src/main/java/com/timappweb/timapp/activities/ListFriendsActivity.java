@@ -63,13 +63,13 @@ public class ListFriendsActivity extends BaseActivity{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FriendsAdapter(this);
-        recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 IntentsUtils.profile(ListFriendsActivity.this, adapter.getData().get(position));
             }
         });
+        recyclerView.setAdapter(adapter);
     }
 
     //  ============================================================================================

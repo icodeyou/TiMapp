@@ -1,5 +1,6 @@
 package com.timappweb.timapp.sync;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -16,11 +17,19 @@ import android.util.Log;
  * manage the lifecycle of our {@link DataSyncAdapter} and provide a handle to said DataSyncAdapter to the
  * OS on request.
  */
-public class DataSyncService extends Service {
+public class DataSyncService extends IntentService {
     private static final String TAG = "DataSyncService";
 
     private static final Object sSyncAdapterLock = new Object();
     private static DataSyncAdapter sDataSyncAdapter = null;
+
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     */
+    public DataSyncService() {
+        super("data_sync_service");
+    }
 
     /**
      * Thread-safe constructor, creates static {@link DataSyncAdapter} instance.
@@ -56,5 +65,10 @@ public class DataSyncService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return sDataSyncAdapter.getSyncAdapterBinder();
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        Log.d(TAG, "onHandleIntent() called with intent: " + intent);
     }
 }

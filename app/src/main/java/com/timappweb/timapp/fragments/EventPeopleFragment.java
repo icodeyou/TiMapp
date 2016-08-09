@@ -47,25 +47,26 @@ import retrofit2.Call;
 
 public class EventPeopleFragment extends EventBaseFragment {
 
-    private static final String TAG = "EventTagsFragment";
-    private static final long MAX_UPDATE_DELAY = 3600 * 1000;
+    private static final String     TAG                             = "EventTagsFragment";
+    private static final long       MAX_UPDATE_DELAY                = 3600 * 1000;
 
-    private Context         context;
+    // ---------------------------------------------------------------------------------------------
 
-    private MyFlexibleAdapter mPlaceUsersAdapter;
-
-    private View            progressView;
-    private View            noPostsView;
-    private View            noConnectionView;
-    private SwipeRefreshLayout mSwipeLayout;
-    private FloatingActionButton postButton;
-    private RecyclerView mRecyclerView;
-
-    private ExpandableHeaderItem mExpandableHereHeader;
-    private ExpandableHeaderItem mExpandableComingHeader;
-    private ExpandableHeaderItem mExpandableInviteHeader;
+    private Context                 context;
+    private MyFlexibleAdapter       mPlaceUsersAdapter;
+    private View                    progressView;
+    private View                    noPostsView;
+    private View                    noConnectionView;
+    private SwipeRefreshLayout      mSwipeLayout;
+    private FloatingActionButton    postButton;
+    private RecyclerView            mRecyclerView;
+    private ExpandableHeaderItem    mExpandableHereHeader;
+    private ExpandableHeaderItem    mExpandableComingHeader;
+    private ExpandableHeaderItem    mExpandableInviteHeader;
 
     //private RecyclerViewMaterialAdapter mAdapter;
+
+    // ---------------------------------------------------------------------------------------------
 
     public static EventPeopleFragment newInstance(int columnCount) {
         EventPeopleFragment fragment = new EventPeopleFragment();
@@ -231,7 +232,6 @@ public class EventPeopleFragment extends EventBaseFragment {
         @Override
         public void onLoadFinished(Loader<List<UserEvent>> loader, List<UserEvent> data) {
             super.onLoadFinished(loader, data);
-
             mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
             mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
             for (UserEvent userEvent: data){
@@ -268,17 +268,29 @@ public class EventPeopleFragment extends EventBaseFragment {
         public void onLoadFinished(Loader<List<EventsInvitation>> loader, List<EventsInvitation> data) {
             super.onLoadFinished(loader, data);
 
-
             mPlaceUsersAdapter.removeItems(mExpandableInviteHeader);
-            //mExpandableInviteHeader.removeSubItems();
-            int i = 0;
             for (EventsInvitation invitation: data){
                 UserItem item = new UserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
-                //mExpandableInviteHeader.addSubItem(item);
                 mPlaceUsersAdapter.addSubItem(mExpandableInviteHeader, item);
             }
             mPlaceUsersAdapter.expand(mExpandableInviteHeader);
         }
 
+    }
+
+    /**
+     +	 * Provides all the item positions that belongs to the section represented by the specified header.
+     +	 *
+     +	 * @param header the header that represents the section
+     +	 * @return NonNull list of all item positions in the specified section.
+     +	 */
+    @NonNull
+    public <T extends IFlexible> List<Integer> getSectionItemPositions(@NonNull FlexibleAdapter adapter, @NonNull IHeader header) {
+        List<Integer> sectionItemPositions = new ArrayList<Integer>();
+        int startPosition = adapter.getGlobalPositionOf(header);
+        while (adapter.hasSameHeader(adapter.getItem(++startPosition), header)) {
+            sectionItemPositions.add(startPosition);
+        }
+        return sectionItemPositions;
     }
 }
