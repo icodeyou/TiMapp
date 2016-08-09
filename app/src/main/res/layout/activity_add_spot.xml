@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
         <import type="android.graphics.drawable.Drawable"/>
         <variable
             name="errors"
-            type="com.timappweb.timapp.rest.model.RestValidationErrorParser"></variable>
+            type="com.timappweb.timapp.rest.model.RestValidationErrorParser" />
         <variable
             name="spot"
-            type="com.timappweb.timapp.data.models.Spot"></variable>
+            type="com.timappweb.timapp.data.models.Spot" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +17,9 @@
         android:orientation="vertical">
         <include layout="@layout/toolbar_layout" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/spot_categories_rv"
+        <com.timappweb.timapp.views.CategorySelectorView
+            android:id="@+id/category_selector"
+            app:color_background="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -29,10 +29,6 @@
             android:hint="@string/hint_spot_name"
             android:text="@={spot.name}"
             android:nextFocusForward="@+id/description_edit_text" />
-
-        <com.timappweb.timapp.views.CategorySelectorView
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
 
         <com.timappweb.timapp.views.SwipeRefreshLayout
             android:layout_width="match_parent"

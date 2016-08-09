@@ -76,10 +76,10 @@ public class EventCategory extends SyncBaseModel{
                 Log.v(TAG, "Resource read from field ic_category_" + this.name + ": " + resourceWhite);
             } catch (IllegalAccessException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_highlight_else;
+                resourceWhite = R.drawable.ic_category_unknown;
             } catch (NoSuchFieldException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_highlight_else;
+                resourceWhite = R.drawable.ic_category_unknown;
             }
         }
         Log.v(TAG, "Getting icon resource: " + resourceWhite);
@@ -92,10 +92,10 @@ public class EventCategory extends SyncBaseModel{
                 resourceBlack = R.drawable.class.getField("ic_category_" + this.name).getInt(null);
             } catch (IllegalAccessException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_else;
+                resourceBlack = R.drawable.ic_category_unknown;
             } catch (NoSuchFieldException e) {
                 Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_else;
+                resourceBlack = R.drawable.ic_category_unknown;
             }
         }
         return resourceBlack;

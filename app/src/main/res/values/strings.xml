@@ -253,6 +253,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="post">Post</string>
     <string name="i_am_here">I\'m here</string>
     <string name="i_am_coming">I\'m coming</string>
+    <string name="internet_connection">Internet Connection</string>
+    <string name="no_internet_connection_message">Sorry, we couldn\'t find any internet connection. Please make sure you have a good connection, and then restart the app. Thank you.</string>
     <string name="action_performed_not_successful">Sorry but it didn\'t work...</string>
 
 

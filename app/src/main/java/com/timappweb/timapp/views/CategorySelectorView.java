@@ -2,6 +2,7 @@ package com.timappweb.timapp.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddEventActivity;
+import com.timappweb.timapp.adapters.CategoriesAdapter;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
@@ -40,6 +42,9 @@ public class CategorySelectorView extends LinearLayout {
     private ImageView           imageSelectedCategory;
     private TextView            textSelectedCategory;
     private View                selectedCategoryView;
+    private LinearLayout        mainLayout;
+
+    private int colorBackground = 0;
 
 
     public CategorySelectorView(Context context) {
@@ -51,8 +56,8 @@ public class CategorySelectorView extends LinearLayout {
         super(context, attrs);
 
         //Get attributes in XML
-        //TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SpotView, 0, 0);
-        //isTagsVisible = ta.getBoolean(R.styleable.CardView_tags_visible, false);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CategorySelectorView, 0, 0);
+        colorBackground = ta.getColor(R.styleable.CategorySelectorView_color_background, 0);
 
         this.init(context);
     }
@@ -62,6 +67,7 @@ public class CategorySelectorView extends LinearLayout {
         inflate(getContext(), R.layout.view_category_selector, this);
 
         imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        mainLayout = (LinearLayout) findViewById(R.id.main_layout);
         rvAllCategories = (RecyclerView) findViewById(R.id.rv_all_categories);
         rvMainCategories = (RecyclerView) findViewById(R.id.rv_main_categories);
         imageSelectedCategory = (ImageView) findViewById(R.id.image_category_selected);
@@ -70,8 +76,14 @@ public class CategorySelectorView extends LinearLayout {
         moreBtn = (CrossView) findViewById(R.id.more_button);
         pickTv = (TextView) findViewById(R.id.pick_tv);
 
+        initBackground();
         initRv();
         initListeners();
+    }
+
+    private void initBackground() {
+        mainLayout.setBackgroundColor(colorBackground);
+        pickTv.setBackgroundColor(colorBackground);
     }
 
     private void initListeners() {
@@ -114,7 +126,7 @@ public class CategorySelectorView extends LinearLayout {
         rvAllCategories.setLayoutManager(allManager);
     }
 
-    public void setAdapters(EventCategoriesAdapter adapterMain, EventCategoriesAdapter adapterAll) {
+    public void setAdapters(CategoriesAdapter adapterMain, CategoriesAdapter adapterAll) {
         rvMainCategories.setAdapter(adapterMain);
         rvAllCategories.setAdapter(adapterAll);
     }

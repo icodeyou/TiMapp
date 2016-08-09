@@ -75,7 +75,7 @@ public class SpotCategory extends SyncBaseModel {
         try {
             return R.drawable.class.getField(resourceName + "_" + iconType).getInt(null);
         } catch (Exception ex) {
-            return R.drawable.ic_category_else;
+            return R.drawable.ic_category_unknown;
         }
     }
 

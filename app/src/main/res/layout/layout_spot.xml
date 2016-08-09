@@ -23,10 +23,11 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_margin="5dp"
+        android:padding="15dp"
         android:layout_gravity="center"
         tools:src="@drawable/ic_category_highlight_else"
+        android:background="@color/colorPrimary"
         fresco:actualImageScaleType="fitCenter"
-        fresco:roundAsCircle="true"
         fresco:placeholderImage="@drawable/ic_category_highlight_else"/>
 
         <LinearLayout

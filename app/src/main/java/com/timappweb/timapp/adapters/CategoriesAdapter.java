@@ -29,7 +29,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     public EventCategoriesAdapter.CategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View categories_view = inflater.inflate(R.layout.item_category, parent, false);
 
-        return new EventCategoriesAdapter.CategoriesViewHolder(categories_view);
+        return new CategoriesViewHolder(categories_view);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
     @Override
     public int getItemCount() {
-        return ConfigurationProvider.eventCategories().size();
+        return 0;
     }
 
     public void setOnItemClickListener(OnItemAdapterClickListener onClickListener) {

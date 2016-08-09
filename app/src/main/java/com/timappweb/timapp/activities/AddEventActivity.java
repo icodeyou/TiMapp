@@ -220,11 +220,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void setProgressView(boolean bool) {
         if(bool) {
             progressView.setVisibility(View.VISIBLE);
-            getSupportActionBar().hide();
         }
         else {
             progressView.setVisibility(View.GONE);
-            getSupportActionBar().show();
         }
     }
 
