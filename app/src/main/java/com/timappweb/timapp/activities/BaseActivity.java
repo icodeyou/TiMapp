@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -90,6 +91,15 @@ public class BaseActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(this, color));
         }
+    }
+
+    public void initMapUI(GoogleMap gMap, boolean gestureEnabled) {
+        gMap.setIndoorEnabled(true);
+        gMap.setMyLocationEnabled(true);
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);
+        gMap.getUiSettings().setScrollGesturesEnabled(gestureEnabled);
+        gMap.getUiSettings().setRotateGesturesEnabled(gestureEnabled);
+        gMap.getUiSettings().setTiltGesturesEnabled(gestureEnabled);
     }
 
     protected void setSearchview(Menu menu) {
