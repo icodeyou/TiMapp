@@ -222,7 +222,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void submitEvent(final Event event){
         Log.d(TAG, "Submit event " + event.toString());
-        // TODO add loader
         RestClient
             .post(ResourceUrlMapping.MODEL_EVENT, AddEventMapper.toJson(event))
                 .onResponse(new AutoMergeCallback(event))

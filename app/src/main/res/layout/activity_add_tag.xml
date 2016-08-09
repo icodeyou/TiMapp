@@ -4,46 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TagActivity"
+    tools:context=".activities.AddTagActivity"
     android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/event_view">
+        android:layout_below="@+id/toolbar_layout">
 
-        <!-- TITLE -->
-        <!-- **********************************************************************-->
-<!--        <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_small_header"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_activity_tag_1"
-                        android:textSize="30dp"
-                        android:layout_gravity="center_vertical"/>
-                    /<TextView
-                        android:remote_id="@+remote_id/num_left_tags"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="3"
-                        android:textSize="30dp"
-                        android:layout_gravity="center_vertical"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_activity_tag_2"
-                        android:textSize="30dp"
-                        android:layout_gravity="center_vertical"/>
-
+        <LinearLayout
+            android:id="@+id/progress_end"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:gravity="center"
+            android:visibility="visible">
+            <include layout="@layout/progress_view"
+                android:layout_width="@dimen/default_progressview"
+                android:layout_height="@dimen/default_progressview"/>
         </LinearLayout>
--->
 
         <!-- Separator Top -->
         <!-- **********************************************************************-->
@@ -118,18 +98,6 @@
 
     </LinearLayout>
 
-    <!-- Confirm button -->
-    <!-- **********************************************************************-->
-
-    <View
-        android:id="@+id/progress_end"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:gravity="center"
-        android:visibility="gone" />
-
-
 
     <!-- Anonymous button -->
     <!-- **********************************************************************-->
@@ -161,6 +129,7 @@
     </RelativeLayout>
 
 
-    <include layout="@layout/toolbar_transparent_layout" />
+    <include android:id="@+id/toolbar_layout"
+        layout="@layout/toolbar_transparent_layout" />
 
 </RelativeLayout>
