@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tiemapp.iml" filepath="$PROJECT_DIR$/tiemapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/timapp-android-app.iml" filepath="$PROJECT_DIR$/timapp-android-app.iml" />
     </modules>
   </component>
