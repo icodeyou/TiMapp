@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -25,7 +24,6 @@ import android.widget.FrameLayout;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
@@ -35,7 +33,6 @@ public class ExploreFragment extends Fragment{
 
     private static final String TAG = "ExploreFragment";
 
-    private ViewPager viewPager;
     private AreaDataLoaderFromAPI dataLoader;
 
 
@@ -119,7 +116,7 @@ public class ExploreFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_list:
-                updateList();
+                actionList();
                 eventsFragment.onFragmentSelected(this);
                 return true;
             case R.id.action_filter :
@@ -140,11 +137,7 @@ public class ExploreFragment extends Fragment{
         super.onResume();
     }
 
-    public ViewPager getViewPager() {
-        return viewPager;
-    }
-
-    public void updateList() {
+    public void actionList() {
         if(containerEvents.getVisibility()==View.GONE) {
             Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down_all);
             Animation appear = AnimationUtils.loadAnimation(getContext(), R.anim.appear);

@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -203,7 +202,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
             View frameContainerEvent = exploreFragment.getContainerEvents();
             if(frameContainerEvent.getVisibility()==View.VISIBLE) {
-                exploreFragment.updateList();
+                exploreFragment.actionList();
                 return;
             }
             if(exploreMapFragment.isPlaceViewVisible()) {
