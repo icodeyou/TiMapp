@@ -28,7 +28,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
@@ -320,8 +319,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
                 // If zoom level is too big, go to list (TODO global parameter)
                 if (currentZoomLevel > map.getMaxZoomLevel() - 2){
-                    // TODO JEAN: AFFICHE LA LISTE SINON
-                    //((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
+                    exploreFragment.actionList();
                     return true;
                 }
 
