@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
@@ -21,7 +22,10 @@
     <ImageView
         style="@style/imageIcon"
         android:id="@+id/spot_category_icon"
-        android:src="@drawable/ic_category_bar"/>
+        android:layout_marginRight="@dimen/padding_event_bottom_view"
+        android:layout_marginLeft="@dimen/padding_event_bottom_view"
+        android:background="@color/colorPrimary"
+        app:imageResource="@{spot.getCategory().iconWhiteResId}"/>
 
     <TextView
         style="@style/TextLightBackgroundBold"
@@ -39,9 +43,10 @@
     <me.grantland.widget.AutofitTextView
         style="@style/TextLightBackgroundBold"
         android:id="@+id/title_spot"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:maxLines="1"
+        android:text="@{spot.name}"
         tools:text="Le Vertigo"/>
 </LinearLayout>
 </layout>

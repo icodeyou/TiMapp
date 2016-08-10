@@ -58,37 +58,35 @@
                 myattrs:horizontal_tags_text_size="@dimen/text_tags" />
         </LinearLayout>
 
-        <!--<android.support.design.widget.FloatingActionButton
-            android:id="@+id/post_event_button"
-            style="@style/DarkFab"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/event_view"
-            android:layout_alignWithParentIfMissing="true"
-            app:backgroundTint="@color/colorPrimaryDark" />-->
-
         <LinearLayout
+            android:id="@+id/event_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/map"
-            android:id="@+id/event_view"
             android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_top_gradient_view"
+                android:background="@drawable/gradient_top_view_light"
+                android:layout_above="@+id/event_view"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/gradient_top_view_light">
+                android:background="@color/white">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp">
+                    android:padding="@dimen/padding_event_bottom_view">
                     <TextView
-                        style="@style/TextLightBackground"
+                        style="@style/TextLightBackgroundBold"
                         android:id="@+id/title_event"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:text="@{event.name}"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignBottom="@+id/distance_layout"
                         android:layout_toLeftOf="@+id/distance_layout"
                         android:layout_toStartOf="@+id/distance_layout"
                         tools:text="Fete de la musique"/>
@@ -130,7 +128,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_stats_event_map"
-                android:gravity="center"
+                android:gravity="left|center_vertical"
                 android:background="@color/white">
                 <include layout="@layout/event_stats_people"
                     bind:event="@{event}"></include>
