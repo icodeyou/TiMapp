@@ -41,8 +41,6 @@
                         android:layout_centerInParent="true"
                         android:alpha="0.7"
                         android:padding="1dp"
-                        android:layout_marginStart="@dimen/padding_card_minus_two"
-                        android:layout_marginLeft="@dimen/padding_card_minus_two"
                         android:src="@drawable/checkboxselected"/>
                 </RelativeLayout>
 

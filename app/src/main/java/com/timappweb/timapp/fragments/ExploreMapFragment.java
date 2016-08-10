@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fragments;
 
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
@@ -44,6 +46,7 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.List;
 
@@ -71,6 +74,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private View                            progressView;
     private HorizontalTagsRecyclerView      filterTagsRv;
     private View                            filterTagsContainer;
+    private SimpleTimerView                 tvCountPoints;
 
     private ExploreFragment                 exploreFragment;
     private DrawerActivity                  drawerActivity;
@@ -114,6 +118,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
+        tvCountPoints = (SimpleTimerView) root.findViewById(R.id.white_points_text);
+
         eventView = root.findViewById(R.id.event_view);
         eventView.setVisibility(View.GONE);
         initListeners();
@@ -158,6 +164,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
+        tvCountPoints.cancelTimer();
+        tvCountPoints.initTimer(event.getPoints()*1000);
+        //TODO Steph : might be better to initialize the timer through databinding
     }
 
     public void hideEvent() {
@@ -375,5 +384,4 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             updateMapData();
         }
     }
-
 }
