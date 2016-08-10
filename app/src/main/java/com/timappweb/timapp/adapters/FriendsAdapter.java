@@ -43,6 +43,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
     @Override
     public void onBindViewHolder(FriendViewHolder friendViewHolder, int position) {
+        friendViewHolder.selectedView.setVisibility(View.GONE);
         User friend = data.get(position);
         friendViewHolder.personName.setText(friend.getUsername());
 
