@@ -1,6 +1,6 @@
 package com.timappweb.timapp.rest.managers;
 
-import com.timappweb.timapp.rest.callbacks.HttpCallbackBase;
+import com.timappweb.timapp.rest.callbacks.HttpCallbackGroup;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 
@@ -16,7 +16,7 @@ import retrofit2.Response;
  */
 public class HttpCallManager<T> {
 
-    private final HttpCallbackBase<T> callbackBase;
+    private final HttpCallbackGroup<T> callbackBase;
     private final Call<T> call;
     private long callDelay;
     private Timer timer;
@@ -24,7 +24,7 @@ public class HttpCallManager<T> {
     public HttpCallManager(Call<T> call) {
         this.call = call;
         this.callDelay = 0;
-        this.callbackBase = new HttpCallbackBase<>();
+        this.callbackBase = new HttpCallbackGroup<>();
     }
 
     public HttpCallManager<T> onResponse(HttpCallback<T> httpCallback) {
@@ -104,5 +104,19 @@ public class HttpCallManager<T> {
     public HttpCallManager<T> setCallDelay(long callDelay) {
         this.callDelay = callDelay;
         return this;
+    }
+
+    public HttpCallManager onFinally(FinallyCallback callback) {
+        if (this.callbackBase.isDone()){
+            this.callbackBase.onFinally(callback);
+        }
+        else{
+            this.callbackBase.add(callback);
+        }
+        return this;
+    }
+
+    public interface FinallyCallback{
+        void onFinally(boolean failure);
     }
 }

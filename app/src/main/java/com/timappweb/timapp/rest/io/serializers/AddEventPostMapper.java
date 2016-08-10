@@ -11,14 +11,19 @@ import java.util.List;
  */
 public class AddEventPostMapper {
 
+    public static final String MAP_KEY_EVENT_ID             = "place_id";
+    public static final String MAP_KEY_LATITUDE             = "latitude";
+    public static final String MAP_KEY_LONGITUDE            = "latitude";
+    public static final String MAP_KEY_TAGS                 = "tag_string";
+
     public static JsonObject toJson(EventPost eventPost){
         JsonObject jsonObject = new JsonObject();
-        if (eventPost.event != null) jsonObject.addProperty("event_id", eventPost.event.getRemoteId());
+        if (eventPost.event != null) jsonObject.addProperty(MAP_KEY_EVENT_ID, eventPost.event.getRemoteId());
         if (eventPost.hasTags()){
-            jsonObject.addProperty("tag_string", tagToString(eventPost.getTags()));
+            jsonObject.addProperty(MAP_KEY_TAGS, tagToString(eventPost.getTags()));
         }
-        jsonObject.addProperty("latitude", eventPost.latitude);
-        jsonObject.addProperty("longitude", eventPost.longitude);
+        jsonObject.addProperty(MAP_KEY_LATITUDE, eventPost.latitude);
+        jsonObject.addProperty(MAP_KEY_LONGITUDE, eventPost.longitude);
         return jsonObject;
     }
 

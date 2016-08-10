@@ -36,6 +36,7 @@ import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
@@ -67,6 +68,11 @@ public class AddTagActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (!IntentsUtils.requireLogin(this, false)){
+            finish();
+            return;
+        }
+
         this.currentEvent = IntentsUtils.extractEvent(getIntent());
         this.eventEventPost = new EventPost();
         this.eventEventPost.setLocation(LocationManager.getLastLocation());
@@ -79,15 +85,12 @@ public class AddTagActivity extends BaseActivity{
 
         setContentView(R.layout.activity_add_tag);
         this.initToolbar(false);
-
-        //Initialize variables
         selectedTagsView = findViewById(R.id.rv_selected_tags);
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressStartView = (ProgressBar) findViewById(R.id.progress_view);
         progressEndView = findViewById(R.id.progress_end);
         confirmButton = (Button) findViewById(R.id.confirm_button);
-
         confirmButton.setOnClickListener(new OnPostTagButtonClickListener());
 
         initClickSelectedTag();
@@ -134,7 +137,7 @@ public class AddTagActivity extends BaseActivity{
             case R.id.action_validate:
                 String query = searchView.getQuery().toString();
                 if(query.isEmpty()) {
-                    Toast.makeText(this, "ActionTypeName a tag before submitting", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.select_at_least_one_tag, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     searchView.setQuery(query, true);
@@ -236,8 +239,10 @@ public class AddTagActivity extends BaseActivity{
     private class OnPostTagButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            confirmButton.setEnabled(false);
+
             eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
-            eventEventPost.place_id = currentEvent.remote_id;
+            eventEventPost.event = currentEvent;
             // Validating user input
             if (!eventEventPost.validateForSubmit()) {
                 Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
@@ -262,6 +267,13 @@ public class AddTagActivity extends BaseActivity{
                         @Override
                         public void notSuccessful() {
                             Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .onFinally(new HttpCallManager.FinallyCallback(){
+                        @Override
+                        public void onFinally(boolean failure) {
+                            // TODO remove loader here
+                            confirmButton.setEnabled(true);
                         }
                     })
                     .perform();

@@ -261,6 +261,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="user_message_should_be_around_event_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
     <string name="friend_already_invited">Invitation already sent!</string>
     <string name="action_list">List</string>
+    <string name="error_require_gps">We need your location to do that</string>
+    <string name="select_at_least_one_tag">Select at least one tag</string>
 
 
     <plurals name="number_people_event">

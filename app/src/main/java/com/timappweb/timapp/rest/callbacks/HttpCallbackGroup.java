@@ -2,14 +2,13 @@ package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
 
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.model.RestValidationError;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.HttpURLConnection;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,11 +21,12 @@ import retrofit2.Response;
 /**
  * Created by stephane on 6/6/2016.
  */
-public class HttpCallbackBase<T> implements Callback<T> {
+public class HttpCallbackGroup<T> implements Callback<T> {
 
-    private static final String TAG = "HttpCallbackBase";
+    private static final String TAG = "HttpCallbackGroup";
     private List<HttpCallback<T>> responseCallbacks = new LinkedList<>();
     private List<RequestFailureCallback> failureCallbacks = new LinkedList<>();
+    private List<HttpCallManager.FinallyCallback> finallyCallbacks = new LinkedList<>();
 
     private Response<T> response = null;
     private Throwable error = null;
@@ -42,9 +42,17 @@ public class HttpCallbackBase<T> implements Callback<T> {
 
         for (HttpCallback callback : responseCallbacks) {
             callback.setResponse(response);
-            HttpCallbackBase.dispatchResponse(response, callback);
+            HttpCallbackGroup.dispatchResponse(response, callback);
+        }
+        this.callFinallyCallbacks(false);
+    }
+
+    private void callFinallyCallbacks(boolean isFailure) {
+        for (HttpCallManager.FinallyCallback callback : finallyCallbacks) {
+            callback.onFinally(isFailure);
         }
     }
+
     public static void dispatchResponse(Response response, HttpCallback callback) {
         if (response.isSuccessful()) {
             callback.successful(response.body());
@@ -105,18 +113,12 @@ public class HttpCallbackBase<T> implements Callback<T> {
         this.error = error;
         Log.d(TAG, "Request error: " + error);
         error.printStackTrace();
-
         for (RequestFailureCallback callback : failureCallbacks) {
             dispatchError(error, callback);
         }
+        this.callFinallyCallbacks(true);
     }
 
-    public static void dispatchError(Throwable error, RequestFailureCallback callback){
-        callback.onError(error);
-        if (error instanceof IOException) {
-            callback.network((IOException) error);
-        }
-    }
 
     public void onFailure(Call<T> call) {
         this.onFailure(call, this.error);
@@ -128,6 +130,10 @@ public class HttpCallbackBase<T> implements Callback<T> {
 
     public void add(RequestFailureCallback callback) {
         this.failureCallbacks.add(callback);
+    }
+
+    public void add(HttpCallManager.FinallyCallback callback) {
+        this.finallyCallbacks.add(callback);
     }
 
 
@@ -154,6 +160,17 @@ public class HttpCallbackBase<T> implements Callback<T> {
 
     public Throwable getError() {
         return error;
+    }
+
+    public static void dispatchError(Throwable error, RequestFailureCallback callback){
+        callback.onError(error);
+        if (error instanceof IOException) {
+            callback.network((IOException) error);
+        }
+    }
+
+    public void onFinally(HttpCallManager.FinallyCallback callback) {
+        callback.onFinally(error != null);
     }
 }
 

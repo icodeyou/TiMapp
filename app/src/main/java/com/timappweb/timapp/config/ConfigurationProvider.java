@@ -11,13 +11,9 @@ import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncCallback;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.HttpCallbackBase;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
 import java.util.List;
-
-import retrofit2.Response;
 
 /**
  * Created by stephane on 1/24/2016.

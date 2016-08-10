@@ -3,6 +3,7 @@ package com.timappweb.timapp.config;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -35,6 +36,7 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.fragments.BaseFragment;
 import com.timappweb.timapp.utils.SerializeHelper;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 public class IntentsUtils {
 
@@ -360,6 +362,16 @@ public class IntentsUtils {
         }
         return true;
     }
+
+    public static boolean requireUpToDateLocation(Context context, boolean clear) {
+        if (!LocationManager.hasUpToDateLastLocation()){
+            Toast.makeText(context, R.string.error_require_gps, Toast.LENGTH_LONG).show();
+            IntentsUtils.login(context, clear);
+            return false;
+        }
+        return true;
+    }
+
 
     public static int extractPlaceId(Intent intent) {
         Bundle extras = intent.getExtras();

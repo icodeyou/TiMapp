@@ -5,6 +5,7 @@ import android.util.Log;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.util.List;
@@ -15,14 +16,17 @@ import retrofit2.Call;
  * Created by stephane on 2/2/2016.
  */
 
-public class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
-    private static final String TAG = "SearchHistoryDataProv";
+public abstract class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
+
+    private static final String                 TAG             = "SearchHistoryDataProv";
+    private SearchAndSelectTagManager           manager;
+
+    // ---------------------------------------------------------------------------------------------
 
     public void setManager(SearchAndSelectTagManager manager) {
         this.manager = manager;
     }
 
-    private SearchAndSelectTagManager manager;
 
     public SearchTagDataProvider(SearchAndSelectTagManager manager) {
         this.manager = manager;
@@ -34,7 +38,6 @@ public class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
 
     @Override
     public void load(final String term) {
-
         Call<List<Tag>> call = RestClient.service().suggest(term);
         RestClient.buildCall(call)
                 .onResponse(new HttpCallback<List<Tag>>() {
@@ -44,13 +47,17 @@ public class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
                         manager.getSearchHistory().addInCache(term, tags);
                     }
                 })
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(boolean failure) {
+                        SearchTagDataProvider.this.onLoadEnds();
+                    }
+                })
                 .perform();
     }
 
     @Override
-    public void onLoadEnds() {
-
-    }
+    public abstract void onLoadEnds();
 
     @Override
     public void onSearchComplete(String term, List<Tag> tags) {

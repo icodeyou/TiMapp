@@ -94,7 +94,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         setListeners();
         LocationManager.addOnLocationChangedListener(this);
 
-
         mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
 
     }
@@ -298,6 +297,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(LocationManager.getLastLocation(), ConfigurationProvider.rules().place_max_reachable);
             this.query = Spot.queryByArea(bounds);
             this.syncOption.set(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, bounds);
+            //this.setSwipeAndRefreshLayout(sw);
         }
 
         @Override
