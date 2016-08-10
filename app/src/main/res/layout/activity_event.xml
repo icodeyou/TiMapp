@@ -38,17 +38,11 @@
             android:id="@+id/multiple_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
             fab:fab_addButtonColorPressed="@color/background"
             fab:fab_addButtonPlusIconColor="@color/colorPrimary"
-            fab:fab_labelStyle="@style/FabLabels"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            fab:fab_expandDirection="up">
+            style="@style/Fab"
+            fab:fab_expandDirection="left">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_camera"

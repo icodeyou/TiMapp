@@ -152,6 +152,7 @@ public class InviteFriendsActivity extends BaseActivity {
             }
         }
         if (ids.size() == 0){
+
             return;
         }
         Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.remote_id, ids);

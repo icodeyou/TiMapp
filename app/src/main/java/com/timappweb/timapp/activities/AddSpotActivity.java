@@ -11,6 +11,7 @@ import android.os.ResultReceiver;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.text.Editable;
@@ -87,15 +88,23 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etCustomPlace = (EditText) findViewById(R.id.name_spot);
-        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etCustomPlace.clearFocus();
 
+        initEditText();
         initAdapters();
         setListeners();
         LocationManager.addOnLocationChangedListener(this);
 
         mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
 
+    }
+
+    private void initEditText() {
+        InputFilter[] f = new InputFilter[1];
+        f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spot_min_name_length);
+        etCustomPlace.setFilters(f);
+        //TODO Steph : Mettre une config pour le max !
+        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        etCustomPlace.clearFocus();
     }
 
     @Override

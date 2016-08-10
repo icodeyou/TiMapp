@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="wrap_content"
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_horizontal_tag"
+    android:layout_width="wrap_content"
     android:layout_height="@dimen/height_rv_displayed_tags"
-    android:gravity="center"
-    android:padding="5dp">
-    <TextView
-        android:id="@+id/item_horizontal_tag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
-        android:text="#test"
-        android:textSize="@dimen/text_normal"
-        android:textStyle="bold"/>
-</LinearLayout>
+    android:padding="5dp"
+    android:text="#test"
+    android:textColor="@color/colorAccent"
+    android:textSize="@dimen/text_normal"
+    android:textStyle="bold"/>

@@ -40,7 +40,6 @@
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         android:alpha="0.7"
-                        android:padding="1dp"
                         android:src="@drawable/checkboxselected"/>
                 </RelativeLayout>
 
