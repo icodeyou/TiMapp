@@ -17,7 +17,6 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
 
     @Override
     public void successful(T feedback) {
-
         QuotaManager.instance().add(actionType);
     }
 

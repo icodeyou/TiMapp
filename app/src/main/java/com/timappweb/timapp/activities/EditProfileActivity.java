@@ -134,7 +134,6 @@ public class EditProfileActivity extends BaseActivity{
             @Override
             public void onClick(View v) {
                 Map<String, String> data = new HashMap<>();
-                // TODO
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
                 RestClient.buildCall(call)
                         .onResponse(new HttpCallback() {

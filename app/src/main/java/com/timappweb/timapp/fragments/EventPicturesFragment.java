@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
@@ -36,6 +37,8 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.PictureUtility;
@@ -212,20 +215,9 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     }
 
     public void uploadPicture(final Uri fileUri) {
+        setUploadVisibility(true);
         // create upload service client
         File file = new File(fileUri.getPath());
-
-        LoadingListener pictureLoadListener = new LoadingListener() {
-            @Override
-            public void onLoadStart() {
-                setUploadVisibility(true);
-            }
-
-            @Override
-            public void onLoadEnd() {
-                setUploadVisibility(false);
-            }
-        };
 
         try {
             // Compress the file
@@ -264,15 +256,28 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                     public void successful(Object feedback) {
                         // Get the bitmap in according to the width of the device
                         getPicturesRv().smoothScrollToPosition(0);
-                        QuotaManager.instance().add(QuotaType.ADD_PICTURE);
                         picture.mySave();
-                        Log.v(TAG, "New picture uploaded: " + picture);
+                        Log.d(TAG, "New picture uploaded: " + picture);
                     }
 
+                })
+                .onError(new RequestFailureCallback(){
+                    @Override
+                    public void onError(Throwable error) {
+                        Toast.makeText(EventPicturesFragment.this.getContext(),
+                                R.string.cannot_upload_picture, Toast.LENGTH_LONG).show();
+                    }
+                })
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(boolean failure) {
+                        setUploadVisibility(false);
+                    }
                 })
                 .perform();
 
         } catch (IOException e) {
+            Toast.makeText(this.getContext(), R.string.cannot_resize_picture, Toast.LENGTH_LONG).show();
             Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
             e.printStackTrace();
             return ;

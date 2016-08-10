@@ -308,6 +308,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
         mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
         mMaterialViewPager.setImageDrawable(drawable, 0);
+        mMaterialViewPager.getViewPager().setOffscreenPageLimit(PAGER_OFFSCREEN_PAGE_LIMIT); // Does not seem to work.
+
         /*
         Change header image and color
         mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {

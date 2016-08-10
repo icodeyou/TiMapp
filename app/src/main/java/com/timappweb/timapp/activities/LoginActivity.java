@@ -49,14 +49,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private static final String TAG = "LoginActivity";
 
     /**
-     * NewActivity dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "stef@tiemapp.com:stef", "jack@tiemapp.com:jack"
-    };
-    private static final int MINMUM_PASSWORD_LENGTH = 3;
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     //private UserLoginTask mAuthTask = null;
