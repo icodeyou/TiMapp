@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -35,12 +36,14 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class AddTagActivity extends BaseActivity{
 
@@ -254,9 +257,9 @@ public class AddTagActivity extends BaseActivity{
                     .post(ResourceUrlMapping.MODEL_EVENT_POST, AddEventPostMapper.toJson(eventEventPost))
                     .onResponse(new AutoMergeCallback(eventEventPost))
                     .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
-                    .onResponse(new HttpCallback() {
+                    .onResponse(new HttpCallback<JsonObject>() {
                         @Override
-                        public void successful(Object feedback) {
+                        public void successful(JsonObject feedback) {
                             Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
                             eventEventPost.deepSave();
                             EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());

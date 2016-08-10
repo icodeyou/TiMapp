@@ -21,28 +21,28 @@ import retrofit2.Response;
 /**
  * Created by stephane on 6/6/2016.
  */
-public class HttpCallbackGroup<T> implements Callback<T> {
+public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBodyType> {
 
     private static final String TAG = "HttpCallbackGroup";
-    private List<HttpCallback<T>> responseCallbacks = new LinkedList<>();
+    private List<HttpCallback<ResponseBodyType>> responseCallbacks = new LinkedList<>();
     private List<RequestFailureCallback> failureCallbacks = new LinkedList<>();
     private List<HttpCallManager.FinallyCallback> finallyCallbacks = new LinkedList<>();
 
-    private Response<T> response = null;
+    private Response<ResponseBodyType> response = null;
     private Throwable error = null;
 
 
-    public Response<T> getResponse() {
+    public Response<ResponseBodyType> getResponse() {
         return response;
     }
 
     @Override
-    public void onResponse(Call<T> call, Response<T> response) {
+    public void onResponse(Call<ResponseBodyType> call, Response<ResponseBodyType> response) {
         this.response = response;
 
-        for (HttpCallback callback : responseCallbacks) {
+        for (HttpCallback<ResponseBodyType> callback : responseCallbacks) {
             callback.setResponse(response);
-            HttpCallbackGroup.dispatchResponse(response, callback);
+            HttpCallbackGroup.<ResponseBodyType>dispatchResponse(response, callback);
         }
         this.callFinallyCallbacks(false);
     }
@@ -53,7 +53,7 @@ public class HttpCallbackGroup<T> implements Callback<T> {
         }
     }
 
-    public static void dispatchResponse(Response response, HttpCallback callback) {
+    public static <StaticType> void  dispatchResponse(Response<StaticType> response, HttpCallback<StaticType> callback) {
         if (response.isSuccessful()) {
             callback.successful(response.body());
 
@@ -104,12 +104,12 @@ public class HttpCallbackGroup<T> implements Callback<T> {
         }
     }
 
-    public void onResponse(Call<T> call) {
+    public void onResponse(Call<ResponseBodyType> call) {
         this.onResponse(call, this.response);
     }
 
     @Override
-    public void onFailure(Call<T> call, Throwable error) {
+    public void onFailure(Call<ResponseBodyType> call, Throwable error) {
         this.error = error;
         Log.d(TAG, "Request error: " + error);
         error.printStackTrace();
@@ -120,11 +120,11 @@ public class HttpCallbackGroup<T> implements Callback<T> {
     }
 
 
-    public void onFailure(Call<T> call) {
+    public void onFailure(Call<ResponseBodyType> call) {
         this.onFailure(call, this.error);
     }
 
-    public void add(HttpCallback httpCallback) {
+    public void add(HttpCallback<ResponseBodyType> httpCallback) {
         this.responseCallbacks.add(httpCallback);
     }
 
@@ -138,10 +138,10 @@ public class HttpCallbackGroup<T> implements Callback<T> {
 
 
     // ---------------------------------------------------------------------------------------------
-    private static <T> T parseErrorBody(Response response, Class<T> classOfT) {
+    private static <ErrorType> ErrorType parseErrorBody(Response response, Class<ErrorType> classOfT) {
 
         if (response.errorBody() != null) {
-            Converter<ResponseBody, T> errorConverter =
+            Converter<ResponseBody, ErrorType> errorConverter =
                     RestClient.instance().getRetrofit().responseBodyConverter(classOfT, new Annotation[0]);
             try {
                 Log.v(TAG, "Received errorBody=" + response.errorBody().string());

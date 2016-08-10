@@ -28,6 +28,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
     }
 
     // http://tools.android.com/tech-docs/unit-testing-support#TOC-Method-...-not-mocked.-

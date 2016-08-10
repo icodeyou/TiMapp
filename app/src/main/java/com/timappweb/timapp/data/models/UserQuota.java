@@ -7,6 +7,8 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
@@ -135,9 +137,7 @@ public class UserQuota extends SyncBaseModel {
 
     public void setMinDelayReason(){
         int mustWaitSeconds = (int)this.min_delay - Util.delayFromNow((int)this.last_activity);
-        //TODO : get string instead of writing text here
-        // A solution to this : http://stackoverflow.com/questions/4391720/how-can-i-get-a-resource-content-from-a-static-context/4391811#4391811
-        this._quota_error_reason = "You must wait " + Util.secondsDurationToPrettyTime(mustWaitSeconds) + " before posting again";
+        this._quota_error_reason = MyApplication.getApplicationBaseContext().getString(R.string.quota_wait_string,  Util.secondsDurationToPrettyTime(mustWaitSeconds));
     }
 
 

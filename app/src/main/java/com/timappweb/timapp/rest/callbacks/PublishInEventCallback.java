@@ -7,7 +7,7 @@ import com.timappweb.timapp.data.models.User;
 /**
  * Created by stephane on 6/7/2016.
  */
-public class PublishInEventCallback extends HttpCallback {
+public class PublishInEventCallback<T> extends HttpCallback<T> {
 
     private final int actionType;
 
@@ -16,7 +16,8 @@ public class PublishInEventCallback extends HttpCallback {
     }
 
     @Override
-    public void successful(Object feedback) {
+    public void successful(T feedback) {
+
         QuotaManager.instance().add(actionType);
     }
 

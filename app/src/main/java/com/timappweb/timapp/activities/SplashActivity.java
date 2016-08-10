@@ -7,7 +7,10 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 
@@ -22,8 +25,6 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Activity context = this;
 
 
         final MultipleHttpCallManager manager = ConfigurationProvider.load(this);
@@ -60,7 +61,13 @@ public class SplashActivity extends BaseActivity {
                             }
 
                             if (MyApplication.isLoggedIn()){
-                                IntentsUtils.home(SplashActivity.this);
+                                Event currentEvent = EventStatusManager.getCurrentEvent();
+                                if (currentEvent != null && !currentEvent.isOver()){
+                                    IntentsUtils.viewSpecifiedEvent(SplashActivity.this, currentEvent);
+                                }
+                                else{
+                                    IntentsUtils.home(SplashActivity.this);
+                                }
                             }
                             else{
                                 IntentsUtils.login(SplashActivity.this);

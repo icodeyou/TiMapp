@@ -32,7 +32,7 @@ import java.util.Map;
  *
  *  @warning: Given objects must have a default constructor
  */
-public class AutoMergeCallback extends HttpCallback<JsonElement>{
+public class AutoMergeCallback extends HttpCallback<JsonObject>{
 
     private static final String TAG = "AutoMergeCallback";
     private final Model model;
@@ -43,21 +43,13 @@ public class AutoMergeCallback extends HttpCallback<JsonElement>{
 
 
     @Override
-    public void created(JsonElement jsonElement) {
+    public void created(JsonObject jsonElement) {
 
     }
 
     @Override
-    public void successful(JsonElement jsonElement) {
-        if (jsonElement.isJsonArray()){
-            // TODO
-        }
-        else if (jsonElement.isJsonObject()){
-            this.merge(model, jsonElement.getAsJsonObject());
-        }
-        else{
-            Log.e(TAG, "Server response is neither an array or an object: " + jsonElement);
-        }
+    public void successful(JsonObject jsonObject) {
+        this.merge(model, jsonObject);
     }
 
 

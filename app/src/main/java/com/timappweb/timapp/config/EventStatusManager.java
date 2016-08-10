@@ -229,12 +229,15 @@ public class EventStatusManager {
     // ---------------------------------------------------------------------------------------------
 
     public static Event getCurrentEvent(){
+        if (!MyApplication.isLoggedIn()){
+            return null;
+        }
         if (currentEvent != null){
             return currentEvent;
         }
         UserEvent lastHereStatus = new Select()
-                .from(EventStatus.class)
-                .where("Status = ?", UserPlaceStatusEnum.HERE)
+                .from(UserEvent.class)
+                .where("Status = ? AND User = ?", UserPlaceStatusEnum.HERE, MyApplication.getCurrentUser())
                 .orderBy("Created DESC")
                 .executeSingle();
         if (lastHereStatus == null){
@@ -246,7 +249,7 @@ public class EventStatusManager {
             event.requestSync();
         }
         else{
-            Log.i(TAG, "Current event is now hover...");
+            Log.i(TAG, "Current event is now over...");
         }
         return event;
     }

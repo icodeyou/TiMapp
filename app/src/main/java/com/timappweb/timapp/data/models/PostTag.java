@@ -20,4 +20,17 @@ public class PostTag extends MyModel {
             onDelete= Column.ForeignKeyAction.CASCADE)
     public Tag tag;
 
+    // ---------------------------------------------------------------------------------------------
+
+    public PostTag(EventPost eventPost, Tag tag) {
+        this.eventPost = eventPost;
+        this.tag = tag;
+    }
+
+    public PostTag(Tag tag, EventPost eventPost) {
+        this.eventPost = eventPost;
+        this.tag = tag;
+    }
+
+
 }

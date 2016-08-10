@@ -75,6 +75,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     private FloatingActionButton        mPostButton;
     private RefreshableRecyclerView     mRecyclerView;
     private RecyclerViewMaterialAdapter mAdapter;
+    private Loader<List<Picture>>       mLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -99,14 +100,14 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         initAdapter();
         //this.loadData();
 
-        getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, new PictureLoader(this.getContext(), eventActivity.getEvent()));
+        mLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, new PictureLoader(this.getContext(), eventActivity.getEvent()));
 
         startPictureActivity();
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getLoaderManager().getLoader(EventActivity.LOADER_ID_PICTURE).forceLoad();
+                mLoader.forceLoad();
             }
         });
         return root;
@@ -203,6 +204,12 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             noPicView.setVisibility(View.GONE);
         }
     }*/
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mLoader.forceLoad();
+    }
 
     public void uploadPicture(final Uri fileUri) {
         // create upload service client

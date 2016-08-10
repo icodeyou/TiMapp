@@ -101,6 +101,12 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mTagLoader.forceLoad();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case IntentsUtils.REQUEST_TAGS:

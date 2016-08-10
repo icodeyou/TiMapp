@@ -63,6 +63,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     private ExpandableHeaderItem    mExpandableHereHeader;
     private ExpandableHeaderItem    mExpandableComingHeader;
     private ExpandableHeaderItem    mExpandableInviteHeader;
+    private Loader<List<EventsInvitation>> mInviteLoader;
 
     //private RecyclerViewMaterialAdapter mAdapter;
 
@@ -106,7 +107,7 @@ public class EventPeopleFragment extends EventBaseFragment {
 
         getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
         if (MyApplication.isLoggedIn()){
-            getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
+            mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
         }
 
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -114,7 +115,7 @@ public class EventPeopleFragment extends EventBaseFragment {
             public void onRefresh() {
                 getLoaderManager().getLoader(EventActivity.LOADER_ID_USERS).forceLoad();
                 if (MyApplication.isLoggedIn()) {
-                    getLoaderManager().getLoader(EventActivity.LOADER_ID_INVITATIONS).forceLoad();
+                    mInviteLoader.forceLoad();
                 }
             }
         });
@@ -124,6 +125,14 @@ public class EventPeopleFragment extends EventBaseFragment {
     public void onResume() {
         Log.v(TAG, "onResume()");
         super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mInviteLoader!= null){
+            mInviteLoader.forceLoad();
+        }
     }
 
     @Override

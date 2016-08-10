@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
@@ -29,6 +30,7 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
 import java.util.ArrayList;
@@ -149,6 +151,9 @@ public class InviteFriendsActivity extends BaseActivity {
                 ids.add(friendEntry.getKey().remote_id);
             }
         }
+        if (ids.size() == 0){
+            return;
+        }
         Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.remote_id, ids);
         RestClient.buildCall(call)
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
@@ -157,21 +162,36 @@ public class InviteFriendsActivity extends BaseActivity {
                     public void successful(List<UserInvitationFeedback> feedbackList) {
                         Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
                         for (UserInvitationFeedback feedback: feedbackList){
+                            Log.v(TAG, feedback.toString());
                             if (feedback.success){
                                 if (feedback.invitation != null){
+                                    feedback.invitation.event = event;
+                                    feedback.invitation.user_source = MyApplication.getCurrentUser();
+                                    feedback.invitation.user_target = User.queryByRemoteId(User.class, feedback.user_id).executeSingle();
                                     MyModel savedModel = feedback.invitation.mySave();
+                                    if (!savedModel.hasLocalId() && BuildConfig.DEBUG){
+                                        throw new InternalError("Model should be saved to DB...");
+                                    }
                                 }
                             }
                             else{
-                                Log.e(TAG, "Cannot invite user=" + feedback.user_id);
+                                Log.e(TAG, "Cannot invite user with id: " + feedback.user_id);
                             }
                         }
                         finishActivityResult();
                     }
 
+
                     @Override
                     public void notSuccessful() {
                         Toast.makeText(getApplicationContext(), R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+                    }
+
+                })
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(boolean failure) {
+                        // TODO remove load here
                     }
                 })
                 .perform();

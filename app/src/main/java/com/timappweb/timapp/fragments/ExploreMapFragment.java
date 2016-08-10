@@ -320,7 +320,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
                 // If zoom level is too big, go to list (TODO global parameter)
                 if (currentZoomLevel > map.getMaxZoomLevel() - 2){
-                    ((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
+                    // TODO JEAN: AFFICHE LA LISTE SINON
+                    //((ExploreFragment)getParentFragment()).getViewPager().setCurrentItem(1);
                     return true;
                 }
 

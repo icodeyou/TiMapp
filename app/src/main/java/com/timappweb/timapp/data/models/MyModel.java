@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.io.Serializable;
@@ -26,6 +27,13 @@ public class MyModel extends Model implements Observable, Serializable{
 
     /**
      * Save belongs to many association.
+     *
+     * @warning models must have corresponding constructors defined. For example:
+     *      If class A (this) has and belongs to many class B
+     *      AssociationModel C must have the following constructor
+     *      ==> C(A a, B b);
+     *
+     *
      * @param data association to save
      * @param associationModel association model
      */
@@ -45,7 +53,13 @@ public class MyModel extends Model implements Observable, Serializable{
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+                throw new InternalError("No constructor for class: '" + associationModel.getCanonicalName() + "'");
+            }
+            else {
+                Log.e(TAG, e.getMessage());
+            }
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
