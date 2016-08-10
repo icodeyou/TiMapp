@@ -12,6 +12,9 @@ import com.timappweb.timapp.utils.Util;
 
 /**
  * Created by stephane on 4/5/2016.
+ *
+ * Store user status all events
+ *
  */
 @Table(name = "EventStatus")
 public class EventStatus extends SyncBaseModel {

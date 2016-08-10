@@ -13,6 +13,9 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
+/**
+ * Join table for
+ */
 @Table(name = "UserEvent")
 public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
 
