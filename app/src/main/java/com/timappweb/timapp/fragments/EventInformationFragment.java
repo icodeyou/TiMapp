@@ -25,10 +25,10 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.EventStatus;
+import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -100,9 +100,9 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                 int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
                 statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
 
-                UserPlaceStatusEnum newStatus = isChecked
-                        ? (event.isUserAround() ? UserPlaceStatusEnum.HERE : UserPlaceStatusEnum.COMING)
-                        :  UserPlaceStatusEnum.GONE;
+                UserEventStatusEnum newStatus = isChecked
+                        ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
+                        :  UserEventStatusEnum.GONE;
 
                 HttpCallManager manager = EventStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
                 if (manager != null){
@@ -158,16 +158,16 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     public void updateUserStatusButton(){
         Event event = eventActivity.getEvent();
-        EventStatus statusInfo = EventStatusManager.getStatus(event);
+        UserEvent statusInfo = EventStatusManager.getStatus(event);
         if (event.isUserAround()){
             statusTv.setText(getContext().getResources().getString(R.string.i_am_here));
             if (statusInfo != null ){
-                switchButton.setChecked(statusInfo.status == UserPlaceStatusEnum.HERE);
+                switchButton.setChecked(statusInfo.status == UserEventStatusEnum.HERE);
             }
         }
         else{
             statusTv.setText(getContext().getResources().getString(R.string.i_am_coming));
-            switchButton.setChecked(statusInfo != null && statusInfo.status == UserPlaceStatusEnum.COMING);
+            switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.COMING);
         }
     }
 

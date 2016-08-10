@@ -10,7 +10,6 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventStatus;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 

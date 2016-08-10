@@ -25,7 +25,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -34,7 +33,7 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.EventStatusManager;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
+import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
@@ -243,7 +242,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         if (event.hasLocalId()){
                             try{
                                 long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                                EventStatusManager.instance().addLocally(syncId, event, UserPlaceStatusEnum.HERE);
+                                EventStatusManager.instance().addLocally(syncId, event, UserEventStatusEnum.HERE);
                             }
                             catch (Exception ex){
                                 Log.e(TAG, "Cannot get EventUser id from server response");

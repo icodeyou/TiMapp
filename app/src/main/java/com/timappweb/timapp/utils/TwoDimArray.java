@@ -2,8 +2,6 @@ package com.timappweb.timapp.utils;
 
 import android.util.Log;
 
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
-
 import java.util.LinkedList;
 import java.util.List;
 

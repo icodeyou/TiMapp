@@ -2,7 +2,6 @@ package com.timappweb.timapp.views.controller;
 
 import android.location.Location;
 
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.utils.location.LocationManager;
 

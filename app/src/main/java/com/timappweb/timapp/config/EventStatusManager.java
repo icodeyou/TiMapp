@@ -4,14 +4,11 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventStatus;
-import com.timappweb.timapp.data.entities.UserPlaceStatusEnum;
-import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.rest.RestClient;
@@ -19,7 +16,6 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import retrofit2.Call;
@@ -37,7 +33,7 @@ public class EventStatusManager {
 
     private class LastCallInfo{
         public HttpCallManager httpCallManager;
-        public UserPlaceStatusEnum status;
+        public UserEventStatusEnum status;
         public long eventId;
     }
     private static LastCallInfo lastCallInfo;
@@ -53,7 +49,7 @@ public class EventStatusManager {
     private EventStatusManager() {
     }
 
-    public HttpCallManager add(final Context context, final Event event, final UserPlaceStatusEnum status) {
+    public HttpCallManager add(final Context context, final Event event, final UserEventStatusEnum status) {
         return add(context, event, status, 0L);
     }
     /**
@@ -61,7 +57,7 @@ public class EventStatusManager {
      * @param event
      * @param status
      */
-    public HttpCallManager add(final Context context, final Event event, final UserPlaceStatusEnum status, long callDelay) {
+    public HttpCallManager add(final Context context, final Event event, final UserEventStatusEnum status, long callDelay) {
 
         if (this.isDuplicateRequest(event, status)){
             return null;
@@ -96,13 +92,13 @@ public class EventStatusManager {
                     @Override
                     public void successful(RestFeedback feedback) {
                         Log.d(TAG, "Success register status=" + status + " for user on event: " + event);
-                        EventStatus.setStatus(MyApplication.getCurrentUser(),
+                        UserEvent.setStatus(MyApplication.getCurrentUser(),
                                 event,
                                 status,
                                 feedback.getIntData("id"));
                         QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
 
-                        if (status == UserPlaceStatusEnum.HERE){
+                        if (status == UserEventStatusEnum.HERE){
                             EventStatusManager.setCurrentEvent(event);
                         }
                     }
@@ -121,7 +117,7 @@ public class EventStatusManager {
      * @param event
      * @param status
      */
-    public HttpCallManager cancel(final Context context, final Event event, final UserPlaceStatusEnum status) {
+    public HttpCallManager cancel(final Context context, final Event event, final UserEventStatusEnum status) {
         Call<RestFeedback> call;
         // TODO call must be cancelable
         switch (status){
@@ -140,7 +136,7 @@ public class EventStatusManager {
                     @Override
                     public void successful(RestFeedback feedback) {
                         Log.d(TAG, "Success canceling status=" + status + " for user on event: " + event);
-                        EventStatus.removeStatus(MyApplication.getCurrentUser(), event, status);
+                        UserEvent.removeStatus(MyApplication.getCurrentUser(), event, status);
                     }
 
                     @Override
@@ -162,26 +158,26 @@ public class EventStatusManager {
     public HttpCallManager cancel(Context context, Event event) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return null;
-        UserPlaceStatusEnum status = EventStatus.hasStatus(user.getId(), event.getId(), UserPlaceStatusEnum.COMING)
-                ? UserPlaceStatusEnum.COMING
-                : UserPlaceStatusEnum.HERE;
+        UserEventStatusEnum status = UserEvent.hasStatus(user.getId(), event.getId(), UserEventStatusEnum.COMING)
+                ? UserEventStatusEnum.COMING
+                : UserEventStatusEnum.HERE;
         return cancel(context, event, status);
     }
 
-    public static EventStatus getStatus(Event event) {
+    public static UserEvent getStatus(Event event) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return null;
-        return EventStatus.getStatus(event.getId(), user.getId());
+        return UserEvent.getStatus(event.getId(), user.getId());
     }
 
-    public static boolean hasStatus(long placeId, UserPlaceStatusEnum status) {
+    public static boolean hasStatus(long placeId, UserEventStatusEnum status) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return false;
-        return EventStatus.hasStatus(user.getId(), placeId, status);
+        return UserEvent.hasStatus(user.getId(), placeId, status);
     }
 
-    public boolean isDuplicateRequest(Event event, UserPlaceStatusEnum status) {
-        EventStatus currentStatus = getStatus(event);
+    public boolean isDuplicateRequest(Event event, UserEventStatusEnum status) {
+        UserEvent currentStatus = getStatus(event);
 
         // Cancel pending request if needed
         if (lastCallInfo != null){
@@ -190,14 +186,14 @@ public class EventStatusManager {
                 switch (status){
                     case COMING:
                     case HERE:
-                        if (lastCallInfo.status == UserPlaceStatusEnum.GONE){
+                        if (lastCallInfo.status == UserEventStatusEnum.GONE){
                             lastCallInfo.httpCallManager.cancel();
                             Log.i(TAG, "Cancelling request " +lastCallInfo.status+ " du to the opposite add " + status);
                             return true;
                         }
                         break;
                     case GONE:
-                        if (lastCallInfo.status == UserPlaceStatusEnum.HERE || lastCallInfo.status == UserPlaceStatusEnum.COMING){
+                        if (lastCallInfo.status == UserEventStatusEnum.HERE || lastCallInfo.status == UserEventStatusEnum.COMING){
                             lastCallInfo.httpCallManager.cancel();
                             Log.i(TAG, "Cancelling request " +lastCallInfo.status+ " du to the opposite add " + status);
                             return true;
@@ -216,14 +212,14 @@ public class EventStatusManager {
 
 
 
-    public EventStatus addLocally(long syncId, Event event, UserPlaceStatusEnum status) {
-        EventStatus eventStatus = new EventStatus();
+    public UserEvent addLocally(long syncId, Event event, UserEventStatusEnum status) {
+        UserEvent eventStatus = new UserEvent();
         eventStatus.setRemoteId(syncId);
         eventStatus.status = status;
         eventStatus.user = MyApplication.getCurrentUser();
         eventStatus.created = (int)(System.currentTimeMillis()/1000);
         eventStatus.event = event;
-        return (EventStatus) eventStatus.mySave();
+        return (UserEvent) eventStatus.mySave();
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -237,7 +233,7 @@ public class EventStatusManager {
         }
         UserEvent lastHereStatus = new Select()
                 .from(UserEvent.class)
-                .where("Status = ? AND User = ?", UserPlaceStatusEnum.HERE, MyApplication.getCurrentUser())
+                .where("Status = ? AND User = ?", UserEventStatusEnum.HERE, MyApplication.getCurrentUser())
                 .orderBy("Created DESC")
                 .executeSingle();
         if (lastHereStatus == null){
