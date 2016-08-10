@@ -5,6 +5,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="com.timappweb.timapp.utils.DistanceHelper"/>
+        <import type="com.timappweb.timapp.utils.Util"/>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
     <LinearLayout
@@ -74,8 +75,13 @@
                             android:padding="@dimen/margin_event_activity"
                             android:orientation="vertical">
 
-                            <include layout="@layout/layout_spot"
-                                bind:spot="@{event.spot}"></include>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center">
+                                <include layout="@layout/layout_spot"
+                                    bind:spot="@{event.spot}"  />
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -103,7 +109,7 @@
                                             style="@style/item_text_info"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="@{event.getCategoryWithDefault().name}"
+                                            android:text="@{Util.capitalize(event.getCategoryWithDefault().name)}"
                                             tools:text="Category name"/>
                                     </RelativeLayout>
 
