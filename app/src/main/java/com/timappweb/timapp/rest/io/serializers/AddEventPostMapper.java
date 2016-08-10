@@ -13,7 +13,7 @@ public class AddEventPostMapper {
 
     public static final String MAP_KEY_EVENT_ID             = "place_id";
     public static final String MAP_KEY_LATITUDE             = "latitude";
-    public static final String MAP_KEY_LONGITUDE            = "latitude";
+    public static final String MAP_KEY_LONGITUDE            = "longitude";
     public static final String MAP_KEY_TAGS                 = "tag_string";
 
     public static JsonObject toJson(EventPost eventPost){
