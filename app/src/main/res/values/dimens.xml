@@ -155,5 +155,6 @@
     <dimen name="width_locate_button_googlemap">60dp</dimen>
     <dimen name="width_icon_pick_category">80dp</dimen>
     <dimen name="padding_event_bottom_view">10dp</dimen>
+    <dimen name="width_locate_button">60dp</dimen>
 
 </resources>

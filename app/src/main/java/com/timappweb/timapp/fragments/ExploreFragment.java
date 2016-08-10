@@ -6,23 +6,28 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.listeners.LoadingListener;
-import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 
@@ -30,15 +35,17 @@ public class ExploreFragment extends Fragment{
 
     private static final String TAG = "ExploreFragment";
 
-    private TabsAdapter tabsAdapter;
     private ViewPager viewPager;
     private AreaDataLoaderFromAPI dataLoader;
-    private MyOnPageChangeListener onPageChangeListener;
-    private View fakeListView;
+
+
+    private FrameLayout containerEvents;
     private View blurBackground;
+    private ExploreEventsFragment eventsFragment;
+    private ExploreMapFragment mapFragment;
 
     public ExploreMapFragment getExploreMapFragment(){
-        return tabsAdapter.getExploreMapFragment();
+        return mapFragment;
     }
 
     public AreaDataLoaderFromAPI getDataLoader() {
@@ -60,18 +67,34 @@ public class ExploreFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_explore, container, false);
+        setHasOptionsMenu(true);
 
-        /** Important: Must use the child FragmentManager or you will see side effects. */
-        tabsAdapter = new TabsAdapter(getContext(), getChildFragmentManager());
-
-        fakeListView = root.findViewById(R.id.fake_list_view);
+        containerEvents = (FrameLayout) root.findViewById(R.id.fragment_events);
         blurBackground = root.findViewById(R.id.blur_background);
 
-        viewPager = (ViewPager) root.findViewById(R.id.explore_viewpager);
-        onPageChangeListener =new MyOnPageChangeListener();
-        viewPager.addOnPageChangeListener(onPageChangeListener);
-        viewPager.setAdapter(tabsAdapter);
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), MyApplication.searchFilter);
+
+        initFragments();
+        setListeners();
+
+        return root;
+    }
+
+    private void initFragments() {
+        //Map
+        FragmentTransaction transactionMap = getChildFragmentManager().beginTransaction();
+        mapFragment = new ExploreMapFragment();
+        transactionMap.add(R.id.fragment_map, mapFragment);
+        transactionMap.commit();
+
+        //List
+        FragmentTransaction transactionList = getChildFragmentManager().beginTransaction();
+        eventsFragment = new ExploreEventsFragment();
+        transactionList.add(R.id.fragment_events, eventsFragment);
+        transactionList.commit();
+    }
+
+    private void setListeners() {
         dataLoader.setLoadingListener(new LoadingListener() {
             @Override
             public void onLoadStart() {
@@ -84,17 +107,32 @@ public class ExploreFragment extends Fragment{
             }
         });
 
+    }
 
-        PagerTabStrip pagerTabStrip = (PagerTabStrip) root.findViewById(R.id.pager_tab_strip);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
 
-        //hide underline
-        pagerTabStrip.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-        pagerTabStrip.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-        pagerTabStrip.setDrawFullUnderline(true);
-        pagerTabStrip.setTabIndicatorColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
-
-
-        return root;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_list:
+                updateList();
+                eventsFragment.onFragmentSelected(this);
+                return true;
+            case R.id.action_filter :
+                IntentsUtils.filter(getActivity());
+                return true;
+            case R.id.action_clear_filter:
+                MyApplication.searchFilter.tags.clear();
+                getExploreMapFragment().updateFilterView();
+                getExploreMapFragment().updateMapData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -102,28 +140,24 @@ public class ExploreFragment extends Fragment{
         super.onResume();
     }
 
-    public Fragment getFragmentSelected() {
-        return tabsAdapter.getItem(viewPager.getCurrentItem());
-    }
-
     public ViewPager getViewPager() {
         return viewPager;
     }
 
     public void updateList() {
-        if(fakeListView.getVisibility()==View.GONE) {
+        if(containerEvents.getVisibility()==View.GONE) {
             Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down_all);
             Animation appear = AnimationUtils.loadAnimation(getContext(), R.anim.appear);
             blurBackground.startAnimation(appear);
-            fakeListView.startAnimation(slideIn);
-            fakeListView.setVisibility(View.VISIBLE);
+            containerEvents.startAnimation(slideIn);
+            containerEvents.setVisibility(View.VISIBLE);
             blurBackground.setVisibility(View.VISIBLE);
         } else {
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_righ);
             Animation disappear = AnimationUtils.loadAnimation(getContext(), R.anim.disappear);
             blurBackground.startAnimation(disappear);
-            fakeListView.startAnimation(slideOut);
-            fakeListView.setVisibility(View.GONE);
+            containerEvents.startAnimation(slideOut);
+            containerEvents.setVisibility(View.GONE);
             blurBackground.setVisibility(View.GONE);
         }
     }
@@ -184,26 +218,14 @@ public class ExploreFragment extends Fragment{
 
             return sb;
         }
-
     }
 
-    private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+    public ExploreEventsFragment getExploreEventsFragment() {
+        return eventsFragment;
+    }
 
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            //Log.d(TAG, "onPageScrolled: " + position);
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            Log.d(TAG, "Page is now selected: " + position);
-            ((OnExploreTabSelectedListener)tabsAdapter.getItem(position)).onTabSelected();
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-            //Log.d(TAG, "onPageScrollStateChanged: " + state);
-        }
+    public FrameLayout getContainerEvents() {
+        return containerEvents;
     }
 }
 

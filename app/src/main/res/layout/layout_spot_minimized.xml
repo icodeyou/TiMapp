@@ -19,13 +19,17 @@
     android:padding="5dp"
     android:visibility="@{spot == null ? View.GONE : View.VISIBLE}">
 
-    <ImageView
+    <FrameLayout
         style="@style/imageIcon"
-        android:id="@+id/spot_category_icon"
         android:layout_marginRight="@dimen/padding_event_bottom_view"
-        android:layout_marginLeft="@dimen/padding_event_bottom_view"
-        android:background="@color/colorPrimary"
-        app:imageResource="@{spot.getCategory().iconWhiteResId}"/>
+        android:layout_marginLeft="@dimen/padding_event_bottom_view">
+        <ImageView
+            android:id="@+id/spot_category_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:imageResource="@{spot.getCategory().iconWhiteResId}"/>
+    </FrameLayout>
 
     <TextView
         style="@style/TextLightBackgroundBold"

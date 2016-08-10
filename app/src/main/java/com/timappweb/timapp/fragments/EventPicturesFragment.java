@@ -290,9 +290,6 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         //mPostButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
-
-
-
     // =============================================================================================
 
     /**
@@ -312,6 +309,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             //picturesAdapter.setBaseUrl(this.getServerResponse().extra.get("base_url"));
             picturesAdapter.setData(data);
             mAdapter.notifyDataSetChanged();
+            picturesAdapter.getItemCount();
             noPicView.setVisibility(picturesAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 

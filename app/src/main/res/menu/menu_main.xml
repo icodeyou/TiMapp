@@ -1,17 +1,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_list"
+        android:title="@string/action_list"
+        android:icon="@drawable/list"
+        android:orderInCategory="1"
+        app:showAsAction="always" />
+
     <item android:id="@+id/action_filter"
         android:title="@string/action_filter"
         android:icon="@drawable/magnifier"
-        android:orderInCategory="110"
+        android:orderInCategory="2"
         android:visible="false"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_clear_filter"
         android:title="@string/action_filter"
         android:icon="@drawable/trashcan"
-        android:orderInCategory="110"
+        android:orderInCategory="3"
         app:showAsAction="always"
         android:visible="false"/>
 

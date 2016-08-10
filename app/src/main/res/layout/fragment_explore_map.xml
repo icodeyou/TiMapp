@@ -30,17 +30,6 @@
                 android:layout_height="40dp"/>
         </LinearLayout>-->
 
-        <!--<ImageView
-            android:remote_id="@+remote_id/my_location_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="80dp"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:src="@drawable/my_loc_button"/>-->
-
         <LinearLayout
             android:id="@+id/search_tags_container"
             android:layout_width="match_parent"

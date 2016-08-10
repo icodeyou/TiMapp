@@ -29,12 +29,10 @@ import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListene
 
 import java.util.List;
 
-public class ExploreEventsFragment extends Fragment implements OnExploreTabSelectedListener {
+public class ExploreEventsFragment extends Fragment {
 
     private static final String TAG = "ExplorePlaceFragment";
     private EventsAdapter eventsAdapter;
-    private ExploreFragment exploreFragment;
-    private DrawerActivity drawerActivity;
     private View newEventButton;
     private View progressView;
     private View noEventsView;
@@ -47,9 +45,6 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView");
         View root = inflater.inflate(R.layout.fragment_explore_events, container, false);
-
-        exploreFragment = (ExploreFragment) getParentFragment();
-        drawerActivity = (DrawerActivity) exploreFragment.getActivity();
 
         //Views
         eventRecyclerView = (RecyclerView) root.findViewById(R.id.list_places);
@@ -106,8 +101,7 @@ public class ExploreEventsFragment extends Fragment implements OnExploreTabSelec
         //eachSecondTimerTask.cancel();
     }
 
-    @Override
-    public void onTabSelected() {
+    public void onFragmentSelected(ExploreFragment exploreFragment) {
         if (eventsAdapter == null) return;
         Log.d(TAG, "ExploreEventsFragment is now selected");
         Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");

@@ -1,6 +1,5 @@
 package com.timappweb.timapp.fragments;
 
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,8 +29,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
@@ -54,7 +52,8 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private static final String             TAG                             = "GoogleMapFragment";
     private static final long               TIME_WAIT_MAP_VIEW              = 500;
-    private static final int                MARGIN_TOP_BUTTON_LOCATE_MAP    = 120;
+    private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
+    private static final int                PADDING__MAP                    = 30;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
 
     // ---------------------------------------------------------------------------------------------
@@ -77,7 +76,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     private SimpleTimerView                 tvCountPoints;
 
     private ExploreFragment                 exploreFragment;
-    private DrawerActivity                  drawerActivity;
     private FragmentExploreMapBinding       mBinding;
     private AreaRequestHistory              history;
     private Bundle                          mapBundle;
@@ -111,7 +109,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_explore_map, container, false);
         root = mBinding.getRoot();
         exploreFragment = (ExploreFragment) getParentFragment();
-        drawerActivity = (DrawerActivity) exploreFragment.getActivity();
         setHasOptionsMenu(true);
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(mapBundle);
@@ -140,8 +137,26 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         if (gMap == null){
             mapView.getMapAsync(this);
         }
+        initLocationButton();
         updateFilterView();
         LocationManager.addOnLocationChangedListener(this);
+    }
+
+    private void initLocationButton() {
+        // Get the button view
+        View locationButton = ((View) mapView.findViewById(1).getParent()).findViewById(2);
+        // and next place it, for exemple, on bottom right (as Google Maps app)
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_END, 0);
+        rlp.addRule(RelativeLayout.ALIGN_END, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        rlp.setMargins(0,0,0,MARGIN_BUTTON_LOCATE_MAP);
+        mapView.getMap().setPadding(PADDING__MAP, 0, 0, 0);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -161,7 +176,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         // TODO can be removed later when all data are synchronized localy...
         if (!event.hasLocalId()) event.mySave();
         mBinding.setEvent(event);
-        final Animation slideIn = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_in_up);
+        final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
         tvCountPoints.cancelTimer();
@@ -170,7 +185,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     }
 
     public void hideEvent() {
-        final Animation slideOut = AnimationUtils.loadAnimation(drawerActivity, R.anim.slide_out_down);
+        final Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
         eventView.startAnimation(slideOut);
         eventView.setVisibility(View.GONE);
     }
@@ -181,10 +196,10 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             filterTagsContainer.setVisibility(View.VISIBLE);
             filterTagsRv.getAdapter().setData(MyApplication.searchFilter.tags);
             Log.d(TAG,"Number of tags filtered : " + MyApplication.searchFilter.tags.size());
-            mapView.getMap().setPadding(0, MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
+            //mapView.getMap().setPadding(0, MARGIN_BUTTON_LOCATE_MAP, 0, 0);
         } else {
             filterTagsContainer.setVisibility(View.GONE);
-            mapView.getMap().setPadding(0, 2*MARGIN_TOP_BUTTON_LOCATE_MAP, 0, 0);
+            //mapView.getMap().setPadding(0, 0, 0, 0);
         }
         getActivity().invalidateOptionsMenu();
     }
@@ -384,4 +399,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             updateMapData();
         }
     }
+
+
 }

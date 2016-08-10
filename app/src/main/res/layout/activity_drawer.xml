@@ -33,20 +33,7 @@
             android:id="@+id/toolbar_id"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbarHeight"
-            android:background="@color/background_semi_transparent"
-            android:gravity="right">
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/list_icon"
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:padding="15dp"
-                    android:src="@drawable/list_icon"/>
-            </FrameLayout>
-        </android.support.v7.widget.Toolbar>
+            android:background="@drawable/gradient_bottom_view" />
 
         <!-- FLOATING ACTION BUTTON -->
         <LinearLayout

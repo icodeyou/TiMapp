@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/loading_view"
@@ -33,12 +32,5 @@
         android:text="@string/no_events_message1"
         android:visibility="gone"
         />
-
-    <!--<android.support.design.widget.FloatingActionButton
-        style="@style/DarkFab"
-        android:id="@+id/post_event_button"
-        android:layout_alignParentRight="true"
-        android:layout_above="@+id/event_view"
-        android:layout_alignWithParentIfMissing="true"/>-->
 
 </RelativeLayout>

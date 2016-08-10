@@ -41,10 +41,11 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotViewHold
             Log.d(TAG, "Get view for " + (position+1) + "/" + getItemCount());
             final Spot spot = data.get(position);
 
-            //OnTagsRvClick : Same event as adapter click.
+            //TODO : NullPointerException !
+            /*//OnTagsRvClick : Same event as adapter click.
             HorizontalTagsTouchListener mHorizontalTagsTouchListener =
                     new HorizontalTagsTouchListener(context, itemAdapterClickListener, position);
-            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);
+            holder.horizontalTagsRv.setOnTouchListener(mHorizontalTagsTouchListener);*/
     }
 
     @Override

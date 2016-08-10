@@ -7,11 +7,7 @@
     <color name="colorPrimaryDarkTransparent">#D9D32F2F</color>
     <color name="colorWhiteTransparent50">#80FFFFFF</color>
     <color name="colorBlackTransparent50">#80000000</color>
-    <!--<color name="colorAccent">#ff8707</color>-->
-    <!--<color name="colorAccent">#ADD8E6</color>-->
-    <!--<color name="colorAccent">#476e64</color>-->
     <color name="colorAccent">#f44336</color>
-    <!--<color name="colorSecondary">#ffefc6</color>-->
     <color name="colorSecondary">#2b3778</color>
     <color name="colorSecondaryExtaLight">#f9faff</color>
     <color name="colorSecondaryDark">#2b3778</color>
@@ -20,7 +16,7 @@
     <color name="transparent">#00000000</color>
     <color name="background">#f6f6f2</color>
     <color name="background_dark">#f1f1ea</color>
-    <color name="background_semi_transparent">#9be3dddd</color>
+    <color name="background_semi_transparent">#71ffffff</color>
     <color name="background_loading_map">#5d080808</color>
     <color name="background_card">@color/White</color>
     <color name="background_event_map">#e3000000</color>
@@ -32,6 +28,7 @@
     <color name="background_spot_very_transparent">#602e468a</color>
     <color name="background_activity_event">@color/background_spot_transparent</color>
     <color name="status_bar_map">#cf5555</color>
+    <!--<color name="status_bar_map">@color/black</color>-->
     <color name="border">#bababa</color>
     <color name="border_green">#00ff00</color>
     <color name="selected_tag_text_color">#ffffff</color>

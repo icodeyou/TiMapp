@@ -126,7 +126,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         setStatusBarColor(R.color.status_bar_map);
         initDrawer();
         this.initAddSpotButton();
-        this.initList();
         backPressedOnce = false;
 
         if (savedInstanceState == null) {
@@ -192,17 +191,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     // -----------------------------------------------------------------------------------------
 
-    private void initList() {
-        ImageView listIcon = (ImageView) findViewById(R.id.list_icon);
-        listIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exploreFragment.updateList();
-            }
-        });
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
@@ -213,27 +201,30 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     public void onBackPressed() {
         if (exploreFragment != null){
             ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-            if (exploreFragment.getFragmentSelected() instanceof ExploreMapFragment
-                    && exploreMapFragment.isPlaceViewVisible()) {
+            View frameContainerEvent = exploreFragment.getContainerEvents();
+            if(frameContainerEvent.getVisibility()==View.VISIBLE) {
+                exploreFragment.updateList();
+                return;
+            }
+            if(exploreMapFragment.isPlaceViewVisible()) {
                 exploreMapFragment.hideEvent();
+                return;
             }
-            else{
-                if (backPressedOnce) {
-                    super.onBackPressed();
-                    return;
+            if (backPressedOnce) {
+                super.onBackPressed();
+                return;
+            }
+
+            this.backPressedOnce = true;
+            Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    backPressedOnce = false;
                 }
-
-                this.backPressedOnce = true;
-                Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
-
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        backPressedOnce = false;
-                    }
-                }, TIMELAPSE_BEFORE_BACK_EXIT);
-            }
+            }, TIMELAPSE_BEFORE_BACK_EXIT);
         }
         else {
             super.onBackPressed();
@@ -264,32 +255,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
     protected void showAddSpotButton(){
         fabContainer.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) { // Handle action bar item clicks here.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch (id) {
-            case R.id.action_filter :
-                IntentsUtils.filter(this);
-                break;
-            case R.id.action_clear_filter:
-                MyApplication.searchFilter.tags.clear();
-                exploreFragment.getExploreMapFragment().updateFilterView();
-                exploreFragment.getExploreMapFragment().updateMapData();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /* Called whenever we call invalidateOptionsMenu() */

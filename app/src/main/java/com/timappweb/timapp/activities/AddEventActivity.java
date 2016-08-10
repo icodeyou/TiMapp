@@ -375,11 +375,16 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         }
     }
 
-
     @Override
     public void onPause() {
         mapView.onPause();
         super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
     }
 
     @Override
