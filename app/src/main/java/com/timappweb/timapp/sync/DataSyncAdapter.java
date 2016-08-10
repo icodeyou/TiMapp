@@ -25,6 +25,7 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
@@ -125,7 +126,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         Log.v(TAG, "--------------- Beginning network synchronization for data---------------------");
 
         int syncTypeId = extras.getInt(DataSyncAdapter.SYNC_TYPE_KEY, -1);
-        Log.i(TAG, "onPerformSync with type=" + syncTypeId);
+        Log.i(TAG, "Performing sync for type=" + syncTypeId);
         try {
             switch (syncTypeId){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
@@ -201,12 +202,10 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     getContext().sendBroadcast(new Intent(ACTION_SYNC_EVENT_FINISHED));
                     break;
                 case DataSyncAdapter.SYNC_TYPE_SPOT:
-                    // TODO
                     LatLngBounds bounds = extractMapBounds(extras);
                     if (bounds != null && bounds.northeast != null){
                         QueryCondition conditions = new QueryCondition().setBounds(bounds);
                         Response<PaginatedResponse<Spot>> spots = RestClient.service().spots(conditions.toMap()).execute();
-                        // TODO check successful elsewhere
                         if (spots.isSuccessful()){
                             new RemoteMasterSyncPerformer(
                                     spots.body(),
@@ -214,6 +213,12 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                                     syncResult)
                                     .perform();
                         }
+                        else{
+                            Log.e(TAG, "Cannot sync spots. Error");
+                        }
+                    }
+                    else{
+                        Log.e(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
                     }
                     break;
                 default:
@@ -229,8 +234,14 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         Log.v(TAG, "--------------- Network synchronization complete for data----------------------");
     }
 
-    private LatLngBounds extractMapBounds(Bundle extras) {
-        return SerializeHelper.unpack(extras.getString(SYNC_PARAM_MAP_BOUNDS), LatLngBounds.class);
+    private LatLngBounds extractMapBounds(Bundle bundle) {
+        LatLng sw = new LatLng(
+                bundle.getDouble(SYNC_PARAM_MAP_BOUNDS + "swlatitude"),
+                bundle.getDouble(SYNC_PARAM_MAP_BOUNDS + "swlongitude"));
+        LatLng ne = new LatLng(
+                bundle.getDouble(SYNC_PARAM_MAP_BOUNDS + "nelatitude"),
+                bundle.getDouble(SYNC_PARAM_MAP_BOUNDS + "nelongitude"));
+        return new LatLngBounds(sw, ne);
     }
 
 

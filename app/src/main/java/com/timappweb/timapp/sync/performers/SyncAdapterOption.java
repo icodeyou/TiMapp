@@ -2,6 +2,7 @@ package com.timappweb.timapp.sync.performers;
 
 import android.os.Bundle;
 
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
@@ -20,6 +21,7 @@ public class SyncAdapterOption {
     public void setType(int type){
         bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, type);
     }
+
     public int getSyncType() {
         return bundle.getInt(DataSyncAdapter.SYNC_TYPE_KEY);
     }
@@ -32,4 +34,10 @@ public class SyncAdapterOption {
         bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(getSyncType()));
     }
 
+    public void set(String key, LatLngBounds bounds) {
+        bundle.putDouble(key + "swlatitude", bounds.southwest.latitude);
+        bundle.putDouble(key + "swlongitude", bounds.southwest.longitude);
+        bundle.putDouble(key + "nelatitude", bounds.northeast.latitude);
+        bundle.putDouble(key + "nelongitude", bounds.northeast.longitude);
+    }
 }

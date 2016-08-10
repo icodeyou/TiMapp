@@ -22,6 +22,7 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
@@ -50,21 +51,20 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     // ---------------------------------------------------------------------------------------------
 
-    private InputMethodManager imm;
+    private InputMethodManager                      imm;
 
-    private Spot currentSpot;
+    private Spot                                    currentSpot;
 
     //private ImageView showCategoriesButton;
-    private EditText etCustomPlace;
-    private RecyclerView spotsRv;
-    private CategorySelectorView categorySelector;
-    private GoogleMap gMap;
-    private AddressResultReceiver mAddressResultReceiver;
-    private Menu menu;
-    private Loader<List<Spot>> mSpotLoader;
-    private LatLngBounds mSpotReachableBounds;
-    private SpotsAdapter spotsAdapter;
-    private SpotCategory categorySelected;
+    private EditText                                etCustomPlace;
+    private RecyclerView                            spotsRv;
+    private CategorySelectorView                    categorySelector;
+    private GoogleMap                               gMap;
+    private AddressResultReceiver                   mAddressResultReceiver;
+    private Menu                                    menu;
+    private Loader<List<Spot>>                      mSpotLoader;
+    private SpotsAdapter                            spotsAdapter;
+    private SpotCategory                            categorySelected;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -72,6 +72,12 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_spot);
+
+        if (!LocationManager.hasUpToDateLastLocation()){
+            Log.e(TAG, "User launch AddSpotActivity without a up to date location. Refused");
+            finish();
+            return;
+        }
 
         //Toolbar
         this.initToolbar(true);
@@ -81,11 +87,16 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etCustomPlace = (EditText) findViewById(R.id.name_spot);
+        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        etCustomPlace.clearFocus();
 
         initAdapters();
         setListeners();
-        initEt();
         LocationManager.addOnLocationChangedListener(this);
+
+
+        mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
+
     }
 
     @Override
@@ -123,12 +134,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         if (LocationManager.hasLastLocation()){
             requestReverseGeocoding(LocationManager.getLastLocation());
         }
-    }
-
-    private void initEt() {
-        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT |
-                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etCustomPlace.clearFocus();
     }
 
     private void initAdapters() {
@@ -254,11 +259,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
-        requestReverseGeocoding(newLocation);
-        if (mSpotLoader == null){
-            mSpotReachableBounds = LocationManager.generateBoundsAroundLocation(newLocation, ConfigurationProvider.rules().place_max_reachable);
-            mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, new SpotAroundLoader(this));
-        }
+        //requestReverseGeocoding(newLocation);
     }
 
     @Override
@@ -293,12 +294,10 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     class SpotAroundLoader extends MultipleEntryLoaderCallback<Spot> {
 
         public SpotAroundLoader(Context context) {
-            super(context, 10, DataSyncAdapter.SYNC_TYPE_SPOT);
-
-            if (mSpotReachableBounds != null){
-                this.query = Spot.queryByArea(mSpotReachableBounds);
-                this.syncOption.getBundle().putString(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, SerializeHelper.pack(mSpotReachableBounds));
-            }
+            super(context, 60 * 1000, DataSyncAdapter.SYNC_TYPE_SPOT);
+            LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(LocationManager.getLastLocation(), ConfigurationProvider.rules().place_max_reachable);
+            this.query = Spot.queryByArea(bounds);
+            this.syncOption.set(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, bounds);
         }
 
         @Override

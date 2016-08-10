@@ -1,5 +1,8 @@
 package com.timappweb.timapp.utils;
 
+import android.os.Bundle;
+
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,8 +17,14 @@ public class SerializeHelper {
             // @warning When using Gson with ActiveAndroid model, it will crash if you remove this line...
             .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
             .create();
-
-    public static String pack(Object obj){
+/*
+    public static String pack(LatLngBounds obj){
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("southeast", obj.southwest);
+        bundle.putParcelable("northeast", obj.northeast);
+        return bundle;
+    }*/
+    public static <T> String pack(T obj){
         return serializer.toJson(obj);
     }
 
