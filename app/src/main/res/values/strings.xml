@@ -14,7 +14,7 @@
     <string name="title_activity_post">Post</string>
     <string name="title_activity_place">Event</string>
     <string name="title_activity_incoming">Incoming</string>
-    <string name="title_activity_invite_friends">Invite friends</string>
+    <string name="title_activity_invite_friends">Motivate them</string>
     <string name="title_activity_list_friends">My friends</string>
     <string name="title_activity_invitations">My invitations</string>
     <string name="title_activity_profile">Profile</string>
@@ -25,7 +25,6 @@
     <string name="title_activity_add_spot">Attach a place</string>
     <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
-
 
     <string name="tab_map">Map</string>
     <string name="tab_list">List</string>

@@ -7,7 +7,7 @@
 
     <include layout="@layout/toolbar_layout" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -30,12 +30,7 @@
             android:id="@+id/no_friends_view"
             android:text="@string/no_friends"/>
 
-    </FrameLayout>
-
-    <Button
-        android:id="@+id/invite_button"
-        style="@style/pageSubmitButton"
-        android:text="@string/invite_button"/>
+    </RelativeLayout>
 
 
 </LinearLayout>

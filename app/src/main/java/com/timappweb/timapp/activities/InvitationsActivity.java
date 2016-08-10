@@ -7,13 +7,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
@@ -73,7 +77,6 @@ public class InvitationsActivity extends BaseActivity{
 
 
     private void updateView(List<EventsInvitation> items){
-
         invitations = items;
         if(invitations.size()==0) {
             noInvitationsView.setVisibility(View.VISIBLE);
@@ -87,8 +90,6 @@ public class InvitationsActivity extends BaseActivity{
         EventsInvitation invitation = invitations.get(position);
         IntentsUtils.viewSpecifiedEvent(this, invitation.event);
     }
-
-
 
     // =============================================================================================
 

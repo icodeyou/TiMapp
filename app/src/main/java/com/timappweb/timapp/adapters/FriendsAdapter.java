@@ -110,7 +110,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
             personPhoto = (SimpleDraweeView) itemView.findViewById(R.id.person_photo);
             selectedView = itemView.findViewById(R.id.selectedView);
             horizontalTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
-
         }
 
         @Override

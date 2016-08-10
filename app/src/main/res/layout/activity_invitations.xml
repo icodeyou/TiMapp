@@ -7,6 +7,10 @@
 
     <include layout="@layout/toolbar_layout" />
 
+    <!-- TODO : Add AutoLabelUI Library from pizarro to see which friends are selected. -->
+    <!-- It doesn't matter for now because the list of friends is short.. But that may be annoying
+     not to see clearly our selected friends with a long list of friends-->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

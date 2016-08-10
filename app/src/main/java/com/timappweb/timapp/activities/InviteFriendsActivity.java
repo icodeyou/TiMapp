@@ -9,6 +9,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,14 +43,13 @@ public class InviteFriendsActivity extends BaseActivity {
     private static final int    LOADER_ID_FRIENDS_LIST      = 0;
 
     // ---------------------------------------------------------------------------------------------
+    private Menu menu;
 
     private RecyclerView                recyclerView;
     private SelectFriendsAdapter        adapter;
-    private View                        inviteButton;
     private Event                       event;
     private FriendsLoader               mLoader;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
-
     // ---------------------------------------------------------------------------------------------
 
     @Override
@@ -67,12 +68,10 @@ public class InviteFriendsActivity extends BaseActivity {
 
         this.initToolbar(true);
 
-        inviteButton = findViewById(R.id.invite_button);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         initAdapterListFriends();
-        initInviteButton();
 
         mLoader = new FriendsLoader(MyApplication.getCurrentUser());
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
@@ -83,6 +82,25 @@ public class InviteFriendsActivity extends BaseActivity {
                 getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS_LIST).forceLoad();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_invite, menu);
+        this.menu = menu;
+        //setButtonValidation();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_invite:
+                sendInvites();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void initAdapterListFriends() {
@@ -109,7 +127,8 @@ public class InviteFriendsActivity extends BaseActivity {
                 else {
                     adapter.setSelected(friend, !info.selected);
                 }
-                inviteButton.setVisibility(adapter.count(true, true) > 0 ? View.VISIBLE : View.INVISIBLE);
+                boolean enableInviteButton = adapter.count(true, true) > 0;
+                menu.findItem(R.id.action_invite).setEnabled(enableInviteButton);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -121,14 +140,6 @@ public class InviteFriendsActivity extends BaseActivity {
         }
     }
 
-    private void initInviteButton() {
-        inviteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendInvites();
-            }
-        });
-    }
 
     private void sendInvites(){
         // Encoding data:
