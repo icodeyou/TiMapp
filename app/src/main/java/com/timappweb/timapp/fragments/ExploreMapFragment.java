@@ -144,6 +144,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     private void initLocationButton() {
         // Get the button view
+        // TODO wtf jean ?
         View locationButton = ((View) mapView.findViewById(1).getParent()).findViewById(2);
         // and next place it, for exemple, on bottom right (as Google Maps app)
         RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();

@@ -34,11 +34,6 @@ public class ApplicationRules {
     @Expose
     public int places_populars_limit = 20;
 
-    @Expose
-    public int places_min_delay_add = 60;
-
-    @Expose
-    public int places_users_min_delay_add  = 60;
 
     @Expose
     public int posts_min_tag_number = 3;
@@ -62,10 +57,19 @@ public class ApplicationRules {
     public int gps_min_accuracy = 3500;
 
     @Expose
+    public int places_min_delay_add = 60; // TODO use... or remove if redondant with quota...
+
+    @Expose
     public int places_min_name_length = 3;
 
     @Expose
     public int places_max_name_length = 0; // @warning used to check if configuration is correctly loaded. Do not change default
+
+    @Expose
+    public int spots_min_name_length = 3;
+
+    @Expose
+    public int spots_max_name_length = 30;
 
     @Expose
     public int tags_min_search_length = 0;
@@ -83,7 +87,6 @@ public class ApplicationRules {
                 ", tags_suggest_limit=" + tags_suggest_limit +
                 ", places_populars_limit=" + places_populars_limit +
                 ", places_min_delay_add=" + places_min_delay_add +
-                ", places_users_min_delay_add=" + places_users_min_delay_add +
                 ", posts_min_tag_number=" + posts_min_tag_number +
                 ", posts_max_tags_number=" + posts_max_tags_number +
                 ", tags_min_name_length=" + tags_min_name_length +
