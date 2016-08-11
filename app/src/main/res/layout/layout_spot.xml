@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         tools:src="@drawable/ic_category_highlight_else"
         app:imageResource="@{spot.getCategory().getSmallIcon()}"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/radius_simple_background_primary"
         fresco:actualImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/ic_category_highlight_else"/>
 

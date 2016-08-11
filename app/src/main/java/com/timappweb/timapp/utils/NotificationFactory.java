@@ -12,6 +12,7 @@ import android.util.Log;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.EventCategory;
 
 /**
  * Created by stephane on 4/2/2016.
@@ -63,11 +64,9 @@ public class NotificationFactory {
             String title = notification.getString("title");
             String icon = notification.getString("icon");
             int placeId = Integer.valueOf(bundle.getString("place_id"));
-            //int userId = bundle.getInt("user_id");
-
-            // TODO icon
 
             Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
-            return NotificationFactory.build(context, R.drawable.ic_category_bar, title, body, resultIntent);
+            int categoryId = EventCategory.getSmallIcon(icon);
+            return NotificationFactory.build(context, categoryId, title, body, resultIntent);
     }
 }

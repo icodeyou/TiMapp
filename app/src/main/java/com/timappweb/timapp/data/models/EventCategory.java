@@ -65,10 +65,14 @@ public class EventCategory extends SyncBaseModel{
 
 
     public int getSmallIcon() {
+        return getSmallIcon(this.name);
+    }
+
+    public static int getSmallIcon(String name) {
         try {
-            return DrawableUtil.get("ic_category_" + this.name);
+            return DrawableUtil.get("ic_category_" + name);
         } catch (DrawableUtil.UnknownDrawableException e) {
-            Log.e(TAG, "Unknown category drawable for " + this.name);
+            Log.e(TAG, "Unknown category drawable for " + name);
             return R.drawable.ic_category_unknown;
         }
     }
@@ -121,4 +125,5 @@ public class EventCategory extends SyncBaseModel{
         result = 31 * result + remote_id;
         return result;
     }
+
 }
