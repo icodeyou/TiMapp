@@ -266,6 +266,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="quota_wait_string">\"You must wait %s before posting again\"</string>
     <string name="cannot_upload_picture">We cannot upload this picture. Do you have a network access ?</string>
     <string name="cannot_resize_picture">This picture is too big and we cannot resize it. Choose another one!</string>
+    <string name="text_no_event">There isn\'t any events to display here.</string>
 
 
     <plurals name="number_people_event">

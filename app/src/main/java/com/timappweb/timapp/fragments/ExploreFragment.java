@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -130,7 +131,6 @@ public class ExploreFragment extends Fragment{
         switch (item.getItemId()) {
             case R.id.action_list:
                 actionList();
-                eventsFragment.onFragmentSelected(this);
                 return true;
             case R.id.action_filter :
                 IntentsUtils.filter(getActivity());
@@ -152,12 +152,17 @@ public class ExploreFragment extends Fragment{
 
     public void actionList() {
         if(containerEvents.getVisibility()==View.GONE) {
-            Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down_all);
-            Animation appear = AnimationUtils.loadAnimation(getContext(), R.anim.appear);
-            blurBackground.startAnimation(appear);
-            containerEvents.startAnimation(slideIn);
-            containerEvents.setVisibility(View.VISIBLE);
-            blurBackground.setVisibility(View.VISIBLE);
+            boolean isEventsOnMap = eventsFragment.onFragmentSelected(this);
+            if(isEventsOnMap) {
+                Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down_all);
+                Animation appear = AnimationUtils.loadAnimation(getContext(), R.anim.appear);
+                blurBackground.startAnimation(appear);
+                containerEvents.startAnimation(slideIn);
+                containerEvents.setVisibility(View.VISIBLE);
+                blurBackground.setVisibility(View.VISIBLE);
+            } else {
+                Toast.makeText(getContext(), R.string.text_no_event, Toast.LENGTH_SHORT).show();
+            }
         } else {
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_righ);
             Animation disappear = AnimationUtils.loadAnimation(getContext(), R.anim.disappear);
@@ -168,7 +173,14 @@ public class ExploreFragment extends Fragment{
         }
     }
 
-    public static class TabsAdapter extends FragmentPagerAdapter {
+    public ExploreEventsFragment getExploreEventsFragment() {
+        return eventsFragment;
+    }
+    public FrameLayout getContainerEvents() {
+        return containerEvents;
+    }
+
+    /*public static class TabsAdapter extends FragmentPagerAdapter {
 
         private ExploreMapFragment exploreMapFragment;
         private ExploreEventsFragment exploreEventsFragment;
@@ -188,11 +200,11 @@ public class ExploreFragment extends Fragment{
             return 2;
         }
 
-        /**
+        *//**
          * This is only called when initializing the fragment
          * @param position
          * @return
-         */
+         *//*
         @Override
         public Fragment getItem(int position) {
             Log.d(TAG, "TabsAdapter load position " + position);
@@ -224,14 +236,6 @@ public class ExploreFragment extends Fragment{
 
             return sb;
         }
-    }
-
-    public ExploreEventsFragment getExploreEventsFragment() {
-        return eventsFragment;
-    }
-
-    public FrameLayout getContainerEvents() {
-        return containerEvents;
-    }
+    }*/
 }
 

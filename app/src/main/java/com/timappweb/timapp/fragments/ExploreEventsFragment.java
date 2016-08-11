@@ -101,8 +101,8 @@ public class ExploreEventsFragment extends Fragment {
         //eachSecondTimerTask.cancel();
     }
 
-    public void onFragmentSelected(ExploreFragment exploreFragment) {
-        if (eventsAdapter == null) return;
+    public boolean onFragmentSelected(ExploreFragment exploreFragment) {
+        if (eventsAdapter == null) return false;
         Log.d(TAG, "ExploreEventsFragment is now selected");
         Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");
         eventsAdapter.clear();
@@ -110,11 +110,7 @@ public class ExploreEventsFragment extends Fragment {
         List<Event> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
         eventsAdapter.setData(markers);
 
-        if(eventsAdapter.getData().size()==0) {
-            noEventsView.setVisibility(View.VISIBLE);
-        } else {
-            noEventsView.setVisibility(View.GONE);
-        }
+        return eventsAdapter.getData().size()!=0;
     }
 
 }

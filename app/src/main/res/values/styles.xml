@@ -157,6 +157,10 @@
         <item name="android:layout_margin">@dimen/fab_margin</item>
     </style>
 
+    <style name="GetbaseFab" parent="Fab">
+        <item name="android:layout_margin">@dimen/fab_margin_minus_twelve</item>
+    </style>
+
     <style name="LightFab" parent="Fab">
         <item name="rippleColor">@color/colorSecondaryExtaLight</item>
         <item name="backgroundTint">@color/background</item>
