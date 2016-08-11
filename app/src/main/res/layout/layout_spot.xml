@@ -12,7 +12,8 @@
     </data>
 <LinearLayout
     android:id="@+id/layout_spot"
-    android:layout_width="wrap_content"
+    android:gravity="left"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingBottom="5dp"
@@ -26,63 +27,43 @@
         android:layout_margin="5dp"
         android:padding="15dp"
         android:layout_gravity="center"
-        tools:src="@drawable/ic_category_highlight_else"
+        tools:src="@drawable/ic_category_else"
         app:imageResource="@{spot.getCategory().getSmallIcon()}"
         android:background="@drawable/radius_simple_background_primary"
         fresco:actualImageScaleType="fitCenter"
-        fresco:placeholderImage="@drawable/ic_category_highlight_else"/>
+        fresco:placeholderImage="@drawable/ic_category_else"/>
 
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/parent_textviews"
+            <TextView
+                android:id="@+id/title_spot"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_gravity="center_vertical">
-
-                <me.grantland.widget.AutofitTextView
-                    android:id="@+id/title_spot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:maxLines="1"
-                    android:gravity="left|center"
-                    android:textStyle="bold"
-                    android:text="@{spot.name}"
-                    tools:text="Le vertigo"
-                    android:textSize="@dimen/text_big"
-                    android:textColor="@color/colorPrimaryDark" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:maxLines="2"
+                android:gravity="left|center"
+                android:textStyle="bold"
+                android:text="@{spot.name}"
+                android:ellipsize="end"
+                tools:text="Terrain"
+                android:textSize="@dimen/text_normal"
+                android:textColor="@color/colorPrimaryDark" />
 
-                <!--<ImageView
-                    style="@style/imageIcon"
-                    android:id="@+id/spot_category_icon"
-                    android:src="@drawable/ic_category_highlight_else"/>-->
-
-                <TextView
-                    style="@style/TextLightBackground"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    tools:text="Bar"
-                    android:text="@{spot.getCategory().name}"
-                    android:id="@+id/textView5" />
-
-            </LinearLayout>
+            <TextView
+                style="@style/TextLightBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Bar"
+                android:textSize="@dimen/text_normal"
+                android:text="@{spot.getCategory().name}"
+                android:id="@+id/textView5" />
         </LinearLayout>
 </LinearLayout>
 </layout>

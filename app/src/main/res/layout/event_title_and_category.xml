@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/event_title_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    >
+    android:layout_alignParentBottom="true">
     <ImageView
         android:id="@+id/image_small_category_place"
         android:layout_width="@dimen/little_icon_spot"
@@ -13,7 +12,7 @@
         android:layout_marginRight="@dimen/default_ic_margin"
         android:layout_marginEnd="@dimen/default_ic_margin"
         android:textAlignment="center"
-        android:src="@drawable/ic_category_highlight_party"
+        tools:src="@drawable/ic_category_party"
         android:visibility="visible"/>
     <include layout="@layout/event_title"></include>
 </LinearLayout>

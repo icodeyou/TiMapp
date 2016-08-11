@@ -22,7 +22,7 @@ public class SimpleTimerView extends TextView{
     public void initTimer(int initialms) {
         final TextView currentTextView = this;
         if(countDownTimer==null) {
-            countDownTimer = new CountDownTimer(initialms, COUNTDOWNINTERVAL) {
+            countDownTimer = new CountDownTimer(initialms*1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
                     currentTextView.setText(String.valueOf(millisUntilFinished / 1000));

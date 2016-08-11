@@ -17,6 +17,11 @@
         <attr name="color_background" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="SpotView">
+        <attr name="center" format="boolean" />
+    </declare-styleable>
+
+
     <!-- parent styleable -->
     <!--<declare-styleable name="CardView">
         <attr name="tags_visible" format="boolean" />
@@ -41,7 +46,7 @@
         <attr name="is_description" format="boolean" />
     </declare-styleable>-->
 
-    <declare-styleable name="SpotView">
+    <!--<declare-styleable name="SpotView">
         <attr name="tags_visible" />
         <attr name="bottom_shadow" />
         <attr name="top_shadow" />
@@ -50,7 +55,7 @@
         <attr name="edit_mode"  format="boolean"/>
         <attr name="background_color"  format="boolean"/>
         <attr name="gravity_center" format="boolean" />
-    </declare-styleable>
+    </declare-styleable>-->
 
     <!-- SLIDING TABS -->
     <declare-styleable name="SlidingTabLayout">
