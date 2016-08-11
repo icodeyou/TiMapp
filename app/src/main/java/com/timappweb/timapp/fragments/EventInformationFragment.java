@@ -64,6 +64,8 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private View                        flameView;
     private View                        mainLayout;
     private TextView                    statusTv;
+    private View                        hereImage;
+    private View                        comingImage;
 
     @Nullable
     @Override
@@ -92,12 +94,20 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         //rateButtons = view.findViewById(R.id.here_view);
         flameView = view.findViewById(R.id.points_icon);
         switchButton = (SwitchCompat) view.findViewById(R.id.switch_button);
+        hereImage = view.findViewById(R.id.ic_here);
+        comingImage = view.findViewById(R.id.ic_coming);
 
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final boolean isChecked = switchButton.isChecked();
                 updatePointsView(isChecked);
+            }
+        });
+
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
                 statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
 
@@ -122,7 +132,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                                 }
                             });
                 }
-                switchButton.setChecked(isChecked);
             }
         });
 
@@ -162,12 +171,16 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         Event event = eventActivity.getEvent();
         UserEvent statusInfo = EventStatusManager.getStatus(event);
         if (event.isUserAround()){
+            comingImage.setVisibility(View.GONE);
+            hereImage.setVisibility(View.VISIBLE);
             statusTv.setText(getContext().getResources().getString(R.string.i_am_here));
             if (statusInfo != null ){
                 switchButton.setChecked(statusInfo.status == UserEventStatusEnum.HERE);
             }
         }
         else{
+            comingImage.setVisibility(View.VISIBLE);
+            hereImage.setVisibility(View.GONE);
             statusTv.setText(getContext().getResources().getString(R.string.i_am_coming));
             switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.COMING);
         }
@@ -204,7 +217,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         mapView.onResume();
         super.onResume();
         Log.d(TAG, "ExploreMapFragment.onResume()");
-        //this.loadMapIfNeeded();
     }
 
     public void updatePointsView(boolean increase) {

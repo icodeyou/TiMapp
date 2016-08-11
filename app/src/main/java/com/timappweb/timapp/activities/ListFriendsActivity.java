@@ -51,7 +51,6 @@ public class ListFriendsActivity extends BaseActivity{
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, new FriendsLoader());
         mToolbar.setTitle(R.string.title_activity_list_friends);
 
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
