@@ -342,7 +342,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             @Override
             public void onClick(View v) {
                 Spot spot = mBinding.getEvent().getSpot();
-                if (spot != null && spot.isNew()) {
+                if (spot != null) {
                     IntentsUtils.pinSpot(AddEventActivity.this, spot);
                 }
             }
