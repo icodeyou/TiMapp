@@ -68,7 +68,7 @@ public class SpotCategory extends SyncBaseModel {
                 '}';
     }
 
-    public int getIcon() {
+    public int getSmallIcon() {
         return _getIcon();
     }
 

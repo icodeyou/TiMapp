@@ -47,7 +47,7 @@ public class SpotCategoriesAdapter extends CategoriesAdapter {
         final TextView categoryText = holder.categoryText;
         icons.put(spotCategory.remote_id, categoryIcon);
 
-        categoryIcon.setImageResource(spotCategory.getIcon());
+        categoryIcon.setImageResource(spotCategory.getSmallIcon());
         if(isLegend) {
             String nameCapitalized = Util.capitalize(spotCategory.name);
             categoryText.setText(nameCapitalized);

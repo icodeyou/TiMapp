@@ -57,7 +57,7 @@ public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
     @Override
     protected void onBeforeClusterItemRendered(Spot spot, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
-        categoryImage.setImageResource(spot.getCategory().getIcon());
+        categoryImage.setImageResource(spot.getCategory().getSmallIcon());
         categoryImage.setDrawingCacheEnabled(true);
 
         // Without this code, the view will have a dimension of 0,0 and the bitmap will be null
@@ -117,7 +117,7 @@ public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
             if (!profilePhotos.containsKey(spot.category_id)){
-                Drawable drawable = ContextCompat.getDrawable(context, spot.getCategory().getIcon());
+                Drawable drawable = ContextCompat.getDrawable(context, spot.getCategory().getSmallIcon());
                 drawable.setBounds(0, 0, width, height);
                 profilePhotos.put(spot.category_id, drawable);
             }

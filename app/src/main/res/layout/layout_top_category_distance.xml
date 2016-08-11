@@ -24,7 +24,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="3.5dp"
                 android:background="@drawable/radius_simple_background_primary"
-                app:imageResource="@{event.getCategoryWithDefault().getIconWhiteResId()}" />
+                app:imageResource="@{event.getCategoryWithDefault().getSmallIcon()}" />
 
             <TextView
                 android:layout_width="wrap_content"
