@@ -184,11 +184,13 @@
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
                                         <ImageView
+                                            android:id="@+id/ic_here"
                                             android:layout_width="50dp"
                                             android:layout_height="50dp"
                                             android:src="@drawable/gps"
                                             android:padding="10dp"/>
                                         <ImageView
+                                            android:id="@+id/ic_coming"
                                             android:layout_width="50dp"
                                             android:layout_height="50dp"
                                             android:src="@drawable/ic_coming_guy_black"
@@ -216,6 +218,7 @@
                         android:textColor="@color/DarkGray"
                         android:textSize="@dimen/text_small"
                         android:text="@{event.description}"
+                        android:visibility="@{event.hasDescription() ? View.VISIBLE : View.GONE}"
                         tools:text="This is the description of the event. The event is beautiful. The event is magical. The event is free. Come. Come here if you want to spend a wonderful time."/>
 
                     <RelativeLayout

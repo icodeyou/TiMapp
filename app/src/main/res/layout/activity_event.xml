@@ -41,7 +41,7 @@
             fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
             fab:fab_addButtonColorPressed="@color/background"
             fab:fab_addButtonPlusIconColor="@color/colorPrimary"
-            style="@style/Fab"
+            style="@style/GetbaseFab"
             fab:fab_expandDirection="left">
 
             <com.getbase.floatingactionbutton.FloatingActionButton

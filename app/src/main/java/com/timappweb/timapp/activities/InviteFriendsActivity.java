@@ -52,6 +52,7 @@ public class InviteFriendsActivity extends BaseActivity {
     private Event                       event;
     private FriendsLoader               mLoader;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
+    private View                        progressview;
     // ---------------------------------------------------------------------------------------------
 
     @Override
@@ -72,6 +73,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        progressview = findViewById(R.id.progressview);
 
         initAdapterListFriends();
 
@@ -90,6 +92,7 @@ public class InviteFriendsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_invite, menu);
         this.menu = menu;
+        menu.findItem(R.id.action_invite).setEnabled(false);
         //setButtonValidation();
         return true;
     }
@@ -152,9 +155,9 @@ public class InviteFriendsActivity extends BaseActivity {
             }
         }
         if (ids.size() == 0){
-
             return;
         }
+        progressview.setVisibility(View.VISIBLE);
         Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.remote_id, ids);
         RestClient.buildCall(call)
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
@@ -185,6 +188,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
                     @Override
                     public void notSuccessful() {
+                        progressview.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
                     }
 
@@ -192,7 +196,7 @@ public class InviteFriendsActivity extends BaseActivity {
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(boolean failure) {
-                        // TODO remove load here
+                        progressview.setVisibility(View.GONE);
                     }
                 })
                 .perform();
