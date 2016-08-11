@@ -71,27 +71,31 @@
                         bind:event="@{event}" />
                 </FrameLayout>
 
-                <FrameLayout
-                    android:id="@+id/layout_top_category_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="20dp"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_top_gradient_view"
                     android:layout_alignBottom="@+id/header_event_activity"
-                    android:background="@drawable/gradient_top_view_light">
-                    <include layout="@layout/layout_top_category_distance"
-                        bind:event="@{event}"></include>
-                </FrameLayout>
+                    android:background="@drawable/gradient_top_view_light" />
             </RelativeLayout>
 
-            <FrameLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
-
-                <include layout="@layout/layout_spot_minimized"
-                    bind:spot="@{event.spot}"></include>
-            </FrameLayout>
+                android:orientation="vertical"
+                android:layout_gravity="center">
+                <include android:id="@+id/layout_top_category_distance"
+                    layout="@layout/layout_top_category_distance"
+                    bind:event="@{event}" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
+                    <include android:id="@+id/layout_spot"
+                        layout="@layout/layout_spot_minimized"
+                        bind:spot="@{event.spot}"></include>
+                </FrameLayout>
+            </LinearLayout>
         </LinearLayout>
 
 

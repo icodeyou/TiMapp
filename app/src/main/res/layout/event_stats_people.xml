@@ -6,49 +6,6 @@
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
 
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">-->
-
-        <!--<LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="@dimen/logo_big"
-                android:layout_height="@dimen/logo_big"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_hashtag_circle_palred"
-                android:layout_marginBottom="5dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tags_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginEnd="5dp"
-                    style="@style/LabelInfo"
-                    android:text="24"/>
-                &lt;!&ndash; TODO : Display number of tags &ndash;&gt;
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tags"
-                    style="@style/LabelInfo"
-                    android:visibility="gone"
-                    android:id="@+id/textView" />
-            </LinearLayout>
-        </LinearLayout>-->
-
     <LinearLayout
         android:id="@+id/white_points_layout"
         android:layout_width="wrap_content"
@@ -56,36 +13,13 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:visibility="visible">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/points_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/trending" />
-
-        <!--<LinearLayout
-            android:id="@+id/here_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="gone">
-            <ImageView
-                android:id="@+id/rate_down_button"
-                style="@style/LightFab"
-                android:src="@drawable/rate_down2"/>
-
-            <ImageView
-                android:id="@+id/rate_up_button"
-                style="@style/LightFab"
-                android:src="@drawable/rate_up2"/>
-        </LinearLayout>-->
-
-        <!--<android.support.design.widget.FloatingActionButton
-            android:id="@+id/here_button"
-            style="@style/LightFab"
-            android:src="@drawable/fire_up_here"/>-->
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_hot" />
 
         <com.timappweb.timapp.views.SimpleTimerView
             android:id="@+id/white_points_text"
@@ -95,48 +29,12 @@
             android:textSize="@dimen/text_huge"
             android:gravity="center"
             android:textStyle="italic"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
             android:text="3602"/>
         <!--android:text="@{event.isOver() ? @string/event_over_points : event.displayPoints()}"-->
-        <!---->
     </LinearLayout>
 
 
-        <!--<LinearLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="@dimen/logo_big"
-                android:layout_height="@dimen/logo_big"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_camera_white"
-                android:layout_marginBottom="5dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
 
-                <TextView
-                    android:id="@+id/pictures_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:text="17"
-                    style="@style/LabelInfo"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/pics"
-                    android:visibility="gone"
-                    style="@style/LabelInfo"/>
-            </LinearLayout>
-        </LinearLayout>-->
-    <!--</LinearLayout>-->
 </layout>
