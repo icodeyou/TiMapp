@@ -27,7 +27,7 @@
             android:id="@+id/spot_category_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/radius_simple_background_primary"
             app:imageResource="@{spot.getCategory().iconWhiteResId}"/>
     </FrameLayout>
 
