@@ -149,10 +149,20 @@
     </style>
 
 
-    <style name="DarkFab">
+    <style name="Fab">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
+    </style>
+
+    <style name="LightFab" parent="Fab">
+        <item name="rippleColor">@color/colorSecondaryExtaLight</item>
+        <item name="backgroundTint">@color/background</item>
+    </style>
+
+    <style name="DarkFab" parent="Fab">
         <item name="rippleColor">@color/colorPrimaryDark</item>
         <item name="backgroundTint">@color/colorSecondary</item>
     </style>

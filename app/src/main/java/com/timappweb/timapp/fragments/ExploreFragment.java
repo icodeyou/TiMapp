@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class ExploreFragment extends Fragment{
     private View blurBackground;
     private ExploreEventsFragment eventsFragment;
     private ExploreMapFragment mapFragment;
+    private View fab;
 
     public ExploreMapFragment getExploreMapFragment(){
         return mapFragment;
@@ -68,13 +70,24 @@ public class ExploreFragment extends Fragment{
 
         containerEvents = (FrameLayout) root.findViewById(R.id.fragment_events);
         blurBackground = root.findViewById(R.id.blur_background);
+        fab = root.findViewById(R.id.fab_button);
 
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), MyApplication.searchFilter);
 
+        initAddSpotButton();
         initFragments();
         setListeners();
 
         return root;
+    }
+
+    public void initAddSpotButton() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.locate(getActivity());
+            }
+        });
     }
 
     private void initFragments() {

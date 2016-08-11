@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
@@ -21,7 +22,6 @@ import java.util.List;
 
 public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAdapter.MyViewHolder> {
     private String TAG = "HorizontalTagsAdapter";
-    private static final int NUMBER_MAX_TAGS = 3;
 
     protected LayoutInflater inflater;
     private List<Tag> mDataTags;
@@ -103,7 +103,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         if (this.mDataTags.contains(newTag)) {
             Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
             return false;
-        } else if(mDataTags.size()>=NUMBER_MAX_TAGS) {
+        } else if(mDataTags.size()>=getMaxTags()) {
             Toast.makeText(context, R.string.toast_too_many_tags, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -160,7 +160,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     }
 
     public int getMaxTags() {
-        return NUMBER_MAX_TAGS;
+        return ConfigurationProvider.rules().posts_max_tags_number;
     }
 
     /*
@@ -189,7 +189,9 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             this.textView = (TextView) view.findViewById(R.id.item_horizontal_tag);
             view.setBackgroundColor(backgroundColor);
             textView.setTextColor(textColor);
-            textView.setTextSize(Util.convertPixelsToDp(textSize, context));
+            //Can't change text size, because it will insert unwanted margins in the UI.
+            //textView.setTextSize(Util.convertPixelsToDp(textSize, context));
+            //TODO : delete TextSize attribute for the view
             if(!isBold) {
                 textView.setTypeface(Typeface.DEFAULT);
             } else {

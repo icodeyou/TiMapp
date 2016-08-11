@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.text.Editable;
@@ -69,6 +71,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private SpotsAdapter                            spotsAdapter;
     private SpotCategory                            categorySelected;
     private SpotAroundLoader                        mSpotLoaderModel;
+    private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -91,14 +94,14 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etCustomPlace = (EditText) findViewById(R.id.name_spot);
-        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etCustomPlace.clearFocus();
+        mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
+        initEditText();
         initAdapters();
         setListeners();
         LocationManager.addOnLocationChangedListener(this);
 
-        mSpotLoaderModel = new SpotAroundLoader(this);
+        mSpotLoaderModel = new SpotAroundLoader(this, mSwipeAndRefreshLayout);
         if (LocationManager.hasLastLocation()){
             mSpotLoaderModel.setBounds(LocationManager.getLastLocation());
             initLoader();
@@ -106,12 +109,23 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     }
 
+    /**
+     * @warning: it must be initialized only when the model has a LatLngBounds, otherwise null pointer exception
+     */
     private void initLoader() {
         if (!mSpotLoaderModel.hasBounds()){
             Util.appStateError(TAG, "Bounds for the loader model should be initialized before the model");
         }
-        // @warning: it must be initialized only when the model has a LatLngBounds, otherwise null pointer exception
+        Log.d(TAG, "Initialize loader");
         mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, mSpotLoaderModel);
+    }
+    private void initEditText() {
+        InputFilter[] f = new InputFilter[1];
+        f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spot_min_name_length);
+        etCustomPlace.setFilters(f);
+        //TODO Steph : Mettre une config pour le max !
+        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        etCustomPlace.clearFocus();
     }
 
     @Override
@@ -317,8 +331,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
         private LatLngBounds                bounds;
 
-        public SpotAroundLoader(Context context) {
+        public SpotAroundLoader(Context context, SwipeRefreshLayout swipeRefreshLayout) {
             super(context, UPDATE_SYNC_DELAY, DataSyncAdapter.SYNC_TYPE_SPOT, Spot.class);
+            this.setSwipeAndRefreshLayout(swipeRefreshLayout);
         }
 
         public void setBounds(LatLngBounds bounds){

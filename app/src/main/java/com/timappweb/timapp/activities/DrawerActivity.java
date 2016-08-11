@@ -56,7 +56,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private ExploreFragment             exploreFragment;
 
     private SimpleFacebook              mSimpleFacebook;
-    private View                        fabContainer;
+    private View fab;
 
     private boolean                     backPressedOnce;
     private FrameLayout                 mFrame;
@@ -124,7 +124,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         setStatusBarColor(R.color.status_bar_map);
         initDrawer();
-        this.initAddSpotButton();
         backPressedOnce = false;
 
         if (savedInstanceState == null) {
@@ -234,27 +233,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     /* ============================================================================================*/
     /* Methods */
     /* ============================================================================================*/
-
-    /**
-     * Create the button to add a spot
-     */
-    protected void initAddSpotButton() {
-        fabContainer = findViewById(R.id.fab_container);
-        final Activity that = this;
-        Log.d(TAG, "Init add_spot_button button");
-        fabContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.locate(that);
-            }
-        });
-    }
-    protected void hideAddSpotButton(){
-        fabContainer.setVisibility(View.GONE);
-    }
-    protected void showAddSpotButton(){
-        fabContainer.setVisibility(View.VISIBLE);
-    }
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
@@ -383,8 +361,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         Log.i(TAG, "You clicked on button " + position);
 
         switch (FragmentId.values()[position]){
-            default:            // By default go to Explore
-                showAddSpotButton();
+            default:
                 newFragmentTAG = "Explore";
                 newFragment = new ExploreFragment();
                 exploreFragment = (ExploreFragment) newFragment;
@@ -430,11 +407,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     public void updateFabPosition(ListView placesViewer) {
         int padding = placesViewer.getHeight();
-        fabContainer.setPadding(0,0,0,padding);
+        fab.setPadding(0,0,0,padding);
     }
 
     public void clearFabPosition() {
-        fabContainer.setPadding(0,0,0,0);
+        fab.setPadding(0,0,0,0);
     }
 
 

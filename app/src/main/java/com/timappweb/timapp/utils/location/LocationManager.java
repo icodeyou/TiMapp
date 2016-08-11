@@ -133,8 +133,8 @@ public class LocationManager {
     }
     public static LatLngBounds expand(LatLngBounds bounds, int size) {
         LatLng southwest =new LatLng(
-                bounds.southwest.latitude + DistanceHelper.metersToLatitude(size),
-                bounds.southwest.longitude + DistanceHelper.metersToLongitude(size, bounds.southwest.latitude)
+                bounds.southwest.latitude - DistanceHelper.metersToLatitude(size),
+                bounds.southwest.longitude - DistanceHelper.metersToLongitude(size, bounds.southwest.latitude)
         );
         LatLng northeast =new LatLng(
                 bounds.northeast.latitude + DistanceHelper.metersToLatitude(size),

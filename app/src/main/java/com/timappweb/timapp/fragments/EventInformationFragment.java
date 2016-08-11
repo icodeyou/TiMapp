@@ -93,9 +93,10 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         flameView = view.findViewById(R.id.points_icon);
         switchButton = (SwitchCompat) view.findViewById(R.id.switch_button);
 
-        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+            public void onClick(View v) {
+                final boolean isChecked = switchButton.isChecked();
                 updatePointsView(isChecked);
                 int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
                 statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
@@ -107,26 +108,27 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                 HttpCallManager manager = EventStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
                 if (manager != null){
                     manager.onResponse(new HttpCallback() {
-                            @Override
-                            public void notSuccessful() {
-                                // TODO revert status changed
-                            }
+                        @Override
+                        public void notSuccessful() {
+                            // TODO revert status changed
+                        }
 
-                        })
-                        .onError(new RequestFailureCallback(){
-                            @Override
-                            public void onError(Throwable error) {
-                                // TODO cancel
-                                switchButton.setChecked(!isChecked);
-                            }
-                        });
+                    })
+                            .onError(new RequestFailureCallback(){
+                                @Override
+                                public void onError(Throwable error) {
+                                    // TODO cancel
+                                    switchButton.setChecked(!isChecked);
+                                }
+                            });
                 }
+                switchButton.setChecked(isChecked);
             }
         });
 
         tvCountPoints = (SimpleTimerView) view.findViewById(R.id.white_points_text);
         int initialTime = event.getPoints();
-        tvCountPoints.initTimer(initialTime);
+        tvCountPoints.initTimer(initialTime*1000);
 
         btnRequestNavigation = view.findViewById(R.id.button_nav);
         btnRequestNavigation.setOnClickListener(new View.OnClickListener() {
@@ -205,43 +207,16 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         //this.loadMapIfNeeded();
     }
 
-    /*private void loadMapIfNeeded() {
-        try {
-            if (gMap == null){
-                gMap = mapView.getMap();
-            }
-            gMap.setIndoorEnabled(true);
-            Event event = eventActivity.getEvent();
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
-            gMap.addMarker(event.getMarkerOption());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
     public void updatePointsView(boolean increase) {
-        /*if(increase && !hotPoints) {
-            hotPoints = true;
-            icPoints.setImageResource(R.drawable.ic_hot);
-            tvCountPoints.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark));
-        } else if(!increase && hotPoints){
-            hotPoints = false;
-            icPoints.setImageResource(R.drawable.ic_hot_white);
-            tvCountPoints.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
-        } else {
-            return;
-        }*/
-
         animator = new ValueAnimator();
         tvCountPoints.cancelTimer();
-        int initialPoints = tvCountPoints.getPoints();
+        int initialPoints = tvCountPoints.getPoints(); //TODO Steph : get points from server instead of TextView
         final int finalPoints;
         if(increase) {
-            finalPoints = initialPoints+300;
+            finalPoints = initialPoints+300; //TODO Steph : Replace 300 by the number of points actually added on the server
         } else {
-            if(initialPoints>300) {
-                finalPoints = initialPoints-300;
+            if(initialPoints>300) { //TODO Steph : Replace 300
+                finalPoints = initialPoints-300; //TODO Steph : Replace 300
             } else {
                 finalPoints = 0;
             }
