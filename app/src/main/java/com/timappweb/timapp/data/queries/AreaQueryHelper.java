@@ -14,35 +14,43 @@ public class AreaQueryHelper {
 
 
     /**
-     * Create a condition to get all locations that are in the area bounds
-     *
-     *  -           -
-     *       ________________________
-     *      |                        |
-     *      |  X         X           |
-     *      |                        |     -
-     *      |      X                 |
-     *      |                 X      |
-     *      |________________________|
-     *                  - -
-     *      -
+     * Create a condition to get all locations that are in the area bounds given in parameter
+     * Based on android implementation LatLngBounds.contain()
      *
      * @param bounds
      * @return
      */
     public static String rowInBounds(LatLngBounds bounds){
-        return zzi(bounds) + " AND " + zzj(bounds);
+        return rowInBounds(bounds, "Latitude", "Longitude");
+    }
+    public static String rowInBounds(LatLngBounds bounds, String latitudeFields, String longitudeField){
+        return "("+zzi(bounds, latitudeFields) + " AND " + zzj(bounds, longitudeField)+")";
     }
 
     // =============================================================================================
 
-    private static String zzi(LatLngBounds bounds) {
-        return "(Latitude >= " + bounds.southwest.latitude + " AND Latitude <= " + bounds.northeast.latitude + ")";
+    /**
+
+     * @param bounds
+     * @param latitudeFields
+     * @return
+     */
+    private static String zzi(LatLngBounds bounds, String latitudeFields) {
+        return "("+latitudeFields+" >= " + bounds.southwest.latitude + " AND "+latitudeFields+" <= " + bounds.northeast.latitude + ")";
     }
 
-    private static String zzj(LatLngBounds bounds) {
+    private static String zzj(LatLngBounds bounds, String longitudeField) {
         return bounds.southwest.longitude <= bounds.northeast.longitude
-                ? "(Longitude >= " + bounds.southwest.longitude + " AND Longitude <= " + bounds.northeast.longitude + ")"
-                : "(Longitude >= " + bounds.southwest.longitude + " OR Longitude <= " + bounds.northeast.longitude + ")";
+                ? "("+longitudeField+" >= " + bounds.southwest.longitude + " AND "+longitudeField+" <= " + bounds.northeast.longitude + ")"
+                : "("+longitudeField+" >= " + bounds.southwest.longitude + " OR "+longitudeField+" <= " + bounds.northeast.longitude + ")";
+    }
+
+    public static String locationInSQLBounds(double latitude, double longitude) {
+        return String.format("((%1$f >= LatitudeSW AND %1$f <= LatitudeNE) AND " +
+                "( " +
+                "   (%2$f >= LongitudeSW AND %2$f <= LongitudeNE AND LongitudeSW <= LongitudeNE) " +
+                "   OR " +
+                "   ((%2$f >= LongitudeSW OR %2$f <= LongitudeNE) AND LongitudeSW > LongitudeNE)" +
+                "))", latitude, longitude);
     }
 }

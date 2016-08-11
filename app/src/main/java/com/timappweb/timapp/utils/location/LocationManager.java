@@ -120,16 +120,34 @@ public class LocationManager {
     }
 
     public static LatLngBounds generateBoundsAroundLocation(Location location, int size) {
+        return generateBoundsAroundLocation(location.getLatitude(), location.getLongitude(), size);
+    }
+
+    public static LatLngBounds generateBoundsAroundLocation(double latitude, double longitude, int size) {
         double offsetLatitude = DistanceHelper.metersToLatitude(size) / 2;
-        double offsetLongitude = DistanceHelper.metersToLongitude(size, location.getLatitude()) / 2;
+        double offsetLongitude = DistanceHelper.metersToLongitude(size, latitude) / 2;
         return new LatLngBounds(
-                new LatLng(location.getLatitude() - offsetLatitude, location.getLongitude() - offsetLongitude),
-                new LatLng(location.getLatitude() + offsetLatitude, location.getLongitude() + offsetLongitude));
+                new LatLng(latitude - offsetLatitude, longitude - offsetLongitude),
+                new LatLng(latitude + offsetLatitude, longitude + offsetLongitude));
+
+    }
+    public static LatLngBounds expand(LatLngBounds bounds, int size) {
+        LatLng southwest =new LatLng(
+                bounds.southwest.latitude + DistanceHelper.metersToLatitude(size),
+                bounds.southwest.longitude + DistanceHelper.metersToLongitude(size, bounds.southwest.latitude)
+        );
+        LatLng northeast =new LatLng(
+                bounds.northeast.latitude + DistanceHelper.metersToLatitude(size),
+                bounds.northeast.longitude + DistanceHelper.metersToLongitude(size, bounds.northeast.latitude)
+        );
+        LatLngBounds newBounds = new LatLngBounds(southwest, northeast);
+        return newBounds;
     }
 
     public static void removeLocationListener(Object object) {
         listeners.remove(object);
     }
+
 
     // =============================================================================================
 

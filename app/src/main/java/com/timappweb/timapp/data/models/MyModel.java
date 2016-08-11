@@ -9,6 +9,7 @@ import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -53,13 +54,7 @@ public class MyModel extends Model implements Observable, Serializable{
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-                throw new InternalError("No constructor for class: '" + associationModel.getCanonicalName() + "'");
-            }
-            else {
-                Log.e(TAG, e.getMessage());
-            }
+            Util.appStateError(TAG, "No constructor for class: '" + associationModel.getCanonicalName() + "'");
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }

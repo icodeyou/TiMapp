@@ -19,29 +19,62 @@ public class SyncHistory extends MyModel {
     //@Column(name = "User", uniqueGroups = "uniqueHistoryPerUser")
     //User user;
 
-    //@Column(name = "Type", uniqueGroups = "uniqueHistoryPerUser")
-    @Column(name = "Type", unique = true)
+    //@Column(name = "Type", uniqueGroups =
+    /**
+     * Sync type
+     */
+    @Column(name = "Type", unique = true, notNull = true)
     int type;
 
-    @Column(name = "LastUpdate")
+    /**
+     * last update (unix timestamp)
+     */
+    @Column(name = "LastUpdate", notNull = true)
     long last_update;
 
-    @Column(name = "Extra")
-    String extra;
+    /**
+     * Extra identifier for the sync
+     */
+    @Column(name = "ExtraID", notNull = false)
+    String extraID;
 
     // =============================================================================================
 
+    /**
+     * Set the current unix time for the specified sync time
+     * @param type
+     */
     public static void updateSync(int type){
+        updateSync(type, null);
+    }
+
+
+    /**
+     *
+     * @param type
+     */
+    public static void updateSync(int type, String extraID){
         Log.d(TAG, "Updating update sync date for type=" + type);
-        SyncHistory history = getByType(type);
+        SyncHistory history = getByType(type, extraID);
         if (history == null){
             history = new SyncHistory();
             history.type = type;
+            history.extraID = extraID;
         }
         history.last_update = System.currentTimeMillis();
         history.mySave();
     }
 
+    /**
+     *
+     * @param type
+     * @param updateMinDelay if 0 means infinite delay
+     * @return
+     */
+    public static boolean requireUpdate(int type, String extraID, long updateMinDelay){
+        SyncHistory history = getByType(type, extraID);
+        return history == null || (updateMinDelay != 0 && System.currentTimeMillis() - history.last_update > updateMinDelay);
+    }
 
     /**
      *
@@ -50,19 +83,28 @@ public class SyncHistory extends MyModel {
      * @return
      */
     public static boolean requireUpdate(int type, long updateMinDelay){
-        SyncHistory history = getByType(type);
-        return history == null || (updateMinDelay != 0 && System.currentTimeMillis() - history.last_update > updateMinDelay);
+        return requireUpdate(type, null, updateMinDelay);
     }
 
-    public static SyncHistory getByType(int type){
+    /**
+     *
+     * @param type
+     * @return
+     */
+    public static SyncHistory getByType(int type, String extraID){
         return new Select()
                 .from(SyncHistory.class)
-                .where("Type = ?", type)
+                .where("Type = ? AND ExtraId", type, extraID)
                 .executeSingle();
     }
 
+    /**
+     *
+     * @param syncType
+     * @return
+     */
     public static long getLastSyncTime(int syncType) {
-        SyncHistory history = getByType(syncType);
+        SyncHistory history = getByType(syncType, null);
         return history != null ? history.last_update : 0;
     }
 }

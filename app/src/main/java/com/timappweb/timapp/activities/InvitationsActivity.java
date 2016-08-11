@@ -99,7 +99,8 @@ public class InvitationsActivity extends BaseActivity{
             super(InvitationsActivity.this,
                     SYNC_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED,
-                    MyApplication.getCurrentUser().getInviteReceivedQuery());
+                    MyApplication.getCurrentUser().getInviteReceivedQuery(),
+                    EventsInvitation.class);
             this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 

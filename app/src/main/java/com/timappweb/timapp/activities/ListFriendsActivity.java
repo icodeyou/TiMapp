@@ -18,6 +18,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -79,7 +80,10 @@ public class ListFriendsActivity extends BaseActivity{
     {
 
         public FriendsLoader() {
-            super(ListFriendsActivity.this, SYNC_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_FRIENDS, MyApplication.getCurrentUser().getFriendsQuery());
+            super(ListFriendsActivity.this, SYNC_UPDATE_DELAY,
+                    DataSyncAdapter.SYNC_TYPE_FRIENDS,
+                    MyApplication.getCurrentUser().getFriendsQuery(),
+                    UserFriend.class);
             this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 

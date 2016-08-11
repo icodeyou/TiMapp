@@ -211,7 +211,7 @@ public class EventPeopleFragment extends EventBaseFragment {
     class UserStatusLoader extends MultipleEntryLoaderCallback<UserEvent> {
 
         public UserStatusLoader(Context context, Event event) {
-            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_USERS, UserEvent.queryForPlace(event));
+            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_USERS, UserEvent.queryForPlace(event), Event.class);
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout, false);
         }
@@ -245,7 +245,8 @@ public class EventPeopleFragment extends EventBaseFragment {
         public InviteSentLoader(Context context, Event event) {
             super(context, MAX_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_EVENT_INVITED,
-                    MyApplication.getCurrentUser().getInviteSentQuery(event.getId()));
+                    MyApplication.getCurrentUser().getInviteSentQuery(event.getId()),
+                    EventsInvitation.class);
 
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeLayout, false);

@@ -31,6 +31,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncHistory;
+import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.model.PaginatedResponse;
@@ -43,6 +44,7 @@ import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
 import com.timappweb.timapp.utils.SerializeHelper;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -66,7 +68,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
     public static final String SYNC_TYPE_KEY            = "data_sync_type";
     public static final String SYNC_ID_KEY              = "data_sync_id";
-    public static final String SYNC_LAST_TIME           = "data_sync_time";
+    public static final String LAST_SYNC_TIME = "data_sync_time";
     public static final String SYNC_PARAM_EVENT_ID      = "place_id";
     public static final String SYNC_PARAM_MAP_BOUNDS    = "map_bounds";
 
@@ -212,6 +214,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                                     Spot.findInArea(bounds),
                                     syncResult)
                                     .perform();
+                            SyncHistoryBounds.updateSync(SyncHistoryBounds.SyncType.SPOT, bounds);
                         }
                         else{
                             Log.e(TAG, "Cannot sync spots. Error");
@@ -220,6 +223,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     else{
                         Log.e(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
                     }
+
                     break;
                 default:
                     Log.e(TAG, "Invalid sync type id: " + syncTypeId);

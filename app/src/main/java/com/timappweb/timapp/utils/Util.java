@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.location.Location;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
+
+import com.timappweb.timapp.BuildConfig;
 
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
@@ -120,4 +123,12 @@ public class Util {
         return string.substring(0,1).toUpperCase() + string.substring(1);
     }
 
+    public static void appStateError(final String TAG, String msg) {
+        if (BuildConfig.DEBUG){
+            throw new InternalError(msg);
+        }
+        else{
+            Log.e(TAG, msg);
+        }
+    }
 }

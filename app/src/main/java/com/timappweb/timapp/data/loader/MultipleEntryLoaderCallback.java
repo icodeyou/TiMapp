@@ -25,36 +25,52 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     // ---------------------------------------------------------------------------------------------
 
     private final   long                            syncDelay;
+    private final   Class<?>                        clazz;
     protected       From                            query;
     protected       SyncAdapterOption               syncOption;
     private         SwipeRefreshLayout              mSwipeRefreshLayout;
-    private         Context                         context;
+    protected       Context                         context;
 
     // ---------------------------------------------------------------------------------------------
 
     public MultipleEntryLoaderCallback(Context context,
                                        long syncDelay,
                                        int syncType,
-                                       From query) {
+                                       From query,
+                                        Class<?> clazz) {
         this.context = context;
         this.syncOption = new SyncAdapterOption(syncType);
         this.syncDelay = syncDelay;
         this.query = query;
+        this.clazz = clazz;
     }
 
     public MultipleEntryLoaderCallback(Context context,
                                        long syncDelay,
-                                       int syncType) {
-        this(context, syncDelay, syncType, null);
+                                       int syncType,
+                                       Class<?> clazz) {
+        this(context, syncDelay, syncType, null, clazz);
     }
 
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     *
+     */
+    public void fetchEntries(boolean force){
+        if (force){
+            SyncBaseModel.getRemoteEntries(context, syncOption);
+        }
+        else{
+            SyncBaseModel.getEntries(context, syncOption, query, syncDelay);
+        }
+    }
+
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
-        SyncBaseModel.getEntries(context, syncOption, query, syncDelay);
+        fetchEntries(false);
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-        return new ModelLoader(context, User.class, query, false);
+        return new ModelLoader(context, clazz, query, false);
     }
 
     @Override
@@ -71,7 +87,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     public void onRefresh(){
         Log.v(TAG, "Refreshing data");
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-        SyncBaseModel.getRemoteEntries(context, syncOption);
+        fetchEntries(true);
     }
 
     public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout, boolean setOnRefreshCallback) {

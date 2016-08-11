@@ -32,6 +32,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,8 +170,8 @@ public class InviteFriendsActivity extends BaseActivity {
                                     feedback.invitation.user_source = MyApplication.getCurrentUser();
                                     feedback.invitation.user_target = User.queryByRemoteId(User.class, feedback.user_id).executeSingle();
                                     MyModel savedModel = feedback.invitation.mySave();
-                                    if (!savedModel.hasLocalId() && BuildConfig.DEBUG){
-                                        throw new InternalError("Model should be saved to DB...");
+                                    if (!savedModel.hasLocalId()){
+                                        Util.appStateError(TAG, "Model should be saved to DB...");
                                     }
                                 }
                             }
@@ -211,8 +212,14 @@ public class InviteFriendsActivity extends BaseActivity {
     class FriendsLoader extends MultipleEntryLoaderCallback
     {
 
+        private static final long MIN_SYNC_DELAY = 3600 * 24 * 1000;
+
         public FriendsLoader(User user) {
-            super(InviteFriendsActivity.this, 3600 * 24 * 1000, DataSyncAdapter.SYNC_TYPE_FRIENDS, user.getFriendsQuery());
+            super(InviteFriendsActivity.this,
+                    MIN_SYNC_DELAY,
+                    DataSyncAdapter.SYNC_TYPE_FRIENDS,
+                    user.getFriendsQuery(),
+                    EventsInvitation.class);
             this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }
 

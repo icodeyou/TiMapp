@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.google.android.gms.maps.LocationSource;
+import com.sromku.simple.fb.entities.PlaceTag;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
@@ -146,7 +147,8 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         public PlaceTagLoader(Context context, Event event) {
             super(context, MAX_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_EVENT_TAGS,
-                    event.getTagsQuery());
+                    event.getTagsQuery(),
+                    PlaceTag.class);
 
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);

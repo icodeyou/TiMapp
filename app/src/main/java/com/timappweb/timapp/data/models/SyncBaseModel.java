@@ -14,6 +14,7 @@ import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
+import com.timappweb.timapp.utils.ConditionInterface;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -177,7 +178,8 @@ public abstract class SyncBaseModel extends MyModel {
      * @param query
      * @return
      */
-    public static <DataType extends SyncBaseModel> List<DataType> getEntries(Context context, SyncAdapterOption options, From query, long syncDelay){
+    public static <DataType extends SyncBaseModel> List<DataType>
+            getEntries(Context context, SyncAdapterOption options, From query, long syncDelay){
         // If need merge
         if (SyncHistory.requireUpdate(options.getSyncType(), syncDelay)){
             getRemoteEntries(context, options);

@@ -310,7 +310,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     class PictureLoader extends MultipleEntryLoaderCallback<Picture> {
 
         public PictureLoader(Context context, Event event) {
-            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, event.getPicturesQuery());
+            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, event.getPicturesQuery(), Picture.class);
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         }

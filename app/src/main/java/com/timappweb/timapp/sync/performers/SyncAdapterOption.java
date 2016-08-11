@@ -31,7 +31,7 @@ public class SyncAdapterOption {
     }
 
     public void setLastSyncTime() {
-        bundle.putLong(DataSyncAdapter.SYNC_LAST_TIME, SyncHistory.getLastSyncTime(getSyncType()));
+        bundle.putLong(DataSyncAdapter.LAST_SYNC_TIME, SyncHistory.getLastSyncTime(getSyncType()));
     }
 
     public void set(String key, LatLngBounds bounds) {
