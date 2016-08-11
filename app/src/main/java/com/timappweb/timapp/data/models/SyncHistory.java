@@ -92,10 +92,15 @@ public class SyncHistory extends MyModel {
      * @return
      */
     public static SyncHistory getByType(int type, String extraID){
-        return new Select()
-                .from(SyncHistory.class)
-                .where("Type = ? AND ExtraId", type, extraID)
-                .executeSingle();
+        From from = new Select()
+                .from(SyncHistory.class);
+        if (extraID != null){
+            from.where("Type = ? AND ExtraId = ?", type, extraID);
+        }
+        else{
+            from.where("Type = ? AND ExtraId IS NULL", type);
+        }
+        return from.executeSingle();
     }
 
     /**
