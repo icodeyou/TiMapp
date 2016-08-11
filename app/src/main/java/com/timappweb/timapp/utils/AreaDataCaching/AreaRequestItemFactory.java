@@ -5,6 +5,6 @@ package com.timappweb.timapp.utils.AreaDataCaching;
  */
 public interface AreaRequestItemFactory<T> {
 
-    public AreaRequestItem<T> build();
+    AreaRequestItemInterface<T> build();
 
 }

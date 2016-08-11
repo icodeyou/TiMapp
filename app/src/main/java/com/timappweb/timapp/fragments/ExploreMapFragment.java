@@ -38,7 +38,8 @@ import com.timappweb.timapp.map.EventClusterRenderer;
 import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
-import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
+import com.timappweb.timapp.utils.AreaDataCaching.OnDataChangeListener;
+import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -162,12 +163,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     public void setLoaderVisibility(boolean bool) {
         if(progressView!=null) {
-            if(bool) {
-                progressView.setVisibility(View.VISIBLE);
-            }
-            else {
-                progressView.setVisibility(View.GONE);
-            }
+            progressView.setVisibility(bool ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -253,17 +249,13 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         history = new AreaRequestHistory(exploreFragment.getDataLoader());
         history.setAreaRequestItemFactory(new AreaRequestItemFactory() {
             @Override
-            public AreaRequestItem build() {
-                AreaRequestItem<Event> requestItem = new AreaRequestItem<Event>();
-                requestItem.setListener(new AreaRequestItem.OnDataChangeListener() {
+            public RAMAreaRequestItem build() {
+                final RAMAreaRequestItem<Event> requestItem = new RAMAreaRequestItem<Event>();
+                requestItem.setListener(new OnDataChangeListener() {
                     @Override
                     public void onDataChange() {
-                        Log.d(TAG, "AreaRequestItem.onDataChange(): ");
-                        // Each time data change we reset everything
-                        List<Event> events = history.getInsideBoundsItems(getMapBounds());
-                        mClusterManagerPost.clearItems();
-                        mClusterManagerPost.addItems(events);
-                        mClusterManagerPost.cluster();
+                        Log.d(TAG, "RAMAreaRequestItem.onDataChange(): ");
+                        updateMapDisplay();
                     }
                 });
                 return requestItem;
@@ -304,6 +296,14 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
             history.resizeArea(bounds);
         }
         history.update(bounds);
+        updateMapDisplay();
+    }
+
+    private void updateMapDisplay() {
+        List<Event> events = history.getInsideBoundsItems(getMapBounds());
+        mClusterManagerPost.clearItems();
+        mClusterManagerPost.addItems(events);
+        mClusterManagerPost.cluster();
     }
 
     private void setUpClusterer(){

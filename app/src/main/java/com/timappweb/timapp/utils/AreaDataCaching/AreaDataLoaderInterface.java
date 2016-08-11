@@ -9,12 +9,12 @@ import com.timappweb.timapp.utils.IntPoint;
 public interface AreaDataLoaderInterface<T> {
 
     /**
-     * Filll the AreaRequestItem with data according to conditions for the point pCpy
+     * Filll the RAMAreaRequestItem with data according to conditions for the point pCpy
      * @param point
      * @param request
      * @param conditions
      */
-    void load(IntPoint point, AreaRequestItem request, QueryCondition conditions);
+    void load(IntPoint point, AreaRequestItemInterface request, QueryCondition conditions);
 
 }
 

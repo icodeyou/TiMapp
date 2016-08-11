@@ -9,6 +9,7 @@ import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.IntLatLng;
 import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import java.util.Map;
  * (-1,-1)| (0,-1)| (1,-1)
  * -----------------------
  *
- * Each grid square has a @AreaRequestItem
+ * Each grid square has a @RAMAreaRequestItem
  * The grid height and width are determined by the constructor inputs
  *
  * Optimisations available
@@ -53,12 +54,13 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
 
     // ---------------------------------------------------------------------------------------------
 
-    public int                      areaWidth;                     // En degré (1 degré ~= 100 km)
-    public int                      areaHeight;                                          // En degré
-    public HashMap<IntPoint, AreaRequestItem<T>> areas;
-    private IntLatLng               center;
-    private AreaDataLoaderInterface dataLoader = null;
-    private AreaRequestItemFactory<T> areaRequestItemFactory = null;
+    public int                                      areaWidth;                     // En degré (1 degré ~= 100 km)
+    public int                                      areaHeight;                                          // En degré
+    public HashMap<IntPoint, AreaRequestItemInterface<T>>    areas;
+    private IntLatLng                               center;
+    private AreaDataLoaderInterface                 dataLoader = null;
+    private AreaRequestItemFactory<T>               areaRequestItemFactory = null;
+    private OnDataChangeListener                    onDataChangeListener;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -67,12 +69,19 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         this.dataLoader = dataLoader;
         this.areaRequestItemFactory = new AreaRequestItemFactory<T>() {
             @Override
-            public AreaRequestItem<T> build() {
-                return new AreaRequestItem<>();
+            public RAMAreaRequestItem<T> build() {
+                return new RAMAreaRequestItem<>();
             }
         };
     }
 
+    public OnDataChangeListener getOnDataChangeListener() {
+        return onDataChangeListener;
+    }
+
+    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener) {
+        this.onDataChangeListener = onDataChangeListener;
+    }
     public void setAreaRequestItemFactory(AreaRequestItemFactory<T> factory){
         this.areaRequestItemFactory = factory;
     }
@@ -139,7 +148,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
      * @param p: the south west point for the area
      * @param item: the area request item
      */
-    private void update(IntPoint p, AreaRequestItem<T> item){
+    private void update(IntPoint p, AreaRequestItemInterface<T> item){
         if (areas.containsKey(p)){
             Log.i(TAG, "Updating request history: " + item);
             areas.get(p).update(item);
@@ -158,14 +167,9 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     public AreaIterator getAreaIterator(LatLngBounds bounds) {
         IntPoint northeast = getIntPoint(bounds.northeast);
         IntPoint southwest = getIntPoint(bounds.southwest);
-        Log.i(TAG, "Southwest is " + southwest.toString() + "Northeast point is " + northeast.toString() + " (in cache: " + areas.size() + ")");
+        Log.i(TAG, "Southwest=" + southwest.toString() + ". Northeast=" + northeast.toString() + " (in cache: " + areas.size() + ")");
 
         AreaIterator iterator = new AreaIterator(southwest, northeast);
-        //if (iterator.size() > MAXIMUM_GRID_SIZE_ON_VIEW*MAXIMUM_GRID_SIZE_ON_VIEW){
-        //    Log.e(TAG, "Grid size is bigger that " + MAXIMUM_GRID_SIZE_ON_VIEW*MAXIMUM_GRID_SIZE_ON_VIEW + " ---> resizing area");
-        //    resizeArea(bounds);
-        //    iterator = new AreaIterator(southwest, northeast);
-        //}
         return iterator;
     }
 
@@ -188,18 +192,18 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
 
         // TODO Stef: find where bug come from
         if (areaIterator.size() > 100){ // TODO parameters
-            Log.e(TAG, "Area a size is hudge: " + areaIterator.size() + ". Something looks wrong... \n\t - Bounds are: " + bounds);
+            Util.appStateError(TAG, "Area a size is hudge: " + areaIterator.size() + ". Something looks wrong... \n\t - Bounds are: " + bounds);
             return;
         }
 
         IntPoint p;
         while ((p = areaIterator.next()) != null){
             IntPoint pCpy = new IntPoint(p);
-            AreaRequestItem<T> request = this.areas.get(p);
+            AreaRequestItemInterface<T> request = this.areas.get(p);
             if (request != null){
                 if (this.DELAY_BEFORE_UPDATE_REQUEST > 0 && request.getLastUpdateDelay() >= this.DELAY_BEFORE_UPDATE_REQUEST){
                     QueryCondition conditions = new QueryCondition();
-                    Log.i(TAG, "-> " + p + " Data in cache are too old; updating with new data from dataTimestamp: " + request.dataTimestamp);
+                    Log.i(TAG, "-> " + p + " Data in cache are too old; updating with new data from dataTimestamp: " + request.getDataTimestamp());
                     conditions.setBounds(this.getBoundFromPoint(p).toDouble());
                     //conditions.setTimestampMin(request.dataTimestamp);
                     request.updateLocalTimestamp();
@@ -230,9 +234,9 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         Iterator it = areas.entrySet().iterator();
         int distance;
         while (it.hasNext()) {
-            Map.Entry<IntPoint, AreaRequestItem<T>> entry = (Map.Entry) it.next();
+            Map.Entry<IntPoint, RAMAreaRequestItem<T>> entry = (Map.Entry) it.next();
             distance = entry.getKey().distance(southeastPoint);
-            AreaRequestItem<T> item = entry.getValue();
+            RAMAreaRequestItem<T> item = entry.getValue();
 
             if (distance > MAXIMUM_ORIGIN_DISTANCE) {
                 item.clear();
@@ -250,8 +254,8 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         Log.d(TAG, "clearAll() areas: " + this.areas.size());
         Iterator it = areas.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<IntPoint, AreaRequestItem<T>> entry = (Map.Entry) it.next();
-            AreaRequestItem<T> item = entry.getValue();
+            Map.Entry<IntPoint, RAMAreaRequestItem<T>> entry = (Map.Entry) it.next();
+            RAMAreaRequestItem<T> item = entry.getValue();
             item.cancel();
             item.clear();
             it.remove();
@@ -265,10 +269,10 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     public List<T> getInsideBoundsItems(LatLngBounds bounds){
         Log.d(TAG, "AreaRequestHistory::getInsideBoundsItems(): " + bounds);
         LinkedList<T> result = new LinkedList<>();
-        for (AreaRequestItem<T> request:
+        for (AreaRequestItemInterface<T> request:
              this.areas.values()) {
             if (request != null){
-                for (T marker: request.data){
+                for (T marker: request.getData()){
                     if (bounds.contains(marker.getPosition())){
                         result.add(marker);
                     }

@@ -6,7 +6,7 @@ import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
-import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
+import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
 import com.timappweb.timapp.utils.AreaDataCaching.CoordinateConverter;
 
 import org.junit.After;
@@ -55,7 +55,7 @@ public class DataLoaderTest {
         LatLngBounds bounds = new LatLngBounds(new LatLng(1.323232, 1.1123232), new LatLng(3.733232, 2.9822834));
         AreaRequestHistory history = new AreaRequestHistory(new AreaDataLoaderInterface() {
             @Override
-            public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
+            public void load(IntPoint point, RAMAreaRequestItem request, QueryCondition conditions) {
 
             }
         });
@@ -93,7 +93,7 @@ public class DataLoaderTest {
         LatLngBounds bounds = new LatLngBounds(new LatLng(1.323232, 1.1123232), new LatLng(3.733232, 2.9822834));
         AreaRequestHistory history = new AreaRequestHistory(new AreaDataLoaderInterface() {
             @Override
-            public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
+            public void load(IntPoint point, RAMAreaRequestItem request, QueryCondition conditions) {
 
             }
         });
@@ -131,7 +131,7 @@ public class DataLoaderTest {
         LatLngBounds bounds = new LatLngBounds(new LatLng(1.323232, 1.1123232), new LatLng(3.733232, 2.9822834));
         AreaRequestHistory history = new AreaRequestHistory(new AreaDataLoaderInterface() {
             @Override
-            public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
+            public void load(IntPoint point, RAMAreaRequestItem request, QueryCondition conditions) {
 
             }
         });
@@ -159,7 +159,7 @@ public class DataLoaderTest {
         public int countClearAllCall = 0;
 
         @Override
-        public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
+        public void load(IntPoint point, RAMAreaRequestItem request, QueryCondition conditions) {
             System.out.println("Loading point " + point);
             request.data.add(new EventPost());
             countLoadCall++;

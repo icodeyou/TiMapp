@@ -3,14 +3,19 @@ package com.timappweb.timapp.utils.AreaDataCaching;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
+import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.IntPoint;
+import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
@@ -30,16 +35,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     private ClusterManager<Event> mClusterManagerPlaces = null;
     private int requestCounter = 0;
     private int lastClear = -1;
-
-    public void setAreaRequestHistory(AreaRequestHistory areaRequestHistory) {
-        this.areaRequestHistory = areaRequestHistory;
-    }
-
     private AreaRequestHistory areaRequestHistory = null;
 
-    public void setLoadingListener(LoadingListener loadingListener) {
-        this.loadingListener = loadingListener;
-    }
+    // ---------------------------------------------------------------------------------------------
 
     public AreaDataLoaderFromAPI(Context context, SearchFilter filter) {
         this.mContext = context;
@@ -58,7 +56,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     }
 
     @Override
-    public void load(final IntPoint pCpy, final AreaRequestItem request, QueryCondition conditions) {
+    public void load(final IntPoint pCpy, final AreaRequestItemInterface request, QueryCondition conditions) {
         conditions.setTimeRange(7200); // TODO cst
         conditions.setMainTags(true);
 
@@ -82,7 +80,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                     public void successful(List<Event> events) {
                         if (loadingListener!= null) loadingListener.onLoadEnd();
                         if (request.isOutdated(itemRequestId)) {
-                            Log.d(TAG, "Outdated request " + request.currentRequestId + " > " + itemRequestId + " . Do not load tags");
+                            Log.d(TAG, "Outdated request " + request.getRequestId() + " > " + itemRequestId + " . Do not load tags");
                             return;
                         }
                         if (requestId < lastClear) {
@@ -106,5 +104,15 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                 })
                 .perform();
     }
+
+
+    public void setAreaRequestHistory(AreaRequestHistory areaRequestHistory) {
+        this.areaRequestHistory = areaRequestHistory;
+    }
+
+    public void setLoadingListener(LoadingListener loadingListener) {
+        this.loadingListener = loadingListener;
+    }
+
 
 }

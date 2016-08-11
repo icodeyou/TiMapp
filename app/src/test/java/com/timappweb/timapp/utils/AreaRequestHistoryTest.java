@@ -7,7 +7,7 @@ import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaIterator;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
-import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItem;
+import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class AreaRequestHistoryTest {
     private void initHistory(){
         this.history = new AreaRequestHistory(new AreaDataLoaderInterface() {
             @Override
-            public void load(IntPoint point, AreaRequestItem request, QueryCondition conditions) {
+            public void load(IntPoint point, RAMAreaRequestItem request, QueryCondition conditions) {
                 // TODO
             }
         });
@@ -116,7 +116,7 @@ public class AreaRequestHistoryTest {
 
         LinkedList<EventPost> data = new LinkedList<>();
         IntPoint p1 = new IntPoint(2, 4);
-        history.areas.put(p1, new AreaRequestItem(10, data));
+        history.areas.put(p1, new RAMAreaRequestItem(10, data));
         assertEquals(true, history.areas.containsKey(p1));
 
         IntPoint p2 = new IntPoint(2, 4);
