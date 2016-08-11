@@ -27,11 +27,11 @@
         android:layout_margin="5dp"
         android:padding="15dp"
         android:layout_gravity="center"
-        tools:src="@drawable/ic_category_highlight_else"
+        tools:src="@drawable/ic_category_else"
         app:imageResource="@{spot.getCategory().getSmallIcon()}"
         android:background="@drawable/radius_simple_background_primary"
         fresco:actualImageScaleType="fitCenter"
-        fresco:placeholderImage="@drawable/ic_category_highlight_else"/>
+        fresco:placeholderImage="@drawable/ic_category_else"/>
 
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
