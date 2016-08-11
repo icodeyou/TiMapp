@@ -194,6 +194,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
         spotsAdapter = new SpotsAdapter(this);
+        spotsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                currentSpot = spotsAdapter.getItem(position);
+                finishActivityResult(currentSpot);
+            }
+        });
         spotsRv.setAdapter(spotsAdapter);
     }
 
