@@ -39,15 +39,15 @@ import com.timappweb.timapp.rest.model.QueryCondition;
 import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
 import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
 import com.timappweb.timapp.sync.performers.PlacePictureSyncPerformer;
-import com.timappweb.timapp.sync.performers.PlaceTagsSyncPerformer;
+import com.timappweb.timapp.sync.performers.EventTagsSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
-import com.timappweb.timapp.utils.SerializeHelper;
-import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import retrofit2.Response;
 
@@ -75,17 +75,17 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     // ---------------------------------------------------------------------------------------------
 
     public static final int SYNC_TYPE_FRIENDS           = 1;
-    public static final int SYNC_TYPE_EVENT_AROUD_USER  = 2;
+    public static final int SYNC_TYPE_MULTIPLE_EVENT    = 2;
     public static final int SYNC_TYPE_USER              = 3;
     public static final int SYNC_TYPE_EVENT             = 4;
     public static final int SYNC_TYPE_EVENT_USERS       = 8;
-    private static final int SYNC_TYPE_EVENT_STATUS     = 5;
+    public static final int SYNC_TYPE_EVENT_STATUS      = 5;
     public static final int SYNC_TYPE_INVITE_SENT       = 6;
     public static final int SYNC_TYPE_INVITE_RECEIVED   = 7;
     public static final int SYNC_TYPE_EVENT_INVITED     = 9;
     public static final int SYNC_TYPE_EVENT_PICTURE     = 10;
     public static final int SYNC_TYPE_EVENT_TAGS        = 11;
-    public static final int SYNC_TYPE_SPOT              = 12;
+    public static final int SYNC_TYPE_MULTIPLE_SPOT     = 12;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -130,15 +130,14 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         int syncTypeId = extras.getInt(DataSyncAdapter.SYNC_TYPE_KEY, -1);
         Log.i(TAG, "Performing sync for type=" + syncTypeId);
         try {
+            LatLngBounds bounds;
+
             switch (syncTypeId){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
                     new FriendsSyncPerformer(
                             RestClient.service().friends().execute().body().items,
                             MyApplication.getCurrentUser().getFriends(),
                             syncResult).perform();
-                    break;
-                case DataSyncAdapter.SYNC_TYPE_EVENT_AROUD_USER:
-                    // TODO
                     break;
                 case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
                     new InvitationsSyncPerformer(
@@ -189,7 +188,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 case DataSyncAdapter.SYNC_TYPE_EVENT_TAGS:
                     event = extractEvent(extras);
                     if (event == null) return;
-                    new PlaceTagsSyncPerformer(
+                    new EventTagsSyncPerformer(
                             RestClient.service().viewPopularTagsForPlace(event.getRemoteId()).execute().body(),
                             syncResult,
                             event).perform();
@@ -203,25 +202,47 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     new SingleEntrySyncPerformer(Event.class, id, RestClient.service().viewPlace(id).execute(), syncResult).perform();
                     getContext().sendBroadcast(new Intent(ACTION_SYNC_EVENT_FINISHED));
                     break;
-                case DataSyncAdapter.SYNC_TYPE_SPOT:
-                    LatLngBounds bounds = extractMapBounds(extras);
+                case DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT:
+                    bounds = extractMapBounds(extras);
                     if (bounds != null && bounds.northeast != null){
                         QueryCondition conditions = new QueryCondition().setBounds(bounds);
                         Response<PaginatedResponse<Spot>> spots = RestClient.service().spots(conditions.toMap()).execute();
                         if (spots.isSuccessful()){
                             new RemoteMasterSyncPerformer(
                                     spots.body(),
-                                    Spot.findInArea(bounds),
+                                    Spot.findInArea(bounds, Spot.class),
                                     syncResult)
                                     .perform();
-                            SyncHistoryBounds.updateSync(SyncHistoryBounds.SyncType.SPOT, bounds);
+                            SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, bounds);
                         }
                         else{
                             Log.e(TAG, "Cannot sync spots. Error");
                         }
                     }
                     else{
-                        Log.e(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
+                        Util.appStateError(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
+                    }
+
+                    break;
+                case DataSyncAdapter.SYNC_TYPE_MULTIPLE_EVENT:
+                    bounds = extractMapBounds(extras);
+                    if (bounds != null && bounds.northeast != null){
+                        QueryCondition conditions = new QueryCondition().setBounds(bounds);
+                        Response<List<Event>> eventResponse = RestClient.service().bestPlaces(conditions.toMap()).execute();
+                        if (eventResponse.isSuccessful()){
+                            new RemoteMasterSyncPerformer(
+                                    eventResponse.body(),
+                                    Event.findInArea(bounds, Event.class),
+                                    syncResult)
+                                    .perform();
+                            SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_EVENT, bounds);
+                        }
+                        else{
+                            Log.e(TAG, "Cannot sync events. Error");
+                        }
+                    }
+                    else{
+                        Util.appStateError(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
                     }
 
                     break;

@@ -15,12 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-import com.google.android.gms.maps.LocationSource;
-import com.sromku.simple.fb.entities.PlaceTag;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
@@ -28,10 +25,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
-import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.util.List;
 
@@ -92,7 +87,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         });*/
 
         mTagLoader = getLoaderManager()
-                .initLoader(EventActivity.LOADER_ID_TAGS, null, new PlaceTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+                .initLoader(EventActivity.LOADER_ID_TAGS, null, new EventTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -140,15 +135,14 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
     // =============================================================================================
     /**
-     * TODO
      */
-    class PlaceTagLoader extends MultipleEntryLoaderCallback<EventTag> {
+    class EventTagLoader extends MultipleEntryLoaderCallback<EventTag> {
 
-        public PlaceTagLoader(Context context, Event event) {
+        public EventTagLoader(Context context, Event event) {
             super(context, MAX_UPDATE_DELAY,
                     DataSyncAdapter.SYNC_TYPE_EVENT_TAGS,
                     event.getTagsQuery(),
-                    PlaceTag.class);
+                    EventTag.class);
 
             this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
             this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);

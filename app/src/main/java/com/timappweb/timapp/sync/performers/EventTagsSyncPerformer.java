@@ -13,12 +13,12 @@ import java.util.List;
 /**
  * Created by stephane on 5/13/2016.
  */
-public class PlaceTagsSyncPerformer extends RemoteMasterSyncPerformer{
+public class EventTagsSyncPerformer extends RemoteMasterSyncPerformer{
 
     Event event;
 
 
-    public PlaceTagsSyncPerformer(List<? extends SyncBaseModel> data, SyncResult syncResult, Event event) {
+    public EventTagsSyncPerformer(List<? extends SyncBaseModel> data, SyncResult syncResult, Event event) {
         super(data, null, syncResult);
         this.event = event;
 

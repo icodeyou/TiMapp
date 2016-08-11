@@ -2,7 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
         <import type="com.timappweb.timapp.utils.DistanceHelper"/>
@@ -51,6 +52,60 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/white">
+
+
+                <!-- TODO JEAN UTILISE LES THEMES AU LIEU DE FAIRE DES PUTAINS DE COPY AND PAST -->
+                <com.getbase.floatingactionbutton.FloatingActionsMenu
+                    android:id="@+id/multiple_actions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
+                    fab:fab_addButtonColorPressed="@color/background"
+                    fab:fab_addButtonPlusIconColor="@color/colorPrimary"
+                    style="@style/GetbaseFab"
+                    fab:fab_expandDirection="left">
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/action_camera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_icon="@drawable/ic_camera_white"
+                        fab:fab_size="mini"
+                        fab:fab_colorNormal="@color/colorPrimary"
+                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"
+                        android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/action_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_icon="@drawable/ic_hashtag_white"
+                        fab:fab_size="mini"
+                        fab:fab_colorNormal="@color/colorPrimary"
+                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"
+                        android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/action_invite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_icon="@drawable/ic_people"
+                        fab:fab_size="mini"
+                        fab:fab_colorNormal="@color/colorPrimary"
+                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
+
+                    <com.getbase.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/action_coming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        fab:fab_icon="@drawable/ic_coming_guy"
+                        fab:fab_size="mini"
+                        fab:fab_colorNormal="@color/colorPrimary"
+                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"
+                        android:visibility="@{!event.isUserAround() ? View.VISIBLE : View.GONE}"/>
+
+                </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,6 +165,9 @@
                 <include layout="@layout/event_stats_people"
                     bind:event="@{event}"></include>
             </LinearLayout>
+
+
+
         </LinearLayout>
 
 

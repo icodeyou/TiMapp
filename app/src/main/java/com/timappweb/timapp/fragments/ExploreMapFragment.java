@@ -179,8 +179,9 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         eventView.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
         tvCountPoints.cancelTimer();
-        tvCountPoints.initTimer(event.getPoints()*1000);
+        tvCountPoints.initTimer(event.getPoints());
         //TODO Steph : might be better to initialize the timer through databinding
+
     }
 
     public void hideEvent() {

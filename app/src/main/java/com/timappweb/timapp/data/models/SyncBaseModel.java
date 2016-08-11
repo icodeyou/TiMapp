@@ -5,13 +5,16 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.ConditionInterface;
@@ -298,4 +301,15 @@ public abstract class SyncBaseModel extends MyModel {
         result = 31 * result + (remote_id != null ? remote_id.hashCode() : 0);
         return result;
     }
+
+
+    public static List<? extends SyncBaseModel> findInArea(LatLngBounds bounds, Class<? extends Model> clazz) {
+        return queryByArea(bounds, clazz).execute();
+    }
+    public static From queryByArea(LatLngBounds bounds, Class<? extends Model> clazz) {
+        return new Select()
+                .from(clazz)
+                .where(AreaQueryHelper.rowInBounds(bounds));
+    }
+
 }

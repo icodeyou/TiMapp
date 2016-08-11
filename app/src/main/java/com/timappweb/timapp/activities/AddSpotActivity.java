@@ -23,21 +23,15 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.BuildConfig;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.Util;
@@ -53,6 +47,8 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private static final float          ZOOM_LEVEL_CENTER_MAP           = 15.0f;
     private static final int            LOADER_ID_SPOT_AROUND           = 0;
     private static final int            NUMBER_OF_MAIN_CATEGORIES       = 4;
+    private static final long           UPDATE_SYNC_DELAY               = 60 * 1000;
+    private static final int            MARGIN_PLACE_MAX_REACHABLE      = 100;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -67,10 +63,10 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private GoogleMap                               gMap;
     private AddressResultReceiver                   mAddressResultReceiver;
     private Menu                                    menu;
-    private Loader<List<Spot>> mSpotLoader;
+    private Loader<List<Spot>>                      mSpotLoader;
     private SpotsAdapter                            spotsAdapter;
     private SpotCategory                            categorySelected;
-    private SpotAroundLoader                        mSpotLoaderModel;
+    private MapAreaLoaderCallback mSpotLoaderModel;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
     // ---------------------------------------------------------------------------------------------
@@ -99,11 +95,20 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         initEditText();
         initAdapters();
         setListeners();
-        LocationManager.addOnLocationChangedListener(this);
 
-        mSpotLoaderModel = new SpotAroundLoader(this, mSwipeAndRefreshLayout);
+        mSpotLoaderModel = new MapAreaLoaderCallback<Spot>(this, DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, Spot.class){
+            @Override
+            public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
+                super.onLoadFinished(loader, data);
+                spotsAdapter.setData(data);
+
+            }
+        };
+        mSpotLoaderModel.setExpandSize(MARGIN_PLACE_MAX_REACHABLE);
+        mSpotLoaderModel.setSwipeAndRefreshLayout(mSwipeAndRefreshLayout);
+        mSpotLoaderModel.setSyncDelay(UPDATE_SYNC_DELAY);
         if (LocationManager.hasLastLocation()){
-            mSpotLoaderModel.setBounds(LocationManager.getLastLocation());
+            mSpotLoaderModel.setBounds(LocationManager.getLastLocation(), ConfigurationProvider.rules().place_max_reachable);
             initLoader();
         }
 
@@ -289,7 +294,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         //requestReverseGeocoding(newLocation);
-        mSpotLoaderModel.setBounds(newLocation);
+        mSpotLoaderModel.setBounds(newLocation, ConfigurationProvider.rules().place_max_reachable);
         if (mSpotLoader == null){
             initLoader();
         }
@@ -300,6 +305,17 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocationManager.addOnLocationChangedListener(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocationManager.removeLocationListener(this);
+    }
 
     // =============================================================================================
 
@@ -319,53 +335,4 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         }
     }
 
-    // =============================================================================================
-
-    class SpotAroundLoader extends MultipleEntryLoaderCallback<Spot> {
-
-        /**
-         * Margin when loading place max reachable around user (in meters)
-         */
-        private static final int            MARGIN_PLACE_MAX_REACHABLE      = 100;
-        private static final long           UPDATE_SYNC_DELAY               = 60 * 1000;
-
-        private LatLngBounds                bounds;
-
-        public SpotAroundLoader(Context context, SwipeRefreshLayout swipeRefreshLayout) {
-            super(context, UPDATE_SYNC_DELAY, DataSyncAdapter.SYNC_TYPE_SPOT, Spot.class);
-            this.setSwipeAndRefreshLayout(swipeRefreshLayout);
-        }
-
-        public void setBounds(LatLngBounds bounds){
-            this.query = Spot.queryByArea(bounds);
-            this.bounds = bounds;
-        }
-        public void setBounds(Location location){
-            LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(location,
-                    ConfigurationProvider.rules().place_max_reachable + MARGIN_PLACE_MAX_REACHABLE);
-            this.query = Spot.queryByArea(bounds);
-            this.bounds = bounds;
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
-            super.onLoadFinished(loader, data);
-            spotsAdapter.setData(data);
-        }
-
-        @Override
-        public void fetchEntries(boolean force) {
-            if (force || SyncHistoryBounds.requireUpdate(SyncHistoryBounds.SyncType.SPOT, bounds, UPDATE_SYNC_DELAY)){
-                LatLngBounds newBounds = LocationManager.expand(bounds, 100);
-                this.syncOption.set(DataSyncAdapter.SYNC_PARAM_MAP_BOUNDS, newBounds);
-                Log.d(TAG, "Require update for bounds: " + bounds);
-                Log.d(TAG, "    - Loading expanded bounds: " + newBounds);
-                SyncBaseModel.getRemoteEntries(this.context, this.syncOption);
-            }
-        }
-
-        public boolean hasBounds() {
-            return bounds != null;
-        }
-    }
 }

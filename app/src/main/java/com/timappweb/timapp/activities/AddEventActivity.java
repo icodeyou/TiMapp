@@ -45,6 +45,7 @@ import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
@@ -224,12 +225,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void setProgressView(boolean bool) {
-        if(bool) {
-            progressView.setVisibility(View.VISIBLE);
-        }
-        else {
-            progressView.setVisibility(View.GONE);
-        }
+        progressView.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void submitEvent(final Event event){
@@ -254,6 +250,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                             }
                         }
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                    }
+                })
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(boolean failure) {
+                        setProgressView(false);
                     }
                 })
                 .perform();
