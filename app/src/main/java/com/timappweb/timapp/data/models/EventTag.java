@@ -14,7 +14,7 @@ import java.util.List;
  * Created by stephane on 5/8/2016.
  */
 @Table(name = "EventTag")
-public class EventTag extends MyModel {
+public class EventTag extends SyncBaseModel {
 
     // =============================================================================================
     // DATABASE
@@ -93,5 +93,10 @@ public class EventTag extends MyModel {
 
     public String getTagName() {
         return tag != null ? tag.name : "";
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        return false;
     }
 }

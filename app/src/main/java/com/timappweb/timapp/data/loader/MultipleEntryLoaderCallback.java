@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.activeandroid.query.From;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -24,11 +25,11 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
 
     // ---------------------------------------------------------------------------------------------
 
-    private final   long                            syncDelay;
-    private final   Class<?>                        clazz;
+    protected final Class<? extends SyncBaseModel>  clazz;
     protected       From                            query;
     protected       SyncAdapterOption               syncOption;
     private         SwipeRefreshLayout              mSwipeRefreshLayout;
+    private         long                            syncDelay;
     protected       Context                         context;
 
     // ---------------------------------------------------------------------------------------------
@@ -37,7 +38,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
                                        long syncDelay,
                                        int syncType,
                                        From query,
-                                        Class<?> clazz) {
+                                        Class<? extends SyncBaseModel> clazz) {
         this.context = context;
         this.syncOption = new SyncAdapterOption(syncType);
         this.syncDelay = syncDelay;
@@ -48,8 +49,14 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     public MultipleEntryLoaderCallback(Context context,
                                        long syncDelay,
                                        int syncType,
-                                       Class<?> clazz) {
+                                       Class<? extends SyncBaseModel> clazz) {
         this(context, syncDelay, syncType, null, clazz);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    public void setSyncDelay(long syncDelay) {
+        this.syncDelay = syncDelay;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -65,6 +72,8 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
             SyncBaseModel.getEntries(context, syncOption, query, syncDelay);
         }
     }
+
+
 
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
@@ -108,4 +117,11 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     }
 
 
+    public long getSyncDelay() {
+        return syncDelay;
+    }
+
+    public int getSyncType() {
+        return this.syncOption.getSyncType();
+    }
 }

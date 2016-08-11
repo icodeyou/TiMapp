@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,41 +15,39 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.google.android.gms.location.LocationListener;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventsAdapter;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.QueryCondition;
+import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
-import retrofit2.Call;
-
 public class LocateActivity extends BaseActivity implements LocationManager.LocationListener {
 
-    private static final double MIN_LOCATION_CHANGED_RELOAD_PLACE = 500.0;
-    private String TAG = "LocateActivity";
+    private static final double MIN_LOCATION_CHANGED_RELOAD_PLACE   = 500.0;
+    private static final long   UPDATE_SYNC_DELAY                   = 60 * 1000;
+    private static final int LOADER_ID_EVENT_AROUND                 = 0;
+    private static final int MARGIN_EVENT_MAX_REACHABLE             = 200;
+    private String              TAG                                 = "LocateActivity";
 
-    //Views
-    private RecyclerView    rvPlaces;
+    // ----------------------------------------------------------------------------------------------
 
-    // ProgressBar and ProgressDialog
-    private View progressView;
-
-    //others
-    private InputMethodManager imm;
-    private Menu mainMenu;
-
-    private LocationListener mLocationListener;
-    private boolean eventsLoaded;
+    private RecyclerView            rvPlaces;
+    private View                    progressView;
+    private InputMethodManager      imm;
+    private Menu                    mainMenu;
+    private boolean                 eventsLoaded;
+    private MapAreaLoaderCallback    mEventLoaderModel;
+    private Loader<Object>          mEventLoader;
 
     // ----------------------------------------------------------------------------------------------
     //OVERRIDE METHODS
@@ -58,22 +57,51 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         Log.d(TAG, "Creating LocateActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_locate);
-
         initToolbar(true);
 
-        //Initialize variables
         progressView = findViewById(R.id.progress_view);
-        //noPlaceView = findViewById(R.id.layout_if_no_place);
         rvPlaces = (RecyclerView) findViewById(R.id.list_places);
-
-        // Init variables
         eventsLoaded = false;
 
         initAdapterPlaces();
+        LocationManager.addOnLocationChangedListener(this);
 
-        //int colorRes = ContextCompat.getColor(this, R.color.colorPrimary);
-        //initToolbar(false, colorRes);
+        mEventLoaderModel = new MapAreaLoaderCallback<Event>(this, DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, Event.class){
+            @Override
+            public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
+                super.onLoadFinished(loader, data);
+                eventsLoaded = true;
+                Log.d(TAG, "Loading " + data.size() + " viewPlace(s)");
+                EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
+                placeAdapter.clear();
+                if (data.size() != 0) {
+                    placeAdapter.setData(data);
+                    progressView.setVisibility(View.GONE);
+                    rvPlaces.setVisibility(View.VISIBLE);
+                    placeAdapter.notifyDataSetChanged();
+                }
+                else {
+                    IntentsUtils.addPlace(LocateActivity.this);
+                    finish();
+                }
+            }
+        };
 
+        mEventLoaderModel.setExpandSize(MARGIN_EVENT_MAX_REACHABLE);
+        mEventLoaderModel.setSyncDelay(UPDATE_SYNC_DELAY);
+        if (LocationManager.hasLastLocation()){
+            mEventLoaderModel.setBounds(LocationManager.getLastLocation(), ConfigurationProvider.rules().place_max_reachable);
+            initLoader();
+        }
+
+    }
+
+    private void initLoader() {
+        if (!mEventLoaderModel.hasBounds()){
+            Util.appStateError(TAG, "Bounds for the loader model should be initialized before the model");
+        }
+        Log.d(TAG, "Initialize loader");
+        mEventLoader = getSupportLoaderManager().initLoader(LOADER_ID_EVENT_AROUND, null, mEventLoaderModel);
     }
 
     @Override
@@ -99,12 +127,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     }
 
     private void initAdapterPlaces() {
-        final LocateActivity that = this;
-
-        //RV
         rvPlaces.setLayoutManager(new LinearLayoutManager(this));
-
-        //Adapter
         final EventsAdapter eventsAdapter = new EventsAdapter(this);
         rvPlaces.setAdapter(eventsAdapter);
 
@@ -112,17 +135,8 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Click on event adapter");
-                /*if (!MyApplication.hasFineLocation()) {
-                    Toast.makeText(getApplicationContext(), R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                // We know that lastLocation is define because places are loaded only when location is defined
                 Event event = eventsAdapter.getItem(position);
-                EventPost eventPost = new EventPost();
-                eventPost.longitude = MyApplication.getLastLocation().getLongitude();
-                eventPost.latitude = MyApplication.getLastLocation().getLatitude();*/
-                Event event = eventsAdapter.getItem(position);
-                IntentsUtils.viewSpecifiedEvent(that, event);
+                IntentsUtils.viewSpecifiedEvent(LocateActivity.this, event);
             }
 
         });
@@ -137,8 +151,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     protected void onStart() {
         super.onStart();
-
-        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
     }
 
@@ -152,48 +164,15 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     // ----------------------------------------------------------------------------------------------
     //PRIVATE METHODS
 
-
-
-    // TODO migrate to service
-    private void loadPlaces(Location location){
-        Log.d(TAG, "Loading places with location: " + Util.print(location));
-        QueryCondition conditions = new QueryCondition();
-        conditions.setUserLocation(location.getLatitude(), location.getLongitude());
-
-        Call<List<Event>> call = RestClient.service().placeReachable(conditions.toMap());
-
-        RestClient.buildCall(call)
-                .onResponse(new HttpCallback<List<Event>>() {
-                    @Override
-                    public void successful(List<Event> events) {
-                        eventsLoaded = true;
-                        Log.d(TAG, "Loading " + events.size() + " viewPlace(s)");
-                        EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
-                        placeAdapter.clear();
-                        if (events.size() != 0) {
-                            placeAdapter.setData(events);
-                            progressView.setVisibility(View.GONE);
-                            rvPlaces.setVisibility(View.VISIBLE);
-                            placeAdapter.notifyDataSetChanged();
-                        } else {
-                            IntentsUtils.addPlace(LocateActivity.this);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void notSuccessful() {
-                        super.notSuccessful();
-                    }
-                })
-                .perform();
-    }
-
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         // if not loaded yet or if user location changed too much we need to reload places
-        if (eventsLoaded == false || (lastLocation != null && DistanceHelper.distFrom(newLocation, lastLocation) > MIN_LOCATION_CHANGED_RELOAD_PLACE)) {
-            loadPlaces(newLocation);
+        mEventLoaderModel.setBounds(newLocation, ConfigurationProvider.rules().place_max_reachable);
+        if (mEventLoader == null){
+            initLoader();
+        }
+        else{
+            mEventLoader.startLoading();
         }
     }
 

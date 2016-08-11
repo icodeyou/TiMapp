@@ -167,15 +167,7 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     }
 
     // =============================================================================================
-    public static From queryByArea(LatLngBounds bounds) {
-        return new Select()
-                .from(Spot.class)
-                .where(AreaQueryHelper.rowInBounds(bounds));
-    }
 
-    public static List<? extends SyncBaseModel> findInArea(LatLngBounds bounds) {
-        return queryByArea(bounds).execute();
-    }
 
     public void setAddress(String address) {
         this.address = address;

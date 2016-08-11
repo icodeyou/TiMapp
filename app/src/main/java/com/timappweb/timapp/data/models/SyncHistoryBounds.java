@@ -20,8 +20,6 @@ public class SyncHistoryBounds extends MyModel {
 
     private static final String TAG = "SyncHistory";
 
-    public enum SyncType {SPOT, EVENT};
-
     // ---------------------------------------------------------------------------------------------
 
     /**
@@ -57,12 +55,12 @@ public class SyncHistoryBounds extends MyModel {
      * Set the current unix time for the specified sync time
      * @param type
      */
-    public static void updateSync(SyncType type, LatLngBounds bounds){
+    public static void updateSync(int type, LatLngBounds bounds){
         Log.d(TAG, "Updating sync date for type=" + type);
         SyncHistoryBounds history = getByType(type, bounds);
         if (history == null){
             history = new SyncHistoryBounds();
-            history.type = type.ordinal();
+            history.type = type;
             history.latitude_ne = bounds.northeast.latitude;
             history.longitude_ne = bounds.northeast.longitude;
             history.latitude_sw = bounds.southwest.latitude;
@@ -78,7 +76,7 @@ public class SyncHistoryBounds extends MyModel {
      * @param updateMinDelay if 0 means infinite delay
      * @return
      */
-    public static boolean requireUpdate(SyncType type, LatLngBounds bounds, long updateMinDelay){
+    public static boolean requireUpdate(int type, LatLngBounds bounds, long updateMinDelay){
         SyncHistoryBounds history = getByType(type, bounds);
         return history == null || (updateMinDelay != 0 && (System.currentTimeMillis() - history.last_update) > updateMinDelay);
     }
@@ -88,13 +86,13 @@ public class SyncHistoryBounds extends MyModel {
      * @param type
      * @return
      */
-    public static SyncHistoryBounds getByType(SyncType type, LatLngBounds bounds){
+    public static SyncHistoryBounds getByType(int type, LatLngBounds bounds){
         return new Select()
                 .from(SyncHistoryBounds.class)
                 .where("Type = ? AND "
                                 + AreaQueryHelper.locationInSQLBounds(bounds.southwest.latitude, bounds.southwest.longitude)
                                 + " AND " + AreaQueryHelper.locationInSQLBounds(bounds.northeast.latitude, bounds.northeast.longitude),
-                        type.ordinal())
+                        type)
                 .orderBy("LastUpdate DESC")
                 .executeSingle();
     }
@@ -104,7 +102,7 @@ public class SyncHistoryBounds extends MyModel {
      * @param syncType
      * @return
      */
-    public static long getLastSyncTime(SyncType syncType) {
+    public static long getLastSyncTime(int syncType) {
         SyncHistoryBounds history = getByType(syncType, null);
         return history != null ? history.last_update : 0;
     }
