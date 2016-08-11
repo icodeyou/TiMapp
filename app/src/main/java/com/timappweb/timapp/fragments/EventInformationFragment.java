@@ -191,7 +191,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         mBinding.setEvent(event);
 
         EventCategory category = event.getCategoryWithDefault();
-        eventCategoryIcon.setImageResource(category.getIconBlackResId());
+        eventCategoryIcon.setImageResource(category.getSmallIcon());
     }
 
 

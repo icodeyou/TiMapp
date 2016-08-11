@@ -279,7 +279,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     public void setCategory(EventCategory eventCategory) {
         eventCategorySelected = eventCategory;
-        categorySelector.selectCategoryUI(eventCategory.getName(),eventCategory.getIconWhiteResId());
+        categorySelector.selectCategoryUI(eventCategory.getName(),eventCategory.getSmallIcon());
         setButtonValidation();
     }
 

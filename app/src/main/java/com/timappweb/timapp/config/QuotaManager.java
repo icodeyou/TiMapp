@@ -9,6 +9,8 @@ import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.UserActivity;
 import com.timappweb.timapp.data.models.UserQuota;
+import com.timappweb.timapp.sync.UserSyncAdapter;
+import com.timappweb.timapp.utils.Util;
 
 
 /**
@@ -63,8 +65,8 @@ public class QuotaManager {
         UserQuota userQuota = MyApplication.getCurrentUser().getQuota(quotaTypeId);
 
         if (userQuota == null){
-            Log.e(TAG, "There is no quota with id " + quotaTypeId);
-            return true;
+            Util.appStateError(TAG, "There is no quota with id: " + quotaTypeId);
+            UserSyncAdapter.syncImmediately(MyApplication.getApplicationBaseContext());
         }
 
         Log.d(TAG, "CHECKING QUOTA : " + userQuota);

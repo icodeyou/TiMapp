@@ -7,6 +7,7 @@ import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.DrawableUtil;
 
 import java.io.Serializable;
 
@@ -67,14 +68,14 @@ public class SpotCategory extends SyncBaseModel {
                 '}';
     }
 
-    public int getIconWhiteResId() {
-        return _getIcon("light");
+    public int getIcon() {
+        return _getIcon();
     }
 
-    private int _getIcon(String iconType) {
+    private int _getIcon() {
         try {
-            return R.drawable.class.getField(resourceName + "_" + iconType).getInt(null);
-        } catch (Exception ex) {
+            return DrawableUtil.get("ic_spot_category_" + resourceName);
+        } catch (DrawableUtil.UnknownDrawableException e) {
             return R.drawable.ic_category_unknown;
         }
     }

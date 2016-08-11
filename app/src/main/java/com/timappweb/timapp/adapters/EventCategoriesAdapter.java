@@ -1,15 +1,11 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -48,7 +44,7 @@ public class EventCategoriesAdapter extends CategoriesAdapter {
         final TextView categoryText = holder.categoryText;
         icons.put(eventCategory.remote_id, categoryIcon);
 
-        categoryIcon.setImageResource(eventCategory.getIconWhiteResId());
+        categoryIcon.setImageResource(eventCategory.getSmallIcon());
         if(isLegend) {
             String capitalizedName = Util.capitalize(eventCategory.getName());
             categoryText.setText(capitalizedName);

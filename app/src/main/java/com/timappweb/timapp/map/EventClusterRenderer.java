@@ -61,7 +61,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
     protected void onBeforeClusterItemRendered(Event event, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
         try {
-            categoryImage.setImageResource(event.getCategory().getIconWhiteResId());
+            categoryImage.setImageResource(event.getCategory().getSmallIcon());
         } catch (UnknownCategoryException e) {
             // TODO
             return;
@@ -131,7 +131,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
                 if (!profilePhotos.containsKey(p.getCategory().getRemoteId())){
                     Drawable drawable = null;
                     try {
-                        drawable = ContextCompat.getDrawable(context, p.getCategory().getIconWhiteResId());
+                        drawable = ContextCompat.getDrawable(context, p.getCategory().getSmallIcon());
                         drawable.setBounds(0, 0, width, height);
                         profilePhotos.put(p.getCategory().getRemoteId(), drawable);
                     } catch (UnknownCategoryException e) {

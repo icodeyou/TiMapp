@@ -302,7 +302,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
         Drawable drawable = null;
         try {
-            drawable = ResourcesCompat.getDrawable(getResources(), event.getCategory().getBigImageResId(), null);
+            drawable = ResourcesCompat.getDrawable(getResources(), event.getCategory().getBigIcon(), null);
         } catch (UnknownCategoryException e) {
             drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_else, null);
         }
@@ -317,7 +317,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             public HeaderDesign getHeaderDesign(int page) {
                 Drawable drawable = null;
                 try {
-                    drawable = getResources().getDrawable(event.getCategory().getBigImageResId());
+                    drawable = getResources().getDrawable(event.getCategory().getBigIcon());
                 } catch (UnknownCategoryException e) {
                     drawable = getResources().getDrawable(R.drawable.image_else);
                 }

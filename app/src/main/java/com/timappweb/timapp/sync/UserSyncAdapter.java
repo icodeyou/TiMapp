@@ -43,7 +43,7 @@ import retrofit2.Response;
  */
 public class UserSyncAdapter extends AbstractSyncAdapter {
 
-    public static final String TAG = "MapDataAdapter";
+    public static final String TAG = "UserSyncAdapter";
 
     /**
      * Constructor. Obtains handle to content resolver for later use.
@@ -93,12 +93,14 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
             }
         }
         catch (IOException e) {
+            // TODO retry
             Log.e(TAG, "Error performing sync for " + classType + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public static void syncImmediately(Context context) {
+        Log.i(TAG, "Requesting immediate sync for user data");
         syncImmediately(context, context.getString(R.string.content_authority_user));
     }
 }

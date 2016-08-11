@@ -7,10 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
@@ -49,7 +47,7 @@ public class SpotCategoriesAdapter extends CategoriesAdapter {
         final TextView categoryText = holder.categoryText;
         icons.put(spotCategory.remote_id, categoryIcon);
 
-        categoryIcon.setImageResource(spotCategory.getIconWhiteResId());
+        categoryIcon.setImageResource(spotCategory.getIcon());
         if(isLegend) {
             String nameCapitalized = Util.capitalize(spotCategory.name);
             categoryText.setText(nameCapitalized);

@@ -6,6 +6,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.DrawableUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,14 +25,6 @@ public class EventCategory extends SyncBaseModel{
     @Expose
     @Column(name = "Position")
     public int position;
-
-    // =============================================================================================
-
-    private int resourceBlack = -1;
-    private int resourceWhite = -1;
-    private int layoutResId = -1;
-    private int smallImageResId = -1;
-    private int bigImageResId= -1;
 
     // =============================================================================================
 
@@ -69,79 +62,26 @@ public class EventCategory extends SyncBaseModel{
         }
         return res;
     }
-    public int getIconWhiteResId() {
-        if (resourceWhite == -1){
-            try {
-                resourceWhite = R.drawable.class.getField("ic_category_highlight_" + this.name).getInt(null);
-                Log.v(TAG, "Resource read from field ic_category_" + this.name + ": " + resourceWhite);
-            } catch (IllegalAccessException e) {
-                Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_unknown;
-            } catch (NoSuchFieldException e) {
-                Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceWhite = R.drawable.ic_category_unknown;
-            }
-        }
-        Log.v(TAG, "Getting icon resource: " + resourceWhite);
-        return resourceWhite;
-    }
 
-    public int getIconBlackResId() {
-        if (resourceBlack == -1){
-            try {
-                resourceBlack = R.drawable.class.getField("ic_category_" + this.name).getInt(null);
-            } catch (IllegalAccessException e) {
-                Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_unknown;
-            } catch (NoSuchFieldException e) {
-                Log.e(TAG, "Unknown category drawable for " + this.name);
-                resourceBlack = R.drawable.ic_category_unknown;
-            }
-        }
-        return resourceBlack;
-    }
 
-    public int getBigImageResId() {
-        if (bigImageResId != -1){
-            return bigImageResId;
-        }
+    public int getSmallIcon() {
         try {
-            bigImageResId = R.drawable.class.getField("image_" + this.name).getInt(null);
-        } catch (IllegalAccessException e) {
-            Log.e(TAG, "Unknown category layout for " + this.name);
-            bigImageResId = R.drawable.image_else;
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "Unknown category layout for " + this.name);
-            bigImageResId = R.drawable.image_else;
+            return DrawableUtil.get("ic_category_" + this.name);
+        } catch (DrawableUtil.UnknownDrawableException e) {
+            Log.e(TAG, "Unknown category drawable for " + this.name);
+            return R.drawable.ic_category_unknown;
         }
-        return bigImageResId;
     }
 
-    public int getSmallImageResId() {
-        if (smallImageResId != -1){
-            return smallImageResId;
-        }
+    public int getBigIcon() {
         try {
-            smallImageResId = R.drawable.class.getField("image_place_" + this.name).getInt(null);
-        } catch (IllegalAccessException e) {
-            Log.e(TAG, "Unknown category layout for " + this.name);
-            smallImageResId = R.drawable.image_place_else;
-        } catch (NoSuchFieldException e) {
-            Log.e(TAG, "Unknown category layout for " + this.name);
-            smallImageResId = R.drawable.image_place_else;
+            return DrawableUtil.get("image_" + this.name);
+        } catch (DrawableUtil.UnknownDrawableException e) {
+            Log.e(TAG, "Unknown category drawable for " + this.name);
+            return R.drawable.image_else;
         }
-        return smallImageResId;
     }
 
-    public int getTitleResId() {
-        try {
-            return R.string.class.getField("category_" + this.name).getInt(null);
-        } catch (IllegalAccessException e) {
-        } catch (NoSuchFieldException e) {
-        }
-        Log.e(TAG, "Unknown category title for " + this.name);
-        return R.string.category_unknown;
-    }
 
     @Override
     public boolean isSync(SyncBaseModel model) {

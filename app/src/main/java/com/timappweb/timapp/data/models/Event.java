@@ -12,7 +12,6 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -21,7 +20,6 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
-import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
@@ -441,7 +439,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     }
 
     public Drawable getBackgroundImage(Context context){
-        return ContextCompat.getDrawable(context, getCategoryWithDefault().getBigImageResId());
+        return ContextCompat.getDrawable(context, getCategoryWithDefault().getBigIcon());
     }
 
     public boolean hasAddress(){
