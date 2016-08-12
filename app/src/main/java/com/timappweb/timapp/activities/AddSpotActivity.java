@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -39,6 +40,8 @@ import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
@@ -57,17 +60,17 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private Spot                                    currentSpot;
 
     //private ImageView showCategoriesButton;
-    private EditText                                etCustomPlace;
+    private EditText                                etNameSpot;
     private RecyclerView                            spotsRv;
     private CategorySelectorView                    categorySelector;
-    private GoogleMap                               gMap;
     private AddressResultReceiver                   mAddressResultReceiver;
     private Menu                                    menu;
     private Loader<List<Spot>>                      mSpotLoader;
     private SpotsAdapter                            spotsAdapter;
-    private SpotCategory                            categorySelected;
     private MapAreaLoaderCallback mSpotLoaderModel;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
+
+    private List<Spot>                              listSpotsAround;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -89,7 +92,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
-        etCustomPlace = (EditText) findViewById(R.id.name_spot);
+        etNameSpot = (EditText) findViewById(R.id.name_spot);
         mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         initEditText();
@@ -100,8 +103,11 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             @Override
             public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
                 super.onLoadFinished(loader, data);
+                listSpotsAround = new ArrayList<>(data);
                 spotsAdapter.setData(data);
-
+                if(currentSpot!=null) { // we can't call afterTextChanged before currentSpot is initialized
+                    etNameSpot.setText("");
+                }
             }
         };
         mSpotLoaderModel.setExpandSize(MARGIN_PLACE_MAX_REACHABLE);
@@ -111,7 +117,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             mSpotLoaderModel.setBounds(LocationManager.getLastLocation(), ConfigurationProvider.rules().place_max_reachable);
             initLoader();
         }
-
     }
 
     /**
@@ -126,48 +131,11 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
     private void initEditText() {
         InputFilter[] f = new InputFilter[1];
-        f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spot_min_name_length);
-        etCustomPlace.setFilters(f);
+        f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spots_max_name_length);
+        etNameSpot.setFilters(f);
         //TODO Steph : Mettre une config pour le max !
-        etCustomPlace.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etCustomPlace.clearFocus();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.menu_add_spot, menu);
-        getSpotAndBind(); //Method called here because it causes menu button validation in EditText Listener
-        setButtonValidation();
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_create:
-                finishActivityResult(currentSpot);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void getSpotAndBind() {
-        currentSpot = IntentsUtils.extractSpot(getIntent());
-        if (currentSpot == null){
-            currentSpot = new Spot();
-        } else {
-            categorySelector.selectCategoryUI(currentSpot.name, currentSpot.getCategory().getSmallIcon());
-            etCustomPlace.setText(currentSpot.name);
-            etCustomPlace.setSelection(currentSpot.name.length());
-        }
-        if (LocationManager.hasLastLocation()){
-            requestReverseGeocoding(LocationManager.getLastLocation());
-        }
+        etNameSpot.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        etNameSpot.clearFocus();
     }
 
     private void initAdapters() {
@@ -204,16 +172,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotsRv.setAdapter(spotsAdapter);
     }
 
-    private void setCategory(SpotCategory spotCategory) {
-        Spot spot = currentSpot;
-        spot.setCategory(spotCategory);
-        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getSmallIcon());
-        etCustomPlace.requestFocus();
-    }
-
     private void setListeners() {
 
-        etCustomPlace.addTextChangedListener(new TextWatcher() {
+        etNameSpot.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -224,10 +185,73 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
             @Override
             public void afterTextChanged(Editable s) {
-                currentSpot.setName(s.toString());
+                String newText = s.toString();
+
+                currentSpot.setName(newText);
+
+                final List<Spot> filteredSpotList = filter(listSpotsAround, newText);
+                spotsAdapter.animateTo(filteredSpotList);
+                spotsRv.scrollToPosition(0);
+
                 setButtonValidation();
             }
         });
+    }
+    private List<Spot> filter(List<Spot> spots, String query) {
+        query = query.toLowerCase();
+
+        final List<Spot> filteredSpotList = new ArrayList<>();
+        for (Spot spot : spots) {
+            final String text = spot.getName().toLowerCase();
+            if(text.contains(query)) {
+                filteredSpotList.add(spot);
+            }
+        }
+        return filteredSpotList;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_add_spot, menu);
+        getSpotAndBind();
+        setButtonValidation();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_create:
+                finishActivityResult(currentSpot);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void getSpotAndBind() {
+        currentSpot = IntentsUtils.extractSpot(getIntent());
+        if (currentSpot == null){
+            currentSpot = new Spot();
+        } else {
+            categorySelector.selectCategoryUI(currentSpot.name, currentSpot.getCategory().getSmallIcon());
+            etNameSpot.setText(currentSpot.name);
+            etNameSpot.setSelection(currentSpot.name.length());
+        }
+        if (LocationManager.hasLastLocation()){
+            requestReverseGeocoding(LocationManager.getLastLocation());
+        }
+    }
+
+    private void setCategory(SpotCategory spotCategory) {
+        Spot spot = currentSpot;
+        spot.setCategory(spotCategory);
+        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getSmallIcon());
+        etNameSpot.requestFocus();
     }
 
     private void finishActivityResult(Spot spot){

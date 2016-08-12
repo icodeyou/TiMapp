@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -65,6 +66,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private EventCategory               eventCategorySelected;
     private View                        progressView;
     private EditText                    descriptionET;
+    private CategorySelectorView        categorySelector;
+
     // Data
     private MapView                     mapView = null;
     private GoogleMap                   gMap;
@@ -75,8 +78,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private View.OnClickListener        displayHideCategories;
 
     private Menu                        menu;
-    private CategorySelectorView        categorySelector;
-    //private View eventLocation;
+    private View test;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -99,6 +101,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
 
         progressView = findViewById(R.id.progress_view);
+        test = findViewById(R.id.test);
         mapView = (MapView) findViewById(R.id.map);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
@@ -193,6 +196,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         eventNameET.setFilters(filters);
         eventNameET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         eventNameET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        eventNameET.clearFocus();
         //To remove words suggestions, add InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
         InputFilter[] f = new InputFilter[1];
@@ -226,6 +230,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void setProgressView(boolean bool) {
         progressView.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
+        /*if(!bool) {
+            test.setVisibility(View.INVISIBLE);
+        }*/
     }
 
     private void submitEvent(final Event event){
@@ -421,7 +428,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void updateMapCenter(Location location){
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
+        LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
+        gMap.clear();
+        gMap.addMarker(new MarkerOptions().position(coordinates));
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_LEVEL_CENTER_MAP));
     }
 
     private void initMap(){

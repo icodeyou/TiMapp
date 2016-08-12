@@ -38,10 +38,10 @@
         android:alpha="0.7"
         android:layout_centerInParent="true"
         android:visibility="gone">
-        <include layout="@layout/progress_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="@dimen/upload_tags_margin"/>
+        <com.crystal.crystalpreloaders.widgets.CrystalPreloader
+            android:layout_marginRight="@dimen/upload_tags_margin"
+            android:layout_marginEnd="@dimen/upload_tags_margin"
+            style="@style/ProgressView"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -16,19 +16,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:gravity="center"
             android:layout_margin="@dimen/margin_small">
-            <ProgressBar
-                android:layout_gravity="center"
-                android:layout_width="@dimen/loader_big"
-                android:layout_height="@dimen/loader_big"/>
+            <com.crystal.crystalpreloaders.widgets.CrystalPreloader
+                style="@style/ProgressViewSmallWhite"/>
             <TextView
                 style="@style/NoDataView"
-                android:text="@string/waiting_for_location"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
+                android:padding="@dimen/default_horizontal_padding"
                 android:textColor="@color/textLight"
+                android:text="@string/waiting_for_location"
                 android:visibility="visible"/>
         </LinearLayout>
         <Button

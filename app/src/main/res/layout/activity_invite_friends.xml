@@ -30,17 +30,7 @@
             android:id="@+id/no_friends_view"
             android:text="@string/no_friends"/>
 
-        <LinearLayout
-            android:id="@+id/progressview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@color/background"
-            android:visibility="gone">
-            <include layout="@layout/progress_view"
-                android:layout_height="@dimen/default_progressview"
-                android:layout_width="@dimen/default_progressview" />
-        </LinearLayout>
+        <include layout="@layout/progressview_fullscreen" />
 
     </RelativeLayout>
 

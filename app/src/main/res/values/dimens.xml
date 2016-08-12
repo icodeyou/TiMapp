@@ -32,7 +32,7 @@
     <dimen name="positive_half_profile_picture_side">45dp</dimen>
     <dimen name="negative_half_profile_picture_side">-45dp</dimen>
     <dimen name="last_post_box">5dp</dimen>
-    <dimen name="height_small_rv_displayed_tags">25dp</dimen>
+    <dimen name="height_small_rv_displayed_tags">30dp</dimen>
     <dimen name="height_item_friend_invited">50dp</dimen>
     <dimen name="height_post_field_group">60dp</dimen>
     <dimen name="height_place_box">160dp</dimen>
@@ -90,6 +90,7 @@
     <dimen name="height_top_gradient_view">4dp</dimen>
     <dimen name="height_bottom_gradient_view">6dp</dimen>
     <dimen name="default_progressview">50dp</dimen>
+    <dimen name="small_progressview">35dp</dimen>
     <dimen name="padding_zoom_fit_cluster">50dp</dimen>
     <dimen name="icon_default">40dp</dimen>
     <dimen name="height_pin_post_box">50dp</dimen>
@@ -106,7 +107,7 @@
     <dimen name="header_height">250dp</dimen>
     <dimen name="tab_height">50dp</dimen>
     <dimen name="min_header_height">150dp</dimen>
-    <dimen name="spot_height_add_event">100dp</dimen>
+    <dimen name="spot_height_add_event">200dp</dimen>
     <dimen name="map_height">250dp</dimen>
     <dimen name="paddingBottomDefault">6dp</dimen>
     <dimen name="cardMarginBottom">10dp</dimen>

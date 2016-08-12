@@ -5,17 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/loading_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:visibility="gone">
-        <include layout="@layout/progress_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"/>
-    </LinearLayout>
+    <include layout="@layout/progressview_fullscreen" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_places"

@@ -25,6 +25,7 @@
         android:layout_marginLeft="@dimen/padding_event_bottom_view">
         <ImageView
             android:id="@+id/spot_category_icon"
+            style="@style/imageIcon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/radius_simple_background_primary"
@@ -44,12 +45,13 @@
         android:padding="12dp"
         android:src="@drawable/dot_separator"/>
 
-    <me.grantland.widget.AutofitTextView
+    <TextView
         style="@style/TextLightBackgroundBold"
         android:id="@+id/title_spot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:maxLines="1"
+        android:ellipsize="end"
         android:text="@{spot.name}"
         tools:text="Le Vertigo"/>
 </LinearLayout>

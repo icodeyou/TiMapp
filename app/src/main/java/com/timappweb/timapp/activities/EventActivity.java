@@ -53,7 +53,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private static final int PAGER_PEOPLE           = 3;
 
     private static final int INITIAL_FRAGMENT_PAGE  = 0;
-    private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 2;
+    private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 4;
 
     public static final int LOADER_ID_CORE          = 0;
     public static final int LOADER_ID_PICTURE       = 1;
@@ -226,9 +226,10 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     @Override
     public void onBackPressed() {
+        //Used to prevent going back to AddEventActivity after creating an event
         NavUtils.navigateUpFromSameTask(this);
+        //TODO : Delete this function once AddEventActivity is called with startActivityForResult()
     }
-
 
     @Override
     protected void onPause() {
@@ -308,7 +309,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
         mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
         mMaterialViewPager.setImageDrawable(drawable, 0);
-        mMaterialViewPager.getViewPager().setOffscreenPageLimit(PAGER_OFFSCREEN_PAGE_LIMIT); // Does not seem to work.
+        mMaterialViewPager.getViewPager().setOffscreenPageLimit(mMaterialViewPager.getChildCount());
 
         /*
         Change header image and color

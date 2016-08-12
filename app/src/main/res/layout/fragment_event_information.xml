@@ -129,8 +129,7 @@
 
                             <ProgressBar
                                 style="@style/SmallFormIconGroup"
-                                android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}"
-                                android:id="@+id/progressBar2" />
+                                android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}" />
 
                             <TextView
                                 android:id="@+id/distance_text"

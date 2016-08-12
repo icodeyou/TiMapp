@@ -19,6 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <com.crystal.crystalpreloaders.widgets.CrystalPreloader
+            android:id="@+id/progress_view"
+            android:layout_centerHorizontal="true"
+            style="@style/SmallProgressView"/>
+
         <LinearLayout
             android:id="@+id/search_tags_container"
             android:layout_width="match_parent"
@@ -134,8 +139,7 @@
                         android:orientation="horizontal">
                         <ProgressBar
                             style="@style/SmallFormIconGroup"
-                            android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}"
-                            android:id="@+id/progressBar2" />
+                            android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}" />
 
                         <TextView
                             style="@style/TextLightBackground"

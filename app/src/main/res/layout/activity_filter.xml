@@ -36,19 +36,7 @@
 
     <!-- Progress View -->
     <!-- **********************************************************************-->
-    <LinearLayout
-        android:id="@+id/progress_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <include layout="@layout/progress_view"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_width="50dp"/>
-    </LinearLayout>
+    <include layout="@layout/progressview_fullscreen" />
 
     <!-- ******************************************************************* -->
     <!-- Second part: ListView : Suggestion of tags -->
