@@ -163,9 +163,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
     // ---------------------------------------------------------------------------------------------
 
     public void setLoaderVisibility(boolean bool) {
-        if(progressView!=null) {
-            progressView.setVisibility(bool ? View.VISIBLE : View.GONE);
-        }
+        progressView.setVisibility(bool ? View.VISIBLE : View.GONE);
     }
 
     private void displayEvent(Event event) {
@@ -178,7 +176,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         tvCountPoints.cancelTimer();
         tvCountPoints.initTimer(event.getPoints());
         //TODO Steph : might be better to initialize the timer through databinding
-
     }
 
     public void hideEvent() {

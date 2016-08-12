@@ -21,42 +21,6 @@
         <attr name="center" format="boolean" />
     </declare-styleable>
 
-
-    <!-- parent styleable -->
-    <!--<declare-styleable name="CardView">
-        <attr name="tags_visible" format="boolean" />
-        <attr name="bottom_shadow" format="boolean" />
-        <attr name="top_shadow" format="boolean" />
-        <attr name="background_color" format="color" />
-    </declare-styleable>-->
-
-
-    <!--<declare-styleable name="EventView">
-        <attr name="tags_visible" />
-        <attr name="bottom_shadow" />
-        <attr name="top_shadow" />
-        <attr name="toolbar_mode" />
-
-        <attr name="points_visible" format="boolean" />
-        <attr name="show_title" format="boolean" />
-        <attr name="is_match_button" format="boolean" />
-        <attr name="is_spot" format="boolean" />
-        <attr name="color_spot" format="boolean" />
-        <attr name="color_event" format="boolean" />
-        <attr name="is_description" format="boolean" />
-    </declare-styleable>-->
-
-    <!--<declare-styleable name="SpotView">
-        <attr name="tags_visible" />
-        <attr name="bottom_shadow" />
-        <attr name="top_shadow" />
-        <attr name="toolbar_mode" />
-
-        <attr name="edit_mode"  format="boolean"/>
-        <attr name="background_color"  format="boolean"/>
-        <attr name="gravity_center" format="boolean" />
-    </declare-styleable>-->
-
     <!-- SLIDING TABS -->
     <declare-styleable name="SlidingTabLayout">
         <attr name="indicatorColor" format="color"/>

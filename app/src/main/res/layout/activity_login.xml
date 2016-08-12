@@ -92,15 +92,14 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:visibility="gone">
-                <include layout="@layout/white_progressview"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp" />
-                <TextView
+                <com.crystal.crystalpreloaders.widgets.CrystalPreloader
+                    style="@style/ProgressViewSmallWhite"/>
+                <!--<TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/please_wait"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_big"/>
+                    android:textSize="@dimen/text_big"/>-->
             </LinearLayout>
         </RelativeLayout>
 

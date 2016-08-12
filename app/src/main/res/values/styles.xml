@@ -308,6 +308,8 @@
         <item name="android:singleLine">true</item>
         <item name="android:background">@drawable/edittext_bottom_line</item>
         <item name="android:padding">4dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
     </style>
 
     <style name="whiteFormEditText" parent="formEditText">
@@ -413,6 +415,35 @@
     <style name="item_text_info" parent="SmallTextLightBackground">
         <item name="android:layout_marginLeft">@dimen/margin_tabulation</item>
         <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="LayoutProgressView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@color/background</item>
+    </style>
+
+    <style name="ProgressView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="crs_pl_fg_color">@color/colorPrimary</item>
+        <item name="crs_pl_style">tornado_circle_3</item>
+        <item name="crs_pl_size">small</item>
+        <item name="crs_pl_bg_color">@color/transparent</item>
+    </style>
+
+    <style name="SmallProgressView" parent="ProgressView">
+        <item name="crs_pl_size">very_small</item>
+    </style>
+
+    <style name="ProgressViewSecondary" parent="ProgressView">
+        <item name="crs_pl_fg_color">@color/colorSecondary</item>
+    </style>
+
+    <style name="ProgressViewSmallWhite" parent="SmallProgressView">
+        <item name="crs_pl_fg_color">@color/white</item>
     </style>
 
     <color name="textMute">

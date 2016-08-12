@@ -41,17 +41,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/progress_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:background="@color/background"
-        android:visibility="visible">
-        <include layout="@layout/progress_view"
-            android:layout_height="@dimen/default_progressview"
-            android:layout_width="@dimen/default_progressview"/>
-    </LinearLayout>
+    <include layout="@layout/progressview_fullscreen" />
 
 </RelativeLayout>

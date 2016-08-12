@@ -105,8 +105,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="exemple_comment">Cet endroit est sympa, surtout
         grâce à Lucia qui s’est mise toute nue sur le bar.</string>
     <string name="hashtag">#</string>
-    <string name="please_wait">Please wait ...</string>
-    <string name="waiting_for_location">Getting your location...</string>
+    <string name="please_wait">Please wait</string>
+    <string name="waiting_for_location">Getting your location</string>
     <string name="skip">Skip</string>
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>
@@ -152,7 +152,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="text_tags_left_3">3 tags left</string>
     <string name="text_tags_left_2">2 tags left</string>
     <string name="text_tags_left_1">1 tag left</string>
-    <string name="tags_shared">Tags shared</string>
+    <string name="posts_shared">Posts shared</string>
     <string name="events_created">Events created</string>
     <string name="edit_first_profile1">Well done.</string>
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>

@@ -68,8 +68,7 @@
                         android:layout_gravity="center"
                         myattrs:horizontal_tags_text_color="@color/colorPrimary"
                         myattrs:horizontal_tags_background_color="@color/background_card"
-                        myattrs:horizontal_tags_is_bold="false"
-                        myattrs:horizontal_tags_text_size="@dimen/text_tags_small" />
+                        myattrs:horizontal_tags_is_bold="false" />
                 </LinearLayout>
             </LinearLayout>
             <!--<RelativeLayout

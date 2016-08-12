@@ -137,7 +137,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
         tvCountPoints = (SimpleTimerView) view.findViewById(R.id.white_points_text);
         int initialTime = event.getPoints();
-        tvCountPoints.initTimer(initialTime*1000);
+        tvCountPoints.initTimer(initialTime);
 
         btnRequestNavigation = view.findViewById(R.id.button_nav);
         btnRequestNavigation.setOnClickListener(new View.OnClickListener() {

@@ -74,7 +74,7 @@ public class InviteFriendsActivity extends BaseActivity {
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        progressview = findViewById(R.id.progressview);
+        progressview = findViewById(R.id.progress_view);
 
         initAdapterListFriends();
 

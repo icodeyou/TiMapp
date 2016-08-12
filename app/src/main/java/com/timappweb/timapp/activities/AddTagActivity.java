@@ -92,7 +92,7 @@ public class AddTagActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressStartView = (ProgressBar) findViewById(R.id.progress_view);
-        progressEndView = findViewById(R.id.progress_end);
+        progressEndView = findViewById(R.id.progress_view);
         confirmButton = (Button) findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(new OnPostTagButtonClickListener());
 
