@@ -46,6 +46,7 @@ public class CategorySelectorView extends LinearLayout {
     private LinearLayout        mainLayout;
 
     private int colorBackground = 0;
+    private Animation slideIn;
 
 
     public CategorySelectorView(Context context) {
@@ -92,11 +93,10 @@ public class CategorySelectorView extends LinearLayout {
         displayHideCategories = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moreBtn.toggle();
-                if(!isExpandedView()) {
-                    expandView();
-                } else {
+                if(isExpandedView()) {
                     lowerView();
+                } else {
+                    expandView();
                 }
             }
         } ;
@@ -123,25 +123,31 @@ public class CategorySelectorView extends LinearLayout {
     }
 
     public boolean isExpandedView() {
-        return rvAllCategories.getVisibility()==VISIBLE;
+        return rvAllCategories.getVisibility()==VISIBLE && slideIn.hasEnded();
     }
 
     public void expandView() {
-        final Animation slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_all);
-        rvAllCategories.startAnimation(slideIn);
-        pickTv.setVisibility(View.VISIBLE);
-        rvAllCategories.setVisibility(View.VISIBLE);
-        rvMainCategories.setVisibility(View.GONE);
-        imm.hideSoftInputFromWindow(getWindowToken(), 0);   //Hide keyboard
+        if(!isExpandedView()) {
+            moreBtn.toggle();
+            slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_all);
+            rvAllCategories.startAnimation(slideIn);
+            pickTv.setVisibility(View.VISIBLE);
+            rvAllCategories.setVisibility(View.VISIBLE);
+            rvMainCategories.setVisibility(View.GONE);
+            imm.hideSoftInputFromWindow(getWindowToken(), 0);   //Hide keyboard
+        }
     }
 
     public void lowerView() {
-        pickTv.setVisibility(View.GONE);
-        rvAllCategories.setVisibility(View.GONE);
-        if(selectedCategoryView.getVisibility()==GONE) {
-            final Animation slideMainIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_main);
-            rvMainCategories.startAnimation(slideMainIn);
-            rvMainCategories.setVisibility(View.VISIBLE);
+        if(isExpandedView()) {
+            moreBtn.toggle();
+            pickTv.setVisibility(View.GONE);
+            rvAllCategories.setVisibility(View.GONE);
+            if(selectedCategoryView.getVisibility()==GONE) {
+                final Animation slideMainIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_main);
+                rvMainCategories.startAnimation(slideMainIn);
+                rvMainCategories.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -151,9 +157,7 @@ public class CategorySelectorView extends LinearLayout {
         textSelectedCategory.setText(capitalizedName);
         selectedCategoryView.setVisibility(View.VISIBLE);
         rvMainCategories.setVisibility(View.GONE);
-        if(isExpandedView()) {
-            lowerView();
-        }
+        lowerView();
     }
 
 }

@@ -32,7 +32,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
-import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.EventClusterRenderer;
 import com.timappweb.timapp.map.MapFactory;
@@ -48,7 +48,7 @@ import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.List;
 
-public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
+public class ExploreMapFragment extends Fragment implements LocationManager.LocationListener, OnMapReadyCallback {
 
     private static final String             TAG                             = "GoogleMapFragment";
     private static final long               TIME_WAIT_MAP_VIEW              = 500;
@@ -93,11 +93,6 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         if (needCenterMap){
             centerMap(newLocation);
         }
-    }
-
-    @Override
-    public void onTabSelected() {
-
     }
 
     // ---------------------------------------------------------------------------------------------

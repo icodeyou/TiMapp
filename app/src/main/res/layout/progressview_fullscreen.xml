@@ -5,3 +5,7 @@
     <com.crystal.crystalpreloaders.widgets.CrystalPreloader
         style="@style/ProgressView"/>
 </LinearLayout>
+
+<!--
+Be careful : Always use this view inside a relativeLayout, so that the loader overlays your previous layout.
+If place it on Top of a LinearLayout, this might cause problems.-->

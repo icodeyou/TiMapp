@@ -44,6 +44,8 @@ public class ExploreFragment extends Fragment{
     private ExploreMapFragment mapFragment;
     private View fab;
 
+    private Menu menu;
+
     public ExploreMapFragment getExploreMapFragment(){
         return mapFragment;
     }
@@ -123,6 +125,7 @@ public class ExploreFragment extends Fragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
+        this.menu = menu;
         super.onCreateOptionsMenu(menu,inflater);
     }
 
@@ -160,6 +163,7 @@ public class ExploreFragment extends Fragment{
                 containerEvents.startAnimation(slideIn);
                 containerEvents.setVisibility(View.VISIBLE);
                 blurBackground.setVisibility(View.VISIBLE);
+                menu.findItem(R.id.action_list).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.list_close));
             } else {
                 Toast.makeText(getContext(), R.string.text_no_event, Toast.LENGTH_SHORT).show();
             }
@@ -170,6 +174,7 @@ public class ExploreFragment extends Fragment{
             containerEvents.startAnimation(slideOut);
             containerEvents.setVisibility(View.GONE);
             blurBackground.setVisibility(View.GONE);
+            menu.findItem(R.id.action_list).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.list));
         }
     }
 

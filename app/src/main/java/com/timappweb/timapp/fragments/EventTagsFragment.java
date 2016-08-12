@@ -25,13 +25,14 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
 
-public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener {
+public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener {
 
     private static final String TAG = "EventTagsFragment";
     private static final long MAX_UPDATE_DELAY = 3600 * 1000;
@@ -156,6 +157,10 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
             mAdapter.notifyDataSetChanged();
             noTagsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.GONE);
         }
+    }
 
+    @Override
+    public void onTabSelected() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }

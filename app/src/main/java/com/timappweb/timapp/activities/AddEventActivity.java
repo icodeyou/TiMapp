@@ -96,12 +96,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         descriptionET = (EditText)  findViewById(R.id.description_edit_text);
         eventNameET = (EditText) findViewById(R.id.event_name);
-        eventNameET.requestFocus();
 
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
 
         progressView = findViewById(R.id.progress_view);
-        test = findViewById(R.id.test);
         mapView = (MapView) findViewById(R.id.map);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
@@ -196,7 +194,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         eventNameET.setFilters(filters);
         eventNameET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         eventNameET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        eventNameET.clearFocus();
         //To remove words suggestions, add InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
         InputFilter[] f = new InputFilter[1];
@@ -230,9 +227,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void setProgressView(boolean bool) {
         progressView.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
-        /*if(!bool) {
-            test.setVisibility(View.INVISIBLE);
-        }*/
+        if(bool) {
+            menu.findItem(R.id.action_post).setEnabled(false);
+        } else {
+            setButtonValidation();
+        }
     }
 
     private void submitEvent(final Event event){
@@ -254,6 +253,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                             }
                             catch (Exception ex){
                                 Log.e(TAG, "Cannot get EventUser id from server response");
+                                setProgressView(false);
                             }
                         }
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
@@ -262,7 +262,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(boolean failure) {
-                        setProgressView(false);
+                        if(failure) {
+                            setProgressView(false);
+                            Log.e(TAG, "Post failed");
+                            //TODO : Steph : failure is always true, even if the post is succesfull
+                        }
                     }
                 })
                 .perform();
@@ -300,14 +304,14 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         View.OnFocusChangeListener onEtFocus = new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                hideCategories();
+                categorySelector.lowerView();
             }
         };
         //If click on editText when Focused
         View.OnClickListener onEtClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideCategories();
+                categorySelector.lowerView();
             }
         };
         eventNameET.setOnFocusChangeListener(onEtFocus);
@@ -369,13 +373,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 //pinView.setVisibility(View.VISIBLE);
             }
         });*/
-    }
-
-    private void hideCategories() {
-        if(categorySelector.isExpandedView()) {
-            categorySelector.lowerView();
-            //TODO : Nettoyer ça : supprimer cette fonction et uniquement appeler la methode lowerview
-        }
     }
 
     private void extractSpot(Bundle bundle){

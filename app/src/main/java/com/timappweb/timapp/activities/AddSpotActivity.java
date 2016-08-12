@@ -238,7 +238,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         if (currentSpot == null){
             currentSpot = new Spot();
         } else {
-            categorySelector.selectCategoryUI(currentSpot.name, currentSpot.getCategory().getSmallIcon());
+            categorySelector.selectCategoryUI(currentSpot.getCategory().name, currentSpot.getCategory().getSmallIcon());
             etNameSpot.setText(currentSpot.name);
             etNameSpot.setSelection(currentSpot.name.length());
         }
@@ -272,45 +272,14 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     @Override
     public void onPause() {
-        //mapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        //mapView.onResume();
         super.onResume();
         Log.d(TAG, "ExploreMapFragment.onResume()");
-        //this.loadMapIfNeeded();
     }
-
-/*    private void loadMapIfNeeded() {
-        try {
-            if (gMap == null){
-                gMap = mapView.getMap();
-            }
-            gMap.setIndoorEnabled(true);
-            Location location = LocationManager.getLastLocation();
-            if (location != null){
-                updateMapCenter(location);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initMap(){
-        mapView.onCreate(null);
-        mapView.getMapAsync(this);
-        gMap = mapView.getMap();
-        gMap.setIndoorEnabled(true);
-        gMap.setMyLocationEnabled(true);
-    }
-
-    private void updateMapCenter(Location location){
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), ZOOM_LEVEL_CENTER_MAP));
-    }*/
 
 
     private void requestReverseGeocoding(Location location){
@@ -365,5 +334,4 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             }
         }
     }
-
 }

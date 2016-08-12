@@ -30,6 +30,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
@@ -38,7 +39,7 @@ import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SimpleTimerView;
 
 
-public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback {
+public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener {
 
     private static final int            TIMELAPSE_HOT_ANIM      = 2000;
     private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 2 * 1000;
@@ -189,9 +190,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     public void updateView(){
         Event event = eventActivity.getEvent();
         mBinding.setEvent(event);
-
-        EventCategory category = event.getCategoryWithDefault();
-        eventCategoryIcon.setImageResource(category.getSmallIcon());
     }
 
 
@@ -253,4 +251,8 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         }
     }
 
+    @Override
+    public void onTabSelected() {
+        mScrollView.smoothScrollTo(0,0);
+    }
 }

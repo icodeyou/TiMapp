@@ -17,20 +17,19 @@
             type="String"></variable>
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".AddSpotActivity"
-        android:orientation="vertical"
         android:background="@color/background">
 
-        <include
+        <include android:id="@+id/layout_toolbar"
             layout="@layout/toolbar_layout_secondary"/>
 
-        <include layout="@layout/progressview_fullscreen"/>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_toolbar">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,5 +112,11 @@
 
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_toolbar"
+            layout="@layout/progressview_fullscreen" />
+    </RelativeLayout>
 </layout>
