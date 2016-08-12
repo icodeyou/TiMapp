@@ -66,7 +66,7 @@ public class ApplicationRules {
     public int places_max_name_length = 0; // @warning used to check if configuration is correctly loaded. Do not change default
 
     @Expose
-    public int spots_min_name_length = 3;
+    public int spots_min_name_length = 3; // TODO use
 
     @Expose
     public int spots_max_name_length = 30;
