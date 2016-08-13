@@ -87,7 +87,7 @@
     <dimen name="width_pic_card">58dp</dimen>
     <dimen name="width_checkbox_card">62dp</dimen>
     <dimen name="upload_tags_margin">25dp</dimen>
-    <dimen name="height_top_gradient_view">4dp</dimen>
+    <dimen name="height_top_gradient_view">6dp</dimen>
     <dimen name="height_bottom_gradient_view">6dp</dimen>
     <dimen name="default_progressview">50dp</dimen>
     <dimen name="small_progressview">35dp</dimen>
@@ -119,11 +119,6 @@
     <dimen name="height_header_event">200dp</dimen>
     <dimen name="header_additional_height">3dp</dimen>
     <dimen name="loader_big">60dp</dimen>
-    <integer name="slide_down_anim">90</integer>
-    <integer name="slide_up_anim">-90</integer>
-    <integer name="slide_event_bottom_map">200</integer>
-    <integer name="slide_in_down">-1000</integer>
-    <integer name="slide_out_up">100</integer>
 
     <!-- ========================================================================================-->
 

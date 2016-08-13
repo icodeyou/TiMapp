@@ -45,6 +45,7 @@ public class ExploreFragment extends Fragment{
     private View fab;
 
     private Menu menu;
+    private View.OnClickListener fabClickListener;
 
     public ExploreMapFragment getExploreMapFragment(){
         return mapFragment;
@@ -73,7 +74,6 @@ public class ExploreFragment extends Fragment{
 
         containerEvents = (FrameLayout) root.findViewById(R.id.fragment_events);
         blurBackground = root.findViewById(R.id.blur_background);
-        fab = root.findViewById(R.id.fab_button);
 
         dataLoader = new AreaDataLoaderFromAPI(this.getContext(), MyApplication.searchFilter);
 
@@ -85,12 +85,12 @@ public class ExploreFragment extends Fragment{
     }
 
     public void initAddSpotButton() {
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentsUtils.locate(getActivity());
             }
-        });
+        };
     }
 
     private void initFragments() {
@@ -178,8 +178,8 @@ public class ExploreFragment extends Fragment{
         }
     }
 
-    public void setFabVisibility(boolean isVisible) {
-        fab.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    public View.OnClickListener getFabClickListener() {
+        return fabClickListener;
     }
 
     public ExploreEventsFragment getExploreEventsFragment() {
@@ -188,63 +188,5 @@ public class ExploreFragment extends Fragment{
     public FrameLayout getContainerEvents() {
         return containerEvents;
     }
-
-    /*public static class TabsAdapter extends FragmentPagerAdapter {
-
-        private ExploreMapFragment exploreMapFragment;
-        private ExploreEventsFragment exploreEventsFragment;
-        private Context mContext;
-
-        public TabsAdapter(Context context, FragmentManager fm) {
-            super(fm);
-            this.mContext = context;
-        }
-
-        public ExploreMapFragment getExploreMapFragment() {
-            return exploreMapFragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        *//**
-         * This is only called when initializing the fragment
-         * @param position
-         * @return
-         *//*
-        @Override
-        public Fragment getItem(int position) {
-            Log.d(TAG, "TabsAdapter load position " + position);
-            if (position == 0) {
-                if (exploreMapFragment == null) exploreMapFragment = new ExploreMapFragment();
-                return exploreMapFragment;
-            } else {
-                if (exploreEventsFragment == null) exploreEventsFragment = new ExploreEventsFragment();
-                return exploreEventsFragment;
-            }
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            SpannableStringBuilder sb;
-            Drawable drawable;
-            if (position == 0) {
-                sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_map));
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.ic_map_light);
-            }
-            else {
-                sb = new SpannableStringBuilder(" " + mContext.getString(R.string.tab_list));
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.list);
-            }
-            int icSize = (int) mContext.getResources().getDimension(R.dimen.logo_small);
-            drawable.setBounds(0, 0, icSize, icSize);
-            ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
-            sb.setSpan(span, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            return sb;
-        }
-    }*/
 }
 

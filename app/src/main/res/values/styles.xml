@@ -15,13 +15,12 @@
         <!-- TOOLBAR -->
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
         <!-- -->
         <item name="android:textColor">@color/textBlack</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/colorSecondary</item>
         <item name="android:textColorSecondary">@color/colorAccent</item>
 
         <!-- Material Theme -->
@@ -71,7 +70,7 @@
     </style>
 
     <style name="AppTheme.ActionBar.Text" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -172,21 +171,22 @@
     </style>
 
     <style name="DarkFab" parent="Fab">
-        <item name="rippleColor">@color/colorPrimaryDark</item>
+        <item name="rippleColor">@color/colorSecondaryExtaLight</item>
         <item name="backgroundTint">@color/colorSecondary</item>
     </style>
 
     <style name="NewEventFab" parent="DarkFab">
         <item name="android:src">@drawable/new_event_button</item>
+        <item name="android:layout_margin">11dp</item>
+        <item name="android:layout_alignParentBottom">false</item>
     </style>
 
     <style name="MiniFab">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="fab_icon">@drawable/ic_camera_white</item>
         <item name="fab_size">mini</item>
-        <item name="fab_colorNormal">@color/colorSecondaryExtaLight</item>
-        <item name="fab_colorPressed">@color/background_dark</item>
+        <item name="fab_colorNormal">@color/colorPrimary</item>
+        <item name="fab_colorPressed">@color/colorPrimaryVeryDark</item>
     </style>
 
     <!-- Texts Styles-->

@@ -56,6 +56,7 @@
     <color name="form_title">@color/Black</color>
     <color name="smoke">#d6ffffff</color>
     <color name="light_smoke">#aeffffff</color>
+    <color name="elevation_gray">#50848484</color>
 
     <!-- Buttons -->
     <color name="background_top_invitation">#1d1d1d</color>
