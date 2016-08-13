@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -19,11 +18,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
@@ -32,7 +29,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
-import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.EventClusterRenderer;
 import com.timappweb.timapp.map.MapFactory;
@@ -48,7 +45,7 @@ import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.List;
 
-public class ExploreMapFragment extends Fragment implements OnExploreTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
+public class ExploreMapFragment extends Fragment implements OnTabSelectedListener, LocationManager.LocationListener, OnMapReadyCallback {
 
     private static final String             TAG                             = "GoogleMapFragment";
     private static final long               TIME_WAIT_MAP_VIEW              = 500;
@@ -115,7 +112,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
-        tvCountPoints = (SimpleTimerView) root.findViewById(R.id.white_points_text);
+        tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
 
         eventView = root.findViewById(R.id.event_view);
         eventView.setVisibility(View.GONE);
@@ -173,6 +170,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         eventView.setVisibility(View.VISIBLE);
+        exploreFragment.setFabVisibility(false);
         tvCountPoints.cancelTimer();
         tvCountPoints.initTimer(event.getPoints());
         //TODO Steph : might be better to initialize the timer through databinding
@@ -180,6 +178,7 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
 
     public void hideEvent() {
         final Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
+        exploreFragment.setFabVisibility(true);
         eventView.startAnimation(slideOut);
         eventView.setVisibility(View.GONE);
     }
@@ -359,11 +358,12 @@ public class ExploreMapFragment extends Fragment implements OnExploreTabSelected
         if(isPlaceViewVisible() && mBinding.getEvent() == event) {
             IntentsUtils.viewSpecifiedEvent(getActivity(), event);
         } else {
-            MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
+            //TODO : what is that ?
+            /*MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
 
             ImageView pin = new ImageView(getContext());
             pin.setImageResource(R.drawable.pin);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));*/
 
             displayEvent(event);
         }

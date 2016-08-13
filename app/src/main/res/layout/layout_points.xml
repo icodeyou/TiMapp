@@ -10,22 +10,22 @@
         android:id="@+id/white_points_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/points_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="3dp"
             android:src="@drawable/ic_hot" />
 
         <com.timappweb.timapp.views.SimpleTimerView
-            android:id="@+id/white_points_text"
+            android:id="@+id/points_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_huge"
             android:gravity="center"
             android:textStyle="italic"

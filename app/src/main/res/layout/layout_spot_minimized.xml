@@ -16,26 +16,24 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="5dp"
     android:visibility="@{spot == null ? View.GONE : View.VISIBLE}">
 
-    <FrameLayout
+    <!--<FrameLayout
         style="@style/imageIcon"
         android:layout_marginRight="@dimen/padding_event_bottom_view"
-        android:layout_marginLeft="@dimen/padding_event_bottom_view">
+        android:layout_marginEnd="@dimen/padding_event_bottom_view">
         <ImageView
             android:id="@+id/spot_category_icon"
             style="@style/imageIcon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/radius_simple_background_primary"
+            android:background="@drawable/radius_simple_background_black"
             app:imageResource="@{spot.getCategory().getSmallIcon()}"/>
-    </FrameLayout>
+    </FrameLayout>-->
 
     <TextView
-        style="@style/TextLightBackgroundBold"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/TextBold"
+        android:textColor="@color/textBlack"
         tools:text="Bar"
         android:text="@{spot.getCategory().name}"/>
 
@@ -43,15 +41,13 @@
         style="@style/imageIcon"
         android:gravity="center"
         android:padding="12dp"
-        android:src="@drawable/dot_separator"/>
+        android:src="@drawable/dot_separator_black"/>
 
     <TextView
-        style="@style/TextLightBackgroundBold"
         android:id="@+id/title_spot"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:maxLines="1"
+        style="@style/TextDefault"
         android:ellipsize="end"
+        android:textColor="@color/textBlack"
         android:text="@{spot.name}"
         tools:text="Le Vertigo"/>
 </LinearLayout>

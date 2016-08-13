@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
-        android:divider="@drawable/gradient_bottom_view"
+        android:divider="@drawable/gradient_bottom_view_dark"
         android:dividerHeight="7dp"
         android:visibility="visible"/>
 

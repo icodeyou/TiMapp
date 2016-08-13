@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
-                <include layout="@layout/event_stats_people"
+                <include layout="@layout/layout_points"
                     bind:event="@{event}"></include>
             </LinearLayout>
         </LinearLayout>

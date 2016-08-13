@@ -5,7 +5,7 @@
     android:id="@id/materialviewpager_pagerTitleStrip"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:pstsPaddingMiddle="true"
+    app:pstsPaddingMiddle="false"
     app:pstsTabTextColor="@color/textLight"
     app:pstsDividerPadding="20dp"
     app:pstsIndicatorColor="@color/white"

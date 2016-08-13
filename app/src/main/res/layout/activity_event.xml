@@ -21,13 +21,13 @@
             app:viewpager_logoMarginTop="70dp"
             app:viewpager_color="@color/textLight"
             app:viewpager_headerHeight="@dimen/height_header_event"
-            app:viewpager_headerAlpha="0.7"
+            app:viewpager_headerAlpha="0.5"
             app:viewpager_hideLogoWithFade="false"
             app:viewpager_hideToolbarAndTitle="false"
             app:viewpager_enableToolbarElevation="true"
             app:viewpager_parallaxHeaderFactor="1"
             app:viewpager_headerAdditionalHeight="@dimen/header_additional_height"
-            app:viewpager_displayToolbarWhenSwipe="false"
+            app:viewpager_displayToolbarWhenSwipe="true"
             app:viewpager_transparentToolbar="false"
             app:viewpager_animatedHeaderImage="true"
             app:viewpager_disableToolbar="false"
@@ -38,11 +38,7 @@
             android:id="@+id/multiple_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
-            fab:fab_addButtonColorPressed="@color/background"
-            fab:fab_addButtonPlusIconColor="@color/colorPrimary"
-            style="@style/GetbaseFab"
-            fab:fab_expandDirection="left">
+            style="@style/GetbaseFab" >
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_camera"

@@ -14,7 +14,7 @@
 			android:ellipsize="end"
 			android:maxLines="1"
 			android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-			android:textColor="@color/textDark"
+			android:textColor="@color/textBlack"
 			tools:text="Title"/>
 
 

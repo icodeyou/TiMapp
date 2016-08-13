@@ -151,12 +151,13 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <!-- Navigation Drawer -->
     <dimen name="nav_drawer_max_width">320dp</dimen>
-    <dimen name="height_stats_event_map">80dp</dimen>
+    <dimen name="height_stats_event_map">90dp</dimen>
     <dimen name="margin_fragments_event">1dp</dimen>
     <dimen name="margin_fragments_event_additional_top">2dp</dimen>
     <dimen name="width_locate_button_googlemap">60dp</dimen>
     <dimen name="width_icon_pick_category">80dp</dimen>
     <dimen name="padding_event_bottom_view">10dp</dimen>
     <dimen name="width_locate_button">60dp</dimen>
+    <dimen name="padding_bottom_map">15dp</dimen>
 
 </resources>

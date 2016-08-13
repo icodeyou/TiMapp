@@ -12,19 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.listeners.OnExploreTabSelectedListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.twotoasters.jazzylistview.effects.CardsEffect;
-import com.twotoasters.jazzylistview.effects.FadeEffect;
-import com.twotoasters.jazzylistview.effects.FlyEffect;
-import com.twotoasters.jazzylistview.effects.SlideInEffect;
 import com.twotoasters.jazzylistview.effects.TiltEffect;
-import com.twotoasters.jazzylistview.effects.WaveEffect;
-import com.twotoasters.jazzylistview.effects.ZipperEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
 import java.util.List;

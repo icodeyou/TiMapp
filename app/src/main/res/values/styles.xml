@@ -20,7 +20,7 @@
         <item name="windowNoTitle">true</item>
 
         <!-- -->
-        <item name="android:textColor">@color/textDark</item>
+        <item name="android:textColor">@color/textBlack</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/colorAccent</item>
 
@@ -159,6 +159,11 @@
 
     <style name="GetbaseFab" parent="Fab">
         <item name="android:layout_margin">@dimen/fab_margin_minus_twelve</item>
+        <item name="fab_addButtonColorNormal">@color/colorPrimary</item>
+        <!--<item name="fab_addButtonColorNormal">@color/colorSecondaryExtaLight</item>-->
+        <item name="fab_addButtonColorPressed">@color/colorPrimaryVeryDark</item>
+        <item name="fab_addButtonPlusIconColor">@color/white</item>
+        <item name="fab_expandDirection">left</item>
     </style>
 
     <style name="LightFab" parent="Fab">
@@ -175,89 +180,73 @@
         <item name="android:src">@drawable/new_event_button</item>
     </style>
 
-    <style name="TextInfo">
-        <item name="android:textSize">@dimen/text_normal</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:gravity">left|center</item>
+    <style name="MiniFab">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
+        <item name="fab_icon">@drawable/ic_camera_white</item>
+        <item name="fab_size">mini</item>
+        <item name="fab_colorNormal">@color/colorSecondaryExtaLight</item>
+        <item name="fab_colorPressed">@color/background_dark</item>
     </style>
 
-    <style name="TextInfoGray" parent="TextInfo">
-        <item name="android:textColor">@color/Gray</item>
-    </style>
-
-    <style name="TextInfoWhite" parent="TextInfo">
-        <item name="android:textColor">@color/white</item>
-    </style>
+    <!-- Texts Styles-->
 
     <style name="TextDefault">
         <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/textDark</item>
-        <item name="android:gravity">left|center</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="TextSmall">
+    <style name="TextMultiLines" parent="TextDefault" >
+        <item name="android:singleLine">false</item>
+    </style>
+
+    <style name="TextTiny" parent="TextDefault">
+        <item name="android:textSize">@dimen/text_tiny</item>
+    </style>
+
+    <style name="TextSmall" parent="TextDefault">
         <item name="android:textSize">@dimen/text_small</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/textDark</item>
-        <item name="android:gravity">left|center</item>
     </style>
 
-    <style name="TextLightBackground" parent="TextDefault">
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+    <style name="TextBig" parent="TextDefault">
+        <item name="android:textSize">@dimen/text_big</item>
     </style>
 
-    <style name="TextLightBackgroundBold" parent="TextLightBackground">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="SmallTextLightBackground" parent="TextSmall">
-        <item name="android:textColor">@color/black</item>
+    <style name="TextHuge" parent="TextDefault">
+        <item name="android:textSize">@dimen/text_huge</item>
     </style>
 
     <style name="TextBold" parent="TextDefault">
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="LabelInfo" parent="TextDefault">
-        <item name="android:textColor">@color/white</item>
+    <style name="TextItalic" parent="TextDefault">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <!--.............................................................-->
+
+    <style name="TextInfoEvent" parent="TextSmall">
+        <item name="android:layout_marginLeft">@dimen/margin_tabulation</item>
+        <item name="android:textColor">@color/textBlack</item>
+    </style>
+
+    <style name="TitleTwoLines" parent="TextMultiLines">
+        <item name="android:maxLines">2</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="ItalicTextMute" parent="TextDefault">
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/DarkGray</item>
-    </style>
+    <!--.............................................................-->
 
-    <style name="SmallItalicTextMute" parent="TextDefault">
-        <item name="android:textSize">@dimen/text_small</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/DarkGray</item>
-    </style>
-
-    <style name="TextMute">
-        <item name="android:textSize">@dimen/text_small</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/textMute</item>
-        <item name="android:gravity">left|center</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="pageSubmitButton">
+    <style name="ButtonWhite">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">vertical</item>
@@ -270,20 +259,6 @@
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:radius">0dp</item>
     </style>
-
-    <!--<style name="pageSubmitButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:background">@drawable/background_button_littlesquare</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/textLight</item>
-        <item name="android:textSize">@dimen/text_big</item>
-        <item name="android:radius">0dp</item>
-    </style>-->
 
     <style name="formLabel">
         <item name="android:layout_width">0dp</item>
@@ -399,12 +374,6 @@
         <item name="android:padding">3dp</item>
     </style>
 
-    <style name="RestErrorMessage" parent="TextInfo">
-        <item name="android:color">@color/colorAccent</item>
-        <item name="android:singleLine">false</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="formLabelGroup">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -412,10 +381,7 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
-    <style name="item_text_info" parent="SmallTextLightBackground">
-        <item name="android:layout_marginLeft">@dimen/margin_tabulation</item>
-        <item name="android:layout_centerVertical">true</item>
-    </style>
+
 
     <style name="LayoutProgressView">
         <item name="android:layout_width">match_parent</item>
@@ -445,9 +411,5 @@
     <style name="ProgressViewSmallWhite" parent="SmallProgressView">
         <item name="crs_pl_fg_color">@color/white</item>
     </style>
-
-    <color name="textMute">
-        @color/DarkGray
-    </color>
 
 </resources>

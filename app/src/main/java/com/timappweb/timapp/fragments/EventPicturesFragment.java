@@ -33,6 +33,7 @@ import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -56,7 +57,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 
 
-public class EventPicturesFragment extends EventBaseFragment implements LocationManager.LocationListener {
+public class EventPicturesFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener {
 
     private static final String         TAG                             = "EventPicturesFragment";
     public static int                   PICUTRE_GRID_COLUMN_NB          =  2;
@@ -325,6 +326,11 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             noPicView.setVisibility(picturesAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
         }
 
+    }
+
+    @Override
+    public void onTabSelected() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }
 

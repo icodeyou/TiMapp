@@ -15,6 +15,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,6 +37,7 @@ import com.timappweb.timapp.fragments.EventInformationFragment;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.fragments.EventTagsFragment;
 import com.timappweb.timapp.fragments.EventPeopleFragment;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -309,7 +311,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
         mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
         mMaterialViewPager.setImageDrawable(drawable, 0);
-        mMaterialViewPager.getViewPager().setOffscreenPageLimit(mMaterialViewPager.getChildCount());
+        int numberOfFragments = mFragmentAdapter.getCount();
+        mMaterialViewPager.getViewPager().setOffscreenPageLimit(numberOfFragments);
+        mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener());
 
         /*
         Change header image and color
@@ -424,6 +428,25 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
 
     // =============================================================================================
+    private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            //Log.d(TAG, "onPageScrolled: " + position);
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Log.d(TAG, "Page " + position + " is now selected.");
+            ((OnTabSelectedListener)mFragmentAdapter.getItem(position)).onTabSelected();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            //Log.d(TAG, "onPageScrollStateChanged: " + state);
+        }
+    }
+
 
     class EventLoader implements LoaderManager.LoaderCallbacks<List<Event>>{
 

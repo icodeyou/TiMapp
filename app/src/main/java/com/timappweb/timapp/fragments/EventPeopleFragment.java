@@ -28,6 +28,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.UserEvent;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.DataSyncAdapter;
@@ -45,7 +46,7 @@ import eu.davidea.flipview.FlipView;
 import retrofit2.Call;
 
 
-public class EventPeopleFragment extends EventBaseFragment {
+public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener {
 
     private static final String     TAG                             = "EventTagsFragment";
     private static final long       MAX_UPDATE_DELAY                = 3600 * 1000;
@@ -264,6 +265,11 @@ public class EventPeopleFragment extends EventBaseFragment {
             mPlaceUsersAdapter.expand(mExpandableInviteHeader);
         }
 
+    }
+
+    @Override
+    public void onTabSelected() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 
 }
