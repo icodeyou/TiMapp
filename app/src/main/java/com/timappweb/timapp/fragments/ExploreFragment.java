@@ -178,6 +178,10 @@ public class ExploreFragment extends Fragment{
         }
     }
 
+    public void setFabVisibility(boolean isVisible) {
+        fab.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
     public ExploreEventsFragment getExploreEventsFragment() {
         return eventsFragment;
     }

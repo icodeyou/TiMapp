@@ -27,7 +27,6 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
@@ -136,7 +135,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             }
         });
 
-        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.white_points_text);
+        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
         int initialTime = event.getPoints();
         tvCountPoints.initTimer(initialTime);
 

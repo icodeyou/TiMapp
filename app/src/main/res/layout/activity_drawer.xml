@@ -33,7 +33,7 @@
             android:id="@+id/toolbar_id"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbarHeight"
-            android:background="@drawable/gradient_bottom_view" />
+            android:background="@drawable/gradient_bottom_view_dark" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -32,7 +32,7 @@
         </LinearLayout>
         <Button
             android:id="@+id/action_skip"
-            style="@style/pageSubmitButton"
+            style="@style/ButtonWhite"
             android:text="@string/skip"/>
     </LinearLayout>
 </FrameLayout>

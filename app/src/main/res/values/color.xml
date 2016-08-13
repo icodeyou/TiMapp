@@ -67,6 +67,13 @@
     <color name="switch_button_thumb_off">#00BCD4</color>
     <color name="switch_button_track_off">#6ecdd9</color>
 
+    <!-- Texts -->
+    <color name="textPrimary">@color/colorPrimary</color>
+    <color name="textBlack">#111111</color>
+    <color name="textMute">#848484</color>
+    <color name="textLight">#eeeeee</color>
+    <color name="textWhite">@color/white</color>
+
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- COLORS -->
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

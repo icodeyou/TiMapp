@@ -89,7 +89,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         EventsViewHolder(View itemView) {
             super(itemView);
-            tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.white_points_text);
+            tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
             itemView.setOnClickListener(this);
         }
 

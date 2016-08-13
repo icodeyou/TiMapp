@@ -17,7 +17,10 @@
         <com.google.android.gms.maps.MapView
             android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <com.crystal.crystalpreloaders.widgets.CrystalPreloader
             android:id="@+id/progress_view"
@@ -41,138 +44,124 @@
                 myattrs:horizontal_tags_text_size="@dimen/text_tags" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/event_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/map"
-            android:orientation="vertical">
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_top_gradient_view"
-                android:background="@drawable/gradient_top_view_light"
-                android:layout_above="@+id/event_view"/>
+            android:layout_alignParentBottom="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/white">
-
-
-                <!-- TODO JEAN UTILISE LES THEMES AU LIEU DE FAIRE DES PUTAINS DE COPY AND PAST -->
-                <com.getbase.floatingactionbutton.FloatingActionsMenu
-                    android:id="@+id/multiple_actions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
-                    fab:fab_addButtonColorPressed="@color/background"
-                    fab:fab_addButtonPlusIconColor="@color/colorPrimary"
-                    style="@style/GetbaseFab"
-                    fab:fab_expandDirection="left">
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/action_camera"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_icon="@drawable/ic_camera_white"
-                        fab:fab_size="mini"
-                        fab:fab_colorNormal="@color/colorPrimary"
-                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"
-                        android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/action_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_icon="@drawable/ic_hashtag_white"
-                        fab:fab_size="mini"
-                        fab:fab_colorNormal="@color/colorPrimary"
-                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"
-                        android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/action_invite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_icon="@drawable/ic_people"
-                        fab:fab_size="mini"
-                        fab:fab_colorNormal="@color/colorPrimary"
-                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"/>
-
-                    <com.getbase.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/action_coming"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_icon="@drawable/ic_coming_guy"
-                        fab:fab_size="mini"
-                        fab:fab_colorNormal="@color/colorPrimary"
-                        fab:fab_colorPressed="@color/colorPrimaryVeryDark"
-                        android:visibility="@{!event.isUserAround() ? View.VISIBLE : View.GONE}"/>
-
-                </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-                <RelativeLayout
+                android:paddingTop="38dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_top_gradient_view"
+                    android:background="@drawable/gradient_top_view_dark"/>
+                <LinearLayout
+                    android:id="@+id/card_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_event_bottom_view">
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/padding_bottom_map"
+                    android:paddingBottom="@dimen/padding_bottom_map"
+                    android:paddingTop="@dimen/padding_bottom_map"
+                    android:background="@color/white">
+
                     <TextView
-                        style="@style/TextLightBackgroundBold"
                         android:id="@+id/title_event"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        style="@style/TextBold"
+                        android:layout_marginRight="80dp"
+                        android:layout_marginEnd="80dp"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="@color/textBlack"
                         android:text="@{event.name}"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignBottom="@+id/distance_layout"
-                        android:layout_toLeftOf="@+id/distance_layout"
-                        android:layout_toStartOf="@+id/distance_layout"
-                        tools:text="Fete de la musique"/>
+                        tools:text="Fete de la musique de la mort qui tue"/>
 
-                    <LinearLayout
-                        android:id="@+id/distance_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:orientation="horizontal">
-                        <ProgressBar
-                            style="@style/SmallFormIconGroup"
-                            android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}" />
-
-                        <TextView
-                            style="@style/TextLightBackground"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/layout_spot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp">
+                            <include layout="@layout/layout_spot_minimized"
+                                bind:spot="@{event.spot}"></include>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/distance_layout"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
-                            tools:text="120 km"
-                            android:id="@+id/textView" />
-                    </LinearLayout>
-                </RelativeLayout>
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layout_spot"
+                            android:orientation="horizontal">
+                            <ProgressBar
+                                style="@style/SmallFormIconGroup"
+                                android:indeterminateTint="@color/gray"
+                                android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
+                            <TextView
+                                style="@style/TextDefault"
+                                android:textColor="@color/textMute"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
+                                tools:text="120 km"
+                                android:id="@+id/textView" />
+                        </LinearLayout>
+                        
+                       <FrameLayout
+                           android:layout_width="84dp"
+                           android:layout_height="match_parent"
+                           android:layout_alignParentRight="true"
+                           android:layout_alignParentEnd="true"
+                           android:layout_alignBottom="@+id/distance_layout">
+                           <com.timappweb.timapp.views.SimpleTimerView
+                               android:id="@+id/points_text"
+                               style="@style/TextDefault"
+                               android:textStyle="bold"
+                               android:layout_gravity="center"
+                               android:text="3600" />
+                       </FrameLayout>
+                    </RelativeLayout>
 
-                    <include layout="@layout/layout_spot_minimized"
-                        bind:spot="@{event.spot}"></include>
-                </FrameLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_stats_event_map"
-                android:gravity="left|center_vertical"
-                android:background="@color/white">
-                <include layout="@layout/event_stats_people"
-                    bind:event="@{event}"></include>
-            </LinearLayout>
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/multiple_actions"
+                style="@style/GetbaseFab"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentBottom="false">
 
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/action_camera"
+                    style="@style/MiniFab"
+                    app:fab_icon="@drawable/ic_camera" />
 
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/action_tag"
+                    style="@style/MiniFab"
+                    app:fab_icon="@drawable/hashtag_red"
+                    android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
 
-        </LinearLayout>
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/action_invite"
+                    app:fab_icon="@drawable/ic_people_red"
+                    style="@style/MiniFab"/>
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/action_coming"
+                    style="@style/MiniFab"
+                    app:fab_icon="@drawable/ic_coming_guy_darkred"
+                    android:visibility="@{!event.isUserAround() ? View.VISIBLE : View.GONE}"/>
+
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+        </RelativeLayout>
 
 
     </RelativeLayout>

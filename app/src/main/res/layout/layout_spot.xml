@@ -45,19 +45,13 @@
 
             <TextView
                 android:id="@+id/title_spot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:gravity="left|center"
-                android:textStyle="bold"
+                style="@style/TitleTwoLines"
+                android:textColor="@color/colorPrimaryDark"
                 android:text="@{spot.name}"
-                android:ellipsize="end"
-                tools:text="Terrain"
-                android:textSize="@dimen/text_normal"
-                android:textColor="@color/colorPrimaryDark" />
+                tools:text="Terrain" />
 
             <TextView
-                style="@style/TextLightBackground"
+                style="@style/TextDefault"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Bar"

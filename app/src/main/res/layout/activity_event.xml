@@ -38,11 +38,7 @@
             android:id="@+id/multiple_actions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_addButtonColorNormal="@color/colorSecondaryExtaLight"
-            fab:fab_addButtonColorPressed="@color/background"
-            fab:fab_addButtonPlusIconColor="@color/colorPrimary"
-            style="@style/GetbaseFab"
-            fab:fab_expandDirection="left">
+            style="@style/GetbaseFab" >
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_camera"

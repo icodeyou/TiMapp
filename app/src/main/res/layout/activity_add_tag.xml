@@ -79,7 +79,7 @@
 
         <Button
             android:id="@+id/confirm_button"
-            style="@style/pageSubmitButton"
+            style="@style/ButtonWhite"
             android:text="@string/main_text_publish_activity" />
 
     </LinearLayout>
