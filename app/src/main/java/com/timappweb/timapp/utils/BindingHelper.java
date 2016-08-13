@@ -3,6 +3,7 @@ package com.timappweb.timapp.utils;
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;
 
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.timappweb.timapp.data.models.Event;
 
 /**
@@ -26,6 +27,11 @@ public class BindingHelper {
         if (event!= null){
             imageView.setImageDrawable(event.getBackgroundImage(imageView.getContext()));
         }
+    }
+
+    @BindingAdapter("app:errorText")
+    public static void setErrorMessage(MaterialEditText editText, CharSequence errorMessage) {
+        editText.setError(errorMessage);
     }
 
 }

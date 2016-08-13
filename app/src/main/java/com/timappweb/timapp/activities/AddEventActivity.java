@@ -43,13 +43,18 @@ import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
-import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallbackBinding;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
+
+import java.io.IOException;
+
+import retrofit2.Response;
 
 
 public class AddEventActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
@@ -239,10 +244,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         RestClient
             .post(ResourceUrlMapping.MODEL_EVENT, AddEventMapper.toJson(event))
                 .onResponse(new AutoMergeCallback(event))
-                .onResponse(new FormErrorsCallback(mBinding))
+                .onResponse(new FormErrorsCallbackBinding(mBinding))
                 .onResponse(new HttpCallback<JsonObject>() {
                     @Override
                     public void successful(JsonObject feedback) {
+
                         Log.d(TAG, "Event has been successfully added");
                         event.setAuthor(MyApplication.getCurrentUser());
                         event.mySave();
@@ -259,15 +265,15 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                     }
                 })
+                .onError(new NetworkErrorCallback(this))
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
-                    public void onFinally(boolean failure) {
-                        if(failure) {
+                    public void onFinally(Response response, Throwable error) {
+                        if (response == null || !response.isSuccessful()){
                             setProgressView(false);
-                            Log.e(TAG, "Post failed");
-                            //TODO : Steph : failure is always true, even if the post is succesfull
                         }
                     }
+
                 })
                 .perform();
     }

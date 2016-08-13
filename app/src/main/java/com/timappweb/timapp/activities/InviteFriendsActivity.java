@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class InviteFriendsActivity extends BaseActivity {
 
@@ -196,7 +197,7 @@ public class InviteFriendsActivity extends BaseActivity {
                 })
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
-                    public void onFinally(boolean failure) {
+                    public void onFinally(Response response, Throwable error) {
                         progressview.setVisibility(View.GONE);
                     }
                 })

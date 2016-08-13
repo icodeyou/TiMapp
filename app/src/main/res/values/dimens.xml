@@ -159,5 +159,6 @@
     <dimen name="padding_event_bottom_view">10dp</dimen>
     <dimen name="width_locate_button">60dp</dimen>
     <dimen name="padding_bottom_map">15dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
 
 </resources>

@@ -11,6 +11,7 @@ import com.timappweb.timapp.utils.SearchHistory;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by stephane on 2/2/2016.
@@ -49,9 +50,10 @@ public abstract class SearchTagDataProvider implements SearchHistory.DataProvide
                 })
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
-                    public void onFinally(boolean failure) {
+                    public void onFinally(Response response, Throwable error) {
                         SearchTagDataProvider.this.onLoadEnds();
                     }
+
                 })
                 .perform();
     }

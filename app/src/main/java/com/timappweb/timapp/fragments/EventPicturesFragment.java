@@ -55,6 +55,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class EventPicturesFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener {
@@ -271,9 +272,10 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                 })
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
-                    public void onFinally(boolean failure) {
+                    public void onFinally(Response response, Throwable error) {
                         setUploadVisibility(false);
                     }
+
                 })
                 .perform();
 

@@ -8,7 +8,7 @@
         <import type="android.graphics.drawable.Drawable"/>
         <variable
             name="errors"
-            type="com.timappweb.timapp.rest.model.RestValidationErrorParser"></variable>
+            type="com.timappweb.timapp.rest.model.RestValidationError"></variable>
         <variable
             name="event"
             type="com.timappweb.timapp.data.models.Event"></variable>
@@ -47,20 +47,34 @@
                     style="@style/whiteFormEditText"
                 </FrameLayout>-->
 
+                <!-- TODO jack design avec un STYLE ça comme tu veux et il faut le metre pour chaque formulaire
+                    c'est le message d'erreur concernant aucun champs (par example quota dépassés)
+                -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_medium"
+                    tools:text="This is an error message youhou! Errors are not cool but it's a necessary evil! Bouya!"
+                    android:background="@color/color_hint"
+                    android:textColor="@color/white"
+                    android:text='@{errors.getFullMessage()}'
+                    android:visibility='@{errors.hasFullMessage() ? View.VISIBLE : View.GONE}'/>
+
                 <com.rengwuxian.materialedittext.MaterialEditText
-                    xmlns:app="http://schemas.android.com/tools"
                     android:id="@+id/event_name"
                     style="@style/labeledFormEditText"
                     android:hint="@string/hint_event_name"
                     android:nextFocusForward="@+id/description_edit_text"
-                    android:text="@={event.name}"/>
+                    android:text="@={event.name}"
+                    app:errorText='@{errors.getError("Places.name")}'/>
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     xmlns:app="http://schemas.android.com/tools"
                     android:id="@+id/description_edit_text"
                     style="@style/formLabeledMultilineText"
                     android:hint="@string/hint_write_description"
-                    android:text="@={event.description}"/>
+                    android:text="@={event.description}"
+                    app:errorText='@{errors.getError("Places.description")}'/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

@@ -254,7 +254,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="i_am_here">I\'m here</string>
     <string name="i_am_coming">I\'m coming</string>
     <string name="internet_connection">Internet Connection</string>
-    <string name="no_internet_connection_message">Sorry, we couldn\'t find any internet connection. Please make sure you have a good connection, and then restart the app. Thank you.</string>
+    <string name="no_internet_connection_message">It seems that you don\'t have a network access.</string>
     <string name="action_performed_not_successful">Sorry but it didn\'t work...</string>
     <string name="form_invalid_input">Please correct required fields before submitting.</string>
     <string name="no_friends">You don\'t have any friends using TiMapp. Share the app with them to get the best experience !</string>

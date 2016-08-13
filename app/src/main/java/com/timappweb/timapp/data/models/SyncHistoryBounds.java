@@ -25,7 +25,7 @@ public class SyncHistoryBounds extends MyModel {
     /**
      * Sync type
      */
-    @Column(name = "Type", unique = true, notNull = true)
+    @Column(name = "Type", notNull = true)
     int type;
 
     /**

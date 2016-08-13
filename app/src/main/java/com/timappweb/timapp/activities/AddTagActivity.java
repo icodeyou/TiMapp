@@ -45,6 +45,8 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import java.util.LinkedList;
 import java.util.List;
 
+import retrofit2.Response;
+
 public class AddTagActivity extends BaseActivity{
 
     private String TAG = "AddTagActivity";
@@ -274,8 +276,7 @@ public class AddTagActivity extends BaseActivity{
                     })
                     .onFinally(new HttpCallManager.FinallyCallback(){
                         @Override
-                        public void onFinally(boolean failure) {
-                            // TODO remove loader here
+                        public void onFinally(Response response, Throwable error) {
                             confirmButton.setEnabled(true);
                         }
                     })

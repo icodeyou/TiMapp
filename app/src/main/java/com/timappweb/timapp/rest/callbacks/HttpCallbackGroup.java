@@ -30,6 +30,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
 
     private Response<ResponseBodyType> response = null;
     private Throwable error = null;
+    private RestValidationError validationErrors;
 
 
     public Response<ResponseBodyType> getResponse() {
@@ -42,18 +43,18 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
 
         for (HttpCallback<ResponseBodyType> callback : responseCallbacks) {
             callback.setResponse(response);
-            HttpCallbackGroup.<ResponseBodyType>dispatchResponse(response, callback);
+            this.dispatchResponse(callback);
         }
         this.callFinallyCallbacks(false);
     }
 
     private void callFinallyCallbacks(boolean isFailure) {
         for (HttpCallManager.FinallyCallback callback : finallyCallbacks) {
-            callback.onFinally(isFailure);
+            callback.onFinally(response, error);
         }
     }
 
-    public static <StaticType> void  dispatchResponse(Response<StaticType> response, HttpCallback<StaticType> callback) {
+    public void dispatchResponse(HttpCallback<ResponseBodyType> callback) {
         if (response.isSuccessful()) {
             callback.successful(response.body());
 
@@ -76,7 +77,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
 
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_BAD_REQUEST:
-                        RestValidationError errors = parseErrorBody(response, RestValidationError.class);
+                        RestValidationError errors = this.getValidationErrors();
                         callback.badRequest(errors);
                         break;
                     case HttpURLConnection.HTTP_FORBIDDEN:
@@ -111,7 +112,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     @Override
     public void onFailure(Call<ResponseBodyType> call, Throwable error) {
         this.error = error;
-        Log.d(TAG, "Request error: " + error);
+        Log.e(TAG, "Request error: " + error);
         error.printStackTrace();
         for (RequestFailureCallback callback : failureCallbacks) {
             dispatchError(error, callback);
@@ -144,7 +145,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
             Converter<ResponseBody, ErrorType> errorConverter =
                     RestClient.instance().getRetrofit().responseBodyConverter(classOfT, new Annotation[0]);
             try {
-                Log.v(TAG, "Received errorBody=" + response.errorBody().string());
+                // Log.v(TAG, "Received errorBody=" + response.errorBody().string()); // @warning DO NOT UNCOMMENT accessing error body will empty the buffer => error
                 return errorConverter.convert(response.errorBody());
             } catch (IOException e) {
                 Log.e(TAG, "Cannot convert error body from rest response: " + e.getMessage());
@@ -170,7 +171,18 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     }
 
     public void onFinally(HttpCallManager.FinallyCallback callback) {
-        callback.onFinally(error != null);
+        callback.onFinally(response, error);
+    }
+
+    public RestValidationError getValidationErrors() {
+        if (validationErrors == null) {
+            validationErrors = parseErrorBody(this.response, RestValidationError.class);
+        }
+        return validationErrors;
+    }
+
+    public boolean isFailed() {
+        return error != null;
     }
 }
 

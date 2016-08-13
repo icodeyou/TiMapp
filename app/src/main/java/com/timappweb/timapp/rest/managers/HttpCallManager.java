@@ -28,7 +28,7 @@ public class HttpCallManager<T> {
     }
 
     public HttpCallManager<T> onResponse(HttpCallback<T> httpCallback) {
-        if (this.callbackBase.isDone()){
+        if (this.callbackBase.isDone() && !this.callbackBase.isFailed()){
             this.callbackBase.onResponse(call);
         }
         else{
@@ -37,7 +37,7 @@ public class HttpCallManager<T> {
         return this;
     }
     public HttpCallManager<T> onError(RequestFailureCallback requestFailureCallback) {
-        if (this.callbackBase.isDone()){
+        if (this.callbackBase.isDone() && this.callbackBase.isFailed()){
             this.callbackBase.onFailure(call);
         }
         else{
@@ -106,7 +106,7 @@ public class HttpCallManager<T> {
         return this;
     }
 
-    public HttpCallManager onFinally(FinallyCallback callback) {
+    public HttpCallManager onFinally(FinallyCallback<T> callback) {
         if (this.callbackBase.isDone()){
             this.callbackBase.onFinally(callback);
         }
@@ -116,7 +116,7 @@ public class HttpCallManager<T> {
         return this;
     }
 
-    public interface FinallyCallback{
-        void onFinally(boolean failure);
+    public interface FinallyCallback<ResponseBodyType>{
+         void onFinally(Response<ResponseBodyType> response, Throwable error);
     }
 }
