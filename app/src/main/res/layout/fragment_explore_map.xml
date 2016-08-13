@@ -87,7 +87,8 @@
                             android:id="@+id/layout_spot"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp">
+                            android:layout_marginBottom="10dp"
+                            android:visibility="gone">
                             <include layout="@layout/layout_spot_minimized"
                                 bind:spot="@{event.spot}"></include>
                         </LinearLayout>
@@ -95,6 +96,7 @@
                             android:id="@+id/distance_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_below="@+id/layout_spot"
                             android:orientation="horizontal">
                             <ProgressBar
