@@ -16,7 +16,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_message"
         android:orientation="vertical"
         android:gravity="center">
         <TextView
@@ -37,7 +36,7 @@
             android:gravity="center"
             tools:text="This text view can display error messacan display error message !This text view can display error message !This text view can display error message !This text view can display error message !This text view can display error message !This text view can display error message !This text view can display error message ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Very long messages ! Indeed."/>
     </LinearLayout>
-
+<!--
     <TextView
         android:id="@+id/bottom_message"
         android:layout_width="match_parent"
@@ -45,9 +44,9 @@
         android:padding="20dp"
         android:textSize="@dimen/text_normal"
         android:gravity="center"
-        tools:text="We are sorry for any trouble this unfortunate even has caused you. Please accept our deepest apologies."
+        tools:text="We are sorry for any trouble this unfortunate event has caused you. Please accept our deepest apologies."
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true" />-->
 
 </RelativeLayout>

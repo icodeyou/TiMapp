@@ -45,7 +45,7 @@
             android:layout_alignParentEnd="true">
             <ImageView
                 style="@style/imageIcon"
-                android:src="@drawable/distance_white"
+                android:src="@drawable/distance_black"
                 android:id="@+id/imageView" />
             <TextView
                 android:id="@+id/distance_text"
