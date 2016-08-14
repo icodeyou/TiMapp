@@ -207,7 +207,9 @@ public class AddTagActivity extends BaseActivity{
         }
         else {
             setSelectedTagsViewVisible();
-            searchView.setQueryHint(getResources().getString(R.string.searchview_hint_few_tags));
+            String string1 = getResources().getString(R.string.searchview_hint_few_tags_part_one);
+            String string2 = getResources().getString(R.string.searchview_hint_few_tags_part_two);
+            searchView.setQueryHint(string1 + selectedTagsRV.getMaxTags() + string2);
         }
         if(searchAndSelectTagManager.getSelectedTags().size()==selectedTagsRV.getMaxTags()) {
             searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);

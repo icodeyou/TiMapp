@@ -72,7 +72,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     </string>
     <string name="toast_no_tag">Please add a tag.</string>
     <string name="toast_tag_one_letter">Your tag should have at least 2 letters.</string>
-    <string name="toast_too_many_tags">You cannot add more than 10 tags.</string>
+    <string name="toast_too_many_tags_part_one">You cannot add more than&#160;</string>
+    <string name="toast_too_many_tags_part_two">&#160;tags.</string>
     <string name="toast_tag_already_chosen">Your tag has already been chosen.</string>
     <string name="toast_thanks_for_sharing">Thank you for sharing !</string>
 
@@ -123,7 +124,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
     <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
     <string name="searchview_hint_no_tags">Type a tag here</string>
-    <string name="searchview_hint_few_tags">You can add up to 10 tags</string>
+    <string name="searchview_hint_few_tags_part_one">You can add up to&#160;</string>
+    <string name="searchview_hint_few_tags_part_two">&#160;tags</string>
     <string name="searchview_hint_2">2 tags left</string>
     <string name="searchview_hint_1">One more !</string>
     <string name="loading_tags">Loading tags</string>
