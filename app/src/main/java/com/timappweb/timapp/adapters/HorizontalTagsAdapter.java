@@ -104,7 +104,9 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
             Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
             return false;
         } else if(mDataTags.size()>=getMaxTags()) {
-            Toast.makeText(context, R.string.toast_too_many_tags, Toast.LENGTH_SHORT).show();
+            String string1 = context.getResources().getString(R.string.toast_too_many_tags_part_one);
+            String string2 = context.getResources().getString(R.string.toast_too_many_tags_part_two);
+            Toast.makeText(context,string1 + getMaxTags() + string2, Toast.LENGTH_SHORT).show();
             return false;
         }
         else if(newTag.getName().isEmpty()) {
