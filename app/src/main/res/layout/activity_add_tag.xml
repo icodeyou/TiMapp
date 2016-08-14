@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar_transparent_layout" />
+        <include layout="@layout/toolbar_layout" />
 
         <include layout="@layout/progressview_fullscreen" />
 
@@ -76,11 +76,6 @@
                 app:tagTextColor="@color/White"
                 />
         </ScrollView>
-
-        <Button
-            android:id="@+id/confirm_button"
-            style="@style/ButtonWhite"
-            android:text="@string/main_text_publish_activity" />
 
     </LinearLayout>
 

@@ -32,7 +32,6 @@ import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.map.EventClusterRenderer;
 import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.map.RemovableNonHierarchicalDistanceBasedAlgorithm;
@@ -54,6 +53,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
     private static final int                PADDING__MAP                    = 30;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
+    private Animation slideOut;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -114,10 +114,35 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         fab = root.findViewById(R.id.fab_button);
 
         eventView = root.findViewById(R.id.event_view);
-        eventView.setVisibility(View.GONE);
 
         initListeners();
+        initEventView();
+
+
         return root;
+    }
+
+    private void initEventView() {
+        //TODO : This is workaround to initialize the height of eventView (so that getHeight() is not null
+        eventView.setVisibility(View.INVISIBLE);
+        Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
+        slideOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                eventView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        eventView.startAnimation(slideOut);
     }
 
     @Override
@@ -169,31 +194,27 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         // TODO can be removed later when all data are synchronized localy...
         if (!event.hasLocalId()) event.mySave();
         mBinding.setEvent(event);
+
         final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
         eventView.startAnimation(slideIn);
         Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
         TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
         translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
-        translateUp.setFillAfter(true);
         translateUp.setInterpolator(new DecelerateInterpolator());
         fab.startAnimation(translateUp);
+
         tvCountPoints.cancelTimer();
         tvCountPoints.initTimer(event.getPoints());
-        //TODO Steph : might be better to initialize the timer through databinding
+        //TODO : might be better to initialize the timer through databinding
     }
 
     public void hideEvent() {
         if(eventView.getVisibility()==View.VISIBLE) {
             Log.i(TAG, "Hide event");
-            Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
-            final TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight());
-            translateDown.setFillAfter(true);
-            translateDown.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
-            translateDown.setInterpolator(new DecelerateInterpolator());
-            fab.startAnimation(translateDown);
 
-            final Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
-            slideOut.setAnimationListener(new Animation.AnimationListener() {
+            Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
+            TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight());
+            translateDown.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -202,7 +223,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     eventView.setVisibility(View.GONE);
-                    translateDown.cancel();
                 }
 
                 @Override
@@ -210,6 +230,12 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
                 }
             });
+            translateDown.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
+            translateDown.setInterpolator(new DecelerateInterpolator());
+
+            fab.startAnimation(translateDown);
+
+            Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
             eventView.startAnimation(slideOut);
         }
     }

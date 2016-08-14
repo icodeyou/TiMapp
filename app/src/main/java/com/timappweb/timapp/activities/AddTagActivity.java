@@ -54,7 +54,7 @@ public class AddTagActivity extends BaseActivity{
     // ---------------------------------------------------------------------------------------------
     //Views
     private HorizontalTagsRecyclerView              selectedTagsRV;
-    private ProgressBar progressStartView;
+    private View progressStartView;
     private Event                                   currentEvent = null;
 
     // @Bind(R.remote_id.hashtags1)
@@ -64,8 +64,8 @@ public class AddTagActivity extends BaseActivity{
     private SearchAndSelectTagManager               searchAndSelectTagManager;
     private View                                    selectedTagsView;
     private EventPost                               eventEventPost;
-    private Button                                  confirmButton;
-    private View                                    progressEndView;
+
+    private Menu menu;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -93,10 +93,7 @@ public class AddTagActivity extends BaseActivity{
         selectedTagsView = findViewById(R.id.rv_selected_tags);
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
-        progressStartView = (ProgressBar) findViewById(R.id.progress_view);
-        progressEndView = findViewById(R.id.progress_view);
-        confirmButton = (Button) findViewById(R.id.confirm_button);
-        confirmButton.setOnClickListener(new OnPostTagButtonClickListener());
+        progressStartView = findViewById(R.id.progress_view);
 
         initClickSelectedTag();
     }
@@ -106,6 +103,8 @@ public class AddTagActivity extends BaseActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search_tags, menu);
+
+        this.menu = menu;
 
         setSearchview(menu);
         searchView.requestFocus();
@@ -147,8 +146,12 @@ public class AddTagActivity extends BaseActivity{
                 else {
                     searchView.setQuery(query, true);
                 }
+                return true;
+            case R.id.action_post:
+                postTags();
             case R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -236,51 +239,43 @@ public class AddTagActivity extends BaseActivity{
         }).start();
     }
 
+    private void postTags() {
+        menu.findItem(R.id.action_post).setEnabled(true);
 
-    //----------------------------------------------------------------------------------------------
-    //Inner classes
-
-
-    private class OnPostTagButtonClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            confirmButton.setEnabled(false);
-
-            eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
-            eventEventPost.event = currentEvent;
-            // Validating user input
-            if (!eventEventPost.validateForSubmit()) {
-                Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
-                return;
-            }
-            Log.d(TAG, "Submitting eventPost: " + eventEventPost);
-
-            RestClient
-                    .post(ResourceUrlMapping.MODEL_EVENT_POST, AddEventPostMapper.toJson(eventEventPost))
-                    .onResponse(new AutoMergeCallback(eventEventPost))
-                    .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
-                    .onResponse(new HttpCallback<JsonObject>() {
-                        @Override
-                        public void successful(JsonObject feedback) {
-                            Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
-                            eventEventPost.deepSave();
-                            EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-
-                        @Override
-                        public void notSuccessful() {
-                            Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .onFinally(new HttpCallManager.FinallyCallback(){
-                        @Override
-                        public void onFinally(Response response, Throwable error) {
-                            confirmButton.setEnabled(true);
-                        }
-                    })
-                    .perform();
+        eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
+        eventEventPost.event = currentEvent;
+        // Validating user input
+        if (!eventEventPost.validateForSubmit()) {
+            Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
+            return;
         }
+        Log.d(TAG, "Submitting eventPost: " + eventEventPost);
+
+        RestClient
+                .post(ResourceUrlMapping.MODEL_EVENT_POST, AddEventPostMapper.toJson(eventEventPost))
+                .onResponse(new AutoMergeCallback(eventEventPost))
+                .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
+                .onResponse(new HttpCallback<JsonObject>() {
+                    @Override
+                    public void successful(JsonObject feedback) {
+                        Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
+                        eventEventPost.deepSave();
+                        EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+
+                    @Override
+                    public void notSuccessful() {
+                        Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
+                    }
+                })
+                .onFinally(new HttpCallManager.FinallyCallback(){
+                    @Override
+                    public void onFinally(Response response, Throwable error) {
+                        menu.findItem(R.id.action_post).setEnabled(false);
+                    }
+                })
+                .perform();
     }
 }
