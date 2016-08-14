@@ -204,6 +204,10 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="TextPadding" parent="TextDefault">
+        <item name="android:padding">@dimen/default_text_padding</item>
+    </style>
+
     <style name="TextMultiLines" parent="TextDefault" >
         <item name="android:singleLine">false</item>
     </style>

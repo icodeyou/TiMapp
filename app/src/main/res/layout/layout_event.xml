@@ -18,13 +18,22 @@
             android:id="@+id/event_view_container"
             android:orientation="vertical" >
 
-            <include
-                layout="@layout/header_event_activity"
-                android:id="@+id/header_event_activity"
-                android:layout_height="100dp"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_marginBottom="-40dp"
-                bind:event="@{event}" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-40dp">
+                <include
+                    layout="@layout/header_event_activity"
+                    android:id="@+id/header_event_activity"
+                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    bind:event="@{event}" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/height_top_gradient_view"
+                    android:background="@drawable/gradient_top_view_light"
+                    android:layout_alignBottom="@id/header_event_activity"/>
+            </RelativeLayout>
 
             <include layout="@layout/layout_event_info"
                 bind:event="@{event}"/>

@@ -49,7 +49,7 @@
     <dimen name="width_border_white">4dp</dimen>
 
     <!-- Text dimensions -->
-    <dimen name="default_horizontal_padding">20dp</dimen>
+    <dimen name="default_text_padding">20dp</dimen>
     <dimen name="text_tiny">10dp</dimen>
     <dimen name="text_small">16dp</dimen>
     <dimen name="text_normal">20dp</dimen>

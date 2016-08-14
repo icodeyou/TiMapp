@@ -22,12 +22,12 @@ import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.twotoasters.jazzylistview.effects.TiltEffect;
+import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
     // ----------------------------------------------------------------------------------------------
 
-    private RecyclerView            rvPlaces;
+    private RecyclerView rvEvents;
     private View                    progressView;
     private InputMethodManager      imm;
     private Menu                    mainMenu;
@@ -60,10 +60,10 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         initToolbar(true);
 
         progressView = findViewById(R.id.progress_view);
-        rvPlaces = (RecyclerView) findViewById(R.id.list_places);
+        rvEvents = (RecyclerView) findViewById(R.id.list_places);
         eventsLoaded = false;
 
-        initAdapterPlaces();
+        initRvAndAdapter();
         LocationManager.addOnLocationChangedListener(this);
 
         mEventLoaderModel = new MapAreaLoaderCallback<Event>(this, DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, Event.class){
@@ -72,12 +72,12 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
                 super.onLoadFinished(loader, data);
                 eventsLoaded = true;
                 Log.d(TAG, "Loading " + data.size() + " viewPlace(s)");
-                EventsAdapter placeAdapter = ((EventsAdapter) rvPlaces.getAdapter());
+                EventsAdapter placeAdapter = ((EventsAdapter) rvEvents.getAdapter());
                 placeAdapter.clear();
                 if (data.size() != 0) {
                     placeAdapter.setData(data);
                     progressView.setVisibility(View.GONE);
-                    rvPlaces.setVisibility(View.VISIBLE);
+                    rvEvents.setVisibility(View.VISIBLE);
                     placeAdapter.notifyDataSetChanged();
                 }
                 else {
@@ -126,10 +126,17 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         }
     }
 
-    private void initAdapterPlaces() {
-        rvPlaces.setLayoutManager(new LinearLayoutManager(this));
+    private void initRvAndAdapter() {
+        //set Jazzy Effect on Recycler View
+        //Best effects : CardsEffect(), TiltEffect(), ZipperEffect().
+        JazzyRecyclerViewScrollListener jazzyRecyclerViewScrollListener = new JazzyRecyclerViewScrollListener();
+        jazzyRecyclerViewScrollListener.setTransitionEffect(new TiltEffect());
+        rvEvents.addOnScrollListener(jazzyRecyclerViewScrollListener);
+        //TODO : This code in duplacted in ExploreEventsFragments
+
+        rvEvents.setLayoutManager(new LinearLayoutManager(this));
         final EventsAdapter eventsAdapter = new EventsAdapter(this);
-        rvPlaces.setAdapter(eventsAdapter);
+        rvEvents.setAdapter(eventsAdapter);
 
         eventsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override

@@ -6,9 +6,9 @@
     <data>
         <variable
             name="event"
-            type="com.timappweb.timapp.data.models.Event"></variable>
+            type="com.timappweb.timapp.data.models.Event" />
     </data>
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/event_title_picture_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,14 +28,20 @@
         <ImageView
             android:id="@+id/background_image_event"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             tools:src="@drawable/image_bar"
             event:backgroundImage="@{event}"
-            android:alpha="0.6"/>
+            android:alpha="1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/background_image_event"
+            android:background="@drawable/gradient_bottom_view_black"/>
 
         <include layout="@layout/event_title"
-            bind:event="@{event}"></include>
+            bind:event="@{event}" />
 
-    </FrameLayout>
+    </RelativeLayout>
 </layout>

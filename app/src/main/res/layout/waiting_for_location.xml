@@ -25,7 +25,7 @@
                 style="@style/NoDataView"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:padding="@dimen/default_horizontal_padding"
+                android:padding="@dimen/default_text_padding"
                 android:textColor="@color/textLight"
                 android:text="@string/waiting_for_location"
                 android:visibility="visible"/>
