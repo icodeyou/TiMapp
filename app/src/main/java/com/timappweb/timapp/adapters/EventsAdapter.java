@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.databinding.ItemEventBinding;
+import com.timappweb.timapp.databinding.LayoutEventBinding;
+import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SimpleTimerView;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private Context context;
     private List<Event> data;
     private OnItemAdapterClickListener itemAdapterClickListener;
-    private ItemEventBinding mBinding;
+    private LayoutEventBinding mBinding;
 
     // =============================================================================================
 
@@ -37,7 +40,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     @Override
     public EventsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_event, parent, false);
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.layout_event, parent, false);
         return new EventsViewHolder(mBinding.getRoot());
     }
 
@@ -48,7 +51,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         mBinding.setEvent(event);
         int initialTime = event.getPoints();
         viewHolder.tvCountPoints.initTimer(initialTime);
-        //TODO Steph : might be better to initialize the timer through databinding
+
+        try {
+            viewHolder.titleTv.setText(Util.capitalize(event.getCategory().name));
+        } catch (UnknownCategoryException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -86,10 +94,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     public class EventsViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener {
         SimpleTimerView tvCountPoints;
+        TextView titleTv;
 
         EventsViewHolder(View itemView) {
             super(itemView);
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
+            titleTv = (TextView) itemView.findViewById(R.id.title_category);
+            titleTv.setVisibility(View.VISIBLE);
             itemView.setOnClickListener(this);
         }
 

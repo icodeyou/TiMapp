@@ -23,7 +23,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="3.5dp"
-                android:background="@drawable/radius_simple_background_primary"
+                android:background="@drawable/radius_simple_background_black"
                 app:imageResource="@{event.getCategoryWithDefault().getSmallIcon()}" />
 
             <TextView
@@ -33,7 +33,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
                 android:textSize="@dimen/text_normal"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/text_info_event"
                 android:text="Strike"
                 android:id="@+id/textView4" />
         </LinearLayout>
@@ -45,7 +45,7 @@
             android:layout_alignParentEnd="true">
             <ImageView
                 style="@style/imageIcon"
-                android:src="@drawable/distance"
+                android:src="@drawable/distance_white"
                 android:id="@+id/imageView" />
             <TextView
                 android:id="@+id/distance_text"
@@ -55,7 +55,7 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="bottom"
                 android:textSize="@dimen/text_normal"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/text_info_event"
                 android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
                 tools:text="121 m"/>
         </LinearLayout>

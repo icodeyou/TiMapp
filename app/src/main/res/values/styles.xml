@@ -244,6 +244,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TitleInfoEvent" parent="TextBold">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:background">@color/background_card</item>
+    </style>
+
     <!--.............................................................-->
 
     <style name="ButtonWhite">

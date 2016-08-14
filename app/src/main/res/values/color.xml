@@ -67,6 +67,7 @@
     <color name="text_selected_button_secondary">#ffefc6</color>
     <color name="switch_button_thumb_off">#00BCD4</color>
     <color name="switch_button_track_off">#6ecdd9</color>
+    <color name="text_info_event">@color/white</color>
 
     <!-- Texts -->
     <color name="textPrimary">@color/colorPrimary</color>
