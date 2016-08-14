@@ -422,7 +422,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             Location location = LocationManager.getLastLocation();
             if (location != null){
                 updateMapCenter(location);
-                //gMap.addMarker(event.getMarkerOption());
             }
         }
         catch (Exception e) {

@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -20,9 +21,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
@@ -53,7 +57,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
     private static final int                PADDING__MAP                    = 30;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
-    private Animation slideOut;
+    private Marker                          selectingMarker;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -211,8 +215,9 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     public void hideEvent() {
         if(eventView.getVisibility()==View.VISIBLE) {
             Log.i(TAG, "Hide event");
-
             Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
+            removeCurrentMarker();
+
             TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight());
             translateDown.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -424,7 +429,22 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));*/
 
             displayEvent(event);
+            addMarker(event);
         }
+    }
+
+    private void addMarker(Event event) {
+        removeCurrentMarker();
+
+        MarkerOptions markerOptions = event.getMarkerOption();
+
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker","drawable", getContext().getPackageName())));
+
+        selectingMarker = gMap.addMarker(markerOptions);
+    }
+
+    private void removeCurrentMarker() {
+        if(selectingMarker!= null) selectingMarker.remove();
     }
 
     public boolean isPlaceViewVisible() {
