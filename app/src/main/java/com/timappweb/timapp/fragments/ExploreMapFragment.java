@@ -13,9 +13,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.flaviofaria.kenburnsview.MathUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,7 +32,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -43,6 +42,7 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.AreaDataCaching.OnDataChangeListener;
 import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -56,6 +56,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final long               TIME_WAIT_MAP_VIEW              = 500;
     private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
     private static final int                PADDING__MAP                    = 30;
+    private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
+    private static final int                TIME_ZOOM_ANIM                  = 500;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
     private Marker                          selectingMarker;
 
@@ -207,6 +209,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         translateUp.setInterpolator(new DecelerateInterpolator());
         fab.startAnimation(translateUp);
 
+        exploreFragment.setSelectedEventForLoader(event);
+
         tvCountPoints.cancelTimer();
         tvCountPoints.initTimer(event.getPoints());
         //TODO : might be better to initialize the timer through databinding
@@ -323,7 +327,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         });
     }
 
-
     private void centerMap(Location location){
         centerMap(location, null);
     }
@@ -400,46 +403,43 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         });
         mClusterManagerPost.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Event>() {
             @Override
-            public boolean onClusterItemClick(Event item) {
-                Log.d(TAG, "You clicked on a cluster item: " + item);
-                showMarkerDetail(item);
+            public boolean onClusterItemClick(Event event) {
+                Log.d(TAG, "You clicked on a cluster item: " + event);
+                LatLng cameraPosition = Util.roundLatLng(gMap.getCameraPosition().target);
+                LatLng markerPosition = Util.roundLatLng(event.getMarkerOption().getPosition());
+                //TODO Steph : clean following line ?
+                if(markerPosition.latitude!=cameraPosition.latitude && markerPosition.latitude != cameraPosition.longitude) {
+                    gMap.animateCamera(CameraUpdateFactory.newLatLng(event.getMarkerOption().getPosition()),TIME_ZOOM_ANIM,null);
+                } else if(isPlaceViewVisible() && mBinding.getEvent() == event) {
+                    IntentsUtils.viewSpecifiedEvent(getActivity(), event);
+                    return true;
+                }
+                if(isPlaceViewVisible() && mBinding.getEvent() == event || selectingMarker ==null || selectingMarker.isVisible()) {
+                    selectUI(event);
+                }
                 return true;
             }
-
         });
         map.setOnMarkerClickListener(mClusterManagerPost);
         map.setOnCameraChangeListener(new OnCameraChangeListener());
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
+
+        //map.setInfoWindowAdapter(new MyInfoWindowAdapter());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    private void showMarkerDetail(MarkerValueInterface markerValue){
-        Event event = (Event) markerValue;
-        if(isPlaceViewVisible() && mBinding.getEvent() == event) {
-            IntentsUtils.viewSpecifiedEvent(getActivity(), event);
-        } else {
-            //TODO : what is that ?
-            /*MarkerOptions markerOptions = ((Event) markerValue).getMarkerOption();
+    private void selectUI(Event event){
+        displayEvent(event);
 
-            ImageView pin = new ImageView(getContext());
-            pin.setImageResource(R.drawable.pin);
-            markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("pin","drawable", getContext().getPackageName())));*/
-
-            displayEvent(event);
-            addMarker(event);
-        }
-    }
-
-    private void addMarker(Event event) {
         removeCurrentMarker();
 
         MarkerOptions markerOptions = event.getMarkerOption();
 
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker","drawable", getContext().getPackageName())));
-
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker_secondary","drawable", getContext().getPackageName())));
+        markerOptions.anchor(0.5f,0.5f); //center Marker Bitmap
         selectingMarker = gMap.addMarker(markerOptions);
     }
 
@@ -475,6 +475,4 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             updateMapData();
         }
     }
-
-
 }

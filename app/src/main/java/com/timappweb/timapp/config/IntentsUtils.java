@@ -3,7 +3,6 @@ package com.timappweb.timapp.config;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,7 +24,7 @@ import com.timappweb.timapp.activities.InviteFriendsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.activities.PlaceViewPagerActivity;
+import com.timappweb.timapp.activities.EventPicturesActivity;
 import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
@@ -34,7 +33,6 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.fragments.BaseFragment;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 
@@ -241,7 +239,7 @@ public class IntentsUtils {
     }
 
     public static void viewPicture(Activity activity, int position, String[] data) {
-        Intent intent = new Intent(activity, PlaceViewPagerActivity.class);
+        Intent intent = new Intent(activity, EventPicturesActivity.class);
         intent.putExtra(VIEW_PICTURE_POSITION, position);
         intent.putExtra(VIEW_PICTURE_LIST, data);
         activity.startActivity(intent);

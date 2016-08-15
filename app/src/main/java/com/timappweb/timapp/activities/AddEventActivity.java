@@ -206,7 +206,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         //TODO Steph : Correct the max length for the description
         //TODO Jack : Allow multiline Text ! Maybe in XML though
         eventNameET.setFilters(f);
-        descriptionET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE);
+        descriptionET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 
     private void initAdapterAndManager() {

@@ -37,6 +37,8 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     private int lastClear = -1;
     private AreaRequestHistory areaRequestHistory = null;
 
+    private Event selectedEvent;
+
     // ---------------------------------------------------------------------------------------------
 
     public AreaDataLoaderFromAPI(Context context, SearchFilter filter) {
@@ -59,6 +61,9 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     public void load(final IntPoint pCpy, final AreaRequestItemInterface request, QueryCondition conditions) {
         conditions.setTimeRange(7200); // TODO cst
         conditions.setMainTags(true);
+        if(selectedEvent!=null) {
+            //TODO Steph : Add a condition if one event is selected : do not remove it from the map during the loading.
+        };
 
         if (filter != null){
             conditions.setFilter(filter);
@@ -94,6 +99,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                                 events.size() > 1
                                         ? events.get(events.size() - 1).created
                                         : 0);
+
                         request.setData(events);
                     }
 
@@ -112,6 +118,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
     public void setLoadingListener(LoadingListener loadingListener) {
         this.loadingListener = loadingListener;
+    }
+
+    public void setSelectedEvent(Event event) {
+        this.selectedEvent = event;
+        return;
     }
 
 
