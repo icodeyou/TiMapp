@@ -1,9 +1,11 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -11,8 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.ProgressBar;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
@@ -36,14 +37,12 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import retrofit2.Response;
 
@@ -66,6 +65,7 @@ public class AddTagActivity extends BaseActivity{
     private EventPost                               eventEventPost;
 
     private Menu menu;
+    private InputMethodManager imm;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -77,6 +77,8 @@ public class AddTagActivity extends BaseActivity{
             finish();
             return;
         }
+
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         this.currentEvent = IntentsUtils.extractEvent(getIntent());
         this.eventEventPost = new EventPost();
@@ -102,14 +104,14 @@ public class AddTagActivity extends BaseActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_tags, menu);
+        getMenuInflater().inflate(R.menu.menu_add_tags, menu);
 
         this.menu = menu;
 
         setSearchview(menu);
         searchView.requestFocus();
-        searchView.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         initListTags();
 
@@ -138,15 +140,6 @@ public class AddTagActivity extends BaseActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_validate:
-                String query = searchView.getQuery().toString();
-                if(query.isEmpty()) {
-                    Toast.makeText(this, R.string.select_at_least_one_tag, Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    searchView.setQuery(query, true);
-                }
-                return true;
             case R.id.action_post:
                 postTags();
             case R.id.home:
@@ -200,32 +193,40 @@ public class AddTagActivity extends BaseActivity{
         });
     }
 
-    public void actionCounter() {
-        if(searchAndSelectTagManager.getSelectedTags().size()==0) {
-            setSelectedTagsViewGone();
-            searchView.setQueryHint(getResources().getString(R.string.searchview_hint_no_tags));
-        }
-        else {
-            setSelectedTagsViewVisible();
-            String string1 = getResources().getString(R.string.searchview_hint_few_tags_part_one);
-            String string2 = getResources().getString(R.string.searchview_hint_few_tags_part_two);
-            searchView.setQueryHint(string1 + selectedTagsRV.getMaxTags() + string2);
-        }
-        if(searchAndSelectTagManager.getSelectedTags().size()==selectedTagsRV.getMaxTags()) {
-            searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    public boolean actionCounter() {
+        // If we ever want to update the keyboard by calling setImeOptions,
+        // we need to clear the focus of the searchview.
+        int numberTags = searchAndSelectTagManager.getSelectedTags().size();
+        if(numberTags == selectedTagsRV.getMaxTags()-1) {
+            searchView.setVisibility(View.VISIBLE);
+            return true;
+        } else if(numberTags == selectedTagsRV.getMaxTags()) {
+            searchView.setVisibility(View.GONE);
+            return true;
+        } else {
+            switch (numberTags) {
+                case 0:
+                    setSelectedTagsViewGone();
+                    searchView.setQueryHint(getResources().getString(R.string.searchview_hint_no_tags));
+                    return true;
+                default:
+                    setSelectedTagsViewVisible();
+                    String string1 = getResources().getString(R.string.searchview_hint_few_tags_part_one);
+                    String string2 = getResources().getString(R.string.searchview_hint_few_tags_part_two);
+                    searchView.setQueryHint(string1 + selectedTagsRV.getMaxTags() + string2);
+                    return false;
+            }
         }
     }
 
     //----------------------------------------------------------------------------------------------
     //Public methods
     private void setSelectedTagsViewGone() {
-        findViewById(R.id.top_line_hrv).setVisibility(View.GONE);
         selectedTagsView.setVisibility(View.GONE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.GONE);
     }
 
     private void setSelectedTagsViewVisible() {
-        findViewById(R.id.top_line_hrv).setVisibility(View.VISIBLE);
         selectedTagsView.setVisibility(View.VISIBLE);
         findViewById(R.id.bottom_line_hrv).setVisibility(View.VISIBLE);
     }

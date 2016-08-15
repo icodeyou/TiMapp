@@ -34,7 +34,6 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
     //Big coef = small icon
     private static int ICON_SIZE_COEF = 12;
     private static int PADDING_ICON = 70;
-    private static int MARGIN_ICON = 100;
 
     private final int mDimension;
     private final ImageView mImageView;
@@ -70,10 +69,6 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
             return;
         }
         categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(MARGIN_ICON, MARGIN_ICON, MARGIN_ICON, MARGIN_ICON);
-        categoryImage.setLayoutParams(lp);
 
         categoryImage = MyApplication.setCategoryBackground(categoryImage, event.getLevel());
 

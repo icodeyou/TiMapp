@@ -405,26 +405,17 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             @Override
             public boolean onClusterItemClick(Event event) {
                 Log.d(TAG, "You clicked on a cluster item: " + event);
-                LatLng cameraPosition = Util.roundLatLng(gMap.getCameraPosition().target);
-                LatLng markerPosition = Util.roundLatLng(event.getMarkerOption().getPosition());
-                //TODO Steph : clean following line ?
-                if(markerPosition.latitude!=cameraPosition.latitude && markerPosition.latitude != cameraPosition.longitude) {
-                    gMap.animateCamera(CameraUpdateFactory.newLatLng(event.getMarkerOption().getPosition()),TIME_ZOOM_ANIM,null);
-                } else if(isPlaceViewVisible() && mBinding.getEvent() == event) {
-                    IntentsUtils.viewSpecifiedEvent(getActivity(), event);
-                    return true;
-                }
-                if(isPlaceViewVisible() && mBinding.getEvent() == event || selectingMarker ==null || selectingMarker.isVisible()) {
+                if(!(isPlaceViewVisible() && mBinding.getEvent() == event)) {
                     selectUI(event);
                 }
-                return true;
+                return false;
             }
         });
+        //If we want to redirect to the place after second click, please set another listener  to the map
+        // new OnMarkerClickListener() and return false to cancel center on map.
         map.setOnMarkerClickListener(mClusterManagerPost);
         map.setOnCameraChangeListener(new OnCameraChangeListener());
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
-
-        //map.setInfoWindowAdapter(new MyInfoWindowAdapter());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
     }

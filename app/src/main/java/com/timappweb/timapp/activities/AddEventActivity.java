@@ -198,15 +198,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         filters[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
         eventNameET.setFilters(filters);
         eventNameET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        eventNameET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         //To remove words suggestions, add InputType.TYPE_CLASS_TEXT |InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
         InputFilter[] f = new InputFilter[1];
         f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().places_max_name_length);
-        //TODO Steph : Correct the max length for the description
-        //TODO Jack : Allow multiline Text ! Maybe in XML though
         eventNameET.setFilters(f);
-        descriptionET.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
     }
 
     private void initAdapterAndManager() {

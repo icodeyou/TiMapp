@@ -17,6 +17,7 @@ import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.IntPoint;
 import com.timappweb.timapp.utils.location.LocationManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -61,9 +62,6 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     public void load(final IntPoint pCpy, final AreaRequestItemInterface request, QueryCondition conditions) {
         conditions.setTimeRange(7200); // TODO cst
         conditions.setMainTags(true);
-        if(selectedEvent!=null) {
-            //TODO Steph : Add a condition if one event is selected : do not remove it from the map during the loading.
-        };
 
         if (filter != null){
             conditions.setFilter(filter);
@@ -76,6 +74,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
         final int itemRequestId = request.setPendingCall(call);
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
+
+        //TODO Steph : This might not be the correct way to do it. Find a way not to remove the selected event from the map during the loading.
+        if(selectedEvent!=null) {
+            List<Event> selectedList = new ArrayList<>();
+            selectedList.add(selectedEvent);
+            request.setData(selectedList);
+        }
 
         if (loadingListener!=null) loadingListener.onLoadStart();
 

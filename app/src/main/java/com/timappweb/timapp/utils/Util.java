@@ -145,7 +145,7 @@ public class Util {
     }
 
     public static LatLng roundLatLng(LatLng initialLatLng) {
-        DecimalFormat df = new DecimalFormat("#.####");
+        DecimalFormat df = new DecimalFormat("#.#####");
         df.setRoundingMode(RoundingMode.CEILING);
         double roundedLatitude = Double.parseDouble(df.format(initialLatLng.latitude));;
         double roundedLongitude = Double.parseDouble(df.format(initialLatLng.longitude));

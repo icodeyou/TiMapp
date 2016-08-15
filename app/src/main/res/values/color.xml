@@ -8,6 +8,7 @@
     <color name="colorWhiteTransparent50">#80FFFFFF</color>
     <color name="colorBlackTransparent50">#80000000</color>
     <color name="colorAccent">#f44336</color>
+    <color name="colorAccentLight">#68f44336</color>
     <color name="colorSecondary">#2b3778</color>
     <color name="colorSecondaryExtaLight">#f9faff</color>
     <color name="colorSecondaryDark">#2b3778</color>

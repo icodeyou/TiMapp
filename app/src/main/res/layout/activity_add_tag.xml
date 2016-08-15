@@ -32,6 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/height_rv_displayed_tags"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             myattrs:horizontal_tags_text_color="@color/colorAccent"
             myattrs:horizontal_tags_background_color="@color/background"
             myattrs:horizontal_tags_is_bold="true"
@@ -43,8 +45,9 @@
             android:id="@+id/bottom_line_hrv"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="3dp"
-            android:background="@color/background_dark"/>
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/colorAccentLight"/>
 
         <!-- Progress View -->
         <!-- **********************************************************************-->
