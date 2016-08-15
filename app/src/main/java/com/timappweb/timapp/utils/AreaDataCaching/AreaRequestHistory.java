@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
-import com.timappweb.timapp.rest.model.QueryCondition;
+import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.utils.IntLatLng;
 import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
@@ -191,8 +191,8 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
         AreaIterator areaIterator = this.getAreaIterator(bounds);
 
         // TODO Stef: find where bug come from
-        if (areaIterator.size() > 100){ // TODO parameters
-            Util.appStateError(TAG, "Area a size is hudge: " + areaIterator.size() + ". Something looks wrong... \n\t - Bounds are: " + bounds);
+        if (areaIterator.size() > 100){
+            Util.appStateError(TAG, "Area a size is huge: " + areaIterator.size() + ". Something looks wrong... \n\t - Bounds are: " + bounds);
             return;
         }
 

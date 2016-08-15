@@ -67,6 +67,8 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         LocationManager.addOnLocationChangedListener(this);
 
         mEventLoaderModel = new MapAreaLoaderCallback<Event>(this, DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, Event.class){
+
+
             @Override
             public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
                 super.onLoadFinished(loader, data);

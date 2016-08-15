@@ -1,9 +1,7 @@
 package com.timappweb.timapp.rest.callbacks;
 
-import com.timappweb.timapp.rest.model.RestFeedback;
-import com.timappweb.timapp.rest.model.RestValidationError;
+import com.timappweb.timapp.rest.io.responses.RestValidationError;
 
-import retrofit2.Call;
 import retrofit2.Response;
 
 /**

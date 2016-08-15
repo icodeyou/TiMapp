@@ -3,19 +3,14 @@ package com.timappweb.timapp.utils.AreaDataCaching;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.ClusterManager;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.model.QueryCondition;
+import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.IntPoint;
-import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
@@ -92,7 +87,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                         // TODO what happens if two row have the same timestamp for the same area ?
                         request.setDataTimestamp(
                                 events.size() > 1
-                                        ? events.get(events.size() - 1).created
+                                        ? events.get(events.size() - 1).getCreated()
                                         : 0);
                         request.setData(events);
                     }

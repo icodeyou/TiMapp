@@ -3,6 +3,8 @@ package com.timappweb.timapp.data.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
  * Created by stephane on 5/5/2016.
  */
 @Table(name = "UserFriend")
-public class UserFriend extends MyModel {
+public class UserFriend extends SyncBaseModel {
 
     // =============================================================================================
     // DATABASE
@@ -25,7 +27,9 @@ public class UserFriend extends MyModel {
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "UserTarget", uniqueGroups = "unique_friendship",
             onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    onDelete= Column.ForeignKeyAction.CASCADE)
+    @SerializedName("user_target")
+    @Expose
     public User userTarget;
 
     // =============================================================================================
@@ -46,4 +50,8 @@ public class UserFriend extends MyModel {
                 '}';
     }
 
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        return false;
+    }
 }

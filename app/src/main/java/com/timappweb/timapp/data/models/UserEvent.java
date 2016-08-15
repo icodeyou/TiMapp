@@ -35,10 +35,6 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
     @Expose
     public UserEventStatusEnum status;
 
-    @Column(name = "Created", notNull = true)
-    @Expose
-    public int created;
-
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "User", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
     @Expose
@@ -83,7 +79,7 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
 
     @Override
     public String getTimeCreated() {
-        return Util.secondsTimestampToPrettyTime(this.created);
+        return Util.millisTimestampToPrettyTime(this.created);
     }
 
     @Override

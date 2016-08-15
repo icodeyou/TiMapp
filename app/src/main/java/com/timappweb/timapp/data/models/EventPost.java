@@ -35,10 +35,6 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface, Pl
     @Expose
     public double longitude;
 
-    @Column(name = "Created")
-    @Expose
-    public int created;
-
     @Column(name = "Comment")
     @Expose
     public String comment;
@@ -144,7 +140,7 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface, Pl
         return p.format(new Date(((long)this.created)* 1000 + mGMTOffset));
         */
         // TODO [TEST] diffent time zone on phone
-        return Util.secondsTimestampToPrettyTime(this.created);
+        return Util.millisTimestampToPrettyTime(this.created);
     }
 
 

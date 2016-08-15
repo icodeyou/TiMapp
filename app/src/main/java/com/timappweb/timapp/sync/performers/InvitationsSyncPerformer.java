@@ -6,7 +6,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 
 import java.util.Collection;
 import java.util.List;

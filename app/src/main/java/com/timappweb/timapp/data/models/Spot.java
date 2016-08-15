@@ -51,10 +51,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     @SerializedName("spot_category_id")
     public int category_id;
 
-    @Column(name = "Created")
-    @Expose(deserialize = true, serialize = false)
-    public int created;
-
     // =============================================================================================
     // Fields
 

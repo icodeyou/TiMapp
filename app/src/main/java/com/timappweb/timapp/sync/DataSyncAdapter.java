@@ -33,10 +33,11 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
-import com.timappweb.timapp.rest.model.QueryCondition;
-import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
+import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
 import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
 import com.timappweb.timapp.sync.performers.PlacePictureSyncPerformer;
 import com.timappweb.timapp.sync.performers.EventTagsSyncPerformer;
@@ -47,6 +48,7 @@ import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Response;
@@ -134,11 +136,9 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
             switch (syncTypeId){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
-                    new FriendsSyncPerformer(
-                            RestClient.service().friends().execute().body().items,
-                            MyApplication.getCurrentUser().getFriends(),
-                            syncResult).perform();
-                    break;
+                    FullTableSyncPerformer syncPerformer = getFriendSyncPerformer();
+                    syncPerformer.getSyncParams().setLimit(2);
+                    syncPerformer.perform();
                 case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
                     new InvitationsSyncPerformer(
                             RestClient.service().inviteReceived().execute().body().items,
@@ -285,5 +285,23 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             throw new InvalidParameterException();
         }
         return id;
+    }
+
+
+    public FullTableSyncPerformer getFriendSyncPerformer() {
+        return new FullTableSyncPerformer(UserFriend.class, new FullTableSyncPerformer.Callback<UserFriend>() {
+            @Override
+            public boolean beforeSave(UserFriend entry) {
+                entry.userSource = MyApplication.getCurrentUser();
+                return true;
+            }
+            @Override
+            public void afterSave(UserFriend entry) {}
+        }, new FullTableSyncPerformer.RemoteLoader() {
+            @Override
+            public TableSyncResult load(HashMap options) throws IOException {
+                return (TableSyncResult) RestClient.service().friends(options).execute().body();
+            }
+        });
     }
 }

@@ -23,7 +23,7 @@ public class RAMAreaRequestItem<T> implements AreaRequestItemInterface<T>{
 
     // ---------------------------------------------------------------------------------------------
 
-    public int              dataTimestamp;          // Timestamp on the server (used to filter data when we update the area)
+    public long              dataTimestamp;          // Timestamp on the server (used to filter data when we update the area)
     public int              localTimestamp;         // Timestamp on the local machine (used to know when was the last update)
     public int              currentRequestId = -1;  // Request remote_id
     public List<T>          data;                   // LIFO: Last spot in => First spot out
@@ -37,7 +37,7 @@ public class RAMAreaRequestItem<T> implements AreaRequestItemInterface<T>{
 
     private OnDataChangeListener listener = null;
 
-    public int getDataTimestamp() {
+    public long getDataTimestamp() {
         return dataTimestamp;
     }
 
@@ -63,8 +63,9 @@ public class RAMAreaRequestItem<T> implements AreaRequestItemInterface<T>{
         this.localTimestamp = 0;
     }
 
-    public void setDataTimestamp(int timestamp) {
-        this.dataTimestamp = timestamp;
+    @Override
+    public void setDataTimestamp(long timesamp) {
+        this.dataTimestamp = timesamp;
     }
 
     public void updateLocalTimestamp() {

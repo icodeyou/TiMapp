@@ -33,6 +33,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.DataSyncAdapter;
@@ -334,7 +335,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 break;
             // DEV
             case R.id.menu_item_dummy_event:
-                IntentsUtils.viewSpecifiedEvent(this, Event.createDummy());
+                IntentsUtils.viewSpecifiedEvent(this, DummyEventFactory.create());
                 break;
         }
 

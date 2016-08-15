@@ -1,6 +1,5 @@
 package com.timappweb.timapp.rest.services;
 
-import com.google.gson.JsonArray;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.models.Event;
@@ -9,13 +8,15 @@ import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.UserEvent;
+import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
+import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
 
 import java.util.List;
 import java.util.Map;
@@ -99,7 +100,7 @@ public interface WebServiceInterface {
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
     @GET("users/friends.json")
-    Call<PaginatedResponse<User>> friends();
+    Call<FullTableSyncPerformer.RemoteLoader.TableSyncResult<UserFriend>> friends(@QueryMap Map<String,String> options);
 
     @POST("users/edit.json")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);

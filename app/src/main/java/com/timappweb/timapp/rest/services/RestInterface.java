@@ -1,8 +1,7 @@
 package com.timappweb.timapp.rest.services;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 
 import java.util.HashMap;
 import java.util.List;

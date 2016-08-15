@@ -39,16 +39,35 @@ public class MyModel extends Model implements Observable, Serializable{
      * @param associationModel association model
      */
     public  <T extends MyModel> void saveBelongsToMany(Collection<T> data,
-                                  Class<? extends MyModel> associationModel){
+                                                       Class<? extends MyModel> associationModel){
         MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
-            //Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
-            //return;
+        //Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
+        //return;
         try {
             for (MyModel model: data){
                 Constructor<? extends MyModel> constructor = associationModel.getConstructor(savedModel.getClass(), model.getClass());
                 MyModel instance = constructor.newInstance(savedModel, model);
                 instance.deepSave();
             }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            Util.appStateError(TAG, "No constructor for class: '" + associationModel.getCanonicalName() + "'");
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+    public  <T extends MyModel> void saveBelongsToMany(T data,
+                                                       Class<? extends MyModel> associationModel){
+        MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
+        //Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
+        //return;
+        try {
+            Constructor<? extends MyModel> constructor = associationModel.getConstructor(savedModel.getClass(), data.getClass());
+            MyModel instance = constructor.newInstance(savedModel, data);
+            instance.deepSave();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

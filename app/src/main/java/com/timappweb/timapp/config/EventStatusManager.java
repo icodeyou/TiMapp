@@ -14,8 +14,8 @@ import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.rest.model.QueryCondition;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import retrofit2.Call;
@@ -217,7 +217,7 @@ public class EventStatusManager {
         eventStatus.setRemoteId(syncId);
         eventStatus.status = status;
         eventStatus.user = MyApplication.getCurrentUser();
-        eventStatus.created = (int)(System.currentTimeMillis()/1000);
+        eventStatus.setCreated(System.currentTimeMillis());
         eventStatus.event = event;
         return (UserEvent) eventStatus.mySave();
     }

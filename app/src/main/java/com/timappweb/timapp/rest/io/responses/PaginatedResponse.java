@@ -1,4 +1,4 @@
-package com.timappweb.timapp.rest.model;
+package com.timappweb.timapp.rest.io.responses;
 
 import com.google.gson.annotations.Expose;
 

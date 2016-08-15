@@ -7,7 +7,7 @@ import com.activeandroid.query.From;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.models.MapAreaInfo;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 /**

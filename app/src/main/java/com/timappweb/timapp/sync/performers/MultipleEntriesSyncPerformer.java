@@ -21,9 +21,9 @@ public abstract class MultipleEntriesSyncPerformer implements SyncPerformer {
 
     private static final String TAG = "RemoteMasterSyncPerf";
 
-    private final List<? extends SyncBaseModel> remoteEntries;
-    private final List<? extends SyncBaseModel> localEntries;
-    protected final SyncResult syncResult;
+    private final List<? extends SyncBaseModel>     remoteEntries;
+    private final List<? extends SyncBaseModel>     localEntries;
+    protected final SyncResult                      syncResult;
 
     public MultipleEntriesSyncPerformer(List<? extends SyncBaseModel> remoteEntries,
                                         List<? extends SyncBaseModel> localEntries,

@@ -30,9 +30,9 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.sync.UserSyncAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -149,6 +149,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                                     MyApplication.login(getApplicationContext(), user, token, accessToken);
                                     MyApplication.requestGcmToken(LoginActivity.this);
                                     IntentsUtils.lastActivityBeforeLogin(LoginActivity.this);
+                                    UserSyncAdapter.syncImmediately(MyApplication.getApplicationBaseContext());
                                 }
                                 catch (Exception ex){
                                     Log.e(TAG, "Cannot parse server response for login: " + ex.getMessage());

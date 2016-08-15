@@ -8,7 +8,7 @@
         <import type="android.graphics.drawable.Drawable"/>
         <variable
             name="errors"
-            type="com.timappweb.timapp.rest.model.RestValidationError"></variable>
+            type="com.timappweb.timapp.rest.io.responses.RestValidationError"></variable>
         <variable
             name="event"
             type="com.timappweb.timapp.data.models.Event"></variable>

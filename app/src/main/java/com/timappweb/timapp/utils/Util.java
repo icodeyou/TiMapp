@@ -131,4 +131,8 @@ public class Util {
             Log.e(TAG, msg);
         }
     }
+
+    public static String millisTimestampToPrettyTime(long time) {
+        return secondsDurationToPrettyTime((int)(time / 1000));
+    }
 }

@@ -65,8 +65,9 @@ public class QuotaManager {
         UserQuota userQuota = MyApplication.getCurrentUser().getQuota(quotaTypeId);
 
         if (userQuota == null){
-            Util.appStateError(TAG, "There is no quota with id: " + quotaTypeId);
+            Log.e(TAG, "There is no quota with id: " + quotaTypeId);
             UserSyncAdapter.syncImmediately(MyApplication.getApplicationBaseContext());
+            return true;
         }
 
         Log.d(TAG, "CHECKING QUOTA : " + userQuota);

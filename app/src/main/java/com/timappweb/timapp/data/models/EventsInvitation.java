@@ -20,10 +20,6 @@ public class EventsInvitation extends SyncBaseModel implements PlaceUserInterfac
     // =============================================================================================
     // Database
 
-    @Column(name = "Created", notNull = true)
-    @Expose(serialize = false, deserialize = true)
-    public int created;
-
     @Column(name = "Modified")
     @Expose(serialize = false, deserialize = true)
     public int modified;
@@ -70,7 +66,7 @@ public class EventsInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     @Override
     public String getTimeCreated() {
-        return Util.secondsTimestampToPrettyTime((this.created));
+        return Util.millisTimestampToPrettyTime((this.created));
     }
 
     @Override

@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.rest.model.RestValidationError;
+import com.timappweb.timapp.rest.io.responses.RestValidationError;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

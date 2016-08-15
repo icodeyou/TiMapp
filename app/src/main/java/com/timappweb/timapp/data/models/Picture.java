@@ -12,10 +12,6 @@ public class Picture extends SyncBaseModel {
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "Created")
-    @Expose(serialize = false, deserialize = true)
-    public int created;
-
     @Column(name = "Photo", notNull = true)
     @Expose(serialize = true, deserialize = true)
     public String photo;

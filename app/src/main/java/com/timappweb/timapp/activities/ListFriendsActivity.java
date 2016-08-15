@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ListFriendsActivity extends BaseActivity{
 
-    private static final long   SYNC_UPDATE_DELAY       = 3600 * 1000;
+    private static final long   SYNC_UPDATE_DELAY       = 1 * 1000;
     private static final int    LOADER_ID_FRIENDS       = 0;
     private String               TAG                    = "ListFriendsActivity";
 

@@ -24,7 +24,7 @@ import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.io.Serializable;

@@ -1,11 +1,8 @@
 package com.timappweb.timapp.rest.callbacks;
 
 import android.databinding.ViewDataBinding;
-import android.widget.Toast;
 
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.rest.model.RestValidationError;
-import com.timappweb.timapp.rest.model.RestValidationErrorParser;
+import com.timappweb.timapp.rest.io.responses.RestValidationError;
 import com.timappweb.timapp.utils.Util;
 
 import java.lang.reflect.Method;

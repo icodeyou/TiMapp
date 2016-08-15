@@ -46,6 +46,10 @@ public abstract class SyncBaseModel extends MyModel {
     @Column(name = "_lastSync", notNull = false)
     protected long _last_sync;
 
+    @Column(name = "Created", notNull = true)
+    @Expose(serialize = false, deserialize = true)
+    protected long created;
+
     // =============================================================================================
 
     /**
@@ -185,6 +189,7 @@ public abstract class SyncBaseModel extends MyModel {
             getEntries(Context context, SyncAdapterOption options, From query, long syncDelay){
         // If need merge
         if (SyncHistory.requireUpdate(options.getSyncType(), syncDelay)){
+            Log.i(TAG, "Requesting remote entries for type: " + options);
             getRemoteEntries(context, options);
             return null;
         }
@@ -312,4 +317,11 @@ public abstract class SyncBaseModel extends MyModel {
                 .where(AreaQueryHelper.rowInBounds(bounds));
     }
 
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
+    }
 }

@@ -17,7 +17,7 @@ public class DummyUserEventFactory {
 
         userEvent.event = DummyEventFactory.create();
         userEvent.user = DummyUserFactory.create();
-        userEvent.created = (int) (System.currentTimeMillis() * 1000);
+        userEvent.setCreated(System.currentTimeMillis());
 
         return userEvent;
     }

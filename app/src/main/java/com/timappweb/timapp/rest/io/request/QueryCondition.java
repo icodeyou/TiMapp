@@ -1,4 +1,4 @@
-package com.timappweb.timapp.rest.model;
+package com.timappweb.timapp.rest.io.request;
 
 import android.location.Location;
 
@@ -16,11 +16,10 @@ import java.util.Map;
  */
 public class QueryCondition {
 
-    private Map<String, String> queryMap = new HashMap<>();
-    private SearchFilter filter;
+    private HashMap<String, String> queryMap = new HashMap<>();
 
-    // TODO remove the getter
-    public Map<String, String> toMap() {
+
+    public HashMap<String, String> toMap() {
         return this.queryMap;
     }
 
@@ -41,16 +40,6 @@ public class QueryCondition {
         queryMap.put("latitude", String.valueOf(latLng.latitude));
         queryMap.put("longitude", String.valueOf(latLng.longitude));
         return this;
-    }
-
-    public void setTimestampMin(int min) {
-        if (min > 0)
-            queryMap.put("ts_min", String.valueOf(min));
-        // queryMap.put("cache[]", dataTimestamp + "," + bounds.northeast.latitude + "," + bounds.southwest.longitude + "," +
-        //       "" + bounds.southwest.latitude + "," + bounds.southwest.longitude);
-    }
-    public void setTimestampMax(int max) {
-        queryMap.put("ts_min", String.valueOf(max));
     }
 
     @Override
@@ -94,4 +83,5 @@ public class QueryCondition {
         queryMap.put("filter_tags", Tag.tagsToString(filter.tags));
         queryMap.put("filter_categories", EventCategory.idsToString(filter.categories));
     }
+
 }

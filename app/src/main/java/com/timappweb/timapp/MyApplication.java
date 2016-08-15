@@ -1,6 +1,5 @@
 package com.timappweb.timapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -13,7 +12,6 @@ import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
@@ -21,10 +19,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
-import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
-import com.timappweb.timapp.rest.model.RestFeedback;
+import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
 import com.timappweb.timapp.sync.UserSyncAdapter;
@@ -32,9 +27,6 @@ import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import retrofit2.Call;
 

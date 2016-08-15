@@ -1,6 +1,6 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import com.timappweb.timapp.rest.model.QueryCondition;
+import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.utils.IntPoint;
 
 /**

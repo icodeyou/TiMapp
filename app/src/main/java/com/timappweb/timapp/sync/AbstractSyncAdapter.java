@@ -10,7 +10,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.sync.performers.FriendsSyncPerformer;
 
 /**
  * Created by stephane on 4/27/2016.

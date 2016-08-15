@@ -60,10 +60,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     @Expose
     public String           description;
 
-    @Column(name = "Created")
-    @Expose(serialize = false, deserialize = true)
-    public int              created;
-
     @Column(name = "Latitude")
     @Expose
     public double           latitude;
@@ -148,20 +144,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
 
     public int countPosts(){
         return this.count_posts;
-    }
-
-    // Dummy data
-    private static int dummyIndice = 0;
-
-    public static Event createDummy(){
-        Event event = new Event(1, dummyIndice, dummyIndice, "Test");
-        event.tags.add(Tag.createDummy());
-        event.addPost(EventPost.createDummy());
-        event.addPost(EventPost.createDummy());
-        event.addPost(EventPost.createDummy());
-        event.addPost(EventPost.createDummy());
-        dummyIndice++;
-        return event;
     }
 
     // =============================================================================================

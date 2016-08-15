@@ -10,7 +10,7 @@ import com.timappweb.timapp.utils.Util;
  * Created by stephane on 4/4/2016.
  */
 @Table(name = "activities")
-public class UserActivity extends  Model{
+public class UserActivity extends MyModel{
 
     @Expose
     @Column(name = "DateCreated", index = true)

@@ -19,7 +19,7 @@ import retrofit2.Call;
  */
 public interface AreaRequestItemInterface<T> {
 
-    void setDataTimestamp(int timesamp);
+    void setDataTimestamp(long timesamp);
 
     void updateLocalTimestamp();
 
@@ -37,7 +37,7 @@ public interface AreaRequestItemInterface<T> {
 
     void clear();
 
-    int getDataTimestamp();
+    long getDataTimestamp();
 
     List<T> getData();
 

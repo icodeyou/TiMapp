@@ -5,7 +5,7 @@ import android.content.SyncResult;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.model.PaginatedResponse;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 
 import java.util.Collection;
 
