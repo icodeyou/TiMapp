@@ -12,13 +12,6 @@ public class OnAddTagListener extends OnBasicQueryTagListener {
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        super.onQueryTextSubmit(query);
-        addTagActivity.actionCounter();
-        return true;
-    }
-
-    @Override
     public void addTag(String query) {
         super.addTag(query);
         addTagActivity.actionCounter();

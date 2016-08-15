@@ -220,7 +220,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 setDefaultShareIntent();
                 return true;
             case android.R.id.home:
-                finish();
+                //finish();
             default:
                 return super.onOptionsItemSelected(item);
         }

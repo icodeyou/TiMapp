@@ -2,11 +2,15 @@ package com.timappweb.timapp.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 
+import com.flaviofaria.kenburnsview.MathUtils;
+import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.BuildConfig;
 
 import org.joda.time.Period;
@@ -14,12 +18,11 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by stephane on 9/10/2015.
- */
 public class Util {
 
     private static PeriodFormatter _daysHoursMinutesFormater = null;
@@ -133,6 +136,23 @@ public class Util {
     }
 
     public static String millisTimestampToPrettyTime(long time) {
-        return secondsDurationToPrettyTime((int)(time / 1000));
+        return secondsDurationToPrettyTime((int) (time / 1000));
+    }
+
+    public static Bitmap getBmpFromImgView(ImageView imageView, int iconDiameter) {
+        Bitmap bmp = Bitmap.createScaledBitmap(imageView.getDrawingCache(),
+                iconDiameter,iconDiameter,true);
+        imageView.setDrawingCacheEnabled(false); // clear drawing cache
+
+        bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);
+        return bmp;
+    }
+
+    public static LatLng roundLatLng(LatLng initialLatLng) {
+        DecimalFormat df = new DecimalFormat("#.#####");
+        df.setRoundingMode(RoundingMode.CEILING);
+        double roundedLatitude = Double.parseDouble(df.format(initialLatLng.latitude));;
+        double roundedLongitude = Double.parseDouble(df.format(initialLatLng.longitude));
+        return new LatLng(roundedLatitude,roundedLongitude);
     }
 }

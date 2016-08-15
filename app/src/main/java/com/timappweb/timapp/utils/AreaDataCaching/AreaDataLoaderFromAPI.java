@@ -12,6 +12,7 @@ import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,6 +32,8 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     private int requestCounter = 0;
     private int lastClear = -1;
     private AreaRequestHistory areaRequestHistory = null;
+
+    private Event selectedEvent;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -67,6 +70,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
         final int itemRequestId = request.setPendingCall(call);
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
 
+        //TODO Steph : This might not be the correct way to do it. Find a way not to remove the selected event from the map during the loading.
+        if(selectedEvent!=null) {
+            List<Event> selectedList = new ArrayList<>();
+            selectedList.add(selectedEvent);
+            request.setData(selectedList);
+        }
+
         if (loadingListener!=null) loadingListener.onLoadStart();
 
         RestClient.buildCall(call)
@@ -89,6 +99,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                                 events.size() > 1
                                         ? events.get(events.size() - 1).getCreated()
                                         : 0);
+
                         request.setData(events);
                     }
 
@@ -107,6 +118,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
     public void setLoadingListener(LoadingListener loadingListener) {
         this.loadingListener = loadingListener;
+    }
+
+    public void setSelectedEvent(Event event) {
+        this.selectedEvent = event;
+        return;
     }
 
 

@@ -21,11 +21,12 @@ import com.timappweb.timapp.views.MyHackyViewPager;
 import me.relex.photodraweeview.PhotoDraweeView;
 
 
-public class PlaceViewPagerActivity extends FragmentActivity {
+public class EventPicturesActivity extends FragmentActivity {
 
     private static String[] IMAGES;
 
     private ViewPager page;
+    private View progressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,9 @@ public class PlaceViewPagerActivity extends FragmentActivity {
         if (IMAGES == null){
             IntentsUtils.home(this);
         }
-        setContentView(R.layout.activity_view_pager2);
+        setContentView(R.layout.activity_event_pictures);
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter();
+        progressView = findViewById(R.id.progress_view);
         page = (MyHackyViewPager)findViewById(R.id.view_pager);
         page.setAdapter(pagerAdapter);
 
@@ -82,6 +84,7 @@ public class PlaceViewPagerActivity extends FragmentActivity {
                     if (imageInfo == null) {
                         return;
                     }
+                    progressView.setVisibility(View.GONE);
                     photoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
                 }
             });

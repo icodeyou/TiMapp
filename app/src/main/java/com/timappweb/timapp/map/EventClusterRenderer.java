@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -20,6 +21,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +69,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
             return;
         }
         categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
+
         categoryImage = MyApplication.setCategoryBackground(categoryImage, event.getLevel());
 
         categoryImage.setDrawingCacheEnabled(true);
@@ -91,7 +94,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
                 iconDiameter,iconDiameter,true);
         categoryImage.setDrawingCacheEnabled(false); // clear drawing cache
 
-        bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);
+        bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);;
 
         //add marker to Map
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bmp));

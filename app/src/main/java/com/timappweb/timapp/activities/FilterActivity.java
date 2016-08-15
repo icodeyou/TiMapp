@@ -18,7 +18,6 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.BubbleCategoryAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -136,7 +135,7 @@ public class FilterActivity extends BaseActivity {
         Log.d(TAG, "FilterActivity::onCreateOptionsMenu()");
         final Activity thatActivity = this;
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_tags, menu);
+        getMenuInflater().inflate(R.menu.menu_add_tags, menu);
 
         setSearchview(menu);
         searchView.clearFocus();

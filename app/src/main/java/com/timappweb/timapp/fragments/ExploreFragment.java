@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
@@ -180,6 +181,10 @@ public class ExploreFragment extends Fragment{
 
     public View.OnClickListener getFabClickListener() {
         return fabClickListener;
+    }
+
+    public void setSelectedEventForLoader(Event selectedEvent) {
+        dataLoader.setSelectedEvent(selectedEvent);
     }
 
     public ExploreEventsFragment getExploreEventsFragment() {
