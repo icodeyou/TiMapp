@@ -55,7 +55,7 @@ public class PostActivity extends BaseActivity {
             this.loadPost(postId);
         }
         else {
-            Log.d(TAG, "Using eventPost given in extras " + currentEventPost);
+            Log.d(TAG, "Using eventPost given in extra " + currentEventPost);
             this.fetchDataToView();
             if (!currentEventPost.hasTags()){
                 this.loadTagsForPost();

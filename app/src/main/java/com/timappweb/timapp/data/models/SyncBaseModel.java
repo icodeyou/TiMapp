@@ -1,10 +1,13 @@
 package com.timappweb.timapp.data.models;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.query.Delete;
@@ -15,6 +18,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
+import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.ConditionInterface;
@@ -48,7 +52,7 @@ public abstract class SyncBaseModel extends MyModel {
 
     @Column(name = "Created", notNull = true)
     @Expose(serialize = false, deserialize = true)
-    protected long created;
+    public long created;
 
     // =============================================================================================
 
@@ -179,6 +183,9 @@ public abstract class SyncBaseModel extends MyModel {
         DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
     }
 
+    public static void startSync(Context context, SyncParams params) {
+        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), params.toBundle());
+    }
     /**
      * Get entries for a specified model. If entries exists locally, take it otherwise request a sync update
      * @param context
@@ -323,5 +330,27 @@ public abstract class SyncBaseModel extends MyModel {
 
     public void setCreated(long created) {
         this.created = created;
+    }
+
+    public static <T extends SyncBaseModel> long getMaxCreated(Class<T> clazz, String where) {
+        return _getMaxMin("MAX", clazz, "Created", where);
+    }
+
+    public static long getMaxRemoteId(Class<? extends SyncBaseModel> clazz, String where) {
+        return _getMaxMin("MAX", clazz, "SyncId", where);
+    }
+
+    private static long _getMaxMin(String op, Class<? extends SyncBaseModel> clazz, String column, String where){
+        String query = "SELECT "+op+"("+column+") FROM " + Cache.getTableInfo(clazz).getTableName();
+        if (where != null && where != ""){
+            query += " WHERE " + where;
+        }
+        Cursor cursor =  Cache.openDatabase().rawQuery(query, null);
+        cursor.moveToFirst();
+        return cursor.getLong(0);
+    }
+
+    public static long getMinRemoteId(Class<? extends SyncBaseModel> clazz, String where) {
+        return _getMaxMin("MIN", clazz, "SyncId", where);
     }
 }

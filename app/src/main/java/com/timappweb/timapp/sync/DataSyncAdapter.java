@@ -29,22 +29,28 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
+import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.responses.TableSyncResult;
+import com.timappweb.timapp.sync.performers.ChunckTableSyncPerformer;
 import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
 import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
-import com.timappweb.timapp.sync.performers.PlacePictureSyncPerformer;
 import com.timappweb.timapp.sync.performers.EventTagsSyncPerformer;
 import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
 import com.timappweb.timapp.utils.Util;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -92,6 +98,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     // ---------------------------------------------------------------------------------------------
 
     public static final String ACTION_SYNC_EVENT_FINISHED  = "com.timappweb.timapp.ACTION_SYNC_EVENT_FINISHED";
+    public static final String ACTION_SYNC_EVENT_PICTURES = "com.timappweb.timapp.ACTION_SYNC_EVENT_PICTURES";
 
     // ---------------------------------------------------------------------------------------------
 
@@ -134,10 +141,11 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         try {
             LatLngBounds bounds;
 
+            // TODO MANAGE ERRORS .........
             switch (syncTypeId){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
                     FullTableSyncPerformer syncPerformer = getFriendSyncPerformer();
-                    syncPerformer.getSyncParams().setLimit(2);
+                    syncPerformer.getSyncParams().setLimit(2); // TODO param
                     syncPerformer.perform();
                 case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
                     new InvitationsSyncPerformer(
@@ -161,11 +169,13 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE:
                     event = extractEvent(extras);
-                    if (event == null) return;
-                    new PlacePictureSyncPerformer(
-                            RestClient.service().viewPicturesForPlace(event.getRemoteId()).execute().body(),
-                            event,
-                            syncResult).perform();
+                    if (event == null) { Util.appStateError(TAG, "Event should not be null in sync adapter");}
+                    ChunckTableSyncPerformer pictureSyncPerformer = getEventPictureSyncPerformer(event);
+                    pictureSyncPerformer.setSyncParam(new SyncParams(extras));
+                    pictureSyncPerformer.perform();
+                    SyncResultMessage syncResultMessage = new SyncResultMessage(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
+                    syncResultMessage.setUpToDate(pictureSyncPerformer.getResult().up_to_date);
+                    EventBus.getDefault().post(syncResultMessage);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_USERS:
                     event = extractEvent(extras);
@@ -303,5 +313,33 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 return (TableSyncResult) RestClient.service().friends(options).execute().body();
             }
         });
+    }
+
+    public ChunckTableSyncPerformer getEventPictureSyncPerformer(final Event event) {
+        ChunckTableSyncPerformer performer = new ChunckTableSyncPerformer(Picture.class);
+        performer.setRemoteLoader(new ChunckTableSyncPerformer.RemoteLoader<Picture>(){
+
+            @Override
+            public TableSyncResult<Picture> load(HashMap options) throws IOException {
+                return (TableSyncResult<Picture>) RestClient.service().viewPicturesForPlace(event.getRemoteId(), options).execute().body();
+            }
+
+        });
+
+        performer.setCallback(new ChunckTableSyncPerformer.Callback<Picture>() {
+            @Override
+            public boolean beforeSave(Picture entry, TableSyncResult<Picture> result) {
+                entry.base_url = result.extra.getAsJsonObject().get("base_url").getAsString();
+                entry.event = event;
+                return true;
+            }
+
+            @Override
+            public void afterSave(Picture entry, TableSyncResult<Picture> result) {
+
+            }
+
+        });
+        return performer;
     }
 }

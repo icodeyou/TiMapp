@@ -71,7 +71,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
 
         //TODO Steph : This might not be the correct way to do it. Find a way not to remove the selected event from the map during the loading.
-        if(selectedEvent!=null) {
+        if(selectedEvent!=null ) {
             List<Event> selectedList = new ArrayList<>();
             selectedList.add(selectedEvent);
             request.setData(selectedList);

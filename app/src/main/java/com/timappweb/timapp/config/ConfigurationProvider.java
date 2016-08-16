@@ -194,4 +194,9 @@ public class ConfigurationProvider {
         }
     }
 
+    public static void reset(){
+        eventCategories = null;
+        spotCategories = null;
+    }
+
 }

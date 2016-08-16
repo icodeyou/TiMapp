@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.activeandroid.query.From;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.data.models.User;
@@ -25,7 +26,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
 
     // ---------------------------------------------------------------------------------------------
 
-    protected final Class<? extends SyncBaseModel>  clazz;
+    protected final Class<? extends MyModel>  clazz;
     protected       From                            query;
     protected       SyncAdapterOption               syncOption;
     private         SwipeRefreshLayout              mSwipeRefreshLayout;
@@ -38,7 +39,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
                                        long syncDelay,
                                        int syncType,
                                        From query,
-                                        Class<? extends SyncBaseModel> clazz) {
+                                        Class<? extends MyModel> clazz) {
         this.context = context;
         this.syncOption = new SyncAdapterOption(syncType);
         this.syncDelay = syncDelay;

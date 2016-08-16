@@ -3,6 +3,7 @@ package com.timappweb.timapp.rest;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
+import com.google.repacked.antlr.v4.codegen.model.Sync;
 import com.timappweb.timapp.data.models.MyModel;
 
 /**
@@ -12,6 +13,7 @@ import com.timappweb.timapp.data.models.MyModel;
  */
 @Table(name="SyncStatus")
 public class SyncStatus extends MyModel {
+
     public enum SyncStatusType {PENDING, DONE, FAIL, SKIPPED}
 
     // ---------------------------------------------------------------------------------------------
@@ -39,6 +41,9 @@ public class SyncStatus extends MyModel {
 
     // ---------------------------------------------------------------------------------------------
 
+    public SyncStatusType getStatus() {
+        return status;
+    }
 
     public long getMaxCreated() {
         return maxCreated;
@@ -55,5 +60,10 @@ public class SyncStatus extends MyModel {
         syncStatus.lastUpdate = 0;
         return syncStatus;
     }
+
+    public static SyncStatus getByMaxCreated(long created) {
+        return new Select().from(SyncStatus.class).where("MaxCreated = ?", created).executeSingle();
+    }
+
 
 }

@@ -9,6 +9,7 @@ import com.activeandroid.query.Select;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.SyncStatus;
 import com.timappweb.timapp.rest.io.request.SyncParams;
+import com.timappweb.timapp.rest.io.responses.TableSyncResult;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
@@ -30,27 +31,46 @@ public class ChunckTableSyncPerformer<T extends SyncBaseModel> implements SyncPe
     private Callback<T>     callback;
     private RemoteLoader<T> remoteLoader;
 
+    public TableSyncResult<T> getResult() {
+        return result;
+    }
+
+    private TableSyncResult<T> result;
+
     // ---------------------------------------------------------------------------------------------
 
-    public ChunckTableSyncPerformer(Class<T> clazz, Callback<T> callback, RemoteLoader<T> remoteLoader) {
+
+    public ChunckTableSyncPerformer(Class<T> clazz) {
         this.clazz = clazz;
-        this.callback = callback;
-        this.remoteLoader = remoteLoader;
         this.params = new SyncParams();
     }
 
-    public void sync(List<T> remoteEntries) {
-        try {
+    public void setRemoteLoader(RemoteLoader<T> remoteLoader) {
+        this.remoteLoader = remoteLoader;
+    }
+
+    public void setCallback(Callback<T> callback) {
+        this.callback = callback;
+    }
+
+    @Override
+    public void perform() {
+        try{
+            this.result = this.remoteLoader.load(this.getSyncParams().toMap());
             ActiveAndroid.beginTransaction();
             // Update and remove existing items. Loop over local entries
-            for (T remoteEntry: remoteEntries){
-                if (callback.beforeSave(remoteEntry)) {
+            for (T remoteEntry: result.items){
+                if (callback.beforeSave(remoteEntry, result)) {
                     T entry = (T) remoteEntry.mySave();
-                    callback.afterSave(entry);
+                    callback.afterSave(entry, result);
                 }
             }
             Log.i(TAG, "Merge solution ready. Applying updates");
             ActiveAndroid.setTransactionSuccessful();
+        }
+        catch (IOException e) {
+            Log.e(TAG, "Exception while sync: " + e.getMessage());
+            e.printStackTrace();
         }
         catch (Exception ex){
             Util.appStateError(TAG, ex.toString());
@@ -59,84 +79,31 @@ public class ChunckTableSyncPerformer<T extends SyncBaseModel> implements SyncPe
             Log.i(TAG, "Merge solution done");
             ActiveAndroid.endTransaction();
         }
-    }
 
-    @Override
-    public void perform() {
-        try {
-            int i = 0;
-            while (i < MAX_SYNC){
-                int maxCreated = getMaxCreated();
-                params.setMaxCreated(maxCreated);
-                List<T> data = this.remoteLoader.load(params.toMap());
-                this.sync(data);
-                if (data.size() < params.getLimit()){
-                    Log.d(TAG, "Sync is fully done");
-                    return;
-                }
-                i++;
-            }
-            Log.e(TAG, "Max sync number reached for " +clazz.getCanonicalName()+ ": " + MAX_SYNC);
-        } catch (IOException e) {
-            Log.e(TAG, "Exception while sync: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public int getMaxCreated() {
-        Cursor cursor = ActiveAndroid.getDatabase().rawQuery("SELECT MAX(Created) FROM " + Cache.getTableInfo(clazz).getTableName() + ";", null);
-        if (cursor.moveToNext()) {
-            return cursor.getInt(0);
-        }
-        else{
-            return 0;
-        }
     }
 
     public SyncParams getSyncParams() {
         return params;
     }
 
+    public void setSyncParam(SyncParams params) {
+        this.params = params;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+
     public interface Callback<T> {
 
-        boolean beforeSave(T entry);
+        boolean beforeSave(T entry, TableSyncResult<T> result);
 
-        void afterSave(T entry);
+        void afterSave(T entry, TableSyncResult<T> result);
 
     }
 
     public interface RemoteLoader<T>{
 
-        List<T> load(HashMap<String, String> options) throws IOException;
+        TableSyncResult<T> load(HashMap<String, String> options) throws IOException;
     }
 
-
-    // ---------------------------------------------------------------------------------------------
-
-
-    public static SyncStatus syncDone(String table, long minCreated, long maxCreated, long lastUpdate, int qty, int limit) {
-        // Check if the new chunk if just after the previous on
-
-        // If we reach the limit, we check if we have all data until the last chunk
-        if (qty == limit){
-            SyncStatus previousSection = new Select().from(SyncStatus.class)
-                    .where("Table = ? AND MaxCreated <= ", table, minCreated)
-                    .orderBy("MaxCreated ASC")
-                    .limit(1)
-                    .executeSingle();
-            if (previousSection.getMaxCreated() < minCreated){
-                // We need to create
-                SyncStatus.create(table, previousSection.getMaxCreated(), minCreated, SyncStatus.SyncStatusType.SKIPPED);
-            }
-        }
-        return null;
-    }
-
-    public static SyncStatus loadOlder(String table, long oldestLoaded) {
-        new Select()
-                .from(SyncStatus.class)
-                .where("MaxCreated < ?", oldestLoaded)
-                .executeSingle();
-        return null;
-    }
 }

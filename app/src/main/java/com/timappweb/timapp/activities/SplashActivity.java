@@ -50,6 +50,7 @@ public class SplashActivity extends BaseActivity {
                             if (!ConfigurationProvider.hasEventCategoriesConfig()) {
                                 Log.e(TAG, "    - No event categories configuration");
                             }
+                            ConfigurationProvider.reset();
                             IntentsUtils.fatalError(SplashActivity.this, R.string.fatal_error_no_network_title, R.string.fatal_error_no_network_message);
                         }
                         else{

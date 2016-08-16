@@ -16,8 +16,10 @@ import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.rest.io.responses.TableSyncResult;
 import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +102,7 @@ public interface WebServiceInterface {
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
     @GET("users/friends.json")
-    Call<FullTableSyncPerformer.RemoteLoader.TableSyncResult<UserFriend>> friends(@QueryMap Map<String,String> options);
+    Call<TableSyncResult<UserFriend>> friends(@QueryMap Map<String,String> options);
 
     @POST("users/edit.json")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);
@@ -132,7 +134,7 @@ public interface WebServiceInterface {
                               @Body RequestBody body);
 
     @GET("pictures/place/{id}.json")
-    Call<PaginatedResponse<Picture>> viewPicturesForPlace(@Path("id") long id);
+    Call<TableSyncResult<Picture>> viewPicturesForPlace(@Path("id") long id, @QueryMap Map<String, String> options);
 
     // ---------------------------------------------------------------------------------------------
     // Places

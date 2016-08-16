@@ -2,6 +2,8 @@ package com.timappweb.timapp.rest.io.request;
 
 import android.os.Bundle;
 
+import com.timappweb.timapp.sync.DataSyncAdapter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,38 +12,92 @@ import java.util.Map;
  */
 public class SyncParams {
 
-    private HashMap<String, String> queryMap = new HashMap<>();
+    public enum SyncDirection {DOWN, UP}
 
     public static final String SYNC_PARAM_MIN_CREATED       = "min_created";
     public static final String SYNC_PARAM_MAX_CREATED       = "max_created";
     public static final String SYNC_PARAM_ORDER             = "order";
     public static final String SYNC_PARAM_LIMIT             = "limit";
-    public static final String SYNC_PARAM_TYPE              = "last_update";
+    public static final String SYNC_PARAM_LAST_UPDATE       = "last_update";
+    public static final String SYNC_PARAM_DIRECTION         = "direction";
+    public static final String SYNC_PARAM_MAX_ID            = "max_id";
+    public static final String SYNC_PARAM_MIN_ID            = "min_id";
+
+    // ---------------------------------------------------------------------------------------------
+
+    private Bundle bundle;
+
+    // ---------------------------------------------------------------------------------------------
+
+    public SyncParams() {
+        bundle = new Bundle();
+    }
+
+    public SyncParams(Bundle extras) {
+        this.fromBundle(extras);
+    }
+
 
     public HashMap<String, String> toMap() {
-        return this.queryMap;
+        HashMap<String, String> queryMap = new HashMap();
+        if (bundle.containsKey(SYNC_PARAM_MIN_CREATED))
+            queryMap.put(SYNC_PARAM_MIN_CREATED, String.valueOf(bundle.getLong(SYNC_PARAM_MIN_CREATED)));
+
+        if (bundle.containsKey(SYNC_PARAM_MAX_CREATED))
+            queryMap.put(SYNC_PARAM_MAX_CREATED, String.valueOf(bundle.getLong(SYNC_PARAM_MAX_CREATED)));
+
+        if (bundle.containsKey(SYNC_PARAM_LIMIT))
+            queryMap.put(SYNC_PARAM_LIMIT, String.valueOf(bundle.getInt(SYNC_PARAM_LIMIT)));
+
+        if (bundle.containsKey(SYNC_PARAM_ORDER))
+            queryMap.put(SYNC_PARAM_ORDER, String.valueOf(bundle.getInt(SYNC_PARAM_ORDER)));
+
+        if (bundle.containsKey(SYNC_PARAM_LAST_UPDATE))
+            queryMap.put(SYNC_PARAM_LAST_UPDATE, String.valueOf(bundle.getInt(SYNC_PARAM_LAST_UPDATE)));
+
+        if (bundle.containsKey(SYNC_PARAM_MAX_ID))
+            queryMap.put(SYNC_PARAM_MAX_ID, String.valueOf(bundle.getLong(SYNC_PARAM_MAX_ID)));
+
+        if (bundle.containsKey(SYNC_PARAM_MIN_ID))
+            queryMap.put(SYNC_PARAM_MIN_ID, String.valueOf(bundle.getLong(SYNC_PARAM_MIN_ID)));
+
+        if (bundle.containsKey(SYNC_PARAM_DIRECTION))
+            queryMap.put(SYNC_PARAM_DIRECTION, String.valueOf(bundle.getInt(SYNC_PARAM_DIRECTION)));
+
+        return queryMap;
     }
 
-
-    public void setTimestampMin(int min) {
-        if (min > 0)
-            queryMap.put("ts_min", String.valueOf(min));
-        // queryMap.put("cache[]", dataTimestamp + "," + bounds.northeast.latitude + "," + bounds.southwest.longitude + "," +
-        //       "" + bounds.southwest.latitude + "," + bounds.southwest.longitude);
-    }
-    public void setTimestampMax(int max) {
-        queryMap.put("ts_min", String.valueOf(max));
+    public Bundle toBundle() {
+        return bundle;
     }
 
     @Override
     public String toString() {
-        String res = "QueryCondition{\n";
-        for (Map.Entry<String, String> entry : queryMap.entrySet()){
-            res += entry.getKey() + ":" + entry.getValue() + " | ";
-        }
+        String res = "QueryCondition{" +
+                "bundle= " + bundle +
+                "}";
         return res;
     }
 
+    // ---------------------------------------------------------------------------------------------
+
+    public Bundle getBundle() {
+        return bundle;
+    }
+
+    public SyncParams setMaxId(long id) {
+        bundle.putLong(SYNC_PARAM_MAX_ID, id);
+        return this;
+    }
+    public SyncParams setMinId(long id) {
+        bundle.putLong(SYNC_PARAM_MIN_ID, id);
+        return this;
+    }
+
+    public SyncParams setType(int type) {
+        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, type);
+        return this;
+    }
     /**
      * min_created
      * max_created
@@ -51,48 +107,54 @@ public class SyncParams {
      *
      * @param params
      */
-    public void setSyncParams(Bundle params) {
-        queryMap.put(SYNC_PARAM_MIN_CREATED, params.getString(SYNC_PARAM_MIN_CREATED));
-        queryMap.put(SYNC_PARAM_MAX_CREATED, params.getString(SYNC_PARAM_MAX_CREATED));
-        queryMap.put(SYNC_PARAM_LIMIT, params.getString(SYNC_PARAM_LIMIT));
-        queryMap.put(SYNC_PARAM_ORDER, params.getString(SYNC_PARAM_ORDER));
-        queryMap.put(SYNC_PARAM_TYPE, params.getString(SYNC_PARAM_TYPE));
-    }
-    public void setMinCreated(long minCreated) {
-        queryMap.put(SYNC_PARAM_MIN_CREATED, String.valueOf(minCreated));
-    }
-    public void setMaxCreated(long maxCreated) {
-        queryMap.put(SYNC_PARAM_MAX_CREATED, String.valueOf(maxCreated));
+    public void fromBundle(Bundle params) {
+        this.bundle = params;
     }
 
+    public void setMinCreated(long minCreated) {
+        bundle.putLong(SYNC_PARAM_MIN_CREATED, minCreated);
+    }
+
+    public void setMaxCreated(long maxCreated) {
+        bundle.putLong(SYNC_PARAM_MAX_CREATED, maxCreated);
+    }
 
     public long getMinCreated() {
-        return Long.valueOf(queryMap.get(SYNC_PARAM_MIN_CREATED));
+        return bundle.getLong(SYNC_PARAM_MIN_CREATED);
     }
 
     public long getMaxCreated() {
-        return Long.valueOf(queryMap.get(SYNC_PARAM_MAX_CREATED));
+        return Long.valueOf(bundle.getLong(SYNC_PARAM_MAX_CREATED));
     }
+
     public int getLimit() {
-        return Integer.valueOf(queryMap.get(SYNC_PARAM_LIMIT));
+        return Integer.valueOf(bundle.getInt(SYNC_PARAM_LIMIT));
     }
 
     public boolean hasMinCreated() {
-        return queryMap.containsKey(SYNC_PARAM_MAX_CREATED);
+        return bundle.containsKey(SYNC_PARAM_MAX_CREATED);
     }
+
     public boolean hasMaxCreated() {
-        return queryMap.containsKey(SYNC_PARAM_MAX_CREATED);
+        return bundle.containsKey(SYNC_PARAM_MAX_CREATED);
     }
 
     public boolean hasLimit() {
-        return queryMap.containsKey(SYNC_PARAM_LIMIT);
+        return bundle.containsKey(SYNC_PARAM_LIMIT);
     }
 
-    public void setLimit(int limit) {
-        queryMap.put(SYNC_PARAM_LIMIT, String.valueOf(limit));
+    public SyncParams setLimit(int limit) {
+        bundle.putInt(SYNC_PARAM_LIMIT, limit);
+        return this;
     }
 
-    public void setLastUpdate(long lastUpdate) {
-        queryMap.put(SYNC_PARAM_TYPE, String.valueOf(lastUpdate));
+    public SyncParams setLastUpdate(long lastUpdate) {
+        bundle.putLong(SYNC_PARAM_LAST_UPDATE, lastUpdate);
+        return this;
+    }
+
+    public SyncParams setDirection(SyncDirection direction) {
+        bundle.putInt(SYNC_PARAM_DIRECTION, direction.ordinal());
+        return this;
     }
 }

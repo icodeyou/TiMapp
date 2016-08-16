@@ -122,6 +122,7 @@ dependencies {
     compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
 
     compile 'com.crystal:crystalpreloaders:1.0.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
 }
 
 task wrapper(type: Wrapper) {
