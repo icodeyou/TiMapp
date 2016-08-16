@@ -227,6 +227,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="label_category_name">Category</string>
     <string name="btn_submit_new_spot">Add</string>
     <string name="former_username">Former user</string>
+    <string name="former_time">Former time</string>
     <string name="event_over_points">Over!</string>
     <string name="formAddEventLabelDescription">Description</string>
     <string name="formAddEventLabelPicture">Picture</string>

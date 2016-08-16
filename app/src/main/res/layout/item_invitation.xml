@@ -11,93 +11,40 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:id="@+id/header_invitation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
             android:orientation="horizontal"
             android:gravity="center">
-            <me.grantland.widget.AutofitTextView
+            <TextView
                 android:id="@+id/name_invitation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
+                style="@style/TextBold"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_normal"
                 android:text="@{user != null ? user.getUsername() : @string/former_username}"
-                tools:text="Jack Overfield" />
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:padding="3dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center"
-                android:src="@drawable/dot_separator_grey"/>
-            <me.grantland.widget.AutofitTextView
+                tools:text="Jack Overfield the maega big boss" />
+            <TextView
                 android:id="@+id/date_invitation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                style="@style/TextSmall"
                 android:textColor="@color/DarkGray"
-                android:textSize="@dimen/text_small"
-                android:text="@{invitation.getTimeCreated()}"
-                tools:text="Ten hours ago" />
+                android:text="@{invitation != null ? invitation.getTimeCreated() : @string/former_time}"
+                tools:text="4 months ago" />
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginBottom="30dp"
-            android:background="@color/background_card"
-            android:elevation="@dimen/card_elevation">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <FrameLayout
-                    android:id="@+id/header_event_activity"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp">
-
-                    <include layout="@layout/header_event_activity"
-                        bind:event="@{event}" />
-                </FrameLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/height_top_gradient_view"
-                    android:layout_alignBottom="@+id/header_event_activity"
-                    android:background="@drawable/gradient_top_view_light" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center">
-                <include android:id="@+id/layout_top_category_distance"
-                    layout="@layout/layout_top_category_distance"
-                    bind:event="@{event}" />
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:visibility="@{event.hasSpot ? View.VISIBLE : View.GONE}">
-                    <include android:id="@+id/layout_spot"
-                        layout="@layout/layout_spot_minimized"
-                        bind:spot="@{event.spot}"></include>
-                </FrameLayout>
-            </LinearLayout>
-        </LinearLayout>
-
+        <include layout="@layout/layout_event"
+            bind:event="@{event}" />
 
     </LinearLayout>
 </layout>

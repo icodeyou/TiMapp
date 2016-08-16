@@ -48,15 +48,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     public void onBindViewHolder(EventsViewHolder viewHolder, int position) {
         final Event event = data.get(position);
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
-        mBinding.setEvent(event);
-        int initialTime = event.getPoints();
-        viewHolder.tvCountPoints.initTimer(initialTime);
-
-        try {
-            viewHolder.titleTv.setText(Util.capitalize(event.getCategory().name));
-        } catch (UnknownCategoryException e) {
-            e.printStackTrace();
-        }
+        viewHolder.setEventInHolder(event);
     }
 
     @Override
@@ -91,8 +83,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
-    public class EventsViewHolder extends RecyclerView.ViewHolder implements
-            View.OnClickListener {
+    public class EventsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         SimpleTimerView tvCountPoints;
         TextView titleTv;
 
@@ -109,6 +100,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             if (itemAdapterClickListener != null) {
                 itemAdapterClickListener.onClick(getAdapterPosition());
             }
+        }
+
+        public void setEventInHolder(Event event) {
+            mBinding.setEvent(event);
+            int initialTime = event.getPoints();
+            tvCountPoints.initTimer(initialTime);
+
+            try {
+                titleTv.setText(Util.capitalize(event.getCategory().name));
+            } catch (UnknownCategoryException e) {
+                e.printStackTrace();
+            }
+
+            // Following line is important, it will force to load the variable in a custom view
+            mBinding.executePendingBindings();
         }
     }
 

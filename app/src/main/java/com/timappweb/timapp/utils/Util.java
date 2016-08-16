@@ -89,9 +89,9 @@ public class Util {
         return type;
     }
 
-    public static String secondsTimestampToPrettyTime(int created) {
+    public static String secondsTimestampToPrettyTime(long created) {
         PrettyTime p = new PrettyTime();
-        return p.format(new Date((long) created * 1000));
+        return p.format(new Date(created * 1000));
     }
     public static String secondsDurationToPrettyTime(int duration) {
         // TODO define
