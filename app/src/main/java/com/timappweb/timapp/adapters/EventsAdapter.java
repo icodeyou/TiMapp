@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.LayoutEventBinding;
+import com.timappweb.timapp.databinding.LayoutSpotBinding;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
@@ -29,7 +30,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private Context context;
     private List<Event> data;
     private OnItemAdapterClickListener itemAdapterClickListener;
-    private LayoutEventBinding mBinding;
 
     // =============================================================================================
 
@@ -40,8 +40,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     @Override
     public EventsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.layout_event, parent, false);
-        return new EventsViewHolder(mBinding.getRoot());
+       LayoutEventBinding mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.layout_event, parent, false);
+        return new EventsViewHolder(mBinding.getRoot(), mBinding);
     }
 
     @Override
@@ -86,9 +86,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     public class EventsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         SimpleTimerView tvCountPoints;
         TextView titleTv;
+        LayoutEventBinding mBinding;
 
-        EventsViewHolder(View itemView) {
+        EventsViewHolder(View itemView, LayoutEventBinding binding) {
             super(itemView);
+            this.mBinding = binding;
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
             titleTv = (TextView) itemView.findViewById(R.id.title_category);
             titleTv.setVisibility(View.VISIBLE);
