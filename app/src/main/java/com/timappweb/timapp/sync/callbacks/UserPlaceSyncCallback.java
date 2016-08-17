@@ -1,4 +1,4 @@
-package com.timappweb.timapp.sync.performers;
+package com.timappweb.timapp.sync.callbacks;
 
 import android.content.SyncResult;
 
@@ -6,6 +6,8 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
+import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,12 +15,11 @@ import java.util.List;
 /**
  * Created by stephane on 5/13/2016.
  */
-public class UserPlaceSyncPerformer extends RemoteMasterSyncPerformer{
+public class UserPlaceSyncCallback extends RemoteMasterSyncCallback {
 
     Event event;
 
-    public UserPlaceSyncPerformer(PaginatedResponse<UserEvent> body, List<? extends SyncBaseModel> users, SyncResult syncResult, Event event) {
-        super(body, users, syncResult);
+    public UserPlaceSyncCallback(Event event) {
         this.event = event;
     }
 
@@ -35,4 +36,5 @@ public class UserPlaceSyncPerformer extends RemoteMasterSyncPerformer{
         }
         super.onRemoteOnly(values);
     }
+
 }

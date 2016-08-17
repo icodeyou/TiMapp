@@ -91,6 +91,10 @@ public class EventStatusManager {
                 .onResponse(new HttpCallback<RestFeedback>() {
                     @Override
                     public void successful(RestFeedback feedback) {
+                        if (feedback == null){
+                            Log.e(TAG, "Server returned a null response...");
+                            return;
+                        }
                         Log.d(TAG, "Success register status=" + status + " for user on event: " + event);
                         UserEvent.setStatus(MyApplication.getCurrentUser(),
                                 event,

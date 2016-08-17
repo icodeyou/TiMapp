@@ -315,7 +315,7 @@ public abstract class SyncBaseModel extends MyModel {
     }
 
 
-    public static List<? extends SyncBaseModel> findInArea(LatLngBounds bounds, Class<? extends Model> clazz) {
+    public static <T extends MyModel> List<T> findInArea(LatLngBounds bounds, Class<T> clazz) {
         return queryByArea(bounds, clazz).execute();
     }
     public static From queryByArea(LatLngBounds bounds, Class<? extends Model> clazz) {

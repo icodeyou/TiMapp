@@ -29,10 +29,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.SyncHistoryBounds;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.events.SyncResultMessage;
@@ -41,13 +43,15 @@ import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.rest.io.responses.TableSyncResult;
+import com.timappweb.timapp.sync.callbacks.EventTagsSyncCallback;
+import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.performers.ChunckTableSyncPerformer;
 import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
-import com.timappweb.timapp.sync.performers.InvitationsSyncPerformer;
-import com.timappweb.timapp.sync.performers.EventTagsSyncPerformer;
-import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
+import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
+import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
-import com.timappweb.timapp.sync.performers.UserPlaceSyncPerformer;
+import com.timappweb.timapp.sync.callbacks.UserPlaceSyncCallback;
 import com.timappweb.timapp.utils.Util;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,6 +61,7 @@ import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.Response;
 
 /**
@@ -144,64 +149,33 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             // TODO MANAGE ERRORS .........
             switch (syncTypeId){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
-                    FullTableSyncPerformer syncPerformer = getFriendSyncPerformer();
-                    syncPerformer.getSyncParams().setLimit(2); // TODO param
-                    syncPerformer.perform();
+                    this.syncFriends(extras);
                 case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
-                    new InvitationsSyncPerformer(
-                            RestClient.service().inviteReceived().execute().body().items,
-                            MyApplication.getCurrentUser().getInviteReceived(),
-                            syncResult).perform();
+                    this.syncInvitation(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_INVITE_SENT:
-                    Event event = extractEvent(extras);
-                    if (event == null) return;
-                    new InvitationsSyncPerformer(
-                            RestClient.service().invitesSent(event.getRemoteId()).execute().body().items,
-                            MyApplication.getCurrentUser().getInviteSent(event.getId()),
-                            syncResult).perform();
+                    this.syncInviteSent(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_STATUS:
-                    new RemoteMasterSyncPerformer(
-                            RestClient.service().placeStatus().execute().body(),
+                    new MultipleEntriesSyncPerformer<>(
+                            RestClient.service().placeStatus(),
                             MyApplication.getCurrentUser().getPlaceStatus(),
-                            syncResult).perform();
+                            DataSyncAdapter.SYNC_TYPE_EVENT_STATUS,
+                            true)
+                            .setCallback(new RemoteMasterSyncCallback())
+                            .perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE:
-                    event = extractEvent(extras);
-                    if (event == null) { Util.appStateError(TAG, "Event should not be null in sync adapter");}
-                    ChunckTableSyncPerformer pictureSyncPerformer = getEventPictureSyncPerformer(event);
-                    pictureSyncPerformer.setSyncParam(new SyncParams(extras));
-                    pictureSyncPerformer.perform();
-                    SyncResultMessage syncResultMessage = new SyncResultMessage(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
-                    syncResultMessage.setUpToDate(pictureSyncPerformer.getResult().up_to_date);
-                    EventBus.getDefault().post(syncResultMessage);
+                    this.syncEventPicture(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_USERS:
-                    event = extractEvent(extras);
-                    if (event == null) return;
-                    new UserPlaceSyncPerformer(
-                            RestClient.service().viewUsersForPlace(event.getRemoteId()).execute().body(),
-                            event.getUsers(),
-                            syncResult,
-                            event).perform();
-
+                    this.syncEventUsers(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_INVITED:
-                    event = extractEvent(extras);
-                    if (event == null) return;
-                    new InvitationsSyncPerformer(
-                            RestClient.service().invitesSent(event.getRemoteId()).execute().body(),
-                            MyApplication.getCurrentUser().getInviteSent(event.getId()),
-                            syncResult).perform();
+                    this.syncEventInvited(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_EVENT_TAGS:
-                    event = extractEvent(extras);
-                    if (event == null) return;
-                    new EventTagsSyncPerformer(
-                            RestClient.service().viewPopularTagsForPlace(event.getRemoteId()).execute().body(),
-                            syncResult,
-                            event).perform();
+                    this.syncEventTags(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_USER:
                     long id = extractRemoteId(extras);
@@ -213,48 +187,10 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     getContext().sendBroadcast(new Intent(ACTION_SYNC_EVENT_FINISHED));
                     break;
                 case DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT:
-                    bounds = extractMapBounds(extras);
-                    if (bounds != null && bounds.northeast != null){
-                        QueryCondition conditions = new QueryCondition().setBounds(bounds);
-                        Response<PaginatedResponse<Spot>> spots = RestClient.service().spots(conditions.toMap()).execute();
-                        if (spots.isSuccessful()){
-                            new RemoteMasterSyncPerformer(
-                                    spots.body(),
-                                    Spot.findInArea(bounds, Spot.class),
-                                    syncResult)
-                                    .perform();
-                            SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, bounds);
-                        }
-                        else{
-                            Log.e(TAG, "Cannot sync spots. Error");
-                        }
-                    }
-                    else{
-                        Util.appStateError(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
-                    }
-
+                    this.syncMultipleSpot(extras, syncTypeId);
                     break;
                 case DataSyncAdapter.SYNC_TYPE_MULTIPLE_EVENT:
-                    bounds = extractMapBounds(extras);
-                    if (bounds != null && bounds.northeast != null){
-                        QueryCondition conditions = new QueryCondition().setBounds(bounds);
-                        Response<List<Event>> eventResponse = RestClient.service().bestPlaces(conditions.toMap()).execute();
-                        if (eventResponse.isSuccessful()){
-                            new RemoteMasterSyncPerformer(
-                                    eventResponse.body(),
-                                    Event.findInArea(bounds, Event.class),
-                                    syncResult)
-                                    .perform();
-                            SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_EVENT, bounds);
-                        }
-                        else{
-                            Log.e(TAG, "Cannot sync events. Error");
-                        }
-                    }
-                    else{
-                        Util.appStateError(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
-                    }
-
+                    this.syncMultipleEvents(extras, syncTypeId);
                     break;
                 default:
                     Log.e(TAG, "Invalid sync type id: " + syncTypeId);
@@ -265,8 +201,121 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         } catch (IOException e) {
             Log.e(TAG, "IOException while performing sync. Do you have a network access ? Message: " + e.toString());
             e.printStackTrace();
+        } catch (CannotSyncException e) {
+            Log.e(TAG, "Cannot sync: " + e.getMessage());
+            e.printStackTrace();
         }
         Log.v(TAG, "--------------- Network synchronization complete for data----------------------");
+    }
+
+    private void syncMultipleEvents(Bundle extras, int syncTypeId) throws IOException, CannotSyncException {
+        LatLngBounds bounds = extractMapBounds(extras);
+        if (bounds != null && bounds.northeast != null){
+            QueryCondition conditions = new QueryCondition().setBounds(bounds);
+            Call<List<Event>> call = RestClient.service().bestPlaces(conditions.toMap());
+            new MultipleEntriesSyncPerformer<>(
+                        call,
+                        Event.findInArea(bounds, Event.class),
+                        syncTypeId,
+                        true)
+                        .perform();
+            SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_EVENT, bounds);
+        }
+        else{
+            Util.appStateError(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
+        }
+    }
+
+    private void syncEventPicture(Bundle extras, int syncTypeId) {
+        Event event = extractEvent(extras);
+        if (event == null) { Util.appStateError(TAG, "Event should not be null in sync adapter");}
+        ChunckTableSyncPerformer pictureSyncPerformer = getEventPictureSyncPerformer(event);
+        pictureSyncPerformer.setSyncParam(new SyncParams(extras));
+        pictureSyncPerformer.perform();
+        SyncResultMessage syncResultMessage = new SyncResultMessage(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
+        syncResultMessage.setUpToDate(pictureSyncPerformer.getResult().up_to_date);
+        EventBus.getDefault().post(syncResultMessage);
+    }
+
+    private void syncFriends(Bundle extras) {
+        FullTableSyncPerformer syncPerformer = new FullTableSyncPerformer(UserFriend.class, new FullTableSyncPerformer.Callback<UserFriend>() {
+            @Override
+            public boolean beforeSave(UserFriend entry) {
+                entry.userSource = MyApplication.getCurrentUser();
+                return true;
+            }
+            @Override
+            public void afterSave(UserFriend entry) {}
+        }, new FullTableSyncPerformer.RemoteLoader() {
+            @Override
+            public TableSyncResult load(HashMap options) throws IOException {
+                return (TableSyncResult) RestClient.service().friends(options).execute().body();
+            }
+        });
+        syncPerformer.perform();
+    }
+
+    private void syncEventUsers(Bundle extras, int syncTypeId) throws IOException, CannotSyncException {
+
+        Event event = extractEvent(extras);
+        if (event == null) return;
+        new MultipleEntriesSyncPerformer<>(
+                RestClient.service().viewUsersForPlace(event.getRemoteId()),
+                event.getUsers(),
+                syncTypeId)
+                .setCallback(new UserPlaceSyncCallback(event))
+                .perform();
+    }
+
+    private void syncEventTags(Bundle extras, int syncTypeId) throws IOException, CannotSyncException {
+        Event event = extractEvent(extras);
+        if (event == null) return;
+        new MultipleEntriesSyncPerformer<>(
+                RestClient.service().viewPopularTagsForPlace(event.getRemoteId()),
+                event.getTagsQuery().<Tag>execute(),
+                syncTypeId,
+                true)
+                .setCallback(new EventTagsSyncCallback(event))
+                .perform();
+    }
+
+    private void syncInviteSent(Bundle extras, int syncTypeId) throws IOException, CannotSyncException {
+        Event event = extractEvent(extras);
+        if (event == null) return;
+        new MultipleEntriesSyncPerformer<EventsInvitation>(
+                RestClient.service().invitesSent(event.getRemoteId()),
+                MyApplication.getCurrentUser().getInviteSent(event.getId()),
+                syncTypeId)
+                .setCallback(new InvitationSyncCallback())
+                .perform();
+    }
+
+    private void syncEventInvited(Bundle extras, int syncId) throws CannotSyncException, IOException {
+        Event event = extractEvent(extras);
+        if (event == null) throw new CannotSyncException("Missing event parameter", syncId);
+
+
+        new MultipleEntriesSyncPerformer<EventsInvitation>(
+                RestClient.service().invitesSent(event.getRemoteId()),
+                MyApplication.getCurrentUser().getInviteSent(event.getId()),
+                syncId)
+                .perform();
+    }
+
+    private void syncMultipleSpot(Bundle extras, int syncId) throws IOException, CannotSyncException {
+        LatLngBounds bounds = extractMapBounds(extras);
+        if (bounds != null && bounds.northeast != null){
+            QueryCondition conditions = new QueryCondition().setBounds(bounds);
+            Call<PaginatedResponse<Spot>> request = RestClient.service().spots(conditions.toMap());
+            MultipleEntriesSyncPerformer<Spot> syncPerformer
+                    = new MultipleEntriesSyncPerformer(request, Spot.findInArea(bounds, Spot.class), syncId);
+            syncPerformer.perform();
+            SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, bounds);
+        }
+        else{
+            Util.appStateError(TAG, "Not bounds where given for the spot udpdate. Please fix this ASAP");
+        }
+
     }
 
     private LatLngBounds extractMapBounds(Bundle bundle) {
@@ -288,6 +337,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         }
         return Event.loadByRemoteId(Event.class, eventId);
     }
+
     private long extractRemoteId(Bundle extras){
         int id = extras.getInt(SYNC_ID_KEY, -1);
         if (id == -1) {
@@ -297,23 +347,6 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         return id;
     }
 
-
-    public FullTableSyncPerformer getFriendSyncPerformer() {
-        return new FullTableSyncPerformer(UserFriend.class, new FullTableSyncPerformer.Callback<UserFriend>() {
-            @Override
-            public boolean beforeSave(UserFriend entry) {
-                entry.userSource = MyApplication.getCurrentUser();
-                return true;
-            }
-            @Override
-            public void afterSave(UserFriend entry) {}
-        }, new FullTableSyncPerformer.RemoteLoader() {
-            @Override
-            public TableSyncResult load(HashMap options) throws IOException {
-                return (TableSyncResult) RestClient.service().friends(options).execute().body();
-            }
-        });
-    }
 
     public ChunckTableSyncPerformer getEventPictureSyncPerformer(final Event event) {
         ChunckTableSyncPerformer performer = new ChunckTableSyncPerformer(Picture.class);
@@ -342,4 +375,15 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         });
         return performer;
     }
+
+
+    public void syncInvitation(Bundle extras, int syncTypeId) throws IOException, CannotSyncException {
+        new MultipleEntriesSyncPerformer<EventsInvitation>(
+                RestClient.service().inviteReceived(),
+                MyApplication.getCurrentUser().getInviteReceived(),
+                syncTypeId)
+                .setCallback(new InvitationSyncCallback())
+                .perform();
+    }
 }
+

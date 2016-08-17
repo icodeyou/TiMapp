@@ -350,7 +350,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
         return getPicturesQuery().execute();
     }
 
-    public List<? extends SyncBaseModel> getUsers() {
+    public List<UserEvent> getUsers() {
         return new Select().from(UserEvent.class).where("Event = ?", this.getId()).execute();
     }
 

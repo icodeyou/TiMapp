@@ -26,11 +26,15 @@ import android.util.Log;
 
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.performers.UserQuotaSyncPerformer;
+import com.timappweb.timapp.sync.callbacks.UserQuotaSyncCallback;
+import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.io.IOException;
 import java.util.List;
@@ -77,26 +81,25 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
+        if (!MyApplication.isLoggedIn()){
+            Log.e(TAG, "Call user sync adapter but user is not logged in");
+            return;
+        }
         Log.i(TAG, "--------------- Beginning network synchronization for user---------------------");
-        this.performModelSync(UserQuota.class, RestClient.service().userQuotas(), syncResult);
+        try {
+            this.performUserQuotaSync(MyApplication.getCurrentUser());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CannotSyncException e) {
+            e.printStackTrace();
+        }
         Log.i(TAG, "--------------- Network synchronization complete for user----------------------");
     }
 
-    public void performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult){
-        Log.i(TAG, "Performing model sync for " + classType.getCanonicalName() + "...");
-        From localQuery = new Select().from(classType);
-        try {
-            Response response = remoteQuery.execute();
-            if (response.isSuccessful()){
-                List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
-                new UserQuotaSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
-            }
-        }
-        catch (IOException e) {
-            // TODO retry
-            Log.e(TAG, "Error performing sync for " + classType + ": " + e.getMessage());
-            e.printStackTrace();
-        }
+    public void performUserQuotaSync(User user) throws IOException, CannotSyncException {
+        new MultipleEntriesSyncPerformer<>(RestClient.service().userQuotas(), user.getQuotas(), 0, true)
+                .setCallback(new UserQuotaSyncCallback())
+                .perform();
     }
 
     public static void syncImmediately(Context context) {

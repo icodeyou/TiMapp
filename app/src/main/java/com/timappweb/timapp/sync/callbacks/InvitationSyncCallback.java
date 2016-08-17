@@ -1,4 +1,4 @@
-package com.timappweb.timapp.sync.performers;
+package com.timappweb.timapp.sync.callbacks;
 
 import android.content.SyncResult;
 import android.util.Log;
@@ -7,6 +7,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,18 +16,9 @@ import java.util.List;
  * Created by stephane on 5/5/2016.
  *
  */
-public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
+public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Callback {
 
-    private static final String TAG = "FriendsSyncPerformer";
-
-    public InvitationsSyncPerformer(List<? extends SyncBaseModel> remoteEntries,
-                                    List<? extends SyncBaseModel> localEntries, SyncResult syncResult) {
-        super(remoteEntries, localEntries, syncResult);
-    }
-
-    public InvitationsSyncPerformer(PaginatedResponse<EventsInvitation> body, List<EventsInvitation> inviteSent, SyncResult syncResult) {
-        super(body.items, inviteSent, syncResult);
-    }
+    private static final String TAG = "FriendsSyncCallback";
 
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
@@ -37,7 +29,6 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
             this.completeUser(invitation);
             invitation.deepSave();
 
-            syncResult.stats.numUpdates++;
             Log.i(TAG, "Updating: " + localModel.toString());
         }
         else{
@@ -57,7 +48,6 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
             }
             this.completeUser(invitation);
             invitation.deepSave();
-            syncResult.stats.numInserts++;
         }
     }
 
@@ -65,7 +55,6 @@ public class InvitationsSyncPerformer extends MultipleEntriesSyncPerformer {
     public void onLocalOnly(SyncBaseModel localModel) {
         Log.i(TAG, "Deleting: " + localModel.toString());
         localModel.delete();
-        syncResult.stats.numDeletes++;
     }
 
 

@@ -7,7 +7,7 @@ import com.activeandroid.query.Select;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncCallback;
+import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -95,9 +95,9 @@ public class ConfigurationProvider {
                         }
                     });
             callManager.addCall(CALL_ID_SPOT_CATEGORIES, RestClient.service().spotCategories())
-                    .onResponse(new RemoteMasterSyncCallback(SpotCategory.class, new Select().from(SpotCategory.class)));
+                    .onResponse(new RemoteMasterSyncHttpCallback(SpotCategory.class, new Select().from(SpotCategory.class)));
             callManager.addCall(CALL_ID_EVENT_CATEGORIES, RestClient.service().eventCategories())
-                    .onResponse(new RemoteMasterSyncCallback(EventCategory.class, new Select().from(EventCategory.class)));
+                    .onResponse(new RemoteMasterSyncHttpCallback(EventCategory.class, new Select().from(EventCategory.class)));
         }
         else{
             Log.i(TAG, "Configuration exists and is up to date");

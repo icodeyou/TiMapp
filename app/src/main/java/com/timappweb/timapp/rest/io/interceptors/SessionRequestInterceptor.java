@@ -28,7 +28,7 @@ public class SessionRequestInterceptor implements Interceptor
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
-                //.header("Accept", "application/json")
+                .header("X-Platform", "Android")
                 .method(original.method(), original.body());
 
         if (MyApplication.isLoggedIn()) {

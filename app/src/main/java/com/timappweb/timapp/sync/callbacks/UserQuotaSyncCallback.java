@@ -1,12 +1,12 @@
-package com.timappweb.timapp.sync.performers;
+package com.timappweb.timapp.sync.callbacks;
 
 import android.content.SyncResult;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserQuota;
+import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,12 +14,8 @@ import java.util.List;
 /**
  * Created by stephane on 5/10/2016.
  */
-public class UserQuotaSyncPerformer extends RemoteMasterSyncPerformer{
+public class UserQuotaSyncCallback extends RemoteMasterSyncCallback {
 
-
-    public UserQuotaSyncPerformer(List<? extends SyncBaseModel> remoteEntries, List<? extends SyncBaseModel> localEntries, SyncResult syncResult) {
-        super(remoteEntries, localEntries, syncResult);
-    }
 
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {

@@ -1,10 +1,11 @@
-package com.timappweb.timapp.sync.performers;
+package com.timappweb.timapp.sync.callbacks;
 
 import android.content.SyncResult;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,28 +17,14 @@ import java.util.List;
  *  - All local data will be overwritten.
  *  - Missing corresponding data will be removed
  */
-public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
+public class RemoteMasterSyncCallback implements MultipleEntriesSyncPerformer.Callback {
 
     private static final String TAG = "RemoteMasterSyncPerf";
-
-    public RemoteMasterSyncPerformer(List<? extends SyncBaseModel> remoteEntries,
-                                     List<? extends SyncBaseModel> localEntries,
-                                     SyncResult syncResult) {
-        super(remoteEntries, localEntries, syncResult);
-    }
-
-    public RemoteMasterSyncPerformer(PaginatedResponse<? extends SyncBaseModel> remoteEntries,
-                                     List<? extends SyncBaseModel> localEntries,
-                                     SyncResult syncResult) {
-        super(remoteEntries.items, localEntries, syncResult);
-    }
-
 
 
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
         if (!remoteModel.isSync(localModel)){
             localModel.merge(remoteModel);
-            if (syncResult != null) syncResult.stats.numUpdates++;
             Log.i(TAG, "Updating: " + localModel.toString());
         }
         else{
@@ -50,13 +37,12 @@ public class RemoteMasterSyncPerformer extends MultipleEntriesSyncPerformer {
         for (SyncBaseModel m : values) {
             Log.i(TAG, "Scheduling insert: " + m.toString());
             m.deepSave();
-            if (syncResult != null) syncResult.stats.numInserts++;
         }
     }
 
     public void onLocalOnly(SyncBaseModel localModel) {
         Log.i(TAG, "Deleting: " + localModel.toString());
         localModel.delete();
-        if (syncResult != null) syncResult.stats.numDeletes++;
     }
+
 }

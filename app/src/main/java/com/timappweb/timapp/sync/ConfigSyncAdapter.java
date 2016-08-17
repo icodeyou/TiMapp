@@ -29,11 +29,10 @@ import com.activeandroid.query.Select;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.performers.RemoteMasterSyncPerformer;
+import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.io.IOException;
 import java.util.List;
@@ -98,26 +97,6 @@ public class ConfigSyncAdapter extends AbstractSyncAdapter {
         Log.i(TAG, "--------------- Network synchronization complete -------------------------------");
     }
 
-    public static Response performModelSync(Class<? extends SyncBaseModel> classType, Call remoteQuery, SyncResult syncResult) throws IOException {
-        Log.i(TAG, "Performing model sync for " + classType.getCanonicalName() + "...");
-        From localQuery = new Select().from(classType);
-        Response response = remoteQuery.execute();
-        if (response.isSuccessful()){
-            List<? extends SyncBaseModel> remoteEntries = (List<? extends SyncBaseModel>) response.body();
-            new RemoteMasterSyncPerformer(remoteEntries, localQuery.<SyncBaseModel>execute(), syncResult).perform();
-        }
-        return response;
-    }
-
-    private Response syncApplicationRules() throws IOException {
-        Log.i(TAG, "Sync application rules...");
-        Response<ApplicationRules> response = RestClient.service().applicationRules().execute();
-        if (response.isSuccessful()){
-            ApplicationRules rules = response.body();
-            ConfigurationProvider.setApplicationRules(rules);
-        }
-        return response;
-    }
 
     public static void syncImmediately(Context context) {
         syncImmediately(context, context.getString(R.string.content_authority_config));
