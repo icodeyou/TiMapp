@@ -25,6 +25,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -73,6 +74,12 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
 
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
+        tagsAndCountersAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                IntentsUtils.postEvent(eventActivity, eventActivity.getEvent(), IntentsUtils.ACTION_TAGS);
+            }
+        });
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
         mRecyclerView.setAdapter(mAdapter);
 

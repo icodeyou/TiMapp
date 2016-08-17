@@ -156,6 +156,19 @@
         <item name="android:layout_margin">@dimen/fab_margin</item>
     </style>
 
+    <style name="ContainerFabDrawer">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="DrawerFab">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <style name="GetbaseFab" parent="Fab">
         <item name="android:layout_margin">@dimen/fab_margin_minus_twelve</item>
         <item name="fab_addButtonColorNormal">@color/colorPrimary</item>
@@ -166,8 +179,8 @@
     </style>
 
     <style name="LightFab" parent="Fab">
-        <item name="rippleColor">@color/colorSecondaryExtaLight</item>
-        <item name="backgroundTint">@color/background</item>
+        <item name="rippleColor">@color/LightGrey</item>
+        <item name="backgroundTint">@color/white</item>
     </style>
 
     <style name="DarkFab" parent="Fab">
@@ -177,7 +190,13 @@
 
     <style name="NewEventFab" parent="DarkFab">
         <item name="android:src">@drawable/new_event_button</item>
-        <item name="android:layout_margin">11dp</item>
+        <item name="android:layout_margin">@dimen/margin_map_fab</item>
+        <item name="android:layout_alignParentBottom">false</item>
+    </style>
+
+    <style name="LocationFab" parent="LightFab">
+        <item name="android:src">@drawable/location_button</item>
+        <item name="android:layout_margin">@dimen/margin_map_fab</item>
         <item name="android:layout_alignParentBottom">false</item>
     </style>
 

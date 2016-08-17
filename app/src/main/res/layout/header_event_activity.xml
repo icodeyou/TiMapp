@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            tools:src="@drawable/image_bar"
+            android:src="@drawable/image_bar"
             event:backgroundImage="@{event}"
             android:alpha="1"/>
 

@@ -13,7 +13,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -54,11 +53,12 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final String             TAG                             = "ExploreMapFragment";
     private static final long               TIME_WAIT_MAP_VIEW              = 500;
     private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
-    private static final int                PADDING__MAP                    = 30;
+    private static final int                PADDING__MAP                    = 140;
     private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
     private static final int                TIME_ZOOM_ANIM                  = 500;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
     private Marker                          selectingMarker;
+    private Location                        lastLocation;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -79,6 +79,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private View                            filterTagsContainer;
     private SimpleTimerView                 tvCountPoints;
     private View                            fab;
+    private View                            fabLoc;
     private View                            cameraButton;
     private View                            tagButton;
     private View                            inviteButton;
@@ -98,6 +99,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
+        this.lastLocation = lastLocation;
         if (needCenterMap){
             centerMap(newLocation);
         }
@@ -120,6 +122,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
         fab = root.findViewById(R.id.fab_button_add_event);
+        fabLoc = root.findViewById(R.id.fab_button_location);
         cameraButton = root.findViewById(R.id.action_camera);
         tagButton = root.findViewById(R.id.action_tag);
         inviteButton = root.findViewById(R.id.action_invite);
@@ -176,6 +179,16 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         });
 
         fab.setOnClickListener(exploreFragment.getFabClickListener());
+
+        fabLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lastLocation!=null) {
+                    LatLng currentPosition = MyLocationProvider.convert(lastLocation);
+                    gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition,ZOOM_LEVEL_CENTER_MAP));
+                }
+            }
+        });
     }
 
     private void initEventView() {
@@ -215,27 +228,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         if (gMap == null){
             mapView.getMapAsync(this);
         }
-        initLocationButton();
         updateFilterView();
         LocationManager.addOnLocationChangedListener(this);
-    }
-
-    private void initLocationButton() {
-        // Get the button view
-        // TODO Jack : wtf ?
-        View locationButton = ((View) mapView.findViewById(1).getParent()).findViewById(2);
-        // and next place it, for exemple, on bottom right (as Google Maps app)
-        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-        // position on right bottom
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_TOP, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_END, 0);
-        rlp.addRule(RelativeLayout.ALIGN_END, 0);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rlp.setMargins(0,0,0,MARGIN_BUTTON_LOCATE_MAP);
-        mapView.getMap().setPadding(PADDING__MAP, 0, 0, 0);
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -276,7 +270,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
             removeCurrentMarker();
 
-            TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight());
+            TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight()+500);
+            translateDown.setDuration(getResources().getInteger(R.integer.time_slide_out_map));
             translateDown.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -286,6 +281,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     eventView.setVisibility(View.GONE);
+                    Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_fab);
+                    fab.startAnimation(slideIn);
                 }
 
                 @Override
@@ -293,10 +290,11 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
                 }
             });
-            translateDown.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
+
             translateDown.setInterpolator(new DecelerateInterpolator());
 
             fab.startAnimation(translateDown);
+            fabLoc.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.appear));
 
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
             eventView.startAnimation(slideOut);
@@ -326,8 +324,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is now ready!");
-        gMap = googleMap;
-        MapFactory.initMap(gMap);
+        initMap(googleMap);
         setUpClusterer();
         initAreaRequestHistory();
         exploreFragment.getDataLoader().setAreaRequestHistory(this.history);
@@ -335,6 +332,13 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         if (LocationManager.hasLastLocation()){
             centerMap(LocationManager.getLastLocation());
         }
+    }
+
+    private void initMap(GoogleMap googleMap) {
+        gMap = googleMap;
+        MapFactory.initMap(gMap);
+        gMap.getUiSettings().setMapToolbarEnabled(false);
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);
     }
 
 

@@ -157,5 +157,7 @@
     <dimen name="padding_bottom_map">15dp</dimen>
     <dimen name="margin_medium">12dp</dimen>
     <dimen name="margin_top_layout_event_info">37dp</dimen>
+    <dimen name="margin_map_fab">11dp</dimen>
+    <dimen name="width_post_button_drawer">60dp</dimen>
 
 </resources>

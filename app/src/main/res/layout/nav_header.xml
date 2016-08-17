@@ -5,24 +5,45 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:layout_width="85dp"
-        android:layout_height="33dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_nav_clock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:src="@drawable/logotimapp"
         android:visibility="gone"/>
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/event_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:gravity="center">
-        <ImageView
+        android:layout_height="match_parent">
+        <include layout="@layout/header_event_activity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/logotimapp"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_marginBottom="30dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/width_post_button_drawer"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+            <FrameLayout
+                style="@style/ContainerFabDrawer">
+                <android.support.design.widget.FloatingActionButton
+                    style="@style/DrawerFab"
+                    android:src="@drawable/ic_camera_white"/>
+            </FrameLayout>
+            <FrameLayout
+                style="@style/ContainerFabDrawer">
+                <android.support.design.widget.FloatingActionButton
+                    style="@style/DrawerFab"
+                    android:src="@drawable/ic_hashtag_white"/>
+            </FrameLayout>
+            <FrameLayout
+                style="@style/ContainerFabDrawer">
+                <android.support.design.widget.FloatingActionButton
+                    style="@style/DrawerFab"
+                    android:src="@drawable/ic_people"/>
+            </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

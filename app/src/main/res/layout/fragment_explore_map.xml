@@ -48,6 +48,16 @@
             style="@style/NewEventFab"
             android:layout_above="@+id/event_view_container"/>
 
+        <ImageView
+            android:id="@+id/fab_button_location"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/location_button"
+            android:layout_alignParentBottom="true" />
+
         <FrameLayout
             android:id="@+id/event_view_container"
             android:layout_width="match_parent"

@@ -17,6 +17,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.BR;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
@@ -421,7 +422,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
     }
 
     public Drawable getBackgroundImage(Context context){
-        return ContextCompat.getDrawable(context, getCategoryWithDefault().getBigIcon());
+        //TODO Steph : Récup random photo of event from server else { *default icon* }
+
+        //default icon :
+        return ContextCompat.getDrawable(context, R.drawable.photo_event_default);
     }
 
     public boolean hasAddress(){

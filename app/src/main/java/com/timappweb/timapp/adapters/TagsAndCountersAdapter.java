@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.EventTag;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,6 +23,8 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     private final Context context;
     private final LinkedList<EventTag> mData;
+
+    private OnItemAdapterClickListener onLongClickListener;
 
     public TagsAndCountersAdapter(Context context) {
         this.mData = new LinkedList<>();
@@ -58,7 +61,11 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
         this.mData.add(tag);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
+        this.onLongClickListener = itemAdapterClickListener;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
         private final TextView tagText;
         private final TextView tagCounter;
@@ -69,6 +76,7 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
             tagText = (TextView) itemView.findViewById(R.id.tv_tag);
             tagCounter = (TextView) itemView.findViewById(R.id.tv_tag_counter);
             mainLayout = (LinearLayout) itemView.findViewById(R.id.main_layout);
+            itemView.setOnLongClickListener(this);
         }
 
         void setEventTag(int position, EventTag tag) {
@@ -83,6 +91,14 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             }
             mainLayout.setLayoutParams(params);*/
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if(onLongClickListener!=null) {
+                onLongClickListener.onClick(getAdapterPosition());
+            }
+            return true;
         }
     }
 }

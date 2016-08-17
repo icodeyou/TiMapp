@@ -99,6 +99,7 @@ public class BaseActivity extends AppCompatActivity {
         gMap.getUiSettings().setScrollGesturesEnabled(gestureEnabled);
         gMap.getUiSettings().setRotateGesturesEnabled(gestureEnabled);
         gMap.getUiSettings().setTiltGesturesEnabled(gestureEnabled);
+        gMap.getUiSettings().setMapToolbarEnabled(false);
     }
 
     protected void setSearchview(Menu menu) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="time_slide_in_map_fab">200</integer>
     <integer name="time_slide_in_map">400</integer>
     <integer name="time_slide_out_map">300</integer>
 

@@ -2,5 +2,4 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:anim/decelerate_interpolator">
     <translate android:duration="@integer/time_slide_in_map" android:fromYDelta="100%" android:toYDelta="0%" />
-    <alpha android:duration="@integer/time_slide_in_map" android:fromAlpha="0.0" android:toAlpha="1.0" />
 </set>

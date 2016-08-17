@@ -2,5 +2,5 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:interpolator="@android:anim/decelerate_interpolator">
     <translate android:duration="@integer/time_slide_out_map" android:fromYDelta="0%" android:toYDelta="100%" />
-    <alpha android:duration="500" android:fromAlpha="1.0" android:toAlpha="0.0" />
+    <alpha android:duration="@integer/time_slide_out_map" android:fromAlpha="1.0" android:toAlpha="0.0" />
 </set>
