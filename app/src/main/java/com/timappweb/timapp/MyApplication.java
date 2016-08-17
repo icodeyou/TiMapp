@@ -70,6 +70,9 @@ public class MyApplication extends com.activeandroid.app.Application {
         auth.login(user, token, accessToken);
         UserSyncAdapter.syncImmediately(context);
     }
+    public static void login(User user, String token, String accessToken){
+        login(MyApplication.getApplicationBaseContext(), user, token, accessToken);
+    }
 
     @Override
     public void onCreate(){

@@ -44,7 +44,7 @@
         </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_button"
+            android:id="@+id/fab_button_add_event"
             style="@style/NewEventFab"
             android:layout_above="@+id/event_view_container"/>
 

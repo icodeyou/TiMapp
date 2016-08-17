@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     private void setListeners() {
-        ImageButton loginButton = (ImageButton) findViewById(R.id.login_button);
+        ImageButton loginButton = (ImageButton) findViewById(R.id.facebook_login_button);
         final OnLoginListener onLoginListener = new OnLoginListener() {
 
             @Override

@@ -15,7 +15,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
-import com.flaviofaria.kenburnsview.MathUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,7 +41,6 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.AreaDataCaching.OnDataChangeListener;
 import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
-import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -120,7 +118,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
-        fab = root.findViewById(R.id.fab_button);
+        fab = root.findViewById(R.id.fab_button_add_event);
         cameraButton = root.findViewById(R.id.action_camera);
         tagButton = root.findViewById(R.id.action_tag);
         inviteButton = root.findViewById(R.id.action_invite);

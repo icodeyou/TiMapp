@@ -41,6 +41,11 @@ public class ListFriendsActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!IntentsUtils.requireLogin(this, false)){
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
