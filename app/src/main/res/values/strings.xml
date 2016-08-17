@@ -270,7 +270,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="cannot_upload_picture">We cannot upload this picture. Do you have a network access ?</string>
     <string name="cannot_resize_picture">This picture is too big and we cannot resize it. Choose another one!</string>
     <string name="text_no_event">There isn\'t any events to display here.</string>
-
+    <string name="dev_name">Concert improvisé :D</string>
+    <string name="dev_description">Petit event totalement gratuitement au coeur de NY.\nUn SDF a décidé de nous faire une impro A Capella, deux musiciens qui passaient se sont empressés de prendre leur guitare, et ça rend quelque chose de génial ! \nA voir absolument si vous passez dans le coin.</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

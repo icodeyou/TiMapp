@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.LayoutEventBinding;
-import com.timappweb.timapp.databinding.LayoutSpotBinding;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
@@ -85,15 +84,18 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     public class EventsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         SimpleTimerView tvCountPoints;
-        TextView titleTv;
+        TextView titleCategory;
+        TextView titleEvent;
         LayoutEventBinding mBinding;
 
         EventsViewHolder(View itemView, LayoutEventBinding binding) {
             super(itemView);
             this.mBinding = binding;
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
-            titleTv = (TextView) itemView.findViewById(R.id.title_category);
-            titleTv.setVisibility(View.VISIBLE);
+            titleCategory = (TextView) itemView.findViewById(R.id.title_category);
+            titleEvent = (TextView) itemView.findViewById(R.id.name_event);
+            titleCategory.setVisibility(View.VISIBLE);
+            titleEvent.setVisibility(View.GONE);
             itemView.setOnClickListener(this);
         }
 
@@ -110,7 +112,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             tvCountPoints.initTimer(initialTime);
 
             try {
-                titleTv.setText(Util.capitalize(event.getCategory().name));
+                titleCategory.setText(Util.capitalize(event.getCategory().name));
             } catch (UnknownCategoryException e) {
                 e.printStackTrace();
             }
@@ -119,5 +121,4 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             mBinding.executePendingBindings();
         }
     }
-
 }

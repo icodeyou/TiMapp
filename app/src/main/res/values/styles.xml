@@ -251,7 +251,7 @@
     <style name="TitleInfoEvent" parent="TextBold">
         <item name="android:layout_width">match_parent</item>
         <item name="android:textColor">@color/Black</item>
-        <item name="android:background">@color/background_card</item>
+        <!--<item name="android:background">@color/background_card</item>-->
     </style>
 
     <!--.............................................................-->

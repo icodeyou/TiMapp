@@ -88,15 +88,18 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
 
         ItemInvitationBinding mBinding;
         private SimpleTimerView tvCountPoints;
-        private TextView titleTv;
+        private TextView titleCategory;
+        private TextView titleEvent;
 
         InvitationsViewHolder(View itemView, ItemInvitationBinding binding) {
             super(itemView);
             mBinding = binding;
 
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
-            titleTv = (TextView) itemView.findViewById(R.id.title_category);
-            titleTv.setVisibility(View.VISIBLE);
+            titleCategory = (TextView) itemView.findViewById(R.id.title_category);
+            titleEvent = (TextView) itemView.findViewById(R.id.name_event);
+            titleCategory.setVisibility(View.VISIBLE);
+            titleEvent.setVisibility(View.GONE);
 
             itemView.setOnClickListener(this);
         }
@@ -119,7 +122,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
             tvCountPoints.initTimer(initialTime);
 
             try {
-                titleTv.setText(Util.capitalize(eventInvitation.event.getCategory().name));
+                titleCategory.setText(Util.capitalize(eventInvitation.event.getCategory().name));
             } catch (UnknownCategoryException e) {
                 e.printStackTrace();
             }
