@@ -93,9 +93,9 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         private SimpleTimerView tvCountPoints;
         private TextView titleCategory;
         private TextView titleEvent;
-        private final FloatingActionButton cameraButton;
-        private final FloatingActionButton tagButton;
-        private final FloatingActionButton inviteButton;
+        private final View cameraButton;
+        private final View tagButton;
+        private final View inviteButton;
 
         InvitationsViewHolder(View itemView, ItemInvitationBinding binding) {
             super(itemView);
@@ -104,10 +104,9 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
             titleCategory = (TextView) itemView.findViewById(R.id.title_category);
             titleEvent = (TextView) itemView.findViewById(R.id.name_event);
-            cameraButton = (FloatingActionButton) itemView.findViewById(R.id.action_camera);
-            tagButton = (FloatingActionButton) itemView.findViewById(R.id.action_tag);
-            inviteButton = (FloatingActionButton) itemView.findViewById(R.id.action_invite);
-
+            cameraButton = itemView.findViewById(R.id.action_camera);
+            tagButton = itemView.findViewById(R.id.action_tag);
+            inviteButton = itemView.findViewById(R.id.action_invite);
 
             titleCategory.setVisibility(View.VISIBLE);
             titleEvent.setVisibility(View.GONE);
@@ -126,7 +125,6 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
             mBinding.setInvitation(eventInvitation);
             mBinding.setEvent(eventInvitation.event);
             mBinding.setUser(eventInvitation.getUserSource());
-
 
             //TODO : Following code is duplicated (method setEventInHolder() in class EventsAdapter)
             int initialTime = eventInvitation.event.getPoints();

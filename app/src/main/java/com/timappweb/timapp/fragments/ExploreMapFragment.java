@@ -124,7 +124,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         tagButton = root.findViewById(R.id.action_tag);
         inviteButton = root.findViewById(R.id.action_invite);
 
-        eventView = root.findViewById(R.id.event_view_container);
+        eventView = root.findViewById(R.id.event_view_layout_map);
 
         initListeners();
         initEventView();
