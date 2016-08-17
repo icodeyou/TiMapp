@@ -130,18 +130,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             changeCurrentFragment(FragmentId.Explore);
         }
-
-        NavigationView nvDrawer = (NavigationView) findViewById(R.id.nav_view);
-        //hide scrollbar in drawer
-        NavigationMenuView navigationMenuView = (NavigationMenuView) nvDrawer.getChildAt(0);
-        if (navigationMenuView != null) {
-            navigationMenuView.setVerticalScrollBarEnabled(false);
-        }
-        intHeader(nvDrawer);
-    }
-
-    private void intHeader(Nav) {
-        getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
     }
 
     @Override
@@ -290,6 +278,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //hide scrollbar in drawer
+        NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
+        if (navigationMenuView != null) {
+            navigationMenuView.setVerticalScrollBarEnabled(false);
+        }
+        getLayoutInflater().inflate(R.layout.nav_header, navigationView, false);
     }
 
     // ----------------------

@@ -28,6 +28,7 @@
             <FrameLayout
                 style="@style/ContainerFabDrawer">
                 <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/action"
                     style="@style/DrawerFab"
                     android:src="@drawable/ic_camera_white"/>
             </FrameLayout>
