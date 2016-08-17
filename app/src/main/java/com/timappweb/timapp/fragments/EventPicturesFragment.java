@@ -33,6 +33,7 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
@@ -116,12 +117,22 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                 mPictureLoaderModel.refresh();
             }
         });
-
-
         startPictureActivity();
         initAdapter();
-
         return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        try {
+            if (eventActivity.getEvent() == null){
+                throw new Exception("Cannot add picture for null event");
+            }
+            eventActivity.getEvent().requireLocalId();
+        } catch (Exception e) {
+            IntentsUtils.home(getContext());
+        }
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void startPictureActivity() {

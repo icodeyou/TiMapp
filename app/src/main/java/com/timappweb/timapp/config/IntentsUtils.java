@@ -80,9 +80,9 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void home(Activity activity) {
-        Intent intent = new Intent(activity, DrawerActivity.class);
-        activity.startActivity(intent);
+    public static void home(Context context) {
+        Intent intent = new Intent(context, DrawerActivity.class);
+        context.startActivity(intent);
     }
     public static void fatalError(Context context, int idTitle, int idMessage) {
         Intent intent = new Intent(context, ErrorActivity.class);
