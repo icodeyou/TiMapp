@@ -143,9 +143,6 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         int syncTypeId = extras.getInt(DataSyncAdapter.SYNC_TYPE_KEY, -1);
         Log.i(TAG, "Performing sync for type=" + syncTypeId);
         try {
-            LatLngBounds bounds;
-
-            // TODO MANAGE ERRORS .........
             switch (syncTypeId){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
                     this.syncFriends(extras);

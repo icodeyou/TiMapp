@@ -33,6 +33,7 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
@@ -70,12 +71,11 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
     private static final String         TAG                             = "EventPicturesFragment";
     public static int                   PICUTRE_GRID_COLUMN_NB          =  2;
-    private static final long           MAX_UPDATE_DELAY                = 3600 * 1000;
+    private static final long MIN_DELAY_REFRESH = 3600 * 1000;
     private static final int            ENDLESS_SCROLL_THRESHOLD = 1;
 
     // ---------------------------------------------------------------------------------------------
 
-    private EventActivity               eventActivity;
     private Context                     context;
 
     //Views
@@ -100,7 +100,6 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
         context = getContext();
-        eventActivity = (EventActivity) getActivity();
         //Views
         noPicView = root.findViewById(R.id.no_pictures_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
@@ -110,12 +109,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
         mPictureLoaderModel = new PictureLoader();
         mLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, mPictureLoaderModel);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPictureLoaderModel.refresh();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(mPictureLoaderModel);
         startPictureActivity();
         initAdapter();
         return root;
@@ -313,7 +307,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
     /**
      */
-    class PictureLoader implements FlexibleAdapter.EndlessScrollListener, LoaderManager.LoaderCallbacks<List<Picture>> {
+    class PictureLoader implements FlexibleAdapter.EndlessScrollListener, LoaderManager.LoaderCallbacks<List<Picture>>, SwipeRefreshLayout.OnRefreshListener {
 
         @Override
         public Loader<List<Picture>> onCreateLoader(int id, Bundle args) {
@@ -329,7 +323,6 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             noPicView.setVisibility(!picturesAdapter.hadData() ? View.VISIBLE : View.GONE);
         }
 
-
         @Override
         public void onLoaderReset(Loader<List<Picture>> loader) {
 
@@ -344,19 +337,25 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             if (remoteId > 0){
                 params.setMaxId(remoteId-1);
             }
-            params.setDirection(SyncAdapterOption.SyncDirection.DOWN);
-            params.setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
-            params.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
+            params.setDirection(SyncAdapterOption.SyncDirection.DOWN)
+                    .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE)
+                    .getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
+
             SyncBaseModel.startSync(EventPicturesFragment.this.getContext(), params);
         }
 
-        public void refresh() {
+        @Override
+        public void onRefresh() {
+            if (!SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, getEvent(), MIN_DELAY_REFRESH)){
+                return;
+            }
+
             long remoteId = SyncBaseModel.getMaxRemoteId(Picture.class, "Event = " + eventActivity.getEvent().getId());
             SyncAdapterOption params = new SyncAdapterOption();
             params.setMinId(remoteId+1)
-                .setDirection(SyncAdapterOption.SyncDirection.DOWN)
-                .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE)
-                .getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
+                    .setDirection(SyncAdapterOption.SyncDirection.DOWN)
+                    .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE)
+                    .getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
             SyncBaseModel.startSync(EventPicturesFragment.this.getContext(), params);
         }
     }

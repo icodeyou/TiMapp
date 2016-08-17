@@ -19,11 +19,10 @@ public class SyncHistory extends MyModel {
     //@Column(name = "User", uniqueGroups = "uniqueHistoryPerUser")
     //User user;
 
-    //@Column(name = "Type", uniqueGroups =
     /**
      * Sync type
      */
-    @Column(name = "Type", unique = true, notNull = true)
+    @Column(name = "Type", uniqueGroups = "typeAndID", notNull = true)
     int type;
 
     /**
@@ -35,7 +34,7 @@ public class SyncHistory extends MyModel {
     /**
      * Extra identifier for the sync
      */
-    @Column(name = "ExtraID", notNull = false)
+    @Column(name = "ExtraID", uniqueGroups = "typeAndID", notNull = false)
     String extraID;
 
     // =============================================================================================
@@ -71,9 +70,8 @@ public class SyncHistory extends MyModel {
      * @param updateMinDelay if 0 means infinite delay
      * @return
      */
-    public static boolean requireUpdate(int type, String extraID, long updateMinDelay){
-        SyncHistory history = getByType(type, extraID);
-        return history == null || (updateMinDelay != 0 && System.currentTimeMillis() - history.last_update > updateMinDelay);
+    public static boolean requireUpdate(int type, HistoryItemInterface object, long updateMinDelay){
+        return updateMinDelay != 0 && ((System.currentTimeMillis() - getLastSyncTime(type, object)) > updateMinDelay);
     }
 
     /**
@@ -109,7 +107,18 @@ public class SyncHistory extends MyModel {
      * @return
      */
     public static long getLastSyncTime(int syncType) {
-        SyncHistory history = getByType(syncType, null);
+        return getLastSyncTime(syncType, null);
+    }
+
+    public static long getLastSyncTime(int syncType, HistoryItemInterface object) {
+        SyncHistory history = getByType(syncType, object != null ? object.hashHistoryKey() : null);
         return history != null ? history.last_update : 0;
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+    public interface HistoryItemInterface{
+        String hashHistoryKey();
+    }
+
 }

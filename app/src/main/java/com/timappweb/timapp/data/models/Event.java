@@ -34,7 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 @Table(name = "Event")
-public class Event extends SyncBaseModel implements MarkerValueInterface {
+public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface {
 
     private static final String TAG = "PlaceEntity" ;
 
@@ -466,5 +466,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface {
 
     public long getPointsLong() {
         return getPoints() * 1000;
+    }
+
+    @Override
+    public String hashHistoryKey() {
+        return String.valueOf(this.getRemoteId());
     }
 }
