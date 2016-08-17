@@ -88,6 +88,7 @@
     <dimen name="width_checkbox_card">62dp</dimen>
     <dimen name="upload_tags_margin">25dp</dimen>
     <dimen name="height_top_gradient_view">6dp</dimen>
+    <dimen name="height_top_gradient_view_small">3dp</dimen>
     <dimen name="height_bottom_gradient_view">6dp</dimen>
     <dimen name="default_progressview">50dp</dimen>
     <dimen name="small_progressview">35dp</dimen>
@@ -155,5 +156,6 @@
     <dimen name="width_locate_button">60dp</dimen>
     <dimen name="padding_bottom_map">15dp</dimen>
     <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_top_layout_event_info">37dp</dimen>
 
 </resources>
