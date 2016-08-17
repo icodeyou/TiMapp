@@ -39,6 +39,7 @@ import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
@@ -251,21 +252,22 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 .onResponse(new HttpCallback<JsonObject>() {
                     @Override
                     public void successful(JsonObject feedback) {
-
-                        Log.d(TAG, "Event has been successfully added");
-                        event.setAuthor(MyApplication.getCurrentUser());
-                        event.mySave();
-                        if (event.hasLocalId()){
-                            try{
-                                long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                                EventStatusManager.instance().addLocally(syncId, event, UserEventStatusEnum.HERE);
-                            }
-                            catch (Exception ex){
-                                Log.e(TAG, "Cannot get EventUser id from server response");
-                                setProgressView(false);
-                            }
+                        try {
+                            Log.d(TAG, "Event has been successfully added");
+                            event.setAuthor(MyApplication.getCurrentUser());
+                            event.mySave();
+                            long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
+                            EventStatusManager.instance().addLocally(syncId, event, UserEventStatusEnum.HERE);
+                        } catch (CannotSaveModelException e) {
+                            e.printStackTrace();
                         }
-                        IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                        catch (Exception ex){
+                            Log.e(TAG, "Cannot get EventUser id from server response");
+                            setProgressView(false);
+                        }
+                        finally {
+                            IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                        }
                     }
                 })
                 .onError(new NetworkErrorCallback(this))

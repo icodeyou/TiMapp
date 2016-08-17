@@ -27,6 +27,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnAddTagListener;
@@ -262,7 +263,7 @@ public class AddTagActivity extends BaseActivity{
                     @Override
                     public void successful(JsonObject feedback) {
                         Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
-                        eventEventPost.deepSave();
+                        eventEventPost.mySaveSafeCall();
                         EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
                         setResult(RESULT_OK);
                         finish();

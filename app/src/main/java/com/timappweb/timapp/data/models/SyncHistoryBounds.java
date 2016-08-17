@@ -67,7 +67,7 @@ public class SyncHistoryBounds extends MyModel {
             history.longitude_sw = bounds.southwest.longitude;
         }
         history.last_update = System.currentTimeMillis();
-        history.mySave();
+        history.mySaveSafeCall();
     }
 
     /**

@@ -67,8 +67,9 @@ public class MyApplication extends com.activeandroid.app.Application {
     }
 
     public static void login(Context context, User user, String token, String accessToken){
-        auth.login(user, token, accessToken);
-        UserSyncAdapter.syncImmediately(context);
+        if (auth.login(user, token, accessToken)){
+            UserSyncAdapter.syncImmediately(context);
+        }
     }
     public static void login(User user, String token, String accessToken){
         login(MyApplication.getApplicationBaseContext(), user, token, accessToken);

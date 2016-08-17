@@ -7,6 +7,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.activeandroid.query.Update;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 
 import java.util.List;
 
@@ -69,22 +70,26 @@ public class EventTag extends MyModel {
         }
         ActiveAndroid.beginTransaction();
         for (Tag tag: tags){
+            try{
             if (!tag.hasLocalId()) tag = (Tag) tag.mySave();
-            EventTag existingEventTag = new Select().from(EventTag.class)
-                    .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
-                    .executeSingle();
-            // Insert if does not exists
-            if (existingEventTag != null){
-                existingEventTag.count_ref += 1;
-                existingEventTag.mySave();
-                //new Update(EventTag.class)
-                //        .set("CountRef = CountRef + 1")
-                //        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
-                //        .execute();
-            }
-            // Update existing record
-            else{
-                new EventTag(event, tag, 1).mySave();
+                EventTag existingEventTag = new Select().from(EventTag.class)
+                        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
+                        .executeSingle();
+                // Insert if does not exists
+                if (existingEventTag != null){
+                    existingEventTag.count_ref += 1;
+                    existingEventTag.mySave();
+                    //new Update(EventTag.class)
+                    //        .set("CountRef = CountRef + 1")
+                    //        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
+                    //        .execute();
+                }
+                // Update existing record
+                else{
+                    new EventTag(event, tag, 1).mySave();
+                }
+            } catch (CannotSaveModelException e) {
+                e.printStackTrace(); // TODO
             }
         }
         ActiveAndroid.setTransactionSuccessful();

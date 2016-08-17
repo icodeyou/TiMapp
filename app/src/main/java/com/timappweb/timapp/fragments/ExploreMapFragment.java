@@ -32,6 +32,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.EventClusterRenderer;
@@ -245,24 +246,28 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
     private void displayEvent(Event event) {
         Log.i(TAG, "Display event");
-        eventView.setVisibility(View.VISIBLE);
-        // TODO can be removed later when all data are synchronized localy...
-        if (!event.hasLocalId()) event.mySave();
-        mBinding.setEvent(event);
+        try {
+            event.requireLocalId();
+            eventView.setVisibility(View.VISIBLE);
+            mBinding.setEvent(event);
 
-        final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
-        eventView.startAnimation(slideIn);
-        Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
-        TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
-        translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
-        translateUp.setInterpolator(new DecelerateInterpolator());
-        fab.startAnimation(translateUp);
+            final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
+            eventView.startAnimation(slideIn);
+            Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
+            TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
+            translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
+            translateUp.setInterpolator(new DecelerateInterpolator());
+            fab.startAnimation(translateUp);
 
-        exploreFragment.setSelectedEventForLoader(event);
+            exploreFragment.setSelectedEventForLoader(event);
 
-        tvCountPoints.cancelTimer();
-        tvCountPoints.initTimer(event.getPoints());
-        //TODO : might be better to initialize the timer through databinding
+            tvCountPoints.cancelTimer();
+            tvCountPoints.initTimer(event.getPoints());
+            //TODO : might be better to initialize the timer through databinding
+        } catch (CannotSaveModelException e) {
+            // TODO
+            e.printStackTrace();
+        }
     }
 
     public void hideEvent() {

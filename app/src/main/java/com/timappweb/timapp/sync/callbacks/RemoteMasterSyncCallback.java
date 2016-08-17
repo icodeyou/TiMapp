@@ -4,6 +4,7 @@ import android.content.SyncResult;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
@@ -23,20 +24,28 @@ public class RemoteMasterSyncCallback implements MultipleEntriesSyncPerformer.Ca
 
 
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
-        if (!remoteModel.isSync(localModel)){
-            localModel.merge(remoteModel);
-            Log.i(TAG, "Updating: " + localModel.toString());
-        }
-        else{
-            Log.i(TAG, "No action: " + localModel.toString());
+        try {
+            if (!remoteModel.isSync(localModel)){
+                    localModel.merge(remoteModel);
+                Log.i(TAG, "Updating: " + localModel.toString());
+            }
+            else{
+                Log.i(TAG, "No action: " + localModel.toString());
+            }
+        } catch (CannotSaveModelException e) {
+            e.printStackTrace();
         }
     }
 
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values){
         // Add new items
         for (SyncBaseModel m : values) {
-            Log.i(TAG, "Scheduling insert: " + m.toString());
-            m.deepSave();
+            try {
+                Log.i(TAG, "Scheduling insert: " + m.toString());
+                m.deepSave();
+            } catch (CannotSaveModelException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -223,7 +223,7 @@ public class EventStatusManager {
         eventStatus.user = MyApplication.getCurrentUser();
         eventStatus.setCreated(System.currentTimeMillis());
         eventStatus.event = event;
-        return (UserEvent) eventStatus.mySave();
+        return (UserEvent) eventStatus.mySaveSafeCall();
     }
 
     // ---------------------------------------------------------------------------------------------

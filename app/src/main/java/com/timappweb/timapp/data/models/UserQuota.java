@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.Calendar;
@@ -100,7 +101,7 @@ public class UserQuota extends SyncBaseModel {
     }
 
     @Override
-    public MyModel mySave() {
+    public MyModel mySave() throws CannotSaveModelException {
         this.remote_id = this.type_id; // hack because Remote id must not be null ...
         return super.mySave();
     }
@@ -163,7 +164,7 @@ public class UserQuota extends SyncBaseModel {
         }
         Log.d(TAG, "Updated user quota: " + userQuota);
         userQuota.increment();
-        userQuota.mySave();
+        userQuota.mySaveSafeCall();
     }
 
     public void increment() {

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
@@ -72,12 +73,19 @@ public class AuthProvider {
         return null;
     }
 
-    public void login(User user, String token, String accessToken) {
-        KeyValueStorage.in()
-                .putString(KEY_TOKEN, token)
-                .putLong(KEY_LOGIN_TIME, System.currentTimeMillis());
-        setCurrentUser(user);
-        setSocialProvider(SocialProvider.FACEBOOK, accessToken);
+    public boolean login(User user, String token, String accessToken) {
+        try{
+            setCurrentUser(user);
+            KeyValueStorage.in()
+                    .putString(KEY_TOKEN, token)
+                    .putLong(KEY_LOGIN_TIME, System.currentTimeMillis());
+            setSocialProvider(SocialProvider.FACEBOOK, accessToken);
+            return true;
+        } catch (CannotSaveModelException e) {
+            Log.e(TAG, "Cannot set current user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public User getCurrentUser() {
@@ -101,16 +109,15 @@ public class AuthProvider {
     }
 
 
-    private void setCurrentUser(User user){
+    private void setCurrentUser(User user) throws CannotSaveModelException {
+        currentUser = user.deepSave();
+        _isUserLoaded = true;
         Log.i(TAG, "Writing user information: " + user);
         KeyValueStorage.in()
-            .putInt(KEY_ID, user.remote_id)
-            .putBoolean(KEY_IS_LOGIN, true)
-            .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
-            .commit();
-        currentUser = user;
-        currentUser = currentUser.deepSave();
-        _isUserLoaded = true;
+                .putInt(KEY_ID, user.remote_id)
+                .putBoolean(KEY_IS_LOGIN, true)
+                .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
+                .commit();
     }
 
 

@@ -198,24 +198,6 @@ public class RestClient {
         return buildCall(call);
     }
 
-    /**
-     * Update the model
-     * @param url
-     * @param model
-     * @return
-     */
-    public static HttpCallManager updateModel(String url, final SyncBaseModel model) {
-        Call call = RestClient.restService().get(url, model.getRemoteId());
-        HttpCallManager manager = buildCall(call);
-        manager.onResponse(new AutoMergeCallback(model));
-        manager.onResponse(new HttpCallback<JsonObject>() {
-            @Override
-            public void successful(JsonObject feedback) {
-                model.deepSave();
-            }
-        });
-        return manager.perform();
-    }
 
     public static <T> HttpCallManager buildCall(Call<T> call) {
         return new HttpCallManager<>(call)

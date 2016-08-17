@@ -141,7 +141,7 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
             eventStatus.status = status;
         }
         eventStatus.remote_id = remoteId;
-        eventStatus.mySave();
+        eventStatus.mySaveSafeCall();
         return eventStatus;
     }
 

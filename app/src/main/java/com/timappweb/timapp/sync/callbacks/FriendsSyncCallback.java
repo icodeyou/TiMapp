@@ -7,6 +7,7 @@ import com.activeandroid.query.Delete;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.UserFriend;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.util.Collection;
@@ -23,18 +24,26 @@ public class FriendsSyncCallback implements MultipleEntriesSyncPerformer.Callbac
 
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
-        if (!remoteModel.isSync(localModel)){
-            localModel.merge(remoteModel);
-            Log.i(TAG, "Updating: " + localModel.toString());
-        }
-        else{
-            Log.i(TAG, "No action: " + localModel.toString());
+        try {
+            if (!remoteModel.isSync(localModel)){
+                    localModel.merge(remoteModel);
+                Log.i(TAG, "Updating: " + localModel.toString());
+            }
+            else{
+                Log.i(TAG, "No action: " + localModel.toString());
+            }
+        } catch (CannotSaveModelException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values){
-        MyApplication.getCurrentUser().saveBelongsToMany(values, UserFriend.class);
+        try {
+            MyApplication.getCurrentUser().saveBelongsToMany(values, UserFriend.class);
+        } catch (CannotSaveModelException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

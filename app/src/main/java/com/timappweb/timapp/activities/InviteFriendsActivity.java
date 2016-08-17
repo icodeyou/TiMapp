@@ -26,6 +26,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
@@ -60,7 +61,6 @@ public class InviteFriendsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite_friends);
 
         if (!IntentsUtils.requireLogin(this, false)) {
             return;
@@ -71,23 +71,32 @@ public class InviteFriendsActivity extends BaseActivity {
             finish();
         }
 
-        this.initToolbar(true);
+        setContentView(R.layout.activity_invite_friends);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        progressview = findViewById(R.id.progress_view);
+        try {
+            event = (Event) event.requireLocalId();
 
-        initAdapterListFriends();
+            this.initToolbar(true);
 
-        mLoader = new FriendsLoader(MyApplication.getCurrentUser());
-        getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
+            mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            progressview = findViewById(R.id.progress_view);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS_LIST).forceLoad();
-            }
-        });
+            initAdapterListFriends();
+
+            mLoader = new FriendsLoader(MyApplication.getCurrentUser());
+            getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
+
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS_LIST).forceLoad();
+                }
+            });
+        } catch (CannotSaveModelException e) {
+            IntentsUtils.home(this);
+            finish();
+        }
     }
 
     @Override
@@ -174,10 +183,7 @@ public class InviteFriendsActivity extends BaseActivity {
                                     feedback.invitation.event = event;
                                     feedback.invitation.user_source = MyApplication.getCurrentUser();
                                     feedback.invitation.user_target = User.queryByRemoteId(User.class, feedback.user_id).executeSingle();
-                                    MyModel savedModel = feedback.invitation.mySave();
-                                    if (!savedModel.hasLocalId()){
-                                        Util.appStateError(TAG, "Model should be saved to DB...");
-                                    }
+                                    feedback.invitation.mySaveSafeCall();
                                 }
                             }
                             else{

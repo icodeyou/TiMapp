@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.sync.DataSyncAdapter;
@@ -77,7 +78,7 @@ public abstract class SyncBaseModel extends MyModel {
      *
      * @return
      */
-    public <T extends MyModel> T deepSave(){
+    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
         /*
         if (!this.hasLocalId()){
             SyncBaseModel model = this.queryByRemoteId().executeSingle();
@@ -91,7 +92,7 @@ public abstract class SyncBaseModel extends MyModel {
     }
 
     @Override
-    public MyModel mySave() {
+    public MyModel mySave() throws CannotSaveModelException {
         if (!this.hasLocalId() && this.hasRemoteId()){
             SyncBaseModel model = this.queryByRemoteId().executeSingle();
             if (model != null){
@@ -221,7 +222,7 @@ public abstract class SyncBaseModel extends MyModel {
      * Sync and persist modification to database
      * @param model
      */
-    public void merge(SyncBaseModel model){
+    public void merge(SyncBaseModel model) throws CannotSaveModelException {
         this.merge(model, true);
     }
 
@@ -231,7 +232,7 @@ public abstract class SyncBaseModel extends MyModel {
      * @param model
      * @param persist true if we save modification in db. If yes,
      */
-    public void merge(SyncBaseModel model, boolean persist){
+    public void merge(SyncBaseModel model, boolean persist) throws CannotSaveModelException {
         // For each deserializable fields, we update the value if it is not null
         Class<? extends SyncBaseModel> clazz = this.getClass();
         for (Field field: clazz.getFields()){

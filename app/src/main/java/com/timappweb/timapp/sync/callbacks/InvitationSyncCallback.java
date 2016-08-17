@@ -6,6 +6,7 @@ import android.util.Log;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
@@ -22,17 +23,21 @@ public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Call
 
     @Override
     public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
-        if (!remoteModel.isSync(localModel)){
-            localModel.merge(remoteModel);
+        try {
+            if (!remoteModel.isSync(localModel)){
+                    localModel.merge(remoteModel);
 
-            EventsInvitation invitation = (EventsInvitation) localModel;
-            this.completeUser(invitation);
-            invitation.deepSave();
+                EventsInvitation invitation = (EventsInvitation) localModel;
+                this.completeUser(invitation);
+                invitation.deepSave();
 
-            Log.i(TAG, "Updating: " + localModel.toString());
-        }
-        else{
-            Log.i(TAG, "No action: " + localModel.toString());
+                Log.i(TAG, "Updating: " + localModel.toString());
+            }
+            else{
+                Log.i(TAG, "No action: " + localModel.toString());
+            }
+        } catch (CannotSaveModelException e) {
+            e.printStackTrace();
         }
     }
 
@@ -40,14 +45,18 @@ public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Call
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values){
         // Add new items
         for (SyncBaseModel m : values) {
-            Log.i(TAG, "Scheduling insert: " + m.toString());
-            EventsInvitation invitation = (EventsInvitation) m;
-            if (invitation.user_source == null && invitation.user_target == null) {
-                Log.e(TAG, "Received invitation from unknown counter part... Skipping...");
-                continue;
+            try {
+                Log.i(TAG, "Scheduling insert: " + m.toString());
+                EventsInvitation invitation = (EventsInvitation) m;
+                if (invitation.user_source == null && invitation.user_target == null) {
+                    Log.e(TAG, "Received invitation from unknown counter part... Skipping...");
+                    continue;
+                }
+                this.completeUser(invitation);
+                invitation.deepSave();
+            } catch (CannotSaveModelException e) {
+                e.printStackTrace();
             }
-            this.completeUser(invitation);
-            invitation.deepSave();
         }
     }
 

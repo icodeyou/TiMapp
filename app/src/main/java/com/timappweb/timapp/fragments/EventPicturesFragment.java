@@ -243,7 +243,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                     public void successful(Object feedback) {
                         // Get the bitmap in according to the width of the device
                         mRecyclerView.smoothScrollToPosition(0);
-                        picture.mySave();
+                        picture.mySaveSafeCall();
                         Log.d(TAG, "New picture uploaded: " + picture);
                     }
 

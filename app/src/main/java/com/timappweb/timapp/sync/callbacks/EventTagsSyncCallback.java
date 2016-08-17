@@ -4,6 +4,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.util.Collection;
@@ -24,7 +25,12 @@ public class EventTagsSyncCallback extends RemoteMasterSyncCallback {
     public void onRemoteOnly(Collection<? extends SyncBaseModel> values) {
         for (SyncBaseModel model: values){
             EventTag eventTag = new EventTag(event, (Tag) model, ((Tag)model).count_ref);
-            eventTag.deepSave();
+            try {
+                eventTag.deepSave();
+            } catch (CannotSaveModelException e) {
+                // TODO mes
+                e.printStackTrace();
+            }
         }
     }
 

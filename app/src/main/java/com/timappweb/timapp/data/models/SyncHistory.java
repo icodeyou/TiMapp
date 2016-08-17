@@ -62,7 +62,7 @@ public class SyncHistory extends MyModel {
             history.extraID = extraID;
         }
         history.last_update = System.currentTimeMillis();
-        history.mySave();
+        history.mySaveSafeCall();
     }
 
     /**

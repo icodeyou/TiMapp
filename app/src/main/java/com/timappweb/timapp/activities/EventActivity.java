@@ -32,6 +32,7 @@ import com.timappweb.timapp.adapters.EventPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.EventInformationFragment;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
@@ -90,38 +91,40 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.event = IntentsUtils.extractEvent(getIntent());
-        eventId = IntentsUtils.extractPlaceId(getIntent());
-        if (event == null && eventId <= 0){
-            Log.e(TAG, "Trying to view an invalid event --> redirect to home");
-            IntentsUtils.home(this);
-            return;
-        }
-        else if (eventId <= 0){
-            eventId = event.remote_id;
-        }
-
-
-       mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
-
-        pageTitle = (TextView) findViewById(R.id.title_event);
-        btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
-        btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
-        btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
-
-
-        getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
-
-        if (event != null){
-            onEventLoaded();
-
-            if (!event.hasLocalId()) {
-                event = event.deepSave();
+        try {
+            this.event = IntentsUtils.extractEvent(getIntent());
+            eventId = IntentsUtils.extractPlaceId(getIntent());
+            if (event == null && eventId <= 0){
+                Log.e(TAG, "Trying to view an invalid event --> redirect to home");
+                IntentsUtils.home(this);
+                return;
             }
-        }
+            else if (eventId <= 0){
+                eventId = event.remote_id;
+            }
 
-        initListeners();
+
+           mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
+
+            pageTitle = (TextView) findViewById(R.id.title_event);
+            btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
+            btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
+            btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
+
+
+            getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
+
+            if (event != null){
+                onEventLoaded();
+                event.requireLocalId();
+            }
+            initListeners();
+        } catch (CannotSaveModelException e) {
+            // TODO toast
+            e.printStackTrace();
+            IntentsUtils.home(this);
+            finish();
+        }
     }
 
     private void initListeners() {
@@ -454,7 +457,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             Log.d(TAG, "Event loaded finish");
             if (data.size() > 0){
                 event = data.get(0);
-                if (!event.hasLocalId()) event.mySave();
+                event = (Event) event.requireLocalIdSafeCall();
                 onEventLoaded();
             }
         }

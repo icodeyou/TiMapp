@@ -23,6 +23,7 @@ import com.timappweb.timapp.data.loader.SingleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserTag;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.ActivityProfileBinding;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 
@@ -173,13 +174,18 @@ public class ProfileActivity extends BaseActivity  {
         }
         switch (requestCode){
             case ACTIVITY_RESULT_EDIT_PROFILE:
-                // Get tags
-                List<Tag> tags = (List<Tag>) data.getSerializableExtra(EditProfileActivity.EXTRA_KEY_TAG_LIST);
-                Log.v(TAG, "Editing user tags: " + tags);
-                if (tags != null){
-                    mUser.replaceAssociation(tags, UserTag.class);
-                    mUser.setTags(tags);
-                    updateView();
+                try {
+                    // Get tags
+                    List<Tag> tags = (List<Tag>) data.getSerializableExtra(EditProfileActivity.EXTRA_KEY_TAG_LIST);
+                    Log.v(TAG, "Editing user tags: " + tags);
+                    if (tags != null){
+                        mUser.replaceAssociation(tags, UserTag.class);
+                        mUser.setTags(tags);
+                        updateView();
+                    }
+                } catch (CannotSaveModelException e) {
+                    // TODO toast
+                    e.printStackTrace();
                 }
                 break;
         }
