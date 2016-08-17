@@ -119,7 +119,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
         fab = root.findViewById(R.id.fab_button);
 
-        eventView = root.findViewById(R.id.event_view);
+        eventView = root.findViewById(R.id.event_view_layout_map);
 
         initListeners();
         initEventView();

@@ -53,8 +53,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
-            <include layout="@layout/layout_event_info"
-                bind:event="@{event}"/>
+            <!-- -->
+            <RelativeLayout
+                android:id="@+id/event_view_layout_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <View
+                        android:id="@+id/space"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/margin_top_layout_event_info" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/height_top_gradient_view"
+                        android:layout_alignBottom="@+id/space"
+                        android:background="@drawable/gradient_top_view_dark" />
+                </RelativeLayout>
+                <View
+                    android:id="@+id/background_event_info_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_top_layout_event_info"
+                    android:layout_alignBottom="@+id/layout_event_info"
+                    android:background="@color/background_card" />
+                <include layout="@layout/layout_event_info"
+                    android:id="@+id/layout_event_info"
+                    bind:event="@{event}"/>
+            </RelativeLayout>
         </FrameLayout>
+
     </RelativeLayout>
 </layout>

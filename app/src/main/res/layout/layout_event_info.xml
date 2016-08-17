@@ -9,7 +9,6 @@
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
     <RelativeLayout
-        android:id="@+id/event_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,11 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="32dp">
+            android:paddingTop="@dimen/margin_top_layout_event_info">
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/height_top_gradient_view"
-                android:background="@drawable/gradient_top_view_dark"/>
+                android:background="@drawable/gradient_top_view_light"/>
             <LinearLayout
                 android:id="@+id/card_layout"
                 android:layout_width="match_parent"
