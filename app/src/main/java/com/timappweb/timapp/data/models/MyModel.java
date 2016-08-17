@@ -211,11 +211,4 @@ public class MyModel extends Model implements Observable, Serializable{
         return this;
     }
 
-    public MyModel requireLocalIdSafeCall() {
-        try {
-            return this.requireLocalId();
-        } catch (CannotSaveModelException e) {
-            return this;
-        }
-    }
 }

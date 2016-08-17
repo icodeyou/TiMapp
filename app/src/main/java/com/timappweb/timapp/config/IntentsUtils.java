@@ -176,11 +176,15 @@ public class IntentsUtils {
     }
 
     public static void addPicture(Activity activity) {
+        if (!requireLogin(activity, false))
+            return;
         Intent startCustomCameraIntent = new Intent(activity, CameraActivity.class);
         activity.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
     public static void addPictureFromFragment(Context context, Fragment fragment) {
+        if (!requireLogin(context, false))
+            return;
         Intent startCustomCameraIntent = new Intent(context, CameraActivity.class);
         fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }

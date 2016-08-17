@@ -116,7 +116,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
             if (event != null){
                 onEventLoaded();
-                event.requireLocalId();
+                event = (Event) event.requireLocalId();
             }
             initListeners();
         } catch (CannotSaveModelException e) {
@@ -165,6 +165,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void onEventLoaded() {
         if (!isEventLoaded){
             isEventLoaded = true;
+
            // eventView.setEvent(event);
             initFragments();
             parseIntentParameters();
@@ -454,11 +455,16 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
         @Override
         public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-            Log.d(TAG, "Event loaded finish");
-            if (data.size() > 0){
-                event = data.get(0);
-                event = (Event) event.requireLocalIdSafeCall();
-                onEventLoaded();
+            try {
+                Log.d(TAG, "Event loaded finish");
+                if (data.size() > 0){
+                    event = data.get(0);
+                    event = (Event) event.requireLocalId();
+                    onEventLoaded();
+                }
+            } catch (CannotSaveModelException e) {
+                IntentsUtils.home(EventActivity.this);
+                EventActivity.this.finish();
             }
         }
 

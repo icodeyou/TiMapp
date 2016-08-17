@@ -247,7 +247,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private void displayEvent(Event event) {
         Log.i(TAG, "Display event");
         try {
-            event.requireLocalId();
+            event = (Event) event.requireLocalId();
             eventView.setVisibility(View.VISIBLE);
             mBinding.setEvent(event);
 
