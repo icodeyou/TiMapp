@@ -137,7 +137,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (navigationMenuView != null) {
             navigationMenuView.setVerticalScrollBarEnabled(false);
         }
-        //inflate header
+        intHeader(nvDrawer);
+    }
+
+    private void intHeader(Nav) {
         getLayoutInflater().inflate(R.layout.nav_header, nvDrawer, false);
     }
 
