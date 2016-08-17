@@ -10,6 +10,7 @@ import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -71,6 +72,10 @@ public class  MultipleEntriesSyncPerformer<T extends SyncBaseModel>implements Sy
     */
     @Override
     public void perform() {
+        if (callback == null){
+            Util.appStateError(TAG, "Callback MUST not be null. Please fix this.");
+            return;
+        }
 
         if (localEntries == null || localEntries.size() == 0){
             callback.onRemoteOnly(remoteEntries);

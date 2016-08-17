@@ -214,6 +214,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                         Event.findInArea(bounds, Event.class),
                         syncTypeId,
                         true)
+                        .setCallback(new InvitationSyncCallback())
                         .perform();
             SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_EVENT, bounds);
         }
@@ -295,6 +296,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 RestClient.service().invitesSent(event.getRemoteId()),
                 MyApplication.getCurrentUser().getInviteSent(event.getId()),
                 syncId)
+                .setCallback(new RemoteMasterSyncCallback())
                 .perform();
     }
 
@@ -305,6 +307,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             Call<PaginatedResponse<Spot>> request = RestClient.service().spots(conditions.toMap());
             MultipleEntriesSyncPerformer<Spot> syncPerformer
                     = new MultipleEntriesSyncPerformer(request, Spot.findInArea(bounds, Spot.class), syncId);
+            syncPerformer.setCallback(new RemoteMasterSyncCallback());
             syncPerformer.perform();
             SyncHistoryBounds.updateSync(DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, bounds);
         }
