@@ -29,7 +29,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
     private Context context;
     private List<Event> data;
     private OnItemAdapterClickListener itemAdapterClickListener;
-    private LayoutEventBinding mBinding;
 
     // =============================================================================================
 
@@ -40,23 +39,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
     @Override
     public EventsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.layout_event, parent, false);
-        return new EventsViewHolder(mBinding.getRoot());
+       LayoutEventBinding mBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.layout_event, parent, false);
+        return new EventsViewHolder(mBinding.getRoot(), mBinding);
     }
 
     @Override
     public void onBindViewHolder(EventsViewHolder viewHolder, int position) {
         final Event event = data.get(position);
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
-        mBinding.setEvent(event);
-        int initialTime = event.getPoints();
-        viewHolder.tvCountPoints.initTimer(initialTime);
-
-        try {
-            viewHolder.titleTv.setText(Util.capitalize(event.getCategory().name));
-        } catch (UnknownCategoryException e) {
-            e.printStackTrace();
-        }
+        viewHolder.setEventInHolder(event);
     }
 
     @Override
@@ -91,16 +82,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
-    public class EventsViewHolder extends RecyclerView.ViewHolder implements
-            View.OnClickListener {
+    public class EventsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         SimpleTimerView tvCountPoints;
-        TextView titleTv;
+        TextView titleCategory;
+        TextView titleEvent;
+        LayoutEventBinding mBinding;
 
-        EventsViewHolder(View itemView) {
+        EventsViewHolder(View itemView, LayoutEventBinding binding) {
             super(itemView);
+            this.mBinding = binding;
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
-            titleTv = (TextView) itemView.findViewById(R.id.title_category);
-            titleTv.setVisibility(View.VISIBLE);
+            titleCategory = (TextView) itemView.findViewById(R.id.title_category);
+            titleEvent = (TextView) itemView.findViewById(R.id.name_event);
+            titleCategory.setVisibility(View.VISIBLE);
+            titleEvent.setVisibility(View.GONE);
             itemView.setOnClickListener(this);
         }
 
@@ -110,6 +105,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 itemAdapterClickListener.onClick(getAdapterPosition());
             }
         }
-    }
 
+        public void setEventInHolder(Event event) {
+            mBinding.setEvent(event);
+            int initialTime = event.getPoints();
+            tvCountPoints.initTimer(initialTime);
+
+            try {
+                titleCategory.setText(Util.capitalize(event.getCategory().name));
+            } catch (UnknownCategoryException e) {
+                e.printStackTrace();
+            }
+
+            // Following line is important, it will force to load the variable in a custom view
+            mBinding.executePendingBindings();
+        }
+    }
 }

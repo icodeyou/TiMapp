@@ -31,7 +31,7 @@
                 android:paddingLeft="@dimen/padding_bottom_map"
                 android:paddingBottom="@dimen/padding_bottom_map"
                 android:paddingTop="@dimen/padding_bottom_map"
-                android:background="@color/background_card">
+                android:background="@color/background_event_info">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:layout_marginEnd="80dp"
                     android:layout_marginBottom="10dp">
                     <TextView
-                        android:id="@+id/title_event"
+                        android:id="@+id/name_event"
                         style="@style/TitleInfoEvent"
                         android:text="@{event.name}"
                         tools:text="Fete de la musique de la mort qui tue"/>

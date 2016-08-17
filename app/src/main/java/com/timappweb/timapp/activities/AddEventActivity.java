@@ -27,6 +27,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.JsonObject;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
@@ -82,8 +83,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private AddressResultReceiver       mAddressResultReceiver;
     private View.OnClickListener        displayHideCategories;
 
-    private Menu                        menu;
-    private View test;
+    private MenuItem postButton;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -123,6 +123,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         initLocationListener();
         initEvents();
         initMap();
+    }
+
+    private void initDebugView() {
+        eventNameET.setText(getResources().getString(R.string.dev_name));
+        descriptionET.setText(getResources().getString(R.string.dev_description));
     }
 
     private void initEvents() {
@@ -165,8 +170,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_event, menu);
-        this.menu = menu;
+        postButton = menu.findItem(R.id.action_post);
         setButtonValidation();
+
+        if(BuildConfig.DEBUG) initDebugView();
         return true;
     }
 
@@ -229,7 +236,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void setProgressView(boolean bool) {
         progressView.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
         if(bool) {
-            menu.findItem(R.id.action_post).setEnabled(false);
+            postButton.setEnabled(false);
         } else {
             setButtonValidation();
         }
@@ -277,7 +284,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public void setButtonValidation() {
         String textAfterChange = eventNameET.getText().toString().trim();
         boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange);
-        menu.findItem(R.id.action_post).setEnabled(isValid);
+        postButton.setEnabled(isValid);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -339,7 +346,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
             @Override
             public void afterTextChanged(Editable s) {
-                setButtonValidation();
+                if(postButton!=null) {
+                    setButtonValidation();
+                }
             }
         });
 

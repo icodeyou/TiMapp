@@ -11,9 +11,6 @@ import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
-/**
- * Created by stephane on 3/28/2016.
- */
 @Table(name = "EventsInvitation")
 public class EventsInvitation extends SyncBaseModel implements PlaceUserInterface {
 
@@ -66,7 +63,7 @@ public class EventsInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     @Override
     public String getTimeCreated() {
-        return Util.millisTimestampToPrettyTime((this.created));
+        return Util.secondsTimestampToPrettyTime(this.created);
     }
 
     @Override

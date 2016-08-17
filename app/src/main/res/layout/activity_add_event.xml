@@ -6,6 +6,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="android.graphics.drawable.Drawable"/>
+        <import type="com.timappweb.timapp.BuildConfig" />
         <variable
             name="errors"
             type="com.timappweb.timapp.rest.io.responses.RestValidationError"></variable>
