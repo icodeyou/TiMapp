@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
-            <!-- -->
+            <!-- Following layout is to add a black separator. -->
             <RelativeLayout
                 android:id="@+id/event_view_layout_map"
                 android:layout_width="match_parent"
@@ -71,6 +71,7 @@
                         android:layout_alignBottom="@+id/space"
                         android:background="@drawable/gradient_top_view_dark" />
                 </RelativeLayout>
+                <!-- Following view is to prevent transparence -->
                 <View
                     android:id="@+id/background_event_info_map"
                     android:layout_width="match_parent"

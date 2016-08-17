@@ -80,6 +80,9 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private View                            filterTagsContainer;
     private SimpleTimerView                 tvCountPoints;
     private View                            fab;
+    private View                            cameraButton;
+    private View                            tagButton;
+    private View                            inviteButton;
 
     private ExploreFragment                 exploreFragment;
     private FragmentExploreMapBinding       mBinding;
@@ -118,6 +121,9 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
         fab = root.findViewById(R.id.fab_button);
+        cameraButton = root.findViewById(R.id.action_camera);
+        tagButton = root.findViewById(R.id.action_tag);
+        inviteButton = root.findViewById(R.id.action_invite);
 
         eventView = root.findViewById(R.id.event_view_layout_map);
 
@@ -126,6 +132,51 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
 
         return root;
+    }
+
+    private void initListeners() {
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_CAMERA);
+            }
+        });
+        tagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_TAGS);
+            }
+        });
+        inviteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_PEOPLE);
+            }
+        });
+
+        eventView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.viewSpecifiedEvent(getActivity(), mBinding.getEvent());
+            }
+        });
+
+        filterTagsRv.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
+            @Override
+            public void onClick(int position) {
+                IntentsUtils.filter(getActivity());
+            }
+        });
+
+        mapView.getMap().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                hideEvent();
+            }
+        });
+
+        fab.setOnClickListener(exploreFragment.getFabClickListener());
     }
 
     private void initEventView() {
@@ -264,31 +315,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
     public boolean isFilterActive() {
         return MyApplication.searchFilter.tags!=null && MyApplication.searchFilter.tags.size()!=0;
-    }
-
-    private void initListeners() {
-        eventView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.viewSpecifiedEvent(getActivity(), mBinding.getEvent());
-            }
-        });
-
-        filterTagsRv.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                IntentsUtils.filter(getActivity());
-            }
-        });
-
-        mapView.getMap().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                hideEvent();
-            }
-        });
-
-        fab.setOnClickListener(exploreFragment.getFabClickListener());
     }
 
 
