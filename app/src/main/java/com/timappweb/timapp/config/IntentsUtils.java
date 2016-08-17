@@ -204,9 +204,10 @@ public class IntentsUtils {
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
 
-    public static void viewEventFromId(Context context, int id) {
-        Intent intent = buildIntentViewPlace(context, id);
-        context.startActivity(intent);
+    public static void viewEventFromId(Activity activity, int id) {
+        activity.finish();
+        Intent intent = buildIntentViewPlace(activity, id);
+        activity.startActivity(intent);
     }
 
     public static void viewSpecifiedEvent(Context context, Event event) {
@@ -245,15 +246,16 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void addPlace(Context context) {
-        if (!requireLogin(context, false))
+    public static void addPlace(Activity activity) {
+        if (!requireLogin(activity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
-        Intent intent = new Intent(context, AddEventActivity.class);
-        context.startActivity(intent);
+        activity.finish();
+        Intent intent = new Intent(activity, AddEventActivity.class);
+        activity.startActivity(intent);
     }
 /*
     public static void comment(Activity activity, String comment) {

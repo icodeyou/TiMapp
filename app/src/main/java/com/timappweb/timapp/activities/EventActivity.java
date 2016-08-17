@@ -227,13 +227,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     @Override
-    public void onBackPressed() {
-        //Used to prevent going back to AddEventActivity after creating an event
-        NavUtils.navigateUpFromSameTask(this);
-        //TODO : Delete this function once AddEventActivity is called with startActivityForResult()
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
     }

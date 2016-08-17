@@ -2,6 +2,7 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
@@ -48,7 +51,7 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         Log.d(TAG, "Get view for " + (position + 1) + "/" + getItemCount());
         final EventsInvitation placeInvitation = data.get(position);
         holder.setEventInHolder(placeInvitation);
-        Log.d(TAG, "Done.");
+        holder.setListeners(placeInvitation.event);
     }
 
     @Override
@@ -90,6 +93,9 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
         private SimpleTimerView tvCountPoints;
         private TextView titleCategory;
         private TextView titleEvent;
+        private final FloatingActionButton cameraButton;
+        private final FloatingActionButton tagButton;
+        private final FloatingActionButton inviteButton;
 
         InvitationsViewHolder(View itemView, ItemInvitationBinding binding) {
             super(itemView);
@@ -98,6 +104,11 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
             titleCategory = (TextView) itemView.findViewById(R.id.title_category);
             titleEvent = (TextView) itemView.findViewById(R.id.name_event);
+            cameraButton = (FloatingActionButton) itemView.findViewById(R.id.action_camera);
+            tagButton = (FloatingActionButton) itemView.findViewById(R.id.action_tag);
+            inviteButton = (FloatingActionButton) itemView.findViewById(R.id.action_invite);
+
+
             titleCategory.setVisibility(View.VISIBLE);
             titleEvent.setVisibility(View.GONE);
 
@@ -129,6 +140,27 @@ public class InvitationsAdapter extends RecyclerView.Adapter<InvitationsAdapter.
 
             // Following line is important, it will force to load the variable in a custom view
             mBinding.executePendingBindings();
+        }
+
+        public void setListeners(final Event event) {
+            cameraButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_CAMERA);
+                }
+            });
+            tagButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_TAGS);
+                }
+            });
+            inviteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
+                }
+            });
         }
     }
 }
