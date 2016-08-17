@@ -1,12 +1,9 @@
 package com.timappweb.timapp.sync.performers;
 
-import android.database.Cursor;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Cache;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.rest.io.responses.TableSyncResult;
 import com.timappweb.timapp.utils.Util;
 
@@ -22,7 +19,7 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
     private static final String TAG = "FullTableSyncPerformer";
     private static final int MAX_SYNC = 15;
 
-    private SyncParams params;
+    private SyncAdapterOption params;
     private Class<T> clazz;
     private Callback<T> callback;
     private RemoteLoader<T> remoteLoader;
@@ -31,7 +28,7 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
         this.clazz = clazz;
         this.callback = callback;
         this.remoteLoader = remoteLoader;
-        this.params = new SyncParams();
+        this.params = new SyncAdapterOption();
     }
 
     public void sync(List<T> remoteEntries) {
@@ -83,7 +80,7 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
         return SyncBaseModel.getMaxCreated(clazz, null);
     }
 
-    public SyncParams getSyncParams() {
+    public SyncAdapterOption getSyncParams() {
         return params;
     }
 

@@ -1,32 +1,25 @@
 package com.timappweb.timapp.sync.performers;
 
-import android.database.Cursor;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Cache;
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.SyncStatus;
-import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.rest.io.responses.TableSyncResult;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Stephane on 14/08/2016.
  */
 public class ChunckTableSyncPerformer<T extends SyncBaseModel> implements SyncPerformer {
 
-    private static final String TAG = "FullTableSyncPerformer";
-    private static final int MAX_SYNC = 15;
+    private static final String TAG = "ChunckTableSyncPerfor";
 
     // ---------------------------------------------------------------------------------------------
 
-    private SyncParams      params;
+    private SyncAdapterOption      params;
     private Class<T>        clazz;
     private Callback<T>     callback;
     private RemoteLoader<T> remoteLoader;
@@ -42,7 +35,7 @@ public class ChunckTableSyncPerformer<T extends SyncBaseModel> implements SyncPe
 
     public ChunckTableSyncPerformer(Class<T> clazz) {
         this.clazz = clazz;
-        this.params = new SyncParams();
+        this.params = new SyncAdapterOption();
     }
 
     public void setRemoteLoader(RemoteLoader<T> remoteLoader) {
@@ -82,11 +75,11 @@ public class ChunckTableSyncPerformer<T extends SyncBaseModel> implements SyncPe
 
     }
 
-    public SyncParams getSyncParams() {
+    public SyncAdapterOption getSyncParams() {
         return params;
     }
 
-    public void setSyncParam(SyncParams params) {
+    public void setSyncParam(SyncAdapterOption params) {
         this.params = params;
     }
 

@@ -39,7 +39,6 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.rest.io.responses.TableSyncResult;
@@ -52,6 +51,7 @@ import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.callbacks.UserPlaceSyncCallback;
+import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.Util;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,7 +62,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Define a merge adapter for the app.
@@ -230,7 +229,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         Event event = extractEvent(extras);
         if (event == null) { Util.appStateError(TAG, "Event should not be null in sync adapter");}
         ChunckTableSyncPerformer pictureSyncPerformer = getEventPictureSyncPerformer(event);
-        pictureSyncPerformer.setSyncParam(new SyncParams(extras));
+        pictureSyncPerformer.setSyncParam(new SyncAdapterOption(extras));
         pictureSyncPerformer.perform();
         SyncResultMessage syncResultMessage = new SyncResultMessage(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
         syncResultMessage.setUpToDate(pictureSyncPerformer.getResult().up_to_date);

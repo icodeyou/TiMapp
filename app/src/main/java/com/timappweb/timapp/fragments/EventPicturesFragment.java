@@ -33,7 +33,6 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
@@ -41,10 +40,10 @@ import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
-import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.performers.SyncAdapterOption;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -341,11 +340,11 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             Log.d(TAG, "Loading more data");
             long remoteId = SyncBaseModel.getMinRemoteId(Picture.class, "Event = " + eventActivity.getEvent().getId());
             Log.d(TAG, "Last picture has been created: " + remoteId);
-            SyncParams params = new SyncParams();
+            SyncAdapterOption params = new SyncAdapterOption();
             if (remoteId > 0){
                 params.setMaxId(remoteId-1);
             }
-            params.setDirection(SyncParams.SyncDirection.DOWN);
+            params.setDirection(SyncAdapterOption.SyncDirection.DOWN);
             params.setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
             params.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
             SyncBaseModel.startSync(EventPicturesFragment.this.getContext(), params);
@@ -353,9 +352,9 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
         public void refresh() {
             long remoteId = SyncBaseModel.getMaxRemoteId(Picture.class, "Event = " + eventActivity.getEvent().getId());
-            SyncParams params = new SyncParams();
+            SyncAdapterOption params = new SyncAdapterOption();
             params.setMinId(remoteId+1)
-                .setDirection(SyncParams.SyncDirection.DOWN)
+                .setDirection(SyncAdapterOption.SyncDirection.DOWN)
                 .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE)
                 .getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
             SyncBaseModel.startSync(EventPicturesFragment.this.getContext(), params);

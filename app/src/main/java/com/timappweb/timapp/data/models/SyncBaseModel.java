@@ -2,11 +2,9 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
@@ -19,17 +17,11 @@ import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
-import com.timappweb.timapp.rest.io.request.SyncParams;
 import com.timappweb.timapp.sync.DataSyncAdapter;
 import com.timappweb.timapp.sync.performers.SyncAdapterOption;
-import com.timappweb.timapp.utils.ConditionInterface;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
-
-import retrofit2.Call;
 
 /**
  * Created by stephane on 4/23/2016.
@@ -184,7 +176,7 @@ public abstract class SyncBaseModel extends MyModel {
         DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
     }
 
-    public static void startSync(Context context, SyncParams params) {
+    public static void startSync(Context context, SyncAdapterOption params) {
         DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), params.toBundle());
     }
     /**

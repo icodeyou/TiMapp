@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by stephane on 5/10/2016.
  */
-public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>> {
+public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>>, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "MultipleEntriesCallback";
 
@@ -30,6 +30,9 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     protected       From                            query;
     protected       SyncAdapterOption               syncOption;
     private         SwipeRefreshLayout              mSwipeRefreshLayout;
+    /**
+     * Min delay between two sync with the server
+     */
     private         long                            syncDelay;
     protected       Context                         context;
 
@@ -104,12 +107,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
         this.mSwipeRefreshLayout = swipeAndRefreshLayout;
 
         if (setOnRefreshCallback){
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    MultipleEntryLoaderCallback.this.onRefresh();
-                }
-            });
+            mSwipeRefreshLayout.setOnRefreshListener(this);
         }
     }
 
