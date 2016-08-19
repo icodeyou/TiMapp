@@ -3,24 +3,50 @@ package com.timappweb.timapp.views;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
+import com.hanks.htextview.HTextView;
+import com.hanks.htextview.HTextViewType;
 import com.timappweb.timapp.R;
 
-public class SimpleTimerView extends TextView{
+public class SimpleTimerView extends TextSwitcher {
     private static int COUNTDOWNINTERVAL = 1000;
     private CountDownTimer countDownTimer;
 
     public SimpleTimerView(Context context) {
         super(context);
+        init();
     }
 
     public SimpleTimerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        this.setFactory(new ViewFactory() {
+            @Override
+            public View makeView() {
+                LayoutInflater inflater = LayoutInflater.from((getContext()));
+                TextView textView = (TextView) inflater.inflate(R.layout.textview_counter, null);
+                return textView;
+            }
+        });
+
+        Animation inAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.timer_in);
+        Animation outAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.timer_out);
+        this.setInAnimation(inAnimation);
+        this.setOutAnimation(outAnimation);
     }
 
     public void initTimer(int initialms) {
-        final TextView currentTextView = this;
+        final TextSwitcher currentTextView = this;
         if(countDownTimer==null) {
             countDownTimer = new CountDownTimer(initialms*1000, COUNTDOWNINTERVAL) {
 
@@ -29,7 +55,7 @@ public class SimpleTimerView extends TextView{
                 }
 
                 public void onFinish() {
-                    currentTextView.setText(R.string.counter_over);
+                    currentTextView.setText(getResources().getString(R.string.counter_over));
                 }
             };
             countDownTimer.start();
@@ -44,12 +70,15 @@ public class SimpleTimerView extends TextView{
     }
 
     public int getPoints() {
+        TextView textView = (TextView) this.getCurrentView();
+        String text = textView.getText().toString();
         int points;
-        if(this.getText() == getResources().getString(R.string.counter_over)) {
+        if(text == getResources().getString(R.string.counter_over)) {
             points = 0;
         } else {
-            points = Integer.parseInt(this.getText().toString());
+            points = Integer.parseInt(text);
         }
         return points;
     }
+
 }

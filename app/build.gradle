@@ -135,6 +135,8 @@ dependencies {
 
     compile 'com.crystal:crystalpreloaders:1.0.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+
+    compile 'com.github.hanks-zyh:HTextView:416cdc7733'
 }
 
 task wrapper(type: Wrapper) {
