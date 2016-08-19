@@ -29,6 +29,8 @@ import com.timappweb.timapp.sync.DataSyncAdapter;
 
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 public class ProfileActivity extends BaseActivity  {
 
     public static final String TAG = "ProfileActivity";
@@ -48,7 +50,7 @@ public class ProfileActivity extends BaseActivity  {
     private View noConnectionView;
     private SimpleDraweeView profilePicture;
     private UserLoader mLoader;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
     private ActivityProfileBinding mBinding;
 
 

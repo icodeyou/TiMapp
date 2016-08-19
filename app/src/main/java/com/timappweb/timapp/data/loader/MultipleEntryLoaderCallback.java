@@ -17,10 +17,12 @@ import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 /**
  * Created by stephane on 5/10/2016.
  */
-public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>>, SwipeRefreshLayout.OnRefreshListener {
+public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>>, WaveSwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "MultipleEntriesCallback";
 
@@ -29,7 +31,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     protected final Class<? extends MyModel>  clazz;
     protected       From                            query;
     protected       SyncAdapterOption               syncOption;
-    private         SwipeRefreshLayout              mSwipeRefreshLayout;
+    private         WaveSwipeRefreshLayout          mSwipeRefreshLayout;
     /**
      * Min delay between two sync with the server
      */
@@ -103,7 +105,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
         fetchEntries(true);
     }
 
-    public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout, boolean setOnRefreshCallback) {
+    public void setSwipeAndRefreshLayout(WaveSwipeRefreshLayout swipeAndRefreshLayout, boolean setOnRefreshCallback) {
         this.mSwipeRefreshLayout = swipeAndRefreshLayout;
 
         if (setOnRefreshCallback){
@@ -111,7 +113,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
         }
     }
 
-    public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout) {
+    public void setSwipeAndRefreshLayout(WaveSwipeRefreshLayout swipeAndRefreshLayout) {
         setSwipeAndRefreshLayout(swipeAndRefreshLayout, true);
     }
 

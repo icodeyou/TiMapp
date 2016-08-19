@@ -9,10 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
-import com.hanks.htextview.HTextView;
-import com.hanks.htextview.HTextViewType;
 import com.timappweb.timapp.R;
 
 public class SimpleTimerView extends TextSwitcher {

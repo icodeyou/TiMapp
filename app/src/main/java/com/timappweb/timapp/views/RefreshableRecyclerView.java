@@ -10,12 +10,14 @@ import com.timappweb.timapp.listeners.OnScrollListenerRefreshableView;
 
 import java.security.InvalidParameterException;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 /**
  * Created by stephane on 5/14/2016.
  */
 public class RefreshableRecyclerView extends RecyclerView {
 
-    private android.support.v4.widget.SwipeRefreshLayout mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
 
     public RefreshableRecyclerView(Context context) {
         super(context);
@@ -36,8 +38,8 @@ public class RefreshableRecyclerView extends RecyclerView {
     }
 
     public void init(){
-        this.mSwipeRefreshLayout = (android.support.v4.widget.SwipeRefreshLayout) getParent();
-        if (this.mSwipeRefreshLayout == null) throw new InvalidParameterException("Refreshable recycler view should be wrap with a SwipeRefreshLayout");
+        this.mSwipeRefreshLayout = (WaveSwipeRefreshLayout) getParent();
+        if (this.mSwipeRefreshLayout == null) throw new InvalidParameterException("Refreshable recycler view should be wrap with a WaveSwipeRefreshLayout");
         this.addOnScrollListener(new OnScrollListenerRefreshableView(mSwipeRefreshLayout));
     }
 

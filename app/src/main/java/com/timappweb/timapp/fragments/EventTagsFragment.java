@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,8 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 
 public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener {
 
@@ -49,7 +52,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     private RecyclerView                    mRecyclerView;
     private RecyclerViewMaterialAdapter     mAdapter;
     private Loader<List<EventTag>>          mTagLoader;
-    private SwipeRefreshLayout              mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -71,7 +74,8 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         mRecyclerView.setHasFixedSize(true);
 
         noTagsView = view.findViewById(R.id.no_tags_view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
+        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
+        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(getContext(),R.color.colorRefresh));
 
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         tagsAndCountersAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
@@ -96,7 +100,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, new EventTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mTagLoader.forceLoad();

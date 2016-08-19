@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
 
     private static final String         TAG                             = "AddSpotActivity";
@@ -68,7 +71,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private Loader<List<Spot>>                      mSpotLoader;
     private SpotsAdapter                            spotsAdapter;
     private MapAreaLoaderCallback mSpotLoaderModel;
-    private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
+    private WaveSwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
     private List<Spot>                              listSpotsAround;
 
@@ -93,7 +96,8 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etNameSpot = (EditText) findViewById(R.id.name_spot);
-        mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeAndRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeAndRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
 
         initEditText();
         initAdapters();

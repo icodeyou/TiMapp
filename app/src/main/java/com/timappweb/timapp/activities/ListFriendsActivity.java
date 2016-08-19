@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,8 @@ import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 public class ListFriendsActivity extends BaseActivity{
 
     private static final long   SYNC_UPDATE_DELAY       = 1 * 1000;
@@ -36,7 +39,7 @@ public class ListFriendsActivity extends BaseActivity{
     private RecyclerView recyclerView;
     private FriendsAdapter adapter;
     private View noFriendsView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +53,14 @@ public class ListFriendsActivity extends BaseActivity{
         this.initToolbar(true);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_layout);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
         initAdapterListFriends();
 
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, new FriendsLoader());
         mToolbar.setTitle(R.string.title_activity_list_friends);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS).forceLoad();
