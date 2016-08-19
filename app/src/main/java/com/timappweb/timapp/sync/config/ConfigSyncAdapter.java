@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.timappweb.timapp.sync;
+package com.timappweb.timapp.sync.config;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -24,21 +24,8 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
-
-import java.io.IOException;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Response;
+import com.timappweb.timapp.sync.AbstractSyncAdapter;
 
 /**
  * Define a merge adapter for the app.

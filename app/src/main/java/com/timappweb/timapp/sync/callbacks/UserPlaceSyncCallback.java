@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by stephane on 5/13/2016.
  */
-public class UserPlaceSyncCallback extends RemoteMasterSyncCallback {
+public class UserPlaceSyncCallback extends RemoteMasterSyncCallback<UserEvent> {
 
     Event event;
 
@@ -24,15 +24,15 @@ public class UserPlaceSyncCallback extends RemoteMasterSyncCallback {
     }
 
     @Override
-    public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
-        ((UserEvent)remoteModel).event = event;
+    public void onMatch(UserEvent remoteModel, UserEvent localModel) {
+        remoteModel.event = event;
         super.onMatch(remoteModel, localModel);
     }
 
     @Override
-    public void onRemoteOnly(Collection<? extends SyncBaseModel> values) {
-        for (SyncBaseModel model: values){
-            ((UserEvent)model).event = event;
+    public void onRemoteOnly(Collection<UserEvent> values) {
+        for (UserEvent model: values){
+            model.event = event;
         }
         super.onRemoteOnly(values);
     }

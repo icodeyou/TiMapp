@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -11,11 +12,13 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import retrofit2.Call;
@@ -64,7 +67,7 @@ public class EventStatusManager {
         }
         Log.d(TAG, "Initialize request to set status=" + status + " for event=" + event);
 
-        Call<RestFeedback> call;
+        Call<UserEvent> call;
         // TODO call must be cancelable
         switch (status) {
             case COMING:
@@ -77,8 +80,8 @@ public class EventStatusManager {
                 call = RestClient.service().notifyPlaceGone(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             default:
-                Log.v(TAG, "Nothing to do on remote for status: " + status);
-                throw new UnsupportedOperationException();
+                Util.appStateError(TAG, "Trying to add an invalid status: " + status);
+                return null;
         }
 
         if (lastCallInfo == null){
@@ -88,22 +91,19 @@ public class EventStatusManager {
         lastCallInfo.status = status;
         lastCallInfo.httpCallManager = RestClient.buildCall(call)
                 .setCallDelay(callDelay)
-                .onResponse(new HttpCallback<RestFeedback>() {
+                .onResponse(new HttpCallback<UserEvent>() {
                     @Override
-                    public void successful(RestFeedback feedback) {
-                        if (feedback == null){
+                    public void successful(UserEvent userEvent) {
+                        if (userEvent == null){
                             Log.e(TAG, "Server returned a null response...");
                             return;
                         }
-                        Log.d(TAG, "Success register status=" + status + " for user on event: " + event);
-                        UserEvent.setStatus(MyApplication.getCurrentUser(),
-                                event,
-                                status,
-                                feedback.getIntData("id"));
-                        QuotaManager.instance().add(QuotaType.NOTIFY_COMING);
-
-                        if (status == UserEventStatusEnum.HERE){
-                            EventStatusManager.setCurrentEvent(event);
+                        try {
+                            Log.d(TAG, "Success register status=" + status + " for user on event: " + event);
+                            userEvent.event = event;
+                            EventStatusManager.addStatus(userEvent);
+                        } catch (CannotSaveModelException e) {
+                            Log.e(TAG, "CannotSaveModelException: " + e.getMessage());
                         }
                     }
 
@@ -115,6 +115,37 @@ public class EventStatusManager {
                 })
                 .perform();
         return lastCallInfo.httpCallManager;
+    }
+
+    private static UserEvent addStatus(UserEvent userEvent) throws CannotSaveModelException {
+        userEvent.user = MyApplication.getCurrentUser();
+        userEvent.setCreated(System.currentTimeMillis());
+        userEvent.deepSave();
+        if (userEvent.status == UserEventStatusEnum.HERE){
+            EventStatusManager.setCurrentEvent(userEvent.event);
+
+            // Cancel other here status on client side
+            new Delete()
+                    .from(UserEvent.class)
+                    .where("User = ? AND Status = ? AND Id != ?", userEvent.user.getId(), UserEventStatusEnum.HERE, userEvent.getId())
+                    .execute();
+        }
+        // If we add the GONE status to our current event
+        if (userEvent.status == UserEventStatusEnum.GONE){
+            if (currentEvent != null && currentEvent.getId() == userEvent.event.getId()){
+                setCurrentEvent(null);
+            }
+        }
+        QuotaManager.instance().add(QuotaType.NOTIFY_STATUS);
+        return userEvent;
+    }
+
+    public static UserEvent addLocally(long syncId, Event event, UserEventStatusEnum status) throws CannotSaveModelException {
+        UserEvent eventStatus = new UserEvent();
+        eventStatus.setRemoteId(syncId);
+        eventStatus.status = status;
+        eventStatus.event = event;
+        return addStatus(eventStatus);
     }
     /**
      *  @param context
@@ -215,16 +246,6 @@ public class EventStatusManager {
     }
 
 
-
-    public UserEvent addLocally(long syncId, Event event, UserEventStatusEnum status) {
-        UserEvent eventStatus = new UserEvent();
-        eventStatus.setRemoteId(syncId);
-        eventStatus.status = status;
-        eventStatus.user = MyApplication.getCurrentUser();
-        eventStatus.setCreated(System.currentTimeMillis());
-        eventStatus.event = event;
-        return (UserEvent) eventStatus.mySaveSafeCall();
-    }
 
     // ---------------------------------------------------------------------------------------------
 

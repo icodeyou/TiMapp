@@ -1,16 +1,16 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
-import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.data.entities.SocialProvider;
-import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+        import com.activeandroid.annotation.Column;
+        import com.activeandroid.annotation.Table;
+        import com.activeandroid.query.From;
+        import com.activeandroid.query.Select;
+        import com.google.gson.annotations.Expose;
+        import com.timappweb.timapp.data.entities.PlaceUserInterface;
+        import com.timappweb.timapp.data.entities.SocialProvider;
+        import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
-import java.io.Serializable;
-import java.util.List;
+        import java.io.Serializable;
+        import java.util.List;
 
 @Table(name = "User")
 public class User extends SyncBaseModel implements PlaceUserInterface {
@@ -171,8 +171,8 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
 
     public static From getFriendsQuery(long userId) {
         return new Select()
-                .from(User.class)
-                .innerJoin(UserFriend.class)
+                .from(UserFriend.class)
+                .innerJoin(User.class)
                 .on("User.Id = UserFriend.UserTarget")
                 .where("UserFriend.UserSource = ?", userId);
     }
@@ -204,7 +204,7 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
         return new Select()
                 .from(EventsInvitation.class)
                 .where("UserTarget = ?", this.getId())
-                .orderBy("created DESC");
+                .orderBy("id DESC");
     }
 
     public From getInviteReceivedQuery(long placeId) {

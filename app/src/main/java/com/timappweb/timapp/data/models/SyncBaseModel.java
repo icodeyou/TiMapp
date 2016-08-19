@@ -17,8 +17,9 @@ import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
-import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.sync.performers.SyncAdapterOption;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.utils.Util;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * Class representing data that need synchronisation from the remote server.
  */
-public abstract class SyncBaseModel extends MyModel {
+public abstract class SyncBaseModel extends MyModel implements SyncHistory.HistoryItemInterface {
 
     private static final String TAG = "SyncBaseModel";
     public static int SYNC_INTERVAL = 3600 * 1000;
@@ -345,5 +346,14 @@ public abstract class SyncBaseModel extends MyModel {
 
     public static long getMinRemoteId(Class<? extends SyncBaseModel> clazz, String where) {
         return _getMaxMin("MIN", clazz, "SyncId", where);
+    }
+
+    @Override
+    public String hashHistoryKey() {
+        if (!this.hasRemoteId()){
+            Util.appStateError(TAG, "This model does not have a remote id. It cannot be stored in sync history");
+            return "";
+        }
+        return String.valueOf(this.getRemoteId());
     }
 }

@@ -25,7 +25,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.ActivityProfileBinding;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
 

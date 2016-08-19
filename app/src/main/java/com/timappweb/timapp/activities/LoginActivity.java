@@ -31,8 +31,9 @@ import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
-import com.timappweb.timapp.sync.UserSyncAdapter;
+import com.timappweb.timapp.sync.user.UserSyncAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -163,6 +164,14 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                             public void notSuccessful() {
                                 setProgressVisibility(false);
                                 Log.i(TAG, "User attempt to connect with wrong credential");
+                                Toast.makeText(LoginActivity.this, R.string.cannot_facebook_login, Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .onError(new RequestFailureCallback(){
+                            @Override
+                            public void onError(Throwable error) {
+                                setProgressVisibility(false);
+                                Toast.makeText(LoginActivity.this, R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
                             }
                         })
                         .perform();

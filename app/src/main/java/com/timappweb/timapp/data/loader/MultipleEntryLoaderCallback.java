@@ -10,9 +10,7 @@ import android.util.Log;
 import com.activeandroid.query.From;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.SyncHistoryBounds;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.sync.performers.SyncAdapterOption;
+import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     protected       SyncAdapterOption               syncOption;
     private         SwipeRefreshLayout              mSwipeRefreshLayout;
     /**
-     * Min delay between two sync with the server
+     * Min delay between two sync with the server sync delay
      */
     private         long                            syncDelay;
     protected       Context                         context;
@@ -100,7 +98,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     public void onRefresh(){
         Log.v(TAG, "Refreshing data");
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-        fetchEntries(true);
+        //fetchEntries(true);
     }
 
     public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout, boolean setOnRefreshCallback) {

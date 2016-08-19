@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.timappweb.timapp.sync;
+package com.timappweb.timapp.sync.user;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -24,23 +24,26 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
+import com.activeandroid.query.Delete;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserQuota;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.callbacks.UserQuotaSyncCallback;
+import com.timappweb.timapp.sync.AbstractSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
+import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
+import com.timappweb.timapp.sync.performers.StoreEntriesSyncPerformer;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  *
@@ -88,17 +91,50 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
         Log.i(TAG, "--------------- Beginning network synchronization for user---------------------");
         try {
             this.performUserQuotaSync(MyApplication.getCurrentUser());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CannotSyncException e) {
-            e.printStackTrace();
+        }
+        catch (IOException e) {
+            Log.e(TAG, "IOException while performing sync. Do you have a network access ? Message: " + e.toString());
+            //EventBus.getDefault().post(e);
+        }
+        catch (CannotSyncException e) {
+            Log.e(TAG, "Cannot sync: " + e.getMessage());
+           // EventBus.getDefault().post(e);
         }
         Log.i(TAG, "--------------- Network synchronization complete for user----------------------");
     }
 
-    public void performUserQuotaSync(User user) throws IOException, CannotSyncException {
-        new MultipleEntriesSyncPerformer<>(RestClient.service().userQuotas(), user.getQuotas(), 0, true)
-                .setCallback(new UserQuotaSyncCallback())
+    public void performUserQuotaSync(final User user) throws IOException, CannotSyncException, HttpResponseSyncException {
+
+        new StoreEntriesSyncPerformer<UserQuota, List<UserQuota>>()
+                .setRemoteLoader(new DataSyncAdapter.RemoteLoader<List<UserQuota>, UserQuota>(){
+                    @Override
+                    protected Call getCall(HashMap<String, String> options) {
+                        return RestClient.service().userQuotas();
+                    }
+
+                    @Override
+                    protected List<UserQuota> getEntries(List<UserQuota> body) {
+                        return body;
+                    }
+                })
+                .setCallback(new StoreEntriesSyncPerformer.Callback<UserQuota>() {
+                    @Override
+                    public void save(UserQuota remoteModel) throws CannotSaveModelException {
+                        Log.d(TAG, "    - " + remoteModel);
+                        remoteModel.user = user;
+                        remoteModel.mySave();
+                    }
+
+                    @Override
+                    public void before() {
+                        new Delete().from(UserQuota.class).where("User = ?", user).execute();
+                        Log.d(TAG, "Cleaning user quota... Fetching new quota");
+                    }
+
+                    @Override
+                    public void after() {
+                        Log.d(TAG, "New quota have been updated");}
+                })
                 .perform();
     }
 

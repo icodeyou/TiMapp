@@ -23,7 +23,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.twotoasters.jazzylistview.effects.TiltEffect;

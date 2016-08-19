@@ -117,17 +117,16 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
                 HttpCallManager manager = EventStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
                 if (manager != null){
-                    manager.onResponse(new HttpCallback() {
-                        @Override
-                        public void notSuccessful() {
-                            // TODO revert status changed
-                        }
+                    manager .onResponse(new HttpCallback() {
+                                @Override
+                                public void notSuccessful() {
+                                    switchButton.setChecked(!isChecked);
+                                }
 
-                    })
+                            })
                             .onError(new RequestFailureCallback(){
                                 @Override
                                 public void onError(Throwable error) {
-                                    // TODO cancel
                                     switchButton.setChecked(!isChecked);
                                 }
                             });

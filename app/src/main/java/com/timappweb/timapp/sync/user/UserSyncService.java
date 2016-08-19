@@ -1,9 +1,11 @@
-package com.timappweb.timapp.sync;
+package com.timappweb.timapp.sync.user;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.timappweb.timapp.sync.config.ConfigSyncAdapter;
 
 /**
  * Service to handle user merge requests.

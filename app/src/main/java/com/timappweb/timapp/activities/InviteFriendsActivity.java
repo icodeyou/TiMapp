@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,17 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
-import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.data.loader.FriendsLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
@@ -32,8 +29,8 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.utils.Util;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +50,7 @@ public class InviteFriendsActivity extends BaseActivity {
     private RecyclerView                recyclerView;
     private SelectFriendsAdapter        adapter;
     private Event                       event;
-    private FriendsLoader               mLoader;
+    private FriendsLoader               mFriendsLoader;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private View                        progressview;
     // ---------------------------------------------------------------------------------------------
@@ -84,15 +81,8 @@ public class InviteFriendsActivity extends BaseActivity {
 
             initAdapterListFriends();
 
-            mLoader = new FriendsLoader(MyApplication.getCurrentUser());
-            getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mLoader);
-
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    getSupportLoaderManager().getLoader(LOADER_ID_FRIENDS_LIST).forceLoad();
-                }
-            });
+            mFriendsLoader = new FriendsLoader(this, adapter, mSwipeRefreshLayout);
+            getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mFriendsLoader);
         } catch (CannotSaveModelException e) {
             IntentsUtils.home(this);
             finish();
@@ -218,37 +208,16 @@ public class InviteFriendsActivity extends BaseActivity {
         finish();
     }
 
-
-    // LOADER FUNCTIONS ============================================================================
-
-    class FriendsLoader extends MultipleEntryLoaderCallback
-    {
-
-        private static final long MIN_SYNC_DELAY = 3600 * 24 * 1000;
-
-        public FriendsLoader(User user) {
-            super(InviteFriendsActivity.this,
-                    MIN_SYNC_DELAY,
-                    DataSyncAdapter.SYNC_TYPE_FRIENDS,
-                    user.getFriendsQuery(),
-                    EventsInvitation.class);
-            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
-        }
-
-        @Override
-        public void onLoadFinished(Loader loader, List data) {
-            super.onLoadFinished(loader, data);
-            adapter.clear();
-            adapter.setData(data);
-            adapter.notifyDataSetChanged();
-            Log.d(TAG, "Loaded " + data.size() + " friends for the user");
-        }
-
-        @Override
-        public void onLoaderReset(Loader loader) {
-            super.onLoaderReset(loader);
-            adapter.clear();
-            adapter.notifyDataSetChanged();
-        }
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(mFriendsLoader);
     }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(mFriendsLoader);
+        super.onStop();
+    }
+
 }

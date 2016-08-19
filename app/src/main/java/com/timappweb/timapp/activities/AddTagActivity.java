@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.MenuItemCompat;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,7 +26,6 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnAddTagListener;
@@ -36,6 +34,7 @@ import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
@@ -258,13 +257,15 @@ public class AddTagActivity extends BaseActivity{
         RestClient
                 .post(ResourceUrlMapping.MODEL_EVENT_POST, AddEventPostMapper.toJson(eventEventPost))
                 .onResponse(new AutoMergeCallback(eventEventPost))
-                .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_POST))
+                .onResponse(new PublishInEventCallback(currentEvent, MyApplication.getCurrentUser(), QuotaType.ADD_TAGS))
+                .onResponse(new FormErrorsCallback(AddTagActivity.this, "Posts"))
                 .onResponse(new HttpCallback<JsonObject>() {
                     @Override
                     public void successful(JsonObject feedback) {
                         Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
                         eventEventPost.mySaveSafeCall();
                         EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
+                        Toast.makeText(AddTagActivity.this, R.string.thanks_for_add_tag, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -274,6 +275,7 @@ public class AddTagActivity extends BaseActivity{
                         Toast.makeText(AddTagActivity.this, R.string.form_invalid_input, Toast.LENGTH_LONG).show();
                     }
                 })
+                .onError(new NetworkErrorCallback(AddTagActivity.this))
                 .onFinally(new HttpCallManager.FinallyCallback(){
                     @Override
                     public void onFinally(Response response, Throwable error) {

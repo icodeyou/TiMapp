@@ -9,8 +9,7 @@ import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.UserActivity;
 import com.timappweb.timapp.data.models.UserQuota;
-import com.timappweb.timapp.sync.UserSyncAdapter;
-import com.timappweb.timapp.utils.Util;
+import com.timappweb.timapp.sync.user.UserSyncAdapter;
 
 
 /**

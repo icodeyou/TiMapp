@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,11 +31,10 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 //import android.support.design.widget.FloatingActionButton;
 

@@ -12,11 +12,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -71,10 +73,20 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
         return data;
     }
 
-    public void setData(List<User> friends) {
-        this.data = friends;
+    public void setData(List<UserFriend> friends) {
+        this.data = new LinkedList<>();
+        addData(friends);
         notifyDataSetChanged();
     }
+
+    public void addData(List<UserFriend> data) {
+        if (this.data == null) this.data = new LinkedList<>();
+        for (UserFriend friend: data){
+            this.data.add(friend.userTarget);
+        }
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {

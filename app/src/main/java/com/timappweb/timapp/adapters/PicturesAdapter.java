@@ -71,7 +71,7 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         return this.getItemCountOfTypes(R.layout.item_picture);
     }
 
-    public boolean hadData() {
+    public boolean hasData() {
         return this.getDataCount() > 0;
     }
 

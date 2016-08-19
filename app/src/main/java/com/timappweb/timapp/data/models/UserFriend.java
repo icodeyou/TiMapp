@@ -19,15 +19,19 @@ public class UserFriend extends SyncBaseModel {
     // DATABASE
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "UserSource", uniqueGroups = "unique_friendship",
+    @Column(name = "UserSource",
+            uniqueGroups = "unique_friendship",
+            notNull = true,
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     public User userSource;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "UserTarget", uniqueGroups = "unique_friendship",
+    @Column(name = "UserTarget",
+            notNull = true,
+            uniqueGroups = "unique_friendship",
             onUpdate = Column.ForeignKeyAction.CASCADE,
-    onDelete= Column.ForeignKeyAction.CASCADE)
+            onDelete= Column.ForeignKeyAction.CASCADE)
     @SerializedName("user_target")
     @Expose
     public User userTarget;

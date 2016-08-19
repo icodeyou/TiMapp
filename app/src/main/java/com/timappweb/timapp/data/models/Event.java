@@ -22,7 +22,7 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -468,8 +468,4 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return getPoints() * 1000;
     }
 
-    @Override
-    public String hashHistoryKey() {
-        return String.valueOf(this.getRemoteId());
-    }
 }

@@ -52,13 +52,14 @@ public class SyncHistory extends MyModel {
      *
      * @param type
      */
-    public static void updateSync(int type, String extraID){
+    public static void updateSync(int type, HistoryItemInterface object){
         Log.d(TAG, "Updating update sync date for type=" + type);
-        SyncHistory history = getByType(type, extraID);
+        String extraId = object != null ? object.hashHistoryKey() : null;
+        SyncHistory history = getByType(type, extraId);
         if (history == null){
             history = new SyncHistory();
             history.type = type;
-            history.extraID = extraID;
+            history.extraID = extraId;
         }
         history.last_update = System.currentTimeMillis();
         history.mySaveSafeCall();

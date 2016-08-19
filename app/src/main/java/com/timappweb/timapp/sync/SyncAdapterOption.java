@@ -1,17 +1,27 @@
-package com.timappweb.timapp.sync.performers;
+package com.timappweb.timapp.sync;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.models.SyncHistory;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.HashMap;
 
 /**
  * Created by stephane on 5/12/2016.
  */
-public class SyncAdapterOption {
+public class SyncAdapterOption implements SyncHistory.HistoryItemInterface, Cloneable {
+
+    private static final String TAG = "SyncAdapterOption";
+
+    @Override
+    public String hashHistoryKey() {
+        return getHashId();
+    }
 
     public enum SyncDirection {DOWN, UP}
 
@@ -23,6 +33,8 @@ public class SyncAdapterOption {
     public static final String SYNC_PARAM_DIRECTION         = "direction";
     public static final String SYNC_PARAM_MAX_ID            = "max_id";
     public static final String SYNC_PARAM_MIN_ID            = "min_id";
+
+    public static final String SYNC_PARAM_HASH_ID           = "hash";
 
     private Bundle bundle;
 
@@ -84,7 +96,7 @@ public class SyncAdapterOption {
             queryMap.put(SYNC_PARAM_ORDER, String.valueOf(bundle.getInt(SYNC_PARAM_ORDER)));
 
         if (bundle.containsKey(SYNC_PARAM_LAST_UPDATE))
-            queryMap.put(SYNC_PARAM_LAST_UPDATE, String.valueOf(bundle.getInt(SYNC_PARAM_LAST_UPDATE)));
+            queryMap.put(SYNC_PARAM_LAST_UPDATE, String.valueOf(bundle.getLong(SYNC_PARAM_LAST_UPDATE)));
 
         if (bundle.containsKey(SYNC_PARAM_MAX_ID))
             queryMap.put(SYNC_PARAM_MAX_ID, String.valueOf(bundle.getLong(SYNC_PARAM_MAX_ID)));
@@ -153,6 +165,15 @@ public class SyncAdapterOption {
         return bundle.containsKey(SYNC_PARAM_LIMIT);
     }
 
+    public String getHashId() {
+        return bundle.getString(SYNC_PARAM_HASH_ID, null);
+    }
+
+    public SyncAdapterOption setHashId(SyncHistory.HistoryItemInterface object) {
+        bundle.putString(SYNC_PARAM_HASH_ID, object.hashHistoryKey());
+        return this;
+    }
+
     public SyncAdapterOption setLimit(int limit) {
         bundle.putInt(SYNC_PARAM_LIMIT, limit);
         return this;
@@ -165,6 +186,17 @@ public class SyncAdapterOption {
 
     public SyncAdapterOption setDirection(SyncDirection direction) {
         bundle.putInt(SYNC_PARAM_DIRECTION, direction.ordinal());
+        return this;
+    }
+
+
+    @Override
+    public SyncAdapterOption clone() {
+        try {
+            return (SyncAdapterOption) super.clone();
+        } catch (CloneNotSupportedException e) {
+            Util.appStateError(TAG, e.getMessage());
+        }
         return this;
     }
 }

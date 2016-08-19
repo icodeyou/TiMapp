@@ -189,7 +189,7 @@ public class ModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
 
         // Start watching for changes in the job data.
         if (mContentObserver == null)
-        {
+            {
             mContentObserver = new ContentObserver(new Handler(getContext().getMainLooper()))
             {
 

@@ -119,30 +119,12 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
         }
         return eventStatus != null && eventStatus.status == status;
     }
-    public static UserEvent getStatus(long placeId, long userId){
+    public static UserEvent getStatus(long eventId, long userId){
         return new Select()
                 .from(UserEvent.class)
-                .where("User = ? AND Event = ?", userId, placeId)
-                .orderBy("Created DESC")
+                .where("User = ? AND Event = ?", userId, eventId)
+                .orderBy("SyncId DESC")
                 .executeSingle();
-    }
-    public static UserEvent setStatus(User user, Event event, UserEventStatusEnum status, int remoteId){
-
-        // Remove all other here status
-        if (status == UserEventStatusEnum.HERE){
-            new Delete().from(UserEvent.class).where("User = ? AND Status = ?", user.getId(), status).execute();
-        }
-
-        UserEvent eventStatus = getStatus(event.getId(), user.getId());
-        if (eventStatus == null){
-            eventStatus = new UserEvent(user, event, status);
-        }
-        else{
-            eventStatus.status = status;
-        }
-        eventStatus.remote_id = remoteId;
-        eventStatus.mySaveSafeCall();
-        return eventStatus;
     }
 
 

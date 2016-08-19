@@ -2,15 +2,12 @@ package com.timappweb.timapp.data.loader;
 
 import android.content.Context;
 import android.location.Location;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.SyncHistoryBounds;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 

@@ -25,7 +25,6 @@ import java.util.Date;
 
 public class Util {
 
-    private static PeriodFormatter _daysHoursMinutesFormater = null;
     private static long currentTimeMilli;
 
     public static String print(Location location) {
@@ -94,22 +93,19 @@ public class Util {
         return p.format(new Date(created * 1000));
     }
     public static String secondsDurationToPrettyTime(int duration) {
-        // TODO define
-        if (_daysHoursMinutesFormater == null){
-            _daysHoursMinutesFormater = new PeriodFormatterBuilder()
-                    .appendDays()
-                    .appendSuffix(" day", " days")
-                    .appendSeparator(" and ")
-                    .appendMinutes()
-                    .appendSuffix(" min", " mins")
-                    .appendSeparator(" and ")
-                            //.appendSeconds()
-                            //.appendSuffix(" sec", " secs")
-                    .toFormatter();
+        PeriodFormatterBuilder builder = new PeriodFormatterBuilder()
+                .appendDays()
+                .appendSuffix(" day", " days")
+                .appendSeparator(" and ")
+                .appendMinutes()
+                .appendSuffix(" min", " mins");
+        if (duration < 60) {
+            builder .appendSeparator(" and ")
+                    .appendSeconds()
+                    .appendSuffix(" sec", " secs");
         }
         Period period =  new Period(duration * 1000);
-        //System.out.println(daysHoursMinutes.print(period));
-        return _daysHoursMinutesFormater.print(period.normalizedStandard());
+        return builder.toFormatter().print(period.normalizedStandard());
     }
 
     public static String byteToKB(long size) {
@@ -154,5 +150,11 @@ public class Util {
         double roundedLatitude = Double.parseDouble(df.format(initialLatLng.latitude));;
         double roundedLongitude = Double.parseDouble(df.format(initialLatLng.longitude));
         return new LatLng(roundedLatitude,roundedLongitude);
+    }
+
+    public static void appAssert(final boolean b, final String TAG, final String msg) {
+        if (!b){
+            appStateError(TAG, msg);
+        }
     }
 }

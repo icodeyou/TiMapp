@@ -35,6 +35,8 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.EventStatusManager;
+import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -257,13 +259,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                             event.setAuthor(MyApplication.getCurrentUser());
                             event.mySave();
                             long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                            EventStatusManager.instance().addLocally(syncId, event, UserEventStatusEnum.HERE);
-                        } catch (CannotSaveModelException e) {
-                            e.printStackTrace();
+                            QuotaManager.instance().add(QuotaType.ADD_EVENT);
+                            EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
                         }
                         catch (Exception ex){
-                            Log.e(TAG, "Cannot get EventUser id from server response");
                             setProgressView(false);
+                            Log.e(TAG, "Cannot get EventUser id from server response");
                         }
                         finally {
                             IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);

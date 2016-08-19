@@ -1,4 +1,4 @@
-package com.timappweb.timapp.sync;
+package com.timappweb.timapp.sync.config;
 
 import android.app.Service;
 import android.content.Intent;

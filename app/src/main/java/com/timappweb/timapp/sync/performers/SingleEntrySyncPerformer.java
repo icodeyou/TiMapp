@@ -8,6 +8,8 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.callbacks.HttpCallbackGroup;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 
 import java.io.IOException;
 
@@ -36,29 +38,21 @@ public class SingleEntrySyncPerformer implements SyncPerformer {
      * Performe a single entry merge with the remote server
      */
     @Override
-    public void perform() {
+    public void perform() throws CannotSyncException {
         try {
-            if (response.isSuccessful()){
-                SyncBaseModel model = response.body();
-                if (model != null){
-                    Log.d(TAG, "Server returned a object. Synchronizing with local entry.");
-                    model.deepSave();
-                }
-                else{
-                    Log.e(TAG, "Server returned a null response when performing a entry sync");
-                }
+            if (!response.isSuccessful()){
+                throw new HttpResponseSyncException(response, null);
             }
-            else if (response.code() == 404){
-                // Remove in model
-                Log.i(TAG, "Requested remote entry does not exists anymore: ");
-                SyncBaseModel.deleteByRemoteId(classType, key);
+            SyncBaseModel model = response.body();
+            if (model != null){
+                Log.d(TAG, "Server returned a object. Synchronizing with local entry.");
+                model.deepSave();
             }
-            else {
-                // TODO handle this case globally ???
-                Log.e(TAG, "Cannot synchronise, api response invalid: " + response.code());
+            else{
+                Log.e(TAG, "Server returned a null response when performing a entry sync");
             }
         } catch (CannotSaveModelException e) {
-            e.printStackTrace();
+            throw new CannotSyncException("Internal error cannot save model: " + e.getMessage(), 0);
         }
     }
 

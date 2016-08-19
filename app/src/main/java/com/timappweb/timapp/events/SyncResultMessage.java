@@ -7,6 +7,7 @@ public class SyncResultMessage {
 
     public int type;
     public boolean upToDate;
+    public int count = 0;
 
     public SyncResultMessage(int type) {
         this.type = type;
@@ -14,5 +15,9 @@ public class SyncResultMessage {
 
     public void setUpToDate(boolean upToDate) {
         this.upToDate = upToDate;
+    }
+
+    public int countItems() {
+        return count;
     }
 }

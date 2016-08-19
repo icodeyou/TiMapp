@@ -16,10 +16,8 @@ import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
-import com.timappweb.timapp.rest.io.responses.TableSyncResult;
-import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
+import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +69,7 @@ public interface WebServiceInterface {
     //Call<PaginatedResponse<EventsInvitation>> invitesSent();
 
     @GET("PlacesInvitations/received.json")
-    Call<PaginatedResponse<EventsInvitation>> inviteReceived();
+    Call<ResponseSyncWrapper<EventsInvitation>> inviteReceived(@QueryMap Map<String,String> options);
 
 
     // ---------------------------------------------------------------------------------------------
@@ -102,7 +100,7 @@ public interface WebServiceInterface {
     Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
 
     @GET("users/friends.json")
-    Call<TableSyncResult<UserFriend>> friends(@QueryMap Map<String,String> options);
+    Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);
 
     @POST("users/edit.json")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);
@@ -134,7 +132,7 @@ public interface WebServiceInterface {
                               @Body RequestBody body);
 
     @GET("pictures/place/{id}.json")
-    Call<TableSyncResult<Picture>> viewPicturesForPlace(@Path("id") long id, @QueryMap Map<String, String> options);
+    Call<ResponseSyncWrapper<Picture>> viewPicturesForPlace(@Path("id") long id, @QueryMap Map<String, String> options);
 
     // ---------------------------------------------------------------------------------------------
     // Places
@@ -204,17 +202,17 @@ public interface WebServiceInterface {
      *
      */
     @POST("PlacesUsers/coming/{placeId}.json")
-    Call<RestFeedback> notifyPlaceComing(@Path("placeId") long remoteId, @Body Map<String, String> conditions);
+    Call<UserEvent> notifyPlaceComing(@Path("placeId") long remoteId, @Body Map<String, String> conditions);
     /**
      *
      */
     @POST("PlacesUsers/gone/{placeId}.json")
-    Call<RestFeedback> notifyPlaceGone(@Path("placeId") long id, @Body Map<String, String> conditions);
+    Call<UserEvent> notifyPlaceGone(@Path("placeId") long id, @Body Map<String, String> conditions);
     /**
      *
      */
     @POST("PlacesUsers/here/{placeId}.json")
-    Call<RestFeedback> notifyPlaceHere(@Path("placeId") long id, @Body Map<String, String> conditions);
+    Call<UserEvent> notifyPlaceHere(@Path("placeId") long id, @Body Map<String, String> conditions);
 
     /**
      *

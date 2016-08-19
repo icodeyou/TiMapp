@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Stephane on 16/08/2016.
  */
-public class TableSyncResult<T> {
+public class ResponseSyncWrapper<T> {
 
     @Expose
     public long last_update;
@@ -21,4 +21,8 @@ public class TableSyncResult<T> {
 
     @Expose
     public JsonElement extra;
+
+    public int getCount(){
+        return items != null ? items.size() : 0;
+    }
 }

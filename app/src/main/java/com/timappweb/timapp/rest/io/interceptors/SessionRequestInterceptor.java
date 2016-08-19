@@ -76,12 +76,12 @@ public class SessionRequestInterceptor implements Interceptor
 
     private void setAuthHeader(Request.Builder builder, String token, String providerToken, HttpUrl url) {
         Log.d(TAG, "Request interceptor: User is logged in with token " + token);
-        HttpUrl newUrl = url.newBuilder()
-                .addQueryParameter("_token", token)
-                .build();
+        //HttpUrl newUrl = url.newBuilder()
+        //        .addQueryParameter("_token", token)
+        //        .build();
 
         builder
-                .url(newUrl)
+                //.url(newUrl)
                 .header("Authorization", String.format("Bearer %s", token));
         if (providerToken != null){
             builder.header("SocialAccessToken", providerToken);

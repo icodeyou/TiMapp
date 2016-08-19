@@ -81,7 +81,7 @@
         <!-- CONFIGURATION -->
         <!-- This service implements our ConfigSyncAdapter. It needs to be exported, so that the system
         merge framework can access it. -->
-        <service android:name=".sync.ConfigSyncService"
+        <service android:name=".sync.config.ConfigSyncService"
             android:exported="true"
             android:enabled="true" >
             <!-- This intent filter is required. It allows the system to launch our merge service
@@ -95,7 +95,7 @@
                 android:resource="@xml/syncadapter_config" />
         </service>
 
-        <service android:name=".sync.DataSyncService"
+        <service android:name=".sync.data.DataSyncService"
             android:exported="false"
             android:enabled="true" >
             <!-- This intent filter is required. It allows the system to launch our merge service
@@ -109,7 +109,7 @@
                 android:resource="@xml/syncadapter_data" />
         </service>
 
-        <service android:name=".sync.UserSyncService"
+        <service android:name=".sync.user.UserSyncService"
             android:exported="false"
             android:enabled="true" >
             <!-- This intent filter is required. It allows the system to launch our merge service
@@ -124,17 +124,17 @@
         </service>
 
 
-        <provider android:name=".config.provider.DummyProvider"
+        <provider android:name=".sync.config.DummyProvider"
             android:authorities="@string/content_authority_config"
             android:syncable="true"
             android:label="DummyConfigProvider" />
 
-        <provider android:name=".data.provider.data.DummyProvider"
+        <provider android:name=".sync.data.DummyProvider"
             android:authorities="@string/content_authority_data"
             android:syncable="true"
             android:label="DummyDataProvider" />
 
-        <provider android:name=".data.provider.user.DummyProvider"
+        <provider android:name=".sync.user.DummyProvider"
             android:authorities="@string/content_authority_user"
             android:syncable="true"
             android:label="DummyUserProvider" />

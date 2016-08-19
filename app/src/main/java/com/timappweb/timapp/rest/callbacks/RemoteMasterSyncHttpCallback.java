@@ -5,8 +5,10 @@ import android.util.Log;
 import com.activeandroid.query.From;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
+import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,8 +26,15 @@ public class RemoteMasterSyncHttpCallback<T extends SyncBaseModel> extends HttpC
 
     @Override
     public void successful(List<T> remoteEntries) {
-        new MultipleEntriesSyncPerformer<>(remoteEntries, localData.<T>execute())
-                .setCallback(new RemoteMasterSyncCallback())
-                .perform();
+        try {
+            new MultipleEntriesSyncPerformer<>(remoteEntries, localData.<T>execute())
+                    .setCallback(new RemoteMasterSyncCallback())
+                    .perform();
+        } catch (IOException e) {
+            // TODO
+            e.printStackTrace();
+        } catch (HttpResponseSyncException e) {
+            e.printStackTrace();
+        }
     }
 }

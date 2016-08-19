@@ -78,7 +78,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private HorizontalTagsRecyclerView      filterTagsRv;
     private View                            filterTagsContainer;
     private SimpleTimerView                 tvCountPoints;
-    private View                            fab;
+    private View                            btnAddEvent;
     private View                            fabLoc;
     private View                            cameraButton;
     private View                            tagButton;
@@ -121,7 +121,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
-        fab = root.findViewById(R.id.fab_button_add_event);
+        btnAddEvent = root.findViewById(R.id.fab_button_add_event);
         fabLoc = root.findViewById(R.id.fab_button_location);
         cameraButton = root.findViewById(R.id.action_camera);
         tagButton = root.findViewById(R.id.action_tag);
@@ -178,7 +178,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             }
         });
 
-        fab.setOnClickListener(exploreFragment.getFabClickListener());
+        btnAddEvent.setOnClickListener(exploreFragment.getFabClickListener());
 
         fabLoc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,7 +251,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
             translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
             translateUp.setInterpolator(new DecelerateInterpolator());
-            fab.startAnimation(translateUp);
+            btnAddEvent.startAnimation(translateUp);
 
             exploreFragment.setSelectedEventForLoader(event);
 
@@ -282,7 +282,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                 public void onAnimationEnd(Animation animation) {
                     eventView.setVisibility(View.GONE);
                     Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_fab);
-                    fab.startAnimation(slideIn);
+                    btnAddEvent.startAnimation(slideIn);
                 }
 
                 @Override
@@ -293,7 +293,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
             translateDown.setInterpolator(new DecelerateInterpolator());
 
-            fab.startAnimation(translateDown);
+            btnAddEvent.startAnimation(translateDown);
             fabLoc.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.appear));
 
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);

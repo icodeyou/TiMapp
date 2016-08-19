@@ -11,4 +11,8 @@ public class CannotSyncException extends Exception {
         super(detailMessage);
         this.type = type;
     }
+
+    public String getUserFeedback() {
+        return this.getMessage();
+    }
 }

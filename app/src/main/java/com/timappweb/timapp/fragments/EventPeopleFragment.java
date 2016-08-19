@@ -2,7 +2,6 @@ package com.timappweb.timapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
@@ -26,24 +25,15 @@ import com.timappweb.timapp.adapters.flexibleadataper.UserItem;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.sync.DataSyncAdapter;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.common.DividerItemDecoration;
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
-import eu.davidea.flexibleadapter.items.IFlexible;
-import eu.davidea.flexibleadapter.items.IHeader;
 import eu.davidea.flipview.FlipView;
-import retrofit2.Call;
 
 
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener {

@@ -13,16 +13,18 @@ import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import java.util.Collection;
 import java.util.List;
 
+import retrofit2.Response;
+
 /**
  * Created by stephane on 5/5/2016.
  *
  */
-public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Callback {
+public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Callback<EventsInvitation> {
 
     private static final String TAG = "FriendsSyncCallback";
 
     @Override
-    public void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel) {
+    public void onMatch(EventsInvitation remoteModel, EventsInvitation localModel) {
         try {
             if (!remoteModel.isSync(localModel)){
                     localModel.merge(remoteModel);
@@ -42,12 +44,11 @@ public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Call
     }
 
     @Override
-    public void onRemoteOnly(Collection<? extends SyncBaseModel> values){
+    public void onRemoteOnly(Collection<EventsInvitation> values){
         // Add new items
-        for (SyncBaseModel m : values) {
+        for (EventsInvitation invitation : values) {
             try {
-                Log.i(TAG, "Scheduling insert: " + m.toString());
-                EventsInvitation invitation = (EventsInvitation) m;
+                Log.i(TAG, "Scheduling insert: " + invitation.toString());
                 if (invitation.user_source == null && invitation.user_target == null) {
                     Log.e(TAG, "Received invitation from unknown counter part... Skipping...");
                     continue;
@@ -61,7 +62,7 @@ public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Call
     }
 
     @Override
-    public void onLocalOnly(SyncBaseModel localModel) {
+    public void onLocalOnly(EventsInvitation localModel) {
         Log.i(TAG, "Deleting: " + localModel.toString());
         localModel.delete();
     }

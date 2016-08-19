@@ -13,7 +13,10 @@ import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.Util;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -106,11 +109,6 @@ public class UserQuota extends SyncBaseModel {
         return super.mySave();
     }
 
-    public static List<UserQuota> all(){
-        return new Select().from(UserQuota.class)
-                .execute();
-    }
-
     public static UserQuota get(long user_id, int type){
         UserQuota userQuota = new Select()
                 .from(UserQuota.class)
@@ -136,13 +134,13 @@ public class UserQuota extends SyncBaseModel {
                 && _checkQuota(this.count_overall, this.quota_overall, "life");
     }
 
-    public void setMinDelayReason(){
+    protected void setMinDelayReason(){
         int mustWaitSeconds = (int)this.min_delay - Util.delayFromNow((int)this.last_activity);
         this._quota_error_reason = MyApplication.getApplicationBaseContext().getString(R.string.quota_wait_string,  Util.secondsDurationToPrettyTime(mustWaitSeconds));
     }
 
 
-    public boolean _checkQuota(int current, int limit, String period){
+    protected boolean _checkQuota(int current, int limit, String period){
         if (limit > 0 && current >= limit){
             this._quota_error_reason = "You are limited at " + limit + " per " + period;
             return false;
@@ -162,9 +160,9 @@ public class UserQuota extends SyncBaseModel {
             Log.i(TAG, "Quota type: " + type + " does not exists");
             return;
         }
-        Log.d(TAG, "Updated user quota: " + userQuota);
         userQuota.increment();
         userQuota.mySaveSafeCall();
+        Log.d(TAG, "Updated user quota: " + userQuota);
     }
 
     public void increment() {
@@ -226,8 +224,8 @@ public class UserQuota extends SyncBaseModel {
     public String toString() {
         return "UserQuota{" +
                 " type=" + type_id +
-                ", user=" + user +
-                ", last_activity=" + last_activity + "/" + min_delay + " ("+ Util.delayFromNow((int)last_activity)+" sec)" +
+                ", user=" + (user != null ? user.getUsername() : "!!!NO USER!!!") +
+                ", last_activity=" + getLastActivityPretty() + " (min delay: " + min_delay + " sec)" +
                 ", minute=" + count_minute + "/" + quota_minute +
                 ", hour=" + count_hour + "/" + quota_hour +
                 ", day=" + count_day + "/" + quota_day +
@@ -235,6 +233,11 @@ public class UserQuota extends SyncBaseModel {
                 ", year=" + count_year + "/" + quota_year +
                 ", overall=" + count_overall + "/" + quota_overall +
                 '}';
+    }
+
+    public String getLastActivityPretty(){
+        PrettyTime p = new PrettyTime();
+        return p.format(new Date(this.last_activity * 1000));
     }
 
     @Override

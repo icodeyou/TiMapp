@@ -41,9 +41,13 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     public void onResponse(Call<ResponseBodyType> call, Response<ResponseBodyType> response) {
         this.response = response;
 
+        if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST){
+            validationErrors = parseErrorBody(response, RestValidationError.class);//this.getValidationErrors();
+        }
+
         for (HttpCallback<ResponseBodyType> callback : responseCallbacks) {
             callback.setResponse(response);
-            this.dispatchResponse(callback);
+            this.dispatchResponse(this.response, callback, this.validationErrors);
         }
         this.callFinallyCallbacks(false);
     }
@@ -54,7 +58,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         }
     }
 
-    public void dispatchResponse(HttpCallback<ResponseBodyType> callback) {
+    public static <ResponseBodyType> void dispatchResponse(Response<ResponseBodyType> response, HttpCallback<ResponseBodyType> callback, RestValidationError validationErrors) {
         if (response.isSuccessful()) {
             callback.successful(response.body());
 
@@ -77,8 +81,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
 
                 switch (response.code()) {
                     case HttpURLConnection.HTTP_BAD_REQUEST:
-                        RestValidationError errors = this.getValidationErrors();
-                        callback.badRequest(errors);
+                        callback.badRequest(validationErrors);
                         break;
                     case HttpURLConnection.HTTP_FORBIDDEN:
                         callback.forbidden();
@@ -145,7 +148,6 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
             Converter<ResponseBody, ErrorType> errorConverter =
                     RestClient.instance().getRetrofit().responseBodyConverter(classOfT, new Annotation[0]);
             try {
-                // Log.v(TAG, "Received errorBody=" + response.errorBody().string()); // @warning DO NOT UNCOMMENT accessing error body will empty the buffer => error
                 return errorConverter.convert(response.errorBody());
             } catch (IOException e) {
                 Log.e(TAG, "Cannot convert error body from rest response: " + e.getMessage());

@@ -1,4 +1,5 @@
-package com.timappweb.timapp.data.provider.user;
+package com.timappweb.timapp.sync.config;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;

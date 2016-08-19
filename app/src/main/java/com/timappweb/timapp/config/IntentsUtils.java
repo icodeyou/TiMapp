@@ -157,7 +157,7 @@ public class IntentsUtils {
     public static void locate(Context context) {
         if (!requireLogin(context, false))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_POST, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
@@ -178,6 +178,10 @@ public class IntentsUtils {
     public static void addPicture(Activity activity) {
         if (!requireLogin(activity, false))
             return;
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
         Intent startCustomCameraIntent = new Intent(activity, CameraActivity.class);
         activity.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
@@ -192,6 +196,10 @@ public class IntentsUtils {
     public static void addTags(Activity activity, Event event) {
         if (!requireLogin(activity, false))
             return;
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_TAGS, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
 
         Intent intent = new Intent(activity, AddTagActivity.class);
         Bundle extras = new Bundle();
@@ -201,6 +209,12 @@ public class IntentsUtils {
     }
 
     public static void inviteFriendToEvent(Activity activity, Event event) {
+        if (!requireLogin(activity, false))
+            return;
+        if (!QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
         extras.putSerializable(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
@@ -253,7 +267,7 @@ public class IntentsUtils {
     public static void addPlace(Activity activity) {
         if (!requireLogin(activity, false))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }
@@ -283,7 +297,7 @@ public class IntentsUtils {
     public static void pinSpot(Activity activity, Spot spot) {
         if (!requireLogin(activity, false))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.PLACES, true)){
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;
         }

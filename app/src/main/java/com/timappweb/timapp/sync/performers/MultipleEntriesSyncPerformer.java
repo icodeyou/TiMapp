@@ -1,15 +1,13 @@
 package com.timappweb.timapp.sync.performers;
 
-import android.content.SyncResult;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
-import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.UserEvent;
-import com.timappweb.timapp.data.models.UserQuota;
-import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
-import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
@@ -17,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit2.Call;
 import retrofit2.Response;
 
 /**
@@ -27,42 +24,32 @@ import retrofit2.Response;
  *  - All local data will be overwritten.
  *  - Missing corresponding data will be removed
  */
-public class  MultipleEntriesSyncPerformer<T extends SyncBaseModel>implements SyncPerformer {
+public class  MultipleEntriesSyncPerformer<EntityType extends SyncBaseModel, RemoteCallType> implements SyncPerformer {
 
     private static final String TAG = "RemoteMasterSyncPerf";
 
-    private final List<T>     remoteEntries;
-    private final List<T>     localEntries;
+    private List<EntityType>     remoteEntries;
+    private List<EntityType>     localEntries;
+    private DataSyncAdapter.RemoteLoader   remoteLoader;
     protected Callback                              callback;
+    private SyncAdapterOption               syncOptions;
 
-    public MultipleEntriesSyncPerformer(List<T> remoteEntries,
-                                        List<T> localEntries) {
-
-
+    public MultipleEntriesSyncPerformer(List<EntityType> remoteEntries,
+                                        List<EntityType> localEntries) {
         this.remoteEntries = remoteEntries;
         this.localEntries = localEntries;
     }
 
-    public MultipleEntriesSyncPerformer(Call<PaginatedResponse<T>> call, List<T> localEntries, int syncType) throws IOException, CannotSyncException {
-        Response<PaginatedResponse<T>> response = call.execute();
-        if (!response.isSuccessful()){
-            throw new CannotSyncException("Request not successfull", syncType);
-        }
-        this.remoteEntries = response.body().items;
-        this.localEntries = localEntries;
+    public MultipleEntriesSyncPerformer() {
+
     }
 
-    public MultipleEntriesSyncPerformer(Call<List<T>> call, List<T> localEntries, int syncType, boolean b) throws CannotSyncException, IOException {
-        Response<List<T>> response = call.execute();
-        if (!response.isSuccessful()){
-            throw new CannotSyncException("Request not successfull", syncType);
-        }
-        this.remoteEntries = response.body();
-        this.localEntries = localEntries;
+    public MultipleEntriesSyncPerformer<EntityType, RemoteCallType> setRemoteLoader(DataSyncAdapter.RemoteLoader<RemoteCallType, EntityType> loader){
+        this.remoteLoader = loader;
+        return this;
     }
 
-
-    public MultipleEntriesSyncPerformer<T> setCallback(Callback callback) {
+    public MultipleEntriesSyncPerformer setCallback(Callback callback) {
         this.callback = callback;
         return this;
     }
@@ -71,7 +58,11 @@ public class  MultipleEntriesSyncPerformer<T extends SyncBaseModel>implements Sy
      *
     */
     @Override
-    public void perform() {
+    public void perform() throws IOException, HttpResponseSyncException {
+        if (remoteLoader != null){
+            this.remoteEntries = remoteLoader.items(syncOptions != null ? syncOptions.toMap() : new HashMap<String, String>());
+        }
+
         if (callback == null){
             Util.appStateError(TAG, "Callback MUST not be null. Please fix this.");
             return;
@@ -79,6 +70,12 @@ public class  MultipleEntriesSyncPerformer<T extends SyncBaseModel>implements Sy
 
         if (localEntries == null || localEntries.size() == 0){
             callback.onRemoteOnly(remoteEntries);
+            return;
+        }
+        if (remoteEntries == null || remoteEntries.size() == 0){
+            for (SyncBaseModel localEntry : localEntries){
+                callback.onLocalOnly(localEntry);
+            }
             return;
         }
         // Build hash table of remote entries
@@ -126,13 +123,27 @@ public class  MultipleEntriesSyncPerformer<T extends SyncBaseModel>implements Sy
         // syncToNetwork=false in the line above to prevent duplicate syncs.
     }
 
+    public MultipleEntriesSyncPerformer<EntityType, RemoteCallType> setSyncOptions(SyncAdapterOption syncOptions) {
+        this.syncOptions = syncOptions;
+        return this;
+    }
 
-    public interface Callback{
-        void onMatch(SyncBaseModel remoteModel, SyncBaseModel localModel);
+    public MultipleEntriesSyncPerformer setLocalEntries(List<EntityType> localEntries){
+        this.localEntries = localEntries;
+        return this;
+    }
 
-        void onRemoteOnly(Collection<? extends SyncBaseModel> values);
+    public DataSyncAdapter.RemoteLoader getRemoteLoader() {
+        return remoteLoader;
+    }
 
-        void onLocalOnly(SyncBaseModel localModel);
+
+    public interface Callback<EntityType>{
+        void onMatch(EntityType remoteModel, EntityType localModel);
+
+        void onRemoteOnly(Collection<EntityType> values);
+
+        void onLocalOnly(EntityType localModel);
 
     }
 

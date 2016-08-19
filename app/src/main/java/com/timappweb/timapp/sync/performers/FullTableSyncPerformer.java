@@ -4,15 +4,22 @@ import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.io.responses.TableSyncResult;
+import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.utils.Util;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by Stephane on 14/08/2016.
+ *
+ * Perform a full table synchronisation.
+ * If data cannot be load in one request, it will repeat the request until
+ * all rows are downloaded or MAX_SYNC times is reached.
+ *
  */
 public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerformer {
 
@@ -22,12 +29,10 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
     private SyncAdapterOption params;
     private Class<T> clazz;
     private Callback<T> callback;
-    private RemoteLoader<T> remoteLoader;
+    private DataSyncAdapter.RemoteLoader<ResponseSyncWrapper, T> remoteLoader;
 
-    public FullTableSyncPerformer(Class<T> clazz, Callback<T> callback, RemoteLoader<T> remoteLoader) {
+    public FullTableSyncPerformer(Class<T> clazz) {
         this.clazz = clazz;
-        this.callback = callback;
-        this.remoteLoader = remoteLoader;
         this.params = new SyncAdapterOption();
     }
 
@@ -37,7 +42,7 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
             // Update and remove existing items. Loop over local entries
             for (T remoteEntry: remoteEntries){
                 if (callback.beforeSave(remoteEntry)) {
-                    T entry = (T) remoteEntry.mySave();
+                    T entry = (T) remoteEntry.deepSave();
                     callback.afterSave(entry);
                 }
             }
@@ -54,26 +59,21 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
     }
 
     @Override
-    public void perform() {
-        try {
-            int i = 0;
-            long maxCreated = getMaxCreated();
-            params.setLastUpdate(maxCreated);
-            while (i < MAX_SYNC){
-                TableSyncResult data = this.remoteLoader.load(params.toMap());
-                this.sync(data.items);
-                if (data.up_to_date){
-                    Log.d(TAG, "Sync is fully done");
-                    return;
-                }
-                params.setLastUpdate(data.last_update);
-                i++;
+    public void perform() throws IOException, HttpResponseSyncException {
+        int i = 0;
+        long maxCreated = getMaxCreated();
+        params.setLastUpdate(maxCreated);
+        while (i < MAX_SYNC){
+            ResponseSyncWrapper data = this.remoteLoader.load(params.toMap());
+            this.sync(data.items);
+            if (data.up_to_date){
+                Log.d(TAG, "Sync is fully done");
+                return;
             }
-            Log.e(TAG, "Max sync number reached for " +clazz.getCanonicalName()+ ": " + MAX_SYNC);
-        } catch (IOException e) {
-            Log.e(TAG, "Exception while sync: " + e.getMessage());
-            e.printStackTrace();
+            params.setLastUpdate(data.last_update);
+            i++;
         }
+        Log.e(TAG, "Max sync number reached for " +clazz.getCanonicalName()+ ": " + MAX_SYNC);
     }
 
     public long getMaxCreated() {
@@ -84,6 +84,16 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
         return params;
     }
 
+    public FullTableSyncPerformer<T> setCallback(Callback<T> callback) {
+        this.callback = callback;
+        return this;
+    }
+
+    public FullTableSyncPerformer<T> setRemoteLoader(DataSyncAdapter.RemoteLoader<ResponseSyncWrapper, T> remoteLoader) {
+        this.remoteLoader = remoteLoader;
+        return this;
+    }
+
     public interface Callback<T> {
 
         boolean beforeSave(T entry);
@@ -92,10 +102,5 @@ public class FullTableSyncPerformer<T extends SyncBaseModel> implements SyncPerf
 
     }
 
-    public interface RemoteLoader<T>{
-
-        TableSyncResult<T> load(HashMap<String, String> options) throws IOException;
-
-    }
 
 }

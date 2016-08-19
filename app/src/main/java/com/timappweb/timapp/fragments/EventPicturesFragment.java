@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -30,21 +29,22 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.ApplicationRules;
+import com.timappweb.timapp.data.loader.DataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallbackBinding;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
-import com.timappweb.timapp.sync.DataSyncAdapter;
-import com.timappweb.timapp.sync.performers.SyncAdapterOption;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -59,7 +59,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,27 +69,22 @@ import retrofit2.Response;
 public class EventPicturesFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener {
 
     private static final String         TAG                             = "EventPicturesFragment";
-    public static int                   PICUTRE_GRID_COLUMN_NB          =  2;
-    private static final long MIN_DELAY_REFRESH = 3600 * 1000;
-    private static final int            ENDLESS_SCROLL_THRESHOLD = 1;
+    public static int                   PICUTRE_GRID_COLUMN_NB          = 2;
+    private static final long           MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
+    private static final long           MIN_DELAY_AUTO_REFRESH          = 10 * 60 * 1000;
+    private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
 
     // ---------------------------------------------------------------------------------------------
 
-    private Context                     context;
-
-    //Views
-    //private View                      progressView;
     private View                        noPicView;
     private View                        noConnectionView;
     private View                        uploadView;
-
     private PicturesAdapter             picturesAdapter;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private FloatingActionButton        mPostButton;
     private RefreshableRecyclerView     mRecyclerView;
-    //private RecyclerViewMaterialAdapter           mAdapterWrapper;
     private Loader<List<Picture>>       mLoader;
-    private PictureLoader mPictureLoaderModel;
+    private DataLoader                  mPictureLoaderModel;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -99,19 +93,29 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
-        context = getContext();
         //Views
         noPicView = root.findViewById(R.id.no_pictures_view);
         noConnectionView = root.findViewById(R.id.no_connection_view);
         uploadView = root.findViewById(R.id.upload_view);
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(context, PICUTRE_GRID_COLUMN_NB));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
-        mPictureLoaderModel = new PictureLoader();
-        mLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, mPictureLoaderModel);
-        mSwipeRefreshLayout.setOnRefreshListener(mPictureLoaderModel);
+
         startPictureActivity();
         initAdapter();
+
+        SyncAdapterOption options = new SyncAdapterOption()
+                .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
+        options.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
+
+        mPictureLoaderModel = new PictureLoader(this.getContext())
+                .setEnlessLoading(picturesAdapter)
+                .setSwipeAndRefreshLayout(mSwipeRefreshLayout)
+                .setHistoryItemInterface(getEvent())
+                .setSyncOptions(options)
+                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH);
+        mLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, mPictureLoaderModel);
         return root;
     }
 
@@ -205,7 +209,15 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         super.onStop();
     }
 
+    /**
+     * Only one upload at a time.
+     * @param fileUri
+     */
     public void uploadPicture(final Uri fileUri) {
+        if (uploadView.getVisibility() == View.VISIBLE){
+            Toast.makeText(getContext(), R.string.upload_picture_in_progress, Toast.LENGTH_SHORT).show();
+            return;
+        }
         setUploadVisibility(true);
         // create upload service client
         File file = new File(fileUri.getPath());
@@ -218,7 +230,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                     ". Max size: " + Util.byteToKB(ConfigurationProvider.rules().picture_max_size));
 
             ApplicationRules rules = ConfigurationProvider.rules();
-            file = PictureUtility.resize(context, file, rules.picture_max_width, rules.picture_max_height);
+            file = PictureUtility.resize(getContext(), file, rules.picture_max_width, rules.picture_max_height);
 
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 
@@ -242,6 +254,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                 .buildCall(call)
                 .onResponse(new AutoMergeCallback(picture))
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.ADD_PICTURE))
+                .onResponse(new FormErrorsCallback(getContext(), "Pictures"))
                 .onResponse(new HttpCallback() {
                     @Override
                     public void successful(Object feedback) {
@@ -272,7 +285,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             Toast.makeText(this.getContext(), R.string.cannot_resize_picture, Toast.LENGTH_LONG).show();
             Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
             e.printStackTrace();
-            return ;
+            setUploadVisibility(false);
         }
     }
 
@@ -282,9 +295,8 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     public void onResume() {
         super.onResume();
         LocationManager.addOnLocationChangedListener(this);
-
-
     }
+
     @Override
     public void onPause() {
         super.onResume();
@@ -296,7 +308,6 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         //mPostButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
-
     @Override
     public void onTabSelected() {
         mRecyclerView.smoothScrollToPosition(0);
@@ -307,57 +318,27 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
     /**
      */
-    class PictureLoader implements FlexibleAdapter.EndlessScrollListener, LoaderManager.LoaderCallbacks<List<Picture>>, SwipeRefreshLayout.OnRefreshListener {
+    class PictureLoader extends DataLoader<Picture> {
 
-        @Override
-        public Loader<List<Picture>> onCreateLoader(int id, Bundle args) {
-            ModelLoader loader = new ModelLoader(context, Picture.class, eventActivity.getEvent().getPicturesQuery(), false);
-            return loader;
+        public PictureLoader(Context context) {
+            super(context);
         }
 
         @Override
-        public void onLoadFinished(Loader<List<Picture>> loader, List<Picture> data) {
+        protected Loader<List<Picture>> buildModelLoader() {
+            return new ModelLoader(context, Picture.class, eventActivity.getEvent().getPicturesQuery(), false);
+        }
+
+
+        @Override
+        public void onFinish(List<Picture> data) {
             //picturesAdapter.setBaseUrl(this.getServerResponse().extra.get("base_url"));
             picturesAdapter.setData(data);
             picturesAdapter.notifyDataSetChanged();
-            noPicView.setVisibility(!picturesAdapter.hadData() ? View.VISIBLE : View.GONE);
+            noPicView.setVisibility(!picturesAdapter.hasData() ? View.VISIBLE : View.GONE);
         }
 
-        @Override
-        public void onLoaderReset(Loader<List<Picture>> loader) {
 
-        }
-
-        @Override
-        public void onLoadMore() {
-            Log.d(TAG, "Loading more data");
-            long remoteId = SyncBaseModel.getMinRemoteId(Picture.class, "Event = " + eventActivity.getEvent().getId());
-            Log.d(TAG, "Last picture has been created: " + remoteId);
-            SyncAdapterOption params = new SyncAdapterOption();
-            if (remoteId > 0){
-                params.setMaxId(remoteId-1);
-            }
-            params.setDirection(SyncAdapterOption.SyncDirection.DOWN)
-                    .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE)
-                    .getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
-
-            SyncBaseModel.startSync(EventPicturesFragment.this.getContext(), params);
-        }
-
-        @Override
-        public void onRefresh() {
-            if (!SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE, getEvent(), MIN_DELAY_REFRESH)){
-                return;
-            }
-
-            long remoteId = SyncBaseModel.getMaxRemoteId(Picture.class, "Event = " + eventActivity.getEvent().getId());
-            SyncAdapterOption params = new SyncAdapterOption();
-            params.setMinId(remoteId+1)
-                    .setDirection(SyncAdapterOption.SyncDirection.DOWN)
-                    .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE)
-                    .getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
-            SyncBaseModel.startSync(EventPicturesFragment.this.getContext(), params);
-        }
     }
 }
 
