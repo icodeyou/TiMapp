@@ -1,32 +1,16 @@
 package com.timappweb.timapp.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.fragments.EventPicturesFragment;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 
@@ -63,8 +47,9 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         }
     }
 
-    public void addItem(AbstractFlexibleItem item){
+    public boolean addItem(AbstractFlexibleItem item){
         super.addItem(getItemCount(), item);
+        return false;
     }
 
     public int getDataCount(){
@@ -81,6 +66,7 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     }
 
     public void addData(List<Picture> pictures) {
+        if (pictures == null) return;
         if (picturesUris == null){
             picturesUris = new LinkedList<>();
         }

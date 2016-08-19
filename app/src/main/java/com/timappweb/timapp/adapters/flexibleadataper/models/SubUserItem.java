@@ -1,9 +1,6 @@
-package com.timappweb.timapp.adapters.flexibleadataper;
+package com.timappweb.timapp.adapters.flexibleadataper.models;
 
-import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,18 +9,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.AbstractModelItem;
+import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFilterable;
 import eu.davidea.flexibleadapter.items.IHeader;
 import eu.davidea.flexibleadapter.items.ISectionable;
@@ -35,11 +29,11 @@ import eu.davidea.viewholders.FlexibleViewHolder;
  * {@link eu.davidea.flexibleadapter.items.AbstractFlexibleItem} to benefit of the already
  * implemented methods (getter and setters).
  */
-public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
-		implements ISectionable<UserItem.UserViewHolder, IHeader>, IFilterable {
+public class SubUserItem extends AbstractModelItem<SubUserItem.UserViewHolder>
+		implements ISectionable<SubUserItem.UserViewHolder, IHeader>, IFilterable {
 
 	private static final long 		serialVersionUID 		= 2519281529221244211L;
-	private static final String 	TAG 					= "UserItem";
+	private static final String 	TAG 					= "SubUserItem";
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -48,12 +42,12 @@ public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 
 	// ---------------------------------------------------------------------------------------------
 
-	public UserItem(String id, User user) {
+	public SubUserItem(String id, User user) {
 		super(id);
 		this.user = user;
 	}
 
-	public UserItem(String id, User user, ExpandableHeaderItem header) {
+	public SubUserItem(String id, User user, ExpandableHeaderItem header) {
 		this(id, user);
 		this.setHeader(header);
 	}
@@ -116,6 +110,10 @@ public class UserItem extends AbstractModelItem<UserItem.UserViewHolder>
 	@Override
 	public String toString() {
 		return "SubItem[" + super.toString() + "]";
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 	public class UserViewHolder extends FlexibleViewHolder{

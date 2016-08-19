@@ -154,6 +154,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onResume() {
         super.onResume();
+        updateEventViewInHeader();
         registerReceiver(syncBroadcastReceiver, syncIntentFilter);
         mSimpleFacebook = SimpleFacebook.getInstance(this);
         if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
@@ -301,7 +302,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         inviteButton = findViewById(R.id.action_invite);
         noEventLayout = findViewById(R.id.no_events_layout);
         eventLayout = findViewById(R.id.event_layout);
-        updateEventViewInHeader();
     }
 
     private void updateEventViewInHeader() {

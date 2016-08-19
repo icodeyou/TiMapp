@@ -25,7 +25,7 @@ public class SelectFriendsAdapter extends FriendsAdapter {
         invites = new HashMap<>();
     }
 
-
+/*
     @Override
     public void onBindViewHolder(FriendViewHolder friendViewHolder, int position) {
         super.onBindViewHolder(friendViewHolder, position);
@@ -36,7 +36,7 @@ public class SelectFriendsAdapter extends FriendsAdapter {
         } else {
             friendViewHolder.selectedView.setVisibility(View.GONE);
         }
-    }
+    }*/
 
     public InviteInfo getInviteInfo(User friend) {
         return invites.get(friend);

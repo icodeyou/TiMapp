@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,7 @@ import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
-import com.timappweb.timapp.adapters.flexibleadataper.UserItem;
+import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
@@ -35,7 +34,6 @@ import eu.davidea.flexibleadapter.common.DividerItemDecoration;
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
 import eu.davidea.flipview.FlipView;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
-import retrofit2.Call;
 
 
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener {
@@ -215,7 +213,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
             mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
             mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
             for (UserEvent userEvent: data){
-                UserItem item = new UserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
+                SubUserItem item = new SubUserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
                 switch (userEvent.status){
                     case COMING:
                         mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);
@@ -251,7 +249,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
             mPlaceUsersAdapter.removeItems(mExpandableInviteHeader);
             for (EventsInvitation invitation: data){
-                UserItem item = new UserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
+                SubUserItem item = new SubUserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
                 mPlaceUsersAdapter.addSubItem(mExpandableInviteHeader, item);
             }
             mPlaceUsersAdapter.expand(mExpandableInviteHeader);

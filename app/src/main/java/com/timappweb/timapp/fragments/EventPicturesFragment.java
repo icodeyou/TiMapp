@@ -157,18 +157,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSyncResult(SyncResultMessage event) {
-        picturesAdapter.onLoadMoreComplete(null);
-        mSwipeRefreshLayout.setRefreshing(false);
-        if (event.upToDate){
-            Log.d(TAG, "All data are up to date, disabling load more");
-            picturesAdapter.removeLoadMore();
-        }
-    }
-
     private void initAdapter() {
-
         picturesAdapter = new PicturesAdapter(getActivity(), PICUTRE_GRID_COLUMN_NB);
         //Experimenting NEW features (v5.0.0)
         picturesAdapter.setAutoScrollOnExpand(true);
@@ -199,19 +188,6 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             uploadView.setVisibility(View.GONE);
         }
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
     /**
      * Only one upload at a time.
      * @param fileUri
@@ -292,7 +268,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         }
     }
 
-
+    // =============================================================================================
 
     @Override
     public void onResume() {
@@ -304,6 +280,19 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     public void onPause() {
         super.onResume();
         LocationManager.removeLocationListener(this);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(mPictureLoaderModel);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(mPictureLoaderModel);
+        super.onStop();
     }
 
     @Override

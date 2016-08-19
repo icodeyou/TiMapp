@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.activeandroid.Model;
 import com.activeandroid.query.From;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.FriendsAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.SyncHistory;
@@ -46,8 +48,8 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
     protected WaveSwipeRefreshLayout mSwipeAndRefreshLayout;
     protected Context                               context;
     protected SyncHistory.HistoryItemInterface      historyItemInterface;
-    private SyncAdapterOption                       syncOptions;
-    private FlexibleAdapter                         adapter;
+    protected SyncAdapterOption                       syncOptions;
+    protected MyFlexibleAdapter                  adapter;
 
     // -----------------------------------------------------------------------------------------
 
@@ -168,7 +170,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSyncSuccess(SyncResultMessage syncResult){
         if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(false);
-        if (syncResult.countItems() == 0){
+        if (syncResult.countItems() == 0 && adapter != null){
             adapter.onLoadMoreComplete(null);
         }
 
@@ -220,7 +222,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
         return syncOptions;
     }
 
-    public DataLoader<EntityType> setEnlessLoading(@NonNull FlexibleAdapter adapter) {
+    public DataLoader<EntityType> setEnlessLoading(@NonNull MyFlexibleAdapter adapter) {
         this.adapter = adapter;
         adapter.setEndlessScrollListener(this, new ProgressItem());
         return this;
@@ -232,5 +234,9 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
 
     public int getLocalOffset(){
         return 0;
+    }
+
+    public void setAdapter(FriendsAdapter adapter) {
+        this.adapter = adapter;
     }
 }

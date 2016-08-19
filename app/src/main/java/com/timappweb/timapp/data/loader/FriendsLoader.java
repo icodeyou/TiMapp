@@ -4,12 +4,16 @@ import android.content.Context;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
@@ -25,20 +29,16 @@ public class FriendsLoader extends DataLoader<UserFriend> {
 
     // -----------------------------------------------------------------------------------------
 
-    private final FriendsAdapter adapter;
-
-    // -----------------------------------------------------------------------------------------
-
     public FriendsLoader(Context context, FriendsAdapter adapter, WaveSwipeRefreshLayout swipeAndRefreshLayout) {
         super(context);
         this.setHistoryItemInterface(MyApplication.getCurrentUser());
         this.setMinDelayForceRefresh(MIN_AUTO_REFRESH_DELAY);
         this.setMinDelayForceRefresh(MIN_FORCE_REFRESH_DELAY);
         this.setSwipeAndRefreshLayout(swipeAndRefreshLayout);
+        this.setAdapter(adapter);
         this.setSyncOptions(new SyncAdapterOption()
                 .setType(DataSyncAdapter.SYNC_TYPE_FRIENDS)
                 .setHashId(historyItemInterface));
-        this.adapter = adapter;
     }
     @Override
     protected Loader<List<UserFriend>> buildModelLoader() {
@@ -48,7 +48,14 @@ public class FriendsLoader extends DataLoader<UserFriend> {
 
     public void onFinish(List<UserFriend> data){
         super.onFinish(data);
-        adapter.setData(data);
+        adapter.removeItemsOfType(R.layout.item_friend);
+        if (data != null){
+            for (UserFriend friend: data){
+                adapter.addItem(new UserItem(friend.userSource));
+            }
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
 }

@@ -1,23 +1,13 @@
 package com.timappweb.timapp.adapters.flexibleadataper;
 
-import android.animation.Animator;
-import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.view.View;
 
-import com.timappweb.timapp.R;
+import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import eu.davidea.flexibleadapter.items.IFlexible;
-import eu.davidea.flexibleadapter.items.IHeader;
 
 /**
  *
@@ -25,7 +15,7 @@ import eu.davidea.flexibleadapter.items.IHeader;
 public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	private static final String TAG = MyFlexibleAdapter.class.getSimpleName();
-	private Context mContext;//this should not be necessary for view holders
+	protected Context mContext;//this should not be necessary for view holders
 
 
 	public MyFlexibleAdapter(Context context) {
@@ -35,6 +25,9 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	}
 
 
+	public boolean addItem(AbstractFlexibleItem item){
+		return this.addItem(getItemCount(), item);
+	}
 
 	public int removeItems(ExpandableHeaderItem headerItem) {
 		int headerPosition = getGlobalPositionOf(headerItem);
@@ -48,7 +41,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		return size;
 	}
 
-	public void addSubItem(ExpandableHeaderItem headerItem, UserItem item) {
+	public void addSubItem(ExpandableHeaderItem headerItem, SubUserItem item) {
 		int size = headerItem.getSubItems() != null ? headerItem.getSubItems().size(): 0;
 		if (headerItem.isExpanded()){
 			addItemToSection(item, headerItem, size);

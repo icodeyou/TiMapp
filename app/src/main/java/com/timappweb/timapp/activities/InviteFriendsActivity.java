@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
@@ -25,7 +25,6 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
@@ -37,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -117,28 +118,32 @@ public class InviteFriendsActivity extends BaseActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendsAdapter(this);
         recyclerView.setAdapter(adapter);
+        adapter.initializeListeners(new FlexibleAdapter.OnItemClickListener(){
 
-        adapter.setOnItemClickListener(new OnItemAdapterClickListener() {
             @Override
-            public void onClick(int position) {
-                User friend = adapter.getData().get(position);
-                SelectFriendsAdapter.InviteInfo info = adapter.getInviteInfo(friend);
+            public boolean onItemClick(int position) {
+                AbstractFlexibleItem item = adapter.getItem(position);
+                if (item instanceof SubUserItem){
+                    User friend = ((SubUserItem) item).getUser();
+                    SelectFriendsAdapter.InviteInfo info = adapter.getInviteInfo(friend);
 
-                if (info == null){
-                    adapter.setSelected(friend, true);
-                }
-                else if (!info.editable){
-                    if (info.selected){
-                        Toast.makeText(InviteFriendsActivity.this, R.string.friend_already_invited, Toast.LENGTH_LONG).show();
+                    if (info == null){
+                        adapter.setSelected(friend, true);
                     }
-                    // not editable, do nothing
+                    else if (!info.editable){
+                        if (info.selected){
+                            Toast.makeText(InviteFriendsActivity.this, R.string.friend_already_invited, Toast.LENGTH_LONG).show();
+                        }
+                        // not editable, do nothing
+                    }
+                    else {
+                        adapter.setSelected(friend, !info.selected);
+                    }
+                    boolean enableInviteButton = adapter.count(true, true) > 0;
+                    menu.findItem(R.id.action_invite).setEnabled(enableInviteButton);
+                    adapter.notifyDataSetChanged();
                 }
-                else {
-                    adapter.setSelected(friend, !info.selected);
-                }
-                boolean enableInviteButton = adapter.count(true, true) > 0;
-                menu.findItem(R.id.action_invite).setEnabled(enableInviteButton);
-                adapter.notifyDataSetChanged();
+                return true;
             }
         });
 

@@ -34,13 +34,14 @@
                         fresco:actualImageScaleType="fitCenter"
                         fresco:placeholderImage="@drawable/placeholder_default"
                         fresco:roundAsCircle="true" />
+                    <!--
                     <ImageView
                         android:id="@+id/selectedView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         android:alpha="0.7"
-                        android:src="@drawable/checkboxselected"/>
+                        android:src="@drawable/checkboxselected"/>-->
                 </RelativeLayout>
 
                 <LinearLayout

@@ -8,11 +8,15 @@ import android.view.View;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.FriendsLoader;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,10 +61,14 @@ public class ListFriendsActivity extends BaseActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new FriendsAdapter(this);
-        mAdapter.setOnItemClickListener(new OnItemAdapterClickListener() {
+        mAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
-            public void onClick(int position) {
-                IntentsUtils.profile(ListFriendsActivity.this, mAdapter.getData().get(position));
+            public boolean onItemClick(int position) {
+                AbstractFlexibleItem item = mAdapter.getItem(position);
+                if (item instanceof UserItem){
+                    IntentsUtils.profile(ListFriendsActivity.this, ((UserItem) item).getUser());
+                }
+                return true;
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -72,6 +80,7 @@ public class ListFriendsActivity extends BaseActivity {
         mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout){
             @Override
             public void onFinish(List<UserFriend> data) {
+                super.onFinish(data);
                 noFriendsView.setVisibility (mAdapter.getItemCount() > 0
                         ? View.GONE
                         : View.VISIBLE);

@@ -309,16 +309,11 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
     private void syncEventTags(SyncAdapterOption options, SyncResultMessage result) throws IOException, CannotSyncException {
         final Event event = extractEvent(options.getBundle());
-        new StoreEntriesSyncPerformer<Tag, PaginatedResponse<Tag>>()
-                .setRemoteLoader(new RemoteLoader<PaginatedResponse<Tag>, Tag>() {
+        new StoreEntriesSyncPerformer<Tag, List<Tag>>()
+                .setRemoteLoader(new RemoteLoader<List<Tag>, Tag>() {
                     @Override
                     protected Call getCall(HashMap<String, String> options) {
                         return RestClient.service().viewPopularTagsForPlace(event.getRemoteId());
-                    }
-
-                    @Override
-                    protected List getEntries(@NotNull PaginatedResponse body) {
-                        return body.items;
                     }
                 })
                 .setCallback(new StoreEntriesSyncPerformer.Callback<Tag>() {
@@ -361,15 +356,15 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     }
 
     private void syncEventInvited(SyncAdapterOption options, SyncResultMessage result) throws CannotSyncException, IOException {
-        new MultipleEntriesSyncPerformer<EventsInvitation, PaginatedResponse<EventsInvitation>>()
-                .setRemoteLoader(new RemoteLoader<PaginatedResponse<EventsInvitation>, EventsInvitation>() {
+        new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
+                .setRemoteLoader(new RemoteLoader<ResponseSyncWrapper<EventsInvitation>, EventsInvitation>() {
                     @Override
                     protected Call getCall(HashMap<String, String> options) {
                         return  RestClient.service().inviteReceived(options);
                     }
 
                     @Override
-                    protected List getEntries(@NotNull PaginatedResponse body) {
+                    protected List getEntries(@NotNull ResponseSyncWrapper body) {
                         return body.items;
                     }
                 })
