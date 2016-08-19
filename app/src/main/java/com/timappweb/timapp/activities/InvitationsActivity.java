@@ -3,6 +3,7 @@ package com.timappweb.timapp.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 public class InvitationsActivity extends BaseActivity{
 
@@ -42,8 +44,8 @@ public class InvitationsActivity extends BaseActivity{
     private RecyclerView recyclerView;
     private InvitationsAdapter adapter;
     private View noInvitationsView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private InvitationLoader mInvitationLoader;
+    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +59,8 @@ public class InvitationsActivity extends BaseActivity{
 
         recyclerView = (RefreshableRecyclerView) findViewById(R.id.recyclerView);
         noInvitationsView = findViewById(R.id.no_invitations_view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
 
         initAdapterListFriends();
 

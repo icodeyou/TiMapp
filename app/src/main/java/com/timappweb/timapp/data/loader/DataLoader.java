@@ -27,11 +27,12 @@ import java.io.IOException;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 /**
  * Created by Stephane on 18/08/2016.
  */
-public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCallbacks<List<EntityType>>, SwipeRefreshLayout.OnRefreshListener, FlexibleAdapter.EndlessScrollListener {
+public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCallbacks<List<EntityType>>, FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "DataLoader";
 
@@ -42,7 +43,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
     //public enum ActionType {REFRESH, LOAD_MORE, NEWEST, UPDATE}
 // -----------------------------------------------------------------------------------------
 
-    protected SwipeRefreshLayout                    mSwipeAndRefreshLayout;
+    protected WaveSwipeRefreshLayout mSwipeAndRefreshLayout;
     protected Context                               context;
     protected SyncHistory.HistoryItemInterface      historyItemInterface;
     private SyncAdapterOption                       syncOptions;
@@ -203,7 +204,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
         return this;
     }
 
-    public DataLoader<EntityType> setSwipeAndRefreshLayout(SwipeRefreshLayout mSwipeAndRefreshLayout) {
+    public DataLoader<EntityType> setSwipeAndRefreshLayout(WaveSwipeRefreshLayout mSwipeAndRefreshLayout) {
         this.mSwipeAndRefreshLayout = mSwipeAndRefreshLayout;
         mSwipeAndRefreshLayout.setOnRefreshListener(this);
         return this;

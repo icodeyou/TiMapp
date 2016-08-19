@@ -34,6 +34,8 @@ import java.util.List;
 import eu.davidea.flexibleadapter.common.DividerItemDecoration;
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
 import eu.davidea.flipview.FlipView;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import retrofit2.Call;
 
 
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener {
@@ -48,7 +50,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     private View                    progressView;
     private View                    noPostsView;
     private View                    noConnectionView;
-    private SwipeRefreshLayout      mSwipeLayout;
+    private WaveSwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton    postButton;
     private RecyclerView            mRecyclerView;
     private ExpandableHeaderItem    mExpandableHereHeader;
@@ -92,7 +94,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         progressView = view.findViewById(R.id.progress_view);
         noPostsView = view.findViewById(R.id.no_posts_view);
         noConnectionView = view.findViewById(R.id.no_connection_view);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
+        mSwipeLayout = (WaveSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
         //postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
@@ -101,7 +103,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
             mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
         }
 
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getLoaderManager().getLoader(EventActivity.LOADER_ID_USERS).forceLoad();

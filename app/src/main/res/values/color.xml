@@ -12,6 +12,7 @@
     <color name="colorSecondary">#2b3778</color>
     <color name="colorSecondaryExtaLight">#f9faff</color>
     <color name="colorSecondaryDark">#2b3778</color>
+    <color name="colorRefresh">@color/colorAccent</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
     <color name="TEST">#f44437</color>
     <color name="transparent">#00000000</color>
@@ -20,6 +21,7 @@
     <color name="background_semi_transparent">#71ffffff</color>
     <color name="background_loading_map">#2c080808</color>
     <color name="background_card">@color/White</color>
+    <color name="background_nav_header">@color/White</color>
     <color name="background_event_info">#d3ffffff</color>
     <color name="background_event">#343f51</color>
     <color name="background_half_black">#80000000</color>

@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,6 +59,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -80,7 +81,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
     private View                        noConnectionView;
     private View                        uploadView;
     private PicturesAdapter             picturesAdapter;
-    private SwipeRefreshLayout          mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout          mSwipeRefreshLayout;
     private FloatingActionButton        mPostButton;
     private RefreshableRecyclerView     mRecyclerView;
     private Loader<List<Picture>>       mLoader;
@@ -99,8 +100,10 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         uploadView = root.findViewById(R.id.upload_view);
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
-        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
-
+        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
+        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(getContext(),R.color.colorRefresh));
+        mPictureLoaderModel = new PictureLoader(getContext());
+        mLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_PICTURE, null, mPictureLoaderModel);
         startPictureActivity();
         initAdapter();
 

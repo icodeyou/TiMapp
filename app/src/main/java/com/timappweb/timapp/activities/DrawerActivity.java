@@ -1,9 +1,11 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +34,10 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
+import com.timappweb.timapp.databinding.ActivityDrawerBinding;
+import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
@@ -72,6 +78,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             EventStatusManager.updateCurrentEventStatus();
         }
     };
+    private View cameraButton;
+    private View tagButton;
+    private View inviteButton;
+    private View noEventLayout;
+    private View eventLayout;
+    private ActivityDrawerBinding mBinding;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -97,9 +109,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (mWaitForLocationLayout != null){
             removeWaitForLocationLayout();
         }
-        if (lastLocation == null){
-            //updateMapData();
-        }
     }
 
     private void removeWaitForLocationLayout() {
@@ -110,11 +119,10 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     // -----------------------------------------------------------------------------------------
     // LIFE CALLBACKS
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drawer);
 
         //Import toolbar without calling function initToolbar, because of the toggle button
         toolbar = (Toolbar) findViewById(R.id.toolbar_id);
@@ -282,7 +290,54 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (navigationMenuView != null) {
             navigationMenuView.setVerticalScrollBarEnabled(false);
         }
-        getLayoutInflater().inflate(R.layout.nav_header, navigationView, false);
+        /*getLayoutInflater().inflate(R.layout.nav_header, navigationView, false);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        ItemInvitationBinding mBinding  = DataBindingUtil.inflate(inflater, R.layout.item_invitation, this, false);
+
+        View rootHeaderView = navigationView.getHeaderView(0);*/
+
+        cameraButton = findViewById(R.id.action_camera);
+        tagButton = findViewById(R.id.action_tag);
+        inviteButton = findViewById(R.id.action_invite);
+        noEventLayout = findViewById(R.id.no_events_layout);
+        eventLayout = findViewById(R.id.event_layout);
+        updateEventViewInHeader();
+    }
+
+    private void updateEventViewInHeader() {
+        final Event event = EventStatusManager.getCurrentEvent();
+        //final Event event = null;
+        mBinding.setEvent(event);
+        if(event==null) {
+            noEventLayout.setVisibility(View.VISIBLE);
+            eventLayout.setVisibility(View.GONE);
+        } else {
+            noEventLayout.setVisibility(View.GONE);
+            eventLayout.setVisibility(View.VISIBLE);
+
+            final Activity context = this;
+            cameraButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Cam click", Toast.LENGTH_SHORT).show();
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_CAMERA);
+                }
+            });
+            tagButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Tag click", Toast.LENGTH_SHORT).show();
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_TAGS);
+                }
+            });
+            inviteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Invite click", Toast.LENGTH_SHORT).show();
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
+                }
+            });
+        }
     }
 
     // ----------------------

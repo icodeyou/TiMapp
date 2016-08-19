@@ -12,6 +12,8 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
 import java.util.List;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 /**
  * Created by Stephane on 18/08/2016.
  */
@@ -27,7 +29,7 @@ public class FriendsLoader extends DataLoader<UserFriend> {
 
     // -----------------------------------------------------------------------------------------
 
-    public FriendsLoader(Context context, FriendsAdapter adapter, SwipeRefreshLayout swipeAndRefreshLayout) {
+    public FriendsLoader(Context context, FriendsAdapter adapter, WaveSwipeRefreshLayout swipeAndRefreshLayout) {
         super(context);
         this.setHistoryItemInterface(MyApplication.getCurrentUser());
         this.setMinDelayForceRefresh(MIN_AUTO_REFRESH_DELAY);

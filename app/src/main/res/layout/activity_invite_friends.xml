@@ -1,9 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:autolabel="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background">
+    xmlns:autolabel="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <include layout="@layout/toolbar_layout" />
 
@@ -12,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.timappweb.timapp.views.SwipeRefreshLayout
+        <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -23,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"/>
 
-        </com.timappweb.timapp.views.SwipeRefreshLayout>
+        </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
 
         <TextView
             style="@style/NoDataView"

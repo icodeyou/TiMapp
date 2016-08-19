@@ -1,7 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -13,6 +13,7 @@ import com.timappweb.timapp.data.loader.FriendsLoader;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,7 +29,7 @@ public class ListFriendsActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private FriendsAdapter mAdapter;
     private View noFriendsView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
     private FriendsLoader mFriendsLoader;
 
     @Override
@@ -43,12 +44,15 @@ public class ListFriendsActivity extends BaseActivity {
         this.initToolbar(true);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         noFriendsView = findViewById(R.id.no_friends_layout);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
         mToolbar.setTitle(R.string.title_activity_list_friends);
 
         initAdapter();
         initLoader();
+
     }
+
     private void initAdapter() {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -73,8 +77,8 @@ public class ListFriendsActivity extends BaseActivity {
                         : View.VISIBLE);
             }
         };
+        mFriendsLoader.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, mFriendsLoader);
-        mSwipeRefreshLayout.setOnRefreshListener(mFriendsLoader);
     }
 
     @Override

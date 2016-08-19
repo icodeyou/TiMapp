@@ -102,7 +102,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 eventId = event.remote_id;
             }
 
-
            mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
 
             pageTitle = (TextView) findViewById(R.id.title_event);

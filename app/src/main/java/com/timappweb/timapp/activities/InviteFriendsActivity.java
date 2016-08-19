@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -51,7 +53,7 @@ public class InviteFriendsActivity extends BaseActivity {
     private SelectFriendsAdapter        adapter;
     private Event                       event;
     private FriendsLoader               mFriendsLoader;
-    private SwipeRefreshLayout          mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout          mSwipeRefreshLayout;
     private View                        progressview;
     // ---------------------------------------------------------------------------------------------
 
@@ -75,7 +77,8 @@ public class InviteFriendsActivity extends BaseActivity {
 
             this.initToolbar(true);
 
-            mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+            mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+            mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             progressview = findViewById(R.id.progress_view);
 

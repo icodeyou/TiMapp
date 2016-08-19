@@ -1,5 +1,6 @@
 package com.timappweb.timapp.data.models;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
@@ -7,6 +8,7 @@ import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
@@ -60,6 +62,23 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
         this.event = event;
         this.status = status;
         this.created = Util.getCurrentTimeSec();
+    }
+
+    /**
+     * Get the current HERE event for current user
+     * If there is a gone status after the here, it means that it's not the current event anymore
+     * @return
+     */
+    public static UserEvent getCurrentEventStatus() {
+        UserEvent lastHereStatus = new Select()
+                .from(UserEvent.class)
+                .where("(Status = ? OR Status = ?) AND User = ?", UserEventStatusEnum.HERE, UserEventStatusEnum.GONE, MyApplication.getCurrentUser().getId())
+                .orderBy("SyncId DESC")
+                .executeSingle();
+        if (lastHereStatus != null && lastHereStatus.status == UserEventStatusEnum.GONE){
+            return null;
+        }
+        return lastHereStatus;
     }
 
     @Override
@@ -119,6 +138,13 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
         }
         return eventStatus != null && eventStatus.status == status;
     }
+
+    /**
+     * Get user status for a particular event
+     * @param eventId
+     * @param userId
+     * @return
+     */
     public static UserEvent getStatus(long eventId, long userId){
         return new Select()
                 .from(UserEvent.class)
@@ -126,6 +152,7 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
                 .orderBy("SyncId DESC")
                 .executeSingle();
     }
+
 
 
     public boolean isStatusUpToDate() {

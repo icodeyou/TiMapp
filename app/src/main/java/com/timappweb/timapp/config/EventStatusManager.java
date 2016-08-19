@@ -5,7 +5,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
@@ -256,23 +255,26 @@ public class EventStatusManager {
         if (currentEvent != null){
             return currentEvent;
         }
-        UserEvent lastHereStatus = new Select()
-                .from(UserEvent.class)
-                .where("Status = ? AND User = ?", UserEventStatusEnum.HERE, MyApplication.getCurrentUser())
-                .orderBy("Created DESC")
-                .executeSingle();
+        UserEvent lastHereStatus = UserEvent.getCurrentEventStatus();
         if (lastHereStatus == null){
-            return null;
+            return currentEvent;
         }
+
         Event event = lastHereStatus.event;
-        // If event is hover but we didn't updated the data when it was done
-        if (event.isOver() && (event.getLastSync() < event.getTimestampPoints()) ){
-            event.requestSync();
+        if (event.isOver()){
+            // If event is hover but we didn't updated the data when it was done
+            if (event.getLastSync() < event.getTimestampPoints()){
+                Log.i(TAG, "Request update for this event. It may be hover. " + event);
+                event.requestSync();
+            }
+            // TODO Event is over and already sync so we must clear the status...
+            else{
+                Log.i(TAG, "Event is now over: " + event);
+                return null;
+            }
         }
-        else{
-            Log.i(TAG, "Current event is now over...");
-        }
-        return event;
+        currentEvent = event;
+        return currentEvent;
     }
 
     public static Event updateCurrentEventStatus(){
