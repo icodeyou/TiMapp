@@ -239,7 +239,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     }
 
     private void displayEvent(Event event) {
-        Log.i(TAG, "Display event");
         try {
             event = (Event) event.requireLocalId();
             eventView.setVisibility(View.VISIBLE);
@@ -247,7 +246,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
             final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
             eventView.startAnimation(slideIn);
-            Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
+            Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
             TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
             translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
             translateUp.setInterpolator(new DecelerateInterpolator());
@@ -259,8 +258,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             tvCountPoints.initTimer(event.getPoints());
             //TODO : might be better to initialize the timer through databinding
         } catch (CannotSaveModelException e) {
-            // TODO
-            e.printStackTrace();
+            // should not happen
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -269,7 +268,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             Log.i(TAG, "Hide event");
             Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
             removeCurrentMarker();
-
             TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight()+500);
             translateDown.setDuration(getResources().getInteger(R.integer.time_slide_out_map));
             translateDown.setAnimationListener(new Animation.AnimationListener() {

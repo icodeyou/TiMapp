@@ -4,6 +4,8 @@ import android.os.Parcelable;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.utils.SearchHistory;
 
@@ -123,5 +125,12 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
                 "name='" + name + '\'' +
                 ", count_ref=" + count_ref +
                 '}';
+    }
+
+    public static From querySuggestTagForEvent(Event event) {
+        return new Select()
+                .from(Tag.class)
+                .leftJoin(EventTag.class).on("Tag.Id = EventTag.Tag AND EventTag.Event = ?", event.getId())
+                .orderBy("EventTag.CountRef DESC, Tag.CountRef DESC");
     }
 }

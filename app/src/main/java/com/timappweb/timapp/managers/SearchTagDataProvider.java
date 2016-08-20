@@ -20,16 +20,11 @@ import retrofit2.Response;
 public abstract class SearchTagDataProvider implements SearchHistory.DataProvider<Tag> {
 
     private static final String                 TAG             = "SearchHistoryDataProv";
-    private SearchAndSelectTagManager           manager;
+    protected SearchAndSelectTagManager           manager;
 
     // ---------------------------------------------------------------------------------------------
 
     public void setManager(SearchAndSelectTagManager manager) {
-        this.manager = manager;
-    }
-
-
-    public SearchTagDataProvider(SearchAndSelectTagManager manager) {
         this.manager = manager;
     }
 
@@ -45,7 +40,7 @@ public abstract class SearchTagDataProvider implements SearchHistory.DataProvide
                     @Override
                     public void successful(List<Tag> tags) {
                         Log.d(TAG, "Got suggested tags from server with term " + term + "* : " + tags.size());
-                        manager.getSearchHistory().addInCache(term, tags);
+                        manager.getSearchHistory().onSearchResponse(term, tags, true);
                     }
                 })
                 .onFinally(new HttpCallManager.FinallyCallback() {

@@ -7,19 +7,43 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ *
  * Created by stephane on 12/9/2015.
+ *
+ * Search history.
+ *
+ * @param <T> data type contained
  */
 public class SearchHistory<T>{
-    private static final String TAG = "SearchHistory";
-    private int minimumSearchLength;
-    private HashMap<String, Item> data;
-    private int maximumResults;
-    private String lastSearch = ""; // Last search to update view accordingly...
 
+    private static final String TAG = "SearchHistory";
+
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Minimum search length. If search term is smaller than this value, no search will be triggered
+     */
+    private int         minimumSearchLength;
+    /**
+     * Maximum result number to store for a search result
+     */
+    private int         maximumResults;
+    /**
+     * Last search term
+     */
+    private String      lastSearch              = ""; // Last search to update view accordingly...
+    /**
+     * match data to a search term
+     * Item wraps data corresponding to the search term to provides useful info
+     */
+    private HashMap<String, Item> data;
+
+    /**
+     * Data provider. Use to get entries according to the seach term
+     */
     private DataProvider provider;
-    public void setDataProvider(DataProvider provider){
-        this.provider = provider;
-    }
+
+    // ---------------------------------------------------------------------------------------------
 
     public SearchHistory(DataProvider provider, int minimumSearchLength, int maximumResults) {
         this.data = new HashMap<>();
@@ -27,12 +51,12 @@ public class SearchHistory<T>{
         this.maximumResults = maximumResults;
         this.provider = provider;
     }
-    public SearchHistory(DataProvider provider) {
-        this(provider, 2, 20);
-    }
+
     public SearchHistory(int minimumSearchLength, int maximumResults) {
         this(null, minimumSearchLength, maximumResults);
     }
+
+    // ---------------------------------------------------------------------------------------------
 
     public void search(String term){
         if (term.length() < this.minimumSearchLength){
@@ -45,15 +69,13 @@ public class SearchHistory<T>{
 
         // Data are in cache and fetch is done
         if (this.hasTerm(term) && !this.data.get(term).pending){
-            //TODO Steph : J'ai mis cette ligne en comment, pour pas que la liste de tags complète soit rechargée à chaque fois qu'on enlève un tag
-            //this.provider.onSearchComplete(term, this.data.get(term).getData());
+            this.provider.onSearchComplete(term, this.data.get(term).getData());
         }
         else if (!this.hasTerm(term)){
             // Data are not in cache, try searching for a sub term
             SearchHistory.Item subHistory = this.getTermOrSubTerm(term);
             if (subHistory != null){
-                //TODO Steph : J'ai mis cette ligne en comment, pour pas que la liste de tags complète soit rechargée à chaque fois qu'on enlève un tag
-                //this.provider.onSearchComplete(term, subHistory.getFilteredData(term));
+                this.provider.onSearchComplete(term, subHistory.getFilteredData(term));
                 if (subHistory.isComplete()){
                     return ;
                 }
@@ -62,26 +84,6 @@ public class SearchHistory<T>{
             this.create(term);
             provider.load(term);
         }
-    }
-
-    public void addInCache(String term, List<T> items) {
-        Log.d(TAG, "Adding in cache " + items.size() + " element(s) for search " + term);
-       // assert (term.length() >= this.minimumSearchLength);
-        Item node = this.data.get(term);
-        if (node == null) return;
-        node.setPending(false);
-        node.setData(items);
-        //node.setComplete(this.maximumResults > 0 && items.size() >= this.maximumResults);
-        node.setComplete(true);
-        this.provider.onSearchComplete(term, items);
-    }
-
-    public boolean hasTerm(String term){
-        return this.data.containsKey(term);
-    }
-
-    public boolean hasTermOrSubTerm(String term){
-        return this.getTermOrSubTerm(term) != null;
     }
 
     /**
@@ -108,28 +110,18 @@ public class SearchHistory<T>{
         }
     }
 
-    public void create(String term) {
-        this.data.put(term, new Item(null, false));
-    }
 
-    public void setLastSearch(String lastSearch) {
-        this.lastSearch = lastSearch;
-    }
-
-    public boolean isLastSearch(String search){
-        return this.lastSearch == search;
-    }
-
-    public int getMinimumSearchLength() {
-        return minimumSearchLength;
-    }
-
-    public int getMaximumResults() {
-        return maximumResults;
-    }
-
-    public String getLastSearch() {
-        return lastSearch;
+    /**
+     *
+     * @param term
+     * @param data
+     */
+    public void onSearchResponse(String term, List<T> data, boolean append) {
+        Item node = this.addInCache(term, data, append);
+        if (node != null){
+            node.setComplete(node.size() >= this.maximumResults);
+        }
+        this.provider.onSearchComplete(term, data);
     }
 
     /**
@@ -161,9 +153,86 @@ public class SearchHistory<T>{
         return results;
     }
 
-    public class Item<T>{
+    // ---------------------------------------------------------------------------------------------
+    // Gettes/Setters
+
+    public void setDataProvider(DataProvider provider){
+        this.provider = provider;
+    }
+
+    public boolean hasTerm(String term){
+        return this.data.containsKey(term);
+    }
+
+    public boolean hasTermOrSubTerm(String term){
+        return this.getTermOrSubTerm(term) != null;
+    }
+
+
+    public void setLastSearch(String lastSearch) {
+        this.lastSearch = lastSearch;
+    }
+
+    public boolean isLastSearch(String search){
+        return this.lastSearch == search;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    protected Item<T> create(String term) {
+        Item item = new Item(null, false);
+        this.data.put(term, item);
+        return item;
+    }
+
+    /**
+     * Add the term in cache. If
+     * @param term
+     * @param items
+     * @param append
+     * @return
+     */
+    protected Item<T> addInCache(String term, List<T> items, boolean append) {
+        Log.d(TAG, "Adding in cache " + items.size() + " element(s) for search " + term);
+        // assert (term.length() >= this.minimumSearchLength);
+        Item node = this.data.get(term);
+        if (node == null) {
+            node = this.create(term);
+        }
+        node.setPending(false);
+        if (append){
+            node.addData(items);
+        }
+        else{
+            node.setData(items);
+        }
+        node.setComplete(items.size() > this.maximumResults);
+        return node;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Represents a search history item. It can contain any type of data.
+     *
+     * @param <T> data type that it contains
+     */
+    public static class Item<T>{
+        /**
+         * true if this search if complete. Meaning that there is no more data to fetch for this search
+         */
         boolean complete = false;
+        /**
+         * true if data are currently being loaded in an asynchronous thread. It usefull to know
+         * if we need to start a new request or if we must wait because there is a pending request
+         * going on
+         */
         boolean pending = true;
+
+        /**
+         * Data.
+         * @warning It can be null
+         */
         List<T> data;
 
         public Item(List<T> data, boolean complete) {
@@ -178,6 +247,12 @@ public class SearchHistory<T>{
 
         public void setData(List<T> data) {
             this.data = data;
+        }
+        public void addData(List<T> data) {
+            if (this.data == null)
+                setData(data);
+            else
+                this.data.addAll(data);
         }
 
         public void setComplete(boolean complete) {
@@ -201,12 +276,26 @@ public class SearchHistory<T>{
         }
 
 
+        public int size() {
+            return this.data != null ? this.data.size() : 0;
+        }
     };
 
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Searchable item.
+     */
     public interface SearchableItem{
         boolean matchSearch(String term);
     }
 
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Data provider
+     * @param <T>
+     */
     public interface DataProvider<T>{
 
         /**

@@ -32,8 +32,7 @@ public class SearchAndSelectTagManager {
                                      SearchView searchView,
                                      HashtagView suggestedRecyclerView,
                                      HorizontalTagsRecyclerView selectedRecyclerView,
-                                     OnBasicQueryTagListener queryTagListener,
-                                     SearchTagDataProvider searchTagDataProvider) {
+                                     OnBasicQueryTagListener queryTagListener) {
         this.activity = activity;
         this.searchView = searchView;
         this.suggestedRecyclerView = suggestedRecyclerView;
@@ -42,13 +41,12 @@ public class SearchAndSelectTagManager {
         this.queryTagListener = queryTagListener;
 
         this.init();
-        this.setDataProvider(searchTagDataProvider);
-        this.loadTags("");
     }
 
-    public void setDataProvider(SearchTagDataProvider provider){
+    public SearchAndSelectTagManager setDataProvider(SearchTagDataProvider provider){
         provider.setManager(this);
         this.searchHistory.setDataProvider(provider);
+        return this;
     }
 
     private void init(){
@@ -76,7 +74,7 @@ public class SearchAndSelectTagManager {
         this.loadTags(term);
     }
 
-    private void loadTags(final String term){
+    public void loadTags(final String term){
         searchHistory.search(term);
     }
 
@@ -85,9 +83,13 @@ public class SearchAndSelectTagManager {
         horizontalAdapter.notifyDataSetChanged();
     }
 
-    public void addTag(String tag) {
-        horizontalAdapter.tryAddData(tag);
-        selectedTagsRecyclerView.scrollToEnd();
+    public boolean addTag(String tag) {
+        if (horizontalAdapter.tryAddData(tag)){
+            selectedTagsRecyclerView.scrollToEnd();
+            getSearchView().setIconified(true);
+            return true;
+        }
+        return false;
     }
 
     // Getters
@@ -117,5 +119,9 @@ public class SearchAndSelectTagManager {
 
     public SearchHistory getSearchHistory() {
         return searchHistory;
+    }
+
+    public boolean hasSelectedTag(Tag tag) {
+        return getSelectedTags() != null && getSelectedTags().contains(tag);
     }
 }

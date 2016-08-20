@@ -49,7 +49,6 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
     public void addTag(String query) {
         manager.addTag(query);
-        manager.getSearchView().setIconified(true);
     }
 
     public void setSearchAndSelectTagManager(SearchAndSelectTagManager searchAndSelectTagManager) {

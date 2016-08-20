@@ -151,15 +151,16 @@ public class FilterActivity extends BaseActivity {
                 searchView,
                 hashtagView,
                 selectedTagsRecyclerView,
-                onFilterQueryTagListener,
-                new SearchTagDataProvider() {
+                onFilterQueryTagListener
+        )
+        .setDataProvider(new SearchTagDataProvider() {
                     @Override
                     public void onLoadEnds() {
                         getProgressBarView().setVisibility(View.GONE);
                         tagScrollView.setVisibility(View.VISIBLE);
                     }
-                }
-        );
+                });
+        searchAndSelectTagManager.loadTags("");
 
         return true;
     }

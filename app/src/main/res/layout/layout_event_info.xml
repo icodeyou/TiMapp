@@ -110,7 +110,8 @@
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_camera"
                 style="@style/MiniFab"
-                app:fab_icon="@drawable/ic_camera_white" />
+                app:fab_icon="@drawable/ic_camera_white"
+                android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_tag"

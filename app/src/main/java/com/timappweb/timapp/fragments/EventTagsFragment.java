@@ -172,6 +172,8 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
     @Override
     public void onTabSelected() {
-        mRecyclerView.smoothScrollToPosition(0);
+        if (mRecyclerView != null){
+            mRecyclerView.smoothScrollToPosition(0);
+        }
     }
 }

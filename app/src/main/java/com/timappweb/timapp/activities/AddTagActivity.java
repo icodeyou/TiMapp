@@ -15,17 +15,21 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.google.gson.JsonObject;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.DataTransformTag;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnAddTagListener;
@@ -43,6 +47,7 @@ import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import retrofit2.Response;
 
@@ -121,14 +126,36 @@ public class AddTagActivity extends BaseActivity{
                 searchView,
                 suggestedTagsView,
                 selectedTagsRV,
-                onBasicQueryTagListener,
-                new SearchTagDataProvider() {
+                onBasicQueryTagListener
+        )
+                .setDataProvider(new SearchTagDataProvider() {
+
                     @Override
                     public void onLoadEnds() {
                         progressStartView.setVisibility(View.GONE);
                     }
-                }
-        );
+
+                    @Override
+                    public void load(String term) {
+                        int tagLimit = ConfigurationProvider.rules().tags_suggest_limit;
+                        // Get local tags (suggest in first tag already added to this event, then tag that are in db order by popularity)
+                        From query = Tag.querySuggestTagForEvent(currentEvent)
+                                .limit(tagLimit);
+                        if (term != null && term.length() > 0){
+                            query.where("Tag.name LIKE ? OR Tag.name = ?", term, term); // TODO add %%
+                        }
+                        List<Tag> tags = query.execute();
+                        Log.d(TAG, "Tag in local db: " + tags.size() + "/" + tagLimit);
+                        // If not enough tags locally, we get more on the server
+                        if (tags.size() < tagLimit){
+                            super.load(term);
+                        }
+                        else if (tags.size() > 0){
+                            manager.getSearchHistory().onSearchResponse(term, tags, true);
+                        }
+                    }
+                });
+        searchAndSelectTagManager.loadTags("");
 
 
         //Initialize Query hint in searchview
@@ -142,6 +169,7 @@ public class AddTagActivity extends BaseActivity{
         switch (item.getItemId()) {
             case R.id.action_post:
                 postTags();
+                return true;
             case R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -168,12 +196,12 @@ public class AddTagActivity extends BaseActivity{
             @Override
             public void onItemClicked(Object item) {
                 Tag tag = (Tag) item;
-
-                boolean success = suggestedTagsView.removeItem(item);
-                Log.d(TAG, "removing item success : "+ success);
-
-                searchView.setQuery(tag.name, true);
-                searchView.clearFocus();
+                if (!searchAndSelectTagManager.hasSelectedTag(tag)){
+                    if (searchAndSelectTagManager.addTag(tag.getName())){
+                        suggestedTagsView.removeItem(item);
+                        actionCounter();
+                    }
+                }
             }
         });
 
@@ -210,6 +238,7 @@ public class AddTagActivity extends BaseActivity{
                     searchView.setQueryHint(getResources().getString(R.string.searchview_hint_no_tags));
                     return true;
                 default:
+                    // TODO Jack change this... Use formated string .. See doc
                     setSelectedTagsViewVisible();
                     String string1 = getResources().getString(R.string.searchview_hint_few_tags_part_one);
                     String string2 = getResources().getString(R.string.searchview_hint_few_tags_part_two);
@@ -243,7 +272,7 @@ public class AddTagActivity extends BaseActivity{
     }
 
     private void postTags() {
-        menu.findItem(R.id.action_post).setEnabled(true);
+        menu.findItem(R.id.action_post).setEnabled(false);
 
         eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
         eventEventPost.event = currentEvent;
@@ -279,7 +308,7 @@ public class AddTagActivity extends BaseActivity{
                 .onFinally(new HttpCallManager.FinallyCallback(){
                     @Override
                     public void onFinally(Response response, Throwable error) {
-                        menu.findItem(R.id.action_post).setEnabled(false);
+                        menu.findItem(R.id.action_post).setEnabled(true);
                     }
                 })
                 .perform();
