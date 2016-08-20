@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
@@ -102,7 +104,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 eventId = event.remote_id;
             }
 
-           mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
+            mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
 
             pageTitle = (TextView) findViewById(R.id.title_event);
             btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
@@ -222,7 +224,23 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 setDefaultShareIntent();
                 return true;
             case android.R.id.home:
-                //finish();
+                //http://stackoverflow.com/questions/19999619/navutils-navigateupto-does-not-start-any-activity
+
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot()) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

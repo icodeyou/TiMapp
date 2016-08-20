@@ -14,8 +14,6 @@
 
         <include layout="@layout/toolbar_layout" />
 
-        <include layout="@layout/progressview_fullscreen" />
-
         <!-- Separator Top -->
         <!-- **********************************************************************-->
         <View

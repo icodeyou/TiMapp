@@ -11,6 +11,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -54,6 +56,7 @@ import retrofit2.Response;
 public class AddTagActivity extends BaseActivity{
 
     private String TAG = "AddTagActivity";
+    private AddTagActivity context;
 
     // ---------------------------------------------------------------------------------------------
     //Views
@@ -112,6 +115,7 @@ public class AddTagActivity extends BaseActivity{
         getMenuInflater().inflate(R.menu.menu_add_tags, menu);
 
         this.menu = menu;
+        this.context = this;
 
         setSearchview(menu);
         searchView.requestFocus();
@@ -133,6 +137,8 @@ public class AddTagActivity extends BaseActivity{
                     @Override
                     public void onLoadEnds() {
                         progressStartView.setVisibility(View.GONE);
+                        /*Animation animationTagsIn = AnimationUtils.loadAnimation(context, R.anim.appear_grow);
+                        suggestedTagsView.setAnimation(animationTagsIn);*/
                     }
 
                     @Override
@@ -273,7 +279,6 @@ public class AddTagActivity extends BaseActivity{
 
     private void postTags() {
         menu.findItem(R.id.action_post).setEnabled(false);
-
         eventEventPost.setTags(searchAndSelectTagManager.getSelectedTags());
         eventEventPost.event = currentEvent;
         // Validating user input
