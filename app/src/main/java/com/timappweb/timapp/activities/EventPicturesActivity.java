@@ -74,10 +74,10 @@ public class EventPicturesActivity extends FragmentActivity {
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             final PhotoDraweeView photoDraweeView = new PhotoDraweeView(container.getContext());
-            PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
-            controller.setUri(Uri.parse(IMAGES[position]));
-            controller.setOldController(photoDraweeView.getController());
-            controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(Uri.parse(IMAGES[position]))
+                    .setOldController(photoDraweeView.getController())
+                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
                 @Override
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                     super.onFinalImageSet(id, imageInfo, animatable);

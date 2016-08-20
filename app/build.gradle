@@ -104,7 +104,7 @@ dependencies {
     compile 'com.sromku:simple-fb:4.1.1'
     compile 'com.github.boxme:squarecamera:1.1.0'
     //compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
-    compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
+    //compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
     compile 'me.grantland:autofittextview:0.2.+'
     //compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.0-beta5'
 

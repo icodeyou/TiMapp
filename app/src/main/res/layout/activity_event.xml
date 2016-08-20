@@ -34,6 +34,7 @@
             app:viewpager_pagerTitleStrip="@layout/event_pager_tabs"
             />
 
+        <!-- TODO jack use style... -->
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/multiple_actions"
             android:layout_width="wrap_content"

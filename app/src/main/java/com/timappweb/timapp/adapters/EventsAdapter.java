@@ -2,12 +2,13 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.support.design.widget.FloatingActionButton;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
@@ -90,6 +91,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         private final View cameraButton;
         private final View tagButton;
         private final View inviteButton;
+        private final ImageView imageView;
         SimpleTimerView tvCountPoints;
         TextView titleCategory;
         TextView titleEvent;
@@ -105,6 +107,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             cameraButton = itemView.findViewById(R.id.action_camera);
             tagButton = itemView.findViewById(R.id.action_tag);
             inviteButton = itemView.findViewById(R.id.action_invite);
+            imageView = (ImageView)itemView.findViewById(R.id.background_image_event);
 
             titleCategory.setVisibility(View.VISIBLE);
             titleEvent.setVisibility(View.GONE);
@@ -124,6 +127,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             int initialTime = event.getPoints();
             tvCountPoints.initTimer(initialTime);
 
+
+            // @warning: we cannot use binding for this because image cannot load.
+            //if (event.hasPicture()){
+            //    imageView.setImageURI(Uri.parse(Uri.decode(event.getPicture().getPreviewUrl())));
+            //}
+            //else{
+            //    imageView.setImageDrawable(event.getBackgroundImage(imageView.getContext()));
+            //}
+
+            // TODO use binding
             try {
                 titleCategory.setText(Util.capitalize(event.getCategory().name));
             } catch (UnknownCategoryException e) {

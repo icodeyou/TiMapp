@@ -25,6 +25,7 @@ public class PictureSyncCallback extends RemoteMasterSyncCallback<Picture> {
         this.event = event;
     }
 
+    /*
     private String getBaseUrl() {
 
         if (baseUrl == null){
@@ -41,7 +42,7 @@ public class PictureSyncCallback extends RemoteMasterSyncCallback<Picture> {
             }
         }
         return baseUrl;
-    }
+    }*/
 
 
     @Override
@@ -52,7 +53,6 @@ public class PictureSyncCallback extends RemoteMasterSyncCallback<Picture> {
     @Override
     public void onRemoteOnly(Collection<Picture> entries) {
         for (Picture entry: entries){
-            entry.base_url = getBaseUrl();
             entry.event = event;
         }
     }

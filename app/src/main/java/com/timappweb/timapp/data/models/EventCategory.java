@@ -77,15 +77,6 @@ public class EventCategory extends SyncBaseModel{
         }
     }
 
-    public int getBigIcon() {
-        try {
-            return DrawableUtil.get("image_" + this.name);
-        } catch (DrawableUtil.UnknownDrawableException e) {
-            Log.e(TAG, "Unknown category drawable for " + this.name);
-            return R.drawable.image_else;
-        }
-    }
-
 
     @Override
     public boolean isSync(SyncBaseModel model) {

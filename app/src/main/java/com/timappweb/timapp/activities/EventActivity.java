@@ -32,6 +32,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
@@ -316,14 +317,14 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
         //After set an adapter to the ViewPager
         mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
-        Drawable drawable = null;
-        try {
-            drawable = ResourcesCompat.getDrawable(getResources(), event.getCategory().getBigIcon(), null);
-        } catch (UnknownCategoryException e) {
-            drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.image_else, null);
-        }
         mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
-        mMaterialViewPager.setImageDrawable(drawable, 0);
+
+        if (event.hasPicture()){
+            mMaterialViewPager.setImageUrl(event.getBackgroundUrl(), 0);
+        }
+        else{
+            mMaterialViewPager.setImageDrawable(event.getBackgroundImage(this), 0);
+        }
         int numberOfFragments = mFragmentAdapter.getCount();
         mMaterialViewPager.getViewPager().setOffscreenPageLimit(numberOfFragments);
         mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener());
@@ -438,6 +439,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
     }
 
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
 
     // =============================================================================================

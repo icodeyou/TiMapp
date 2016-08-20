@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_presentation_next"
-        android:src="@drawable/presentation_main"
+        android:src="@drawable/ic_coming_guy_black"
         android:scaleType="fitCenter"/>
     <Button
         android:id="@+id/button_presentation_next"

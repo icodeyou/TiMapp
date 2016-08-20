@@ -128,7 +128,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
             if (eventActivity.getEvent() == null){
                 throw new Exception("Cannot add picture for null event");
             }
-            eventActivity.getEvent().requireLocalId();
+            eventActivity.setEvent((Event) eventActivity.getEvent().requireLocalId());
         } catch (Exception e) {
             IntentsUtils.home(getContext());
         }

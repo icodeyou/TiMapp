@@ -21,6 +21,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
@@ -33,6 +34,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @warning event cannot be serialize anymore as there is a recursive dependency:
+ *  Event -> BELONGS TO -> Picture -> BELONGS TO -> Event
+ */
 @Table(name = "Event")
 public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface {
 
@@ -71,6 +76,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
     @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
+    @SerializedName("category")
     @Expose
     public EventCategory    event_category;
 
@@ -85,6 +91,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Column(name = "CountComing")
     @Expose(serialize = false, deserialize = true)
     public Integer count_coming;
+
+    @ModelAssociation(joinModel = Picture.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "picture_id")
+    @Column(name = "Picture", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.CASCADE)
+    @SerializedName("picture")
+    @Expose
+    public Picture    picture;
+
 
     // =============================================================================================
     // Fields
@@ -181,11 +194,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
-                ", latitude=" + latitude +
+                ", location=(" + latitude + "," + longitude + ")" +
                 ", created=" + created +
-                ", longitude=" + longitude +
-                ", category=" + event_category +
-                ", spot=" + (spot != null ? spot : "No spot") +
+                ", category=" + (event_category != null ? event_category.getName() : "NONE") +
+                ", spot=" + (spot != null ? spot.getName() : "No spot") +
+                ", picture=" + (picture != null ? picture.getUrl() : "No picture") +
                 '}';
     }
 
@@ -395,6 +408,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return name;
     }
 
+    /**
+     * TODO remove when using category from the server
+     * @return
+     */
     public EventCategory getCategoryWithDefault() {
         try {
             return this.getCategory();
@@ -422,9 +439,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public Drawable getBackgroundImage(Context context){
-        //TODO Steph : Récup random photo of event from server else { *default icon* }
-
-        //default icon :
         return ContextCompat.getDrawable(context, R.drawable.photo_event_default);
     }
 
@@ -468,4 +482,34 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return getPoints() * 1000;
     }
 
+    public boolean hasPicture() {
+        return picture != null;
+    }
+
+    public String getBackgroundUrl() {
+        return picture.getPreviewUrl();
+    }
+
+    @Override
+    public Event deepSave() throws CannotSaveModelException {
+        if (this.hasPicture()){
+            // We need to save first the event as the picture require this association
+            // If we don't do that there is an infinit loop as event save picture which save event
+            Picture tmp = this.picture;
+            this.picture = null;
+            Event newModel = super.deepSave();
+            newModel.picture = tmp;
+            newModel.picture.event = newModel;
+            newModel.picture.mySave();
+            newModel.mySave();
+            return newModel;
+        }
+        else {
+            return super.deepSave();
+        }
+    }
+
+    public Picture getPicture() {
+        return picture;
+    }
 }

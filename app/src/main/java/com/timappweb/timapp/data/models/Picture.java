@@ -24,22 +24,23 @@ public class Picture extends SyncBaseModel {
     @Expose(serialize = false, deserialize = true)
     public String square;
 
-    @Column(name = "PhotoDir")
+    @Column(name = "PhotoDir", notNull = true)
     @Expose(serialize = false, deserialize = true)
     public String photo_dir;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Event", notNull = true)
+    @Column(name = "Event", notNull = true, onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("place")
     @Expose(serialize = false, deserialize = true)
     public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "User", notNull = false)
+    @Column(name = "User", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.CASCADE)
     @Expose(serialize = false, deserialize = true)
     public User user;
 
     @Column(name = "BaseUrl")
+    @Expose(serialize = false, deserialize = true)
     public String base_url;
 
     // =============================================================================================
@@ -53,14 +54,14 @@ public class Picture extends SyncBaseModel {
     // =============================================================================================
 
     public String getUrl(){
-        return  this.base_url + "/" + this.photo_dir + "/" + this.photo;
+        return  this.base_url + this.photo_dir + "/" + this.photo;
     }
 
     public String getPreviewUrl(){
-        return  this.base_url + "/" + this.photo_dir + "/" + this.preview;
+        return  this.base_url + this.photo_dir + "/" + this.preview;
     }
     public String getSquareUrl(){
-        return  this.base_url + "/" + this.photo_dir + "/" + this.square;
+        return  this.base_url  + this.photo_dir + "/" + this.square;
     }
 
     @Override

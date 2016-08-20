@@ -90,7 +90,7 @@ public class MyModel extends Model implements Observable, Serializable{
      * @return
      */
     public <T extends MyModel> T deepSave() throws CannotSaveModelException {
-        Log.v(TAG, "Saving model " + this.getClass().getCanonicalName());
+        Log.v(TAG, "==> Saving model " + this.getClass().getCanonicalName());
         this._saveModelAssociations();
         return (T) this.mySave();
     }
@@ -102,7 +102,7 @@ public class MyModel extends Model implements Observable, Serializable{
     public MyModel mySave() throws CannotSaveModelException {
         if (this.save() == -1){
             Log.e(TAG, "Cannot save model: " + this);
-            throw new CannotSaveModelException();
+            throw new CannotSaveModelException(this);
         }
         return this;
     }
@@ -119,10 +119,9 @@ public class MyModel extends Model implements Observable, Serializable{
                             case BELONGS_TO:
                                 MyModel fieldValue = (MyModel) field.get(this);
                                 if (fieldValue != null && !fieldValue.hasLocalId()){
-                                    MyModel model = null;
-                                    model = fieldValue.deepSave();
+                                    MyModel model = fieldValue.deepSave();
                                     field.set(this, model);
-                                    Log.d(TAG, "Saving deep association for field '" + field.getName());
+                                    Log.d(TAG, "    - Saving deep association for field '" + field.getName());
                                 }
                                 break;
                             case BELONGS_TO_MANY:
@@ -132,7 +131,7 @@ public class MyModel extends Model implements Observable, Serializable{
                                         this.deleteAssociation(annotation.joinModel());
                                     }
                                     this.saveBelongsToMany(fieldValues, annotation.joinModel());
-                                    Log.d(TAG, "Saving deep association for field '" + field.getName() + ": size=" + fieldValues.size());
+                                    Log.d(TAG, "    - Saving deep association for field '" + field.getName() + ": size=" + fieldValues.size());
                                 }
                                 break;
                         }
@@ -206,7 +205,7 @@ public class MyModel extends Model implements Observable, Serializable{
 
     public MyModel requireLocalId() throws CannotSaveModelException {
         if (!this.hasLocalId()){
-           return this.mySave();
+           return this.deepSave();
         }
         return this;
     }
