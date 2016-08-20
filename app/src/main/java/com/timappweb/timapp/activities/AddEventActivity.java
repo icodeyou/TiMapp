@@ -257,7 +257,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         try {
                             Log.d(TAG, "Event has been successfully added");
                             event.setAuthor(MyApplication.getCurrentUser());
-                            event.mySave();
+                            event.deepSave();
                             long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
                             QuotaManager.instance().add(QuotaType.ADD_EVENT);
                             EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);

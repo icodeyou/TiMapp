@@ -31,25 +31,19 @@ public class RestValidationErrorParser {
     }
 
     private String _getNode(String keys){
+        return _getNode(keys, data);
+    }
+
+    private String _getNode(String keys, JsonElement element){
         try {
             String[] parts = keys.split("\\.");
-            JsonElement element = data;
             for (String key: parts){
                 element = element.getAsJsonObject().get(key);
             }
             if (element == null) {
                 return null;
             }
-            String msg = "";
-            if (element.isJsonObject()){
-                JsonObject messageObject = element.getAsJsonObject();
-                for (Map.Entry<String, JsonElement> elem: messageObject.entrySet()){
-                    msg += elem.getValue().getAsString();
-                }
-            }
-            else{
-                msg = element.getAsString();
-            }
+            String msg = _elementToString(element);
             return msg;
         }
         catch (Exception ex){
@@ -57,4 +51,19 @@ public class RestValidationErrorParser {
             return null;
         }
     }
+
+    private String _elementToString(JsonElement element) {
+        String msg = "";
+        if (element.isJsonObject()){
+            JsonObject messageObject = element.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> elem: messageObject.entrySet()){
+                msg += _elementToString(elem.getValue()) + "\n";
+            }
+        }
+        else{
+            msg = element.getAsString();
+        }
+        return msg;
+    }
+
 }

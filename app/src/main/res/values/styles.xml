@@ -223,6 +223,14 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="ValidationErrorMessage">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:background">@color/color_hint</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="TextPadding" parent="TextDefault">
         <item name="android:padding">@dimen/default_text_padding</item>
     </style>

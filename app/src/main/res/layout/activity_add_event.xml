@@ -48,16 +48,10 @@
                     style="@style/whiteFormEditText"
                 </FrameLayout>-->
 
-                <!-- TODO jack design avec un STYLE ça comme tu veux et il faut le metre pour chaque formulaire
-                    c'est le message d'erreur concernant aucun champs (par example quota dépassés)
-                -->
+                <!-- c'est le message d'erreur concernant aucun champs (par example quota dépassés) -->
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_medium"
+                    style="@style/ValidationErrorMessage"
                     tools:text="This is an error message youhou! Errors are not cool but it's a necessary evil! Bouya!"
-                    android:background="@color/color_hint"
-                    android:textColor="@color/white"
                     android:text='@{errors.getFullMessage()}'
                     android:visibility='@{errors.hasFullMessage() ? View.VISIBLE : View.GONE}'/>
 
@@ -77,6 +71,12 @@
                     android:text="@={event.description}"
                     app:errorText='@{errors.getError("Places.description")}'/>
 
+                <TextView
+                    style="@style/ValidationErrorMessage"
+                    tools:text="Error concerning the spot"
+                    android:text='@{errors.getError("Places.spot")}'
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:visibility='@{errors.hasError("Places.spot") ? View.VISIBLE : View.GONE}'/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/spot_height_add_event"
