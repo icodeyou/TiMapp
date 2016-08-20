@@ -35,6 +35,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.views.MySwitchCompat;
 import com.timappweb.timapp.views.SimpleTimerView;
 
 
@@ -59,7 +60,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private ValueAnimator               animator;
     private boolean                     hotPoints               = false;
 
-    private SwitchCompat                switchButton;
+    private MySwitchCompat switchButton;
     private View                        rateButtons;
     private View                        flameView;
     private View                        mainLayout;
@@ -93,7 +94,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         statusTv = (TextView) view.findViewById(R.id.status_text);
         //rateButtons = view.findViewById(R.id.here_view);
         flameView = view.findViewById(R.id.points_icon);
-        switchButton = (SwitchCompat) view.findViewById(R.id.switch_button);
+        switchButton = (MySwitchCompat) view.findViewById(R.id.switch_button);
         hereImage = view.findViewById(R.id.ic_here);
         comingImage = view.findViewById(R.id.ic_coming);
 
@@ -120,14 +121,14 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                     manager .onResponse(new HttpCallback() {
                                 @Override
                                 public void notSuccessful() {
-                                    switchButton.setChecked(!isChecked);
+                                    switchButton.setCheckedNoTrigger(!isChecked);
                                 }
 
                             })
                             .onError(new RequestFailureCallback(){
                                 @Override
                                 public void onError(Throwable error) {
-                                    switchButton.setChecked(!isChecked);
+                                    switchButton.setCheckedNoTrigger(!isChecked);
                                 }
                             });
                 }

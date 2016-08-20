@@ -20,6 +20,8 @@ import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import retrofit2.Call;
 
 /**
@@ -108,8 +110,10 @@ public class EventStatusManager {
 
                     @Override
                     public void failure() {
-                        Log.e(TAG, "Fail register status=" + status + " for user on event: " + event);
-                        Toast.makeText(context, context.getString(R.string.cannot_notify_status), Toast.LENGTH_SHORT).show();
+                        if (this.response.code() != HttpsURLConnection.HTTP_UNAUTHORIZED) {
+                            Log.e(TAG, "Fail register status=" + status + " for user on event: " + event);
+                            Toast.makeText(context, context.getString(R.string.cannot_notify_status), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .perform();

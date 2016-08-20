@@ -161,10 +161,7 @@ public class RestClient {
 
         // After logout redirect user to Login UserActivity
         Intent i = new Intent(app, LoginActivity.class);
-        // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        // Add new Flag to start new UserActivity
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Call<RestFeedback> logoutCall = this.service.logout();
         RestClient.buildCall(logoutCall)
@@ -180,7 +177,7 @@ public class RestClient {
                     }
                 })
                 .perform();
-        // Staring Login UserActivity
+
         app.startActivity(i);
     }
 

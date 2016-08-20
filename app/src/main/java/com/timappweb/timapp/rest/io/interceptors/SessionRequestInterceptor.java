@@ -7,6 +7,8 @@ import com.timappweb.timapp.rest.RestClient;
 
 import java.io.IOException;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -39,7 +41,7 @@ public class SessionRequestInterceptor implements Interceptor
         Response response = chain.proceed(request); //perform request, here original request will be executed
 
         Log.d(TAG, "HTTP Reponse code: " + response.code());
-        if (response.code() == 401) { //if unauthorized
+        if (response.code() == HttpsURLConnection.HTTP_UNAUTHORIZED) { //if unauthorized
             Log.d(TAG, "Trying to refresh token... Waiting for synchronisation...");
             synchronized (RestClient.instance().getHttpClient()) { //perform all 401 in merge blocks, to avoid multiply token updates
                 Log.d(TAG, "Synchronisation OK...");

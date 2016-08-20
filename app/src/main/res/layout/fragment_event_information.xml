@@ -160,7 +160,7 @@
                                 android:id="@+id/ic_here"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:src="@drawable/gps"
+                                android:src="@{event.isUserAround() ? @drawable/gps : @drawable/ic_coming_guy_black}"
                                 android:padding="10dp"/>
                             <ImageView
                                 android:id="@+id/ic_coming"
@@ -169,7 +169,7 @@
                                 android:src="@drawable/ic_coming_guy_black"
                                 android:padding="10dp"
                                 android:visibility="gone"/>
-                            <android.support.v7.widget.SwitchCompat
+                            <com.timappweb.timapp.views.MySwitchCompat
                                 android:id="@+id/switch_button"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
