@@ -5,6 +5,7 @@ import com.timappweb.timapp.data.models.User;
 
 import java.util.List;
 
+// TODO remove if not used anymore
 public interface PlaceUserInterface {
 
     //String getUsername();

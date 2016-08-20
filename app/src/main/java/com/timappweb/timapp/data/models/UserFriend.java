@@ -24,6 +24,7 @@ public class UserFriend extends SyncBaseModel {
             notNull = true,
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
+    @SerializedName("user_source")
     public User userSource;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)

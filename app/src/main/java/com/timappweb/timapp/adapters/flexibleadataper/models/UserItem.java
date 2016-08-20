@@ -1,5 +1,6 @@
 package com.timappweb.timapp.adapters.flexibleadataper.models;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
+import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import com.timappweb.timapp.views.SimpleTimerView;
@@ -29,6 +31,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
  * Created by Stephane on 16/08/2016.
@@ -67,26 +70,34 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
     @Override
     public FriendViewHolder createViewHolder(FlexibleAdapter adapter, LayoutInflater inflater, ViewGroup parent) {
         View view = inflater.inflate(getLayoutRes(), parent, false);
-        return new FriendViewHolder(view);
+        return new FriendViewHolder(view, adapter);
     }
 
     @Override
-    public void bindViewHolder(FlexibleAdapter adapter, FriendViewHolder holder, int position, List payloads) {
+    public void bindViewHolder(final FlexibleAdapter adapter, FriendViewHolder holder, int position, List payloads) {
+        Context context = MyApplication.getApplicationBaseContext();
         //holder.selectedView.setVisibility(View.GONE);
         UserItem item = (UserItem) adapter.getItem(position);
         User friend = item.getUser();
         holder.personName.setText(friend.getUsername());
 
         //Listener Horizontal Scroll View
-        //HorizontalTagsTouchListener mHorizontalTagsTouchListener =
-         //       new HorizontalTagsTouchListener(mContext, mItemClickListener, position);
-        //holder.horizontalTags.setOnTouchListener(mHorizontalTagsTouchListener);
+        // Make it scrollable but it's also possible to click. Other wise if user click on tags
+        // It does not react as a click on the whole element.
+        HorizontalTagsTouchListener mHorizontalTagsTouchListener =
+                new HorizontalTagsTouchListener(context, new OnItemAdapterClickListener() {
+                    @Override
+                    public void onClick(int position) {
+                        adapter.mItemClickListener.onItemClick(position);
+                    }
+                }, position);
+        holder.horizontalTags.setOnTouchListener(mHorizontalTagsTouchListener);
 
         //Horizontal tags
         HorizontalTagsAdapter horizontalTagsAdapter = holder.horizontalTags.getAdapter();
         if(!friend.hasTags()) {
             List<Tag> newbieList = new ArrayList<>();
-            newbieList.add(new Tag(MyApplication.getApplicationBaseContext().getString(R.string.newbie_tag)));
+            newbieList.add(new Tag(context.getString(R.string.newbie_tag)));
             horizontalTagsAdapter.setData(newbieList);
         } else {
             horizontalTagsAdapter.setData(friend.getTags());
@@ -97,20 +108,18 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
         holder.personPhoto.setImageURI(uri);
     }
 
-    public class FriendViewHolder extends RecyclerView.ViewHolder {
+    public class FriendViewHolder extends FlexibleViewHolder {
 
         View cv;
         TextView personName;
         SimpleDraweeView personPhoto;
-        //View selectedView;
         HorizontalTagsRecyclerView horizontalTags;
 
-        FriendViewHolder(View itemView) {
-            super(itemView);
+        FriendViewHolder(View itemView, FlexibleAdapter adapter) {
+            super(itemView, adapter);
             cv = itemView.findViewById(R.id.cv);
             personName = (TextView) itemView.findViewById(R.id.person_name);
             personPhoto = (SimpleDraweeView) itemView.findViewById(R.id.person_photo);
-            //selectedView = itemView.findViewById(R.id.selectedView);
             horizontalTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
         }
 

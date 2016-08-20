@@ -51,7 +51,7 @@ public class FriendsLoader extends DataLoader<UserFriend> {
         adapter.removeItemsOfType(R.layout.item_friend);
         if (data != null){
             for (UserFriend friend: data){
-                adapter.addItem(new UserItem(friend.userSource));
+                adapter.addItem(new UserItem(friend.userTarget));
             }
             adapter.notifyDataSetChanged();
         }

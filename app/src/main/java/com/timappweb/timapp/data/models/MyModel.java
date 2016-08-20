@@ -1,5 +1,6 @@
 package com.timappweb.timapp.data.models;
 
+import android.database.sqlite.SQLiteException;
 import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -100,11 +102,20 @@ public class MyModel extends Model implements Observable, Serializable{
      * @return
      */
     public MyModel mySave() throws CannotSaveModelException {
-        if (this.save() == -1){
-            Log.e(TAG, "Cannot save model: " + this);
+        try{
+            if (this.save() == -1){
+                Log.e(TAG, "Cannot save model: " + this);
+                throw new CannotSaveModelException(this);
+            }
+            return this;
+        }
+        catch (SQLiteException ex){
+            Log.e(TAG, "SQLiteException: " + ex);
+            if (BuildConfig.DEBUG){
+                ex.printStackTrace();
+            }
             throw new CannotSaveModelException(this);
         }
-        return this;
     }
 
     private void _saveModelAssociations(){
