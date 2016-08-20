@@ -26,6 +26,7 @@ import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.EventPicturesActivity;
 import com.timappweb.timapp.activities.PostActivity;
+import com.timappweb.timapp.activities.PresentationActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
@@ -410,6 +411,11 @@ public class IntentsUtils {
         bundle.putSerializable("description", description);
         intent.putExtras(bundle);
         activity.setResult(Activity.RESULT_OK, intent);
+    }
+
+    public static void presentApp(Context context) {
+        Intent intent = new Intent(context, PresentationActivity.class);
+        context.startActivity(intent);
     }
 
 }

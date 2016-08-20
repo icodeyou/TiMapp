@@ -312,7 +312,6 @@
         <activity
             android:name=".activities.EventActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
             android:label="@string/title_activity_place"
             android:theme="@style/EditProfileTheme"
             android:parentActivityName=".activities.DrawerActivity" >
@@ -328,7 +327,19 @@
 
         </activity>
 
-        <!-- PLACE ACTIVITY //////////////////////////////////////////////-->
+        <!-- VIEW PAGER ACTIVITY //////////////////////////////////////////////-->
+        <activity
+            android:name=".activities.PresentationActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_presentation"
+            android:parentActivityName=".activities.DrawerActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.DrawerActivity" />
+        </activity>
+
+        <!-- EVENTS PICTURES ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.EventPicturesActivity"
             android:screenOrientation="portrait"
