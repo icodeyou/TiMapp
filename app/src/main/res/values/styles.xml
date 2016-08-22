@@ -156,12 +156,6 @@
         <item name="android:layout_margin">@dimen/fab_margin</item>
     </style>
 
-    <style name="ContainerFabDrawer">
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
     <style name="DrawerFab">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -213,7 +207,7 @@
     <style name="TextDefault">
         <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">normal</item>
@@ -255,6 +249,10 @@
         <item name="android:textSize">@dimen/text_huge</item>
     </style>
 
+    <style name="TextMountain" parent="TextDefault">
+        <item name="android:textSize">@dimen/text_mountain</item>
+    </style>
+
     <style name="TextBold" parent="TextDefault">
         <item name="android:textStyle">bold</item>
     </style>
@@ -263,7 +261,77 @@
         <item name="android:textStyle">italic</item>
     </style>
 
-    <!--.............................................................-->
+    <!--.................... Présentation .........................................-->
+    
+    <style name="TextTitlePresentation" parent="TextHuge">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/default_text_padding</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextInfoPresentation" parent="TextBig">
+        <!--<item name="android:textStyle">italic</item>-->
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:padding">@dimen/default_text_padding</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextLegendPresentation" parent="TextBold">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_item_padding</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ImagePresentationThree">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ImagePresentationFour">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+    </style>
+
+    <style name="LinearLayoutPFour">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!--<style name="ImageLayoutFour">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:padding">10dp</item>
+    </style>-->
+
+    <style name="ImageLayoutFour">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+    </style>
+
+    <style name="TextLayoutFour" parent="TextMultiLines">
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:paddingRight">10dp</item>
+    </style>
+
+    <style name="TextMultilinesPresentation" parent="TextMultiLines">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/default_text_padding</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--....................... Texts ............................-->
 
     <style name="TextInfoEvent" parent="TextSmall">
         <item name="android:layout_marginLeft">@dimen/margin_tabulation</item>
@@ -297,10 +365,7 @@
         <item name="android:radius">0dp</item>
     </style>
 
-    <style name="formLabel">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-       <item name="android:layout_height">wrap_content</item>
+    <style name="formLabel" parent="WidthWeightOne">
         <item name="android:gravity">center_vertical</item>
        <item name="android:textColor">@color/form_title</item>
        <item name="android:textSize">@dimen/text_normal</item>
@@ -452,6 +517,18 @@
 
     <style name="ProgressViewSmallWhite" parent="SmallProgressView">
         <item name="crs_pl_fg_color">@color/white</item>
+    </style>
+
+    <style name="ButtonPresentation" parent="WidthWeightOne">
+        <item name="android:layout_height">@dimen/height_bottom_button</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="WidthWeightOne">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

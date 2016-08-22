@@ -23,15 +23,27 @@ public class PresentationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
 
+        setStatusBarColor(R.color.black);
+
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(new PresentationPagerAdapter(this));
+
+        initListeners();
+    }
+
+    private void initListeners() {
+
     }
 
     public enum CustomPagerEnum {
 
-        RED(R.string.text_anonymous, R.layout.presentation_one),
-        BLUE(R.string.title_activity_profile, R.layout.presentation_two),
-        ORANGE(R.string.title_activity_invite_friends, R.layout.presentation_three);
+        ONE(R.string.p_key_one, R.layout.presentation_one),
+        TWO(R.string.p_key_two, R.layout.presentation_two),
+        THREE(R.string.p_key_three, R.layout.presentation_three),
+        FOUR(R.string.p_key_four, R.layout.presentation_four),
+        FIVE(R.string.p_key_five, R.layout.presentation_five),
+        SIX(R.string.p_key_six, R.layout.presentation_six),
+        SEVEN(R.string.p_key_seven, R.layout.presentation_seven);
 
         private int mTitleResId;
         private int mLayoutResId;

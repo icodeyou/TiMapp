@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Have a great day world"/>
+    android:layout_height="match_parent"
+    android:background="@drawable/radius_simple_background_presentation"
+    android:gravity="center" >
+    <me.grantland.widget.AutofitTextView
+        style="@style/TextTitlePresentation"
+        android:text="@string/title_p_three"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="horizontal">
+        <LinearLayout
+            style="@style/WidthWeightOne"
+            android:orientation="vertical">
+            <ImageView
+                style="@style/ImagePresentationThree"
+                android:src="@drawable/screenshot_map"/>
+            <TextView
+                style="@style/TextLegendPresentation"
+                android:textColor="@color/white"
+                android:text="Map"/>
+        </LinearLayout>
+        <LinearLayout
+            style="@style/WidthWeightOne"
+            android:orientation="vertical">
+            <ImageView
+                style="@style/ImagePresentationThree"
+                android:src="@drawable/screenshot_list"/>
+            <TextView
+                style="@style/TextLegendPresentation"
+                android:text="List"/>
+        </LinearLayout>
+    </LinearLayout>
+    <me.grantland.widget.AutofitTextView
+        style="@style/TextInfoPresentation"
+        android:text="@string/two_ways_to_explore"/>
 </LinearLayout>

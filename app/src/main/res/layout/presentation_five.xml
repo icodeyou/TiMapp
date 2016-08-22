@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/radius_simple_background_presentation"
+    android:gravity="center" >
+    <me.grantland.widget.AutofitTextView
+        style="@style/TextTitlePresentation"
+        android:text="@string/title_p_five"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            style="@style/WidthWeightOne"
+            android:orientation="vertical"
+            android:layout_marginBottom="@dimen/margin_icons_presentation_four">
+            <ImageView
+                style="@style/ImagePresentationFour"
+                android:src="@drawable/picandtags"/>
+            <TextView
+                style="@style/TextLegendPresentation"
+                android:text="@string/post_pics_and_tags"/>
+        </LinearLayout>
+        <LinearLayout
+            style="@style/WidthWeightOne"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_icons_presentation_four">
+            <ImageView
+                style="@style/ImagePresentationFour"
+                android:src="@drawable/invite_icon"/>
+            <TextView
+                style="@style/TextLegendPresentation"
+                android:text="Invite people"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+        style="@style/TextMultilinesPresentation"
+        android:text="Your posts provide Real Time Rating for the community"/>
+    <TextView
+        style="@style/TextMultilinesPresentation"
+        android:text="You can only post if you're located in an event."/>
+</LinearLayout>

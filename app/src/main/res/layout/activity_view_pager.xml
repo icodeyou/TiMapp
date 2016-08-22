@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/view_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_coming_guy"/>
+    android:background="@drawable/presentation_background">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_above="@+id/buttons_layout" />
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginRight="@dimen/margin_separator_button"
+            android:layout_marginLeft="@dimen/margin_separator_button"
+            android:background="@color/LightGrey"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                style="@style/ButtonPresentation"
+                android:text="Skip"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_separator_button"
+                android:layout_marginBottom="@dimen/margin_separator_button"
+                android:background="@color/LightGrey"/>
+            <Button
+                style="@style/ButtonPresentation"
+                android:text="Next"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
