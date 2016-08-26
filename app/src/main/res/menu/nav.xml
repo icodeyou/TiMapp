@@ -3,6 +3,8 @@
 
     <item android:title="@string/menu_title_community">
         <menu>
+            <item android:id="@+id/menu_item_viewpager" android:icon="@drawable/questin_mark"
+                android:title="@string/how_it_works" />
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_dialog_map"
                 android:title="@string/nav_explore" />
             <item android:id="@+id/menu_item_tag_around" android:icon="@drawable/ic_plus"

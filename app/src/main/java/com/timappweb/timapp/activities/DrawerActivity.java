@@ -319,9 +319,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             cameraButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(context, "Cam click", Toast.LENGTH_SHORT).show();
-                    //IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_CAMERA);
-                    IntentsUtils.presentApp(context);
+                    Toast.makeText(context, "Cam click", Toast.LENGTH_SHORT).show();
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_CAMERA);
                 }
             });
             tagButton.setOnClickListener(new View.OnClickListener() {
@@ -351,6 +350,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
 
         switch (id){
+            case R.id.menu_item_viewpager:
+                IntentsUtils.presentApp(this);
+                break;
             case R.id.menu_item_explore:
                 IntentsUtils.home(this);
                 break;

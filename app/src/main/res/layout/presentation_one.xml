@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" android:gravity="center"
+    android:padding="20dp">
     <ImageView
+        android:id="@+id/presentation_one_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_presentation_next"
-        android:src="@drawable/ic_coming_guy_black"
-        android:scaleType="fitCenter"/>
-    <Button
-        android:id="@+id/button_presentation_next"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
-</RelativeLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@drawable/presentation_main"
+        android:scaleType="fitCenter" />
+    <!--<TextView
+        android:id="@+id/item_bottom"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        style="@style/TextBig"
+        android:textStyle="italic"
+        android:textColor="@color/white"
+        android:text="The concept in 3 steps"/>-->
+</LinearLayout>
