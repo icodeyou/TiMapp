@@ -34,6 +34,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.fragments.EventInformationFragment;
@@ -41,6 +42,9 @@ import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.fragments.EventTagsFragment;
 import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.loaders.ModelLoader;
@@ -48,8 +52,12 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class EventActivity extends BaseActivity implements LocationManager.LocationListener{
 
+    private static final long MIN_DELAY_UPDATE_EVENT = 5 * 60 * 1000;
     private String          TAG                     = "EventActivity";
 
     private static final int PAGER_INFO             = 0;
@@ -94,37 +102,72 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            this.event = IntentsUtils.extractEvent(getIntent());
-            eventId = IntentsUtils.extractPlaceId(getIntent());
-            if (event == null && eventId <= 0){
-                Log.e(TAG, "Trying to view an invalid event --> redirect to home");
-                IntentsUtils.home(this);
-                return;
-            }
-            else if (eventId <= 0){
-                eventId = event.remote_id;
-            }
+            this.loadEvent();
 
             mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
-
             pageTitle = (TextView) findViewById(R.id.title_event);
             btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
             btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
             btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
 
-
-            getSupportLoaderManager().initLoader(LOADER_ID_CORE, null, new EventLoader());
-
-            if (event != null){
-                onEventLoaded();
-                event = (Event) event.requireLocalId();
-            }
             initListeners();
         } catch (CannotSaveModelException e) {
             // TODO toast
             e.printStackTrace();
             IntentsUtils.home(this);
             finish();
+        }
+    }
+
+    private void loadEvent() throws CannotSaveModelException {
+        this.event = IntentsUtils.extractEvent(getIntent());
+        eventId = IntentsUtils.extractPlaceId(getIntent());
+        if (event == null && eventId <= 0){
+            Log.e(TAG, "Trying to view an invalid event --> redirect to home");
+            IntentsUtils.home(this);
+            return;
+        }
+        else if (eventId <= 0){
+            eventId = event.remote_id;
+        }
+
+        if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
+            // TODO jack: add loader here
+            Call<Event> call = RestClient.service().viewPlace(eventId);
+            RestClient.buildCall(call)
+                    .onResponse(new HttpCallback<Event>() {
+                        @Override
+                        public void successful(Event event) {
+                            try {
+                                EventActivity.this.event = event.deepSave();
+                                SyncHistory.updateSync(DataSyncAdapter.SYNC_TYPE_EVENT, EventActivity.this.event);
+                                onEventLoaded();
+                            } catch (CannotSaveModelException e) {
+                                // TODO toast
+                                e.printStackTrace();
+                                IntentsUtils.home(EventActivity.this);
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void notFound() {
+                            Toast.makeText(EventActivity.this, R.string.event_does_not_exists_anymore, Toast.LENGTH_SHORT).show();
+                            // TODO If user has status here for this event, we need to remove it
+                            IntentsUtils.home(EventActivity.this);
+                            EventActivity.this.finish();
+                        }
+                    })
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
+                            // TODO jack: hide loader here
+                        }
+                    })
+                    .perform();
+        }
+        else{
+            event = (Event) event.requireLocalId();
         }
     }
 
@@ -461,36 +504,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         @Override
         public void onPageScrollStateChanged(int state) {
             //Log.d(TAG, "onPageScrollStateChanged: " + state);
-        }
-    }
-
-
-    class EventLoader implements LoaderManager.LoaderCallbacks<List<Event>>{
-
-        @Override
-        public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
-            SyncBaseModel.getEntry(Event.class, EventActivity.this, eventId, DataSyncAdapter.SYNC_TYPE_EVENT);
-            return new ModelLoader<>(EventActivity.this, Event.class, SyncBaseModel.queryByRemoteId(Event.class, eventId), false);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-            try {
-                Log.d(TAG, "Event loaded finish");
-                if (data.size() > 0){
-                    event = data.get(0);
-                    event = (Event) event.requireLocalId();
-                    onEventLoaded();
-                }
-            } catch (CannotSaveModelException e) {
-                IntentsUtils.home(EventActivity.this);
-                EventActivity.this.finish();
-            }
-        }
-
-        @Override
-        public void onLoaderReset(Loader<List<Event>> loader) {
-
         }
     }
 

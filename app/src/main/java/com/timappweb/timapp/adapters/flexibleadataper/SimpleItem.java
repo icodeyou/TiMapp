@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.Util;
 
 import java.io.Serializable;
 import java.util.List;
@@ -69,6 +70,7 @@ public class SimpleItem extends AbstractModelItem<SimpleItem.ParentViewHolder>
 	@Override
 	@SuppressWarnings("unchecked")
 	public void bindViewHolder(final FlexibleAdapter adapter, ParentViewHolder holder, int position, List payloads) {
+		Context context = holder.itemView.getContext();
 		//Subtitle
 		if (adapter.isExpandable(this)) {
 			setSubtitle(adapter.getCurrentChildren((IExpandable) this).size() + " subItems");
@@ -81,7 +83,7 @@ public class SimpleItem extends AbstractModelItem<SimpleItem.ParentViewHolder>
 			Log.i(this.getClass().getSimpleName(), "ExpandableItem Payload " + payloads);
 			if (adapter.hasSearchText()) {
 				Utils.highlightText(holder.itemView.getContext(), holder.mSubtitle,
-						getSubtitle(), adapter.getSearchText(), R.color.colorAccent);
+						getSubtitle(), adapter.getSearchText(), context.getResources().getColor(R.color.colorAccent));
 			} else {
 				holder.mSubtitle.setText(getSubtitle());
 			}
@@ -107,10 +109,10 @@ public class SimpleItem extends AbstractModelItem<SimpleItem.ParentViewHolder>
 			//In case of searchText matches with Title or with an SimpleItem's field
 			// this will be highlighted
 			if (adapter.hasSearchText()) {
-				Utils.highlightText(holder.itemView.getContext(), holder.mTitle,
-						getTitle(), adapter.getSearchText(), R.color.colorAccent);
-				Utils.highlightText(holder.itemView.getContext(), holder.mSubtitle,
-						getSubtitle(), adapter.getSearchText(), R.color.colorAccent);
+				Utils.highlightText(context, holder.mTitle,
+						getTitle(), adapter.getSearchText(), context.getResources().getColor(R.color.colorAccent));
+				Utils.highlightText(context, holder.mSubtitle,
+						getSubtitle(), adapter.getSearchText(), context.getResources().getColor(R.color.colorAccent));
 			} else {
 				holder.mTitle.setText(getTitle());
 				holder.mSubtitle.setText(getSubtitle());
@@ -188,7 +190,7 @@ public class SimpleItem extends AbstractModelItem<SimpleItem.ParentViewHolder>
 
 		@Override
 		public float getActivationElevation() {
-			return Utils.dpToPx(itemView.getContext(), 0f);
+			return Util.dpToPx(0f, itemView.getContext());
 		}
 
 		@Override

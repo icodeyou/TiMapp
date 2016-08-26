@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
-import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
+import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
@@ -24,25 +25,26 @@ import com.timappweb.timapp.data.loader.FriendsLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class InviteFriendsActivity extends BaseActivity {
+public class InviteFriendsActivity extends BaseActivity
+        implements FlexibleAdapter.OnItemClickListener{
 
     private String              TAG                         = "InviteFriendsActivity";
     private static final int    LOADER_ID_FRIENDS_LIST      = 0;
@@ -51,7 +53,7 @@ public class InviteFriendsActivity extends BaseActivity {
     private Menu menu;
 
     private RecyclerView                recyclerView;
-    private SelectFriendsAdapter        adapter;
+    private SelectFriendsAdapter mAdapter;
     private Event                       event;
     private FriendsLoader               mFriendsLoader;
     private WaveSwipeRefreshLayout          mSwipeRefreshLayout;
@@ -75,17 +77,21 @@ public class InviteFriendsActivity extends BaseActivity {
 
         try {
             event = (Event) event.requireLocalId();
-
             this.initToolbar(true);
-
             mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
             mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             progressview = findViewById(R.id.progress_view);
-
             initAdapterListFriends();
-
-            mFriendsLoader = new FriendsLoader(this, adapter, mSwipeRefreshLayout);
+            mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout){
+                @Override
+                public void onLoadFinished(Loader<List<UserFriend>> loader, List<UserFriend> data) {
+                    super.onLoadFinished(loader, data);
+                    if (data != null && data.size() > 0){
+                        initializeSelection();
+                    }
+                }
+            };
             getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mFriendsLoader);
         } catch (CannotSaveModelException e) {
             IntentsUtils.home(this);
@@ -93,76 +99,95 @@ public class InviteFriendsActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_invite, menu);
         this.menu = menu;
         menu.findItem(R.id.action_invite).setEnabled(false);
-        //setButtonValidation();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_select_all:
+                mAdapter.selectAll();
+                return true;
+            case R.id.action_delete:
+                mAdapter.clearSelection();
+                return true;
             case R.id.action_invite:
                 sendInvites();
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return false;
+        }
+    }
+
+        /*
+    private void initializeActionModeHelper() {
+        mActionModeHelper = new ActionModeHelper(mAdapter, R.menu.menu_invite, this) {
+            //Override to customize the title
+            @Override
+            public void updateContextTitle(int count) {
+                //You can use the internal mActionMode instance
+                if (mActionMode != null) {
+                    mActionMode.setTitle(getResources().getQuantityString(R.plurals.action_friend_selected, count));
+                }
+            }
+        }.withDefaultMode(SelectableAdapter.MODE_MULTI);
+        this.startSupportActionMode(mActionModeHelper);
+    }
+    */
+
+
+    private void initializeSelection(){
+        // Preselect every user already invited.
+        List<EventsInvitation> invitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
+        for (EventsInvitation invite: invitations){
+            int position = mAdapter.getGlobalPositionOf(new UserItem(invite.getUser()));
+            AbstractFlexibleItem item = mAdapter.getItem(position);
+            if (item instanceof UserItem){
+                UserItem userItem = (UserItem) item;
+                mAdapter.toggleSelection(position);
+                userItem.setSelectable(false);
+            }
         }
     }
 
     private void initAdapterListFriends() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SelectFriendsAdapter(this);
-        recyclerView.setAdapter(adapter);
-        adapter.initializeListeners(new FlexibleAdapter.OnItemClickListener(){
+        mAdapter = new SelectFriendsAdapter(this);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setMode(SelectableAdapter.MODE_MULTI);
+    }
 
-            @Override
-            public boolean onItemClick(int position) {
-                AbstractFlexibleItem item = adapter.getItem(position);
-                if (item instanceof SubUserItem){
-                    User friend = ((SubUserItem) item).getUser();
-                    SelectFriendsAdapter.InviteInfo info = adapter.getInviteInfo(friend);
-
-                    if (info == null){
-                        adapter.setSelected(friend, true);
-                    }
-                    else if (!info.editable){
-                        if (info.selected){
-                            Toast.makeText(InviteFriendsActivity.this, R.string.friend_already_invited, Toast.LENGTH_LONG).show();
-                        }
-                        // not editable, do nothing
-                    }
-                    else {
-                        adapter.setSelected(friend, !info.selected);
-                    }
-                    boolean enableInviteButton = adapter.count(true, true) > 0;
-                    menu.findItem(R.id.action_invite).setEnabled(enableInviteButton);
-                    adapter.notifyDataSetChanged();
-                }
+    @Override
+    public boolean onItemClick(int position) {
+        if (position != RecyclerView.NO_POSITION) {
+            // If user is already invited
+            if (!mAdapter.getItem(position).isSelectable()){
+                Toast.makeText(InviteFriendsActivity.this, R.string.friend_already_invited, Toast.LENGTH_LONG).show();
                 return true;
             }
-        });
-
-        List<EventsInvitation> invitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
-        for (EventsInvitation invitation: invitations){
-            adapter.setSelected(invitation.user_target, true);
-            adapter.setEditable(invitation.user_target, false);
+            // New invite
+            else{
+                mAdapter.toggleSelection(position);
+                menu.findItem(R.id.action_invite).setEnabled(mAdapter.countNewSelectedUser() >= 1);
+                //mAdapter.notifyDataSetChanged(); // Useless ?
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 
 
     private void sendInvites(){
-        // Encoding data:
-        ArrayList<Integer> ids = new ArrayList<>();
-        for (Map.Entry<User, SelectFriendsAdapter.InviteInfo> friendEntry: adapter.getInviteInfo().entrySet()){
-            if (friendEntry.getValue().selected && friendEntry.getValue().editable){
-                ids.add(friendEntry.getKey().remote_id);
-            }
-        }
+        // Get user ids for each new invites
+        List<Long> ids = mAdapter.getNewSelectedUserIds();
         if (ids.size() == 0){
             return;
         }
@@ -228,4 +253,43 @@ public class InviteFriendsActivity extends BaseActivity {
         super.onStop();
     }
 
+    // ---------------------------------------------------------------------------------------------
+/*
+    @Override
+    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+        this.menu = menu;
+        menu.findItem(R.id.action_invite).setEnabled(false);
+        mAdapter.setMode(SelectableAdapter.MODE_MULTI);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_select_all:
+                mAdapter.selectAll();
+                return true;
+            case R.id.action_delete:
+                mAdapter.clearSelection();
+                return true;
+            case R.id.action_invite:
+                sendInvites();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode mode) {
+        mAdapter.setMode(SelectableAdapter.MODE_IDLE);
+        mActionModeHelper = null;
+    }
+
+*/
 }

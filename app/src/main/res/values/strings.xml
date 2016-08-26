@@ -278,9 +278,18 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="please_update_app">Oups there has been a little probleme here, it will be fix in the next release !</string>
     <string name="upload_picture_in_progress">Please wait the end of the current upload</string>
     <string name="thanks_for_add_tag">Thank you for your tags !</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_unselect_all">Unselect all</string>
+    <string name="event_does_not_exists_anymore">This event does not exist anymore</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>
         <item quantity="other">%d people</item>
+    </plurals>
+    <plurals name="action_friend_selected">
+        <item quantity="zero">Click to select</item>
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
     </plurals>
 </resources>

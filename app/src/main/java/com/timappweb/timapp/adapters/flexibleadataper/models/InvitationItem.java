@@ -32,7 +32,7 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
  */
 public class InvitationItem extends AbstractFlexibleItem<InvitationItem.InvitationsViewHolder> {
 
-    private static final String TAG = "PictureItem";
+    private static final String TAG = "InvitationItem";
     private EventsInvitation invitation;
 
     public InvitationItem(EventsInvitation invitation) {
@@ -68,7 +68,6 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
 
     @Override
     public void bindViewHolder(FlexibleAdapter adapter, InvitationsViewHolder holder, int position, List payloads) {
-        Log.v(TAG, "Loading picture in adapter: " + invitation);
         holder.setEventInHolder(this.invitation);
     }
 

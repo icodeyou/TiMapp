@@ -5,80 +5,43 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.timappweb.timapp.activities.InviteFriendsActivity;
+import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
+import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 
 public class SelectFriendsAdapter extends FriendsAdapter {
 
-    /**
-     * Retain friends that are invited
-     */
-    HashMap<User, InviteInfo> invites;
-
     public SelectFriendsAdapter(Context context) {
         super(context);
-        invites = new HashMap<>();
     }
 
-/*
-    @Override
-    public void onBindViewHolder(FriendViewHolder friendViewHolder, int position) {
-        super.onBindViewHolder(friendViewHolder, position);
-        User friend = data.get(position);
-
-        if(invites.containsKey(friend) && invites.get(friend).selected) {
-            friendViewHolder.selectedView.setVisibility(View.VISIBLE);
-        } else {
-            friendViewHolder.selectedView.setVisibility(View.GONE);
-        }
-    }*/
-
-    public InviteInfo getInviteInfo(User friend) {
-        return invites.get(friend);
+    public int countNewSelectedUser(){
+        return getNewSelectedUserIds().size();
     }
 
-    public void setSelected(User friend, boolean selected) {
-        InviteInfo info = this.invites.get(friend);
-        if (info == null){
-            info = new InviteInfo();
-            info.editable = true;
-            invites.put(friend, info);
-        }
-        info.selected = selected;
-    }
-    public int count(boolean isSelected, boolean isEditable) {
-        int i = 0;
-        for (Map.Entry<User, InviteInfo> infoEntry: invites.entrySet()){
-            if (infoEntry.getValue().selected == isSelected && infoEntry.getValue().editable == isEditable){
-                i++;
+
+    public List<Long> getNewSelectedUserIds() {
+        List<Long> res = new LinkedList<>();
+        for (int position: this.getSelectedPositions()){
+            AbstractFlexibleItem item = this.getItem(position);
+            if (item instanceof UserItem){
+                UserItem userItem = (UserItem) item;
+                if (userItem.isSelectable()){
+                    res.add(userItem.getUser().getRemoteId());
+                }
             }
         }
-        return i;
-    }
-
-
-    public void setEditable(User friend, boolean editable) {
-        InviteInfo info = this.invites.get(friend);
-        if (info == null){
-            info = new InviteInfo();
-            info.selected = false;
-            invites.put(friend, info);
-        }
-        info.editable = editable;
-    }
-
-    public HashMap<User, InviteInfo> getInviteInfo() {
-        return invites;
-    }
-
-
-    public class InviteInfo{
-        public boolean editable;
-        public boolean selected;
+        return res;
     }
 }

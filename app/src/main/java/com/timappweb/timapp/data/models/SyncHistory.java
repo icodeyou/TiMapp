@@ -49,7 +49,7 @@ public class SyncHistory extends MyModel {
 
 
     /**
-     *
+     *  Update last sync time for the given type and object
      * @param type
      */
     public static void updateSync(int type, HistoryItemInterface object){

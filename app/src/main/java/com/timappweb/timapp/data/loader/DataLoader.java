@@ -108,7 +108,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
     @Override
     public void onLoadMore() {
         int localOffset = this.getLocalOffset();
-        //if (this.localQuery.offset(localOffset).count() > 0){
+        //if (this.localQuery.offset(localOffset).countNewInvites() > 0){
         //    Log.d(TAG, "Loading data from local db with offset: " + localOffset);
         //    List<EntityType> data = (List<EntityType>) this.localQuery.offset(localOffset).execute();
         //    this.onLoadFinished(null, data);

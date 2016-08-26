@@ -1,5 +1,6 @@
 package com.timappweb.timapp.adapters.flexibleadataper.models;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.florent37.materialviewpager.Utils;;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.AbstractModelItem;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
@@ -21,7 +24,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.IFilterable;
 import eu.davidea.flexibleadapter.items.IHeader;
 import eu.davidea.flexibleadapter.items.ISectionable;
-import eu.davidea.flexibleadapter.utils.Utils;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
@@ -76,9 +78,10 @@ public class SubUserItem extends AbstractModelItem<SubUserItem.UserViewHolder>
 	public void bindViewHolder(FlexibleAdapter adapter, UserViewHolder holder, int position, List payloads) {
 		//In case of searchText matches with Title or with an SimpleItem's field
 		// this will be highlighted
+		Context context = holder.itemView.getContext();
 		if (adapter.hasSearchText()) {
-			Utils.highlightText(holder.itemView.getContext(), holder.tvUsername,
-					user.getUsername(), adapter.getSearchText(), R.color.colorAccent);
+			eu.davidea.flexibleadapter.utils.Utils.highlightText(context, holder.tvUsername,
+					user.getUsername(), adapter.getSearchText(), context.getResources().getColor(R.color.colorAccent));
 		} else {
 			holder.tvUsername.setText(user.getUsername());
 		}
@@ -139,7 +142,7 @@ public class SubUserItem extends AbstractModelItem<SubUserItem.UserViewHolder>
 
 		@Override
 		public float getActivationElevation() {
-			return Utils.dpToPx(itemView.getContext(), 4f);
+			return Utils.dpToPx(4f, itemView.getContext());
 		}
 
 		@Override

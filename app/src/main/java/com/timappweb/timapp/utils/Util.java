@@ -157,4 +157,8 @@ public class Util {
             appStateError(TAG, msg);
         }
     }
+
+    public static float dpToPx(float dp, Context context) {
+        return com.github.florent37.materialviewpager.Utils.dpToPx(dp, context);
+    }
 }

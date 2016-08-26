@@ -54,7 +54,7 @@ public interface WebServiceInterface {
     // Event invites
     @FormUrlEncoded
     @POST("PlacesInvitations/invite/{placeId}.json")
-    Call<List<UserInvitationFeedback>> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Integer> ids);
+    Call<List<UserInvitationFeedback>> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Long> ids);
 
     @GET("PlacesInvitations/accept/{inviteId}.json")
     Call<RestFeedback> acceptInvite(@Path("inviteId") int inviteId);

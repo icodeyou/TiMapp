@@ -2,6 +2,7 @@ package com.timappweb.timapp.adapters.flexibleadataper.models;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,6 +32,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.flexibleadapter.utils.DrawableUtils;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
@@ -80,6 +82,14 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
         UserItem item = (UserItem) adapter.getItem(position);
         User friend = item.getUser();
         holder.personName.setText(friend.getUsername());
+
+        // Selection background
+        DrawableUtils.setBackground(holder.itemView,
+                DrawableUtils.getSelectableBackgroundCompat(
+                        Color.WHITE,
+                        Color.BLACK,
+                        context.getResources().getColor(R.color.accent_color)));
+
 
         //Listener Horizontal Scroll View
         // Make it scrollable but it's also possible to click. Other wise if user click on tags

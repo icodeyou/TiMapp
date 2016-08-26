@@ -362,8 +362,10 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         centerMap(location, null);
     }
     private void centerMap(Location location,  GoogleMap.CancelableCallback  callback){
-        needCenterMap = false;
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP), callback);
+        if (gMap != null){
+            needCenterMap = false;
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP), callback);
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.adapters.flexibleadataper;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
@@ -60,9 +62,10 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 	public void bindViewHolder(FlexibleAdapter adapter, ChildViewHolder holder, int position, List payloads) {
 		//In case of searchText matches with Title or with an SimpleItem's field
 		// this will be highlighted
+		Context context = holder.itemView.getContext();
 		if (adapter.hasSearchText()) {
-			Utils.highlightText(holder.itemView.getContext(), holder.mTitle,
-					getTitle(), adapter.getSearchText(), R.color.colorAccent);
+			Utils.highlightText(context, holder.mTitle,
+					getTitle(), adapter.getSearchText(), context.getResources().getColor(R.color.colorAccent));
 		} else {
 			holder.mTitle.setText(getTitle());
 		}
@@ -103,7 +106,7 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 
 		@Override
 		public float getActivationElevation() {
-			return Utils.dpToPx(itemView.getContext(), 4f);
+			return Util.dpToPx(4f, itemView.getContext());
 		}
 	}
 

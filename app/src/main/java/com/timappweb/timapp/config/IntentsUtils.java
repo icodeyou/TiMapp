@@ -340,6 +340,7 @@ public class IntentsUtils {
     public static Event extractEvent(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
+            Log.e(TAG, "Trying to extract a null event");
             return null;
         }
         return Event.load(Event.class, extras.getLong(IntentsUtils.KEY_EVENT));

@@ -812,7 +812,7 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
 //    /**
 //     * https://github.com/googlemaps/android-maps-utils/blob/master/demo/src/com/google/maps/android/utils/demo/CustomMarkerClusteringDemoActivity.java
 //     * Called before the marker for a Cluster is added to the map.
-//     * The default implementation draws a circle with a rough count of the number of items.
+//     * The default implementation draws a circle with a rough countNewInvites of the number of items.
 //     */
 //    @Override
 //    protected void onBeforeClusterRendered(Cluster cluster, MarkerOptions markerOptions) {
