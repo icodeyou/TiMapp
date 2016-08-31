@@ -240,7 +240,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         if (currentSpot == null){
             currentSpot = new Spot();
         } else {
-            categorySelector.selectCategoryUI(currentSpot.getCategory().name, currentSpot.getCategory().getSmallIcon());
+            categorySelector.selectCategoryUI(currentSpot.getCategory().name, currentSpot.getCategory().getIconDrawable(this));
             etNameSpot.setText(currentSpot.name);
             etNameSpot.setSelection(currentSpot.name.length());
         }
@@ -252,7 +252,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private void setCategory(SpotCategory spotCategory) {
         Spot spot = currentSpot;
         spot.setCategory(spotCategory);
-        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getSmallIcon());
+        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getIconDrawable(this));
         etNameSpot.requestFocus();
     }
 

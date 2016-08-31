@@ -102,7 +102,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            this.loadEvent();
 
             mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
             pageTitle = (TextView) findViewById(R.id.title_event);
@@ -111,6 +110,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
 
             initListeners();
+            this.loadEvent();
         } catch (CannotSaveModelException e) {
             // TODO toast
             e.printStackTrace();
@@ -168,6 +168,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
         else{
             event = (Event) event.requireLocalId();
+            onEventLoaded();
         }
     }
 

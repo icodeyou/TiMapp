@@ -1,91 +1,72 @@
 package com.timappweb.timapp.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by stephane on 3/31/2016.
  */
 public class PictureUtility {
-    
-    public static File resize(Context context, File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
 
-        int width = 50, height = 50;
+    private static final String TAG = "PictureUtility";
 
-        // http://frescolib.org/docs/resizing-rotating.html
-
+    public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
         /*Picasso.with(context).load(f)
                 .resize(imageMaxWidth, imageMaxHeight)
                 .onlyScaleDown()
                 .into(getTarget(f.getAbsolutePath()));*/
 
-
-        return f;
-        /*
         FileInputStream fis = new FileInputStream(f);
         Bitmap b = BitmapFactory.decodeStream(fis);
-        b = PictureUtility.getResizedBitmap(b, imageMaxSize);
+        if (b == null){
+            fis.close();
+            throw new IOException("Cannot decode input stream: " + f);
+        }
+        b = PictureUtility.resize(b, imageMaxWidth, imageMaxHeight);
         fis.close();
-
         PictureUtility.persistImage(b, f);
         return f;
-        /*
-        Bitmap b = null;
-
-        //Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-
-        FileInputStream fis = new FileInputStream(f);
-        BitmapFactory.decodeStream(fis, null, o);
-        fis.close();
-
-        int scale = 1;
-        if (o.outHeight > imageMaxSize || o.outWidth > imageMaxSize) {
-            scale = (int)Math.pow(2, (int) Math.ceil(Math.log(imageMaxSize /
-                    (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
-        }
-
-        //Decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        fis = new FileInputStream(f);
-        b = BitmapFactory.decodeStream(fis, null, o2);
-        fis.close();
-
-        FileOutputStream fOut = new FileOutputStream(f);
-        b.compress(Bitmap.CompressFormat.PNG, 0, fOut);
-        fOut.flush();
-        fOut.close();
-        return  f;
-        */
     }
     /**
      * reduces the size of the image
      * @param image
-     * @param maxSize
+     * @param maxWidth
+     * @param maxHeight
      * @return
      */
-    public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+    public static Bitmap resize(@NotNull Bitmap image, int maxWidth, int maxHeight) {
         int width = image.getWidth();
         int height = image.getHeight();
 
+        if (width <= maxWidth && height <= maxHeight){
+            return image;
+        }
         float bitmapRatio = (float)width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
+
+        if (width > maxWidth) {
+            width = maxWidth;
             height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
+        }
+
+        if (height > maxHeight) {
+            height = maxHeight;
             width = (int) (height * bitmapRatio);
         }
+
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
@@ -95,6 +76,26 @@ public class PictureUtility {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
         os.flush();
         os.close();
+    }
+
+    public static Drawable drawableFromUrl(String url, Drawable defaultDrawable) {
+        try {
+            Log.d(TAG, "Get drawable from url: " + url);
+            Bitmap x;
+            HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+            connection.connect();
+            InputStream input = null;
+            input = connection.getInputStream();
+            x = BitmapFactory.decodeStream(input);
+            if (x == null){
+                throw new Exception("Cannot decode input stream from url: " + url);
+            }
+            return new BitmapDrawable(x);
+        } catch (Exception e) {
+            Log.e(TAG, "Cannot convert to drawable: " + e.getMessage());
+            e.printStackTrace();
+            return defaultDrawable;
+        }
     }
 
     //target to save

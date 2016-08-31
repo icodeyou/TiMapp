@@ -44,7 +44,7 @@ public class EventCategoriesAdapter extends CategoriesAdapter {
         final TextView categoryText = holder.categoryText;
         icons.put(eventCategory.remote_id, categoryIcon);
 
-        categoryIcon.setImageResource(eventCategory.getSmallIcon());
+        categoryIcon.setImageDrawable(eventCategory.getIconDrawable(this.context));
         if(isLegend) {
             String capitalizedName = Util.capitalize(eventCategory.getName());
             categoryText.setText(capitalizedName);

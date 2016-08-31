@@ -1,18 +1,15 @@
 package com.timappweb.timapp.adapters.flexibleadataper.models;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.AbstractModelItem;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Picture;
 
 import java.util.List;
@@ -44,11 +41,15 @@ public class PictureItem  extends AbstractModelItem<PictureItem.PictureViewHolde
 
     @Override
     public void bindViewHolder(FlexibleAdapter adapter, PictureViewHolder holder, int position, List payloads) {
-        final String fullUrl = picture.getPreviewUrl();
-        Log.d(TAG, "Loading picture in adapter: " + fullUrl);
-
-        final Uri uri = Uri.parse(fullUrl);
-        holder.ivPicture.setImageURI(uri);
+        final String fullUrl = picture.getThumbnailUrl(Picture.ThumbnailType.SQUARE);
+        if (fullUrl == null){
+            Log.e(TAG, "Picture url is null, setting default picture");
+            holder.ivPicture.setBackgroundResource(R.drawable.placeholder_picture);
+        }
+        else{
+            Log.d(TAG, "Loading picture in adapter: " + fullUrl);
+            holder.ivPicture.setImageURI(Uri.parse(fullUrl));
+        }
         holder.ivPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -109,45 +109,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         SimpleFacebook.setConfiguration(configuration);
     }
 
-
-    /**
-     * TODO reim
-     * @param i
-     * @param level
-     * @return
-     */
-    public static ImageView setCategoryBackground(ImageView i, int level) {
-        switch (level) {
-            case 0:
-                i.setBackgroundResource(R.drawable.b1);
-                return i;
-            case 1:
-                i.setBackgroundResource(R.drawable.b2);
-                return i;
-            case 2:
-                i.setBackgroundResource(R.drawable.b3);
-                return i;
-            case 3:
-                i.setBackgroundResource(R.drawable.b4);
-                return i;
-            case 4:
-                i.setBackgroundResource(R.drawable.b5);
-                return i;
-            default:
-                i.setBackgroundColor(0);
-                return i;
-        }
-    }
-
-    public static EventCategory getCategoryById(int id) throws UnknownCategoryException {
-        for (EventCategory c: ConfigurationProvider.eventCategories()){
-            if (c.remote_id == id){
-                return c;
-            }
-        }
-        throw new UnknownCategoryException(id);
-    }
-
     public static void redirectLogin(Context currentContext){
         Intent intent = new Intent(currentContext, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

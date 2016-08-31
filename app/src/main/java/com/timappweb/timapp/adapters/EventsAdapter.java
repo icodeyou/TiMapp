@@ -130,7 +130,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
             // @warning: we cannot use binding for this because image cannot load.
             //if (event.hasPicture()){
-            //    imageView.setImageURI(Uri.parse(Uri.decode(event.getPicture().getPreviewUrl())));
+            //    imageView.setImageURI(Uri.parse(Uri.decode(event.getPicture().getThumbnailUrl())));
             //}
             //else{
             //    imageView.setImageDrawable(event.getBackgroundImage(imageView.getContext()));

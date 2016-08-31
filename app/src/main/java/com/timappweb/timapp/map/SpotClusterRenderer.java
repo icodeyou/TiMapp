@@ -57,7 +57,7 @@ public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
     @Override
     protected void onBeforeClusterItemRendered(Spot spot, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
-        categoryImage.setImageResource(spot.getCategory().getSmallIcon());
+        categoryImage.setImageDrawable(spot.getCategory().getIconDrawable(this.context));
         categoryImage.setDrawingCacheEnabled(true);
 
         // Without this code, the view will have a dimension of 0,0 and the bitmap will be null
@@ -87,7 +87,7 @@ public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
         markerOptions.anchor(0.5f,0.5f); // set marker centered on its location
     }
 
-    /*private Bitmap getResizedBitmap(Bitmap bmp, int newWidth, int newHeight) {
+    /*private Bitmap resize(Bitmap bmp, int newWidth, int newHeight) {
         int width = bmp.getWidth();
         int height = bmp.getHeight();
         float scaleWidth = ((float) newWidth) / width;
@@ -117,7 +117,7 @@ public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
             if (!profilePhotos.containsKey(spot.category_id)){
-                Drawable drawable = ContextCompat.getDrawable(context, spot.getCategory().getSmallIcon());
+                Drawable drawable = spot.getCategory().getIconDrawable(this.context);
                 drawable.setBounds(0, 0, width, height);
                 profilePhotos.put(spot.category_id, drawable);
             }

@@ -202,20 +202,23 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
         File file = new File(fileUri.getPath());
 
         try {
+            ApplicationRules rules = ConfigurationProvider.rules();
             // Compress the file
             Log.d(TAG, "BEFORE COMPRESSION: " +
                     "Photo '"+ file.getAbsolutePath() + "'" +
                     " has size: " + Util.byteToKB(file.length()) +
-                    ". Max size: " + Util.byteToKB(ConfigurationProvider.rules().picture_max_size));
+                    ". Max size: " + Util.byteToKB(rules.picture_max_size));
 
-            ApplicationRules rules = ConfigurationProvider.rules();
-            file = PictureUtility.resize(getContext(), file, rules.picture_max_width, rules.picture_max_height);
-
+            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 
             Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +
                     " has size: " + Util.byteToKB(file.length()) +
                     " and type: " + fileMimeType);
+
+            if (file.length() > rules.picture_max_size){
+                throw new Exception("Picture size exceed limit: " + file.length() + "/" + rules.picture_max_size);
+            }
 
             RequestBody body = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -260,7 +263,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
                 })
                 .perform();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Toast.makeText(this.getContext(), R.string.cannot_resize_picture, Toast.LENGTH_LONG).show();
             Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
             e.printStackTrace();

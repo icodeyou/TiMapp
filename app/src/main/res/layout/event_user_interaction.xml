@@ -28,8 +28,8 @@
             <ImageView
                 android:id="@+id/image_category_place"
                 style="@style/imageIcon"
-                tools:src="@drawable/ic_category_else"
-                app:imageResource="@{event.getCategoryWithDefault().getSmallIcon()}"
+                tools:src="@drawable/ic_category_unknown"
+                app:imageDrawable="@{event.getCategoryWithDefault().getIconDrawable()}"
                 />
 
             <TextView

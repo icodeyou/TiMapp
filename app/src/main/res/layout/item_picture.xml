@@ -25,4 +25,4 @@
     fresco:roundedCornerRadius="2dp"
     fresco:viewAspectRatio="1"
     fresco:actualImageScaleType="centerCrop"
-    fresco:placeholderImage="@drawable/placeholder_default"/>
+    fresco:placeholderImage="@drawable/placeholder_picture"/>

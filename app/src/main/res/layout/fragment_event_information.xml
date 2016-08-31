@@ -80,8 +80,8 @@
                                 style="@style/imageIconSmall"
                                 android:layout_margin="2dp"
                                 android:background="@drawable/radius_simple_background_black"
-                                tools:src="@drawable/ic_category_cultural"
-                                app:imageResource="@{event.getCategoryWithDefault().getSmallIcon()}"
+                                tools:src="@drawable/ic_category_unknown"
+                                app:imageDrawable="@{event.getCategoryWithDefault().getIconDrawable()}"
                                 />
 
                             <TextView

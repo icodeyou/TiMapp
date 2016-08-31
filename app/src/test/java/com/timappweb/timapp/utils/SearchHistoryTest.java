@@ -56,7 +56,7 @@ public class SearchHistoryTest {
             }
 
             @Override
-            public SearchHistory.Item onSearchComplete(String term, List data) {
+            public void onSearchComplete(String term, List data) {
                 System.out.println("Search complete for term " + term);
                 counterOnComplete++;
             }
@@ -105,7 +105,7 @@ public class SearchHistoryTest {
             try {
                 System.out.println("Starting thread with term: " + term);
                 Thread.sleep(500);
-                history.onSearchResponse(this.term, SearchHistory.filterData(data, term));
+                history.onSearchResponse(this.term, SearchHistory.filterData(data, term), false);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,14 +1,17 @@
 package com.timappweb.timapp.data.models;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.DrawableUtil;
+import com.timappweb.timapp.utils.PictureUtility;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "EventCategory")
@@ -18,11 +21,15 @@ public class EventCategory extends SyncBaseModel{
 
     // =============================================================================================
 
-    @Expose
+    @Expose(serialize = false, deserialize = true)
     @Column(name = "Name")
     public String name;
 
-    @Expose
+    @Expose(serialize = false, deserialize = true)
+    @Column(name = "Icon")
+    public String icon;
+
+    @Expose(serialize = false, deserialize = true)
     @Column(name = "Position")
     public int position;
 
@@ -63,18 +70,14 @@ public class EventCategory extends SyncBaseModel{
         return res;
     }
 
-
-    public int getSmallIcon() {
-        return getSmallIcon(this.name);
+    public Drawable getIconDrawable(Context context){
+        return PictureUtility.drawableFromUrl(this.icon, context.getResources().getDrawable(R.drawable.ic_category_unknown));
     }
 
-    public static int getSmallIcon(String name) {
-        try {
-            return DrawableUtil.get("ic_category_" + name);
-        } catch (DrawableUtil.UnknownDrawableException e) {
-            Log.e(TAG, "Unknown category drawable for " + name);
-            return R.drawable.ic_category_unknown;
-        }
+
+    // Used by databinding
+    public Drawable getIconDrawable(){
+        return getIconDrawable(MyApplication.getApplicationBaseContext());
     }
 
 

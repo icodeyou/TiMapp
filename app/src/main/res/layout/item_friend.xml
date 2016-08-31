@@ -32,7 +32,7 @@
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         fresco:actualImageScaleType="fitCenter"
-                        fresco:placeholderImage="@drawable/placeholder_default"
+                        fresco:placeholderImage="@drawable/placeholder_picture"
                         fresco:roundAsCircle="true" />
                     <!--
                     <ImageView

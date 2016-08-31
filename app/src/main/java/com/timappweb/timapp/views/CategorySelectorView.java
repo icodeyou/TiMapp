@@ -3,6 +3,7 @@ package com.timappweb.timapp.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -151,8 +152,8 @@ public class CategorySelectorView extends LinearLayout {
         }
     }
 
-    public void selectCategoryUI(String name, int iconResId) {
-        imageSelectedCategory.setImageResource(iconResId);
+    public void selectCategoryUI(String name, Drawable image) {
+        imageSelectedCategory.setImageDrawable(image);
         String capitalizedName = Util.capitalize(name);
         textSelectedCategory.setText(capitalizedName);
         selectedCategoryView.setVisibility(View.VISIBLE);

@@ -66,7 +66,7 @@ public class NotificationFactory {
             int placeId = Integer.valueOf(bundle.getString("place_id"));
 
             Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
-            int categoryId = EventCategory.getSmallIcon(icon);
+            int categoryId = R.drawable.ic_category_unknown; // TODO set proper category
             return NotificationFactory.build(context, categoryId, title, body, resultIntent);
     }
 }

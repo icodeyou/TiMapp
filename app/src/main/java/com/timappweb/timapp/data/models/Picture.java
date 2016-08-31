@@ -5,9 +5,10 @@ import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
-
 @Table(name = "Picture")
 public class Picture extends SyncBaseModel {
+
+    public enum ThumbnailType{ CARD, SQUARE }
 
     // =============================================================================================
     // DATABASE
@@ -18,10 +19,12 @@ public class Picture extends SyncBaseModel {
 
     @Column(name = "Preview")
     @Expose(serialize = false, deserialize = true)
-    public String preview;
+    @SerializedName("thumbnail_card")
+    public String card;
 
     @Column(name = "Square")
     @Expose(serialize = false, deserialize = true)
+    @SerializedName("thumbnail_square")
     public String square;
 
     @Column(name = "PhotoDir", notNull = true)
@@ -57,11 +60,14 @@ public class Picture extends SyncBaseModel {
         return  this.base_url + this.photo_dir + "/" + this.photo;
     }
 
-    public String getPreviewUrl(){
-        return  this.base_url + this.photo_dir + "/" + this.preview;
-    }
-    public String getSquareUrl(){
-        return  this.base_url  + this.photo_dir + "/" + this.square;
+    public String getThumbnailUrl(ThumbnailType type){
+        switch (type){
+            case SQUARE:
+                return this.square;
+            case CARD:
+            default:
+                return this.card;
+        }
     }
 
     @Override
@@ -76,7 +82,7 @@ public class Picture extends SyncBaseModel {
                 ", remote_id=" + remote_id +
                 ", created=" + created +
                 ", photo='" + photo + '\'' +
-                ", preview='" + preview + '\'' +
+                ", card='" + card + '\'' +
                 ", square='" + square + '\'' +
                 ", photo_dir='" + photo_dir + '\'' +
                 ", base_url='" + base_url + '\'' +

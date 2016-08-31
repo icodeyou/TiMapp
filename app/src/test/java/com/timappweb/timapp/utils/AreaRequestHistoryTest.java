@@ -7,6 +7,7 @@ import com.timappweb.timapp.rest.io.request.QueryCondition;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaIterator;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
+import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
 
 import org.junit.After;
@@ -28,8 +29,8 @@ public class AreaRequestHistoryTest {
     private void initHistory(){
         this.history = new AreaRequestHistory(new AreaDataLoaderInterface() {
             @Override
-            public void load(IntPoint point, RAMAreaRequestItem request, QueryCondition conditions) {
-                // TODO
+            public void load(IntPoint point, AreaRequestItemInterface request, QueryCondition conditions) {
+
             }
         });
     }

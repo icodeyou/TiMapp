@@ -487,7 +487,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public String getBackgroundUrl() {
-        return picture.getPreviewUrl();
+        return picture.getThumbnailUrl(Picture.ThumbnailType.CARD);
     }
 
     @Override
@@ -511,5 +511,24 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public Picture getPicture() {
         return picture;
+    }
+
+
+
+
+    public int getLevelBackground() {
+        switch (this.getLevel()) {
+            case 0:
+                return R.drawable.b1;
+            case 1:
+                return R.drawable.b2;
+            case 2:
+                return R.drawable.b3;
+            case 3:
+                return R.drawable.b4;
+            case 4:
+            default:
+                return R.drawable.b4;
+        }
     }
 }

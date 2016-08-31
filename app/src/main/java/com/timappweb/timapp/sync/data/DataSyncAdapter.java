@@ -144,7 +144,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
      * the merge.
      */
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority,
+    public void onPerformSync(Account account, Bundle extras, String authoraity,
                               ContentProviderClient provider, SyncResult syncResult) {
         Log.v(TAG, "--------------- Beginning network synchronization for data---------------------");
 

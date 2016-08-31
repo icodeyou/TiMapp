@@ -1,6 +1,7 @@
 package com.timappweb.timapp.utils;
 
 import android.databinding.BindingAdapter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
@@ -26,6 +27,11 @@ public class BindingHelper {
     @BindingAdapter("app:imageResource")
     public static void setImageResource(ImageView imageView, int resource){
         imageView.setImageResource(resource);
+    }
+
+    @BindingAdapter("app:imageDrawable")
+    public static void setImageDrawable(ImageView imageView, Drawable resource){
+        imageView.setImageDrawable(resource);
     }
 
 

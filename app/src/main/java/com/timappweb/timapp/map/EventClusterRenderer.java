@@ -62,16 +62,9 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
     @Override
     protected void onBeforeClusterItemRendered(Event event, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
-        try {
-            categoryImage.setImageResource(event.getCategory().getSmallIcon());
-        } catch (UnknownCategoryException e) {
-            // TODO
-            return;
-        }
+        categoryImage.setImageDrawable(event.getBackgroundImage(this.context));
         categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
-
-        categoryImage = MyApplication.setCategoryBackground(categoryImage, event.getLevel());
-
+        categoryImage.setBackgroundResource(event.getLevelBackground());
         categoryImage.setDrawingCacheEnabled(true);
 
         // Without this code, the view will have a dimension of 0,0 and the bitmap will be null
@@ -101,7 +94,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         markerOptions.anchor(0.5f,0.5f); // set marker centered on its location
     }
 
-    /*private Bitmap getResizedBitmap(Bitmap bmp, int newWidth, int newHeight) {
+    /*private Bitmap resize(Bitmap bmp, int newWidth, int newHeight) {
         int width = bmp.getWidth();
         int height = bmp.getHeight();
         float scaleWidth = ((float) newWidth) / width;
@@ -134,7 +127,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
                 if (!profilePhotos.containsKey(p.getCategory().getRemoteId())){
                     Drawable drawable = null;
                     try {
-                        drawable = ContextCompat.getDrawable(context, p.getCategory().getSmallIcon());
+                        drawable = p.getCategory().getIconDrawable(this.context);
                         drawable.setBounds(0, 0, width, height);
                         profilePhotos.put(p.getCategory().getRemoteId(), drawable);
                     } catch (UnknownCategoryException e) {
