@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
@@ -24,12 +25,12 @@ import retrofit2.Response;
  *  - All local data will be overwritten.
  *  - Missing corresponding data will be removed
  */
-public class  MultipleEntriesSyncPerformer<EntityType extends SyncBaseModel, RemoteCallType> implements SyncPerformer {
+public class MultipleEntriesSyncPerformer<EntityType extends SyncBaseModel, RemoteCallType> implements SyncPerformer {
 
     private static final String TAG = "RemoteMasterSyncPerf";
 
-    private List<EntityType>     remoteEntries;
-    private List<EntityType>     localEntries;
+    protected List<EntityType>     remoteEntries;
+    protected List<EntityType>     localEntries;
     private DataSyncAdapter.RemoteLoader   remoteLoader;
     protected Callback                              callback;
     private SyncAdapterOption               syncOptions;
@@ -137,6 +138,11 @@ public class  MultipleEntriesSyncPerformer<EntityType extends SyncBaseModel, Rem
         return remoteLoader;
     }
 
+
+    public MultipleEntriesSyncPerformer<EntityType, RemoteCallType> setRemoteEntries(List<EntityType> entries) {
+        this.remoteEntries = entries;
+        return this;
+    }
 
     public interface Callback<EntityType>{
         void onMatch(EntityType remoteModel, EntityType localModel);

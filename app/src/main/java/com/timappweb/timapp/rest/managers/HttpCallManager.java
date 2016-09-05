@@ -16,7 +16,7 @@ import retrofit2.Response;
  */
 public class HttpCallManager<T> {
 
-    private final HttpCallbackGroup<T> callbackBase;
+    private final HttpCallbackGroup<T> callbackGroup;
     private final Call<T> call;
     private long callDelay;
     private Timer timer;
@@ -24,24 +24,24 @@ public class HttpCallManager<T> {
     public HttpCallManager(Call<T> call) {
         this.call = call;
         this.callDelay = 0;
-        this.callbackBase = new HttpCallbackGroup<>();
+        this.callbackGroup = new HttpCallbackGroup<>();
     }
 
     public HttpCallManager<T> onResponse(HttpCallback<T> httpCallback) {
-        if (this.callbackBase.isDone() && !this.callbackBase.isFailed()){
-            this.callbackBase.onResponse(call);
+        if (this.callbackGroup.isDone() && !this.callbackGroup.isFailed()){
+            this.callbackGroup.onResponse(call);
         }
         else{
-            this.callbackBase.add(httpCallback);
+            this.callbackGroup.add(httpCallback);
         }
         return this;
     }
     public HttpCallManager<T> onError(RequestFailureCallback requestFailureCallback) {
-        if (this.callbackBase.isDone() && this.callbackBase.isFailed()){
-            this.callbackBase.onFailure(call);
+        if (this.callbackGroup.isDone() && this.callbackGroup.isFailed()){
+            this.callbackGroup.onFailure(call);
         }
         else{
-            this.callbackBase.add(requestFailureCallback);
+            this.callbackGroup.add(requestFailureCallback);
         }
         return this;
     }
@@ -55,7 +55,7 @@ public class HttpCallManager<T> {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                HttpCallManager.this.call.enqueue(HttpCallManager.this.callbackBase);
+                HttpCallManager.this.call.enqueue(HttpCallManager.this.callbackGroup);
             }
         }, this.callDelay);
 
@@ -69,11 +69,11 @@ public class HttpCallManager<T> {
     public Response<T> execute() throws IOException {
         try{
             Response response = this.call.execute();
-            this.callbackBase.onResponse(this.call, response);
+            this.callbackGroup.onResponse(this.call, response);
             return response;
         }
         catch (IOException e) {
-            this.callbackBase.onFailure(this.call, e);
+            this.callbackGroup.onFailure(this.call, e);
             throw e;
         }
     }
@@ -86,15 +86,15 @@ public class HttpCallManager<T> {
     }
 
     public Response<T> getResponse() {
-        return this.callbackBase.getResponse();
+        return this.callbackGroup.getResponse();
     }
 
     public boolean hasError() {
-        return this.callbackBase.getError() != null;
+        return this.callbackGroup.getError() != null;
     }
 
     public boolean hasResponse() {
-        return this.callbackBase.getResponse() != null;
+        return this.callbackGroup.getResponse() != null;
     }
 
     public Call<T> getCall() {
@@ -107,13 +107,17 @@ public class HttpCallManager<T> {
     }
 
     public HttpCallManager onFinally(FinallyCallback<T> callback) {
-        if (this.callbackBase.isDone()){
-            this.callbackBase.onFinally(callback);
+        if (this.callbackGroup.isDone()){
+            this.callbackGroup.onFinally(callback);
         }
         else{
-            this.callbackBase.add(callback);
+            this.callbackGroup.add(callback);
         }
         return this;
+    }
+
+    public void setResponse(Response<T> r) {
+        this.callbackGroup.setResponse(r);
     }
 
     public interface FinallyCallback<ResponseBodyType>{

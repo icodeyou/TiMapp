@@ -3,7 +3,7 @@ package com.timappweb.timapp.utils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.models.EventPost;
-import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaIterator;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
@@ -29,7 +29,7 @@ public class AreaRequestHistoryTest {
     private void initHistory(){
         this.history = new AreaRequestHistory(new AreaDataLoaderInterface() {
             @Override
-            public void load(IntPoint point, AreaRequestItemInterface request, QueryCondition conditions) {
+            public void load(IntPoint point, AreaRequestItemInterface request, RestQueryParams conditions) {
 
             }
         });

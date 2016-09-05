@@ -1,6 +1,6 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.utils.IntPoint;
 
 /**
@@ -14,7 +14,7 @@ public interface AreaDataLoaderInterface<T> {
      * @param request
      * @param conditions
      */
-    void load(IntPoint point, AreaRequestItemInterface request, QueryCondition conditions);
+    void load(IntPoint point, AreaRequestItemInterface request, RestQueryParams conditions);
 
 }
 

@@ -2,7 +2,6 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -10,17 +9,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.AddSpotActivity;
-import com.timappweb.timapp.utils.DrawableUtil;
 import com.timappweb.timapp.utils.PictureUtility;
-
-import java.io.Serializable;
 
 /**
  * Created by stephane on 4/5/2016.
  */
 @Table(name = "SpotCategory")
-public class SpotCategory extends SyncBaseModel {
+public class SpotCategory extends Category{
 
     // =============================================================================================
 
@@ -37,7 +32,12 @@ public class SpotCategory extends SyncBaseModel {
     @Expose
     @SerializedName("icon")
     @Column(name = "ResourceName")
-    public String icon;
+    public String iconUrl;
+
+    // =============================================================================================
+
+    // Used as cache
+    private Drawable _iconDrawable;
 
     // =============================================================================================
 
@@ -93,11 +93,13 @@ public class SpotCategory extends SyncBaseModel {
         return result;
     }
 
-    public Drawable getIconDrawable(Context context) {
-        return PictureUtility.drawableFromUrl(this.icon, context.getResources().getDrawable(R.drawable.ic_category_unknown));
+
+    public String getIconLocalFilename() {
+        return "ic_spot_category_"+ this.getRemoteId();
     }
 
-    public Drawable getIconDrawable() {
-        return getIconDrawable(MyApplication.getApplicationBaseContext());
+    @Override
+    public String getIconUrl() {
+        return this.iconUrl;
     }
 }

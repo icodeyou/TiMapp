@@ -28,21 +28,20 @@ import com.activeandroid.query.Delete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.data.loader.PaginatedSyncResult;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncHistory;
-import com.timappweb.timapp.data.models.SyncHistoryBounds;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
-import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
@@ -55,10 +54,10 @@ import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.sync.exceptions.MissingSyncParameterException;
-import com.timappweb.timapp.sync.performers.FullTableSyncPerformer;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.sync.performers.SingleEntrySyncPerformer;
 import com.timappweb.timapp.sync.performers.StoreEntriesSyncPerformer;
+import com.timappweb.timapp.sync.performers.SyncFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
@@ -150,14 +149,14 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
         SyncAdapterOption options = new SyncAdapterOption(extras);
         Log.i(TAG, "Performing sync for type=" + options.getSyncType());
+        PaginatedSyncResult syncResultMessage = new PaginatedSyncResult(options);
         try {
-            SyncResultMessage syncResultMessage = new SyncResultMessage(options.getSyncType());
             switch (options.getSyncType()){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:
-                    this.syncFriends(syncResultMessage);
+                    SyncFactory.syncFriends(syncResultMessage).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED:
-                    this.syncInvitation(options, syncResultMessage);
+                    SyncFactory.syncInvitationsReceived(options, syncResultMessage).perform();
                     break;
                 case DataSyncAdapter.SYNC_TYPE_INVITE_SENT:
                     this.syncInviteSent(options, syncResultMessage);
@@ -212,20 +211,18 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             SyncHistory.updateSync(options.getSyncType(), options);
             EventBus.getDefault().post(syncResultMessage);
 
-        } catch (IOException e) {
-            Log.e(TAG, "IOException while performing sync. Do you have a network access ? Message: " + e.toString());
-            EventBus.getDefault().post(e);
         }
-        catch (CannotSyncException e) {
+        catch (Exception e) {
             Log.e(TAG, "Cannot sync: " + e.getMessage());
-            EventBus.getDefault().post(e);
+            syncResultMessage.setError(e);
+            EventBus.getDefault().post(syncResultMessage);
         }
         Log.v(TAG, "--------------- Network synchronization complete for data----------------------");
     }
 
     private void syncMultipleEvents(SyncAdapterOption options, SyncResultMessage syncTypeId) throws IOException, CannotSyncException {
         LatLngBounds bounds = extractMapBounds(options.getBundle());
-        final QueryCondition conditions = new QueryCondition().setBounds(bounds);
+        final RestQueryParams conditions = new RestQueryParams().setBounds(bounds);
         new MultipleEntriesSyncPerformer<Event, List<Event>>()
                 .setRemoteLoader(new RemoteLoader<List<Event>, Event>() {
                     @Override
@@ -260,33 +257,6 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
     }
 
-    private void syncFriends(final SyncResultMessage syncResultMessage) throws IOException, HttpResponseSyncException {
-        FullTableSyncPerformer syncPerformer = new FullTableSyncPerformer(UserFriend.class)
-                .setCallback(new FullTableSyncPerformer.Callback<UserFriend>() {
-                        @Override
-                    public boolean beforeSave(UserFriend entry) {
-                        entry.userSource = MyApplication.getCurrentUser();
-                        return true;
-                    }
-
-                    @Override
-                    public void afterSave(UserFriend entry) {
-                    }
-                })
-                .setRemoteLoader(new RemoteLoader<ResponseSyncWrapper, UserFriend>() {
-                    @Override
-                    protected Call getCall(HashMap options) {
-                        return RestClient.service().friends(options);
-                    }
-
-                    @Override
-                    protected List<UserFriend> getEntries(ResponseSyncWrapper body) {
-                        syncResultMessage.count = body != null ? body.getCount() : 0;
-                        return body.items;
-                    }
-                });
-        syncPerformer.perform();
-    }
     private void syncEventUsers(SyncAdapterOption options, SyncResultMessage result) throws IOException, CannotSyncException {
         final Event event = extractEvent(options.getBundle());
         new MultipleEntriesSyncPerformer<UserEvent, PaginatedResponse<UserEvent>>()
@@ -376,7 +346,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
     private void syncMultipleSpot(SyncAdapterOption options, SyncResultMessage result) throws IOException, CannotSyncException, HttpResponseSyncException {
         LatLngBounds bounds = extractMapBounds(options.getBundle());
-        final QueryCondition conditions = new QueryCondition().setBounds(bounds);
+        final RestQueryParams conditions = new RestQueryParams().setBounds(bounds);
         new MultipleEntriesSyncPerformer<Spot, PaginatedResponse<Spot>>()
                 .setRemoteLoader(new RemoteLoader<PaginatedResponse<Spot>, Spot>() {
                     @Override
@@ -394,29 +364,6 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 .perform();
     }
 
-
-
-
-
-    public void syncInvitation(SyncAdapterOption options, final SyncResultMessage syncResultMessage) throws IOException, CannotSyncException {
-        new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
-                .setLocalEntries(MyApplication.getCurrentUser().getInviteReceived())
-                .setSyncOptions(options)
-                .setRemoteLoader(new RemoteLoader<ResponseSyncWrapper<EventsInvitation>, EventsInvitation>() {
-                    @Override
-                    protected Call<ResponseSyncWrapper<EventsInvitation>> getCall(HashMap<String, String> options) {
-                        return RestClient.service().inviteReceived(options);
-                    }
-
-                    @Override
-                    protected List<EventsInvitation> getEntries(ResponseSyncWrapper<EventsInvitation> body) {
-                        syncResultMessage.count = body != null ? body.getCount() : 0;
-                        return body.items;
-                    }
-                })
-                .setCallback(new InvitationSyncCallback())
-                .perform();
-    }
 
     // ---------------------------------------------------------------------------------------------
 

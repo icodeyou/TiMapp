@@ -252,7 +252,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private void setCategory(SpotCategory spotCategory) {
         Spot spot = currentSpot;
         spot.setCategory(spotCategory);
-        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getIconDrawable(this));
+        categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getIconDrawable(AddSpotActivity.this));
         etNameSpot.requestFocus();
     }
 

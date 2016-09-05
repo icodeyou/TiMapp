@@ -8,7 +8,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.IntPoint;
 
@@ -54,7 +54,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     }
 
     @Override
-    public void load(final IntPoint pCpy, final AreaRequestItemInterface request, QueryCondition conditions) {
+    public void load(final IntPoint pCpy, final AreaRequestItemInterface request, RestQueryParams conditions) {
         conditions.setTimeRange(7200); // TODO cst
         conditions.setMainTags(true);
 

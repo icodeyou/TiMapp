@@ -14,11 +14,13 @@ import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.repacked.antlr.v4.codegen.model.Sync;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
 
 import java.lang.reflect.Field;
@@ -356,4 +358,11 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
         }
         return String.valueOf(this.getRemoteId());
     }
+
+    public static From selectIdsRange(Class<? extends SyncBaseModel> clazz, long start, long end) {
+        return new Select().from(clazz)
+                .where("SyncId >= ? && SyncId <= ?", start, end)
+                .orderBy("SyncId DESC");
+    }
+
 }

@@ -78,23 +78,21 @@ public class PictureUtility {
         os.close();
     }
 
-    public static Drawable drawableFromUrl(String url, Drawable defaultDrawable) {
+    public static Bitmap bitmapFromUrl(String url) {
         try {
             Log.d(TAG, "Get drawable from url: " + url);
-            Bitmap x;
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.connect();
-            InputStream input = null;
-            input = connection.getInputStream();
-            x = BitmapFactory.decodeStream(input);
+            InputStream input = connection.getInputStream();
+            Bitmap x = BitmapFactory.decodeStream(input);
             if (x == null){
                 throw new Exception("Cannot decode input stream from url: " + url);
             }
-            return new BitmapDrawable(x);
+            return x;
         } catch (Exception e) {
             Log.e(TAG, "Cannot convert to drawable: " + e.getMessage());
             e.printStackTrace();
-            return defaultDrawable;
+            return null;
         }
     }
 

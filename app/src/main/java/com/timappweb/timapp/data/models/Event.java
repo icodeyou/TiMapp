@@ -494,7 +494,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public Event deepSave() throws CannotSaveModelException {
         if (this.hasPicture()){
             // We need to save first the event as the picture require this association
-            // If we don't do that there is an infinit loop as event save picture which save event
+            // If we don't do that there is an infinite loop as event save picture which save event ...
             Picture tmp = this.picture;
             this.picture = null;
             Event newModel = super.deepSave();

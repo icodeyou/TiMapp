@@ -792,13 +792,13 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
 //
 //        IconGenerator item = new IconGenerator(context);
 //        Bitmap iconBitmap = item.makeIcon(spotsTag.name);
-//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.3f, 0.5f);
+//        markerOptions.iconUrl(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.3f, 0.5f);
 //
-//        //mMap.addMarker(new MarkerOptions().position(ll).icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f));
+//        //mMap.addMarker(new MarkerOptions().position(ll).iconUrl(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f));
 //    /*
 //        mImageView.setImageResource(person.profilePhoto);
-//        Bitmap icon = mIconGenerator.makeIcon();
-//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f);
+//        Bitmap iconUrl = mIconGenerator.makeIcon();
+//        markerOptions.iconUrl(BitmapDescriptorFactory.fromBitmap(iconBitmap)).anchor(0.5f, 0.6f);
 //        */
 //    }
 //
@@ -824,15 +824,15 @@ public class ClustersRenderer implements ClusterRenderer<MapTag> {
 //            this.mIcons.put(bucket, descriptor);
 //        }
 //
-//        markerOptions.icon(descriptor);
+//        markerOptions.iconUrl(descriptor);
 //
 //        super.onBeforeClusterRendered(cluster, markerOptions);
 //        // Draw multiple eventPosts.
 //        // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
 //
 //
-//        Bitmap icon = mClusterIconGenerator.makeIcon(this.getClusterText(cluster));
-//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+//        Bitmap iconUrl = mClusterIconGenerator.makeIcon(this.getClusterText(cluster));
+//        markerOptions.iconUrl(BitmapDescriptorFactory.fromBitmap(iconUrl));
 //    }
 //
 //    @Override

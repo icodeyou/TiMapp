@@ -14,10 +14,21 @@ import java.util.Map;
 /**
  * Created by stephane on 9/12/2015.
  */
-public class QueryCondition {
+public class RestQueryParams {
+
+    public enum SyncDirection {DOWN, UP}
+
+    public static final String SYNC_PARAM_MIN_CREATED       = "min_created";
+    public static final String SYNC_PARAM_MAX_CREATED       = "max_created";
+    public static final String SYNC_PARAM_ORDER             = "order";
+    public static final String SYNC_PARAM_LIMIT             = "limit";
+    public static final String SYNC_PARAM_LAST_UPDATE       = "last_update";
+    public static final String SYNC_PARAM_DIRECTION         = "direction";
+    public static final String SYNC_PARAM_MAX_ID            = "max_id";
+    public static final String SYNC_PARAM_MIN_ID            = "min_id";
+    public static final String SYNC_PARAM_HASH_ID           = "hash";
 
     private HashMap<String, String> queryMap = new HashMap<>();
-
 
     public HashMap<String, String> toMap() {
         return this.queryMap;
@@ -27,7 +38,7 @@ public class QueryCondition {
      * Set the view port
      * @param bounds
      */
-    public QueryCondition setBounds(LatLngBounds bounds) {
+    public RestQueryParams setBounds(LatLngBounds bounds) {
         queryMap.put("lat_ne", String.valueOf(bounds.northeast.latitude));
         queryMap.put("lat_sw", String.valueOf(bounds.southwest.latitude));
         queryMap.put("lon_ne", String.valueOf(bounds.northeast.longitude));
@@ -36,7 +47,7 @@ public class QueryCondition {
         return this;
     }
 
-    public QueryCondition setUserLocation(LatLng latLng){
+    public RestQueryParams setUserLocation(LatLng latLng){
         queryMap.put("latitude", String.valueOf(latLng.latitude));
         queryMap.put("longitude", String.valueOf(latLng.longitude));
         return this;
@@ -44,13 +55,12 @@ public class QueryCondition {
 
     @Override
     public String toString() {
-        String res = "QueryCondition{\n";
+        String res = "RestQueryParams{\n";
         for (Map.Entry<String, String> entry : queryMap.entrySet()){
             res += entry.getKey() + ":" + entry.getValue() + " | ";
         }
         return res;
     }
-
 
     public void setTimeRange(int timeRange) {
         this.queryMap.put("time_range", String.valueOf(timeRange));
@@ -83,5 +93,42 @@ public class QueryCondition {
         queryMap.put("filter_tags", Tag.tagsToString(filter.tags));
         queryMap.put("filter_categories", EventCategory.idsToString(filter.categories));
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // Pagination options
+    public RestQueryParams setLimit(long limit){
+        return add(SYNC_PARAM_LIMIT, limit);
+    }
+    public RestQueryParams setMinId(long id){
+        return add(SYNC_PARAM_MIN_ID, id);
+    }
+    public RestQueryParams setMaxId(long id){
+        return add(SYNC_PARAM_MAX_ID, id);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Add custom options
+
+    public RestQueryParams add(String key, String value) {
+        queryMap.put(key, value);
+        return this;
+    }
+    public RestQueryParams add(String key, long value) {
+        queryMap.put(key, String.valueOf(value));
+        return this;
+    }
+    public RestQueryParams add(String key, int value) {
+        queryMap.put(key, String.valueOf(value));
+        return this;
+    }
+    public RestQueryParams add(String key, boolean value) {
+        queryMap.put(key, String.valueOf(value));
+        return this;
+    }
+    public RestQueryParams add(String key, double value) {
+        queryMap.put(key, String.valueOf(value));
+        return this;
+    }
+
 
 }

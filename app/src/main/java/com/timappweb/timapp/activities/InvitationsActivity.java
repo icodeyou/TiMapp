@@ -1,30 +1,35 @@
 package com.timappweb.timapp.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.loader.DataLoader;
+import com.timappweb.timapp.data.loader.PaginatedDataProviderInterface;
+import com.timappweb.timapp.data.loader.PaginatedDataLoader;
+import com.timappweb.timapp.data.loader.SectionContainer;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.sync.SyncAdapterOption;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
+import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
+import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
-import org.greenrobot.eventbus.EventBus;
-
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,25 +37,27 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
-public class InvitationsActivity extends BaseActivity{
+public class InvitationsActivity extends BaseActivity implements
+        PaginatedDataLoader.Callback<EventsInvitation>,
+        WaveSwipeRefreshLayout.OnRefreshListener,
+        FlexibleAdapter.EndlessScrollListener {
 
-    private static final long   MIN_DELAY_AUTO_REFRESH      = 10 * 60 * 1000;
-    private static final int    MIN_DELAY_FORCE_REFRESH     = 30 * 1000;
-    private static final int    LOADER_ID_FRIENDS_LIST      = 0;
-    private static final int    LOCAL_LOAD_LIMIT = 3;
-    private static final int    REMOTE_LOAD_LIMIT = 3;
+    private static final long MIN_DELAY_AUTO_REFRESH = 10 * 60 * 1000;
+    private static final int MIN_DELAY_FORCE_REFRESH = 30 * 1000;
+    private static final int LOCAL_LOAD_LIMIT = 3;
+    private static final int REMOTE_LOAD_LIMIT = 3;
 
     private String TAG = "ListFriendsActivity";
     private RecyclerView recyclerView;
     private InvitationsAdapter adapter;
     private View noInvitationsView;
-    private InvitationLoader mInvitationLoader;
     private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private PaginatedDataLoader mDataLoader;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!IntentsUtils.requireLogin(this, false)){
+        if (!IntentsUtils.requireLogin(this, false)) {
             finish();
             return;
         }
@@ -60,23 +67,69 @@ public class InvitationsActivity extends BaseActivity{
         recyclerView = (RefreshableRecyclerView) findViewById(R.id.recyclerView);
         noInvitationsView = findViewById(R.id.no_invitations_view);
         mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
+        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this, R.color.colorRefresh));
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         initAdapterListFriends();
 
-        mInvitationLoader = (InvitationLoader) new InvitationLoader(this)
-            .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-            .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
-            .setSwipeAndRefreshLayout(mSwipeRefreshLayout)
-            .setHistoryItemInterface(MyApplication.getCurrentUser())
-            .setEnlessLoading(adapter)
-            .setSyncOptions(new SyncAdapterOption()
-                .setType(DataSyncAdapter.SYNC_TYPE_INVITE_RECEIVED)
-                .setHashId(MyApplication.getCurrentUser())
-                .setLimit(REMOTE_LOAD_LIMIT));
+        PaginatedDataProviderInterface<EventsInvitation> mDataProvider = new PaginatedDataProviderInterface() {
+            @Override
+            public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.Section section) {
+                RestQueryParams options = RestClient.buildPaginatedOptions(section).setLimit(REMOTE_LOAD_LIMIT);
+                return RestClient.buildCall(RestClient.service().inviteReceived(options.toMap())).onResponse(new HttpCallback<ResponseSyncWrapper<EventsInvitation>>() {
+                    @Override
+                    public void successful(ResponseSyncWrapper<EventsInvitation> feedback) {
+                        try {
+                            new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
+                                    .setLocalEntries(MyApplication.getCurrentUser().getInviteReceived())
+                                    .setRemoteEntries(feedback.items)
+                                    .setCallback(new InvitationSyncCallback())
+                                    .perform();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Cannot sync data: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
 
+            @Override
+            public List<EventsInvitation> localLoad(SectionContainer.Section section) {
+                return SyncBaseModel
+                        .selectIdsRange(EventsInvitation.class, section.getStart(), section.getEnd())
+                        .execute();
+            }
+        };
 
-        getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mInvitationLoader);
+        // TODO use a factory
+        mDataLoader = new PaginatedDataLoader<EventsInvitation>()
+                .setCallback(this)
+                .setFormatter(new PaginatedDataLoader.SectionBoundsFormatter<EventsInvitation>() {
+                    @Override
+                    public long format(EventsInvitation data) {
+                        return data.getRemoteId();
+                    }
+                })
+                .setOrder(SectionContainer.PaginateDirection.ASC)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setCacheEngine(new PaginatedDataLoader.CacheEngine<EventsInvitation>(){
+                    @Override
+                    public void add(SectionContainer.Section<EventsInvitation> section, List<EventsInvitation> data) {
+                        // TODO
+                    }
+
+                    @Override
+                    public boolean contains(SectionContainer.Section<EventsInvitation> section) {
+                        return false;
+                    }
+
+                    @Override
+                    public List<EventsInvitation> get(SectionContainer.Section<EventsInvitation> section) {
+                        return SyncBaseModel.selectIdsRange(EventsInvitation.class, section.start, section.end)
+                                .execute();
+                    }
+                })
+                .setDataProvider(mDataProvider);
     }
 
     private void initAdapterListFriends() {
@@ -84,12 +137,12 @@ public class InvitationsActivity extends BaseActivity{
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new InvitationsAdapter(this);
         recyclerView.setAdapter(adapter);
-        adapter.initializeListeners(new FlexibleAdapter.OnItemClickListener(){
+        adapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
                 AbstractFlexibleItem item = adapter.getItem(position);
-                if (item instanceof InvitationItem){
-                    InvitationItem invitationWrapper = (InvitationItem)adapter.getItem(position);
+                if (item instanceof InvitationItem) {
+                    InvitationItem invitationWrapper = (InvitationItem) adapter.getItem(position);
                     IntentsUtils.viewSpecifiedEvent(InvitationsActivity.this, invitationWrapper.getInvitation().event);
                 }
                 return true;
@@ -98,63 +151,74 @@ public class InvitationsActivity extends BaseActivity{
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(mInvitationLoader);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(mInvitationLoader);
         super.onStop();
     }
 
-    // =============================================================================================
 
-    class InvitationLoader extends DataLoader<EventsInvitation>{
-
-        public InvitationLoader(Context context) {
-            super(context);
-            //new Delete().from(EventsInvitation.class).execute();
-            this.setLocalQuery(MyApplication.getCurrentUser().getInviteReceivedQuery().limit(LOCAL_LOAD_LIMIT));
+    @Override
+    public void onLoadMore() {
+        if (!mDataLoader.loadMore()) {
+            mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
 
-        @Override
-        protected Loader<List<EventsInvitation>> buildModelLoader() {
-            return new ModelLoader(InvitationsActivity.this, EventsInvitation.class, this.localQuery, false);
+    @Override
+    public void onRefresh() {
+        if (!mDataLoader.loadNewest()){
+            mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
 
-        @Override
-        public void onFinish(List<EventsInvitation> data) {
-            super.onFinish(data);
+    @Override
+    public void onLoadEnd(SectionContainer.Section section, List<EventsInvitation> data) {
+        mSwipeRefreshLayout.setRefreshing(false);
 
-            if (data == null || data.size() == 0){
-                adapter.onLoadMoreComplete(null);
-                return;
-            }
-
-            List<AbstractFlexibleItem> items = new LinkedList<>();
-            for (EventsInvitation invitation: data){
+        List<AbstractFlexibleItem> items = new LinkedList<>();
+        if (data != null){
+            for (EventsInvitation invitation : data) {
                 items.add(new InvitationItem(invitation));
             }
-            adapter.onLoadMoreComplete(items);
-            noInvitationsView.setVisibility(data == null || data.size() == 0
-                    ? View.VISIBLE
-                    : View.GONE);
         }
 
-        @Override
-        public long getMaxRemoteId() {
-            return SyncBaseModel.getMaxRemoteId(EventsInvitation.class, "UserTarget = " + MyApplication.getCurrentUser().getId());
+        switch (section.getLoadType()) {
+            case MORE:
+                adapter.onLoadMoreComplete(items);
+                break;
+            case NEWEST:
+                adapter.addItems(0, items);
+                break;
+            case UPDATE:
+                // TODO
+                break;
         }
-
-        @Override
-        public long getMinRemoteId() {
-            return SyncBaseModel.getMinRemoteId(EventsInvitation.class, "UserTarget = " + MyApplication.getCurrentUser().getId());
-        }
-
+        noInvitationsView.setVisibility(adapter.getItemCount() == 0
+                ? View.VISIBLE
+                : View.GONE);
 
     }
+
+    @Override
+    public void onLoadError(Throwable error, SectionContainer.Section section) {
+        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
+
+        if (error instanceof IOException) {
+            Toast.makeText(InvitationsActivity.this, R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
+        } else if (error instanceof CannotSyncException) {
+            Toast.makeText(InvitationsActivity.this, ((CannotSyncException) error).getUserFeedback(), Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(InvitationsActivity.this, R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
+        }
+        noInvitationsView.setVisibility(adapter.getItemCount() == 0
+                ? View.VISIBLE
+                : View.GONE);
+    }
+
 }

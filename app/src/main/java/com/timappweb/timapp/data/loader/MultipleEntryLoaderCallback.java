@@ -4,14 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.activeandroid.query.From;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.sync.SyncAdapterOption;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
 
@@ -83,7 +82,7 @@ public class MultipleEntryLoaderCallback<DataType> implements LoaderManager.Load
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
         fetchEntries(false);
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-        return new ModelLoader(context, clazz, query, false);
+        return new AutoModelLoader(context, clazz, query, false);
     }
 
     @Override

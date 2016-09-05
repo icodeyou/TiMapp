@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class SingleEntryLoaderCallback<DataType> implements LoaderManager.Loader
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
         SyncBaseModel.getEntry(User.class, context, key, syncType);
-        return new ModelLoader(context, User.class, SyncBaseModel.queryByRemoteId(clazz, key), true);
+        return new AutoModelLoader(context, User.class, SyncBaseModel.queryByRemoteId(clazz, key), true);
     }
 
     @Override

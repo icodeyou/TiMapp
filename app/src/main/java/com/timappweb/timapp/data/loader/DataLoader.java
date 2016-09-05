@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.From;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
@@ -18,6 +16,7 @@ import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.events.SyncResultMessage;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
@@ -34,7 +33,8 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 /**
  * Created by Stephane on 18/08/2016.
  */
-public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCallbacks<List<EntityType>>, FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener {
+public abstract class DataLoader<EntityType>
+        implements LoaderManager.LoaderCallbacks<List<EntityType>>, FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "DataLoader";
 
@@ -75,6 +75,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
 
     @Override
     public Loader<List<EntityType>> onCreateLoader(int id, Bundle args) {
+        // TODO wtf
         if (SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_FRIENDS, historyItemInterface, minDelayAutoRefresh)) {
             Log.d(TAG, "Require automatic refresh");
             this.newest();
@@ -115,7 +116,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
         // }
         //else{
             SyncAdapterOption option = syncOptions.clone()
-                    .setDirection(SyncAdapterOption.SyncDirection.DOWN)
+                    .setDirection(RestQueryParams.SyncDirection.DOWN)
                     .setMaxId(getMinRemoteId() - 1);
             launchSync(option);
         //}
@@ -124,7 +125,7 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
     public void newest() {
         if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(true);
         SyncAdapterOption option = syncOptions.clone()
-                .setDirection(SyncAdapterOption.SyncDirection.DOWN)
+                .setDirection(RestQueryParams.SyncDirection.DOWN)
                 .setMinId(getMaxRemoteId() + 1);
         launchSync(option);
     }
@@ -132,14 +133,14 @@ public abstract class DataLoader<EntityType> implements LoaderManager.LoaderCall
     public void refresh() {
         if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(true);
         SyncAdapterOption option = syncOptions.clone()
-                .setDirection(SyncAdapterOption.SyncDirection.DOWN);
+                .setDirection(RestQueryParams.SyncDirection.DOWN);
         launchSync(option);
     }
 
     public void update() {
         if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(true);
         SyncAdapterOption option = syncOptions.clone()
-                .setDirection(SyncAdapterOption.SyncDirection.DOWN)
+                .setDirection(RestQueryParams.SyncDirection.DOWN)
                 .setMaxId(getMaxRemoteId())
                 .setMinId(getMinRemoteId());
         launchSync(option);

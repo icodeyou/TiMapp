@@ -186,5 +186,9 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     public boolean isFailed() {
         return error != null;
     }
+
+    public void setResponse(Response<ResponseBodyType> response) {
+        this.response = response;
+    }
 }
 

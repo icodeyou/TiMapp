@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
-import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.utils.IntLatLng;
 import com.timappweb.timapp.utils.IntLatLngBounds;
 import com.timappweb.timapp.utils.IntPoint;
@@ -202,7 +202,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
             AreaRequestItemInterface<T> request = this.areas.get(p);
             if (request != null){
                 if (this.DELAY_BEFORE_UPDATE_REQUEST > 0 && request.getLastUpdateDelay() >= this.DELAY_BEFORE_UPDATE_REQUEST){
-                    QueryCondition conditions = new QueryCondition();
+                    RestQueryParams conditions = new RestQueryParams();
                     Log.i(TAG, "-> " + p + " Data in cache are too old; updating with new data from dataTimestamp: " + request.getDataTimestamp());
                     conditions.setBounds(this.getBoundFromPoint(p).toDouble());
                     //conditions.setTimestampMin(request.dataTimestamp);
@@ -220,7 +220,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
                 request = areaRequestItemFactory.build();
                 this.update(pCpy, request);
                 // We need to build a new condition object because multi threading
-                QueryCondition conditions = new QueryCondition();
+                RestQueryParams conditions = new RestQueryParams();
                 conditions.setBounds(this.getBoundFromPoint(p).toDouble());
                 request.updateLocalTimestamp();
                 dataLoader.load(pCpy, request, conditions);

@@ -10,13 +10,13 @@ import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.loader.SectionContainer;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.interceptors.LogRequestInterceptor;
 import com.timappweb.timapp.rest.io.interceptors.SessionRequestInterceptor;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.deserializers.EventDeserializer;
 import com.timappweb.timapp.rest.io.deserializers.JsonConfDeserializer;
@@ -59,15 +59,16 @@ public class RestClient {
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
 
-    public Retrofit getRetrofit() {
-        return retrofit;
-    }
 
     private Retrofit retrofit;
 
 
     // KEY ID
     //public static final String KEY_SESSION_ID = "remote_id";
+
+    public Retrofit getRetrofit() {
+        return retrofit;
+    }
 
     public static RestClient instance(){
         return conn;
@@ -205,5 +206,11 @@ public class RestClient {
         return new MultipleHttpCallManager();
     }
 
+    public static RestQueryParams buildPaginatedOptions(SectionContainer.Section section) {
+        return new RestQueryParams()
+                .add(RestQueryParams.SYNC_PARAM_MIN_ID, section.start)
+                .add(RestQueryParams.SYNC_PARAM_MAX_ID, section.end)
+                .add(RestQueryParams.SYNC_PARAM_DIRECTION, RestQueryParams.SyncDirection.DOWN.ordinal());
+    }
 }
 

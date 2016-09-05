@@ -1,9 +1,4 @@
 package com.timappweb.timapp.utils.loaders;
-
-/**
- * Created by stephane on 4/27/2016.
- */
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -25,14 +20,29 @@ import com.activeandroid.query.Select;
 
 
 /**
- * The Class ModelLoader.
+ * Created by stephane on 4/27/2016.
+ * The Class AutoModelLoader.
+ *
+ * Listen for change in ActiveAndroid DB. If rows are added, updated or removed it
+ * will trigger the onLoadFinished method
+ *
+ *
  *
  * @param <T> the generic type
  */
-public class ModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
+public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
 {
+    /**
+     * Used to handle communication between the context and the ContentProvider
+     */
     private ContentResolver mContentResolver;
+
+    /**
+     * Observe data modification and notify them
+     */
     private ContentObserver mContentObserver;
+
+
     private From mQuery;
     private List<T> mResults;
     private Class<T> mClass;
@@ -49,7 +59,7 @@ public class ModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
      * @param clazz
      *            the clazz
      */
-    public ModelLoader(Context context, Class<T> clazz)
+    public AutoModelLoader(Context context, Class<T> clazz)
     {
         this(context, clazz, null, false);
     }
@@ -65,7 +75,7 @@ public class ModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
      * @param updateOnRelationshipChanges
      *            if true, loader will updated when tables related to the one detected are changed
      */
-    public ModelLoader(Context context, Class<T> clazz, boolean updateOnRelationshipChanges)
+    public AutoModelLoader(Context context, Class<T> clazz, boolean updateOnRelationshipChanges)
     {
         this(context, clazz, null, updateOnRelationshipChanges);
     }
@@ -83,8 +93,8 @@ public class ModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
      * @param updateOnRelationshipChanges
      *            if true, loader will updated when tables related to the one detected are changed
      */
-    public ModelLoader(Context context, Class<T> clazz, From from,
-                       boolean updateOnRelationshipChanges)
+    public AutoModelLoader(Context context, Class<T> clazz, From from,
+                           boolean updateOnRelationshipChanges)
     {
         super(context);
         mQuery = from;

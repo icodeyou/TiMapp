@@ -27,7 +27,7 @@ public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterIconGenerator;
 
-    //Big coef = small icon
+    //Big coef = small iconUrl
     private static int ICON_SIZE_COEF = 12;
 
     private final int mDimension;

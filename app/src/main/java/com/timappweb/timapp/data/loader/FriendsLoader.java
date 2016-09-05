@@ -2,7 +2,7 @@ package com.timappweb.timapp.data.loader;
 
 import android.content.Context;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
+
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
@@ -11,9 +11,8 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
@@ -42,7 +41,7 @@ public class FriendsLoader extends DataLoader<UserFriend> {
     }
     @Override
     protected Loader<List<UserFriend>> buildModelLoader() {
-        return new ModelLoader(context, UserFriend.class, ((User)historyItemInterface).getFriendsQuery(), false);
+        return new AutoModelLoader(context, UserFriend.class, ((User)historyItemInterface).getFriendsQuery(), false);
     }
 
 

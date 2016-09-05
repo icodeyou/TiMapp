@@ -15,7 +15,7 @@ import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.rest.io.request.QueryCondition;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -186,8 +186,8 @@ public class EventStatusManager {
                 });
     }
 
-    private QueryCondition _buildQuery(Event event){
-        QueryCondition conditions = new QueryCondition();
+    private RestQueryParams _buildQuery(Event event){
+        RestQueryParams conditions = new RestQueryParams();
         //conditions.setAnonymous(false);
         conditions.setUserLocation(LocationManager.getLastLocation());
         return conditions;

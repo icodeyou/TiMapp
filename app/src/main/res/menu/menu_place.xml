@@ -9,7 +9,7 @@
 
     <!--<item
         android:id="@+id/action_reload"
-        android:icon="@drawable/ic_action_reload"
+        android:iconUrl="@drawable/ic_action_reload"
         app:showAsAction="ifRoom"
         android:title="@string/menu_reload" />-->
 </menu>

@@ -1,17 +1,26 @@
 package com.timappweb.timapp.config;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.activeandroid.query.Select;
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.entities.ApplicationRules;
+import com.timappweb.timapp.data.models.Category;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.utils.ImageSaver;
 import com.timappweb.timapp.utils.KeyValueStorage;
+import com.timappweb.timapp.utils.PictureUtility;
 
 import java.util.List;
 
@@ -42,6 +51,9 @@ public class ConfigurationProvider {
     public static List<EventCategory> eventCategories(){
         if (eventCategories == null){
             eventCategories = new Select().from(EventCategory.class).orderBy("Position ASC").execute();
+            if (eventCategories != null){
+                initIcons(MyApplication.getApplicationBaseContext(), eventCategories);
+            }
         }
         if (eventCategories == null || eventCategories.size() == 0){
             throw new IncompleteConfigurationException("Missing spot categories");
@@ -56,6 +68,9 @@ public class ConfigurationProvider {
     public static List<SpotCategory> spotCategories(){
         if (spotCategories == null){
             spotCategories = new Select().from(SpotCategory.class).orderBy("Position ASC").execute();
+            if (spotCategories != null){
+                initIcons(MyApplication.getApplicationBaseContext(), spotCategories);
+            }
         }
         if (spotCategories == null || spotCategories.size() == 0){
             throw new IncompleteConfigurationException("Missing spot categories");
@@ -82,7 +97,7 @@ public class ConfigurationProvider {
      *      - if configuration is not up to date or not present it will start a SYNC immediately
      *      - Otherwise call the callback directly
      */
-    public static MultipleHttpCallManager load(Context context){
+    public static MultipleHttpCallManager load(final Context context){
 
         MultipleHttpCallManager callManager = RestClient.mulipleCallsManager();
 
@@ -95,9 +110,19 @@ public class ConfigurationProvider {
                         }
                     });
             callManager.addCall(CALL_ID_SPOT_CATEGORIES, RestClient.service().spotCategories())
-                    .onResponse(new RemoteMasterSyncHttpCallback(SpotCategory.class, new Select().from(SpotCategory.class)));
+                    .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, new Select().from(SpotCategory.class)){
+                        @Override
+                        public void successful(List<SpotCategory> categories) {
+                            downloadIcons(context, categories);
+                        }
+                    });
             callManager.addCall(CALL_ID_EVENT_CATEGORIES, RestClient.service().eventCategories())
-                    .onResponse(new RemoteMasterSyncHttpCallback(EventCategory.class, new Select().from(EventCategory.class)));
+                    .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, new Select().from(EventCategory.class)){
+                        @Override
+                        public void successful(List<EventCategory> categories) {
+                            downloadIcons(context, categories);
+                        }
+                    });
         }
         else{
             Log.i(TAG, "Configuration exists and is up to date");
@@ -199,4 +224,33 @@ public class ConfigurationProvider {
         spotCategories = null;
     }
 
+
+    public static <T extends Category> void downloadIcons(final Context context, List<T> categories){
+        for (final T category: categories){
+
+            new AsyncTask<String, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(String... params) {
+                    return PictureUtility.bitmapFromUrl(params[0]);
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    if (bitmap != null){
+                        new ImageSaver(context).
+                                setFileName(category.getIconLocalFilename()).
+                                setDirectoryName(Category.ICON_DIRECTORY_NAME).
+                                save(bitmap);
+                        category.setIconDrawable(new BitmapDrawable(bitmap));
+                    }
+                }
+            }.execute(category.getIconUrl());
+        }
+    }
+
+    public static <T extends Category> void initIcons(final Context context, List<T> categories) {
+        for (final T category : categories) {
+            category.loadIconFromLocalStorage(context);
+        }
+    }
 }

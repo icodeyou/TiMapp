@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest.io.responses;
 
 import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,4 +23,15 @@ public class PaginatedResponse<T> {
     @Expose
     public HashMap<String,String> extra;
 
+    public int itemsCount() {
+        return items == null ? 0 : items.size();
+    }
+
+    public T getLastItem() {
+        return items.get(items.size() -1);
+    }
+
+    public T getFirstItem() {
+        return items.get(0);
+    }
 }

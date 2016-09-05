@@ -24,19 +24,18 @@ public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Call
     private static final String TAG = "FriendsSyncCallback";
 
     @Override
-    public void onMatch(EventsInvitation remoteModel, EventsInvitation localModel) {
+    public void onMatch(EventsInvitation remoteModel, EventsInvitation invitation) {
         try {
-            if (!remoteModel.isSync(localModel)){
-                    localModel.merge(remoteModel);
+            if (!remoteModel.isSync(invitation)){
+                invitation.merge(remoteModel);
 
-                EventsInvitation invitation = (EventsInvitation) localModel;
                 this.completeUser(invitation);
                 invitation.deepSave();
 
-                Log.i(TAG, "Updating: " + localModel.toString());
+                Log.i(TAG, "Updating: " + invitation.toString());
             }
             else{
-                Log.i(TAG, "No action: " + localModel.toString());
+                Log.i(TAG, "No action: " + invitation.toString());
             }
         } catch (CannotSaveModelException e) {
             e.printStackTrace();
@@ -76,4 +75,5 @@ public class InvitationSyncCallback implements MultipleEntriesSyncPerformer.Call
             invitation.user_source = MyApplication.getCurrentUser();
         }
     }
+
 }

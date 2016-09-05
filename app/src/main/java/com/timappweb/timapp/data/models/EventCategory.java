@@ -2,20 +2,19 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.utils.DrawableUtil;
 import com.timappweb.timapp.utils.PictureUtility;
 
 import java.util.List;
 
 @Table(name = "EventCategory")
-public class EventCategory extends SyncBaseModel{
+public class EventCategory extends Category{
 
     private static final String TAG = "EventCategory";
 
@@ -27,11 +26,13 @@ public class EventCategory extends SyncBaseModel{
 
     @Expose(serialize = false, deserialize = true)
     @Column(name = "Icon")
-    public String icon;
+    @SerializedName("icon")
+    public String iconUrl;
 
     @Expose(serialize = false, deserialize = true)
     @Column(name = "Position")
     public int position;
+
 
     // =============================================================================================
 
@@ -69,17 +70,6 @@ public class EventCategory extends SyncBaseModel{
         }
         return res;
     }
-
-    public Drawable getIconDrawable(Context context){
-        return PictureUtility.drawableFromUrl(this.icon, context.getResources().getDrawable(R.drawable.ic_category_unknown));
-    }
-
-
-    // Used by databinding
-    public Drawable getIconDrawable(){
-        return getIconDrawable(MyApplication.getApplicationBaseContext());
-    }
-
 
     @Override
     public boolean isSync(SyncBaseModel model) {
@@ -120,4 +110,13 @@ public class EventCategory extends SyncBaseModel{
         return result;
     }
 
+    @Override
+    public String getIconLocalFilename() {
+        return "ic_event_category_"+ this.getRemoteId();
+    }
+
+    @Override
+    public String getIconUrl() {
+        return this.iconUrl;
+    }
 }

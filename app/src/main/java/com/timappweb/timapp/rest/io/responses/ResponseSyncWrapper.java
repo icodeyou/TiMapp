@@ -17,6 +17,9 @@ public class ResponseSyncWrapper<T> {
     public boolean up_to_date;
 
     @Expose
+    public int limit;
+
+    @Expose
     public List<T> items;
 
     @Expose
@@ -24,5 +27,17 @@ public class ResponseSyncWrapper<T> {
 
     public int getCount(){
         return items != null ? items.size() : 0;
+    }
+
+    public T getLastItem() {
+        return items.get(items.size() -1);
+    }
+
+    public T getFirstItem() {
+        return items.get(0);
+    }
+
+    public int limit() {
+        return limit;
     }
 }

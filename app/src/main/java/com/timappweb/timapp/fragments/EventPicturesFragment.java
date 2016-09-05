@@ -32,12 +32,10 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.loader.DataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
-import com.timappweb.timapp.rest.callbacks.FormErrorsCallbackBinding;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
@@ -47,16 +45,13 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
-import com.timappweb.timapp.utils.loaders.ModelLoader;
+import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
@@ -321,7 +316,7 @@ public class EventPicturesFragment extends EventBaseFragment implements Location
 
         @Override
         protected Loader<List<Picture>> buildModelLoader() {
-            return new ModelLoader(context, Picture.class, eventActivity.getEvent().getPicturesQuery(), false);
+            return new AutoModelLoader(context, Picture.class, eventActivity.getEvent().getPicturesQuery(), false);
         }
 
 
