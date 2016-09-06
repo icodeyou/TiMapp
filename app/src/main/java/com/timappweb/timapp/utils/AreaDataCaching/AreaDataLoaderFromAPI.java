@@ -58,7 +58,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     @Override
     public void load(final IntPoint pCpy, final AreaRequestItemInterface request, RestQueryParams conditions) {
         conditions.setTimeRange(7200); // TODO cst
-        conditions.setMainTags(true);
+        conditions.setMainTags(false);
 
         if (filter != null){
             conditions.setFilter(filter);
