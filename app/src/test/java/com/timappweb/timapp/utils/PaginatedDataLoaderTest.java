@@ -3,6 +3,7 @@ package com.timappweb.timapp.utils;
 import com.timappweb.timapp.data.loader.PaginatedDataLoader;
 import com.timappweb.timapp.data.loader.PaginatedDataProviderInterface;
 import com.timappweb.timapp.data.loader.SectionContainer;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
@@ -13,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class PaginatedDataLoaderTest {
 
     @After
     public void tearDown() throws IOException {
-        System.out.println("@After tearDown");
+
     }
 
     @Test
@@ -68,7 +68,7 @@ public class PaginatedDataLoaderTest {
         final List<Integer> loadedData = new LinkedList<>();
         dataLoader.setCallback(new PaginatedDataLoader.Callback<Integer>() {
             @Override
-            public void onLoadEnd(SectionContainer.Section section, List<Integer> data) {
+            public void onLoadEnd(SectionContainer.PaginatedSection section, List<Integer> data) {
                 assertEquals(Math.min(DummyDataProvider.data.size() - loadedData.size(), DummyDataProvider.LIMIT), data.size());
                 assertEquals( SectionContainer.LoadStatus.DONE, section.getStatus());
                 assertNotSame(-1, section.end);
@@ -85,7 +85,7 @@ public class PaginatedDataLoaderTest {
             }
 
             @Override
-            public void onLoadError(Throwable error, SectionContainer.Section section) {
+            public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
                 assertFalse("Should not trigger a load error", true);
             }
         });
@@ -95,8 +95,6 @@ public class PaginatedDataLoaderTest {
         }
 
         assertEquals(DummyDataProvider.data, loadedData);
-
-        System.out.println("Execution done!" + this);
     }
 
     @Test
@@ -104,7 +102,7 @@ public class PaginatedDataLoaderTest {
         final int[] loadCount = {0};
         dataLoader.setCallback(new PaginatedDataLoader.Callback<Integer>() {
             @Override
-            public void onLoadEnd(SectionContainer.Section section, List<Integer> data) {
+            public void onLoadEnd(SectionContainer.PaginatedSection section, List<Integer> data) {
                 loadCount[0]++;
                 assertEquals( SectionContainer.LoadStatus.DONE, section.getStatus());
                 switch (loadCount[0]){
@@ -120,20 +118,53 @@ public class PaginatedDataLoaderTest {
             }
 
             @Override
-            public void onLoadError(Throwable error, SectionContainer.Section section) {
+            public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
                 assertFalse("Should not trigger a load error", true);
             }
         });
 
         synchronized (this) {
-            dataLoader.getSectionContainer().addSection(new SectionContainer.Section(10, 17).setStatus(SectionContainer.LoadStatus.DONE));
+            dataLoader.getSectionContainer().addSection(new SectionContainer.PaginatedSection(10, 17).setStatus(SectionContainer.LoadStatus.DONE));
             dataLoader.loadNewest();
             while (loadCount[0] < 1) this.wait();
         }
 
     }
 
+    @Test
+    public void testCache() throws InterruptedException {
+        DummyCacheEngine cacheEngine = new DummyCacheEngine();
+        dataLoader.setCallback(new PaginatedDataLoader.Callback() {
+            @Override
+            public void onLoadEnd(SectionContainer.PaginatedSection section, List data) {
+                synchronized (PaginatedDataLoaderTest.this) {
+                    PaginatedDataLoaderTest.this.notify();
+                }
+            }
+
+            @Override
+            public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
+
+            }
+        })
+                .setCacheEngine(cacheEngine);
+        synchronized (this) {
+            dataLoader.loadMore();
+            this.wait();
+            assertEquals(0, cacheEngine.getCacheLoadCount());
+            dataLoader.getSectionContainer().clear();
+            // Should load from cache
+            dataLoader.loadMore();
+            assertEquals(1, cacheEngine.getCacheLoadCount());
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------
+
+    /*
+    private static class DummyData{
+        long id;
+    }*/
 
     private static class DummyDataProvider implements PaginatedDataProviderInterface {
 
@@ -147,10 +178,7 @@ public class PaginatedDataLoaderTest {
                 data.add(i);
             }
         }
-
-        @Override
-        public HttpCallManager<ResponseSyncWrapper> remoteLoad(SectionContainer.Section section) {
-            final ResponseSyncWrapper result = new ResponseSyncWrapper<Integer>();
+        public static List<Integer> buildDataSection(List<Integer> data, SectionContainer.PaginatedSection section){
             int start = section.start == -1 ? 0 : (int) section.start;
             int end = section.end == -1
                     ? start + LIMIT
@@ -160,8 +188,13 @@ public class PaginatedDataLoaderTest {
             if (Math.abs(end - start) + 1 > LIMIT){
                 end = start + LIMIT;
             }
+            return data.subList(start, end);
+        }
 
-            result.items = data.subList(start, end);
+        @Override
+        public HttpCallManager<ResponseSyncWrapper> remoteLoad(SectionContainer.PaginatedSection section) {
+            final ResponseSyncWrapper result = new ResponseSyncWrapper<Integer>();
+            result.items = buildDataSection(data, section);
             result.last_update = System.currentTimeMillis();
             result.up_to_date = result.items.size() < LIMIT;
             result.limit = LIMIT;
@@ -207,10 +240,39 @@ public class PaginatedDataLoaderTest {
             });
             return callManager;
         }
+    }
+
+    private class DummyCacheEngine implements PaginatedDataLoader.CacheEngine<Integer> {
+
+        List<Integer> data;
+        SectionContainer sections;
+        int cacheLoadCount;
+
+        public DummyCacheEngine() {
+            this.sections = new SectionContainer();
+            this.data = new LinkedList<>();
+            this.cacheLoadCount = 0;
+        }
 
         @Override
-        public List localLoad(SectionContainer.Section section) {
-            return new LinkedList();
+        public void add(SectionContainer.PaginatedSection<Integer> section, List<Integer> data) {
+            this.data.addAll(data);
+            sections.addSection(section);
+        }
+
+        @Override
+        public boolean contains(SectionContainer.PaginatedSection<Integer> section) {
+            return sections.isLoaded(section);
+        }
+
+        @Override
+        public List<Integer> get(SectionContainer.PaginatedSection<Integer> section) {
+            cacheLoadCount++;
+            return DummyDataProvider.buildDataSection(data, section);
+        }
+
+        public int getCacheLoadCount() {
+            return cacheLoadCount;
         }
     }
 }

@@ -28,12 +28,12 @@ public class PaginatedDataProviderSyncAdapter {
         observers.add(observer);
     }
 
-    protected void notifyObservers(final SectionContainer.Section section) {
+    protected void notifyObservers(final SectionContainer.PaginatedSection section) {
         for (final Callback observer : observers) {
             observer.onLoadEnd(section);
         }
     }
-    protected void notifyObservers(Exception error, final SectionContainer.Section section) {
+    protected void notifyObservers(Exception error, final SectionContainer.PaginatedSection section) {
         for (final Callback observer : observers) {
             observer.onLoadError(error, section);
         }
@@ -41,13 +41,13 @@ public class PaginatedDataProviderSyncAdapter {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSyncEnds(PaginatedSyncResult syncResult){
-        SectionContainer.Section section = syncResult.getSection();
+        SectionContainer.PaginatedSection section = syncResult.getSection();
         if (section != null){
             dispatchLoadResult(syncResult, section);
         }
     }
 
-    public void dispatchLoadResult(SyncResultMessage syncResult, SectionContainer.Section section){
+    public void dispatchLoadResult(SyncResultMessage syncResult, SectionContainer.PaginatedSection section){
         if (syncResult.hasError()){
             notifyObservers(syncResult.getError(), section);
             section.setStatus(SectionContainer.LoadStatus.ERROR);
@@ -60,7 +60,7 @@ public class PaginatedDataProviderSyncAdapter {
         notifyObservers(section);
     }
 
-    public void load(SectionContainer.Section section) {
+    public void load(SectionContainer.PaginatedSection section) {
         Context context = MyApplication.getApplicationBaseContext();
         this.syncAdapterOptions
                 .setMaxId(section.start)
@@ -78,9 +78,9 @@ public class PaginatedDataProviderSyncAdapter {
 
     public interface Callback{
 
-        void onLoadEnd(SectionContainer.Section section);
+        void onLoadEnd(SectionContainer.PaginatedSection section);
 
-        void onLoadError(Exception error, SectionContainer.Section section);
+        void onLoadError(Exception error, SectionContainer.PaginatedSection section);
 
     }
 

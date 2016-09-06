@@ -8,17 +8,17 @@ import com.timappweb.timapp.sync.SyncAdapterOption;
  */
 public class PaginatedSyncResult extends SyncResultMessage{
 
-    private SectionContainer.Section section;
+    private SectionContainer.PaginatedSection section;
 
     public PaginatedSyncResult(SyncAdapterOption options) {
         super(options);
     }
 
-    public SectionContainer.Section getSection() {
+    public SectionContainer.PaginatedSection getSection() {
         return section;
     }
 
-    public void setSection(SectionContainer.Section section) {
+    public void setSection(SectionContainer.PaginatedSection section) {
         this.section = section;
     }
 }

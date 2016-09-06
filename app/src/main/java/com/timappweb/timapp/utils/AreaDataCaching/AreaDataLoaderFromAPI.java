@@ -10,12 +10,14 @@ import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.IntPoint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 /**
@@ -83,7 +85,6 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                 .onResponse(new HttpCallback<List<Event>>() {
                     @Override
                     public void successful(List<Event> events) {
-                        if (loadingListener!= null) loadingListener.onLoadEnd();
                         if (request.isOutdated(itemRequestId)) {
                             Log.d(TAG, "Outdated request " + request.getRequestId() + " > " + itemRequestId + " . Do not load tags");
                             return;
@@ -103,8 +104,10 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                         request.setData(events);
                     }
 
+                })
+                .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
-                    public void notSuccessful() {
+                    public void onFinally(Response response, Throwable error) {
                         if (loadingListener!=null) loadingListener.onLoadEnd();
                     }
                 })

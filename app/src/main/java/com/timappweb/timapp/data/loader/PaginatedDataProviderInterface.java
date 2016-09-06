@@ -8,6 +8,6 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
  */
 public interface PaginatedDataProviderInterface<T> {
 
-    HttpCallManager<ResponseSyncWrapper<T>> remoteLoad(SectionContainer.Section section);
+    HttpCallManager<ResponseSyncWrapper<T>> remoteLoad(SectionContainer.PaginatedSection section);
 
 }

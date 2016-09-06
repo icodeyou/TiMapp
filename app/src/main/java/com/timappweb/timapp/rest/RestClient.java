@@ -206,7 +206,7 @@ public class RestClient {
         return new MultipleHttpCallManager();
     }
 
-    public static RestQueryParams buildPaginatedOptions(SectionContainer.Section section) {
+    public static RestQueryParams buildPaginatedOptions(SectionContainer.PaginatedSection section) {
         return new RestQueryParams()
                 .add(RestQueryParams.SYNC_PARAM_MIN_ID, section.start)
                 .add(RestQueryParams.SYNC_PARAM_MAX_ID, section.end)

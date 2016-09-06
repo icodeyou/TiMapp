@@ -12,8 +12,11 @@ import java.util.List;
 
 import static com.timappweb.timapp.data.loader.SectionContainer.*;
 
+/**
+ * Pagination
+ * @param <T>
+ */
 public class PaginatedDataLoader<T> {
-
 
     public enum LoadType {MORE, UPDATE, NEWEST}
 
@@ -87,7 +90,7 @@ public class PaginatedDataLoader<T> {
         return this;
     }
 
-    public PaginatedDataLoader setMinDelayForceRefresh(long minDelayForceRefresh) {
+    public PaginatedDataLoader setMinDelayRefresh(long minDelayForceRefresh) {
         this.minDelayForceRefresh = minDelayForceRefresh;
         return this;
     }
@@ -95,6 +98,10 @@ public class PaginatedDataLoader<T> {
     public PaginatedDataLoader setDataProvider(PaginatedDataProviderInterface<T> dataProvider) {
         this.dataProvider = dataProvider;
         return this;
+    }
+
+    public CacheEngine getCacheEngine() {
+        return cacheEngine;
     }
 
     /**
@@ -105,8 +112,8 @@ public class PaginatedDataLoader<T> {
         if (_isFullyLoaded || isLoading()){
             return false;
         }
-        SectionContainer.Section lastSection = sectionContainer.last();
-        final SectionContainer.Section newSection = createOlderSection(lastSection);
+        PaginatedSection lastSection = sectionContainer.last();
+        final PaginatedSection newSection = createOlderSection(lastSection);
 
         //if (newSection.getEnd() == -1) return false;
 
@@ -116,7 +123,7 @@ public class PaginatedDataLoader<T> {
         return true;
     }
 
-    private void load(Section section) {
+    private void load(PaginatedSection section) {
         if (this.useCache && this.cacheEngine.contains(section)){
             List<T> data = this.cacheEngine.get(section);
             if (callback != null) callback.onLoadEnd(section, data);
@@ -130,11 +137,11 @@ public class PaginatedDataLoader<T> {
         if (isLoading()){
             return false;
         }
-        SectionContainer.Section section = sectionContainer.first();
+        PaginatedSection section = sectionContainer.first();
         // Check if we need to load newest
         if (        section == null
                 ||  section.isStatus(LoadStatus.DONE)){
-            SectionContainer.Section newSection = createNewerSection(section);
+            PaginatedSection newSection = createNewerSection(section);
             if (section == null || newSection.getEnd() > 0){
                 newSection.setLoadType(LoadType.NEWEST);
                 this.load(newSection);
@@ -144,16 +151,16 @@ public class PaginatedDataLoader<T> {
         return false;
     }
 
-    public Section createNewerSection(Section section) {
-        return new Section(-1, section != null ? section.start + (this.getOrder() == PaginateDirection.ASC ? 1 : -1) : -1);
+    public PaginatedSection createNewerSection(PaginatedSection section) {
+        return new PaginatedSection(-1, section != null ? section.start + (this.getOrder() == PaginateDirection.ASC ? 1 : -1) : -1);
     }
 
-    public Section createOlderSection(Section section) {
+    public PaginatedSection createOlderSection(PaginatedSection section) {
         long start = section == null ? -1 : section.end + (this.getOrder() == PaginateDirection.ASC ? -1 : 1);
-        return new Section(start, -1);
+        return new PaginatedSection(start, -1);
     }
 
-    private void remoteLoad(final Section newSection) {
+    private void remoteLoad(final PaginatedSection newSection) {
         dataProvider.remoteLoad(newSection)
                 .onResponse(new HttpCallback<ResponseSyncWrapper<T>>() {
                     @Override
@@ -180,7 +187,7 @@ public class PaginatedDataLoader<T> {
                         // If data does not meet, remove older ones...
                         else if (newSection.getLoadType() == LoadType.NEWEST){
                             if (feedback.getCount() == feedback.limit()){
-                                Section section = sectionContainer.findOlderSection(newSection);
+                                PaginatedSection section = sectionContainer.findOlderSection(newSection);
                                 if (section == null){
                                     Log.d(TAG, "Clearing sections...");
                                     sectionContainer.clear();
@@ -191,6 +198,9 @@ public class PaginatedDataLoader<T> {
 
                         Log.d(TAG, "Section loaded with success: " + newSection);
                         newSection.setStatus(LoadStatus.DONE);
+                        if (useCache && cacheEngine != null){
+                            cacheEngine.add(newSection, feedback.items);
+                        }
                         if (callback != null) callback.onLoadEnd(newSection, feedback.items);
                     }
 
@@ -213,27 +223,39 @@ public class PaginatedDataLoader<T> {
                 .perform();
     }
 
+    /**
+     *
+     * @param <T>
+     */
     public interface Callback<T>{
 
-        void onLoadEnd(SectionContainer.Section section, List<T> data);
+        void onLoadEnd(PaginatedSection section, List<T> data);
 
-        void onLoadError(Throwable error, Section section);
+        void onLoadError(Throwable error, PaginatedSection section);
 
     }
 
+    /**
+     *
+     * @param <T>
+     */
     public interface SectionBoundsFormatter<T>{
 
         long format(T data);
 
     }
 
+    /**
+     *
+     * @param <T>
+     */
     public interface CacheEngine<T>{
 
-        void add(Section<T> section, List<T> data);
+        void add(PaginatedSection<T> section, List<T> data);
 
-        boolean contains(Section<T> section);
+        boolean contains(PaginatedSection<T> section);
 
-        List<T> get(Section<T> section);
+        List<T> get(PaginatedSection<T> section);
 
     }
 }

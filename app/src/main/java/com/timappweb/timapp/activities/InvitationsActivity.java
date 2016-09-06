@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,15 +17,13 @@ import com.timappweb.timapp.data.loader.PaginatedDataProviderInterface;
 import com.timappweb.timapp.data.loader.PaginatedDataLoader;
 import com.timappweb.timapp.data.loader.SectionContainer;
 import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.models.SectionHistory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.io.IOException;
@@ -74,31 +71,11 @@ public class InvitationsActivity extends BaseActivity implements
 
         PaginatedDataProviderInterface<EventsInvitation> mDataProvider = new PaginatedDataProviderInterface() {
             @Override
-            public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.Section section) {
+            public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.PaginatedSection section) {
                 RestQueryParams options = RestClient.buildPaginatedOptions(section).setLimit(REMOTE_LOAD_LIMIT);
-                return RestClient.buildCall(RestClient.service().inviteReceived(options.toMap())).onResponse(new HttpCallback<ResponseSyncWrapper<EventsInvitation>>() {
-                    @Override
-                    public void successful(ResponseSyncWrapper<EventsInvitation> feedback) {
-                        try {
-                            new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
-                                    .setLocalEntries(MyApplication.getCurrentUser().getInviteReceived())
-                                    .setRemoteEntries(feedback.items)
-                                    .setCallback(new InvitationSyncCallback())
-                                    .perform();
-                        } catch (Exception e) {
-                            Log.e(TAG, "Cannot sync data: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                return RestClient.buildCall(RestClient.service().inviteReceived(options.toMap()));
             }
 
-            @Override
-            public List<EventsInvitation> localLoad(SectionContainer.Section section) {
-                return SyncBaseModel
-                        .selectIdsRange(EventsInvitation.class, section.getStart(), section.getEnd())
-                        .execute();
-            }
         };
 
         // TODO use a factory
@@ -111,24 +88,44 @@ public class InvitationsActivity extends BaseActivity implements
                     }
                 })
                 .setOrder(SectionContainer.PaginateDirection.ASC)
-                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setCacheEngine(new PaginatedDataLoader.CacheEngine<EventsInvitation>(){
-                    @Override
-                    public void add(SectionContainer.Section<EventsInvitation> section, List<EventsInvitation> data) {
-                        // TODO
+
+                    private String getHashKey(){
+                        return "EventInvitationUser" + MyApplication.getCurrentUser().hashHistoryKey();
                     }
 
                     @Override
-                    public boolean contains(SectionContainer.Section<EventsInvitation> section) {
-                        return false;
+                    public void add(SectionContainer.PaginatedSection<EventsInvitation> section, List<EventsInvitation> data) {
+                        // TODO persite
+                        /*
+                        try {
+                            new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
+                                    .setLocalEntries(MyApplication.getCurrentUser().getInviteReceived())
+                                    .setRemoteEntries(data)
+                                    .setCallback(new InvitationSyncCallback())
+                                    .perform();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Cannot sync data: " + e.getMessage());
+                            e.printStackTrace();
+                        }*/
+
+                        SectionHistory.add(this.getHashKey(), section);
                     }
 
                     @Override
-                    public List<EventsInvitation> get(SectionContainer.Section<EventsInvitation> section) {
+                    public boolean contains(SectionContainer.PaginatedSection<EventsInvitation> section) {
+                        return SectionHistory.contains(this.getHashKey(), section);
+                    }
+
+                    @Override
+                    public List<EventsInvitation> get(SectionContainer.PaginatedSection<EventsInvitation> section) {
                         return SyncBaseModel.selectIdsRange(EventsInvitation.class, section.start, section.end)
                                 .execute();
                     }
+
                 })
+                .useCache(false)
                 .setDataProvider(mDataProvider);
     }
 
@@ -177,7 +174,7 @@ public class InvitationsActivity extends BaseActivity implements
     }
 
     @Override
-    public void onLoadEnd(SectionContainer.Section section, List<EventsInvitation> data) {
+    public void onLoadEnd(SectionContainer.PaginatedSection section, List<EventsInvitation> data) {
         mSwipeRefreshLayout.setRefreshing(false);
 
         List<AbstractFlexibleItem> items = new LinkedList<>();
@@ -205,7 +202,7 @@ public class InvitationsActivity extends BaseActivity implements
     }
 
     @Override
-    public void onLoadError(Throwable error, SectionContainer.Section section) {
+    public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(false);
 
         if (error instanceof IOException) {
