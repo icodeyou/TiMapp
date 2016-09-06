@@ -31,7 +31,7 @@ import java.util.List;
  * Request configuration via HTTP request if not present or if not up to date
  *
  */
-public class ConfigurationProvider {
+public class ConfigurationProvider{
 
     private static final String TAG = "ConfigurationProvider";
     private static final String KEY_LAST_UPDATE = "configuration_last_update_time";
@@ -239,7 +239,7 @@ public class ConfigurationProvider {
                 @Override
                 protected void onPostExecute(Bitmap bitmap) {
                     if (bitmap != null){
-                        Log.d(TAG, "Saving category icon: " + category.getIconLocalFilename());
+                        Log.i(TAG, "Saving category icon: " + category.getIconLocalFilename());
                         new ImageSaver(context).
                                 setFileName(category.getIconLocalFilename()).
                                 setDirectoryName(Category.ICON_DIRECTORY_NAME).

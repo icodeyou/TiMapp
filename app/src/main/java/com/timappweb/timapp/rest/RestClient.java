@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
+import com.timappweb.timapp.config.AuthProviderInterface;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.loader.SectionContainer;
 import com.timappweb.timapp.data.models.Event;
@@ -51,11 +52,11 @@ public class RestClient {
     //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
     private static HttpCallback defaultHttpCallback;
-    private final Application app;
+    private final Application app;                      // TODO remove this dependency. It will make it easier to Unit test
     private final OkHttpClient httpClient;
     private final String baseUrl;
     private final Gson gson;
-    private final AuthProvider authProvider;
+    private final AuthProviderInterface authProvider;
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
 
@@ -79,8 +80,8 @@ public class RestClient {
     }
 
 
-    public static void init(Application app, String ep, AuthProvider authProvider){
-        conn = new RestClient(app, ep, authProvider);
+    public static void init(Application app, String baseUrl, AuthProviderInterface authProvider){
+        conn = new RestClient(app, baseUrl, authProvider);
         defaultHttpCallback = new HttpCallback() {
             @Override
             public void error() {
@@ -99,14 +100,14 @@ public class RestClient {
 
     private static Retrofit.Builder builder = null;
 
-    protected RestClient(Application app, String baseUrl, AuthProvider authProvider){
+    protected RestClient(Application app, String baseUrl, AuthProviderInterface authProvider){
         this.app = app;
         this.baseUrl = baseUrl;
         this.authProvider = authProvider;
 
         Log.i(TAG, "Initializing server connection at " + baseUrl);
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
-                .addInterceptor(new SessionRequestInterceptor())
+                .addInterceptor(new SessionRequestInterceptor(authProvider))
                 .addInterceptor(new LogRequestInterceptor())
                 .readTimeout(HTTP_PARAM_READ_TIMEOUT, TimeUnit.SECONDS)
                 .connectTimeout(HTTP_PARAM_CONNECTION_TIMEOUT, TimeUnit.SECONDS);

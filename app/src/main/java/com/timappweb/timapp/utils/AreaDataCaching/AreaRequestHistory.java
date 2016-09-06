@@ -123,6 +123,7 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
     /**
      * Get the area coordinate that contains the name
      *
+     *
      * @param location
      * @return
      */
@@ -284,5 +285,9 @@ public class AreaRequestHistory<T extends MarkerValueInterface>{
 
     public boolean isInitialized() {
         return center != null;
+    }
+
+    public void init(LatLngBounds bounds) {
+        this.setAreaSize(bounds);
     }
 }

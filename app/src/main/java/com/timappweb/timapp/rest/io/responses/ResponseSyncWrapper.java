@@ -25,6 +25,8 @@ public class ResponseSyncWrapper<T> {
     @Expose
     public JsonElement extra;
 
+    // ---------------------------------------------------------------------------------------------
+
     public int getCount(){
         return items != null ? items.size() : 0;
     }
@@ -37,7 +39,7 @@ public class ResponseSyncWrapper<T> {
         return items.get(0);
     }
 
-    public int limit() {
+    public int getLimit() {
         return limit;
     }
 }

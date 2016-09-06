@@ -168,7 +168,7 @@ public class PaginatedDataLoader<T> {
                         // Update min and max ids
                         if (feedback.getCount() > 0){
                             if (newSection.getLoadType() == LoadType.NEWEST){
-                                newSection.setEnd(feedback.limit() == feedback.getCount() ? formatter.format(feedback.getLastItem()) : newSection.getEnd());
+                                newSection.setEnd(feedback.getLimit() == feedback.getCount() ? formatter.format(feedback.getLastItem()) : newSection.getEnd());
                                 newSection.setStart(formatter.format(feedback.getFirstItem()));
                             }
                             else {
@@ -186,7 +186,7 @@ public class PaginatedDataLoader<T> {
                         }
                         // If data does not meet, remove older ones...
                         else if (newSection.getLoadType() == LoadType.NEWEST){
-                            if (feedback.getCount() == feedback.limit()){
+                            if (feedback.getCount() == feedback.getLimit()){
                                 PaginatedSection section = sectionContainer.findOlderSection(newSection);
                                 if (section == null){
                                     Log.d(TAG, "Clearing sections...");

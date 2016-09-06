@@ -114,8 +114,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Expose(serialize = false, deserialize = true)
     public ArrayList<EventPost> eventPosts;
 
+    @Expose(serialize = false, deserialize = false)
     public double           distance = -1;
-    private int pointsLong;
 
     // =============================================================================================
 

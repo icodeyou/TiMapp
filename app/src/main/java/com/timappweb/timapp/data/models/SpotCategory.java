@@ -36,11 +36,6 @@ public class SpotCategory extends Category{
 
     // =============================================================================================
 
-    // Used as cache
-    private Drawable _iconDrawable;
-
-    // =============================================================================================
-
     public SpotCategory() {
         super();
     }

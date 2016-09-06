@@ -2,7 +2,7 @@ package com.timappweb.timapp.rest.io.interceptors;
 
 import android.util.Log;
 
-import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.config.AuthProviderInterface;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.io.IOException;
@@ -16,24 +16,30 @@ import okhttp3.Response;
 
 /**
  * Created by stephane on 9/12/2015.
+ *
  */
 public class SessionRequestInterceptor implements Interceptor
 {
 
     private static final String TAG = "Interceptor";
+    private final AuthProviderInterface auth;
+
+    public SessionRequestInterceptor(AuthProviderInterface authProvider) {
+        this.auth = authProvider;
+    }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
-        String token = MyApplication.auth.getToken();
-        String providerToken = MyApplication.auth.getSocialProviderToken();
+        String token = this.auth.getToken();
+        String providerToken = this.auth.getSocialProviderToken();
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
                 .header("X-Platform", "Android")
                 .method(original.method(), original.body());
 
-        if (MyApplication.isLoggedIn()) {
+        if (auth.isLoggedIn()) {
             setAuthHeader(requestBuilder, token, providerToken, original.url());
         }
 
@@ -45,7 +51,7 @@ public class SessionRequestInterceptor implements Interceptor
             Log.d(TAG, "Trying to refresh token... Waiting for synchronisation...");
             synchronized (RestClient.instance().getHttpClient()) { //perform all 401 in merge blocks, to avoid multiply token updates
                 Log.d(TAG, "Synchronisation OK...");
-                String currentToken = MyApplication.auth.getToken(); //get currently stored token
+                String currentToken = auth.getToken(); //get currently stored token
 
                 if (currentToken == null){
                     logout();
@@ -63,9 +69,9 @@ public class SessionRequestInterceptor implements Interceptor
                     }
                 }
 
-                if (MyApplication.auth.getToken() != null) { //retry requires new auth token,
+                if (auth.getToken() != null) { //retry requires new auth token,
                     Log.d(TAG, "retry request after refresh token...");
-                    setAuthHeader(requestBuilder, MyApplication.auth.getToken(), providerToken, original.url()); //set auth token to updated
+                    setAuthHeader(requestBuilder, auth.getToken(), providerToken, original.url()); //set auth token to updated
                     request = requestBuilder.build();
                     return chain.proceed(request); //repeat request with new token
                 }

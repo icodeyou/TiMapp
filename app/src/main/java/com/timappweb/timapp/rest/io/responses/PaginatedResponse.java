@@ -23,6 +23,8 @@ public class PaginatedResponse<T> {
     @Expose
     public HashMap<String,String> extra;
 
+    // ---------------------------------------------------------------------------------------------
+
     public int itemsCount() {
         return items == null ? 0 : items.size();
     }

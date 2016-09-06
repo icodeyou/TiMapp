@@ -78,9 +78,6 @@ public interface WebServiceInterface {
     @GET("eventPosts/eventPosts.json")
     Call<List<EventPost>> listPosts(@QueryMap Map<String, String> conditions);
 
-    @GET("eventPosts/view/{id}.json")
-    Call<EventPost> viewPost(@Path("id") int id);
-
     @POST("eventPosts/add.json")
     Call<RestFeedback> addTags(@Body EventPost eventPost);
 
@@ -142,7 +139,7 @@ public interface WebServiceInterface {
      * @param id
      */
     @POST("eventPosts/place/{id}.json")
-    Call<List<EventPost>> viewPostsForPlace(@Path("id") int id);
+    Call<List<EventPost>> viewTagsForPlace(@Path("id") int id);
 
     /**
      * Get most popular tags for a place

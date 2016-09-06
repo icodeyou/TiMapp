@@ -138,7 +138,8 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
 
     compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
-    compile 'com.google.android.gms:play-services-appindexing:8.3.0'
+    // @warning WTF is that shit! It makes GSON parser throws stack overflow errors
+    //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
 }
 
 task wrapper(type: Wrapper) {

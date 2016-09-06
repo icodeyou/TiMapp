@@ -25,7 +25,6 @@ import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.EventPicturesActivity;
-import com.timappweb.timapp.activities.PostActivity;
 import com.timappweb.timapp.activities.PresentationActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
@@ -141,17 +140,6 @@ public class IntentsUtils {
 
     public static void filter(Activity activity) {
         Intent intent = new Intent(activity, FilterActivity.class);
-        activity.startActivity(intent);
-    }
-
-    public static void viewPost(Activity activity, EventPost eventPost) {
-        Intent intent = new Intent(activity, PostActivity.class);
-        intent.putExtra("eventPost", eventPost);          // TODO use constant
-        activity.startActivity(intent);
-    }
-    public static void viewPost(Context activity, int postId) {
-        Intent intent = new Intent(activity, PostActivity.class);
-        intent.putExtra("eventPost.id", postId);          // TODO use constant
         activity.startActivity(intent);
     }
 

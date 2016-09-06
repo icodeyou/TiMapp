@@ -1,7 +1,5 @@
 package com.timappweb.timapp.utils;
 
-import com.timappweb.timapp.data.models.Tag;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by stephane on 9/17/2015.
@@ -38,50 +37,74 @@ public class SearchHistoryTest {
         data.add(new Tag("crache"));
 
     }
+    @Test
+    public void testSubTerms() throws InterruptedException {
+        int minimumSearchLength = 2;
+        int maximumResult = 4;
+        final SearchHistory history = new SearchHistory<Tag>(minimumSearchLength, maximumResult);
+
+        SearchHistory.Item itemCa = history.addInCache("ca", new LinkedList(), false);
+        SearchHistory.Item itemCan = history.addInCache("can", new LinkedList(), false);
+
+        SearchHistory.Item item = history.getTermOrSubTerm("canard");
+        assertNotNull(item);
+        assertEquals("Should return the biggest search term", itemCan, item);
+
+        SearchHistory.Item nullItem = history.getTermOrSubTerm("blob");
+        assertEquals(null, nullItem);
+    }
 
     @Test
     public void testSearch() throws InterruptedException {
-
-        final SearchHistory history = new SearchHistory<Tag>(2, 4);
+        int minimumSearchLength = 2;
+        int maximumResult = 4;
+        final SearchHistory history = new SearchHistory<Tag>(minimumSearchLength, maximumResult);
         history.setDataProvider(new SearchHistory.DataProvider() {
 
-            @Override
-            public void load(String term) {
-                counterLoad += 1;
-                new Thread(new LoadDataThread(term, history)).start();
-            }
-            @Override
-            public void onLoadEnds() {
+                    @Override
+                    public void load(String term) {
+                        counterLoad += 1;
+                        new Thread(new LoadDataThread(term, history)).start();
+                    }
+                    @Override
+                    public void onLoadEnds() {
 
-            }
+                    }
 
-            @Override
-            public void onSearchComplete(String term, List data) {
-                System.out.println("Search complete for term " + term);
-                counterOnComplete++;
-            }
-        });
+                    @Override
+                    public void onSearchComplete(String term, List data) {
+                        System.out.println("Search complete for term " + term);
+                        counterOnComplete++;
+                        synchronized (SearchHistoryTest.this){
+                            SearchHistoryTest.this.notify();
+                        }
+                    }
+                });
 
         // Test that we use cache when there is less that maximumResult data
         history.search("c");
-        assertEquals(0, counterLoad);
+        assertEquals("Search term is too short, should NOT trigger a load", 0, counterLoad);
         assertEquals(0, counterOnComplete);
         history.search("ca");
-        assertEquals(1, counterLoad);
+        assertEquals("Should trigger a load", 1, counterLoad);
         assertEquals(0, counterOnComplete);
         history.search("can");
         history.search("can");
         history.search("can");
-        assertEquals(2, counterLoad);
+        assertEquals("Searching for the same term multiple times should NOT trigger multiple load", 2, counterLoad);
         assertEquals(0, counterOnComplete);
 
-        Thread.sleep(1000);
+        synchronized (this){
+            while (counterOnComplete < 2) this.wait();
+        }
+
+        assertEquals(2, counterOnComplete);
 
         history.search("cana");
-        assertEquals(2, counterLoad);
+        assertEquals("Increasing search term for an already completed search should NOT trigger a load", 2, counterLoad);
         assertEquals(3, counterOnComplete);
         history.search("canar");
-        assertEquals(2, counterLoad);
+        assertEquals("Increasing search term for an already completed search should NOT trigger a load", 2, counterLoad);
         assertEquals(4, counterOnComplete);
         history.search("canard");
         assertEquals(2, counterLoad);
@@ -112,4 +135,19 @@ public class SearchHistoryTest {
         }
 
     }
+
+
+    private static class Tag implements SearchHistory.SearchableItem{
+        private final String name;
+
+        public Tag(String tag) {
+            this.name = tag;
+        }
+
+        @Override
+        public boolean matchSearch(String term) {
+            return this.name.startsWith(term);
+        }
+    }
+
 }

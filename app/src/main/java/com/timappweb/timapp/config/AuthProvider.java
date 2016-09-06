@@ -16,7 +16,7 @@ import com.timappweb.timapp.utils.KeyValueStorage;
 /**
  * Created by stephane on 4/26/2016.
  */
-public class AuthProvider {
+public class AuthProvider implements AuthProviderInterface{
 
     private static final String TAG                     = "AuthProvider";
     public static final int     TOKEN_CHECK_DELAY       = 3600;
@@ -102,12 +102,10 @@ public class AuthProvider {
         return currentUser;
     }
 
-    public interface OnTokenListener{
-        void onTokenValid();
-        void onTokenOutdated();
-        void onTokenFailure();
+    @Override
+    public boolean isLoggedIn() {
+        return getCurrentUser() != null;
     }
-
 
     private void setCurrentUser(User user) throws CannotSaveModelException {
         currentUser = user.deepSave();

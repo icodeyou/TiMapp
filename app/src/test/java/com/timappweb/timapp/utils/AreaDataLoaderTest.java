@@ -61,6 +61,7 @@ public class AreaDataLoaderTest {
 
             }
         });
+        history.init(bounds);
 
         history.DELAY_BEFORE_UPDATE_REQUEST = 0;
         double areaHeight = CoordinateConverter.convert(history.areaHeight);
@@ -99,6 +100,7 @@ public class AreaDataLoaderTest {
 
             }
         });
+        history.init(bounds);
 
         history.DELAY_BEFORE_UPDATE_REQUEST = 1;
         history.update(bounds);
@@ -137,6 +139,7 @@ public class AreaDataLoaderTest {
 
             }
         });
+        history.init(bounds);
 
         history.MAXIMUM_ORIGIN_DISTANCE = 2;
         history.DELAY_BEFORE_UPDATE_REQUEST = 10;

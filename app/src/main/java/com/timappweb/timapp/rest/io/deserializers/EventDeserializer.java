@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest.io.deserializers;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -21,7 +22,10 @@ public class EventDeserializer implements JsonDeserializer<Event> {
     @Override
     public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         //Event event = new Event();
-        Event event = new Gson().fromJson(json, Event.class);
+        Event event = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create()
+                .fromJson(json, Event.class);
 
         JsonObject jsonObject = json.getAsJsonObject();
         if (jsonObject.has("category_id")){

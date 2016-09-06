@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @param <T> data type contained
  */
-public class SearchHistory<T>{
+public class SearchHistory<T extends SearchHistory.SearchableItem>{
 
     private static final String TAG = "SearchHistory";
 
@@ -58,6 +58,10 @@ public class SearchHistory<T>{
 
     // ---------------------------------------------------------------------------------------------
 
+    /**
+     *
+     * @param term
+     */
     public void search(String term){
         if (term.length() < this.minimumSearchLength){
             return ;
@@ -76,6 +80,7 @@ public class SearchHistory<T>{
             SearchHistory.Item subHistory = this.getTermOrSubTerm(term);
             if (subHistory != null){
                 this.provider.onSearchComplete(term, subHistory.getFilteredData(term));
+                // If the sub search if complete, it means that we don't need to load more
                 if (subHistory.isComplete()){
                     return ;
                 }
@@ -98,7 +103,7 @@ public class SearchHistory<T>{
                     return this.hasTerm("") ? this.data.get("") : null;
                 }
                 else{
-                    return this.getTermOrSubTerm(term.substring(0, term.length() - 2));
+                    return this.getTermOrSubTerm(term.substring(0, term.length() - 1));
                 }
             }
             else{
@@ -119,7 +124,7 @@ public class SearchHistory<T>{
     public void onSearchResponse(String term, List<T> data, boolean append) {
         Item node = this.addInCache(term, data, append);
         if (node != null){
-            node.setComplete(node.size() >= this.maximumResults);
+            node.setComplete(node.size() < this.maximumResults);
         }
         this.provider.onSearchComplete(term, data);
     }
@@ -141,11 +146,11 @@ public class SearchHistory<T>{
      * @param <T>
      * @return
      */
-    public static <T> List<T> filterData(List<T> data, String term){
+    public static <T extends SearchableItem> List<T> filterData(List<T> data, String term){
         List<T> results = new LinkedList<>();
         if (data != null){
             for (T d: data){
-                if (((SearchableItem)d).matchSearch(term)){
+                if (d.matchSearch(term)){
                     results.add(d);
                 }
             }
@@ -156,8 +161,9 @@ public class SearchHistory<T>{
     // ---------------------------------------------------------------------------------------------
     // Gettes/Setters
 
-    public void setDataProvider(DataProvider provider){
+    public SearchHistory<T> setDataProvider(DataProvider provider){
         this.provider = provider;
+        return this;
     }
 
     public boolean hasTerm(String term){
@@ -175,6 +181,22 @@ public class SearchHistory<T>{
 
     public boolean isLastSearch(String search){
         return this.lastSearch == search;
+    }
+
+    public int getMaximumResults() {
+        return maximumResults;
+    }
+
+    public int getMinimumSearchLength() {
+        return minimumSearchLength;
+    }
+
+    public void setMinimumSearchLength(int minimumSearchLength) {
+        this.minimumSearchLength = minimumSearchLength;
+    }
+
+    public void setMaximumResults(int maximumResults) {
+        this.maximumResults = maximumResults;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -217,7 +239,7 @@ public class SearchHistory<T>{
      *
      * @param <T> data type that it contains
      */
-    public static class Item<T>{
+    public static class Item<T extends SearchableItem>{
         /**
          * true if this search if complete. Meaning that there is no more data to fetch for this search
          */
@@ -299,18 +321,20 @@ public class SearchHistory<T>{
     public interface DataProvider<T>{
 
         /**
-         * Data loader. For the search term it loads the corresponding data
+         * Data loader. For the search term it loads the corresponding data.
+         * If this search or a sub search has already be done, it will not be triggered
          * @param term
          */
         void load(final String term) ;
 
         /**
-         * Called when load ends
+         * Callback for @load() method (as it can be a asyn call)
          */
         void onLoadEnds();
 
         /**
-         * Triggered when the search with term is done
+         * Triggered when there are results for the search term.
+         * It can be partial results
          * @param term
          * @param data
          */

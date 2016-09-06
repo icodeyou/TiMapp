@@ -52,7 +52,7 @@ public class MyApplication extends com.activeandroid.app.Application {
      * @return true if user is logged in
      */
     public static boolean isLoggedIn(){
-        return getCurrentUser() != null;
+        return auth.isLoggedIn();
     }
 
     public static boolean isCurrentUser(int userId){

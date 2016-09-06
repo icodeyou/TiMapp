@@ -55,6 +55,8 @@ public class StartAppTest {
         startActivity();
     }
 
+    //----------------------------------------------------------------------------------------------
+
     @Test
     public void testStartInternetNoConfig() {
         // TODO

@@ -33,6 +33,7 @@ public class AreaRequestHistoryTest {
 
             }
         });
+        history.init(new LatLngBounds(new LatLng(0,0), new LatLng(1,1)));
     }
 
     @Before
