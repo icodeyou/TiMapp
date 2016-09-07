@@ -113,7 +113,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>
     <string name="error_unkown">Unkown error occured</string>
-    <string name="error_no_internet">\"It is not my fucking fault if you do not have internet right now. Check your goddamn phone\"</string>
+    <string name="no_network_access_title">No network access</string>
     <string name="hint_searchview_filter">Search</string>
     <string name="addpost_if_no_tag">You don\'t have any tags yet.</string>
     <string name="title_activity_locate">Checking around</string>
@@ -259,7 +259,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="i_am_coming">I\'m coming</string>
     <string name="internet_connection">Internet Connection</string>
     <string name="no_internet_connection_message">It seems that you don\'t have a network access.</string>
-    <string name="action_performed_not_successful">Sorry but it didn\'t work...</string>
+    <string name="action_performed_not_successful">Sorry but this action is not available right now. Try again later.</string>
     <string name="form_invalid_input">Please correct required fields before submitting.</string>
     <string name="no_friends">You don\'t have any friends using TiMapp. Share the app with them to get the best experience !</string>
     <string name="user_message_should_be_around_event_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
@@ -305,6 +305,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="popularity_page_one">Each event has a number of points representing its popularity</string>
     <string name="popularity_page_two">But it is increased when people post pictures and tags</string>
     <string name="popularity_page_three">This number is in fact a timer</string>
+    <string name="ask_user_to_enable_gps">GPS is disabled in your device. Enable it?</string>
+    <string name="dialog_button_enable_gps">Enable GPS</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

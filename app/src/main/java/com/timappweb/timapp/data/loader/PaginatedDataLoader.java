@@ -3,6 +3,7 @@ package com.timappweb.timapp.data.loader;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
@@ -54,7 +55,7 @@ public class PaginatedDataLoader<T> {
     }
 
 
-    public PaginatedDataLoader<T> setCacheEngine(CacheEngine<EventsInvitation> cacheEngine) {
+    public PaginatedDataLoader<T> setCacheEngine(CacheEngine<T> cacheEngine) {
         this.cacheEngine = cacheEngine;
         this.useCache = true;
         return this;
@@ -73,7 +74,7 @@ public class PaginatedDataLoader<T> {
         return dataProvider;
     }
 
-    public PaginatedDataLoader<T> setFormatter(SectionBoundsFormatter<T> formatter) {
+    public PaginatedDataLoader setFormatter(SectionBoundsFormatter formatter) {
         this.formatter = formatter;
         return this;
     }
@@ -81,6 +82,7 @@ public class PaginatedDataLoader<T> {
     public boolean isFullyLoaded() {
         return _isFullyLoaded;
     }
+
     public boolean isLoading() {
         return sectionContainer.isLoading();
     }
@@ -123,15 +125,21 @@ public class PaginatedDataLoader<T> {
         return true;
     }
 
+    public boolean firstLoad() {
+        return this.loadNewest();
+    }
+
     private void load(PaginatedSection section) {
         if (this.useCache && this.cacheEngine.contains(section)){
             List<T> data = this.cacheEngine.get(section);
+            section.setStatus(LoadStatus.DONE);
             if (callback != null) callback.onLoadEnd(section, data);
         }
         else{
             this.remoteLoad(section);
         }
     }
+
 
     public boolean loadNewest(){
         if (isLoading()){
@@ -206,6 +214,7 @@ public class PaginatedDataLoader<T> {
 
                     @Override
                     public void notSuccessful() {
+                        Log.e(TAG, "Cannot load section: " + newSection + ". HTTP code: " + this.response.code());
                         newSection.setStatus(LoadStatus.ERROR);
                         if (callback != null) callback.onLoadError(new CannotSyncException("Server response is not successfull", 0), newSection);
 
@@ -215,7 +224,6 @@ public class PaginatedDataLoader<T> {
                     @Override
                     public void onError(Throwable error) {
                         Log.e(TAG, "Cannot load section: " + newSection + ". Error: " + error.getMessage());
-
                         newSection.setStatus(LoadStatus.ERROR);
                         if (callback != null) callback.onLoadError(error, newSection);
                     }

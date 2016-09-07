@@ -21,18 +21,24 @@ public class EventTag extends MyModel {
     // DATABASE
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Event", uniqueGroups = "unique_tag",
+    @Column(name = "Event",
+            notNull = true,
+            uniqueGroups = {"unique_tag"},
+            onUniqueConflicts = {Column.ConflictAction.IGNORE},
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Tag", uniqueGroups = "unique_tag",
+    @Column(name = "Tag",
+            notNull = true,
+            uniqueGroups = {"unique_tag"},
+            onUniqueConflicts = {Column.ConflictAction.IGNORE},
             onUpdate = Column.ForeignKeyAction.CASCADE,
             onDelete= Column.ForeignKeyAction.CASCADE)
     public Tag tag;
 
-    @Column(name = "CountRef")
+    @Column(name = "CountRef", notNull = true)
     public int count_ref;
 
 
@@ -43,8 +49,8 @@ public class EventTag extends MyModel {
     public String toString() {
         return "EventTag{" +
                 "count_ref=" + count_ref +
-                ", event=" + event +
                 ", tag=" + tag +
+                ", event=" + (event != null ? event.getName() + " (" + event.getRemoteId() + ") " : "NONE") +
                 '}';
     }
 

@@ -19,25 +19,25 @@ public class SectionHistory extends MyModel {
      * Sync group key
      */
     @Column(name = "GroupKey", notNull = true)
-    String group_key;
+    public String group_key;
 
     /**
      * last update (unix timestamp in millis)
      */
     @Column(name = "LastUpdate", notNull = true)
-    long last_update;
+    public long last_update;
 
     /**
      * Section start
      */
     @Column(name = "Start", notNull = true)
-    long start;
+    public long start;
 
     /**
      * Section end
      */
     @Column(name = "End", notNull = true)
-    long end;
+    public long end;
 
     public static boolean contains(String key, SectionContainer.PaginatedSection section) {
         From from = new Select().from(SectionHistory.class)
@@ -58,5 +58,12 @@ public class SectionHistory extends MyModel {
         history.group_key = groupKey;
         history.last_update = section.lastUpdate;
         history.save();
+    }
+
+    public static SectionHistory getFirst(String hashKey) {
+        return new Select().from(SectionHistory.class)
+                .where("GroupKey = ?", hashKey)
+                .limit(1)
+                .executeSingle();
     }
 }

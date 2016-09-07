@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -27,6 +28,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncHistory;
@@ -42,6 +44,7 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.views.RetryDialog;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -103,11 +106,14 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             initListeners();
             this.loadEvent();
         } catch (CannotSaveModelException e) {
-            // TODO toast
             e.printStackTrace();
-            IntentsUtils.home(this);
-            finish();
+            this.exit();
         }
+    }
+
+    private void exit(){
+        IntentsUtils.home(this);
+        finish();
     }
 
     private void loadEvent() throws CannotSaveModelException {
@@ -115,7 +121,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         eventId = IntentsUtils.extractPlaceId(getIntent());
         if (event == null && eventId <= 0){
             Log.e(TAG, "Trying to view an invalid event --> redirect to home");
-            IntentsUtils.home(this);
+            this.exit();
             return;
         }
         else if (eventId <= 0){
@@ -123,7 +129,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
 
         if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
-            // TODO jack: add loader here
+            // TODO [issue:#107] jack: add loader here
             Call<Event> call = RestClient.service().viewPlace(eventId);
             RestClient.buildCall(call)
                     .onResponse(new HttpCallback<Event>() {
@@ -134,25 +140,41 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                                 SyncHistory.updateSync(DataSyncAdapter.SYNC_TYPE_EVENT, EventActivity.this.event);
                                 onEventLoaded();
                             } catch (CannotSaveModelException e) {
-                                // TODO toast
                                 e.printStackTrace();
-                                IntentsUtils.home(EventActivity.this);
-                                finish();
+                                EventActivity.this.exit();
                             }
                         }
 
                         @Override
                         public void notFound() {
                             Toast.makeText(EventActivity.this, R.string.event_does_not_exists_anymore, Toast.LENGTH_SHORT).show();
-                            // TODO If user has status here for this event, we need to remove it
-                            IntentsUtils.home(EventActivity.this);
-                            EventActivity.this.finish();
+                            if (EventStatusManager.isCurrentEvent(eventId)){
+                                EventStatusManager.clearCurrentEvent();
+                            }
+                            EventActivity.this.exit();
+                        }
+                    })
+                    .onError(new NetworkErrorCallback(this){
+                        @Override
+                        public void onError(Throwable error) {
+                            RetryDialog.show(EventActivity.this, new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        dialog.dismiss();
+                                        EventActivity.this.loadEvent();
+                                    } catch (CannotSaveModelException e) {
+
+                                    }
+                                }
+                            });
+
                         }
                     })
                     .onFinally(new HttpCallManager.FinallyCallback() {
                         @Override
                         public void onFinally(Response response, Throwable error) {
-                            // TODO jack: hide loader here
+                            // TODO [issue:#107] jack: hide loader here
                         }
                     })
                     .perform();

@@ -30,7 +30,11 @@ public class SectionContainer{
         this.sections = new TreeSet<>(new Comparator<PaginatedSection>() {
             @Override
             public int compare(PaginatedSection lhs, PaginatedSection rhs) {
-                return lhs.start < rhs.start ? -1 : lhs.start == rhs.start ? 0 : 1;
+                return lhs.start < rhs.start
+                        ? (order == PaginateDirection.DESC ? -1 : 1)
+                        : lhs.start == rhs.start
+                            ? 0
+                            : (order == PaginateDirection.DESC ? 1 : -1);
             }
         });
     }

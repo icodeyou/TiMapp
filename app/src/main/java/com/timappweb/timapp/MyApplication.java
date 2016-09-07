@@ -66,13 +66,15 @@ public class MyApplication extends com.activeandroid.app.Application {
         return auth.getCurrentUser();
     }
 
-    public static void login(Context context, User user, String token, String accessToken){
+    public static boolean login(Context context, User user, String token, String accessToken){
         if (auth.login(user, token, accessToken)){
             UserSyncAdapter.syncImmediately(context);
+            return true;
         }
+        return false;
     }
-    public static void login(User user, String token, String accessToken){
-        login(MyApplication.getApplicationBaseContext(), user, token, accessToken);
+    public static boolean login(User user, String token, String accessToken){
+        return login(MyApplication.getApplicationBaseContext(), user, token, accessToken);
     }
 
     @Override
@@ -85,7 +87,7 @@ public class MyApplication extends com.activeandroid.app.Application {
 
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         MyApplication.auth = new AuthProvider();
-        RestClient.init(this, getResources().getString(R.string.ws_endpoint), MyApplication.auth);
+        RestClient.init(this, getResources().getString(R.string.api_base_url), MyApplication.auth);
         KeyValueStorage.init(this, RestClient.instance().getGson());
         initFacebookPermissions(); // Useless because friend are loaded from the server ... ? TODO move from here
         JodaTimeAndroid.init(this);

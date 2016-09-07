@@ -1,6 +1,8 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
@@ -52,10 +54,16 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         return false;
     }
 
+    @Override
+    public boolean addBeginning(List<AbstractFlexibleItem> items) {
+        return this.addItems(gridColumnNumber, items);
+    }
+
     public int getDataCount(){
         return this.getItemCountOfTypes(R.layout.item_picture);
     }
 
+    @Override
     public boolean hasData() {
         return this.getDataCount() > 0;
     }
@@ -79,6 +87,8 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     public void removeLoadMore() {
         mEndlessScrollListener = null;
     }
+
+
 
     /*
     public void setBaseUrl(String baseUrl) {

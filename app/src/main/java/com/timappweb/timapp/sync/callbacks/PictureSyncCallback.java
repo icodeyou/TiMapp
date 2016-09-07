@@ -16,34 +16,11 @@ import java.util.Collection;
 public class PictureSyncCallback extends RemoteMasterSyncCallback<Picture> {
 
     private static final String TAG = "PictureSyncCallback";
-    private final MultipleEntriesSyncPerformer performer;
     private final Event event;
-    private String baseUrl = null;
 
-    public PictureSyncCallback(MultipleEntriesSyncPerformer performer, Event event) {
-        this.performer = performer;
+    public PictureSyncCallback(Event event) {
         this.event = event;
     }
-
-    /*
-    private String getBaseUrl() {
-
-        if (baseUrl == null){
-            try {
-                ResponseSyncWrapper<Picture> wrapper = (ResponseSyncWrapper<Picture>) performer
-                        .getRemoteLoader()
-                        .getResponse()
-                        .body();
-                baseUrl = wrapper.extra.getAsJsonObject().get("base_url").getAsString();
-            }
-            catch (Exception ex){
-                Log.e(TAG, "Cannot get base url: " + ex.getMessage());
-                baseUrl = "";
-            }
-        }
-        return baseUrl;
-    }*/
-
 
     @Override
     public void onMatch(Picture remoteModel, Picture localModel) {

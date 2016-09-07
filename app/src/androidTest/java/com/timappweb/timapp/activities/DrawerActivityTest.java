@@ -1,9 +1,11 @@
-package com.timappweb.timapp;
+package com.timappweb.timapp.activities;
 
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.data.models.User;
@@ -36,7 +38,7 @@ public class DrawerActivityTest {
 
     @Test
     public void clickOnMenu() {
-        onView(withId(R.id.action_list))
+        onView(ViewMatchers.withId(R.id.action_list))
                 .perform(click());
 
     }

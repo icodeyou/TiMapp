@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest.io.responses;
 
+import com.activeandroid.util.Log;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.utils.Util;
@@ -47,7 +48,7 @@ public class RestValidationErrorParser {
             return msg;
         }
         catch (Exception ex){
-            Util.appStateError(TAG, "Server response has an invalid error format: " + ex.getMessage());
+            Log.e(TAG, "Server response has an invalid error format: " + ex.getMessage());
             return null;
         }
     }

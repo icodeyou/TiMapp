@@ -229,25 +229,7 @@ public class ConfigurationProvider{
 
     public static <T extends Category> void downloadIcons(final Context context, List<T> categories){
         for (final T category: categories){
-
-            new AsyncTask<String, Void, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(String... params) {
-                    return PictureUtility.bitmapFromUrl(params[0]);
-                }
-
-                @Override
-                protected void onPostExecute(Bitmap bitmap) {
-                    if (bitmap != null){
-                        Log.i(TAG, "Saving category icon: " + category.getIconLocalFilename());
-                        new ImageSaver(context).
-                                setFileName(category.getIconLocalFilename()).
-                                setDirectoryName(Category.ICON_DIRECTORY_NAME).
-                                save(bitmap);
-                        category.setIconDrawable(new BitmapDrawable(bitmap));
-                    }
-                }
-            }.execute(category.getIconUrl());
+            category.loadIconFromAPI(context);
         }
     }
 

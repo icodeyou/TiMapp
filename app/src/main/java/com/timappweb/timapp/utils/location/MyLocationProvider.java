@@ -3,6 +3,7 @@ package com.timappweb.timapp.utils.location;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,6 +21,8 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
 
 /**
@@ -106,6 +109,11 @@ public class MyLocationProvider implements
     }
 
     public Location getLastLocation() throws NoLastLocationException {
+        if (!hasLocationPermission()){
+            this.requestPermissions();
+            throw new NoLastLocationException("App does not have user permission for location yet");
+        }
+
         if (this.mLastLocation != null){
             return mLastLocation;
         }
@@ -138,13 +146,13 @@ public class MyLocationProvider implements
     // Permission related methodes
 
     public void askUserToEnableGPS() {
+        Context context = MyApplication.getApplicationBaseContext();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 activity);
         alertDialogBuilder
-                // TODO: use ressouce
-                .setMessage("GPS is disabled in your device. Enable it?")
+                .setMessage(context.getString(R.string.ask_user_to_enable_gps))
                 .setCancelable(false)
-                .setPositiveButton("Enable GPS",
+                .setPositiveButton(context.getString(R.string.dialog_button_enable_gps),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
@@ -170,6 +178,9 @@ public class MyLocationProvider implements
         alert.show();
     }
 
+    private boolean hasLocationPermission() {
+        return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(MyApplication.getApplicationBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+    }
 
     public void requestPermissions() { //@NonNull String[] permissions, int requestCode){
 
@@ -177,7 +188,7 @@ public class MyLocationProvider implements
         if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            // Show an expanation to the user *asynchronously* -- don't block
+            // Show an explanation to the user *asynchronously* -- don't block
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
             // TODO

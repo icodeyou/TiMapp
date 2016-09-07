@@ -16,6 +16,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.repacked.antlr.v4.codegen.model.Sync;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.data.loader.PaginatedDataLoader;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
@@ -359,10 +360,17 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
         return String.valueOf(this.getRemoteId());
     }
 
-    public static From selectIdsRange(Class<? extends SyncBaseModel> clazz, long start, long end) {
-        return new Select().from(clazz)
-                .where("SyncId >= ? && SyncId <= ?", start, end)
-                .orderBy("SyncId DESC");
-    }
 
+    private static PaginatedDataLoader.SectionBoundsFormatter<SyncBaseModel> _paginatedDataFormatter = null;
+    public static PaginatedDataLoader.SectionBoundsFormatter<SyncBaseModel> getPaginatedFormater() {
+        if (_paginatedDataFormatter == null){
+            _paginatedDataFormatter =  new PaginatedDataLoader.SectionBoundsFormatter<SyncBaseModel>() {
+                @Override
+                public long format(SyncBaseModel data) {
+                    return data.getRemoteId();
+                }
+            };
+        }
+        return _paginatedDataFormatter;
+    }
 }

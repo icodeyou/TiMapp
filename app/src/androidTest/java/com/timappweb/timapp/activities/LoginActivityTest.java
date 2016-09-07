@@ -1,14 +1,18 @@
-package com.timappweb.timapp;
+package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.activities.LoginActivity;
+import com.timappweb.timapp.utils.ActivityHelper;
+
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 
 
@@ -40,9 +44,10 @@ public class LoginActivityTest {
 
     @Test
     public void testSkip() {
-        onView(withId(R.id.skip_loggin_button))
+        onView(ViewMatchers.withId(R.id.skip_loggin_button))
                 .perform(click());
-        assertCurrentActivityIsInstanceOf(DrawerActivity.class);
+
+        ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
     @Test
     public void testLogin() {
@@ -50,27 +55,7 @@ public class LoginActivityTest {
                 .perform(click());
 
         // TODO wait for facebook..
-        //assertCurrentActivityIsInstanceOf(DrawerActivity.class);
+        //assertCurrentActivity(DrawerActivity.class);
     }
 
-    public void assertCurrentActivityIsInstanceOf(Class<? extends Activity> activityClass) {
-        Activity currentActivity = getActivityInstance();
-        checkNotNull(currentActivity);
-        checkNotNull(activityClass);
-        assertTrue(currentActivity.getClass().isAssignableFrom(activityClass));
-    }
-
-    public Activity getActivityInstance(){
-        final Activity[] activity = {null};
-        getInstrumentation().runOnMainSync(new Runnable() {
-            public void run() {
-                Collection resumedActivities = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(RESUMED);
-                if (resumedActivities.iterator().hasNext()){
-                    activity[0] = (Activity) resumedActivities.iterator().next();
-                }
-            }
-        });
-
-        return activity[0];
-    }
 }

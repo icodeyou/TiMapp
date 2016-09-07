@@ -5,6 +5,7 @@ import android.content.Context;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -28,6 +29,11 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	public boolean addItem(AbstractFlexibleItem item){
 		return this.addItem(getItemCount(), item);
 	}
+
+	public boolean addBeginning(List<AbstractFlexibleItem> items){
+		return this.addItems(0, items);
+	}
+
 
 	public int removeItems(ExpandableHeaderItem headerItem) {
 		int headerPosition = getGlobalPositionOf(headerItem);
@@ -57,5 +63,9 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	public AbstractFlexibleItem getLastItem() {
 		return this.getItem(this.getItemCount() - 1);
+	}
+
+	public boolean hasData() {
+		return this.getItemCount() > 0;
 	}
 }

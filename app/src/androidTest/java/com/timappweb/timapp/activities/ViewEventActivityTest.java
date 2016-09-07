@@ -1,10 +1,13 @@
-package com.timappweb.timapp;
+package com.timappweb.timapp.activities;
 
 import android.content.Intent;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.EventActionButtons;
@@ -27,9 +30,9 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ViewEventTest {
+public class ViewEventActivityTest {
 
-    public static final int EVENT_ID = 1;
+    public static final int EVENT_ID = 562;
 
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
@@ -59,7 +62,7 @@ public class ViewEventTest {
 
     @Test
     public void testViewPager(){
-        onView(withId(R.id.event_viewpager))
+        onView(ViewMatchers.withId(R.id.event_viewpager))
                 .perform(swipeRight());
 
         onView(withId(R.id.event_viewpager))

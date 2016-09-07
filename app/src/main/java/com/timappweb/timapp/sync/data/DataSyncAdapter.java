@@ -251,7 +251,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 })
                 .setLocalEntries(event.getPictures());
         performer
-                .setCallback(new PictureSyncCallback(performer, event))
+                .setCallback(new PictureSyncCallback(event))
                 .setSyncOptions(options)
                 .perform();
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import com.flaviofaria.kenburnsview.MathUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.MyApplication;
 
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
@@ -160,5 +163,12 @@ public class Util {
 
     public static float dpToPx(float dp, Context context) {
         return com.github.florent37.materialviewpager.Utils.dpToPx(dp, context);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) MyApplication.getApplicationBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

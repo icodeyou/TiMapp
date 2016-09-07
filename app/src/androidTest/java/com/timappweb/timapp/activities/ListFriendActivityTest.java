@@ -1,12 +1,15 @@
-package com.timappweb.timapp;
+package com.timappweb.timapp.activities;
 
+import android.content.Intent;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.dummy.DummyUserFactory;
 
@@ -21,6 +24,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.
@@ -31,12 +35,15 @@ public class ListFriendActivityTest {
 
     @Rule
     public ActivityTestRule<ListFriendsActivity> mActivityRule = new ActivityTestRule<>(
-            ListFriendsActivity.class);
+            ListFriendsActivity.class, false, false);
 
     @Before
-    public void initUserSession() {
+    public void startActivity(){
         User user = DummyUserFactory.create();
-        MyApplication.login(user, "", "");
+        boolean isLoggedIn = MyApplication.login(user, "", "");
+        assertTrue(isLoggedIn);
+        Intent intent = new Intent(MyApplication.getApplicationBaseContext(), ListFriendsActivity.class);
+        mActivityRule.launchActivity(intent);
     }
 
     @Test

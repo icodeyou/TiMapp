@@ -86,9 +86,9 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
         // Selection background
         DrawableUtils.setBackground(holder.itemView,
                 DrawableUtils.getSelectableBackgroundCompat(
+                        context.getResources().getColor(R.color.background_selected_button),
                         Color.WHITE,
-                        Color.BLACK,
-                        context.getResources().getColor(R.color.accent_color)));
+                        context.getResources().getColor(R.color.red)));
 
 
         //Listener Horizontal Scroll View

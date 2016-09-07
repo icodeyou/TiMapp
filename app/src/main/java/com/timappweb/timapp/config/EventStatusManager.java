@@ -33,6 +33,14 @@ public class EventStatusManager {
     private static EventStatusManager _instance = null;
     private static Event currentEvent;
 
+    public static boolean isCurrentEvent(int eventId) {
+        return currentEvent != null && currentEvent.getRemoteId() == eventId;
+    }
+
+    public static void clearCurrentEvent() {
+        new Delete().from(UserEvent.class).where("Event = ? AND User = ?", currentEvent.getId(), MyApplication.getCurrentUser().getId()).execute();
+        currentEvent = null;
+    }
 
 
     private class LastCallInfo{

@@ -2,9 +2,13 @@ package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+
+import java.util.List;
+
 @Table(name = "Picture")
 public class Picture extends SyncBaseModel {
 
@@ -98,4 +102,6 @@ public class Picture extends SyncBaseModel {
     public void setUser(User user) {
         this.user = user;
     }
+
+
 }

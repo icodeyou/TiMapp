@@ -38,7 +38,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class UploadPictureActivityTest {
+public class ResizePictureTest {
 
     private static final String TAG = "UploadPictureTest"
             ;

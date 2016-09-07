@@ -1,9 +1,10 @@
-package com.timappweb.timapp;
+package com.timappweb.timapp.activities;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.InvitationsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.data.models.User;

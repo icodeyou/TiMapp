@@ -208,10 +208,14 @@ public class RestClient {
     }
 
     public static RestQueryParams buildPaginatedOptions(SectionContainer.PaginatedSection section) {
-        return new RestQueryParams()
-                .add(RestQueryParams.SYNC_PARAM_MIN_ID, section.start)
-                .add(RestQueryParams.SYNC_PARAM_MAX_ID, section.end)
-                .add(RestQueryParams.SYNC_PARAM_DIRECTION, RestQueryParams.SyncDirection.DOWN.ordinal());
+        RestQueryParams query = new RestQueryParams();
+        if (section.getStart() != -1){
+            query.add(RestQueryParams.SYNC_PARAM_MAX_ID, section.start);
+        }
+        if (section.getEnd() != -1){
+            query.add(RestQueryParams.SYNC_PARAM_MIN_ID, section.end);
+        }
+        return query.add(RestQueryParams.SYNC_PARAM_DIRECTION, RestQueryParams.SyncDirection.DOWN.ordinal());
     }
 }
 

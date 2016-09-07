@@ -119,8 +119,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         switch (requestCode){
             case IntentsUtils.REQUEST_TAGS:
                 if(resultCode == Activity.RESULT_OK) {
-                    // TODO update list
-                    //mTagLoader.reset();
+
                 }
                 break;
             default:
