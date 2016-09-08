@@ -7,9 +7,11 @@ import android.widget.Toast;
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.UserActivity;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.sync.user.UserSyncAdapter;
+import com.timappweb.timapp.utils.Util;
 
 
 /**
@@ -18,16 +20,21 @@ import com.timappweb.timapp.sync.user.UserSyncAdapter;
 public class QuotaManager {
 
     private static final String TAG = "QuotaManager";
+
+    // ---------------------------------------------------------------------------------------------
+
     private static QuotaManager inst = null;
     private final Context context;
+
+    // ---------------------------------------------------------------------------------------------
 
     private QuotaManager(Context context){
         this.context = context;
     };
 
     public static void init(Context context){
-            inst = new QuotaManager(context);
-            inst.init();
+        inst = new QuotaManager(context);
+        inst.init();
     }
 
     public static QuotaManager instance(){
@@ -61,25 +68,80 @@ public class QuotaManager {
         if (!MyApplication.isLoggedIn()){
             return false;
         }
-        UserQuota userQuota = MyApplication.getCurrentUser().getQuota(quotaTypeId);
+        UserQuota userQuota = getQuota(quotaTypeId);
 
         if (userQuota == null){
-            // TODO check use
             Log.e(TAG, "There is no quota with id: " + quotaTypeId);
-            UserSyncAdapter.syncImmediately(MyApplication.getApplicationBaseContext());
+            this.sync();
             return true;
         }
 
-        Log.d(TAG, "CHECKING QUOTA : " + userQuota);
-        boolean validQuota = userQuota.hasValidQuotas();
-        if (showMessage && !validQuota){
-            Toast.makeText(context, userQuota.getQuotaErrorReason(), Toast.LENGTH_LONG).show();
+        try {
+            Log.d(TAG, "CHECKING QUOTA : " + userQuota);
+            userQuota.assertValidQuotas();
+            return true;
         }
-        return validQuota;
+        catch (QuotaError error){
+            if (showMessage){
+                Toast.makeText(context, error.getQuotaErrorReason(), Toast.LENGTH_LONG).show();
+            }
+            return false;
+        }
     }
 
     private void init(){
 
     }
 
+    public static void sync() {
+        UserSyncAdapter.syncImmediately(MyApplication.getApplicationBaseContext());
+    }
+
+    public UserQuota getQuota(int quotaTypeId) {
+        return MyApplication.getCurrentUser().getQuota(quotaTypeId);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+
+    public static abstract class QuotaError extends Exception {
+        public abstract String getQuotaErrorReason();
+    }
+    public static class QuotaCountError extends QuotaError{
+
+        public final UserQuota.QuotaPeriod quotaPeriod;
+        private final int limit;
+        private final int currentCount;
+
+
+        public QuotaCountError(UserQuota.QuotaPeriod quotaPeriod, int limit, int currentCount) {
+            this.quotaPeriod = quotaPeriod;
+            this.limit = limit;
+            this.currentCount = currentCount;
+        }
+
+        public String getQuotaErrorReason(){
+            Context context = MyApplication.getApplicationBaseContext();
+            return context.getString(R.string.quota_wait_not_defined);
+        }
+
+
+    }
+    public static class QuotaMinDelayError extends QuotaError{
+
+        private final long lastActivity;
+        private final long minDelay;
+
+        public QuotaMinDelayError(long lastActivity, long minDelay) {
+            this.lastActivity = lastActivity;
+            this.minDelay = minDelay;
+        }
+
+        @Override
+        public String getQuotaErrorReason() {
+            int timeToWait = (int)this.minDelay - Util.delayFromNow((int)this.lastActivity);
+            return MyApplication.getApplicationBaseContext().getString(R.string.quota_wait_string,  Util.secondsDurationToPrettyTime(timeToWait));
+        }
+
+    }
 }

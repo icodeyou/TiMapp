@@ -106,7 +106,7 @@ public class LocationManager {
         try {
             lastLocation = locationProvider.getLastLocation();
         } catch (NoLastLocationException e) {
-            e.printStackTrace();
+
         }
     }
 

@@ -4,6 +4,8 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.utils.Util;
 
+import java.util.UUID;
+
 /**
  * Created by stephane on 5/25/2016.
  */
@@ -16,7 +18,7 @@ public class DummyEventFactory {
         event.count_coming = 3;
         event.points = Util.getCurrentTimeSec() + 3600;
         event.loaded_time = event.points;
-        event.name = "Fête de la musique";
+        event.name = uniqName();
         event.latitude = 12;
         event.longitude = 13;
         event.setSpot(DummySpotFactory.create());
@@ -26,4 +28,7 @@ public class DummyEventFactory {
         return event;
     }
 
+    public static String uniqName() {
+        return "Event " + UUID.randomUUID();
+    }
 }

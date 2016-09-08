@@ -32,7 +32,7 @@ public class CategorySelectorView extends LinearLayout {
 
     private Context context;
     private static final int CATEGORIES_COLUMNS = 4;
-    private static final int NUMBER_OF_MAIN_CATEGORIES = 4;
+    public static final int NUMBER_OF_MAIN_CATEGORIES = 4;
 
     private OnClickListener displayHideCategories;
     private InputMethodManager  imm;

@@ -27,7 +27,6 @@ import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
@@ -80,7 +79,7 @@ public class InviteFriendsActivity extends BaseActivity
             this.initToolbar(true);
             mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
             mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
-            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
             progressview = findViewById(R.id.progress_view);
             initAdapterListFriends();
             mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout){

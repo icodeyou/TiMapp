@@ -4,6 +4,10 @@ import com.timappweb.timapp.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
@@ -12,22 +16,25 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class EventActionButtons {
 
     public static void camera(){
-        onView(withId(R.id.action_camera))
-                .perform(click());
+        actionClick(R.id.action_camera);
     }
 
     public static  void tags(){
-        onView(withId(R.id.action_tag))
-                .perform(click());
+        actionClick(R.id.action_tag);
     }
 
     public static  void invite(){
-        onView(withId(R.id.action_invite))
-                .perform(click());
+        actionClick(R.id.action_invite);
     }
 
     public static  void toggle(){
-        onView(withId(R.id.multiple_actions))
-                .perform(click());
+        actionClick(R.id.multiple_actions);
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private static void actionClick(int id) {
+        ActivityHelper.btnClick(id);
+    }
+
 }

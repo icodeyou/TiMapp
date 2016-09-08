@@ -268,7 +268,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_require_gps">We need your location to do that</string>
     <string name="select_at_least_one_tag">Select at least one tag</string>
     <string name="quota_wait_string">Please wait %s before posting again</string>
-    <string name="cannot_upload_picture">We cannot upload this picture. Do you have a network access ?</string>
+    <string name="quota_wait_not_defined">Please wait %s before posting again</string>
+    <string name="cannot_upload_picture">We cannot upload this picture right now. Please try again later.</string>
     <string name="cannot_resize_picture">This picture is too big and we cannot resize it. Choose another one!</string>
     <string name="text_no_event">There isn\'t any events to display here.</string>
     <string name="dev_name">Concert improvisé :D</string>
@@ -307,6 +308,9 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="popularity_page_three">This number is in fact a timer</string>
     <string name="ask_user_to_enable_gps">GPS is disabled in your device. Enable it?</string>
     <string name="dialog_button_enable_gps">Enable GPS</string>
+    <string name="thanks_for_add_picture">Thanks for your picture</string>
+    <string name="error_picture_too_big">This picture is too large to be uploaded, sorry!</string>
+    <string name="error_picture_too_small">The picture quality seems to be very bad. Try to take another one please.</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

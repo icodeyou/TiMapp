@@ -35,6 +35,7 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
@@ -259,7 +260,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private void finishActivityResult(Spot spot){
         Log.d(TAG, "Spot chose: " + spot);
         Intent intent = new Intent(this, AddEventActivity.class);
-        intent.putExtra(IntentsUtils.KEY_SPOT, spot);
+        intent.putExtra(IntentsUtils.KEY_SPOT, SerializeHelper.packModel(spot, Spot.class));
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

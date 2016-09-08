@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -25,12 +25,9 @@ import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
-import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
-import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
@@ -65,7 +62,7 @@ public class InvitationsActivity extends BaseActivity implements
         setContentView(R.layout.activity_invitations);
         this.initToolbar(true);
 
-        recyclerView = (RefreshableRecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RefreshableRecyclerView) findViewById(R.id.rv_invitations);
         noInvitationsView = findViewById(R.id.no_invitations_view);
         mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this, R.color.colorRefresh));
@@ -115,6 +112,7 @@ public class InvitationsActivity extends BaseActivity implements
                                 .perform();
                     }
                 })
+                .useCache(false)
                 .setDataProvider(mDataProvider);
 
         mDataLoader.firstLoad();
@@ -124,18 +122,20 @@ public class InvitationsActivity extends BaseActivity implements
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new InvitationsAdapter(this);
-        recyclerView.setAdapter(adapter);
         adapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
+                Log.d(TAG, "Click on item at position: "+ position);
                 AbstractFlexibleItem item = adapter.getItem(position);
                 if (item instanceof InvitationItem) {
                     InvitationItem invitationWrapper = (InvitationItem) adapter.getItem(position);
                     IntentsUtils.viewSpecifiedEvent(InvitationsActivity.this, invitationWrapper.getInvitation().event);
+                    return true;
                 }
-                return true;
+                return false;
             }
         });
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

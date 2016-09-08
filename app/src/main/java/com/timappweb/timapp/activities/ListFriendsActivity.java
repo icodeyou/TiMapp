@@ -12,7 +12,6 @@ import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.FriendsLoader;
 import com.timappweb.timapp.data.models.UserFriend;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
@@ -46,7 +45,7 @@ public class ListFriendsActivity extends BaseActivity {
 
         setContentView(R.layout.activity_list_friends);
         this.initToolbar(true);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_friends);
         noFriendsView = findViewById(R.id.no_friends_layout);
         mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));

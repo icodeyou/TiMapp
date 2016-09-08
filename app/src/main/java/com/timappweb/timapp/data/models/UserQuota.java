@@ -9,6 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.Util;
@@ -17,7 +18,6 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by stephane on 4/5/2016.
@@ -25,8 +25,9 @@ import java.util.List;
 @Table(name = "UserQuotas")
 public class UserQuota extends SyncBaseModel {
 
+    public enum QuotaPeriod {MINUTE, HOUR, DAY, MONTH, YEAR, OVERALL}
+
     private static final String TAG = "UserQuota";
-    public String _quota_error_reason;
 
     // =============================================================================================
     // DATABASE
@@ -118,40 +119,39 @@ public class UserQuota extends SyncBaseModel {
         return userQuota;
     }
 
-    public boolean hasValidQuotas() {
-        this.resetQuotas();
-
-        if (this.min_delay != 0 && Util.delayFromNow((int)this.last_activity) < this.min_delay){
-            setMinDelayReason();
+    public boolean hasValidQuotas(){
+        try {
+            this.assertValidQuotas();
+            return true;
+        }
+        catch (QuotaManager.QuotaError ex){
             return false;
         }
-
-        return  _checkQuota(this.count_minute, this.quota_minute, "minute")
-                && _checkQuota(this.quota_hour, this.quota_hour, "hour")
-                && _checkQuota(this.quota_day, this.quota_day, "day")
-                && _checkQuota(this.quota_month, this.quota_month, "month")
-                && _checkQuota(this.count_year, this.quota_year, "year")
-                && _checkQuota(this.count_overall, this.quota_overall, "life");
     }
 
-    protected void setMinDelayReason(){
-        int mustWaitSeconds = (int)this.min_delay - Util.delayFromNow((int)this.last_activity);
-        this._quota_error_reason = MyApplication.getApplicationBaseContext().getString(R.string.quota_wait_string,  Util.secondsDurationToPrettyTime(mustWaitSeconds));
+    public boolean assertValidQuotas() throws QuotaManager.QuotaError {
+        this.updateQuotas();
+
+        if (this.min_delay != 0 && Util.delayFromNow((int)this.last_activity) < this.min_delay){
+            throw new QuotaManager.QuotaMinDelayError(this.last_activity, this.min_delay);
+        }
+
+        return  _checkQuota(this.count_minute, this.quota_minute, QuotaPeriod.MINUTE)
+                && _checkQuota(this.quota_hour, this.quota_hour, QuotaPeriod.HOUR)
+                && _checkQuota(this.quota_day, this.quota_day, QuotaPeriod.DAY)
+                && _checkQuota(this.quota_month, this.quota_month, QuotaPeriod.MONTH)
+                && _checkQuota(this.count_year, this.quota_year, QuotaPeriod.YEAR)
+                && _checkQuota(this.count_overall, this.quota_overall, QuotaPeriod.OVERALL);
     }
 
-
-    protected boolean _checkQuota(int current, int limit, String period){
+    protected boolean _checkQuota(int current, int limit, QuotaPeriod period) throws QuotaManager.QuotaCountError {
         if (limit > 0 && current >= limit){
-            this._quota_error_reason = "You are limited at " + limit + " per " + period;
-            return false;
+            throw new QuotaManager.QuotaCountError(period, limit, current);
         }
 
         return true;
     }
 
-    public String getQuotaErrorReason(){
-        return this._quota_error_reason;
-    }
 
 
     public static void increment(long userId, int type) {
@@ -175,7 +175,7 @@ public class UserQuota extends SyncBaseModel {
         this.last_activity = Util.getCurrentTimeSec();
     }
 
-    public void resetQuotas(){
+    public void updateQuotas(){
         if (last_activity == 0){
             return;
         }
@@ -303,5 +303,31 @@ public class UserQuota extends SyncBaseModel {
         return result;
     }
 
+
+    public void resetCounts() {
+        this.count_minute = 0;
+        this.count_hour = 0;
+        this.count_day = 0;
+        this.count_month = 0;
+        this.count_overall = 0;
+        this.count_year = 0;
+        this.resetLastActivity();
+    }
+
+    public void resetLastActivity() {
+        this.last_activity = 0;
+    }
+
+    public void setCountMinute(int countMinute) {
+        this.count_minute = countMinute;
+    }
+
+    public void setQuotaMinute(int quotaMinute) {
+        this.quota_minute = quotaMinute;
+    }
+
+    public void setQuotaHour(int quotaHour) {
+        this.quota_hour = quotaHour;
+    }
 
 }

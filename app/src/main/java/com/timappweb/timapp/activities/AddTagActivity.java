@@ -81,7 +81,8 @@ public class AddTagActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!IntentsUtils.requireLogin(this, false)){
+        if (!IntentsUtils.requireLogin(this, false)
+                || !LocationManager.hasLastLocation()){
             finish();
             return;
         }

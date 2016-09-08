@@ -179,6 +179,10 @@ public class IntentsUtils {
     public static void addPictureFromFragment(Context context, Fragment fragment) {
         if (!requireLogin(context, false))
             return;
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true)){
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            return;
+        }
         Intent startCustomCameraIntent = new Intent(context, CameraActivity.class);
         fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }

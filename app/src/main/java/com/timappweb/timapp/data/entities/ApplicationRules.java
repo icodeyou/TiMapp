@@ -17,6 +17,9 @@ public class ApplicationRules {
     public int max_invite_per_request = 20;
 
     @Expose
+    public long picture_min_size;
+
+    @Expose
     public int picture_max_size;
 
     @Expose

@@ -61,7 +61,7 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
     public abstract boolean isSync(SyncBaseModel model);
 
     public long getRemoteId(){
-        return this.remote_id;
+        return this.remote_id != null ? this.remote_id : 0L;
     }
 
     public void setRemoteId(long remoteId) {

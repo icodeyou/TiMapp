@@ -28,6 +28,7 @@ import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.entities.SocialProvider;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
@@ -151,7 +152,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                                     MyApplication.login(getApplicationContext(), user, token, accessToken);
                                     MyApplication.requestGcmToken(LoginActivity.this);
                                     IntentsUtils.lastActivityBeforeLogin(LoginActivity.this);
-                                    UserSyncAdapter.syncImmediately(MyApplication.getApplicationBaseContext());
+
+                                    QuotaManager.sync();
                                 }
                                 catch (Exception ex){
                                     Log.e(TAG, "Cannot parse server response for login: " + ex.getMessage());

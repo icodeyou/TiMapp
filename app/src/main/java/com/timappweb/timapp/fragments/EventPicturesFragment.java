@@ -213,6 +213,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                                 .perform();
                     }
                 })
+                .useCache(false)
                 .setDataProvider(new PaginatedDataProviderInterface() {
 
                     @Override
@@ -254,7 +255,8 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     " has size: " + Util.byteToKB(file.length()) +
                     ". Max size: " + Util.byteToKB(rules.picture_max_size));
 
-            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
+            // TODO
+            //file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 
             Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +
@@ -262,7 +264,12 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     " and type: " + fileMimeType);
 
             if (file.length() > rules.picture_max_size){
-                throw new Exception("Picture size exceed limit: " + file.length() + "/" + rules.picture_max_size);
+                this.showUploadFeedbackError(R.string.error_picture_too_big);
+                return;
+            }
+            else if (file.length() <= rules.picture_min_size){
+                this.showUploadFeedbackError(R.string.error_picture_too_small);
+                return;
             }
 
             RequestBody body = new MultipartBody.Builder()
@@ -289,14 +296,15 @@ public class EventPicturesFragment extends EventBaseFragment implements
                         mRecyclerView.smoothScrollToPosition(0);
                         picture.mySaveSafeCall();
                         mDataLoader.loadNewest();
-                        Log.d(TAG, "New picture uploaded: " + picture);
+                        Toast.makeText(EventPicturesFragment.this.getContext(),
+                                R.string.thanks_for_add_picture, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void notSuccessful() {
                         if (this.response.code() != HttpURLConnection.HTTP_BAD_REQUEST){
                             Log.e(TAG, "Cannot upload picture. API response: " + this.response.code());
-                            Toast.makeText(getContext(), R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.cannot_upload_picture, Toast.LENGTH_LONG).show();
                         }
                     }
                 })
@@ -304,7 +312,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     @Override
                     public void onError(Throwable error) {
                         Toast.makeText(EventPicturesFragment.this.getContext(),
-                                R.string.cannot_upload_picture, Toast.LENGTH_LONG).show();
+                                R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
                     }
                 })
                 .onFinally(new HttpCallManager.FinallyCallback() {
@@ -315,12 +323,17 @@ public class EventPicturesFragment extends EventBaseFragment implements
                 })
                 .perform();
 
-        } catch (Exception e) {
-            Toast.makeText(this.getContext(), R.string.cannot_resize_picture, Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e) {
             Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
             e.printStackTrace();
-            setUploadVisibility(false);
+            this.showUploadFeedbackError(R.string.cannot_resize_picture);
         }
+    }
+
+    private void showUploadFeedbackError(int msg){
+        Toast.makeText(this.getContext(), msg, Toast.LENGTH_LONG).show();
+        setUploadVisibility(false);
     }
 
     // =============================================================================================

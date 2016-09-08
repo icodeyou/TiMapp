@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -52,6 +53,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
@@ -391,7 +393,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {
-            Spot spot = (Spot) bundle.getSerializable(IntentsUtils.KEY_SPOT);
+            Spot spot = SerializeHelper.unpackModel(bundle.getString(IntentsUtils.KEY_SPOT), Spot.class);
             mBinding.getEvent().setSpot(spot);
             mBtnAddSpot.setVisibility(View.GONE);
             mSpotContainer.setVisibility(View.VISIBLE);
@@ -528,6 +530,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             mAddressResultReceiver = new AddressResultReceiver();
         }
         ReverseGeocodingHelper.request(this, location, mAddressResultReceiver);
+    }
+
+    public View getProgressBar() {
+        return progressView;
     }
 
     class AddressResultReceiver extends ResultReceiver {

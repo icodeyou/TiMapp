@@ -1,6 +1,7 @@
 package com.timappweb.timapp.data.models;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -120,7 +121,7 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface, Pl
         return new LatLng(this.latitude, this.longitude);
     }
 
-    public void setLocation(Location location){
+    public void setLocation(@NonNull Location location){
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }

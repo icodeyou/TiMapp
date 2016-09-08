@@ -68,7 +68,6 @@ public class MyApplication extends com.activeandroid.app.Application {
 
     public static boolean login(Context context, User user, String token, String accessToken){
         if (auth.login(user, token, accessToken)){
-            UserSyncAdapter.syncImmediately(context);
             return true;
         }
         return false;

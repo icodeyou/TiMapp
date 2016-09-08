@@ -17,9 +17,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  */
 public class AddSpotForm extends TestForm{
     private final ViewInteraction inputName;
+    private final CategorySelectorHelper categorySelector;
 
     public AddSpotForm() {
         inputName = onView(withId(R.id.name_spot));
+        categorySelector = new CategorySelectorHelper();
     }
 
     public AddSpotForm setName(String value) {
@@ -28,8 +30,7 @@ public class AddSpotForm extends TestForm{
     }
 
     public AddSpotForm setCategory(int position) {
-        onView(withId(R.id.category_selector))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));
+        categorySelector.selectByPosition(position);
         return this;
     }
 
@@ -38,4 +39,14 @@ public class AddSpotForm extends TestForm{
                 .perform(click());
     }
 
+    public AddSpotForm selectExistingSpot(int position) {
+        onView(withId(R.id.spots_rv))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));
+        return this;
+    }
+
+    public AddSpotForm waitForExistingSpotLoad() {
+        TestUtil.sleep(2000);
+        return this;
+    }
 }

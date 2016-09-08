@@ -4,17 +4,22 @@ import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.EventActionButtons;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 /**
  * Created by Stephane on 07/09/2016.
  */
-public class ProfileActivityTest {
+public class ProfileActivityTest extends MyActivityTest{
 
     private static final int PROFILE_ID = 1;
     @Rule
@@ -29,7 +34,10 @@ public class ProfileActivityTest {
 
     @Test
     public void testEditProfile() {
-        // TODO
+        ActivityHelper
+                .btnClick(R.id.action_edit_profile);
+
+        ActivityHelper.assertCurrentActivity(EditProfileActivity.class);
     }
 
 
