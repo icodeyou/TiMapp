@@ -10,7 +10,10 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.EventActionButtons;
+import com.timappweb.timapp.utils.RecyclerViewHelper;
+import com.timappweb.timapp.utils.ViewEventHelper;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,57 +39,56 @@ public class ViewEventActivityTest {
 
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
+    private ViewEventHelper viewEventHelper;
 
     @Before
     public void startActivity(){
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EVENT_ID);
         mActivityRule.launchActivity(intent);
+
+        viewEventHelper = new ViewEventHelper();
     }
 
     @Test
     public void testAddPicture() {
-        EventActionButtons.toggle();
-        EventActionButtons.camera();
+        viewEventHelper.addPicture();
     }
 
     @Test
     public void testAddTags() {
-        EventActionButtons.toggle();
-        EventActionButtons.tags();
+        viewEventHelper.addTags();
     }
     @Test
     public void testAddPeople() {
-        EventActionButtons.toggle();
-        EventActionButtons.invite();
+        viewEventHelper.invitePeople();
+        ActivityHelper.assertCurrentActivity(InviteFriendsActivity.class);
+
+        new RecyclerViewHelper(R.id.rv_friends)
+                .clickItem(0)
+                .clickItem(1);
+
+        onView(withId(R.id.action_invite))
+                .perform(click());
+
+        ActivityHelper.assertCurrentActivity(EventActivity.class);
+
+        viewEventHelper.swipeToPeopleTab();
+
+        // TODO check that count has been updated
     }
 
     @Test
-    public void testViewPager(){
-        onView(ViewMatchers.withId(R.id.event_viewpager))
-                .perform(swipeRight());
+    public void testViewPicture() {
+        viewEventHelper.viewPicture(0);
 
-        onView(withId(R.id.event_viewpager))
-                .perform(swipeRight());
-        // TODO assert
-        onView(withId(R.id.event_viewpager))
-                .perform(swipeRight());
+        ActivityHelper.assertCurrentActivity(EventPicturesActivity.class);
 
+        ActivityHelper.goBack();
 
-        onView(withId(R.id.event_viewpager))
-                .perform(swipeLeft());
-
-        onView(withId(R.id.event_viewpager))
-                .perform(swipeLeft());
-
-        onView(withId(R.id.event_viewpager))
-                .perform(swipeLeft());
-        // Back to information
+        ActivityHelper.assertCurrentActivity(EventPicturesActivity.class);
     }
-
-
     @Test
     public void startNavigation() {
-        EventActionButtons.toggle();
-        EventActionButtons.invite();
+        viewEventHelper.startNavigation();
     }
 }

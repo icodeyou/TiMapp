@@ -1,19 +1,15 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
-import android.location.Location;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.AddEventForm;
-import com.timappweb.timapp.utils.AddSpotForm;
 import com.timappweb.timapp.utils.MockLocationProvider;
-import com.timappweb.timapp.utils.idlingresource.ProgressIdlingResource;
+import com.timappweb.timapp.utils.PickTagsForm;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.junit.Before;
@@ -35,7 +31,6 @@ public class AddEventTagActivityTest {
     @Rule
     public ActivityTestRule<AddTagActivity> mActivityRule = new ActivityTestRule<>(
             AddTagActivity.class, false, false);
-    private MockLocationProvider mockLocationProvider;
 
     @Before
     public void setUp() throws Exception {
@@ -52,6 +47,9 @@ public class AddEventTagActivityTest {
         new PickTagsForm()
             .pick(0)
             .pick(3)
-            .pick(5);
+            .pick(5)
+            .submit();
+
+        ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
 }

@@ -55,7 +55,7 @@ public class LoginActivityTest {
                 .perform(click());
 
         // TODO wait for facebook..
-        //assertCurrentActivity(DrawerActivity.class);
+        ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
 
 }

@@ -32,17 +32,16 @@ public class InvitationActivityTest {
             InvitationsActivity.class);
 
     @Before
-    public void initUserSession() {
+    public void setUp() {
         assertTrue(MyApplication.isLoggedIn());
     }
 
     @Test
-    public void testViewProfile() {
-        new RecyclerViewHelper(R.id.rv_friends)
+    public void testViewEvent() {
+        new RecyclerViewHelper(R.id.rv_invitations)
                 .clickItem(0);
-        ActivityHelper.assertCurrentActivity(ProfileActivity.class);
+        ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
-
 
 
 }

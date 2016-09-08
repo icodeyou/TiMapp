@@ -34,14 +34,14 @@ public class ListFriendActivityTest {
 
     @Before
     public void startActivity(){
-        assertTrue(MyApplication.isLoggedIn());
         Intent intent = new Intent(MyApplication.getApplicationBaseContext(), ListFriendsActivity.class);
         mActivityRule.launchActivity(intent);
+        assertTrue(MyApplication.isLoggedIn());
     }
 
     @Test
-    public void testViewEvent() {
-        new RecyclerViewHelper(R.id.rv_invitations)
+    public void testViewUserProfile() {
+        new RecyclerViewHelper(R.id.rv_friends)
                 .clickItem(0);
         ActivityHelper.assertCurrentActivity(ProfileActivity.class);
     }

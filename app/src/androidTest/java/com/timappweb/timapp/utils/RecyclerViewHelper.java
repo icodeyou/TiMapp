@@ -23,7 +23,7 @@ public class RecyclerViewHelper {
     }
 
     public RecyclerViewHelper clickItem(int position) {
-        onView(withId(R.id.rv_friends))
+        rv
                 .check(matches(isDisplayed()))
                 .perform(RecyclerViewActions.scrollToPosition(position))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));

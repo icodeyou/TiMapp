@@ -34,7 +34,10 @@ public class EventActionButtons {
     // ---------------------------------------------------------------------------------------------
 
     private static void actionClick(int id) {
-        ActivityHelper.btnClick(id);
+        onView(withId(id))
+                .check(matches(isDisplayed()))
+                .check(matches(isEnabled()))
+                .perform(click());
     }
 
 }

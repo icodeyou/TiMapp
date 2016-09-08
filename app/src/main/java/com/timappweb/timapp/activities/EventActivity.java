@@ -54,12 +54,13 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private static final long MIN_DELAY_UPDATE_EVENT = 5 * 60 * 1000;
     private String          TAG                     = "EventActivity";
 
-    private static final int PAGER_INFO             = 0;
+    public static final int PAGER_INFO             = 0;
     public static final int PAGER_PICTURE           = 1;
-    private static final int PAGER_TAG              = 2;
-    private static final int PAGER_PEOPLE           = 3;
+    public static final int PAGER_TAG              = 2;
+    public static final int PAGER_PEOPLE           = 3;
+    public static final int INITIAL_FRAGMENT_PAGE  = 0;
 
-    private static final int INITIAL_FRAGMENT_PAGE  = 0;
+
     private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 4;
 
     public static final int LOADER_ID_CORE          = 0;

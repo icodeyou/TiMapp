@@ -1,7 +1,10 @@
 package com.timappweb.timapp.utils;
 
 import android.app.Activity;
+import android.support.test.espresso.Espresso;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+
+import com.timappweb.timapp.R;
 
 import java.util.Collection;
 
@@ -54,5 +57,9 @@ public class ActivityHelper {
                 .check(matches(isEnabled()))
                 .check(matches(isClickable()))
                 .perform(click());
+    }
+
+    public static void goBack() {
+        Espresso.pressBack();
     }
 }

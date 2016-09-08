@@ -13,6 +13,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.AddEventForm;
@@ -22,11 +23,14 @@ import com.timappweb.timapp.utils.idlingresource.ProgressIdlingResource;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.
  *
  * @warning User must be already logged in to perform this test suite
+ *
+ * TODO: disable quota on server and local side for tests to work properly
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -43,6 +47,7 @@ public class AddEventActivityTest{
         AddEventActivity activity = (AddEventActivity) ActivityHelper.getActivityInstance();
         //progressIdlingResource = new ProgressIdlingResource(activity, activity.getProgressBar());
         //Espresso.registerIdlingResources(progressIdlingResource);
+        assertTrue(MyApplication.isLoggedIn());
     }
 
     @Test

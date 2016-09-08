@@ -23,6 +23,7 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
+import com.timappweb.timapp.activities.EventPicturesActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
@@ -70,6 +71,7 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import okhttp3.MediaType;
@@ -115,9 +117,6 @@ public class EventPicturesFragment extends EventBaseFragment implements
         startPictureActivity();
         initAdapter();
 
-        SyncAdapterOption options = new SyncAdapterOption()
-                .setType(DataSyncAdapter.SYNC_TYPE_EVENT_PICTURE);
-        options.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, eventActivity.getEvent().getRemoteId());
         return root;
     }
 
@@ -180,6 +179,19 @@ public class EventPicturesFragment extends EventBaseFragment implements
         picturesAdapter.setHandleDragEnabled(true);
         picturesAdapter.setAnimationOnScrolling(true);
         picturesAdapter.setAnimationOnReverseScrolling(true);
+        picturesAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
+            @Override
+            public boolean onItemClick(int position) {
+                AbstractFlexibleItem item = picturesAdapter.getItem(position);
+                if (item instanceof PictureItem){
+                    IntentsUtils.viewPicture(EventPicturesFragment.this.getActivity(),
+                            (position - picturesAdapter.getGridColumnNumber()),
+                            picturesAdapter.getPictureUris());
+                    return true;
+                }
+                return false;
+            }
+        });
         mRecyclerView.setAdapter(picturesAdapter);
         mRecyclerView.setHasFixedSize(true); //Size of RV will not change
         mRecyclerView.setItemAnimator(new DefaultItemAnimator() {

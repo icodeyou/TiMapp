@@ -84,16 +84,11 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         }
     }
 
-    public void removeLoadMore() {
-        mEndlessScrollListener = null;
+    public String[] getPictureUris() {
+        return (String[]) picturesUris.toArray();
     }
 
-
-
-    /*
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-
-    }*/
-
+    public int getGridColumnNumber() {
+        return gridColumnNumber;
+    }
 }
