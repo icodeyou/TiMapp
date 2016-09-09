@@ -176,7 +176,7 @@ public class IntentsUtils {
         activity.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
-    public static void addPictureFromFragment(Context context, Fragment fragment) {
+    public static void addPictureFromFragment(Context context, Activity activity) {
         if (!requireLogin(context, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true)){
@@ -184,7 +184,7 @@ public class IntentsUtils {
             return;
         }
         Intent startCustomCameraIntent = new Intent(context, CameraActivity.class);
-        fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+        activity.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
     }
 
     public static void addTags(Activity activity, Event event) {

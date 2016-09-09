@@ -153,7 +153,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private void startPictureActivity() {
         Bundle extras = eventActivity.getIntent().getExtras();
         if(extras!=null && extras.getInt(IntentsUtils.KEY_ACTION, -1) == IntentsUtils.ACTION_CAMERA) {
-            IntentsUtils.addPictureFromFragment(getActivity(), this);
+            IntentsUtils.addPictureFromFragment(getActivity(), eventActivity);
             eventActivity.getIntent().putExtra(IntentsUtils.KEY_ACTION, -1);
         }
     }

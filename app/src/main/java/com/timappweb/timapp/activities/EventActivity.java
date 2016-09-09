@@ -90,6 +90,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private FloatingActionButton        btnActionCamera;
     private FloatingActionButton        btnActionTag;
     private FloatingActionButton        btnActionInvite;
+    private View                        loader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -99,6 +100,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         try {
 
             mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
+            loader = findViewById(R.id.progress_view);
             pageTitle = (TextView) findViewById(R.id.title_event);
             btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
             btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
@@ -130,7 +132,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
 
         if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
-            // TODO [issue:#107] jack: add loader here
+            loader.setVisibility(View.VISIBLE);
             Call<Event> call = RestClient.service().viewPlace(eventId);
             RestClient.buildCall(call)
                     .onResponse(new HttpCallback<Event>() {
@@ -175,7 +177,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     .onFinally(new HttpCallManager.FinallyCallback() {
                         @Override
                         public void onFinally(Response response, Throwable error) {
-                            // TODO [issue:#107] jack: hide loader here
+                            loader.setVisibility(View.GONE);
                         }
                     })
                     .perform();
@@ -354,7 +356,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void openAddPictureActivity() {
-        IntentsUtils.addPictureFromFragment(this, fragmentPictures);
+        IntentsUtils.addPictureFromFragment(this, this);
     }
 
     private void openAddPeopleActivity() {
