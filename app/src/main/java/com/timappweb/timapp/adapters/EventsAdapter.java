@@ -91,6 +91,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         private final View cameraButton;
         private final View tagButton;
         private final View inviteButton;
+        private final View comingButton;
         private final ImageView imageView;
         SimpleTimerView tvCountPoints;
         TextView titleCategory;
@@ -107,6 +108,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             cameraButton = itemView.findViewById(R.id.action_camera);
             tagButton = itemView.findViewById(R.id.action_tag);
             inviteButton = itemView.findViewById(R.id.action_invite);
+            comingButton = itemView.findViewById(R.id.action_coming);
             imageView = (ImageView)itemView.findViewById(R.id.background_image_event);
 
             titleCategory.setVisibility(View.VISIBLE);
@@ -164,6 +166,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
                 @Override
                 public void onClick(View v) {
                     IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
+                }
+            });
+            comingButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_COMING);
                 }
             });
         }

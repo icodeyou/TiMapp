@@ -100,13 +100,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         statusImage = view.findViewById(R.id.ic_status);
         progressStatus = view.findViewById(R.id.status_progress);
 
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
@@ -184,6 +177,13 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                 updateUserStatusButton();
             }
         });
+
+        eventActivity.parseIntentParameters();
+        //TODO : call this method in EventActivity after all fragments have been loaded
+    }
+
+    public void toggleStatusButton() {
+        switchButton.toggle();
     }
 
     private void setStatusProgress(boolean isProgressViewEnabled) {

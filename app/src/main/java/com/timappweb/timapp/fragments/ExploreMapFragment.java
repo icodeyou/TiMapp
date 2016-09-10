@@ -83,6 +83,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private View                            cameraButton;
     private View                            tagButton;
     private View                            inviteButton;
+    private View                            comingButton;
 
     private ExploreFragment                 exploreFragment;
     private FragmentExploreMapBinding       mBinding;
@@ -126,6 +127,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         cameraButton = root.findViewById(R.id.action_camera);
         tagButton = root.findViewById(R.id.action_tag);
         inviteButton = root.findViewById(R.id.action_invite);
+        comingButton = root.findViewById(R.id.action_coming);
 
         eventView = root.findViewById(R.id.event_view_layout_map);
 
@@ -154,6 +156,12 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             @Override
             public void onClick(View v) {
                 IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_PEOPLE);
+            }
+        });
+        comingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_COMING);
             }
         });
 

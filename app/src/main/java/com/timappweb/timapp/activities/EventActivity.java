@@ -114,6 +114,94 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocationManager.addOnLocationChangedListener(this);
+        LocationManager.start(this);
+    }
+
+    @Override
+    protected void onStop() {
+        LocationManager.stop();
+        super.onStop();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_place, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                setDefaultShareIntent();
+                return true;
+            case android.R.id.home:
+                //http://stackoverflow.com/questions/19999619/navutils-navigateupto-does-not-start-any-activity
+
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot()) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case IntentsUtils.REQUEST_TAGS:
+                if(resultCode==RESULT_OK) {
+                    setCurrentPageSelected(PAGER_TAG);
+                    Log.d(TAG, "Result OK from AddTagActivity");
+                }
+                break;
+            case IntentsUtils.REQUEST_INVITE_FRIENDS:
+                if(resultCode==RESULT_OK) {
+                    setCurrentPageSelected(PAGER_PEOPLE);
+                    Log.d(TAG, "Result OK from InviteFriendsActivity");
+                }
+                break;
+            case IntentsUtils.REQUEST_CAMERA:
+                if(resultCode==RESULT_OK) {
+                    setCurrentPageSelected(PAGER_PICTURE);
+                    Log.d(TAG, "Result OK from InviteFriendsActivity");
+                }
+                break;
+            default:
+                Log.e(TAG, "Unknown activity result: " + requestCode);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    //Methods
+    //////////////////////////////////////////////////////////////////////////////
+
     private void exit(){
         IntentsUtils.home(this);
         finish();
@@ -229,7 +317,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
            // eventView.setEvent(event);
             initFragments();
-            parseIntentParameters();
         }
 
         updateView();
@@ -256,96 +343,11 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 //mMaterialViewPager.setCurrentItem(2);
                 openAddPeopleActivity();
                 break;
+            case IntentsUtils.ACTION_COMING:
+                fragmentInformation.toggleStatusButton();
+                break;
         }
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LocationManager.addOnLocationChangedListener(this);
-        LocationManager.start(this);
-    }
-
-    @Override
-    protected void onStop() {
-        LocationManager.stop();
-        super.onStop();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_place, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_share:
-                setDefaultShareIntent();
-                return true;
-            case android.R.id.home:
-                //http://stackoverflow.com/questions/19999619/navutils-navigateupto-does-not-start-any-activity
-
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot()) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
-            case IntentsUtils.REQUEST_TAGS:
-                if(resultCode==RESULT_OK) {
-                    setCurrentPageSelected(PAGER_TAG);
-                    Log.d(TAG, "Result OK from AddTagActivity");
-                }
-                break;
-            case IntentsUtils.REQUEST_INVITE_FRIENDS:
-                if(resultCode==RESULT_OK) {
-                    setCurrentPageSelected(PAGER_PEOPLE);
-                    Log.d(TAG, "Result OK from InviteFriendsActivity");
-                }
-                break;
-            case IntentsUtils.REQUEST_CAMERA:
-                if(resultCode==RESULT_OK) {
-                    setCurrentPageSelected(PAGER_PICTURE);
-                    Log.d(TAG, "Result OK from InviteFriendsActivity");
-                }
-                break;
-            default:
-                Log.e(TAG, "Unknown activity result: " + requestCode);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    //private methods
-    //////////////////////////////////////////////////////////////////////////////
-
 
     private void openAddTagsActivity() {
         if (!LocationManager.hasFineLocation()) {
@@ -356,7 +358,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void openAddPictureActivity() {
-        IntentsUtils.addPictureFromFragment(this, this);
+        IntentsUtils.addPictureFromFragment(this, fragmentPictures);
     }
 
     private void openAddPeopleActivity() {
