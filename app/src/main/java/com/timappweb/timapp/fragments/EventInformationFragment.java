@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -37,6 +37,8 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.MySwitchCompat;
 import com.timappweb.timapp.views.SimpleTimerView;
+
+import retrofit2.Response;
 
 
 public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener {
@@ -65,8 +67,8 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private View                        flameView;
     private View                        mainLayout;
     private TextView                    statusTv;
-    private View                        hereImage;
-    private View                        comingImage;
+    private View                        statusImage;
+    private View                        progressStatus;
 
     @Nullable
     @Override
@@ -95,32 +97,36 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         //rateButtons = view.findViewById(R.id.here_view);
         flameView = view.findViewById(R.id.points_icon);
         switchButton = (MySwitchCompat) view.findViewById(R.id.switch_button);
-        hereImage = view.findViewById(R.id.ic_here);
-        comingImage = view.findViewById(R.id.ic_coming);
-
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final boolean isChecked = switchButton.isChecked();
-                updatePointsView(isChecked);
-            }
-        });
+        statusImage = view.findViewById(R.id.ic_status);
+        progressStatus = view.findViewById(R.id.status_progress);
 
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
-                statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
-
                 UserEventStatusEnum newStatus = isChecked
                         ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
                         :  UserEventStatusEnum.GONE;
 
+                int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
+                statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
+                if(progressStatus.getVisibility()==View.VISIBLE){
+                    setStatusProgress(false);
+                }
+
                 HttpCallManager manager = EventStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
                 if (manager != null){
+                    setStatusProgress(true);
+
                     manager .onResponse(new HttpCallback() {
+
+                                @Override
+                                public void successful(Object feedback) {
+                                    updatePointsView(isChecked);
+                                }
+
                                 @Override
                                 public void notSuccessful() {
+                                    Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
                                     switchButton.setCheckedNoTrigger(!isChecked);
                                 }
 
@@ -128,7 +134,14 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                             .onError(new RequestFailureCallback(){
                                 @Override
                                 public void onError(Throwable error) {
+                                    Toast.makeText(eventActivity, R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
                                     switchButton.setCheckedNoTrigger(!isChecked);
+                                }
+                            })
+                            .onFinally(new HttpCallManager.FinallyCallback() {
+                                @Override
+                                public void onFinally(Response response, Throwable error) {
+                                    setStatusProgress(false);
                                 }
                             });
                 }
@@ -162,28 +175,38 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             @Override
             public void onLocationChanged(Location newLocation, Location lastLocation) {
                 updateUserStatusButton();
-                mBinding.notifyChange();
             }
         });
+
+        eventActivity.parseIntentParameters();
+        //TODO : call this method in EventActivity after all fragments have been loaded
+    }
+
+    public void toggleStatusButton() {
+        switchButton.toggle();
+    }
+
+    private void setStatusProgress(boolean isProgressViewEnabled) {
+        if(isProgressViewEnabled) {
+            statusImage.setVisibility(View.GONE);
+            progressStatus.setVisibility(View.VISIBLE);
+        } else {
+            statusImage.setVisibility(View.VISIBLE);
+            progressStatus.setVisibility(View.GONE);
+        }
     }
 
     public void updateUserStatusButton(){
         Event event = eventActivity.getEvent();
         UserEvent statusInfo = EventStatusManager.getStatus(event);
         if (event.isUserAround()){
-            comingImage.setVisibility(View.GONE);
-            hereImage.setVisibility(View.VISIBLE);
-            statusTv.setText(getContext().getResources().getString(R.string.i_am_here));
-            if (statusInfo != null ){
-                switchButton.setChecked(statusInfo.status == UserEventStatusEnum.HERE);
-            }
+            switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.HERE);
         }
         else{
-            comingImage.setVisibility(View.VISIBLE);
-            hereImage.setVisibility(View.GONE);
-            statusTv.setText(getContext().getResources().getString(R.string.i_am_coming));
             switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.COMING);
         }
+
+        mBinding.notifyChange();
     }
 
     public void updateView(){
@@ -220,15 +243,15 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         animator = new ValueAnimator();
         tvCountPoints.cancelTimer();
         int initialPoints = tvCountPoints.getPoints(); //TODO Steph : get points from server instead of TextView
-        final int finalPoints;
+        final int pointsAdded;
         if(increase) {
-            finalPoints = initialPoints+300; //TODO Steph : Replace 300 by the number of points actually added on the server
+            pointsAdded = 300; //TODO Steph : Replace 300 by the number of points actually added on the server
         } else {
-            if(initialPoints>300) { //TODO Steph : Replace 300
-                finalPoints = initialPoints-300; //TODO Steph : Replace 300
-            } else {
-                finalPoints = 0;
-            }
+            pointsAdded = -300; //TODO Steph : Replace 300 by the number of points actually substracted on the server
+        }
+        int finalPoints = initialPoints + pointsAdded - TIMELAPSE_HOT_ANIM/1000;
+        if(initialPoints<pointsAdded && increase) {
+            finalPoints = 0;
         }
 
         Log.d(TAG, "Initial points : " + initialPoints);
@@ -245,8 +268,8 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             Log.d(TAG, "Set timer text to Over");
             tvCountPoints.setText(getString(R.string.counter_over));
         } else {
-            Log.d(TAG, "Initializing timer to +" + finalPoints);
-            tvCountPoints.initTimer(finalPoints*1000 + TIMELAPSE_HOT_ANIM);
+            Log.d(TAG, "Initializing timer to " + finalPoints);
+            tvCountPoints.initTimer(finalPoints);
         }
     }
 

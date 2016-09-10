@@ -90,6 +90,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private FloatingActionButton        btnActionCamera;
     private FloatingActionButton        btnActionTag;
     private FloatingActionButton        btnActionInvite;
+    private View                        loader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -99,6 +100,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         try {
 
             mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
+            loader = findViewById(R.id.progress_view);
             pageTitle = (TextView) findViewById(R.id.title_event);
             btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
             btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
@@ -109,151 +111,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         } catch (CannotSaveModelException e) {
             e.printStackTrace();
             this.exit();
-        }
-    }
-
-    private void exit(){
-        IntentsUtils.home(this);
-        finish();
-    }
-
-    private void loadEvent() throws CannotSaveModelException {
-        this.event = IntentsUtils.extractEvent(getIntent());
-        eventId = IntentsUtils.extractPlaceId(getIntent());
-        if (event == null && eventId <= 0){
-            Log.e(TAG, "Trying to view an invalid event --> redirect to home");
-            this.exit();
-            return;
-        }
-        else if (eventId <= 0){
-            eventId = event.remote_id;
-        }
-
-        if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
-            // TODO [issue:#107] jack: add loader here
-            Call<Event> call = RestClient.service().viewPlace(eventId);
-            RestClient.buildCall(call)
-                    .onResponse(new HttpCallback<Event>() {
-                        @Override
-                        public void successful(Event event) {
-                            try {
-                                EventActivity.this.event = event.deepSave();
-                                SyncHistory.updateSync(DataSyncAdapter.SYNC_TYPE_EVENT, EventActivity.this.event);
-                                onEventLoaded();
-                            } catch (CannotSaveModelException e) {
-                                e.printStackTrace();
-                                EventActivity.this.exit();
-                            }
-                        }
-
-                        @Override
-                        public void notFound() {
-                            Toast.makeText(EventActivity.this, R.string.event_does_not_exists_anymore, Toast.LENGTH_SHORT).show();
-                            if (EventStatusManager.isCurrentEvent(eventId)){
-                                EventStatusManager.clearCurrentEvent();
-                            }
-                            EventActivity.this.exit();
-                        }
-                    })
-                    .onError(new NetworkErrorCallback(this){
-                        @Override
-                        public void onError(Throwable error) {
-                            RetryDialog.show(EventActivity.this, new DialogInterface.OnClickListener(){
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        dialog.dismiss();
-                                        EventActivity.this.loadEvent();
-                                    } catch (CannotSaveModelException e) {
-
-                                    }
-                                }
-                            });
-
-                        }
-                    })
-                    .onFinally(new HttpCallManager.FinallyCallback() {
-                        @Override
-                        public void onFinally(Response response, Throwable error) {
-                            // TODO [issue:#107] jack: hide loader here
-                        }
-                    })
-                    .perform();
-        }
-        else{
-            event = (Event) event.requireLocalId();
-            onEventLoaded();
-        }
-    }
-
-    private void initListeners() {
-
-        btnActionTag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!event.isUserAround()){
-                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
-            }
-        });
-        btnActionCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!event.isUserAround()){
-                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
-                    return;
-                }
-                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
-            }
-        });
-        btnActionInvite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_PEOPLE);
-            }
-        });
-
-    }
-
-    /**
-     * Method called when event has finished loading.
-     * @warning Method must be called only ONCE.
-     */
-    private void onEventLoaded() {
-        if (!isEventLoaded){
-            isEventLoaded = true;
-
-           // eventView.setEvent(event);
-            initFragments();
-            parseIntentParameters();
-        }
-
-        updateView();
-    }
-
-    public void parseIntentParameters() {
-        Bundle extras = getIntent().getExtras();
-        if(extras!=null) {
-            parseActionParameter(extras.getInt(IntentsUtils.KEY_ACTION, -1));
-        }
-    }
-
-    public void parseActionParameter(int action){
-        switch (action) {
-            case IntentsUtils.ACTION_CAMERA:
-                openAddPictureActivity();
-                //mMaterialViewPager.setCurrentItem(0);
-                break;
-            case IntentsUtils.ACTION_TAGS:
-                //mMaterialViewPager.setCurrentItem(1);
-                openAddTagsActivity();
-                break;
-            case IntentsUtils.ACTION_PEOPLE:
-                //mMaterialViewPager.setCurrentItem(2);
-                openAddPeopleActivity();
-                break;
         }
     }
 
@@ -341,9 +198,156 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    //private methods
+
+    //Methods
     //////////////////////////////////////////////////////////////////////////////
 
+    private void exit(){
+        IntentsUtils.home(this);
+        finish();
+    }
+
+    private void loadEvent() throws CannotSaveModelException {
+        this.event = IntentsUtils.extractEvent(getIntent());
+        eventId = IntentsUtils.extractPlaceId(getIntent());
+        if (event == null && eventId <= 0){
+            Log.e(TAG, "Trying to view an invalid event --> redirect to home");
+            this.exit();
+            return;
+        }
+        else if (eventId <= 0){
+            eventId = event.remote_id;
+        }
+
+        if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
+            loader.setVisibility(View.VISIBLE);
+            Call<Event> call = RestClient.service().viewPlace(eventId);
+            RestClient.buildCall(call)
+                    .onResponse(new HttpCallback<Event>() {
+                        @Override
+                        public void successful(Event event) {
+                            try {
+                                EventActivity.this.event = event.deepSave();
+                                SyncHistory.updateSync(DataSyncAdapter.SYNC_TYPE_EVENT, EventActivity.this.event);
+                                onEventLoaded();
+                            } catch (CannotSaveModelException e) {
+                                e.printStackTrace();
+                                EventActivity.this.exit();
+                            }
+                        }
+
+                        @Override
+                        public void notFound() {
+                            Toast.makeText(EventActivity.this, R.string.event_does_not_exists_anymore, Toast.LENGTH_SHORT).show();
+                            if (EventStatusManager.isCurrentEvent(eventId)){
+                                EventStatusManager.clearCurrentEvent();
+                            }
+                            EventActivity.this.exit();
+                        }
+                    })
+                    .onError(new NetworkErrorCallback(this){
+                        @Override
+                        public void onError(Throwable error) {
+                            RetryDialog.show(EventActivity.this, new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        dialog.dismiss();
+                                        EventActivity.this.loadEvent();
+                                    } catch (CannotSaveModelException e) {
+
+                                    }
+                                }
+                            });
+
+                        }
+                    })
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
+                            loader.setVisibility(View.GONE);
+                        }
+                    })
+                    .perform();
+        }
+        else{
+            event = (Event) event.requireLocalId();
+            onEventLoaded();
+        }
+    }
+
+    private void initListeners() {
+
+        btnActionTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!event.isUserAround()){
+                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
+            }
+        });
+        btnActionCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!event.isUserAround()){
+                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
+            }
+        });
+        btnActionInvite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_PEOPLE);
+            }
+        });
+
+    }
+
+    /**
+     * Method called when event has finished loading.
+     * @warning Method must be called only ONCE.
+     */
+    private void onEventLoaded() {
+        if (!isEventLoaded){
+            isEventLoaded = true;
+
+           // eventView.setEvent(event);
+            initFragments();
+        }
+
+        updateView();
+    }
+
+    public void parseIntentParameters() {
+        Bundle extras = getIntent().getExtras();
+        if(extras!=null) {
+            parseActionParameter(extras.getInt(IntentsUtils.KEY_ACTION, -1));
+        }
+    }
+
+    public void parseActionParameter(int action){
+        switch (action) {
+            case IntentsUtils.ACTION_CAMERA:
+                openAddPictureActivity();
+                //mMaterialViewPager.setCurrentItem(0);
+                break;
+            case IntentsUtils.ACTION_TAGS:
+                //mMaterialViewPager.setCurrentItem(1);
+                openAddTagsActivity();
+                break;
+            case IntentsUtils.ACTION_PEOPLE:
+                //mMaterialViewPager.setCurrentItem(2);
+                openAddPeopleActivity();
+                break;
+            case IntentsUtils.ACTION_COMING:
+                fragmentInformation.toggleStatusButton();
+                break;
+        }
+    }
 
     private void openAddTagsActivity() {
         if (!LocationManager.hasFineLocation()) {

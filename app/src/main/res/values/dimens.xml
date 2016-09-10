@@ -162,5 +162,6 @@
     <dimen name="margin_bottom_nav_header">30dp</dimen>
     <dimen name="margin_separator_button">10dp</dimen>
     <dimen name="margin_icons_presentation_four">50dp</dimen>
+    <dimen name="dim_image_status">50dp</dimen>
 
 </resources>

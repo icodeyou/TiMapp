@@ -184,8 +184,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public String getPrettyTimeCreated() {
-        PrettyTime p = new PrettyTime();
-        return p.format(new Date(((long) this.created) * 1000));
+        return Util.secondsTimestampToPrettyTime(this.created);
     }
 
     @Override

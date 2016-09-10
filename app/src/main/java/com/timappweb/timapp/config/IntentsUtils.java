@@ -51,6 +51,7 @@ public class IntentsUtils {
     public static final int ACTION_CAMERA = 1;
     public static final int ACTION_TAGS = 2;
     public static final int ACTION_PEOPLE = 3;
+    public static final int ACTION_COMING= 4;
 
     public static final int ACTION_ADD_EVENT_PICTURE = 4;
 
