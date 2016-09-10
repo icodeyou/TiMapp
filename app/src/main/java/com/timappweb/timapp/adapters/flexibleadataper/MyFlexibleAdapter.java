@@ -15,16 +15,19 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
  */
 public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
-	private static final String TAG = MyFlexibleAdapter.class.getSimpleName();
-	protected Context mContext;//this should not be necessary for view holders
+	private static final String TAG = "MyFlexibleAdapter";
 
+	// ---------------------------------------------------------------------------------------------
+
+	protected Context mContext;
+
+	// ---------------------------------------------------------------------------------------------
 
 	public MyFlexibleAdapter(Context context) {
 		super(new LinkedList<AbstractFlexibleItem>(), context);
 		mContext = context;
 		setNotifyChangeOfUnfilteredItems(true);
 	}
-
 
 	public boolean addItem(AbstractFlexibleItem item){
 		return this.addItem(getItemCount(), item);
@@ -33,7 +36,6 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	public boolean addBeginning(List<AbstractFlexibleItem> items){
 		return this.addItems(0, items);
 	}
-
 
 	public int removeItems(ExpandableHeaderItem headerItem) {
 		int headerPosition = getGlobalPositionOf(headerItem);

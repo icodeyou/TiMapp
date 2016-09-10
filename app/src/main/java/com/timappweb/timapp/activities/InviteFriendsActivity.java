@@ -22,6 +22,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.loader.FriendsLoader;
+import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
@@ -43,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class InviteFriendsActivity extends BaseActivity
-        implements FlexibleAdapter.OnItemClickListener{
+        implements FlexibleAdapter.OnItemClickListener, SyncDataLoader.Callback<UserFriend> {
 
     private String              TAG                         = "InviteFriendsActivity";
     private static final int    LOADER_ID_FRIENDS_LIST      = 0;
@@ -52,10 +53,10 @@ public class InviteFriendsActivity extends BaseActivity
     private Menu menu;
 
     private RecyclerView                recyclerView;
-    private SelectFriendsAdapter mAdapter;
+    private SelectFriendsAdapter        mAdapter;
     private Event                       event;
     private FriendsLoader               mFriendsLoader;
-    private WaveSwipeRefreshLayout          mSwipeRefreshLayout;
+    private WaveSwipeRefreshLayout      mSwipeRefreshLayout;
     private View                        progressview;
     // ---------------------------------------------------------------------------------------------
 
@@ -82,15 +83,9 @@ public class InviteFriendsActivity extends BaseActivity
             recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
             progressview = findViewById(R.id.progress_view);
             initAdapterListFriends();
-            mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout){
-                @Override
-                public void onLoadFinished(Loader<List<UserFriend>> loader, List<UserFriend> data) {
-                    super.onLoadFinished(loader, data);
-                    if (data != null && data.size() > 0){
-                        initializeSelection();
-                    }
-                }
-            };
+            mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout)
+                .setCallback(this);
+
             getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mFriendsLoader);
         } catch (CannotSaveModelException e) {
             IntentsUtils.home(this);
@@ -250,6 +245,19 @@ public class InviteFriendsActivity extends BaseActivity
     public void onStop() {
         EventBus.getDefault().unregister(mFriendsLoader);
         super.onStop();
+    }
+
+    @Override
+    public void onLoadEnd(List<UserFriend> data) {
+        mAdapter.setData(data);
+        if (data != null && data.size() > 0){
+            initializeSelection();
+        }
+    }
+
+    @Override
+    public void onLoadError(Throwable error) {
+        // TODO
     }
 
     // ---------------------------------------------------------------------------------------------

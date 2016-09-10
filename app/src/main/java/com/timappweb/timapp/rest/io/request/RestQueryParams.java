@@ -20,7 +20,11 @@ public class RestQueryParams {
 
     public static final String SYNC_PARAM_MIN_CREATED       = "min_created";
     public static final String SYNC_PARAM_MAX_CREATED       = "max_created";
-    public static final String SYNC_PARAM_ORDER             = "order";
+
+    public static final String SYNC_PARAM_ORDER_DIRECTION = "order";
+    public static final String SYNC_PARAM_ORDER_FIELD = "order_field";
+    public static final String SYNC_PARAM_PAGE = "page";
+
     public static final String SYNC_PARAM_LIMIT             = "limit";
     public static final String SYNC_PARAM_LAST_UPDATE       = "last_update";
     public static final String SYNC_PARAM_DIRECTION         = "direction";
@@ -47,11 +51,6 @@ public class RestQueryParams {
         return this;
     }
 
-    public RestQueryParams setUserLocation(LatLng latLng){
-        queryMap.put("latitude", String.valueOf(latLng.latitude));
-        queryMap.put("longitude", String.valueOf(latLng.longitude));
-        return this;
-    }
 
     @Override
     public String toString() {
@@ -89,13 +88,30 @@ public class RestQueryParams {
         queryMap.put("longitude", String.valueOf(lastLocation.getLongitude()));
     }
 
+    public RestQueryParams setUserLocation(LatLng latLng){
+        queryMap.put("latitude", String.valueOf(latLng.latitude));
+        queryMap.put("longitude", String.valueOf(latLng.longitude));
+        return this;
+    }
     public void setFilter(SearchFilter filter) {
         queryMap.put("filter_tags", Tag.tagsToString(filter.tags));
         queryMap.put("filter_categories", EventCategory.idsToString(filter.categories));
     }
 
     // ---------------------------------------------------------------------------------------------
-    // Pagination options
+    // Paginate options
+    public RestQueryParams setOrderDirection(long order){
+        return add(SYNC_PARAM_ORDER_DIRECTION, order);
+    }
+    public RestQueryParams setOrderField(String orderField){
+        return add(SYNC_PARAM_ORDER_FIELD, orderField);
+    }
+    public RestQueryParams setPage(int page){
+        return add(SYNC_PARAM_PAGE, page);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // sync options
     public RestQueryParams setLimit(long limit){
         return add(SYNC_PARAM_LIMIT, limit);
     }
@@ -130,5 +146,16 @@ public class RestQueryParams {
         return this;
     }
 
+    public String getString(String key) {
+        return queryMap.get(key);
+    }
+
+    public int getInt(String key) {
+        return Integer.valueOf(queryMap.get(key));
+    }
+
+    public double getDouble(String key) {
+        return Double.valueOf(queryMap.get(key));
+    }
 
 }

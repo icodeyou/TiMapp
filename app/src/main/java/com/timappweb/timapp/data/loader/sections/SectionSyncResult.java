@@ -1,4 +1,4 @@
-package com.timappweb.timapp.data.loader;
+package com.timappweb.timapp.data.loader.sections;
 
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.sync.SyncAdapterOption;
@@ -6,11 +6,11 @@ import com.timappweb.timapp.sync.SyncAdapterOption;
 /**
  * Created by Stephane on 02/09/2016.
  */
-public class PaginatedSyncResult extends SyncResultMessage{
+public class SectionSyncResult extends SyncResultMessage{
 
     private SectionContainer.PaginatedSection section;
 
-    public PaginatedSyncResult(SyncAdapterOption options) {
+    public SectionSyncResult(SyncAdapterOption options) {
         super(options);
     }
 

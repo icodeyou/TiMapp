@@ -3,18 +3,14 @@ package com.timappweb.timapp;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.config.AuthProviderInterface;
 import com.timappweb.timapp.data.DBCacheEngine;
-import com.timappweb.timapp.data.loader.PaginatedDataLoader;
-import com.timappweb.timapp.data.loader.PaginatedDataProviderInterface;
-import com.timappweb.timapp.data.loader.SectionContainer;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
@@ -29,17 +25,14 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Response;
-
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
-public class PaginatedDataLoaderTest extends ApplicationTestCase<Application> {
+public class PictureSectionDataLoaderTest extends ApplicationTestCase<Application> {
 
     public static final int EVENT_ID = 562;
 
-    public PaginatedDataLoaderTest() {
+    public PictureSectionDataLoaderTest() {
         super(Application.class);
     }
 
@@ -52,7 +45,7 @@ public class PaginatedDataLoaderTest extends ApplicationTestCase<Application> {
         final int remoteLoadLimit = 3;
         final List<Picture> loadedData = new LinkedList();
 
-        PaginatedDataLoader mDataLoader = new PaginatedDataLoader<Picture>()
+        SectionDataLoader mDataLoader = new SectionDataLoader<Picture>()
                 .setFormatter(SyncBaseModel.getPaginatedFormater())
                 .setOrder(SectionContainer.PaginateDirection.ASC)
                 .setMinDelayRefresh(minDelayForceRefresh)
@@ -71,7 +64,7 @@ public class PaginatedDataLoaderTest extends ApplicationTestCase<Application> {
                                 .perform();
                     }
                 })
-                .setDataProvider(new PaginatedDataProviderInterface() {
+                .setDataProvider(new SectionDataProviderInterface() {
 
                     @Override
                     public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.PaginatedSection section) {
@@ -80,12 +73,12 @@ public class PaginatedDataLoaderTest extends ApplicationTestCase<Application> {
                     }
 
                 })
-                .setCallback(new PaginatedDataLoader.Callback() {
+                .setCallback(new SectionDataLoader.Callback() {
                     @Override
                     public void onLoadEnd(SectionContainer.PaginatedSection section, List data) {
-                        synchronized (PaginatedDataLoaderTest.this){
+                        synchronized (PictureSectionDataLoaderTest.this){
                             loadedData.addAll(data);
-                            PaginatedDataLoaderTest.this.notify();
+                            PictureSectionDataLoaderTest.this.notify();
                         }
                     }
 
@@ -105,42 +98,5 @@ public class PaginatedDataLoaderTest extends ApplicationTestCase<Application> {
             assertEquals(remoteLoadLimit, loadedData.size());
         }
 
-    }
-
-    private static class DummyAuthProvider implements AuthProviderInterface {
-        @Override
-        public String getToken() {
-            return "fejiopzjpf2938020ezpjfpezoCEDEfez";
-        }
-
-        @Override
-        public String getSocialProviderToken() {
-            return "fejiopzjpf2938020ezpjfpezoCEDEfez";
-        }
-
-        @Override
-        public void logout() {
-
-        }
-
-        @Override
-        public HttpCallManager checkToken() {
-            return null;
-        }
-
-        @Override
-        public boolean login(User user, String token, String accessToken) {
-            return false;
-        }
-
-        @Override
-        public User getCurrentUser() {
-            return new User();
-        }
-
-        @Override
-        public boolean isLoggedIn() {
-            return true;
-        }
     }
 }

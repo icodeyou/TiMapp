@@ -1,4 +1,4 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.viewinteraction;
 
 
 import android.support.test.espresso.ViewInteraction;

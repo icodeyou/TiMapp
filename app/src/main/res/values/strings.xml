@@ -311,6 +311,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="thanks_for_add_picture">Thanks for your picture</string>
     <string name="error_picture_too_big">This picture is too large to be uploaded, sorry!</string>
     <string name="error_picture_too_small">The picture quality seems to be very bad. Try to take another one please.</string>
+    <string name="cannot_load_spot_around">Sorry but we cannot load places around you for now, try again later...</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

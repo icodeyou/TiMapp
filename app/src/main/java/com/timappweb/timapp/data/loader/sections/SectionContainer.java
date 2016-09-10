@@ -1,4 +1,4 @@
-package com.timappweb.timapp.data.loader;
+package com.timappweb.timapp.data.loader.sections;
 
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -138,7 +138,7 @@ public class SectionContainer{
         public  long        end;
         public  long        lastUpdate;
         public  LoadStatus  status;
-        private PaginatedDataLoader.LoadType loadType;
+        private SectionDataLoader.LoadType loadType;
 
         //public abstract List<T> getData();
 
@@ -181,11 +181,11 @@ public class SectionContainer{
             return result;
         }
 
-        public void setLoadType(PaginatedDataLoader.LoadType loadType) {
+        public void setLoadType(SectionDataLoader.LoadType loadType) {
             this.loadType = loadType;
         }
 
-        public PaginatedDataLoader.LoadType getLoadType() {
+        public SectionDataLoader.LoadType getLoadType() {
             return loadType;
         }
 

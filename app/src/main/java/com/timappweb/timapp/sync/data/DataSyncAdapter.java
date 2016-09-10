@@ -28,7 +28,7 @@ import com.activeandroid.query.Delete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.loader.PaginatedSyncResult;
+import com.timappweb.timapp.data.loader.sections.SectionSyncResult;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventsInvitation;
@@ -149,7 +149,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
         SyncAdapterOption options = new SyncAdapterOption(extras);
         Log.i(TAG, "Performing sync for type=" + options.getSyncType());
-        PaginatedSyncResult syncResultMessage = new PaginatedSyncResult(options);
+        SectionSyncResult syncResultMessage = new SectionSyncResult(options);
         try {
             switch (options.getSyncType()){
                 case DataSyncAdapter.SYNC_TYPE_FRIENDS:

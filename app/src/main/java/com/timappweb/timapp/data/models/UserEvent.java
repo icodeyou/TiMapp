@@ -113,21 +113,6 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
         return this.status == obj.status;
     }
 
-    public static From queryForPlace(Event event) {
-        return queryForPlace(event.getId());
-    }
-
-    public static From queryForPlace(long placeId) {
-        return new Select().from(UserEvent.class).where("Event = ?", placeId);
-    }
-
-    public static List<UserEvent> getForPlace(Event event) {
-        return queryForPlace(event).execute();
-    }
-    /*
-    public static From queryForPlace(long id) {
-        return new Select().from(UserEvent.class).where("Event = ?", id);
-    }*/
 
     // ---------------------------------------------------------------------------------------------
     public static boolean hasStatus(Long userId, long placeId, UserEventStatusEnum status) {

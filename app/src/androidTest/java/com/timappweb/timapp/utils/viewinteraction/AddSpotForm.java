@@ -1,27 +1,26 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.viewinteraction;
 
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.utils.TestUtil;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by Stephane on 07/09/2016.
  */
-public class AddSpotForm extends TestForm{
+public class AddSpotForm extends FormHelper {
     private final ViewInteraction inputName;
     private final CategorySelectorHelper categorySelector;
+    private final RecyclerViewHelper spotRV;
 
     public AddSpotForm() {
         inputName = onView(withId(R.id.name_spot));
         categorySelector = new CategorySelectorHelper();
+        spotRV = new RecyclerViewHelper(R.id.spots_rv);
     }
 
     public AddSpotForm setName(String value) {
@@ -40,13 +39,17 @@ public class AddSpotForm extends TestForm{
     }
 
     public AddSpotForm selectExistingSpot(int position) {
-        onView(withId(R.id.spots_rv))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));
+        spotRV
+                .clickItem(position);
         return this;
     }
 
     public AddSpotForm waitForExistingSpotLoad() {
         TestUtil.sleep(2000);
         return this;
+    }
+
+    public RecyclerViewHelper getExistingSpotList() {
+        return spotRV;
     }
 }

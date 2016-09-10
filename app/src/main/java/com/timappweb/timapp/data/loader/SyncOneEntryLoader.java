@@ -18,7 +18,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 /**
  * Created by stephane on 5/10/2016.
  */
-public class SingleEntryLoaderCallback<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>> {
+public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbacks<List<DataType>> {
 
     private static final String TAG = "SingleEntryLoaderCallb";
     private final int syncType;
@@ -27,10 +27,10 @@ public class SingleEntryLoaderCallback<DataType> implements LoaderManager.Loader
     private int key;
     private Class<? extends SyncBaseModel> clazz;
 
-    public SingleEntryLoaderCallback(Activity context,
-                                     int key,
-                                     Class<? extends SyncBaseModel> clazz,
-                                     int syncType) {
+    public SyncOneEntryLoader(Activity context,
+                              int key,
+                              Class<? extends SyncBaseModel> clazz,
+                              int syncType) {
         this.context = context;
         this.key = key;
         this.clazz = clazz;
@@ -66,7 +66,7 @@ public class SingleEntryLoaderCallback<DataType> implements LoaderManager.Loader
         mSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                SingleEntryLoaderCallback.this.onRefresh();
+                SyncOneEntryLoader.this.onRefresh();
             }
         });
     }

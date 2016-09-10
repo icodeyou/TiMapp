@@ -9,7 +9,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.MockLocationProvider;
-import com.timappweb.timapp.utils.PickTagsForm;
+import com.timappweb.timapp.utils.viewinteraction.PickTagsForm;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class AddEventTagActivityTest {
         //mockLocationProvider = new MockLocationProvider(android.location.LocationManager.NETWORK_PROVIDER, ActivityHelper.getActivityInstance());
         //mockLocationProvider = new MockLocationProvider(android.location.LocationManager.GPS_PROVIDER, ActivityHelper.getActivityInstance());
 
-        LocationManager.setLastLocation(MockLocationProvider.create(android.location.LocationManager.GPS_PROVIDER, 0, 5));
+        LocationManager.setLastLocation(MockLocationProvider.createMockLocation(android.location.LocationManager.GPS_PROVIDER, 0, 5));
     }
 
     @Test

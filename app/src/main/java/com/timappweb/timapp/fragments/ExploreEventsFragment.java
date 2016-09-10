@@ -39,7 +39,7 @@ public class ExploreEventsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_explore_events, container, false);
 
         //Views
-        eventRecyclerView = (RecyclerView) root.findViewById(R.id.list_places);
+        eventRecyclerView = (RecyclerView) root.findViewById(R.id.list_events);
         progressView = root.findViewById(R.id.progress_view);
         noEventsView = root.findViewById(R.id.no_events_view);
         /*newEventButton = root.findViewById(R.id.post_event_button);

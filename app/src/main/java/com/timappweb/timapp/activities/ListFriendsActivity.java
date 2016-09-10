@@ -11,6 +11,7 @@ import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.FriendsLoader;
+import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.utils.Util;
 
@@ -22,7 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-public class ListFriendsActivity extends BaseActivity {
+public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.Callback<UserFriend> {
 
     private static final int    LOADER_ID_FRIENDS       = 0;
     private String               TAG                    = "ListFriendsActivity";
@@ -76,15 +77,8 @@ public class ListFriendsActivity extends BaseActivity {
     private void initLoader() {
         Util.appAssert(mAdapter != null, TAG, "Adapter must be initialized before calling this method");
         Util.appAssert(mSwipeRefreshLayout != null, TAG, "SwipeAnRefreshLayout must be initialized before calling this method");
-        mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout){
-            @Override
-            public void onFinish(List<UserFriend> data) {
-                super.onFinish(data);
-                noFriendsView.setVisibility (mAdapter.getItemCount() > 0
-                        ? View.GONE
-                        : View.VISIBLE);
-            }
-        };
+        mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout)
+                .setCallback(this);
         mFriendsLoader.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, mFriendsLoader);
     }
@@ -101,4 +95,16 @@ public class ListFriendsActivity extends BaseActivity {
         super.onStop();
     }
 
+    @Override
+    public void onLoadEnd(List<UserFriend> data) {
+        mAdapter.setData(data);
+        noFriendsView.setVisibility (mAdapter.hasData()
+                ? View.GONE
+                : View.VISIBLE);
+    }
+
+    @Override
+    public void onLoadError(Throwable error) {
+        // TODO
+    }
 }

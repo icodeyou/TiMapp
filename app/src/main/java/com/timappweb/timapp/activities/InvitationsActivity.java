@@ -15,9 +15,9 @@ import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.loader.DynamicListLoader;
-import com.timappweb.timapp.data.loader.PaginatedDataProviderInterface;
-import com.timappweb.timapp.data.loader.PaginatedDataLoader;
-import com.timappweb.timapp.data.loader.SectionContainer;
+import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.RestClient;
@@ -35,7 +35,7 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 public class InvitationsActivity extends BaseActivity implements
-        PaginatedDataLoader.Callback<EventsInvitation>{
+        SectionDataLoader.Callback<EventsInvitation>{
 
     private String              TAG                             = "ListFriendsActivity";
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
@@ -48,7 +48,7 @@ public class InvitationsActivity extends BaseActivity implements
     private InvitationsAdapter adapter;
     private View noInvitationsView;
     private WaveSwipeRefreshLayout mSwipeRefreshLayout;
-    private PaginatedDataLoader mDataLoader;
+    private SectionDataLoader mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ public class InvitationsActivity extends BaseActivity implements
         mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this, R.color.colorRefresh));
 
-        initAdapterListFriends();
+        initInvitationAdapter();
         initDataLoader();
 
         new DynamicListLoader(this, adapter, mDataLoader)
@@ -85,7 +85,7 @@ public class InvitationsActivity extends BaseActivity implements
     }
 
     private void initDataLoader() {
-        PaginatedDataProviderInterface<EventsInvitation> mDataProvider = new PaginatedDataProviderInterface() {
+        SectionDataProviderInterface<EventsInvitation> mDataProvider = new SectionDataProviderInterface() {
             @Override
             public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.PaginatedSection section) {
                 RestQueryParams options = RestClient.buildPaginatedOptions(section).setLimit(REMOTE_LOAD_LIMIT);
@@ -93,7 +93,7 @@ public class InvitationsActivity extends BaseActivity implements
             }
 
         };
-        mDataLoader = new PaginatedDataLoader<EventsInvitation>()
+        mDataLoader = new SectionDataLoader<EventsInvitation>()
                 .setFormatter(SyncBaseModel.getPaginatedFormater())
                 .setOrder(SectionContainer.PaginateDirection.ASC)
                 .setMinDelayRefresh(MIN_DELAY_FORCE_REFRESH)
@@ -118,7 +118,7 @@ public class InvitationsActivity extends BaseActivity implements
         mDataLoader.firstLoad();
     }
 
-    private void initAdapterListFriends() {
+    private void initInvitationAdapter() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new InvitationsAdapter(this);

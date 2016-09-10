@@ -1,12 +1,10 @@
 package com.timappweb.timapp.data.models;
 
-import android.util.Log;
-
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.data.loader.SectionContainer;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
 
 /**
  * Created by stephane on 5/8/2016.

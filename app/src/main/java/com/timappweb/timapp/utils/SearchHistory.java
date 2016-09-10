@@ -214,7 +214,7 @@ public class SearchHistory<T extends SearchHistory.SearchableItem>{
      * @param append
      * @return
      */
-    protected Item<T> addInCache(String term, List<T> items, boolean append) {
+    public Item<T> addInCache(String term, List<T> items, boolean append) {
         Log.d(TAG, "Adding in cache " + items.size() + " element(s) for search " + term);
         // assert (term.length() >= this.minimumSearchLength);
         Item node = this.data.get(term);

@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -24,6 +23,8 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
@@ -31,10 +32,20 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
+import com.timappweb.timapp.data.loader.paginate.PaginateDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
+import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
+import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
+import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -46,14 +57,15 @@ import java.util.List;
 
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
-public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback {
+public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback, PaginateDataLoader.Callback {
 
     private static final String         TAG                             = "AddSpotActivity";
     private static final float          ZOOM_LEVEL_CENTER_MAP           = 15.0f;
     private static final int            LOADER_ID_SPOT_AROUND           = 0;
     private static final int            NUMBER_OF_MAIN_CATEGORIES       = 4;
-    private static final long           UPDATE_SYNC_DELAY               = 60 * 1000;
-    private static final int            MARGIN_PLACE_MAX_REACHABLE      = 100;
+    private static final long           MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
+    private static final long           MIN_DELAY_AUTO_REFRESH          = 60 * 1000;
+    private static final long           REMOTE_LOAD_LIMIT = 5;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -67,12 +79,11 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private CategorySelectorView                    categorySelector;
     private AddressResultReceiver                   mAddressResultReceiver;
     private Menu                                    menu;
-    private Loader<List<Spot>>                      mSpotLoader;
     private SpotsAdapter                            spotsAdapter;
-    private MapAreaLoaderCallback mSpotLoaderModel;
     private WaveSwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
     private List<Spot>                              listSpotsAround;
+    private PaginateDataLoader mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -83,6 +94,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
         if (!LocationManager.hasUpToDateLastLocation()){
             Log.e(TAG, "User launch AddSpotActivity without a up to date location. Refused");
+            // TODO use feedback
             finish();
             return;
         }
@@ -101,42 +113,41 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         initEditText();
         initAdapters();
         setListeners();
+        initDataLoader();
 
-        mSpotLoaderModel = new MapAreaLoaderCallback<Spot>(this, DataSyncAdapter.SYNC_TYPE_MULTIPLE_SPOT, Spot.class){
-            @Override
-            public void onLoadFinished(Loader<List<Spot>> loader, List<Spot> data) {
-                super.onLoadFinished(loader, data);
-                listSpotsAround = new ArrayList<>(data);
-                spotsAdapter.setData(data);
-                if(currentSpot!=null) { // we can't call afterTextChanged before currentSpot is initialized
-                    etNameSpot.setText("");
-                }
-            }
-        };
-        mSpotLoaderModel.setExpandSize(MARGIN_PLACE_MAX_REACHABLE);
-        mSpotLoaderModel.setSwipeAndRefreshLayout(mSwipeAndRefreshLayout);
-        mSpotLoaderModel.setSyncDelay(UPDATE_SYNC_DELAY);
         if (LocationManager.hasLastLocation()){
-            mSpotLoaderModel.setBounds(LocationManager.getLastLocation(), ConfigurationProvider.rules().place_max_reachable);
-            initLoader();
+            mDataLoader.loadNextPage();
         }
     }
 
-    /**
-     * @warning: it must be initialized only when the model has a LatLngBounds, otherwise null pointer exception
-     */
-    private void initLoader() {
-        if (!mSpotLoaderModel.hasBounds()){
-            Util.appStateError(TAG, "Bounds for the loader model should be initialized before the model");
-        }
-        Log.d(TAG, "Initialize loader");
-        mSpotLoader = getSupportLoaderManager().initLoader(LOADER_ID_SPOT_AROUND, null, mSpotLoaderModel);
+
+    private void initDataLoader() {
+        PaginateDataLoader.DataProvider<EventsInvitation> mDataProvider = new PaginateDataLoader.DataProvider<EventsInvitation>() {
+            @Override
+            public HttpCallManager<PaginatedResponse<EventsInvitation>> remoteLoad(PaginateDataLoader.PaginateRequestInfo info) {
+                LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(
+                        LocationManager.getLastLocation(),
+                        ConfigurationProvider.rules().place_max_reachable
+                );
+
+                RestQueryParams options = info.getQueryParams()
+                        .setBounds(bounds);
+
+                return RestClient.buildCall(RestClient.service().spots(options.toMap()));
+            }
+
+        };
+        mDataLoader = new PaginateDataLoader<EventsInvitation>()
+                .setCallback(this)
+                .setDataProvider(mDataProvider);
     }
+
+
+
     private void initEditText() {
         InputFilter[] f = new InputFilter[1];
         f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spots_max_name_length);
         etNameSpot.setFilters(f);
-        //TODO Steph : Mettre une config pour le max !
         etNameSpot.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         etNameSpot.clearFocus();
     }
@@ -297,9 +308,14 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         //requestReverseGeocoding(newLocation);
-        mSpotLoaderModel.setBounds(newLocation, ConfigurationProvider.rules().place_max_reachable);
-        if (mSpotLoader == null){
-            initLoader();
+
+        if (lastLocation == null){
+            mDataLoader.loadNextPage();
+        }
+        else {
+            mDataLoader
+                    .clear()
+                    .loadNextPage();
         }
     }
 
@@ -318,6 +334,20 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     protected void onStop() {
         super.onStop();
         LocationManager.removeLocationListener(this);
+    }
+
+    @Override
+    public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
+        listSpotsAround = new ArrayList<>(data);
+        spotsAdapter.setData(data);
+        if(currentSpot!=null) { // we can't call afterTextChanged before currentSpot is initialized
+            etNameSpot.setText("");
+        }
+    }
+
+    @Override
+    public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
+        //Toast.makeText(this, R.string.cannot_load_spot_around, Toast.LENGTH_LONG).show();
     }
 
     // =============================================================================================

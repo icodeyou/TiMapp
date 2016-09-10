@@ -23,6 +23,9 @@ import java.util.List;
 @Table(name = "Spot")
 public class Spot extends SyncBaseModel implements ClusterItem {
 
+    // TODO
+    public enum StatusEnum {VALIDATED, PENDING, BLACKLIST}
+
     // =============================================================================================
     // DATABASE
 
@@ -50,6 +53,12 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     @Expose
     @SerializedName("spot_category_id")
     public int category_id;
+
+    /*
+    @Column(name = "Status")
+    @Expose
+    @SerializedName("status")
+    public StatusEnum status;*/
 
     // =============================================================================================
     // Fields

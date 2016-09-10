@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -213,6 +214,26 @@ public class ConfigurationProvider{
         catch (IncompleteConfigurationException ex){
             return false;
         }
+    }
+
+    public static void clearAll() {
+        ConfigurationProvider.clearApplicationRules();
+        ConfigurationProvider.clearSpotCategories();
+        ConfigurationProvider.clearEventCategories();
+    }
+
+    private static void clearEventCategories() {
+        new Delete().from(EventCategory.class).execute();
+        // TODO clear icons
+    }
+
+    private static void clearSpotCategories() {
+        new Delete().from(SpotCategory.class).execute();
+        // TODO clear icons
+    }
+
+    private static void clearApplicationRules() {
+        KeyValueStorage.in().remove(KEY_APP_RULES).commit();
     }
 
     private static class IncompleteConfigurationException extends Error {

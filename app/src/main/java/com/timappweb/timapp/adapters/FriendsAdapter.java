@@ -21,12 +21,13 @@ public class FriendsAdapter extends MyFlexibleAdapter {
     public void setData(List<UserFriend> friends) {
         removeItemsOfType(R.layout.item_userplace);
         removeItemsOfType(R.layout.item_usertags);
+        removeItemsOfType(R.layout.item_friend);
         addData(friends);
     }
 
     public void addData(List<UserFriend> data) {
         for (UserFriend friend: data){
-            this.addItem(getItemCount(), new UserItem(friend.userTarget));
+            this.addItem(new UserItem(friend.userTarget));
         }
         notifyDataSetChanged();
     }

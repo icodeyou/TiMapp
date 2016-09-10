@@ -536,6 +536,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         return progressView;
     }
 
+    // =============================================================================================
+
     class AddressResultReceiver extends ResultReceiver {
 
         public AddressResultReceiver() {

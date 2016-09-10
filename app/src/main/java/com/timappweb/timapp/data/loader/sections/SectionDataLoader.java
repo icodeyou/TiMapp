@@ -1,9 +1,8 @@
-package com.timappweb.timapp.data.loader;
+package com.timappweb.timapp.data.loader.sections;
 
 import android.util.Log;
 
-import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.Picture;
+import com.timappweb.timapp.data.loader.DataLoaderInterface;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
@@ -11,13 +10,14 @@ import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 
 import java.util.List;
 
-import static com.timappweb.timapp.data.loader.SectionContainer.*;
+import static com.timappweb.timapp.data.loader.sections.SectionContainer.*;
 
 /**
- * Pagination
+ * Pagination store on app side
+ *
  * @param <T>
  */
-public class PaginatedDataLoader<T> {
+public class SectionDataLoader<T> implements DataLoaderInterface {
 
     public enum LoadType {MORE, UPDATE, NEWEST}
 
@@ -26,7 +26,7 @@ public class PaginatedDataLoader<T> {
     // ---------------------------------------------------------------------------------------------
 
     private long minDelayForceRefresh;
-    protected PaginatedDataProviderInterface dataProvider;
+    protected SectionDataProviderInterface dataProvider;
     protected SectionContainer sectionContainer;
     protected SectionBoundsFormatter formatter;
     protected Callback<T> callback;
@@ -38,14 +38,14 @@ public class PaginatedDataLoader<T> {
 
     // ---------------------------------------------------------------------------------------------
 
-    public PaginatedDataLoader() {
+    public SectionDataLoader() {
         this.sectionContainer = new SectionContainer();
     }
 
     // ---------------------------------------------------------------------------------------------
 
 
-    public PaginatedDataLoader<T> useCache(boolean cache) {
+    public SectionDataLoader<T> useCache(boolean cache) {
         this.useCache = cache;
         return this;
     }
@@ -55,13 +55,13 @@ public class PaginatedDataLoader<T> {
     }
 
 
-    public PaginatedDataLoader<T> setCacheEngine(CacheEngine<T> cacheEngine) {
+    public SectionDataLoader<T> setCacheEngine(CacheEngine<T> cacheEngine) {
         this.cacheEngine = cacheEngine;
         this.useCache = true;
         return this;
     }
 
-    public PaginatedDataLoader<T> setOrder(PaginateDirection order) {
+    public SectionDataLoader<T> setOrder(PaginateDirection order) {
         this.sectionContainer.setOrder(order);
         return this;
     }
@@ -70,11 +70,11 @@ public class PaginatedDataLoader<T> {
         return sectionContainer;
     }
 
-    public PaginatedDataProviderInterface getDataProvider() {
+    public SectionDataProviderInterface getDataProvider() {
         return dataProvider;
     }
 
-    public PaginatedDataLoader setFormatter(SectionBoundsFormatter formatter) {
+    public SectionDataLoader setFormatter(SectionBoundsFormatter formatter) {
         this.formatter = formatter;
         return this;
     }
@@ -87,17 +87,17 @@ public class PaginatedDataLoader<T> {
         return sectionContainer.isLoading();
     }
 
-    public PaginatedDataLoader setCallback(Callback<T> callback) {
+    public SectionDataLoader setCallback(Callback<T> callback) {
         this.callback = callback;
         return this;
     }
 
-    public PaginatedDataLoader setMinDelayRefresh(long minDelayForceRefresh) {
+    public SectionDataLoader setMinDelayRefresh(long minDelayForceRefresh) {
         this.minDelayForceRefresh = minDelayForceRefresh;
         return this;
     }
 
-    public PaginatedDataLoader setDataProvider(PaginatedDataProviderInterface<T> dataProvider) {
+    public SectionDataLoader setDataProvider(SectionDataProviderInterface<T> dataProvider) {
         this.dataProvider = dataProvider;
         return this;
     }

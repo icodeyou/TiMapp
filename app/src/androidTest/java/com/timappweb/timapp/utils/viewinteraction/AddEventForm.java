@@ -1,13 +1,10 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.viewinteraction;
 
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddSpotActivity;
-import com.timappweb.timapp.utils.idlingresource.ProgressIdlingResource;
-import com.timappweb.timapp.views.CategorySelectorView;
+import com.timappweb.timapp.utils.ActivityHelper;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -21,7 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 /**
  * Created by Stephane on 07/09/2016.
  */
-public class AddEventForm  extends TestForm{
+public class AddEventForm  extends FormHelper {
 
     private final ViewInteraction inputEventName;
     private final ViewInteraction inputEventDescription;

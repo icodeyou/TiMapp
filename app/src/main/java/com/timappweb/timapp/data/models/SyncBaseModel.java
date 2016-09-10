@@ -14,14 +14,12 @@ import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.google.repacked.antlr.v4.codegen.model.Sync;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.loader.PaginatedDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.SyncAdapterOption;
-import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
 
 import java.lang.reflect.Field;
@@ -361,10 +359,10 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
     }
 
 
-    private static PaginatedDataLoader.SectionBoundsFormatter<SyncBaseModel> _paginatedDataFormatter = null;
-    public static PaginatedDataLoader.SectionBoundsFormatter<SyncBaseModel> getPaginatedFormater() {
+    private static SectionDataLoader.SectionBoundsFormatter<SyncBaseModel> _paginatedDataFormatter = null;
+    public static SectionDataLoader.SectionBoundsFormatter<SyncBaseModel> getPaginatedFormater() {
         if (_paginatedDataFormatter == null){
-            _paginatedDataFormatter =  new PaginatedDataLoader.SectionBoundsFormatter<SyncBaseModel>() {
+            _paginatedDataFormatter =  new SectionDataLoader.SectionBoundsFormatter<SyncBaseModel>() {
                 @Override
                 public long format(SyncBaseModel data) {
                     return data.getRemoteId();

@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,12 +22,12 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
-import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.util.List;
@@ -36,10 +35,11 @@ import java.util.List;
 import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 
-public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener {
+public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener, SyncDataLoader.Callback<EventTag> {
 
     private static final String TAG = "EventTagsFragment";
-    private static final long MAX_UPDATE_DELAY = 3600 * 1000;
+    private static final long MIN_DELAY_AUTO_REFRESH = 5 * 60 * 1000;
+    private static final long MIN_DELAY_FORCE_REFRESH = 60 * 1000;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -53,6 +53,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     private RecyclerViewMaterialAdapter     mAdapter;
     private Loader<List<EventTag>>          mTagLoader;
     private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private EventTagLoader eventTagLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -87,25 +88,31 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
         mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter.notifyDataSetChanged();
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
 
-
-        /*postButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            IntentsUtils.addTags(EventTagsFragment.this, eventActivity.getEvent());
-            }
-        });*/
+        initEventTagLoader();
 
         mTagLoader = getLoaderManager()
-                .initLoader(EventActivity.LOADER_ID_TAGS, null, new EventTagLoader(this.getContext(), ((EventActivity) getActivity()).getEvent()));
+                .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
         mSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mTagLoader.forceLoad();
             }
         });
+    }
+
+    private void initEventTagLoader() {
+        eventTagLoader = new EventTagLoader(this.getContext())
+                .setMinDelayAutoRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayForceRefresh(MIN_DELAY_AUTO_REFRESH)
+                .setModelLoader(new AutoModelLoader<EventTag>(
+                        this.getContext(),
+                        EventTag.class,
+                        getEvent().getTagsQuery(),
+                        false))
+                .setCallback(this);
+        eventTagLoader.getSyncOptions().setType(DataSyncAdapter.SYNC_TYPE_EVENT_TAGS);
     }
 
     @Override
@@ -144,29 +151,17 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         //postButton.setVisibility(eventActivity.isUserAround() ? View.VISIBLE : View.GONE);
     }
 
-    // =============================================================================================
-    /**
-     */
-    class EventTagLoader extends MultipleEntryLoaderCallback<EventTag> {
+    @Override
+    public void onLoadEnd(List<EventTag> data) {
+        tagsAndCountersAdapter.clear();
+        tagsAndCountersAdapter.addAll(data);
+        mAdapter.notifyDataSetChanged();
+        noTagsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.GONE);
+    }
 
-        public EventTagLoader(Context context, Event event) {
-            super(context, MAX_UPDATE_DELAY,
-                    DataSyncAdapter.SYNC_TYPE_EVENT_TAGS,
-                    event.getTagsQuery(),
-                    EventTag.class);
+    @Override
+    public void onLoadError(Throwable error) {
 
-            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
-            this.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<EventTag>> loader, List<EventTag> data) {
-            super.onLoadFinished(loader, data);
-            tagsAndCountersAdapter.clear();
-            tagsAndCountersAdapter.addAll(data);
-            mAdapter.notifyDataSetChanged();
-            noTagsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.GONE);
-        }
     }
 
     @Override
@@ -175,4 +170,15 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
             mRecyclerView.smoothScrollToPosition(0);
         }
     }
+
+    // =============================================================================================
+    /**
+     */
+    class EventTagLoader extends SyncDataLoader<EventTag, EventTagLoader> {
+
+        public EventTagLoader(Context context) {
+            super(context);
+        }
+    }
+
 }

@@ -1,24 +1,19 @@
 package com.timappweb.timapp.activities;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.AddEventForm;
-import com.timappweb.timapp.utils.AddSpotForm;
-import com.timappweb.timapp.utils.TestUtil;
+import com.timappweb.timapp.utils.viewinteraction.AddEventForm;
+import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
 import com.timappweb.timapp.utils.idlingresource.ProgressIdlingResource;
 
 import static android.support.test.espresso.action.ViewActions.click;

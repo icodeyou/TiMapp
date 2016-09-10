@@ -1,9 +1,10 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.squareup.picasso.Picasso;
+import com.timappweb.timapp.utils.PictureUtility;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -1,9 +1,10 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.viewinteraction;
 
 import android.support.test.espresso.ViewInteraction;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
+import com.timappweb.timapp.utils.ActivityHelper;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

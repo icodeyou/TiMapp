@@ -36,4 +36,8 @@ public class PaginatedResponse<T> {
     public T getFirstItem() {
         return items.get(0);
     }
+
+    public boolean isLastPage() {
+        return itemsCount() < perPage;
+    }
 }

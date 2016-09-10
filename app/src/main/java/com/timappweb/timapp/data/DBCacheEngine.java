@@ -4,19 +4,18 @@ import android.util.Log;
 
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.data.loader.SectionContainer;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.models.SectionHistory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.utils.Util;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by Stephane on 06/09/2016.
  */
-public abstract class DBCacheEngine<T extends SyncBaseModel> implements com.timappweb.timapp.data.loader.PaginatedDataLoader.CacheEngine<T> {
+public abstract class DBCacheEngine<T extends SyncBaseModel> implements SectionDataLoader.CacheEngine<T> {
 
     private static final String TAG = "DBCacheEngine";
 

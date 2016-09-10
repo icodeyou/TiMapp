@@ -181,17 +181,10 @@ public interface WebServiceInterface {
      * Used to get all event that are around user position
      * @param conditions"
      */
-    @GET("Places/reachable.json")
-    Call<List<Event>> placeReachable(@QueryMap Map<String, String> conditions);
+    @GET("Places/index.json")
+    Call<PaginatedResponse<Event>> places(@QueryMap Map<String, String> conditions);
 
-    /**
-     *
-     * @param latitude
-     * @param longitude
-     * @return
-     */
-    @GET("Places/reachable.json")
-    Call<List<Event>> placeReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
+
 
     // ---------------------------------------------------------------------------------------------
     // PlacesUsers

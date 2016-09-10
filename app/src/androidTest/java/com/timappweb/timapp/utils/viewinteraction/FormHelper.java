@@ -1,4 +1,4 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.viewinteraction;
 
 import android.support.test.espresso.ViewInteraction;
 
@@ -14,7 +14,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 /**
  * Created by Stephane on 07/09/2016.
  */
-public class TestForm{
+public class FormHelper {
 
     protected static void typeIn(ViewInteraction inputName, String content){
         inputName

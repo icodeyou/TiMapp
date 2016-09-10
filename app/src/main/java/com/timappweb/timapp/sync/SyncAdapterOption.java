@@ -78,8 +78,8 @@ public class SyncAdapterOption implements SyncHistory.HistoryItemInterface, Clon
         if (bundle.containsKey(RestQueryParams.SYNC_PARAM_LIMIT))
             queryMap.put(RestQueryParams.SYNC_PARAM_LIMIT, String.valueOf(bundle.getInt(RestQueryParams.SYNC_PARAM_LIMIT)));
 
-        if (bundle.containsKey(RestQueryParams.SYNC_PARAM_ORDER))
-            queryMap.put(RestQueryParams.SYNC_PARAM_ORDER, String.valueOf(bundle.getInt(RestQueryParams.SYNC_PARAM_ORDER)));
+        if (bundle.containsKey(RestQueryParams.SYNC_PARAM_ORDER_DIRECTION))
+            queryMap.put(RestQueryParams.SYNC_PARAM_ORDER_DIRECTION, String.valueOf(bundle.getInt(RestQueryParams.SYNC_PARAM_ORDER_DIRECTION)));
 
         if (bundle.containsKey(RestQueryParams.SYNC_PARAM_LAST_UPDATE))
             queryMap.put(RestQueryParams.SYNC_PARAM_LAST_UPDATE, String.valueOf(bundle.getLong(RestQueryParams.SYNC_PARAM_LAST_UPDATE)));
@@ -119,43 +119,6 @@ public class SyncAdapterOption implements SyncHistory.HistoryItemInterface, Clon
         return this;
     }
 
-    public void setMinCreated(long minCreated) {
-        bundle.putLong(RestQueryParams.SYNC_PARAM_MIN_CREATED, minCreated);
-    }
-
-    public void setMaxCreated(long maxCreated) {
-        bundle.putLong(RestQueryParams.SYNC_PARAM_MAX_CREATED, maxCreated);
-    }
-
-    public long getMinCreated() {
-        return bundle.getLong(RestQueryParams.SYNC_PARAM_MIN_CREATED);
-    }
-
-    public long getMaxCreated() {
-        return Long.valueOf(bundle.getLong(RestQueryParams.SYNC_PARAM_MAX_CREATED));
-    }
-
-
-    public long getMinId() {
-        return Long.valueOf(bundle.getLong(RestQueryParams.SYNC_PARAM_MIN_ID));
-    }
-    public long getMaxId() {
-        return Long.valueOf(bundle.getLong(RestQueryParams.SYNC_PARAM_MAX_ID));
-    }
-
-
-
-    public int getLimit() {
-        return Integer.valueOf(bundle.getInt(RestQueryParams.SYNC_PARAM_LIMIT));
-    }
-
-    public boolean hasMinCreated() {
-        return bundle.containsKey(RestQueryParams.SYNC_PARAM_MAX_CREATED);
-    }
-
-    public boolean hasMaxCreated() {
-        return bundle.containsKey(RestQueryParams.SYNC_PARAM_MAX_CREATED);
-    }
 
     public boolean hasLimit() {
         return bundle.containsKey(RestQueryParams.SYNC_PARAM_LIMIT);
@@ -195,4 +158,5 @@ public class SyncAdapterOption implements SyncHistory.HistoryItemInterface, Clon
         }
         return this;
     }
+
 }

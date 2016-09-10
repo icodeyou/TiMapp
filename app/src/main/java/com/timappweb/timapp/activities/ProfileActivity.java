@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.UserTagsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.loader.SingleEntryLoaderCallback;
+import com.timappweb.timapp.data.loader.SyncOneEntryLoader;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserTag;
@@ -198,7 +197,7 @@ public class ProfileActivity extends BaseActivity  {
 
     // =============================================================================================
 
-    class UserLoader extends SingleEntryLoaderCallback<User> {
+    class UserLoader extends SyncOneEntryLoader<User> {
 
         public UserLoader() {
             super(ProfileActivity.this, userId, User.class, DataSyncAdapter.SYNC_TYPE_USER);

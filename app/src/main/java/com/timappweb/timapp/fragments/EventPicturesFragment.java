@@ -1,15 +1,11 @@
 package com.timappweb.timapp.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,20 +19,17 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.activities.EventPicturesActivity;
 import com.timappweb.timapp.adapters.PicturesAdapter;
-import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
-import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.loader.DynamicListLoader;
-import com.timappweb.timapp.data.loader.PaginatedDataLoader;
-import com.timappweb.timapp.data.loader.PaginatedDataProviderInterface;
-import com.timappweb.timapp.data.loader.SectionContainer;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Picture;
@@ -52,23 +45,13 @@ import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
-import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
-import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
-import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
-import com.timappweb.timapp.utils.loaders.AutoModelLoader;
-import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
@@ -97,7 +80,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private PicturesAdapter             picturesAdapter;
     private WaveSwipeRefreshLayout          mSwipeRefreshLayout;
     private RefreshableRecyclerView     mRecyclerView;
-    private PaginatedDataLoader mDataLoader;
+    private SectionDataLoader mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -174,7 +157,6 @@ public class EventPicturesFragment extends EventBaseFragment implements
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(getActivity(), PICUTRE_GRID_COLUMN_NB);
-        //Experimenting NEW features (v5.0.0)
         picturesAdapter.setAutoScrollOnExpand(true);
         picturesAdapter.setHandleDragEnabled(true);
         picturesAdapter.setAnimationOnScrolling(true);
@@ -206,7 +188,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
     }
 
     private void initDataLoader() {
-        mDataLoader = new PaginatedDataLoader<Picture>()
+        mDataLoader = new SectionDataLoader<Picture>()
                 .setFormatter(SyncBaseModel.getPaginatedFormater())
                 .setOrder(SectionContainer.PaginateDirection.ASC)
                 .setMinDelayRefresh(MIN_DELAY_FORCE_REFRESH)
@@ -226,7 +208,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     }
                 })
                 .useCache(false)
-                .setDataProvider(new PaginatedDataProviderInterface() {
+                .setDataProvider(new SectionDataProviderInterface() {
 
                     @Override
                     public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.PaginatedSection section) {

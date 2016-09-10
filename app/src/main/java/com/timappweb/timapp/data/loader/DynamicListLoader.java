@@ -6,9 +6,9 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
-import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
-import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 
 import java.io.IOException;
@@ -22,14 +22,14 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 /**
  * Created by Stephane on 06/09/2016.
  */
-public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener, PaginatedDataLoader.Callback {
+public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener, SectionDataLoader.Callback {
 
     private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
 
     private final MyFlexibleAdapter mAdapter;
-    private final PaginatedDataLoader mDataLoader;
+    private final SectionDataLoader mDataLoader;
     private final Context mContext;
-    private PaginatedDataLoader.Callback mCallback;
+    private SectionDataLoader.Callback mCallback;
     private WaveSwipeRefreshLayout mSwipeRefreshLayout;
     private long minDelayAutoRefresh;
     private long minDelayForceRefresh;
@@ -42,7 +42,7 @@ public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener,
 
     private View mNoDataView;
 
-    public DynamicListLoader(Context context, MyFlexibleAdapter adapter, PaginatedDataLoader dataLoader) {
+    public DynamicListLoader(Context context, MyFlexibleAdapter adapter, SectionDataLoader dataLoader) {
         this.mAdapter = adapter;
         this.mDataLoader = dataLoader;
         this.mDataLoader.setCallback(this);
@@ -55,7 +55,7 @@ public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener,
         return this;
     }
 
-    public DynamicListLoader setCallback(PaginatedDataLoader.Callback callback){
+    public DynamicListLoader setCallback(SectionDataLoader.Callback callback){
         this.mCallback = callback;
         return this;
     }
@@ -125,7 +125,7 @@ public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener,
     @Override
     public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
         mSwipeRefreshLayout.setRefreshing(false);
-        if (section.getLoadType() == PaginatedDataLoader.LoadType.MORE){
+        if (section.getLoadType() == SectionDataLoader.LoadType.MORE){
             mAdapter.onLoadMoreComplete(null);
         }
         this.updateNoDataView();

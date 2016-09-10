@@ -1,4 +1,4 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -8,6 +8,8 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemInterface;
 import com.timappweb.timapp.utils.AreaDataCaching.CoordinateConverter;
+import com.timappweb.timapp.utils.IntLatLngBounds;
+import com.timappweb.timapp.utils.IntPoint;
 
 import org.junit.After;
 import org.junit.AfterClass;

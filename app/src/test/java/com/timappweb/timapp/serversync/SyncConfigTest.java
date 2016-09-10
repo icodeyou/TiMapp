@@ -1,4 +1,4 @@
-package com.timappweb.timapp.utils.serversync;
+package com.timappweb.timapp.serversync;
 
 import org.junit.After;
 import org.junit.AfterClass;

@@ -1,19 +1,16 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.EventActionButtons;
-import com.timappweb.timapp.utils.RecyclerViewHelper;
-import com.timappweb.timapp.utils.ViewEventHelper;
+import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
+import com.timappweb.timapp.utils.viewinteraction.ViewEventHelper;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -22,8 +19,6 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;

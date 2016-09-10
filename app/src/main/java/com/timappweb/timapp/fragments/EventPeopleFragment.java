@@ -21,12 +21,14 @@ import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
-import com.timappweb.timapp.data.loader.MultipleEntryLoaderCallback;
+import com.timappweb.timapp.data.loader.DynamicListLoader;
+import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
 
@@ -55,6 +57,8 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     private ExpandableHeaderItem    mExpandableComingHeader;
     private ExpandableHeaderItem    mExpandableInviteHeader;
     private Loader<List<EventsInvitation>> mInviteLoader;
+    private UserStatusLoader userStatusLoader;
+    private InviteSentLoader inviteSentLoader;
 
     //private RecyclerViewMaterialAdapter mAdapter;
 
@@ -88,17 +92,20 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         super.onViewCreated(view, savedInstanceState);
         context = eventActivity.getBaseContext();
 
-        // viewContainer = (ObservableScrollView) root.findViewById(R.id.scrollView);
         progressView = view.findViewById(R.id.progress_view);
         noPostsView = view.findViewById(R.id.no_posts_view);
         noConnectionView = view.findViewById(R.id.no_connection_view);
         mSwipeLayout = (WaveSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
-        //postButton = (FloatingActionButton) view.findViewById(R.id.post_button);
 
-        getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, new UserStatusLoader(this.getContext(), eventActivity.getEvent()));
+        initUserStatusLoader();
+
+
+        //new DynamicListLoader(this, mPlaceUsersAdapter)
+        getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, userStatusLoader);
         if (MyApplication.isLoggedIn()){
-            mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, new InviteSentLoader(this.getContext(), eventActivity.getEvent()));
+            initInviteSentLoader();
+            mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
         }
 
         mSwipeLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
@@ -110,6 +117,65 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 }
             }
         });
+    }
+
+    private void initUserStatusLoader() {
+        userStatusLoader = new UserStatusLoader(this.getContext(), eventActivity.getEvent())
+                .setModelLoader(new AutoModelLoader<UserEvent>(getContext(),
+                        UserEvent.class,
+                        getEvent().getPeopleQuery(),
+                        false))
+                .setCallback(new SyncDataLoader.Callback<UserEvent>() {
+                    @Override
+                    public void onLoadEnd(List<UserEvent> data) {
+                        mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
+                        mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
+                        for (UserEvent userEvent: data){
+                            SubUserItem item = new SubUserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
+                            switch (userEvent.status){
+                                case COMING:
+                                    mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);
+                                    break;
+                                case HERE:
+                                    mPlaceUsersAdapter.addSubItem(mExpandableHereHeader, item);
+                                    break;
+                                default:
+                                    continue;
+                            }
+                        }
+                        mPlaceUsersAdapter.expand(mExpandableHereHeader);
+                        mPlaceUsersAdapter.expand(mExpandableComingHeader);
+                    }
+
+                    @Override
+                    public void onLoadError(Throwable error) {
+
+                    }
+                });
+    }
+
+    private void initInviteSentLoader() {
+        inviteSentLoader = new InviteSentLoader(this.getContext())
+                .setModelLoader(new AutoModelLoader<>(getContext(),
+                        EventsInvitation.class,
+                        MyApplication.getCurrentUser().getInviteSentQuery(getEvent().getId()),
+                        false))
+                .setCallback(new SyncDataLoader.Callback<EventsInvitation>() {
+                    @Override
+                    public void onLoadEnd(List<EventsInvitation> data) {
+                        mPlaceUsersAdapter.removeItems(mExpandableInviteHeader);
+                        for (EventsInvitation invitation: data){
+                            SubUserItem item = new SubUserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
+                            mPlaceUsersAdapter.addSubItem(mExpandableInviteHeader, item);
+                        }
+                        mPlaceUsersAdapter.expand(mExpandableInviteHeader);
+                    }
+
+                    @Override
+                    public void onLoadError(Throwable error) {
+
+                    }
+                });
     }
 
     @Override
@@ -197,69 +263,26 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
-    // =============================================================================================
-
-    class UserStatusLoader extends MultipleEntryLoaderCallback<UserEvent> {
-
-        public UserStatusLoader(Context context, Event event) {
-            super(context, MAX_UPDATE_DELAY, DataSyncAdapter.SYNC_TYPE_EVENT_USERS, UserEvent.queryForPlace(event), Event.class);
-            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
-            this.setSwipeAndRefreshLayout(mSwipeLayout, false);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<UserEvent>> loader, List<UserEvent> data) {
-            super.onLoadFinished(loader, data);
-            mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
-            mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
-            for (UserEvent userEvent: data){
-                SubUserItem item = new SubUserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
-                switch (userEvent.status){
-                    case COMING:
-                        mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);
-                        break;
-                    case HERE:
-                        mPlaceUsersAdapter.addSubItem(mExpandableHereHeader, item);
-                        break;
-                    default:
-                        continue;
-                }
-            }
-            mPlaceUsersAdapter.expand(mExpandableHereHeader);
-            mPlaceUsersAdapter.expand(mExpandableComingHeader);
-        }
-
-    }
-
-    class InviteSentLoader extends MultipleEntryLoaderCallback<EventsInvitation> {
-
-        public InviteSentLoader(Context context, Event event) {
-            super(context, MAX_UPDATE_DELAY,
-                    DataSyncAdapter.SYNC_TYPE_EVENT_INVITED,
-                    MyApplication.getCurrentUser().getInviteSentQuery(event.getId()),
-                    EventsInvitation.class);
-
-            this.syncOption.getBundle().putLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, event.getRemoteId());
-            this.setSwipeAndRefreshLayout(mSwipeLayout, false);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<List<EventsInvitation>> loader, List<EventsInvitation> data) {
-            super.onLoadFinished(loader, data);
-
-            mPlaceUsersAdapter.removeItems(mExpandableInviteHeader);
-            for (EventsInvitation invitation: data){
-                SubUserItem item = new SubUserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
-                mPlaceUsersAdapter.addSubItem(mExpandableInviteHeader, item);
-            }
-            mPlaceUsersAdapter.expand(mExpandableInviteHeader);
-        }
-
-    }
-
     @Override
     public void onTabSelected() {
         mRecyclerView.smoothScrollToPosition(0);
+    }
+
+
+    // =============================================================================================
+
+    class UserStatusLoader extends SyncDataLoader<UserEvent, UserStatusLoader> {
+
+        public UserStatusLoader(Context context, Event event) {
+            super(context);
+        }
+
+    }
+
+    class InviteSentLoader extends SyncDataLoader<EventsInvitation, InviteSentLoader> {
+        public InviteSentLoader(Context context) {
+            super(context);
+        }
     }
 
 }

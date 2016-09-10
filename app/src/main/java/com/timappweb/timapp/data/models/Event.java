@@ -514,8 +514,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
 
-
-
     public int getLevelBackground() {
         switch (this.getLevel()) {
             case 0:
@@ -530,5 +528,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
             default:
                 return R.drawable.b4;
         }
+    }
+
+    public From getPeopleQuery() {
+        return new Select().from(UserEvent.class)
+                .where("Event = ?", this.getId())
+                .orderBy("UserEvent.Created DESC");
     }
 }

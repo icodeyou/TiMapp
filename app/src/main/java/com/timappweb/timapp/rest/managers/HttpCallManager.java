@@ -120,6 +120,10 @@ public class HttpCallManager<T> {
         this.callbackGroup.setResponse(r);
     }
 
+    public boolean isDone() {
+        return callbackGroup.isDone();
+    }
+
     public interface FinallyCallback<ResponseBodyType>{
          void onFinally(Response<ResponseBodyType> response, Throwable error);
     }

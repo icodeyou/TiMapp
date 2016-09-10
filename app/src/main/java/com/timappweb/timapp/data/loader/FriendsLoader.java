@@ -20,7 +20,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 /**
  * Created by Stephane on 18/08/2016.
  */
-public class FriendsLoader extends DataLoader<UserFriend> {
+public class FriendsLoader extends SyncDataLoader<UserFriend, FriendsLoader> {
 
     private static final String TAG = "FriendsLoader";
     private static final long MIN_AUTO_REFRESH_DELAY = 3600 * 24 * 1000;     // Automatic refresh after one day
@@ -28,7 +28,8 @@ public class FriendsLoader extends DataLoader<UserFriend> {
 
     // -----------------------------------------------------------------------------------------
 
-    public FriendsLoader(Context context, FriendsAdapter adapter, WaveSwipeRefreshLayout swipeAndRefreshLayout) {
+    // TODO use factory
+    public FriendsLoader(Context context, final FriendsAdapter adapter, WaveSwipeRefreshLayout swipeAndRefreshLayout) {
         super(context);
         this.setHistoryItemInterface(MyApplication.getCurrentUser());
         this.setMinDelayForceRefresh(MIN_AUTO_REFRESH_DELAY);
@@ -38,23 +39,7 @@ public class FriendsLoader extends DataLoader<UserFriend> {
         this.setSyncOptions(new SyncAdapterOption()
                 .setType(DataSyncAdapter.SYNC_TYPE_FRIENDS)
                 .setHashId(historyItemInterface));
-    }
-    @Override
-    protected Loader<List<UserFriend>> buildModelLoader() {
-        return new AutoModelLoader(context, UserFriend.class, ((User)historyItemInterface).getFriendsQuery(), false);
-    }
-
-
-    public void onFinish(List<UserFriend> data){
-        super.onFinish(data);
-        adapter.removeItemsOfType(R.layout.item_friend);
-        if (data != null){
-            for (UserFriend friend: data){
-                adapter.addItem(new UserItem(friend.userTarget));
-            }
-            adapter.notifyDataSetChanged();
-        }
-
+        this.setModelLoader(new AutoModelLoader(context, UserFriend.class, ((User)historyItemInterface).getFriendsQuery(), false));
     }
 
 }

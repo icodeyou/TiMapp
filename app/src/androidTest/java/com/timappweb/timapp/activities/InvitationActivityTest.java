@@ -6,12 +6,8 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.InvitationsActivity;
-import com.timappweb.timapp.activities.ListFriendsActivity;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.dummy.DummyUserFactory;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.RecyclerViewHelper;
+import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 
 import org.junit.Before;
 import org.junit.Rule;

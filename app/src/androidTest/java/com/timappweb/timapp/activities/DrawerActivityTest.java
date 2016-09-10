@@ -37,28 +37,10 @@ public class DrawerActivityTest {
     }
 
     @Test
-    public void clickOnMenu() {
-        onView(ViewMatchers.withId(R.id.action_list))
-                .perform(click());
-
-    }
-    @Test
     public void selectMapEvent() {
 
     }
 
-    @Test
-    public void clickOnEvent() {
-        onView(withId(R.id.fab_button_add_event))
-                .perform(click());
-
-    }
-
-    @Test
-    public void showEventList() {
-        onView(withId(R.id.action_list))
-                .perform(click());
-    }
 
 
 

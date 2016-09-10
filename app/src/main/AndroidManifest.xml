@@ -42,9 +42,9 @@
     -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <permission android:name="com.timappweb.timapp.permission.C2D_MESSAGE"
+    <permission android:name="${applicationId}.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.timappweb.timapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
 
     <!--android:debuggable="true" has been removed -->
     <application
@@ -64,7 +64,7 @@
         <!--
         // TODO for production set models to speed up launch
         <meta-data  android:name=""AA_MODELS"
-            android:value="com.timappweb.timapp.data.models.UserActivity" />-->
+            android:value="${applicationId}.data.models.UserActivity" />-->
 
 
         <!-- SYNC ADAPTERS ===================================================================== -->
