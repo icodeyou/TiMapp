@@ -55,7 +55,8 @@ import com.timappweb.timapp.views.CategorySelectorView;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.RefreshableRecyclerView;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback, PaginateDataLoader.Callback {
 
@@ -80,7 +81,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private AddressResultReceiver                   mAddressResultReceiver;
     private Menu                                    menu;
     private SpotsAdapter                            spotsAdapter;
-    private WaveSwipeRefreshLayout                      mSwipeAndRefreshLayout;
+    private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
     private PaginateDataLoader mDataLoader;
 
@@ -106,8 +107,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         spotsRv = (RecyclerView) findViewById(R.id.spots_rv);
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etNameSpot = (EditText) findViewById(R.id.name_spot);
-        mSwipeAndRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeAndRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
+        mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         initEditText();
         initAdapters();

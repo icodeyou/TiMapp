@@ -29,6 +29,7 @@ import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     private RecyclerView                    mRecyclerView;
     private RecyclerViewMaterialAdapter     mAdapter;
     private Loader<List<EventTag>>          mTagLoader;
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private EventTagLoader eventTagLoader;
 
     // ---------------------------------------------------------------------------------------------
@@ -75,8 +76,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         mRecyclerView.setHasFixedSize(true);
 
         noTagsView = view.findViewById(R.id.no_tags_view);
-        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
-        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(getContext(),R.color.colorRefresh));
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
 
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         tagsAndCountersAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
@@ -94,7 +94,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
-        mSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mTagLoader.forceLoad();

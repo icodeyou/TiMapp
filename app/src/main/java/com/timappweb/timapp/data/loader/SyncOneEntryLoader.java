@@ -13,7 +13,7 @@ import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
 
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**
  * Created by stephane on 5/10/2016.
@@ -22,7 +22,7 @@ public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbac
 
     private static final String TAG = "SingleEntryLoaderCallb";
     private final int syncType;
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout = null;
+    private SwipeRefreshLayout mSwipeRefreshLayout = null;
     private Activity context;
     private int key;
     private Class<? extends SyncBaseModel> clazz;
@@ -60,10 +60,10 @@ public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbac
         SyncBaseModel.getRemoteEntry(User.class, context, key, syncType);
     }
 
-    public void setSwipeAndRefreshLayout(WaveSwipeRefreshLayout swipeAndRefreshLayout) {
+    public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout) {
         this.mSwipeRefreshLayout = swipeAndRefreshLayout;
 
-        mSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 SyncOneEntryLoader.this.onRefresh();
@@ -72,6 +72,6 @@ public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbac
     }
 
     public void setSwipeAndRefreshLayout() {
-        this.setSwipeAndRefreshLayout((WaveSwipeRefreshLayout) context.findViewById(R.id.swipe_refresh_layout));
+        this.setSwipeAndRefreshLayout((SwipeRefreshLayout) context.findViewById(R.id.swipe_refresh_layout));
     }
 }

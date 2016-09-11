@@ -17,7 +17,7 @@ import com.timappweb.timapp.utils.Util;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -33,7 +33,7 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
     private RecyclerView mRecyclerView;
     private FriendsAdapter mAdapter;
     private View noFriendsView;
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private FriendsLoader mFriendsLoader;
 
     @Override
@@ -48,8 +48,7 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
         this.initToolbar(true);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_friends);
         noFriendsView = findViewById(R.id.no_friends_layout);
-        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mToolbar.setTitle(R.string.title_activity_list_friends);
 
         initAdapter();

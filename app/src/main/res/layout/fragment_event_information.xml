@@ -51,13 +51,6 @@
                         bind:spot="@{event.getSpot()}"/>
                 </LinearLayout>
 
-                <!--<com.timappweb.timapp.views.SpotView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:center="true"
-                    bind:spot="@{event.getSpot()}"
-                    android:layout_marginBottom="10dp" />-->
-
                 <include layout="@layout/divider_grey" />
 
                 <LinearLayout

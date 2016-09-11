@@ -1,9 +1,9 @@
 package com.timappweb.timapp.listeners;
 
-import android.support.v4.widget.SwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**
  * Created by stephane on 5/23/2016.
@@ -11,9 +11,9 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 
 public class OnScrollListenerRefreshableView extends RecyclerView.OnScrollListener {
 
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public OnScrollListenerRefreshableView(WaveSwipeRefreshLayout swipeRefreshLayout) {
+    public OnScrollListenerRefreshableView(SwipeRefreshLayout swipeRefreshLayout) {
         mSwipeRefreshLayout = swipeRefreshLayout;
     }
 

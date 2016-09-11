@@ -32,7 +32,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 public class InvitationsActivity extends BaseActivity implements
         SectionDataLoader.Callback<EventsInvitation>{
@@ -47,7 +47,7 @@ public class InvitationsActivity extends BaseActivity implements
     private RecyclerView recyclerView;
     private InvitationsAdapter adapter;
     private View noInvitationsView;
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private SectionDataLoader mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
@@ -64,8 +64,7 @@ public class InvitationsActivity extends BaseActivity implements
 
         recyclerView = (RefreshableRecyclerView) findViewById(R.id.rv_invitations);
         noInvitationsView = findViewById(R.id.no_invitations_view);
-        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this, R.color.colorRefresh));
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         initInvitationAdapter();
         initDataLoader();

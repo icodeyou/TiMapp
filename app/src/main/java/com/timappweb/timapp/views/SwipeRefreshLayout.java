@@ -23,7 +23,6 @@ public class SwipeRefreshLayout extends android.support.v4.widget.SwipeRefreshLa
         this.setColorSchemeResources(
                 android.R.color.holo_blue_light,
                 android.R.color.holo_orange_light,
-                android.R.color.holo_green_light,
                 android.R.color.holo_red_light);
     }
 

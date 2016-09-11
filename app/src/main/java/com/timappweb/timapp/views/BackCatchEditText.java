@@ -5,6 +5,10 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.EditText;
 
+//BackCatchEditText is an EditText than intercepts the event when the keyboard
+//is hidden by pressing the android back key.
+// Though in AddEventActivity, the event has been managed thanks to the method setOnFocusChangedListener
+
 public class BackCatchEditText extends EditText {
 
 

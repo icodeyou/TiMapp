@@ -252,7 +252,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             eventView.setVisibility(View.VISIBLE);
             mBinding.setEvent(event);
 
-            final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
+            final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_alpha);
             eventView.startAnimation(slideIn);
             Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
             TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
@@ -287,7 +287,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     eventView.setVisibility(View.GONE);
-                    Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_fab);
+                    Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
                     btnAddEvent.startAnimation(slideIn);
                 }
 

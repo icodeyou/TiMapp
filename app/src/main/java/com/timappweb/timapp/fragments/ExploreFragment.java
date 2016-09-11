@@ -1,18 +1,9 @@
 package com.timappweb.timapp.fragments;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -158,7 +149,7 @@ public class ExploreFragment extends Fragment{
         if(containerEvents.getVisibility()==View.GONE) {
             boolean isEventsOnMap = eventsFragment.onFragmentSelected(this);
             if(isEventsOnMap) {
-                Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down_all);
+                Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_down);
                 Animation appear = AnimationUtils.loadAnimation(getContext(), R.anim.appear);
                 blurBackground.startAnimation(appear);
                 containerEvents.startAnimation(slideIn);
@@ -169,7 +160,7 @@ public class ExploreFragment extends Fragment{
                 Toast.makeText(getContext(), R.string.text_no_event, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_righ);
+            Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_right);
             Animation disappear = AnimationUtils.loadAnimation(getContext(), R.anim.disappear);
             blurBackground.startAnimation(disappear);
             containerEvents.startAnimation(slideOut);

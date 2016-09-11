@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.UserTagsAdapter;
+import com.timappweb.timapp.adapters.TagsProfileAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.SyncOneEntryLoader;
 import com.timappweb.timapp.data.models.Tag;
@@ -28,7 +28,7 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
 
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 public class ProfileActivity extends BaseActivity  {
 
@@ -49,7 +49,7 @@ public class ProfileActivity extends BaseActivity  {
     private View noConnectionView;
     private SimpleDraweeView profilePicture;
     private UserLoader mLoader;
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ActivityProfileBinding mBinding;
 
 
@@ -121,7 +121,7 @@ public class ProfileActivity extends BaseActivity  {
 
         initUserTagsAdapter();
 
-        UserTagsAdapter tagsAdapter = (UserTagsAdapter) tagsListView.getAdapter();
+        TagsProfileAdapter tagsAdapter = (TagsProfileAdapter) tagsListView.getAdapter();
         if(mUser.hasTags()){
             Log.v(TAG, "User has a: " + mUser.getTags().size() + " tag(s)");
             tagsAdapter.clear();
@@ -163,8 +163,8 @@ public class ProfileActivity extends BaseActivity  {
 
 
     private void initUserTagsAdapter() {
-        UserTagsAdapter userTagsAdapter= new UserTagsAdapter(this);
-        tagsListView.setAdapter(userTagsAdapter);
+        TagsProfileAdapter tagsProfileAdapter = new TagsProfileAdapter(this);
+        tagsListView.setAdapter(tagsProfileAdapter);
     }
 
 

@@ -24,6 +24,7 @@ import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,7 +39,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
  * Created by Stephane on 18/08/2016.
  */
 public class SyncDataLoader<EntityType, This>
-        implements LoaderManager.LoaderCallbacks<List<EntityType>>, FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener {
+        implements LoaderManager.LoaderCallbacks<List<EntityType>>, FlexibleAdapter.EndlessScrollListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "DataLoader";
 
@@ -49,7 +50,7 @@ public class SyncDataLoader<EntityType, This>
     //public enum ActionType {REFRESH, LOAD_MORE, NEWEST, UPDATE}
 // -----------------------------------------------------------------------------------------
 
-    protected WaveSwipeRefreshLayout mSwipeAndRefreshLayout;
+    protected SwipeRefreshLayout mSwipeAndRefreshLayout;
     protected Context                               context;
     protected SyncHistory.HistoryItemInterface      historyItemInterface;
     protected SyncAdapterOption                       syncOptions;
@@ -224,7 +225,7 @@ public class SyncDataLoader<EntityType, This>
         return (This) this;
     }
 
-    public This setSwipeAndRefreshLayout(WaveSwipeRefreshLayout mSwipeAndRefreshLayout) {
+    public This setSwipeAndRefreshLayout(SwipeRefreshLayout mSwipeAndRefreshLayout) {
         this.mSwipeAndRefreshLayout = mSwipeAndRefreshLayout;
         mSwipeAndRefreshLayout.setOnRefreshListener(this);
         return (This) this;

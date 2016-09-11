@@ -17,10 +17,6 @@
         <attr name="color_background" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="SpotView">
-        <attr name="center" format="boolean" />
-    </declare-styleable>
-
     <!-- SLIDING TABS -->
     <declare-styleable name="SlidingTabLayout">
         <attr name="indicatorColor" format="color"/>

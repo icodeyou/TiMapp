@@ -56,7 +56,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -78,7 +78,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private View                        noPicView;
     private View                        uploadView;
     private PicturesAdapter             picturesAdapter;
-    private WaveSwipeRefreshLayout          mSwipeRefreshLayout;
+    private SwipeRefreshLayout          mSwipeRefreshLayout;
     private RefreshableRecyclerView     mRecyclerView;
     private SectionDataLoader mDataLoader;
 
@@ -94,8 +94,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
         uploadView = root.findViewById(R.id.upload_view);
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
-        mSwipeRefreshLayout = (WaveSwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
-        mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(getContext(),R.color.colorRefresh));
+        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
 
         startPictureActivity();
         initAdapter();

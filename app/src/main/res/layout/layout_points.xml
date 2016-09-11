@@ -10,7 +10,6 @@
         android:id="@+id/white_points_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
         android:orientation="horizontal"
         android:gravity="center">
 
@@ -23,18 +22,14 @@
 
         <com.timappweb.timapp.views.SimpleTimerView
             android:id="@+id/points_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextHuge"
             android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/text_huge"
-            android:gravity="center"
             android:textStyle="italic"
             android:layout_marginLeft="15dp"
-            android:layout_marginStart="15dp"
-            android:text="3602"/>
-        <!--android:text="@{event.isOver() ? @string/event_over_points : event.displayPoints()}"-->
+            android:layout_marginStart="15dp"/>
+        <!--TODO : Use DataBinding to initialize points.
+        WARNING : Use custom attribute.
+        Indeed, android:text="@{event.displayPoints()}" will display a static TextView instead of a timer-->
+
     </LinearLayout>
-
-
-
 </layout>

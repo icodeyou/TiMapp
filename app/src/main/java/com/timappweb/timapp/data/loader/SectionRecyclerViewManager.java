@@ -17,12 +17,12 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**
  * Created by Stephane on 06/09/2016.
  */
-public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener, SectionDataLoader.Callback {
+public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScrollListener, SwipeRefreshLayout.OnRefreshListener, SectionDataLoader.Callback {
 
     private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
 
@@ -30,7 +30,7 @@ public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScroll
     private final SectionDataLoader mDataLoader;
     private final Context mContext;
     private SectionDataLoader.Callback mCallback;
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private long minDelayAutoRefresh;
     private long minDelayForceRefresh;
     private ItemTransformer mItemTransformer;
@@ -60,7 +60,7 @@ public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScroll
         return this;
     }
 
-    public SectionRecyclerViewManager setSwipeRefreshLayout(WaveSwipeRefreshLayout mSwipeRefreshLayout) {
+    public SectionRecyclerViewManager setSwipeRefreshLayout(SwipeRefreshLayout mSwipeRefreshLayout) {
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         this.mSwipeRefreshLayout.setOnRefreshListener(this);
         return this;

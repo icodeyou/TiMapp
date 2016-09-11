@@ -2,28 +2,21 @@ package com.timappweb.timapp.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.adapters.CategoriesAdapter;
-import com.timappweb.timapp.adapters.EventCategoriesAdapter;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
 
 import cdflynn.android.library.crossview.CrossView;
@@ -130,7 +123,7 @@ public class CategorySelectorView extends LinearLayout {
     public void expandView() {
         if(!isExpandedView()) {
             moreBtn.toggle();
-            slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_all);
+            slideIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down);
             rvAllCategories.startAnimation(slideIn);
             pickTv.setVisibility(View.VISIBLE);
             rvAllCategories.setVisibility(View.VISIBLE);
@@ -145,7 +138,7 @@ public class CategorySelectorView extends LinearLayout {
             pickTv.setVisibility(View.GONE);
             rvAllCategories.setVisibility(View.GONE);
             if(selectedCategoryView.getVisibility()==GONE) {
-                final Animation slideMainIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down_main);
+                final Animation slideMainIn = AnimationUtils.loadAnimation(context, R.anim.slide_in_down);
                 rvMainCategories.startAnimation(slideMainIn);
                 rvMainCategories.setVisibility(View.VISIBLE);
             }

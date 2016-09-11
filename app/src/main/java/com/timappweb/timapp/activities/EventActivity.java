@@ -129,7 +129,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_place, menu);
+        getMenuInflater().inflate(R.menu.menu_event, menu);
         return true;
     }
 

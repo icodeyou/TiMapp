@@ -26,6 +26,7 @@
     <string name="title_activity_share_app">Spread the news</string>
     <string name="title_activity_edit_profile">Edit profile</string>
     <string name="title_activity_presentation">What is TiMapp ?</string>
+    <string name="title_activity_login">Sign in</string>
 
     <string name="tab_map">Map</string>
     <string name="tab_list">List</string>
@@ -45,7 +46,7 @@
     <string name="button_broadcast">broadcast</string>
     <string name="action_map">Map</string>
     <string name="alert_dialog_ok">Ok</string>
-    <string name="error_cannot_get_location">Sorry be we cannot get your location! You disappeared from the digital world. Are you a Ninja !?</string>
+    <string name="error_cannot_get_location">Sorry but we cannot get your location! You disappeared from the digital world. Are you a Ninja !?</string>
     <string name="error_credential_invalid">Invalid credential</string>
     <string name="title_search">Search</string>
 
@@ -313,6 +314,22 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_picture_too_small">The picture quality seems to be very bad. Try to take another one please.</string>
     <string name="cannot_load_spot_around">Sorry but we cannot load places around you for now, try again later...</string>
     <string name="squarecamera__app_name">@string/app_name</string>
+
+    <string name="address_found">Address found</string>
+    <string name="no_address_found">No address found</string>
+    <string name="service_not_available">Service not available</string>
+    <string name="invalid_lat_long_used">Invalid latitude or longitude used</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Connect</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

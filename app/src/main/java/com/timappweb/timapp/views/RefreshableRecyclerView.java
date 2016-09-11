@@ -2,7 +2,7 @@ package com.timappweb.timapp.views;
 
 import android.content.Context;
 import android.support.v4.widget.*;
-import android.support.v4.widget.SwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
@@ -17,7 +17,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
  */
 public class RefreshableRecyclerView extends RecyclerView {
 
-    private WaveSwipeRefreshLayout mSwipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public RefreshableRecyclerView(Context context) {
         super(context);
@@ -38,8 +38,8 @@ public class RefreshableRecyclerView extends RecyclerView {
     }
 
     public void init(){
-        this.mSwipeRefreshLayout = (WaveSwipeRefreshLayout) getParent();
-        if (this.mSwipeRefreshLayout == null) throw new InvalidParameterException("Refreshable recycler view should be wrap with a WaveSwipeRefreshLayout");
+        this.mSwipeRefreshLayout = (SwipeRefreshLayout) getParent();
+        if (this.mSwipeRefreshLayout == null) throw new InvalidParameterException("Refreshable recycler view should be wrap with a SwipeRefreshLayout");
         this.addOnScrollListener(new OnScrollListenerRefreshableView(mSwipeRefreshLayout));
     }
 

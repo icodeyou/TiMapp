@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
@@ -11,6 +10,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <View
+            android:id="@+id/gradient_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_bottom_nav_header"
             android:layout_alignParentBottom="true"
@@ -22,12 +22,13 @@
             android:layout_height="wrap_content"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
+            android:layout_above="@+id/gradient_view"
+            android:background="@color/white"
             android:src="@drawable/logotimapp"
             android:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/event_layout"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <include layout="@layout/header_event_activity"

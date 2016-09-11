@@ -29,7 +29,7 @@
             android:layout_marginTop="@dimen/margin_icons_presentation_four">
             <ImageView
                 style="@style/ImagePresentationFour"
-                android:src="@drawable/invite_icon"/>
+                android:src="@drawable/presentation_invite_icon"/>
             <TextView
                 style="@style/TextLegendPresentation"
                 android:text="Invite people"/>

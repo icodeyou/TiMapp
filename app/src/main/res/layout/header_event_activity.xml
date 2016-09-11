@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/photo_event_default"
-            tools:src="@drawable/image_bar"
             android:alpha="1"
             event:backgroundImage="@{event}"/>
 

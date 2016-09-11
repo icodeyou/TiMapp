@@ -79,7 +79,8 @@ public class FilterActivity extends BaseActivity {
     private void initAdapterAndManager() {
         //categoriesAdapter = new BubbleCategoryAdapter(this);
         //categoriesRv.setAdapter(categoriesAdapter);
-        GridLayoutManager manager = new SpanningGridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
+        //TODO : Use the same GridLayout than AddEventActivity for categories selection, and delete class GridLayoutManager.
+        //GridLayoutManager manager = new SpanningGridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
         //categoriesRv.setLayoutManager(manager);
     }
 

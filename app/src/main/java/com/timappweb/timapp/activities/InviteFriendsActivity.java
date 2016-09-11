@@ -32,6 +32,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -56,7 +57,7 @@ public class InviteFriendsActivity extends BaseActivity
     private SelectFriendsAdapter        mAdapter;
     private Event                       event;
     private FriendsLoader               mFriendsLoader;
-    private WaveSwipeRefreshLayout      mSwipeRefreshLayout;
+    private SwipeRefreshLayout          mSwipeRefreshLayout;
     private View                        progressview;
     private List<EventsInvitation>      _cachedInvitations;
     // ---------------------------------------------------------------------------------------------
@@ -79,8 +80,7 @@ public class InviteFriendsActivity extends BaseActivity
         try {
             event = (Event) event.requireLocalId();
             this.initToolbar(true);
-            mSwipeRefreshLayout = (WaveSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-            mSwipeRefreshLayout.setWaveColor(ContextCompat.getColor(this,R.color.colorRefresh));
+            mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
             recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
             progressview = findViewById(R.id.progress_view);
             initAdapterListFriends();

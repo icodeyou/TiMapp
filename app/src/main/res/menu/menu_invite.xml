@@ -7,12 +7,12 @@
 
     <item android:id="@+id/action_select_all"
         android:title="@string/action_select_all"
-        android:icon="@drawable/ic_people_red"
+        android:icon="@drawable/ic_people"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_delete"
         android:title="@string/action_unselect_all"
-        android:icon="@drawable/ic_action_delete"
+        android:icon="@drawable/trashcan_white"
         app:showAsAction="never"/>
 
 </menu>

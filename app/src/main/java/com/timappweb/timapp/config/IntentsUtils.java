@@ -280,20 +280,6 @@ public class IntentsUtils {
         Intent intent = new Intent(activity, AddEventActivity.class);
         activity.startActivity(intent);
     }
-/*
-    public static void comment(Activity activity, String comment) {
-        Intent intent = new Intent(activity, DescriptionActivity.class);
-        intent.putExtra("comment", comment);
-        activity.startActivityForResult(intent, REQUEST_COMMENT);
-    }*/
-
-    public static String extractComment(Intent intent) {
-        if(intent.getExtras()!=null) {
-            return intent.getExtras().getString("comment");
-        } else {
-            return null;
-        }
-    }
 
     public static void pinSpot(Activity activity) {
         IntentsUtils.pinSpot(activity, null);
@@ -416,14 +402,6 @@ public class IntentsUtils {
             Log.e(TAG, "Error extracting spot: " + ex.getMessage());
             return null;
         }
-    }
-
-    public static void exitDescriptionActivity(Activity activity, String description) {
-        Intent intent = new Intent(activity, AddEventActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("description", description);
-        intent.putExtras(bundle);
-        activity.setResult(Activity.RESULT_OK, intent);
     }
 
     public static void presentApp(Context context) {

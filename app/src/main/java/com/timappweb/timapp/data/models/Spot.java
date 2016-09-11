@@ -133,10 +133,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
         }
     }
 
-    public int getItemIcon(){
-        return R.drawable.image_bar;
-    }
-
     @Override
     public LatLng getPosition() {
         return new LatLng(latitude, longitude);

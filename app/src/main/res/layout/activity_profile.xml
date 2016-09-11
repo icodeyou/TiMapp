@@ -74,7 +74,7 @@
                         android:layout_width="@dimen/logo_big"
                         android:layout_height="@dimen/logo_big"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_hashtag_circle_palred"
+                        android:src="@drawable/ic_hashtag_circle"
                         android:layout_marginBottom="5dp"/>
                     <TextView
                         android:id="@+id/tags_counter"

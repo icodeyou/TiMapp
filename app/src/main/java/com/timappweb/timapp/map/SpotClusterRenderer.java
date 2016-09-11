@@ -22,6 +22,8 @@ import com.timappweb.timapp.data.models.Spot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//TODO Steph : Remove if class is never going to be used.
+
 public class SpotClusterRenderer extends DefaultClusterRenderer<Spot> {
 
     private final IconGenerator mIconGenerator;

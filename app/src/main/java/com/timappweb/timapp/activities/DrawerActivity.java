@@ -18,7 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +36,6 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.databinding.ActivityDrawerBinding;
-import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
@@ -158,7 +156,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         registerReceiver(syncBroadcastReceiver, syncIntentFilter);
         mSimpleFacebook = SimpleFacebook.getInstance(this);
         if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
-            mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location, null);
+            mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location_map, null);
             Button skipLocation = (Button) mWaitForLocationLayout.findViewById(R.id.action_skip);
             skipLocation.setOnClickListener(new View.OnClickListener() {
                 @Override

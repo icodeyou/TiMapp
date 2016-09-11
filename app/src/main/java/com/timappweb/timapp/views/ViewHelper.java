@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
+//TODO Steph : Delete this class if it's never going to be used
+
 /**
  * Created by stephane on 5/21/2016.
  */
