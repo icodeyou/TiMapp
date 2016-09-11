@@ -58,6 +58,7 @@ public class InviteFriendsActivity extends BaseActivity
     private FriendsLoader               mFriendsLoader;
     private WaveSwipeRefreshLayout      mSwipeRefreshLayout;
     private View                        progressview;
+    private List<EventsInvitation>      _cachedInvitations;
     // ---------------------------------------------------------------------------------------------
 
     @Override
@@ -110,6 +111,7 @@ public class InviteFriendsActivity extends BaseActivity
                 return true;
             case R.id.action_delete:
                 mAdapter.clearSelection();
+                initializeSelection();
                 return true;
             case R.id.action_invite:
                 sendInvites();
@@ -138,12 +140,15 @@ public class InviteFriendsActivity extends BaseActivity
 
     private void initializeSelection(){
         // Preselect every user already invited.
-        List<EventsInvitation> invitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
-        for (EventsInvitation invite: invitations){
+        if (_cachedInvitations == null){
+            _cachedInvitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
+        }
+        for (EventsInvitation invite: _cachedInvitations){
             int position = mAdapter.getGlobalPositionOf(new UserItem(invite.getUser()));
             AbstractFlexibleItem item = mAdapter.getItem(position);
             if (item instanceof UserItem){
                 UserItem userItem = (UserItem) item;
+                userItem.setSelectable(true);
                 mAdapter.toggleSelection(position);
                 userItem.setSelectable(false);
             }
@@ -218,6 +223,7 @@ public class InviteFriendsActivity extends BaseActivity
                     }
 
                 })
+                .onError(new NetworkErrorCallback(this))
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {

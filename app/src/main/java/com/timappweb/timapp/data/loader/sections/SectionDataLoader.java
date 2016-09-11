@@ -6,6 +6,7 @@ import com.timappweb.timapp.data.loader.DataLoaderInterface;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import static com.timappweb.timapp.data.loader.sections.SectionContainer.*;
  * @param <T>
  */
 public class SectionDataLoader<T> implements DataLoaderInterface {
+
 
     public enum LoadType {MORE, UPDATE, NEWEST}
 
@@ -35,6 +37,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
 
     protected boolean _isFullyLoaded;
     //protected long _lastUpdate;
+    private HttpCallManager currentCallManager;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -84,7 +87,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     }
 
     public boolean isLoading() {
-        return sectionContainer.isLoading();
+        return currentCallManager != null && !currentCallManager.isDone();
     }
 
     public SectionDataLoader setCallback(Callback<T> callback) {
@@ -169,7 +172,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     }
 
     private void remoteLoad(final PaginatedSection newSection) {
-        dataProvider.remoteLoad(newSection)
+        currentCallManager = dataProvider.remoteLoad(newSection)
                 .onResponse(new HttpCallback<ResponseSyncWrapper<T>>() {
                     @Override
                     public void successful(ResponseSyncWrapper<T> feedback) {

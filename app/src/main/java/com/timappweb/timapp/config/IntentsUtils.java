@@ -211,10 +211,10 @@ public class IntentsUtils {
     public static void inviteFriendToEvent(Activity activity, Event event) {
         if (!requireLogin(activity, false))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND, true)){
+        //if (!QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
-            return;
-        }
+        //    return;
+        //}
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
         extras.putLong(IntentsUtils.KEY_EVENT, event.getId());

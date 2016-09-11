@@ -2,6 +2,7 @@ package com.timappweb.timapp.adapters.flexibleadataper;
 
 import android.content.Context;
 
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 
 import java.util.LinkedList;
@@ -69,5 +70,9 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	public boolean hasData() {
 		return this.getItemCount() > 0;
+	}
+
+	public void removeProgressItem() {
+		this.removeItemsOfType(R.layout.progress_item);
 	}
 }

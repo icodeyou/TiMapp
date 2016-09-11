@@ -66,24 +66,29 @@ public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScroll
         return this;
     }
 
-    public SectionRecyclerViewManager setEndlessScrollListener() {
+    public SectionRecyclerViewManager enableEndlessScroll() {
         mAdapter.setEndlessScrollListener(this, new ProgressItem());
         mAdapter.setEndlessScrollThreshold(ENDLESS_SCROLL_THRESHOLD);
-
         return this;
     }
 
     @Override
     public void onLoadMore() {
+        if (mDataLoader.isLoading())
+            return;
         if (!mDataLoader.loadMore()) {
             mSwipeRefreshLayout.setRefreshing(false);
+            mAdapter.removeProgressItem();
         }
     }
 
     @Override
     public void onRefresh() {
+        if (mDataLoader.isLoading())
+            return;
         if (!mDataLoader.loadNewest()){
             mSwipeRefreshLayout.setRefreshing(false);
+            mAdapter.removeProgressItem();
         }
     }
 
@@ -125,6 +130,8 @@ public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScroll
     @Override
     public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
         mSwipeRefreshLayout.setRefreshing(false);
+        mAdapter.removeProgressItem();
+
         if (section.getLoadType() == SectionDataLoader.LoadType.MORE){
             mAdapter.onLoadMoreComplete(null);
         }
@@ -154,6 +161,8 @@ public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScroll
     }
 
     public void firstLoad() {
+        if (mDataLoader.isLoading())
+            return;
         if (mDataLoader.firstLoad()){
             mSwipeRefreshLayout.setRefreshing(true);
         }

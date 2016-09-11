@@ -123,7 +123,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     })
                     .setNoDataView(noPicView)
                     .setSwipeRefreshLayout(mSwipeRefreshLayout)
-                    .setEndlessScrollListener()
+                    .enableEndlessScroll()
                     .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
                     .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                     .firstLoad();

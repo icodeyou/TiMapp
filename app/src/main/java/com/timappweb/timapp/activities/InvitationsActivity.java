@@ -80,7 +80,7 @@ public class InvitationsActivity extends BaseActivity implements
                 .setNoDataView(noInvitationsView)
                 .setCallback(this)
                 .setSwipeRefreshLayout(mSwipeRefreshLayout)
-                .setEndlessScrollListener()
+                .enableEndlessScroll()
                 .firstLoad();
     }
 

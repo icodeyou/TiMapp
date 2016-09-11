@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.florent37.materialviewpager.header.MaterialViewPagerImageHelper;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.data.models.Event;
@@ -42,14 +43,15 @@ public class BindingHelper {
             if (event.hasPicture()){
                 final String fullUrl = event.getBackgroundUrl();
                 // Temp solution
-                Log.d(TAG, "Loading picture in adapter: " + fullUrl);
-                Picasso.with(imageView.getContext()).load(fullUrl).centerCrop().fit().into(imageView);
+                Log.d(TAG, "Loading event background picture: " + fullUrl);
+                MaterialViewPagerImageHelper.setImageUrl(imageView, fullUrl, 0);
                 // @warning cannot use the following line because:
                 //      E/BitmapFactory: Unable to decode stream: java.io.FileNotFoundException: ...: open failed: ENOENT (No such file or directory)
                 //      I/System.out: resolveUri failed on bad bitmap uri:
                 //imageView.setImageURI(Uri.parse(fullUrl));
             }
             else{
+                Log.d(TAG, "Loading event background picture: use default image (NO PICTURE SET)" );
                 imageView.setImageDrawable(event.getBackgroundImage(imageView.getContext()));
             }
         }
