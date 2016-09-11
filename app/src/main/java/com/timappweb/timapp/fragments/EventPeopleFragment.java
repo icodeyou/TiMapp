@@ -129,7 +129,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
                         mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
                         for (UserEvent userEvent: data){
-                            SubUserItem item = new SubUserItem(userEvent.status.toString()+"-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
+                            SubUserItem item = new SubUserItem(userEvent.status.toString()+ "-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
                             switch (userEvent.status){
                                 case COMING:
                                     mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);

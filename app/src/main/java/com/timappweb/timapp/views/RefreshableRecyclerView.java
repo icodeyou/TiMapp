@@ -10,7 +10,7 @@ import com.timappweb.timapp.listeners.OnScrollListenerRefreshableView;
 
 import java.security.InvalidParameterException;
 
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**
  * Created by stephane on 5/14/2016.

@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
-import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**
  * Created by Stephane on 18/08/2016.

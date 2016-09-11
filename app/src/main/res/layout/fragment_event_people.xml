@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/margin_fragments_event_additional_top">
 
-            <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+            <com.timappweb.timapp.views.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout_place_people"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -27,7 +27,7 @@
                     android:saveEnabled="false"/>
                 <!--android:listSelector="@android:color/transparent"-->
 
-            </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+            </com.timappweb.timapp.views.SwipeRefreshLayout>
 
             <include layout="@layout/sticky_header_layout"/>
 

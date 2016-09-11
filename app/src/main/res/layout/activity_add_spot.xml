@@ -19,7 +19,7 @@
         android:hint="@string/hint_spot_name"
         android:nextFocusForward="@+id/description_edit_text" />
 
-    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+    <com.timappweb.timapp.views.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/swipe_refresh_layout">
@@ -27,5 +27,5 @@
             android:id="@+id/spots_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+    </com.timappweb.timapp.views.SwipeRefreshLayout>
 </LinearLayout>

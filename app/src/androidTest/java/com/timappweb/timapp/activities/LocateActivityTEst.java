@@ -5,14 +5,12 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.MockLocationProvider;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
-import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 
 import org.junit.Before;

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/margin_fragments_event">
 
-    <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+    <com.timappweb.timapp.views.SwipeRefreshLayout
         android:layout_marginTop="@dimen/margin_fragments_event_additional_top"
         android:id="@+id/swipe_refresh_layout_place_picture"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:clipToPadding="true"
             android:saveEnabled="false"/>
         <!--android:listSelector="@android:color/transparent"-->
-    </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+    </com.timappweb.timapp.views.SwipeRefreshLayout>
 
     <TextView
         style="@style/NoDataView"

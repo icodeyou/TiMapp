@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout
+        <com.timappweb.timapp.views.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -29,7 +29,7 @@
                 android:clipToPadding="true"
                 android:saveEnabled="false"/>
             <!--android:listSelector="@android:color/transparent"-->
-        </jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout>
+        </com.timappweb.timapp.views.SwipeRefreshLayout>
 
         <TextView
             style="@style/NoDataView"
