@@ -61,6 +61,7 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new FriendsAdapter(this);
+
         mAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -62,12 +63,12 @@ public class MockLocationProvider {
         return mockLocation;
     }
 
-    public static MockLocationProvider createGPSProvider(){
-        return new MockLocationProvider(LocationManager.GPS_PROVIDER, ActivityHelper.getActivityInstance());
+    public static MockLocationProvider createGPSProvider(Activity activity){
+        return new MockLocationProvider(LocationManager.GPS_PROVIDER, activity);
     }
 
-    public static MockLocationProvider createNetworkProvider(){
-        return new MockLocationProvider(android.location.LocationManager.NETWORK_PROVIDER, ActivityHelper.getActivityInstance());
+    public static MockLocationProvider createNetworkProvider(Activity activity){
+        return new MockLocationProvider(android.location.LocationManager.NETWORK_PROVIDER, activity);
     }
 
 

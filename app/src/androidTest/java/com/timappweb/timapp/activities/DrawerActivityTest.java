@@ -32,17 +32,9 @@ public class DrawerActivityTest {
             DrawerActivity.class);
 
     @Before
-    public void initUserSession() {
+    public void beforeTest() {
 
     }
-
-    @Test
-    public void selectMapEvent() {
-
-    }
-
-
-
 
 
 }

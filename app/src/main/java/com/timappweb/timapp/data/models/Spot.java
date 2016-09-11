@@ -185,7 +185,9 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     }
 
     public boolean isValid() {
-        return name != null && name.length() >= ConfigurationProvider.rules().spot_min_name_length;
+        return name != null
+                && name.length() >= ConfigurationProvider.rules().spot_min_name_length
+                && hasCategory();
     }
 
     public boolean hasCategory(SpotCategory category) {

@@ -15,6 +15,7 @@ import com.timappweb.timapp.data.models.Picture;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
  * Created by Stephane on 16/08/2016.
@@ -40,7 +41,7 @@ public class PictureItem  extends AbstractModelItem<PictureItem.PictureViewHolde
     }
 
     @Override
-    public void bindViewHolder(FlexibleAdapter adapter, PictureViewHolder holder, int position, List payloads) {
+    public void bindViewHolder(final FlexibleAdapter adapter, PictureViewHolder holder, final int position, List payloads) {
         final String fullUrl = picture.getThumbnailUrl(Picture.ThumbnailType.SQUARE);
         if (fullUrl == null){
             Log.e(TAG, "Picture url is null, setting default picture");
@@ -53,8 +54,9 @@ public class PictureItem  extends AbstractModelItem<PictureItem.PictureViewHolde
         holder.ivPicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Activity mActivity = (Activity) context;
-                //IntentsUtils.viewPicture(mActivity, position, picturesUris);
+                if (adapter.mItemClickListener != null){
+                    adapter.mItemClickListener.onItemClick(position);
+                }
             }
         });
     }
@@ -64,12 +66,12 @@ public class PictureItem  extends AbstractModelItem<PictureItem.PictureViewHolde
     }
 
 
-    public class PictureViewHolder extends RecyclerView.ViewHolder {
+    public class PictureViewHolder extends FlexibleViewHolder {
 
         SimpleDraweeView ivPicture;
 
         PictureViewHolder(View itemView, FlexibleAdapter adapter) {
-            super(itemView);
+            super(itemView, adapter);
             ivPicture = (SimpleDraweeView) itemView.findViewById(R.id.picture);
         }
 

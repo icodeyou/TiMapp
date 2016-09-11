@@ -18,7 +18,6 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 public class PicturesAdapter extends MyFlexibleAdapter {
 
-    private List<String> picturesUris;
     private int gridColumnNumber;
 
     //private String baseUrl = "";
@@ -30,22 +29,6 @@ public class PicturesAdapter extends MyFlexibleAdapter {
 
         for (int i = 0; i < gridColumnNumber; i++){
             addItem(i, new PlaceHolderItem("PLACEHOLDER" + i));
-        }
-    }
-
-
-    public void setData(List<Picture> pictures) {
-        this.removeData();
-        this.addData(pictures);
-    }
-
-    public void appendData(List<Picture> pictures){
-        if (picturesUris == null){
-            picturesUris = new LinkedList<>();
-        }
-        for (Picture p: pictures){
-            picturesUris.add(p.getUrl());
-            addItem(new PictureItem(p));
         }
     }
 
@@ -68,24 +51,17 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         return this.getDataCount() > 0;
     }
 
-    public void removeData() {
-        this.picturesUris = null;
-        this.removeItemsOfType(R.layout.item_picture);
-    }
-
-    public void addData(List<Picture> pictures) {
-        if (pictures == null) return;
-        if (picturesUris == null){
-            picturesUris = new LinkedList<>();
-        }
-        for (Picture p: pictures){
-            picturesUris.add(p.getUrl());
-            this.addItem(new PictureItem(p));
-        }
-    }
-
     public String[] getPictureUris() {
-        return (String[]) picturesUris.toArray();
+        LinkedList<String> picturesUris = new LinkedList<>();
+        for (int i = 0; i < this.getItemCount(); i++){
+            AbstractFlexibleItem item = this.getItem(i);
+            if (item instanceof PictureItem){
+                PictureItem pictureItem = (PictureItem) item;
+                picturesUris.add(pictureItem.getPicture().getUrl());
+            }
+        }
+        String[] tabList = new String[picturesUris.size()];
+        return picturesUris.toArray(tabList);
     }
 
     public int getGridColumnNumber() {

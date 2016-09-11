@@ -20,7 +20,6 @@ import static junit.framework.Assert.assertTrue;
  *
  * @warning User must be already logged in to perform this test suite
  *
- * TODO: disable quota on server and local side for tests to work properly
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -36,10 +35,9 @@ public class AddSpotActivityTest {
     @Before
     public void setUp() throws Exception {
         assertTrue(MyApplication.isLoggedIn());
-
         addSpotForm = new AddSpotForm();
 
-        //mockLocation = MockLocationProvider.createGPSProvider();
+        mockLocation = MockLocationProvider.createGPSProvider(mActivityRule.getActivity());
         //mockLocation.pushLocation(MockLocation.START_TEST);
     }
 
@@ -47,9 +45,19 @@ public class AddSpotActivityTest {
     public void testExistingSpots() {
         addSpotForm
                 .getExistingSpotList()
-                .checkItemCount(3)
+                .checkItemCount(3) // TODO
                 .scrollToBottom()
                 .checkLoadingMore();
+    }
+
+    @Test
+    public void createNewSpot(){
+        addSpotForm
+                .assertSubmitDisabled()
+                .setName("New name")
+                .assertSubmitDisabled()
+                .setCategory(1)
+                .assertSubmitEnabled();
     }
 
     @Test

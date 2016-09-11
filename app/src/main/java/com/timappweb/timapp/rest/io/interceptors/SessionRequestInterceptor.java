@@ -3,6 +3,7 @@ package com.timappweb.timapp.rest.io.interceptors;
 import android.util.Log;
 
 import com.timappweb.timapp.config.AuthProviderInterface;
+import com.timappweb.timapp.config.ServerHeader;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class SessionRequestInterceptor implements Interceptor
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
-                .header("X-Platform", "Android")
+                .header(ServerHeader.XPLATFORM, "Android")
                 .method(original.method(), original.body());
 
         if (auth.isLoggedIn()) {

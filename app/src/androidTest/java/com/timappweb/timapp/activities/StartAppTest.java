@@ -1,15 +1,24 @@
-package com.timappweb.timapp;
+package com.timappweb.timapp.activities;
 
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.activities.AddEventActivity;
 import com.timappweb.timapp.activities.DrawerActivity;
+import com.timappweb.timapp.activities.PresentationActivity;
 import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.MockLocationProvider;
+import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +35,23 @@ import static junit.framework.Assert.assertTrue;
 @LargeTest
 public class StartAppTest {
 
+    private ApiCallIdlingResource apiCallIdlingResource;
+
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule =
             new ActivityTestRule<>(SplashActivity.class, false, false);
 
+
+    @Before
+    public void setUp() throws Exception {
+        apiCallIdlingResource = new ApiCallIdlingResource();
+        Espresso.registerIdlingResources(apiCallIdlingResource);
+    }
+
+    @After
+    public void unregisterIntentServiceIdlingResource() {
+        Espresso.unregisterIdlingResources(apiCallIdlingResource);
+    }
 
     /*
     @Test
@@ -50,11 +72,19 @@ public class StartAppTest {
     //----------------------------------------------------------------------------------------------
 
     @Test
+    public void testFirstStart() {
+        clearConfigurationData();
+        clearFirstStart();
+        startActivity();
+
+        ActivityHelper.assertCurrentActivity(PresentationActivity.class);
+    }
+
+    @Test
     public void testStartInternetNoConfig() {
         clearConfigurationData();
         startActivity();
 
-        // TODO wait for config load...
         ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
 
@@ -63,7 +93,6 @@ public class StartAppTest {
         setApplicationData();
         startActivity();
 
-        // TODO wait for config load...
         ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
 
@@ -80,4 +109,9 @@ public class StartAppTest {
     private void setApplicationData() {
         // TODO
     }
+
+    private void clearFirstStart() {
+        MyApplication.clearStoredData();
+    }
+
 }

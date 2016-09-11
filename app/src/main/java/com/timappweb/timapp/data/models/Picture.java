@@ -61,7 +61,7 @@ public class Picture extends SyncBaseModel {
     // =============================================================================================
 
     public String getUrl(){
-        return  this.base_url + this.photo_dir + "/" + this.photo;
+        return  this.base_url + this.photo;
     }
 
     public String getThumbnailUrl(ThumbnailType type){

@@ -98,7 +98,8 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
                 new HorizontalTagsTouchListener(context, new OnItemAdapterClickListener() {
                     @Override
                     public void onClick(int position) {
-                        adapter.mItemClickListener.onItemClick(position);
+                        if (adapter.mItemClickListener != null)
+                            adapter.mItemClickListener.onItemClick(position);
                     }
                 }, position);
         holder.horizontalTags.setOnTouchListener(mHorizontalTagsTouchListener);

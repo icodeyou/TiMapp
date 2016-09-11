@@ -272,6 +272,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                             IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                         }
                     }
+
+                    @Override
+                    public void notSuccessful() {
+                        Toast.makeText(AddEventActivity.this, R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+                    }
                 })
                 .onError(new NetworkErrorCallback(this))
                 .onFinally(new HttpCallManager.FinallyCallback() {

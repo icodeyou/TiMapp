@@ -26,16 +26,16 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
 
-        final MultipleHttpCallManager manager = ConfigurationProvider.load(this);
+        final MultipleHttpCallManager callsManager = ConfigurationProvider.load(this);
 
         if (MyApplication.isLoggedIn()) {
             HttpCallManager tokenCallManager = MyApplication.auth.checkToken();
             if (tokenCallManager != null) {
-                manager.addCall(CALL_ID_TOKEN, tokenCallManager);
+                callsManager.addCall(CALL_ID_TOKEN, tokenCallManager);
             }
         }
 
-        manager
+        callsManager
                 .setCallback(new MultipleHttpCallManager.Callback() {
                     @Override
                     public void onPostExecute() {
@@ -54,9 +54,9 @@ public class SplashActivity extends BaseActivity {
                             IntentsUtils.fatalError(SplashActivity.this, R.string.fatal_error_no_network_title, R.string.fatal_error_no_network_message);
                         }
                         else{
-                            if (manager.isSuccess(ConfigurationProvider.CALL_ID_SPOT_CATEGORIES)
-                                    && manager.isSuccess(ConfigurationProvider.CALL_ID_APPLICATION_RULES)
-                                    && manager.isSuccess(ConfigurationProvider.CALL_ID_EVENT_CATEGORIES)) {
+                            if (callsManager.isSuccess(ConfigurationProvider.CALL_ID_SPOT_CATEGORIES)
+                                    && callsManager.isSuccess(ConfigurationProvider.CALL_ID_APPLICATION_RULES)
+                                    && callsManager.isSuccess(ConfigurationProvider.CALL_ID_EVENT_CATEGORIES)) {
                                 ConfigurationProvider.updateLastUpdateTime();
                             }
 
@@ -69,9 +69,14 @@ public class SplashActivity extends BaseActivity {
                                     IntentsUtils.home(SplashActivity.this);
                                 }
                             }
+                            else if (MyApplication.isFirstLaunch()){
+                                Log.i(TAG, "User starting app for the first time");
+                                IntentsUtils.presentApp(SplashActivity.this);
+                            }
                             else{
                                 IntentsUtils.login(SplashActivity.this);
                             }
+                            MyApplication.updateLastLaunch();
                         }
                         finish();
                     }

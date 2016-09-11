@@ -21,13 +21,11 @@ import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
-import com.timappweb.timapp.data.loader.DynamicListLoader;
 import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;

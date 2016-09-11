@@ -46,6 +46,16 @@ public class HttpCallManager<T> {
         return this;
     }
 
+    public HttpCallManager onFinally(FinallyCallback<T> callback) {
+        if (this.callbackGroup.isDone()){
+            this.callbackGroup.onFinally(callback);
+        }
+        else{
+            this.callbackGroup.add(callback);
+        }
+        return this;
+    }
+
     /**
      * ASYNC execute
      * @return
@@ -105,17 +115,6 @@ public class HttpCallManager<T> {
         this.callDelay = callDelay;
         return this;
     }
-
-    public HttpCallManager onFinally(FinallyCallback<T> callback) {
-        if (this.callbackGroup.isDone()){
-            this.callbackGroup.onFinally(callback);
-        }
-        else{
-            this.callbackGroup.add(callback);
-        }
-        return this;
-    }
-
     public void setResponse(Response<T> r) {
         this.callbackGroup.setResponse(r);
     }
@@ -125,6 +124,10 @@ public class HttpCallManager<T> {
     }
 
     public interface FinallyCallback<ResponseBodyType>{
-         void onFinally(Response<ResponseBodyType> response, Throwable error);
+        void onFinally(Response<ResponseBodyType> response, Throwable error);
+    }
+
+    public interface StartCallback<ResponseBodyType>{
+        void onStart();
     }
 }

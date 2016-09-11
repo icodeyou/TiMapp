@@ -26,6 +26,7 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
  * Created by Stephane on 16/08/2016.
@@ -63,7 +64,7 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
     @Override
     public InvitationsViewHolder createViewHolder(FlexibleAdapter adapter, LayoutInflater inflater, ViewGroup parent) {
         ItemInvitationBinding mBinding  = DataBindingUtil.inflate(inflater, getLayoutRes(), parent, false);
-        return new InvitationsViewHolder(mBinding.getRoot(), mBinding);
+        return new InvitationsViewHolder(mBinding.getRoot(), mBinding, adapter);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
         return invitation;
     }
 
-    public class InvitationsViewHolder extends RecyclerView.ViewHolder{
+    public class InvitationsViewHolder extends FlexibleViewHolder{
 
         ItemInvitationBinding mBinding;
         private SimpleTimerView tvCountPoints;
@@ -85,8 +86,8 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
         private final View tagButton;
         private final View inviteButton;
 
-        InvitationsViewHolder(View itemView, ItemInvitationBinding binding) {
-            super(itemView);
+        InvitationsViewHolder(View itemView, ItemInvitationBinding binding, FlexibleAdapter adapter) {
+            super(itemView, adapter);
             mBinding = binding;
 
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);

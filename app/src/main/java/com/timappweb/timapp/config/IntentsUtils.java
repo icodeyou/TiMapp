@@ -196,11 +196,16 @@ public class IntentsUtils {
             return;
         }
 
-        Intent intent = new Intent(activity, AddTagActivity.class);
+        Intent intent = buildIntentAddTags(activity, event);
+        activity.startActivityForResult(intent, REQUEST_TAGS);
+    }
+
+    public static Intent buildIntentAddTags(Context context, Event event){
+        Intent intent = new Intent(context, AddTagActivity.class);
         Bundle extras = new Bundle();
         extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
         intent.putExtras(extras);
-        activity.startActivityForResult(intent, REQUEST_TAGS);
+        return intent;
     }
 
     public static void inviteFriendToEvent(Activity activity, Event event) {
@@ -302,7 +307,9 @@ public class IntentsUtils {
             return;
         }
         Intent intent = new Intent(activity, AddSpotActivity.class);
-        intent.putExtra(IntentsUtils.KEY_SPOT, spot);
+        if (spot != null && !spot.hasRemoteId()){
+            intent.putExtra(IntentsUtils.KEY_SPOT, SerializeHelper.packModel(spot, Spot.class));
+        }
         activity.startActivityForResult(intent, REQUEST_PICK_SPOT);
     }
 
@@ -402,7 +409,13 @@ public class IntentsUtils {
 
     public static Spot extractSpot(Intent intent) {
         Bundle extras = intent.getExtras();
-        return extras != null ? (Spot) extras.getSerializable(IntentsUtils.KEY_SPOT) : null;
+        try{
+            return extras != null ? SerializeHelper.unpackModel(extras.getString(IntentsUtils.KEY_SPOT), Spot.class) : null;
+        }
+        catch (Exception ex){
+            Log.e(TAG, "Error extracting spot: " + ex.getMessage());
+            return null;
+        }
     }
 
     public static void exitDescriptionActivity(Activity activity, String description) {

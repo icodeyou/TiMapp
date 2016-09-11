@@ -104,6 +104,13 @@ public class AddEventForm  extends FormHelper {
         return this;
     }
 
+    public AddEventForm editSpot() {
+        onView(withId(R.id.spot_container))
+                .perform(scrollTo())
+                .perform(click());
+        return this;
+    }
+
     /*
     public AddEventForm waitLoadDone() throws InterruptedException {
         this.assertLoader();

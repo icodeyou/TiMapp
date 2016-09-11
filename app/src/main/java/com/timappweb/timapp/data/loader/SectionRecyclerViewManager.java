@@ -22,7 +22,7 @@ import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 /**
  * Created by Stephane on 06/09/2016.
  */
-public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener, SectionDataLoader.Callback {
+public class SectionRecyclerViewManager implements FlexibleAdapter.EndlessScrollListener, WaveSwipeRefreshLayout.OnRefreshListener, SectionDataLoader.Callback {
 
     private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
 
@@ -35,14 +35,14 @@ public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener,
     private long minDelayForceRefresh;
     private ItemTransformer mItemTransformer;
 
-    public DynamicListLoader setNoDataView(View noDataView) {
+    public SectionRecyclerViewManager setNoDataView(View noDataView) {
         this.mNoDataView = noDataView;
         return this;
     }
 
     private View mNoDataView;
 
-    public DynamicListLoader(Context context, MyFlexibleAdapter adapter, SectionDataLoader dataLoader) {
+    public SectionRecyclerViewManager(Context context, MyFlexibleAdapter adapter, SectionDataLoader dataLoader) {
         this.mAdapter = adapter;
         this.mDataLoader = dataLoader;
         this.mDataLoader.setCallback(this);
@@ -50,23 +50,23 @@ public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener,
     }
 
 
-    public DynamicListLoader setItemTransformer(ItemTransformer transformer){
+    public SectionRecyclerViewManager setItemTransformer(ItemTransformer transformer){
         this.mItemTransformer = transformer;
         return this;
     }
 
-    public DynamicListLoader setCallback(SectionDataLoader.Callback callback){
+    public SectionRecyclerViewManager setCallback(SectionDataLoader.Callback callback){
         this.mCallback = callback;
         return this;
     }
 
-    public DynamicListLoader setSwipeRefreshLayout(WaveSwipeRefreshLayout mSwipeRefreshLayout) {
+    public SectionRecyclerViewManager setSwipeRefreshLayout(WaveSwipeRefreshLayout mSwipeRefreshLayout) {
         this.mSwipeRefreshLayout = mSwipeRefreshLayout;
         this.mSwipeRefreshLayout.setOnRefreshListener(this);
         return this;
     }
 
-    public DynamicListLoader setEndlessScrollListener() {
+    public SectionRecyclerViewManager setEndlessScrollListener() {
         mAdapter.setEndlessScrollListener(this, new ProgressItem());
         mAdapter.setEndlessScrollThreshold(ENDLESS_SCROLL_THRESHOLD);
 
@@ -87,12 +87,12 @@ public class DynamicListLoader implements FlexibleAdapter.EndlessScrollListener,
         }
     }
 
-    public DynamicListLoader setMinDelayAutoRefresh(long minDelayAutoRefresh) {
+    public SectionRecyclerViewManager setMinDelayAutoRefresh(long minDelayAutoRefresh) {
         this.minDelayAutoRefresh = minDelayAutoRefresh;
         return this;
     }
 
-    public DynamicListLoader setMinDelayForceRefresh(long minDelayForceRefresh) {
+    public SectionRecyclerViewManager setMinDelayForceRefresh(long minDelayForceRefresh) {
         this.minDelayForceRefresh = minDelayForceRefresh;
         return this;
     }

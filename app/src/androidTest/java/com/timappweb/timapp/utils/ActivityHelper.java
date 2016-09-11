@@ -31,7 +31,10 @@ public class ActivityHelper {
      * @param activityClass
      */
     public static void assertCurrentActivity(Class<? extends Activity> activityClass) {
-        Activity currentActivity = getActivityInstance();
+        assertCurrentActivity(activityClass, getActivityInstance());
+    }
+
+    public static void assertCurrentActivity(Class<? extends Activity> activityClass, Activity currentActivity) {
         checkNotNull(currentActivity);
         checkNotNull(activityClass);
         assertTrue(currentActivity.getClass().isAssignableFrom(activityClass));

@@ -26,7 +26,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.loader.DynamicListLoader;
+import com.timappweb.timapp.data.loader.SectionRecyclerViewManager;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
@@ -107,14 +107,15 @@ public class EventPicturesFragment extends EventBaseFragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         try {
             if (eventActivity.getEvent() == null){
+                // TODO ???
                 throw new Exception("Cannot add picture for null event");
             }
             eventActivity.setEvent((Event) eventActivity.getEvent().requireLocalId());
 
             initDataLoader();
 
-            new DynamicListLoader(getContext(), picturesAdapter, mDataLoader)
-                    .setItemTransformer(new DynamicListLoader.ItemTransformer<Picture>(){
+            new SectionRecyclerViewManager(getContext(), picturesAdapter, mDataLoader)
+                    .setItemTransformer(new SectionRecyclerViewManager.ItemTransformer<Picture>(){
                         @Override
                         public AbstractFlexibleItem createItem(Picture data) {
                             return new PictureItem(data);
@@ -164,6 +165,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
         picturesAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
+                Log.d(TAG, "Clicking on picture adapter item n°" + position);
                 AbstractFlexibleItem item = picturesAdapter.getItem(position);
                 if (item instanceof PictureItem){
                     IntentsUtils.viewPicture(EventPicturesFragment.this.getActivity(),

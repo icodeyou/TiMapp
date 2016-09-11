@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class MockLocation {
 
-    public static final LatLng START_TEST = new LatLng(45, 5);
+    public static final LatLng START_TEST = new LatLng(45.37042, 5.56461);
 
     public static final LatLng NO_SPOT = new LatLng(-89, 0);
 

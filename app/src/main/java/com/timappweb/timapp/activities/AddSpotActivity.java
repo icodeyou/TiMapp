@@ -82,7 +82,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private SpotsAdapter                            spotsAdapter;
     private WaveSwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
-    private List<Spot>                              listSpotsAround;
     private PaginateDataLoader mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
@@ -200,13 +199,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             @Override
             public void afterTextChanged(Editable s) {
                 String newText = s.toString();
-
                 currentSpot.setName(newText);
+                if (spotsAdapter != null && spotsAdapter.getData() != null){
+                    final List<Spot> filteredSpotList = filter(spotsAdapter.getData(), newText);
+                    spotsAdapter.animateTo(filteredSpotList);
+                }
 
-                final List<Spot> filteredSpotList = filter(listSpotsAround, newText);
-                spotsAdapter.animateTo(filteredSpotList);
                 spotsRv.scrollToPosition(0);
-
                 setButtonValidation();
             }
         });
@@ -338,7 +337,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     @Override
     public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
-        listSpotsAround = new ArrayList<>(data);
         spotsAdapter.setData(data);
         if(currentSpot!=null) { // we can't call afterTextChanged before currentSpot is initialized
             etNameSpot.setText("");

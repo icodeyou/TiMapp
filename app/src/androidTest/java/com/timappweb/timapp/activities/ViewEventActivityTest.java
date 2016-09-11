@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -9,9 +10,11 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 import com.timappweb.timapp.utils.viewinteraction.ViewEventHelper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,10 +41,17 @@ public class ViewEventActivityTest {
 
     @Before
     public void startActivity(){
+        //Espresso.registerIdlingResources(new ApiCallIdlingResource());
+
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EVENT_ID);
         mActivityRule.launchActivity(intent);
 
         viewEventHelper = new ViewEventHelper();
+    }
+
+    @After
+    public void after(){
+
     }
 
     @Test

@@ -33,6 +33,9 @@ import retrofit2.Call;
 public class MyApplication extends com.activeandroid.app.Application {
 
     private static final String TAG = "MyApplication";
+    private static final String KEY_LAST_START = "last_app_start";
+
+
     public static SearchFilter searchFilter = new SearchFilter();
     public static AuthProvider auth;
     private static Context _appContext;
@@ -148,4 +151,15 @@ public class MyApplication extends com.activeandroid.app.Application {
         context.startService(intent);
     }
 
+    public static boolean isFirstLaunch() {
+        return KeyValueStorage.getSafeLong(KEY_LAST_START, 0L) == 0L;
+    }
+
+    public static void updateLastLaunch(){
+        KeyValueStorage.in().putLong(KEY_LAST_START, System.currentTimeMillis()).commit();
+    }
+
+    public static void clearStoredData() {
+        KeyValueStorage.in().clear().commit();
+    }
 }

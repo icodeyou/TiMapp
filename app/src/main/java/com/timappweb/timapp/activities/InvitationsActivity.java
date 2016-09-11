@@ -14,7 +14,7 @@ import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.DBCacheEngine;
-import com.timappweb.timapp.data.loader.DynamicListLoader;
+import com.timappweb.timapp.data.loader.SectionRecyclerViewManager;
 import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
@@ -70,8 +70,8 @@ public class InvitationsActivity extends BaseActivity implements
         initInvitationAdapter();
         initDataLoader();
 
-        new DynamicListLoader(this, adapter, mDataLoader)
-                .setItemTransformer(new DynamicListLoader.ItemTransformer<EventsInvitation>() {
+        new SectionRecyclerViewManager(this, adapter, mDataLoader)
+                .setItemTransformer(new SectionRecyclerViewManager.ItemTransformer<EventsInvitation>() {
                     @Override
                     public AbstractFlexibleItem createItem(EventsInvitation data) {
                         return new InvitationItem(data);
