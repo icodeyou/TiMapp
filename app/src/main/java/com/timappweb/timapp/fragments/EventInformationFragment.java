@@ -177,9 +177,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                 updateUserStatusButton();
             }
         });
-
-        eventActivity.parseIntentParameters();
-        //TODO : call this method in EventActivity after all fragments have been loaded
     }
 
     public void toggleStatusButton() {

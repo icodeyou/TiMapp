@@ -116,6 +116,11 @@ public class InviteFriendsActivity extends BaseActivity
             case R.id.action_invite:
                 sendInvites();
                 return true;
+            case android.R.id.home:
+                finish();
+                //TODO : Workaround. navigateUpFromSameTask redirects to map
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
             default:
                 return false;
         }

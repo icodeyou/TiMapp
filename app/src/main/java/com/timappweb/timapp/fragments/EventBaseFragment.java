@@ -21,6 +21,7 @@ import com.timappweb.timapp.data.models.Event;
 public abstract class EventBaseFragment extends BaseFragment {
 
     protected EventActivity eventActivity;
+    protected OnCreateViewCallback createViewCallback;
 
     @Nullable
     @Override
@@ -29,9 +30,26 @@ public abstract class EventBaseFragment extends BaseFragment {
         return null;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(createViewCallback!=null) {
+            createViewCallback.onCreateView();
+        }
+    }
 
     public Event getEvent() {
         return eventActivity.getEvent();
+    }
+
+    public interface OnCreateViewCallback {
+
+        void onCreateView();
+
+    }
+
+    public void setCreateViewCallback(OnCreateViewCallback createViewCallback) {
+        this.createViewCallback = createViewCallback;
     }
 
 

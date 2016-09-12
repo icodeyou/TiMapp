@@ -19,6 +19,9 @@
         android:hint="@string/hint_spot_name"
         android:nextFocusForward="@+id/description_edit_text" />
 
+    <include
+        layout="@layout/progressview_fullscreen" />
+
     <com.timappweb.timapp.views.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

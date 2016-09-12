@@ -96,7 +96,6 @@ public class EventPicturesFragment extends EventBaseFragment implements
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
 
-        startPictureActivity();
         initAdapter();
 
         return root;
@@ -131,14 +130,6 @@ public class EventPicturesFragment extends EventBaseFragment implements
             IntentsUtils.home(getContext());
         }
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    private void startPictureActivity() {
-        Bundle extras = eventActivity.getIntent().getExtras();
-        if(extras!=null && extras.getInt(IntentsUtils.KEY_ACTION, -1) == IntentsUtils.ACTION_CAMERA) {
-            IntentsUtils.addPictureFromFragment(getActivity(), this);
-            eventActivity.getIntent().putExtra(IntentsUtils.KEY_ACTION, -1);
-        }
     }
 
     @Override

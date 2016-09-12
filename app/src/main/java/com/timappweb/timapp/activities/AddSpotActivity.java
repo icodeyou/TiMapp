@@ -18,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -82,6 +83,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private Menu                                    menu;
     private SpotsAdapter                            spotsAdapter;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
+    private View                                    progressView;
 
     private PaginateDataLoader mDataLoader;
 
@@ -108,6 +110,10 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etNameSpot = (EditText) findViewById(R.id.name_spot);
         mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        progressView = findViewById(R.id.progress_view);
+
+        //TODO Jack : Remove progressView somewhere
+        //TODO Jack : No data view = Where are you ? Indicate a category and a name for your current place. Then click on the button CREATE. If the place already exists in the list below, you can just select it.
 
         initEditText();
         initAdapters();
@@ -338,9 +344,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
         spotsAdapter.setData(data);
-        if(currentSpot!=null) { // we can't call afterTextChanged before currentSpot is initialized
-            etNameSpot.setText("");
-        }
     }
 
     @Override
