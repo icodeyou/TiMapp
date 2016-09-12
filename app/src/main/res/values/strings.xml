@@ -332,6 +332,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_field_required">This field is required</string>
     <string name="submit">Submit</string>
     <string name="text_final_button_viewpager">Let\'s get it started</string>
+    <string name="explanation_gps_usage">Timapp require your location to find events around you. Please authorize us to get your location.</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

@@ -14,6 +14,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * Created by Stephane on 08/09/2016.
@@ -45,8 +47,8 @@ public class RecyclerViewHelper {
     public RecyclerViewHelper scrollToPosition(int position){
         viewInteractionRV
                 .check(matches(isDisplayed()))
-                .check(new RecyclerViewItemCountAssertion(position+1))
-                .perform(RecyclerViewActions.scrollToPosition(this.getItemCount()));
+                .check(new RecyclerViewItemCountAssertion(greaterThan(position)))
+                .perform(RecyclerViewActions.scrollToPosition(position));
         return this;
     }
 

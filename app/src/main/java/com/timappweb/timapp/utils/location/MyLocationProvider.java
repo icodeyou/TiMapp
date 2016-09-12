@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,6 +33,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
+import com.timappweb.timapp.utils.DelayedCallHelper;
+import com.timappweb.timapp.utils.Util;
 
 /**
  * Created by stephane on 8/22/2015.
@@ -224,28 +227,33 @@ public class MyLocationProvider implements
         });
     }
 
-    private boolean hasLocationPermission() {
+    public static boolean hasLocationPermission() {
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(MyApplication.getApplicationBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     public void requestPermissions() { //@NonNull String[] permissions, int requestCode){
-
         // Should we show an explanation?
         if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
-
+            Log.d(TAG, "Show request name explanation to the user");
             // Show an explanation to the user *asynchronously* -- don't block
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
-            // TODO
-            Log.d(TAG, "Show request name explanation to the user");
+            Toast.makeText(MyLocationProvider.this.activity, R.string.explanation_gps_usage, Toast.LENGTH_LONG).show();
+            DelayedCallHelper.create(3500, new DelayedCallHelper.Callback() {
+                @Override
+                public void onTime() {
+                    ActivityCompat.requestPermissions(MyLocationProvider.this.activity,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
+                }
+            });
         } else {
             // No explanation needed, we can request the permission.
             ActivityCompat.requestPermissions(this.activity,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
         }
-
     }
 
     /**
@@ -359,7 +367,7 @@ public class MyLocationProvider implements
         Log.e(TAG, "Google name api onConnected()");
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        if (mRequestingLocationUpdates) {
+        if (mRequestingLocationUpdates && hasLocationPermission()) {
             startLocationUpdates();
         }
     }

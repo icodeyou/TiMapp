@@ -10,6 +10,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 import com.timappweb.timapp.utils.viewinteraction.ViewEventHelper;
@@ -20,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
@@ -38,20 +40,24 @@ public class ViewEventActivityTest {
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
     private ViewEventHelper viewEventHelper;
+    private SystemAnimations systemAnimations;
+    private ApiCallIdlingResource apiCallIdlingResource;
 
     @Before
     public void startActivity(){
-        //Espresso.registerIdlingResources(new ApiCallIdlingResource());
-
+        systemAnimations = new SystemAnimations(getInstrumentation().getContext());
+        apiCallIdlingResource = new ApiCallIdlingResource();
+        systemAnimations.disableAll();
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EVENT_ID);
         mActivityRule.launchActivity(intent);
-
+        Espresso.registerIdlingResources(apiCallIdlingResource);
         viewEventHelper = new ViewEventHelper();
     }
 
     @After
     public void after(){
-
+        systemAnimations.enableAll();
+        Espresso.unregisterIdlingResources(apiCallIdlingResource);
     }
 
     @Test

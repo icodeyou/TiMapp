@@ -85,7 +85,6 @@ public class AddEventActivityTest{
                 .submit();
 
         // TODO wait for load done..
-
         ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
 

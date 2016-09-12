@@ -42,17 +42,16 @@ public class SimpleTimerView extends TextSwitcher {
         this.setOutAnimation(outAnimation);
     }
 
-    public void initTimer(int initialms) {
-        final TextSwitcher currentTextView = this;
-        if(countDownTimer==null) {
+    public void initTimer(long initialms) {
+        if(countDownTimer == null && initialms > 0) {
             countDownTimer = new CountDownTimer(initialms*1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
-                    currentTextView.setText(String.valueOf(millisUntilFinished / 1000));
+                    SimpleTimerView.this.setText(String.valueOf(millisUntilFinished / 1000));
                 }
 
                 public void onFinish() {
-                    currentTextView.setText(getResources().getString(R.string.counter_over));
+                    SimpleTimerView.this.setText(getResources().getString(R.string.counter_over));
                 }
             };
             countDownTimer.start();
@@ -60,7 +59,7 @@ public class SimpleTimerView extends TextSwitcher {
     }
 
     public void cancelTimer() {
-        if(countDownTimer!=null) {
+        if(countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
         }
