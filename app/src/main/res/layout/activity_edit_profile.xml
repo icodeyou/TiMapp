@@ -99,8 +99,7 @@
             android:layout_weight="1">
             <Button
                 android:id="@+id/button_submit"
-                style="@style/BigButtonWhite"
-                android:textColor="@color/colorPrimary"
+                style="@style/BigButton.White"
                 android:text="@string/submit"/>
         </LinearLayout>
     </LinearLayout>

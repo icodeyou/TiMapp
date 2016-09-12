@@ -9,7 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -21,6 +22,9 @@ public class PresentationActivity extends BaseActivity {
     private View skipButton;
     private View nextButton;
     private View loginButton;
+    private View buttonsBottom;
+
+    private int previousPosition;
 
     //source :
     //https://www.bignerdranch.com/blog/viewpager-without-fragments/
@@ -28,16 +32,45 @@ public class PresentationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_pager);
+        setContentView(R.layout.activity_presentation);
 
         setStatusBarColor(R.color.black);
 
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        viewPager.setAdapter(new PresentationPagerAdapter(this));
+        initViewPager();
         skipButton = findViewById(R.id.skip_button);
         nextButton = findViewById(R.id.next_button);
+        buttonsBottom = findViewById(R.id.buttons_layout);
 
         initListeners();
+    }
+
+    private void initViewPager() {
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setAdapter(new PresentationPagerAdapter(this));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int lastPage = viewPager.getAdapter().getCount()-1;
+                if(position==lastPage) {
+                    hideButtons();
+                } else if(position==lastPage-1 && previousPosition==lastPage) {
+                    displayButtons();
+                }
+
+                previousPosition = viewPager.getCurrentItem();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void initListeners() {
@@ -59,6 +92,34 @@ public class PresentationActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void hideButtons() {
+        Animation hideButtons = AnimationUtils.loadAnimation(this, R.anim.slide_out_down);
+        hideButtons.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                buttonsBottom.setVisibility(View.INVISIBLE);
+                //buttonsBottom.setClickable(false);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        buttonsBottom.startAnimation(hideButtons);
+    }
+
+    private void displayButtons() {
+        Animation displayButtons = AnimationUtils.loadAnimation(this, R.anim.slide_in_up);
+        buttonsBottom.startAnimation(displayButtons);
+        buttonsBottom.setVisibility(View.VISIBLE);
     }
 
     public enum CustomPagerEnum {
