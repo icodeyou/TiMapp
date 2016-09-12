@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
+                android:id="@+id/skip_button"
                 style="@style/ButtonPresentation"
                 android:text="Skip"/>
             <View
@@ -36,6 +37,7 @@
                 android:layout_marginBottom="@dimen/margin_separator_button"
                 android:background="@color/LightGrey"/>
             <Button
+                android:id="@+id/next_button"
                 style="@style/ButtonPresentation"
                 android:text="Next"/>
         </LinearLayout>

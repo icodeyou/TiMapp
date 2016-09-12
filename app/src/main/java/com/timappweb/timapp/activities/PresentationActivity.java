@@ -1,19 +1,26 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 
 public class PresentationActivity extends BaseActivity {
-    private String          TAG                     = "EventActivity";
+    private String          TAG                     = "PresentationActivity";
 
     private ViewPager viewPager;
+    private View skipButton;
+    private View nextButton;
+    private View loginButton;
 
     //source :
     //https://www.bignerdranch.com/blog/viewpager-without-fragments/
@@ -27,13 +34,31 @@ public class PresentationActivity extends BaseActivity {
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(new PresentationPagerAdapter(this));
-
+        skipButton = findViewById(R.id.skip_button);
+        nextButton = findViewById(R.id.next_button);
 
         initListeners();
     }
 
     private void initListeners() {
+        final Activity that = this;
 
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.home(that);
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, viewPager.getCurrentItem()+"");
+                Log.d(TAG, viewPager.getAdapter().getCount()+"");
+                if(viewPager.getCurrentItem()!=viewPager.getAdapter().getCount()-1) {
+                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                }
+            }
+        });
     }
 
     public enum CustomPagerEnum {
@@ -77,6 +102,17 @@ public class PresentationActivity extends BaseActivity {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ViewGroup layout = (ViewGroup) inflater.inflate(customPagerEnum.getLayoutResId(), container, false);
             container.addView(layout);
+
+            if(position==viewPager.getAdapter().getCount()-1) {
+                View letsgetitstarted = layout.findViewById(R.id.final_button);
+                letsgetitstarted.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        IntentsUtils.login(getBaseContext());
+                    }
+                });
+            }
+
             return layout;
         }
 

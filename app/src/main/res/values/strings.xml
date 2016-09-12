@@ -330,6 +330,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="submit">Submit</string>
+    <string name="text_final_button_viewpager">Let\'s get it started</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

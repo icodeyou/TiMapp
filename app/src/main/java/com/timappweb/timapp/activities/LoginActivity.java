@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initToolbar(false);
+        //initToolbar(false);
 
         layoutFb = findViewById(R.id.layout_fb);
         progressView = findViewById(R.id.progress_view);

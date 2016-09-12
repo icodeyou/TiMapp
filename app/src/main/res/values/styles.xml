@@ -522,6 +522,29 @@
         <item name="crs_pl_fg_color">@color/textMute</item>
     </style>
 
+    <style name="BigButtonWhite">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_marginLeft">30dp</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:background">@drawable/button_white</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/button_white"
+        android:layout_gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_normal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+    </style>
+
     <style name="ButtonPresentation" parent="WidthWeightOne">
         <item name="android:layout_height">@dimen/height_bottom_button</item>
         <item name="android:background">@color/transparent</item>

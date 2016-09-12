@@ -99,20 +99,10 @@
             android:layout_weight="1">
             <Button
                 android:id="@+id/button_submit"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@drawable/button_white"
-                android:layout_gravity="center"
-                android:textAllCaps="true"
+                style="@style/BigButtonWhite"
                 android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_normal"
-                android:text="Submit"/>
+                android:text="@string/submit"/>
         </LinearLayout>
     </LinearLayout>
-
-
-
 
 </LinearLayout>

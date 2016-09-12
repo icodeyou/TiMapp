@@ -11,9 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <include layout="@layout/layout_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/final_button"
+            style="@style/BigButtonWhite"
+            android:alpha="0.7"
+            android:layout_centerInParent="true"
+            android:text="@string/text_final_button_viewpager" />
     </RelativeLayout>
     <Space
         android:layout_width="match_parent"
