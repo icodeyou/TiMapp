@@ -38,15 +38,6 @@ public class Util {
         return (int)(System.currentTimeMillis() / 1000);
     }
 
-    /**
-     * True if date is at least duration old
-     * @param date seconds
-     * @param duration seconds
-     * @return
-     */
-    public static boolean isOlderThan(int date, int duration) {
-        return (getCurrentTimeSec()-date) > duration;
-    }
 
 
     public static int delayFromNow(int date) {
@@ -170,5 +161,19 @@ public class Util {
                 = (ConnectivityManager) MyApplication.getApplicationBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    /**
+     * True if date is at least duration old
+     * @param date seconds
+     * @param duration seconds
+     * @return
+     */
+    public static boolean isOlderThan(int date, int duration) {
+        return (getCurrentTimeSec()-date) > duration;
+    }
+
+    public static boolean isOlderThan(long date, long duration) {
+        return (System.currentTimeMillis()-date) > duration;
     }
 }

@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import static junit.framework.Assert.assertTrue;
 
+import static org.hamcrest.Matchers.greaterThan;
 /**
  * Created by Stephane on 17/08/2016.
  */
@@ -46,6 +47,7 @@ public class InvitationActivityTest {
         apiCallIdlingResource = new ApiCallIdlingResource();
         Espresso.registerIdlingResources(apiCallIdlingResource);
         assertTrue(MyApplication.isLoggedIn());
+        InvitationsActivity.LOCAL_LOAD_LIMIT = 4;
     }
 
     @After
@@ -56,8 +58,35 @@ public class InvitationActivityTest {
     @Test
     public void testViewEvent() {
         new RecyclerViewHelper(R.id.rv_invitations)
+                .checkItemCount(InvitationsActivity.LOCAL_LOAD_LIMIT)
                 .clickItem(0);
         ActivityHelper.assertCurrentActivity(EventActivity.class);
+    }
+
+    @Test
+    public void testViewEventOver() {
+        // TODO
+        new RecyclerViewHelper(R.id.rv_invitations)
+                .checkItemCount(InvitationsActivity.LOCAL_LOAD_LIMIT)
+                .clickItem(InvitationsActivity.LOCAL_LOAD_LIMIT - 1);
+    }
+
+
+    @Test
+    public void testLoadMore() {
+        new RecyclerViewHelper(R.id.rv_invitations)
+                .checkItemCount(InvitationsActivity.LOCAL_LOAD_LIMIT)
+                .scrollToPosition(InvitationsActivity.LOCAL_LOAD_LIMIT-1)
+                .checkItemCount(greaterThan(InvitationsActivity.LOCAL_LOAD_LIMIT));
+    }
+
+
+
+    @Test
+    public void testRefresh() {
+        // TODO
+        new RecyclerViewHelper(R.id.rv_invitations)
+                .scrollUp();
     }
 
 

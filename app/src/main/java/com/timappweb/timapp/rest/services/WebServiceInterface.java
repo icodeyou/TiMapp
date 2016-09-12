@@ -4,6 +4,7 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.EventPeopleStats;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SpotCategory;
@@ -38,13 +39,11 @@ import retrofit2.http.QueryMap;
 public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
-    @GET("spots/reachable")
-    Call<PaginatedResponse<Spot>> spotReachable(@Query("latitude") double latitude, @Query("longitude") double longitude);
-
-    @GET("spots")
+    @GET("spots.json")
     Call<PaginatedResponse<Spot>> spots(@QueryMap Map<String, String> query);
 
     // ---------------------------------------------------------------------------------------------
+
     // Event
     @POST("places/add")
     Call<RestFeedback> addPlace(@Body Event event);
@@ -161,14 +160,6 @@ public interface WebServiceInterface {
      */
     @POST("Places/populars.json")
     Call<List<Event>> bestPlaces(@QueryMap Map<String, String> conditions);
-    /**
-     * Adding a place
-     * @param event
-     * @param restFeedback
-     */
-    // @POST("Places/add.json")
-    // void addPlace(@Body Event event, RestCallback<RestFeedback> restFeedback);
-
 
     /**
      * Used to get all event that are in a area
@@ -225,6 +216,10 @@ public interface WebServiceInterface {
 
     @POST("PlacesUsers/user.json")
     Call<List<UserEvent>> placeStatus();
+
+
+    @GET("PlacesUsers/stats/{id}.json")
+    Call<EventPeopleStats> eventPeopleStats(@Path("id") long eventId);
 
     // ---------------------------------------------------------------------------------------------
     // Quotas

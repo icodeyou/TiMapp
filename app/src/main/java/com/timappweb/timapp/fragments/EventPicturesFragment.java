@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +25,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.entities.ApplicationRules;
-import com.timappweb.timapp.data.loader.SectionRecyclerViewManager;
+import com.timappweb.timapp.data.loader.RecyclerViewManager;
+import com.timappweb.timapp.data.loader.sections.SectionRecyclerViewManager;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
@@ -114,7 +114,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
             initDataLoader();
 
             new SectionRecyclerViewManager(getContext(), picturesAdapter, mDataLoader)
-                    .setItemTransformer(new SectionRecyclerViewManager.ItemTransformer<Picture>(){
+                    .setItemTransformer(new RecyclerViewManager.ItemTransformer<Picture>(){
                         @Override
                         public AbstractFlexibleItem createItem(Picture data) {
                             return new PictureItem(data);

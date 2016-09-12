@@ -5,18 +5,12 @@ import android.location.Location;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 import com.timappweb.timapp.BR;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.data.queries.AreaQueryHelper;
-import com.timappweb.timapp.utils.DistanceHelper;
 
 import java.util.List;
 

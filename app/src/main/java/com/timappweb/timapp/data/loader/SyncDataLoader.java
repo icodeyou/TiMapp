@@ -9,21 +9,16 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.activeandroid.query.From;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.SyncHistory;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.sync.SyncAdapterOption;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
-import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -33,7 +28,6 @@ import java.io.IOException;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
-import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**
  * Created by Stephane on 18/08/2016.
@@ -225,9 +219,15 @@ public class SyncDataLoader<EntityType, This>
         return (This) this;
     }
 
+
     public This setSwipeAndRefreshLayout(SwipeRefreshLayout mSwipeAndRefreshLayout) {
+        return this.setSwipeAndRefreshLayout(mSwipeAndRefreshLayout, true);
+    }
+
+    public This setSwipeAndRefreshLayout(SwipeRefreshLayout mSwipeAndRefreshLayout, boolean addListener) {
         this.mSwipeAndRefreshLayout = mSwipeAndRefreshLayout;
-        mSwipeAndRefreshLayout.setOnRefreshListener(this);
+        if (addListener)
+            mSwipeAndRefreshLayout.setOnRefreshListener(this);
         return (This) this;
     }
 

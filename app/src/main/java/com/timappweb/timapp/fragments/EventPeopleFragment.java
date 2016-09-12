@@ -17,15 +17,19 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
+import com.timappweb.timapp.activities.NetworkErrorCallback;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.EventPeopleStats;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
+import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
@@ -34,6 +38,8 @@ import eu.davidea.flexibleadapter.common.DividerItemDecoration;
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
 import eu.davidea.flipview.FlipView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener {
@@ -61,14 +67,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     //private RecyclerViewMaterialAdapter mAdapter;
 
     // ---------------------------------------------------------------------------------------------
-
-    public static EventPeopleFragment newInstance(int columnCount) {
-        EventPeopleFragment fragment = new EventPeopleFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -109,9 +107,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getLoaderManager().getLoader(EventActivity.LOADER_ID_USERS).forceLoad();
+                userStatusLoader.refresh();
                 if (MyApplication.isLoggedIn()) {
-                    mInviteLoader.forceLoad();
+                    inviteSentLoader.refresh();
                 }
             }
         });
@@ -123,6 +121,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         UserEvent.class,
                         getEvent().getPeopleQuery(),
                         false))
+                .setSwipeAndRefreshLayout(mSwipeLayout, false)
                 .setCallback(new SyncDataLoader.Callback<UserEvent>() {
                     @Override
                     public void onLoadEnd(List<UserEvent> data) {
@@ -158,6 +157,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         EventsInvitation.class,
                         MyApplication.getCurrentUser().getInviteSentQuery(getEvent().getId()),
                         false))
+                .setSwipeAndRefreshLayout(mSwipeLayout, false)
                 .setCallback(new SyncDataLoader.Callback<EventsInvitation>() {
                     @Override
                     public void onLoadEnd(List<EventsInvitation> data) {
@@ -176,6 +176,24 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 });
     }
 
+
+    // TODO
+    public void loadPeopleStats(){
+        RestClient.buildCall(RestClient.service().eventPeopleStats(getEvent().getRemoteId()))
+            .onResponse(new HttpCallback<EventPeopleStats>() {
+                @Override
+                public void successful(EventPeopleStats peopleStat) {
+                    // TODO
+                }
+
+                @Override
+                public void notSuccessful() {
+
+                }
+            })
+            .onError(new NetworkErrorCallback(getContext()));
+    }
+
     @Override
     public void onResume() {
         Log.v(TAG, "onResume()");
@@ -188,6 +206,15 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         if (mInviteLoader!= null){
             mInviteLoader.forceLoad();
         }
+        EventBus.getDefault().register(userStatusLoader);
+        EventBus.getDefault().register(inviteSentLoader);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(userStatusLoader);
+        EventBus.getDefault().unregister(inviteSentLoader);
+        super.onStop();
     }
 
     @Override

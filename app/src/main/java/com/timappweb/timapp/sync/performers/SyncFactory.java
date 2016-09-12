@@ -1,7 +1,6 @@
 package com.timappweb.timapp.sync.performers;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.loader.sections.SectionSyncResult;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.events.SyncResultMessage;
@@ -50,7 +49,7 @@ public class SyncFactory {
                 });
     }
 
-    public static SyncPerformer syncInvitationsReceived(SyncAdapterOption options, final SectionSyncResult syncResultMessage) throws IOException, HttpResponseSyncException {
+    public static SyncPerformer syncInvitationsReceived(SyncAdapterOption options, final SyncResultMessage syncResultMessage) throws IOException, HttpResponseSyncException {
         return new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
                 .setLocalEntries(MyApplication.getCurrentUser().getInviteReceived())
                 .setSyncOptions(options)

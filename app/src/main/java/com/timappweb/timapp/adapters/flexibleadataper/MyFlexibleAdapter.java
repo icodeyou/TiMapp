@@ -5,6 +5,7 @@ import android.content.Context;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -74,5 +75,13 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	public void removeProgressItem() {
 		this.removeItemsOfType(R.layout.progress_item);
+	}
+
+	public ArrayList<AbstractFlexibleItem> getItemsCopy() {
+		ArrayList<AbstractFlexibleItem> list = new ArrayList<>(getItemCount());
+		for (int i = 0; i < getItemCount(); i++){
+			list.add(getItem(i));
+		}
+		return list;
 	}
 }

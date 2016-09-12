@@ -8,8 +8,11 @@ import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
+
+import retrofit2.Response;
 
 import static com.timappweb.timapp.data.loader.sections.SectionContainer.*;
 
@@ -20,6 +23,8 @@ import static com.timappweb.timapp.data.loader.sections.SectionContainer.*;
  */
 public class SectionDataLoader<T> implements DataLoaderInterface {
 
+
+    private long _lastLoad = 0;
 
     public enum LoadType {MORE, UPDATE, NEWEST}
 
@@ -133,19 +138,23 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     }
 
     private void load(PaginatedSection section) {
-        if (this.useCache && this.cacheEngine.contains(section)){
-            List<T> data = this.cacheEngine.get(section);
-            section.setStatus(LoadStatus.DONE);
-            if (callback != null) callback.onLoadEnd(section, data);
-        }
-        else{
-            this.remoteLoad(section);
+        synchronized (this) {
+            if (this.useCache && this.cacheEngine.contains(section)) {
+                List<T> data = this.cacheEngine.get(section);
+                section.setStatus(LoadStatus.DONE);
+                if (callback != null) callback.onLoadEnd(section, data);
+            } else {
+                this.remoteLoad(section);
+            }
         }
     }
 
 
     public boolean loadNewest(){
         if (isLoading()){
+            return false;
+        }
+        if (!Util.isOlderThan(this._lastLoad, this.minDelayForceRefresh)){
             return false;
         }
         PaginatedSection section = sectionContainer.first();
@@ -229,6 +238,16 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                         Log.e(TAG, "Cannot load section: " + newSection + ". Error: " + error.getMessage());
                         newSection.setStatus(LoadStatus.ERROR);
                         if (callback != null) callback.onLoadError(error, newSection);
+                    }
+                })
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(Response response, Throwable error) {
+                        switch (newSection.getLoadType()){
+                            case NEWEST:
+                                SectionDataLoader.this._lastLoad = System.currentTimeMillis();
+                                break;
+                        }
                     }
                 })
                 .perform();

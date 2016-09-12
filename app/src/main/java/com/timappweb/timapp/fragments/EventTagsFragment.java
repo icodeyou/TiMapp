@@ -35,6 +35,8 @@ import java.util.List;
 
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
+import org.greenrobot.eventbus.EventBus;
+
 
 public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener, SyncDataLoader.Callback<EventTag> {
 
@@ -94,12 +96,6 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mTagLoader.forceLoad();
-            }
-        });
     }
 
     private void initEventTagLoader() {
@@ -111,16 +107,10 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
                         EventTag.class,
                         getEvent().getTagsQuery(),
                         false))
-                .setCallback(this);
+                .setCallback(this)
+                .setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         eventTagLoader.getSyncOptions().setType(DataSyncAdapter.SYNC_TYPE_EVENT_TAGS);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mTagLoader.forceLoad();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
@@ -138,13 +128,27 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     @Override
     public void onResume() {
         super.onResume();
-        LocationManager.addOnLocationChangedListener(this);
+        //LocationManager.addOnLocationChangedListener(this);
+        eventTagLoader.refresh();
     }
     @Override
     public void onPause() {
         super.onResume();
-        LocationManager.removeLocationListener(this);
+        //LocationManager.removeLocationListener(this);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(eventTagLoader);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(eventTagLoader);
+        super.onStop();
+    }
+
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {

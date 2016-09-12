@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.assertions.RecyclerViewItemCountAssertion;
 
+import org.hamcrest.Matcher;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -61,6 +63,12 @@ public class RecyclerViewHelper {
         return this;
     }
 
+    public RecyclerViewHelper checkItemCount(Matcher<Integer> matcher){
+        viewInteractionRV
+                .check(new RecyclerViewItemCountAssertion(matcher));
+        return this;
+    }
+
     public RecyclerViewHelper checkLoadingMore() {
         // TODO
         return this;
@@ -71,5 +79,10 @@ public class RecyclerViewHelper {
             recyclerView = (RecyclerView) ActivityHelper.getActivityInstance().findViewById(id);
         }
         return recyclerView;
+    }
+
+    public RecyclerViewHelper scrollUp() {
+        // TODO
+        return this;
     }
 }

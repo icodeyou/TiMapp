@@ -7,8 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -18,45 +16,43 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.models.SpotItem;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
+import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.PaginateDataLoader;
-import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
-import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
-import com.timappweb.timapp.data.loader.sections.SectionContainer;
+import com.timappweb.timapp.data.loader.paginate.PaginateRecyclerViewManager;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
-import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
-import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback, PaginateDataLoader.Callback {
 
@@ -80,7 +76,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private CategorySelectorView                    categorySelector;
     private AddressResultReceiver                   mAddressResultReceiver;
     private Menu                                    menu;
-    private SpotsAdapter                            spotsAdapter;
+    private SpotsAdapter mAdapter;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
 
     private PaginateDataLoader mDataLoader;
@@ -113,6 +109,18 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         initAdapters();
         setListeners();
         initDataLoader();
+
+        new PaginateRecyclerViewManager(this, mAdapter, mDataLoader)
+                .setItemTransformer(new RecyclerViewManager.ItemTransformer<Spot>() {
+                    @Override
+                    public AbstractFlexibleItem createItem(Spot data) {
+                        return new SpotItem(data);
+                    }
+                })
+                .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
+                .setCallback(this);
 
         if (LocationManager.hasLastLocation()){
             mDataLoader.loadNextPage();
@@ -174,15 +182,16 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         categorySelector.setAdapters(spotCategoriesAdapterMain, spotCategoriesAdapterAll);
 
         spotsRv.setLayoutManager(new LinearLayoutManager(this));
-        spotsAdapter = new SpotsAdapter(this);
-        spotsAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
+        mAdapter = new SpotsAdapter(this);
+        mAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
-            public void onClick(int position) {
-                currentSpot = spotsAdapter.getItem(position);
+            public boolean onItemClick(int position) {
+                currentSpot = mAdapter.getSpot(position);
                 finishActivityResult(currentSpot);
+                return false;
             }
         });
-        spotsRv.setAdapter(spotsAdapter);
+        spotsRv.setAdapter(mAdapter);
     }
 
     private void setListeners() {
@@ -199,28 +208,19 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             @Override
             public void afterTextChanged(Editable s) {
                 String newText = s.toString();
-                currentSpot.setName(newText);
-                if (spotsAdapter != null && spotsAdapter.getData() != null){
-                    final List<Spot> filteredSpotList = filter(spotsAdapter.getData(), newText);
-                    spotsAdapter.animateTo(filteredSpotList);
+                spotsRv.scrollToPosition(0);
+
+                if (mAdapter.hasNewSearchText(newText)) {
+                    Log.d(TAG, "onQueryTextChange newText: " + newText);
+                    mAdapter.setSearchText(newText);
+                    //Fill and Filter mItems with your custom list and automatically animate the changes
+                    //Watch out! The original list must be a copy
+                    mAdapter.filterItems(mAdapter.getItemsCopy(), 200L);
                 }
 
-                spotsRv.scrollToPosition(0);
                 setButtonValidation();
             }
         });
-    }
-    private List<Spot> filter(List<Spot> spots, String query) {
-        query = query.toLowerCase();
-
-        final List<Spot> filteredSpotList = new ArrayList<>();
-        for (Spot spot : spots) {
-            final String text = spot.getName().toLowerCase();
-            if(text.contains(query)) {
-                filteredSpotList.add(spot);
-            }
-        }
-        return filteredSpotList;
     }
 
     @Override
@@ -337,15 +337,12 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
     @Override
     public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
-        spotsAdapter.setData(data);
-        if(currentSpot!=null) { // we can't call afterTextChanged before currentSpot is initialized
-            etNameSpot.setText("");
-        }
+        // If we need more logic
     }
 
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
-        //Toast.makeText(this, R.string.cannot_load_spot_around, Toast.LENGTH_LONG).show();
+        // If we need more logic
     }
 
     // =============================================================================================

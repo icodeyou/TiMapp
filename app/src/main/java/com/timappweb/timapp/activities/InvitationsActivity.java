@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,7 +13,8 @@ import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.DBCacheEngine;
-import com.timappweb.timapp.data.loader.SectionRecyclerViewManager;
+import com.timappweb.timapp.data.loader.RecyclerViewManager;
+import com.timappweb.timapp.data.loader.sections.SectionRecyclerViewManager;
 import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
@@ -39,8 +39,8 @@ public class InvitationsActivity extends BaseActivity implements
 
     private String              TAG                             = "ListFriendsActivity";
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
-    private static final int    LOCAL_LOAD_LIMIT                = 3;
-    private static final int    REMOTE_LOAD_LIMIT               = 3;
+    public static int    LOCAL_LOAD_LIMIT                = 5;
+    private static final int    REMOTE_LOAD_LIMIT               = 5;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -70,7 +70,7 @@ public class InvitationsActivity extends BaseActivity implements
         initDataLoader();
 
         new SectionRecyclerViewManager(this, adapter, mDataLoader)
-                .setItemTransformer(new SectionRecyclerViewManager.ItemTransformer<EventsInvitation>() {
+                .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventsInvitation>() {
                     @Override
                     public AbstractFlexibleItem createItem(EventsInvitation data) {
                         return new InvitationItem(data);

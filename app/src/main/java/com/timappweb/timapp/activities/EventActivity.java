@@ -372,7 +372,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         fragmentPictures = (EventPicturesFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPicturesFragment.class.getName()));
         fragmentTags = (EventTagsFragment) mFragmentGroup.add(Fragment.instantiate(this, EventTagsFragment.class.getName()));
         fragmentPeople = (EventPeopleFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPeopleFragment.class.getName()));
-
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
         mFragmentAdapter = new EventPagerAdapter(getSupportFragmentManager(), mFragmentGroup.getFragments());
         mMaterialViewPager = (MaterialViewPager) findViewById(R.id.event_viewpager);

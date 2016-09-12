@@ -50,7 +50,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     private View                    progressView;
     private InputMethodManager      imm;
     private Menu                    mainMenu;
-    private boolean                 eventsLoaded;
     private MapAreaLoaderCallback<Event>    mEventLoaderModel;
 
     // ----------------------------------------------------------------------------------------------
@@ -63,8 +62,8 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         initToolbar(true);
 
         progressView = findViewById(R.id.progress_view);
+        progressView.setVisibility(View.VISIBLE);
         rvEvents = (RecyclerView) findViewById(R.id.list_events);
-        eventsLoaded = false;
 
         initRvAndAdapter();
         LocationManager.addOnLocationChangedListener(this);
@@ -92,11 +91,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_locate, menu);
         return true;
@@ -112,13 +106,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -146,7 +133,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
     @Override
     public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
-        eventsLoaded = true;
         Log.d(TAG, "Loading " + data.size() + " viewPlace(s)");
         EventsAdapter placeAdapter = ((EventsAdapter) rvEvents.getAdapter());
         placeAdapter.clear();

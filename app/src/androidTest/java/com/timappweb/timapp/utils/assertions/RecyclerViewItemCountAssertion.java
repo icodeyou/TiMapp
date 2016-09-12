@@ -5,7 +5,10 @@ import android.support.test.espresso.ViewAssertion;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.hamcrest.Matcher;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -13,10 +16,14 @@ import static org.hamcrest.Matchers.is;
  */
 public class RecyclerViewItemCountAssertion implements ViewAssertion {
 
-    private final int expectedCount;
+    private final Matcher<Integer> matcher;
 
     public RecyclerViewItemCountAssertion(int expectedCount) {
-        this.expectedCount = expectedCount;
+        this(is(expectedCount));
+    }
+
+    public RecyclerViewItemCountAssertion(Matcher<Integer> matcher) {
+        this.matcher = matcher;
     }
 
     @Override
@@ -27,7 +34,7 @@ public class RecyclerViewItemCountAssertion implements ViewAssertion {
 
         RecyclerView recyclerView = (RecyclerView) view;
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
-        assertThat(adapter.getItemCount(), is(expectedCount));
+        assertThat(adapter.getItemCount(), matcher);
     }
 
 }

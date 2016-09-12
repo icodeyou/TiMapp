@@ -467,9 +467,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         displayEvent(event);
 
         removeCurrentMarker();
-
         MarkerOptions markerOptions = event.getMarkerOption();
-
         markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker_secondary","drawable", getContext().getPackageName())));
         markerOptions.anchor(0.5f,0.5f); //center Marker Bitmap
         selectingMarker = gMap.addMarker(markerOptions);
