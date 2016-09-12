@@ -10,18 +10,13 @@ public class AddSpotMapper {
 
     public static JsonObject toJson(Spot spot){
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", spot.getName());
+        jsonObject.addProperty("latitude", spot.latitude);
+        jsonObject.addProperty("longitude", spot.longitude);
+        if (spot.hasCategory()){
+            jsonObject.addProperty("spot_category_id",  spot.getCategory().getRemoteId());
+        }
 
-        if (spot.hasRemoteId()){
-            jsonObject.addProperty("id", spot.getRemoteId());
-        }
-        else{
-            jsonObject.addProperty("name", spot.getName());
-            jsonObject.addProperty("latitude", spot.latitude);
-            jsonObject.addProperty("longitude", spot.longitude);
-            if (spot.hasCategory()){
-                jsonObject.addProperty("spot_category_id",  spot.getCategory().getRemoteId());
-            }
-        }
         return jsonObject;
     }
 

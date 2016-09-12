@@ -28,6 +28,7 @@ public class PresentationActivity extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(new PresentationPagerAdapter(this));
 
+
         initListeners();
     }
 

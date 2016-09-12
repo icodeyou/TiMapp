@@ -33,6 +33,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.fragments.EventBaseFragment;
 import com.timappweb.timapp.fragments.EventInformationFragment;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.fragments.EventTagsFragment;
@@ -315,32 +316,61 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         if (!isEventLoaded){
             isEventLoaded = true;
 
-           // eventView.setEvent(event);
             initFragments();
+            parseIntentParameters();
         }
 
         updateView();
     }
 
-    public void parseIntentParameters() {
+    private void parseIntentParameters() {
         Bundle extras = getIntent().getExtras();
         if(extras!=null) {
             parseActionParameter(extras.getInt(IntentsUtils.KEY_ACTION, -1));
         }
     }
 
-    public void parseActionParameter(int action){
+    public void parseActionParameter(final int action){
+        EventBaseFragment fragmentOriginPost;
+        switch (action) {
+            case IntentsUtils.ACTION_COMING:
+                fragmentOriginPost = fragmentInformation;
+                break;
+            case IntentsUtils.ACTION_CAMERA:
+                fragmentOriginPost = fragmentPictures;
+                break;
+            case IntentsUtils.ACTION_TAGS:
+                fragmentOriginPost = fragmentTags;
+                break;
+            case IntentsUtils.ACTION_PEOPLE:
+                fragmentOriginPost = fragmentPeople;
+                break;
+            default:
+                Log.e(TAG,"No action is defined in method parseActionParameter");
+                return;
+        }
+        //Check that fragment view has been created.
+        if(fragmentOriginPost.getView()!=null) {
+            actionPost(action);
+        } else {
+            fragmentOriginPost.setCreateViewCallback(new EventBaseFragment.OnCreateViewCallback() {
+                @Override
+                public void onCreateView() {
+                    actionPost(action);
+                }
+            });
+        }
+    }
+
+    private void actionPost(int action) {
         switch (action) {
             case IntentsUtils.ACTION_CAMERA:
                 openAddPictureActivity();
-                //mMaterialViewPager.setCurrentItem(0);
                 break;
             case IntentsUtils.ACTION_TAGS:
-                //mMaterialViewPager.setCurrentItem(1);
                 openAddTagsActivity();
                 break;
             case IntentsUtils.ACTION_PEOPLE:
-                //mMaterialViewPager.setCurrentItem(2);
                 openAddPeopleActivity();
                 break;
             case IntentsUtils.ACTION_COMING:

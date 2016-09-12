@@ -78,6 +78,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private Menu                                    menu;
     private SpotsAdapter mAdapter;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
+    private View                                    progressView;
 
     private PaginateDataLoader mDataLoader;
 
@@ -104,6 +105,11 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
         etNameSpot = (EditText) findViewById(R.id.name_spot);
         mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        progressView = findViewById(R.id.progress_view);
+
+        //TODO Jack : Remove progressView somewhere
+        //TODO Jack : No data view = Where are you ? Indicate a category and a name for your current place. Then click on the button CREATE.
+        // (TUTO: If the place already exists in the list below, you can just select it.)
 
         initEditText();
         initAdapters();
@@ -120,7 +126,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
                 .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                .setCallback(this);
+                .setCallback(this)
+                // .setNoDataView(noDataView) TODO: Jack uncomment this to set the no data view
+                ;
 
         if (LocationManager.hasLastLocation()){
             mDataLoader.loadNextPage();

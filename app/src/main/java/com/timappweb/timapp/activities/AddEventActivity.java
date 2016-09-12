@@ -198,8 +198,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     Toast.makeText(getBaseContext(), R.string.waiting_for_location, Toast.LENGTH_LONG).show();
                 }
                 return true;
-            case android.R.id.home:
-                //Action to do in case of home button pressed
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -275,7 +273,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
                     @Override
                     public void notSuccessful() {
-                        Toast.makeText(AddEventActivity.this, R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+                        if (response.code() != 400){
+                            Toast.makeText(AddEventActivity.this, R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .onError(new NetworkErrorCallback(this))
