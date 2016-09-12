@@ -22,12 +22,14 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	// ---------------------------------------------------------------------------------------------
 
 	protected Context mContext;
+	private ArrayList<AbstractFlexibleItem> mItemsCopy;
 
 	// ---------------------------------------------------------------------------------------------
 
 	public MyFlexibleAdapter(Context context) {
 		super(new LinkedList<AbstractFlexibleItem>(), context);
 		mContext = context;
+		mItemsCopy = new ArrayList<>();
 		setNotifyChangeOfUnfilteredItems(true);
 	}
 
@@ -77,11 +79,15 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		this.removeItemsOfType(R.layout.progress_item);
 	}
 
-	public ArrayList<AbstractFlexibleItem> getItemsCopy() {
-		ArrayList<AbstractFlexibleItem> list = new ArrayList<>(getItemCount());
+	public ArrayList<AbstractFlexibleItem> createItemsCopy() {
+		mItemsCopy = new ArrayList<>(getItemCount());
 		for (int i = 0; i < getItemCount(); i++){
-			list.add(getItem(i));
+			mItemsCopy.add(getItem(i));
 		}
-		return list;
+		return mItemsCopy;
+	}
+
+	public ArrayList<AbstractFlexibleItem> getItemsCopy() {
+		return mItemsCopy;
 	}
 }

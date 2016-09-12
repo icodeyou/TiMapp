@@ -42,12 +42,13 @@ public class SpotItem extends AbstractModelItem<SpotItem.SpotViewHolder>
     @Override
     public SpotViewHolder createViewHolder(FlexibleAdapter adapter, LayoutInflater inflater, ViewGroup parent) {
         LayoutSpotBinding mBinding  = DataBindingUtil.inflate(inflater, getLayoutRes(), parent, false);
-        return new SpotViewHolder(mBinding, inflater.inflate(getLayoutRes(), parent, false), adapter);
+        return new SpotViewHolder(mBinding.getRoot(), mBinding, adapter);
     }
 
     @Override
     public void bindViewHolder(final FlexibleAdapter adapter, SpotViewHolder holder, final int position, List payloads) {
         holder.mBinding.setSpot(spot);
+        //holder.mBinding.notifyChange();
         holder.mBinding.executePendingBindings();
     }
 
@@ -69,9 +70,9 @@ public class SpotItem extends AbstractModelItem<SpotItem.SpotViewHolder>
 
         private final LayoutSpotBinding mBinding;
 
-        SpotViewHolder(LayoutSpotBinding mBinding, View itemView, FlexibleAdapter adapter) {
+        SpotViewHolder(View itemView, LayoutSpotBinding binding, FlexibleAdapter adapter) {
             super(itemView, adapter);
-            this.mBinding = mBinding;
+            this.mBinding = binding;
         }
 
     }

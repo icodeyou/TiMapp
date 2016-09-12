@@ -80,7 +80,7 @@ public class SectionRecyclerViewManager
                 break;
         }
 
-        this.updateNoDataView();
+        //this.updateNoDataView();
     }
 
     @Override
@@ -91,7 +91,7 @@ public class SectionRecyclerViewManager
         if (section.getLoadType() == SectionDataLoader.LoadType.MORE){
             mAdapter.onLoadMoreComplete(null);
         }
-        this.updateNoDataView();
+        //this.updateNoDataView();
 
         if (this.mCallback != null){
             this.mCallback.onLoadError(error, section);

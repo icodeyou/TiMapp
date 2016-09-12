@@ -41,7 +41,7 @@ public class PaginateDataLoader<T> {
         return loadCurrentPage();
     }
 
-    public boolean loadCurrentPage(){
+    public synchronized boolean loadCurrentPage(){
         if (isInCache(pageInfo.getCurrentPage())){
             List items = getCache(pageInfo.getCurrentPage());
             if (callback != null) callback.onLoadEnd(pageInfo, items);

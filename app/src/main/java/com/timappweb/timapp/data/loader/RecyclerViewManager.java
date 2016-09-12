@@ -40,15 +40,22 @@ public abstract class RecyclerViewManager<This>
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(state);
     }
 
+    /*
     protected void updateNoDataView() {
         if (this.mNoDataView != null){
             mNoDataView.setVisibility(mAdapter.hasData()
                     ? View.GONE
                     : View.VISIBLE);
         }
-    }
+    }*/
 
-    public This setNoDataView(View noDataView) {
+    public This setNoDataView(final View noDataView) {
+        mAdapter.initializeListeners(new FlexibleAdapter.OnUpdateListener() {
+            @Override
+            public void onUpdateEmptyView(int size) {
+                noDataView.setVisibility(size == 0 ? View.VISIBLE : View.GONE);
+            }
+        });
         this.mNoDataView = noDataView;
         return (This) this;
     }

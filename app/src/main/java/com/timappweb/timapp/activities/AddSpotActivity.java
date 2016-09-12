@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -199,6 +198,12 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 return false;
             }
         });
+        mAdapter.initializeListeners(new FlexibleAdapter.OnUpdateListener() {
+            @Override
+            public void onUpdateEmptyView(int size) {
+
+            }
+        });
         spotsRv.setAdapter(mAdapter);
     }
 
@@ -217,7 +222,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             public void afterTextChanged(Editable s) {
                 String newText = s.toString();
                 spotsRv.scrollToPosition(0);
-
+                currentSpot.setName(newText);
                 if (mAdapter.hasNewSearchText(newText)) {
                     Log.d(TAG, "onQueryTextChange newText: " + newText);
                     mAdapter.setSearchText(newText);
@@ -264,7 +269,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             etNameSpot.setSelection(currentSpot.name.length());
         }
         if (LocationManager.hasLastLocation()){
-            requestReverseGeocoding(LocationManager.getLastLocation());
+            //requestReverseGeocoding(LocationManager.getLastLocation());
         }
     }
 
@@ -346,6 +351,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
         // If we need more logic
+        mAdapter.createItemsCopy();
     }
 
     @Override

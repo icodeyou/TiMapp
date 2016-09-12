@@ -26,27 +26,9 @@ public class MapAreaLoaderCallback<T extends SyncBaseModel> extends PaginateData
 
     // ---------------------------------------------------------------------------------------------
 
-    private LatLngBounds                bounds;
-    /**
-     * Margin when loading place max reachable around user (in meters)
-     */
-    private int                         expandSize = 0;
-
-    // ---------------------------------------------------------------------------------------------
-
     public MapAreaLoaderCallback() {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------
-
-    public MapAreaLoaderCallback<T> setExpandSize(int expandSize) {
-        this.expandSize = expandSize;
-        return this;
-    }
-
-    public boolean hasBounds() {
-        return bounds != null;
-    }
 
 }

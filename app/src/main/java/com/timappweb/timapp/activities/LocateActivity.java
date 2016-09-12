@@ -121,13 +121,15 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         // if not loaded yet or if user location changed too much we need to reload places
-        if (lastLocation == null){
-            mEventLoaderModel.loadNextPage();
-        }
-        else{
-            mEventLoaderModel
-                    .clear()
-                    .loadNextPage();
+        if (!mEventLoaderModel.isLoading()){
+            if (lastLocation == null){
+                mEventLoaderModel.loadNextPage();
+            }
+            else{
+                mEventLoaderModel
+                        .clear()
+                        .loadNextPage();
+            }
         }
     }
 

@@ -59,13 +59,20 @@ public class PaginateRecyclerViewManager
         List items = mItemTransformer.transform(data);
         mAdapter.onLoadMoreComplete(items);
 
-        this.updateNoDataView();
+        if (this.mCallback != null){
+            this.mCallback.onLoadEnd(info, data);
+        }
+         //this.updateNoDataView();
     }
 
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
         setRefreshing(false);
-        this.updateNoDataView();
+        //this.updateNoDataView();
+
+        if (this.mCallback != null){
+            this.mCallback.onLoadError(error, info);
+        }
 
         if (error instanceof IOException) {
             Toast.makeText(mContext, R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
