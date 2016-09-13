@@ -75,6 +75,18 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
+    public static void loginOrRedirectHome(Activity activity) {
+        if(!MyApplication.isLoggedIn()) {
+            login(activity);
+        } else {
+            if(activity.isTaskRoot()) {
+                home(activity);
+            } else {
+                activity.finish();
+            }
+        }
+    }
+
     public static void share(Activity activity){
         if (!requireLogin(activity, false))
             return;

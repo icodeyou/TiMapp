@@ -26,6 +26,8 @@ public class PresentationActivity extends BaseActivity {
 
     private int previousPosition;
 
+    private PresentationActivity activity;
+
     //source :
     //https://www.bignerdranch.com/blog/viewpager-without-fragments/
 
@@ -40,6 +42,7 @@ public class PresentationActivity extends BaseActivity {
         skipButton = findViewById(R.id.skip_button);
         nextButton = findViewById(R.id.next_button);
         buttonsBottom = findViewById(R.id.buttons_layout);
+        activity = this;
 
         initListeners();
     }
@@ -169,7 +172,7 @@ public class PresentationActivity extends BaseActivity {
                 letsgetitstarted.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        IntentsUtils.login(getBaseContext());
+                        IntentsUtils.loginOrRedirectHome(activity);
                     }
                 });
             }

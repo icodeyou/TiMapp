@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Don't depend on the language -->
     <string name="app_name">TiMapp</string>
     <string name="db_name">database_timapp</string>
+    <string name="p_key_one">TiMapp Presentation (1)</string>
+    <string name="p_key_two">TiMapp Presentation (2)</string>
+    <string name="p_key_three">TiMapp Presentation (3)</string>
+    <string name="p_key_four">TiMapp Presentation (4)</string>
+    <string name="p_key_five">TiMapp Presentation (5)</string>
+    <string name="p_key_six">TiMapp Presentation (6)</string>
+    <string name="p_key_seven">TiMapp Presentation (7)</string>
+    <string name="app_id">1634741340120823</string>
+    <string name="namespace">timappweb</string>
 
     <string name="hello_world">Hello world!</string>
 
+    <!-- Titles Activities -->
     <string name="title_activity_explore">Explore</string>
     <string name="title_activity_place">Event</string>
     <string name="title_activity_invite_friends">Motivate them</string>
@@ -21,30 +33,43 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_locate">Checking around</string>
 
-    <!-- Add EventPost UserActivity -->
+    <!-- Navigation Drawer -->
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_logout">Log out</string>
     <string name="nav_login">Log in</string>
-
-    <string name="alert_dialog_ok">Ok</string>
-    <string name="error_cannot_get_location">Hey, where are you ? We lost you. Go out, breathe !</string>
-
-    <!-- Menus action bar-->
-    <string name="menu_share">Share</string>
-    <string name="menu_edit_profile">Edit profile</string>
-
-    <!-- Nav -->
     <string name="nav_explore">Explore</string>
     <string name="nav_tag_around">Add event</string>
     <string name="nav_my_friends">My friends</string>
     <string name="nav_my_invitations">My invitations</string>
     <string name="nav_share">Get more friends</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-<!--    <string name="facebook_app_id">zY00cczs2SG28RTn1bZQvsCftvI=</string> -->
-    <string name="app_id">1634741340120823</string>
-    <string name="namespace">timappweb</string>
+
+    <!-- Generic Messages -->
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="error_cannot_get_location">Hey, where are you ? We lost you. Go out, breathe !</string>
+
+
+    <!-- .............................................................................-->
+    <!-- Items List -->
+    <!-- .............................................................................-->
+
+    <!-- item invitation -->
+    <string name="former_username">Username</string>
+    <string name="former_time">Time</string>
+
+    <!-- .............................................................................-->
+
+
+
+    <!-- Fragment Event Information -->
+    <string name="i_am_coming">I\'m coming</string>
+    <string name="i_am_here">I\'m here</string>
+
+    <!-- Menus action bar-->
+    <string name="menu_share">Share</string>
+    <string name="menu_edit_profile">Edit profile</string>
+
 
     <!-- _____________________________________________________________-->
     <!-- TOASTS -->
@@ -74,8 +99,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="error_require_login">You must be logged in to perform this action</string>
     <string name="no_network_access_title">No network access</string>
     <string name="hint_searchview_filter">Search</string>
-    <string name="main_text_publish_activity">CONFIRM</string>
-    <string name="text_anonymous">Anonymous</string>
     <string name="hint_event_name">Event name</string>
     <string name="hint_spot_name">Name of the place</string>
     <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
@@ -83,30 +106,14 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="searchview_hint_no_tags">Type a tag here</string>
     <string name="searchview_hint_few_tags_part_one">You can add up to&#160;</string>
     <string name="searchview_hint_few_tags_part_two">&#160;tags</string>
-    <string name="searchview_hint_2">2 tags left</string>
-    <string name="searchview_hint_1">One more !</string>
-    <string name="loading_tags">Loading tags</string>
-    <string name="loading_pictures">Loading pictures</string>
-    <string name="loading_posts">Loading people</string>
-    <string name="uploading_tags">Uploading tags</string>
     <string name="no_pic">There isn\'t any picture here yet.</string>
     <string name="no_tags">No tags yet.</string>
     <string name="no_people">Nobody has posted here.</string>
-    <string name="text_last_post">Last eventPost</string>
-    <string name="button_add_tags">Tags</string>
-    <string name="button_add_pic">Photos</string>
-    <string name="button_add_people">People</string>
-    <string name="please_enable_internet">Please make sure your phone has an internet connection and start again.</string>
-    <string name="text_no_event_around1">There isn\'t any event near you\nright now.</string>
-    <!--<string name="text_no_event_around2">Feel free to create one\nto inform the world.</string>-->
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
     <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the big red button to invite some of your friends.</string>
     <string name="subject_share_activity">Share TiMapp with your friends !</string>
-    <string name="checking_around">Please wait while we load the events that already exist here</string>
-    <string name="or_text_login">Or</string>
-    <string name="text_create_account_login">Create account</string>
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
     <string name="text_tags_left_3">3 tags left</string>
     <string name="text_tags_left_2">2 tags left</string>
@@ -115,52 +122,24 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="events_created">Events created</string>
     <string name="edit_first_profile1">Well done.</string>
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
-    <string name="place_removed">This event does not exists anymore</string>
 
     <!-- Can't load -->
     <string name="cannot_load">We cannot load any data.\nCheck your internet connection.</string>
-    <string name="cannot_load_profile">We cannot load your profile.\nCheck your internet connection.</string>
-    <string name="cannot_load_events">We cannot load the events.\nCheck your internet connection.</string>
-    <string name="cannot_load_tags">We cannot load the tags.\nCheck your internet connection.</string>
-    <string name="cannot_load_pictures">We cannot load the pictures.\nCheck your internet connection.</string>
-    <string name="cannot_load_posts">We cannot load the posts.\nCheck your internet connection.</string>
-
-    <!-- TOASTS -->
-    <string name="cannot_add_coming_status">Coming Failed. Please Try again later</string><string name="create_second_post_delay">You\'ve already added a eventPost a moment ago. Please wait before adding a new one!</string>
-    <string name="create_second_place_delay">You\'ve already added a event a moment ago. Please wait before adding a new one!</string>
-    <string name="cannot_add_more_friends">You can\'t add more than 10 friends</string>
 
     <!--Headers Event People-->
     <string name="header_coming">On their way</string>
     <string name="header_invited">Friends invited</string>
     <string name="header_here">Here</string>
 
-
-    <string name="drawer_title1">TiM</string>
-    <string name="drawer_title2">App</string>
     <string name="slogan">Find. Enjoy. Share.</string>
-    <string name="coming_button">Go</string>
-    <string name="on_my_way">On My Way</string>
-    <string name="tags_upcoming">Tags upcoming</string>
-    <string name="after_create_place_clicked">Thanks for sharing</string>
-    <string name="text_no_last_post">Never posted anything</string>
     <string name="define_yourself_tag">DefineYourself</string>
     <string name="newbie_tag">Newbie</string>
-    <string name="log_set_adapter_placepeoplefragment">Setting adapter with list of size :</string>
     <string name="menu_search_tags">Search tags</string>
     <string name="no_events_message1">There are no events in this area!</string>
     <string name="uploading_pic">Uploading picture</string>
     <string name="counter_over">Over !</string>
-    <string name="loading_friends">Loading friends</string>
-    <string name="loading_invitations">Loading invitations</string>
     <string name="define_yourself">Define yourself</string>
     <string name="text_no_invitations">No invitation at the moment</string>
-    <string name="title_add_spot">Where are you ?</string>
-    <string name="title_add_event">What is it ?</string>
-    <string name="no_place_attach">Pin a place</string>
-    <string name="add_spot">Add a place</string>
-    <string name="where_are_you">Where are you ?</string>
-
 
     <string name="sync_account_type">timapp.timappweb.com</string>
     <string name="content_authority_config">com.timappweb.timapp.config.provider</string>
@@ -168,52 +147,18 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="content_authority_user">com.timappweb.timapp.data.provider.user</string>
     <string name="menu_title_community">Community</string>
     <string name="menu_title_account">Account</string>
-    <string name="unknown_category">Unknown category</string>
     <string name="hint_write_description">Description</string>
-    <string name="iamhere">I\'m here !</string>
-    <string name="iamcoming">I\'m coming !</string>
-    <string name="please_wait_location">Please wait while we get your location</string>
-    <string name="event_over_change_status">The event is finished, you can\'t change your status !</string>
     <string name="cannot_notify_status">Sorry, you cannot notify your status for now</string>
-    <string name="hint_event_location">Event location</string>
-    <string name="btn_start_navigation">Start navigation</string>
-    <string name="title_event_location">Location</string>
-    <string name="no_event_description">There is no description for this event.</string>
-    <string name="hint_spot_category">Category</string>
-    <string name="label_spot_name">Name</string>
-    <string name="label_category_name">Category</string>
-    <string name="btn_submit_new_spot">Add</string>
-    <string name="former_username">Former user</string>
-    <string name="former_time">Former time</string>
-    <string name="event_over_points">Over!</string>
-    <string name="formAddEventLabelDescription">Description</string>
-    <string name="formAddEventLabelPicture">Picture</string>
-    <string name="formAddEventButtonAddSpot">Create a new place</string>
-    <string name="loading_address">Loading adress</string>
-    <string name="event_organizer">Organised by</string>
-    <string name="event_popularity">Popularity</string>
-    <string name="event_description">Description</string>
     <string name="more">More</string>
     <string name="pick_a_category">Pick a category</string>
-    <string name="tags">tags</string>
-    <string name="pics">pics</string>
     <string name="profile_saved">Your profile has been saved</string>
     <string name="cannot_save_your_profile">Your profile cannot be saved for now. Sorry...</string>
-    <string name="posts">posts</string>
     <string name="fatal_error_unknown_reason_title">Something bad happened...</string>
     <string name="fatal_error_unknown_reason_message">Sorry, but something went wrong. You need to restart your application. If this message appear again, try updating your application.</string>
     <string name="no_fine_location">We don\'t have a fine location. Make sure your gps is enabled.</string>
-    <string name="fatal_error_server_down_message">Sorry we cannot reach our server for now. Try again later.</string>
-    <string name="fatal_error_server_down_title">Cannot reach servers</string>
     <string name="fatal_error_no_network_title">No network available</string>
     <string name="fatal_error_no_network_message">You don\'t have a network access.</string>
-    <string name="fatal_error_cannot_sync_title">Cannot sync application</string>
-    <string name="fatal_error_cannot_sync_message">Sorry but we cannot reach our server to sync your application. We will be back very soon, try again later.</string>
-    <string name="done">Done</string>
     <string name="post">Post</string>
-    <string name="i_am_here">I\'m here</string>
-    <string name="i_am_coming">I\'m coming</string>
-    <string name="internet_connection">Internet Connection</string>
     <string name="no_internet_connection_message">It seems that you don\'t have a network access.</string>
     <string name="action_performed_not_successful">Sorry but this action is not available right now. Try again later.</string>
     <string name="form_invalid_input">Please correct required fields before submitting.</string>
@@ -222,7 +167,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="friend_already_invited">Invitation already sent!</string>
     <string name="action_list">List</string>
     <string name="error_require_gps">We need your location to do that</string>
-    <string name="select_at_least_one_tag">Select at least one tag</string>
     <string name="quota_wait_string">Please wait %s before posting again</string>
     <string name="quota_wait_not_defined">Please wait %s before posting again</string>
     <string name="cannot_upload_picture">We cannot upload this picture right now. Please try again later.</string>
@@ -236,7 +180,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="please_update_app">Oups there has been a little probleme here, it will be fix in the next release !</string>
     <string name="upload_picture_in_progress">Please wait the end of the current upload</string>
     <string name="thanks_for_add_tag">Thank you for your tags !</string>
-    <string name="action_delete">Delete</string>
     <string name="action_select_all">Select all</string>
     <string name="action_unselect_all">Unselect all</string>
     <string name="event_does_not_exists_anymore">This event does not exist anymore</string>
@@ -244,13 +187,6 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="how_it_works">How it works</string>
     <string name="presentation_two_text"><![CDATA[With TiMapp,\n find & share geoloated events that are happening right now.]]></string>
     <string name="post_pics_and_tags">Post pics &amp; tags</string>
-    <string name="p_key_one">TiMapp Presentation (1)</string>
-    <string name="p_key_two">TiMapp Presentation (2)</string>
-    <string name="p_key_three">TiMapp Presentation (3)</string>
-    <string name="p_key_four">TiMapp Presentation (4)</string>
-    <string name="p_key_five">TiMapp Presentation (5)</string>
-    <string name="p_key_six">TiMapp Presentation (6)</string>
-    <string name="p_key_seven">TiMapp Presentation (7)</string>
     <string name="invite_people">Invite people</string>
     <string name="text_p_four">Add the events around you on the map by choosing a name and a category.</string>
     <string name="share_page_p_one">Your posts provide Real Time Rating for the community</string>
