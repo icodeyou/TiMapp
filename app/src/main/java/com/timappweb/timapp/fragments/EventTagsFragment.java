@@ -64,30 +64,34 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        return inflater.inflate(R.layout.fragment_event_tags, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_tags, container, false);
+        initVariables(view);
 
+        return view;
+
+    }
+
+    private void initVariables(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list_tags);
+        noTagsView = view.findViewById(R.id.no_tags_view);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
+        tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
+        mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Find views
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list_tags);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setHasFixedSize(true);
 
-        noTagsView = view.findViewById(R.id.no_tags_view);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
-
-        tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         tagsAndCountersAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
                 IntentsUtils.postEvent(eventActivity, eventActivity.getEvent(), IntentsUtils.ACTION_TAGS);
             }
         });
-        mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);

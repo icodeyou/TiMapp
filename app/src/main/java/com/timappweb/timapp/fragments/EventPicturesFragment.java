@@ -89,16 +89,19 @@ public class EventPicturesFragment extends EventBaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
-        //Views
+        initVariables(root);
+
+        initAdapter();
+
+        return root;
+    }
+
+    private void initVariables(View root) {
         noPicView = root.findViewById(R.id.no_pictures_view);
         uploadView = root.findViewById(R.id.upload_view);
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
-
-        initAdapter();
-
-        return root;
     }
 
     @Override

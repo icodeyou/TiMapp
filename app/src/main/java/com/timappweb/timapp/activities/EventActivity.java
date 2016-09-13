@@ -374,7 +374,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 openAddPeopleActivity();
                 break;
             case IntentsUtils.ACTION_COMING:
-                fragmentInformation.toggleStatusButton();
+                fragmentInformation.turnComingOn();
                 break;
         }
     }

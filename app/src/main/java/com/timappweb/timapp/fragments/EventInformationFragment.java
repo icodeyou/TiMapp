@@ -57,13 +57,12 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private GoogleMap                   gMap;
     private ImageView                   eventCategoryIcon;
     private FragmentEventInformationBinding mBinding;
-    private View                        btnRequestNavigation;
     private SimpleTimerView             tvCountPoints;
 
     private ValueAnimator               animator;
     private boolean                     hotPoints               = false;
 
-    private MySwitchCompat switchButton;
+    private MySwitchCompat              switchButton;
     private View                        rateButtons;
     private View                        flameView;
     private View                        mainLayout;
@@ -71,37 +70,19 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private View                        statusImage;
     private View                        progressStatus;
 
+    private boolean isStatusLoading = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mBinding  = DataBindingUtil.inflate(inflater, R.layout.fragment_event_information, container, false);
-        return mBinding.getRoot();
-    }
+        View view = mBinding.getRoot();
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        initVariables(view);
 
-        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-        mapView = (MapView) view.findViewById(R.id.map);
-        distanceText = (TextView) view.findViewById(R.id.distance_text);
-        eventCategoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
-
-        final Event event = eventActivity.getEvent();
-        mainLayout = view.findViewById(R.id.main_layout);
-        statusTv = (TextView) view.findViewById(R.id.status_text);
-        flameView = view.findViewById(R.id.points_icon);
-        switchButton = (MySwitchCompat) view.findViewById(R.id.switch_button);
-        statusImage = view.findViewById(R.id.ic_status);
-        progressStatus = view.findViewById(R.id.status_progress);
-        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
-        switchButton.setOnCheckedChangeListener(new OnStatusChangedListener());
-
-
-
-        tvCountPoints.initTimer(event.getPoints());
-        btnRequestNavigation = view.findViewById(R.id.button_nav);
+        tvCountPoints.initTimer(getEvent().getPoints());
+        View btnRequestNavigation = view.findViewById(R.id.button_nav);
         btnRequestNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,13 +99,34 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         mapView.getMapAsync(this);
 
         updateView();
-
-        updateUserStatusButton();
         LocationManager.addOnLocationChangedListener(this);
+        updateUserStatusButton();
+
+        return view;
     }
 
-    public void toggleStatusButton() {
-        switchButton.toggle();
+    private void initVariables(View view) {
+        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
+        mapView = (MapView) view.findViewById(R.id.map);
+        distanceText = (TextView) view.findViewById(R.id.distance_text);
+        eventCategoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
+
+        final Event event = eventActivity.getEvent();
+        mainLayout = view.findViewById(R.id.main_layout);
+        statusTv = (TextView) view.findViewById(R.id.status_text);
+        flameView = view.findViewById(R.id.points_icon);
+        switchButton = (MySwitchCompat) view.findViewById(R.id.switch_button);
+        statusImage = view.findViewById(R.id.ic_status);
+        progressStatus = view.findViewById(R.id.status_progress);
+        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
+        switchButton.setOnCheckedChangeListener(new OnStatusChangedListener());
+    }
+
+
+    public void turnComingOn() {
+        //TODO Steph: Find a better way than using a boolean
+        isStatusLoading = true;
+        switchButton.setChecked(true);
     }
 
     private void setStatusProgress(boolean isProgressViewEnabled) {
@@ -221,7 +223,9 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
-        updateUserStatusButton();
+        if(!isStatusLoading) {
+            updateUserStatusButton();
+        }
     }
 
     private class OnStatusChangedListener implements CompoundButton.OnCheckedChangeListener {
@@ -268,6 +272,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                     @Override
                     public void onFinally(Response response, Throwable error) {
                         setStatusProgress(false);
+                        isStatusLoading = false;
                     }
                 });
             }

@@ -130,10 +130,9 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         comingButton = root.findViewById(R.id.action_coming);
 
         eventView = root.findViewById(R.id.event_view_layout_map);
+        eventView.setVisibility(View.GONE);
 
         initListeners();
-        initEventView();
-
 
         return root;
     }
@@ -199,29 +198,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         });
     }
 
-    private void initEventView() {
-        //TODO : This is workaround to initialize the height of eventView (so that getHeight() is not null
-        eventView.setVisibility(View.INVISIBLE);
-        Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
-        slideOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                eventView.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        eventView.startAnimation(slideOut);
-    }
-
     @Override
     public void onPause() {
         mapView.onPause();
@@ -255,9 +231,12 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_alpha);
             eventView.startAnimation(slideIn);
             Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
-            TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
-            translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
-            translateUp.setInterpolator(new DecelerateInterpolator());
+            Animation translateUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
+
+            //TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
+            //translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
+            //translateUp.setInterpolator(new DecelerateInterpolator());
+
             btnAddEvent.startAnimation(translateUp);
 
             exploreFragment.setSelectedEventForLoader(event);
