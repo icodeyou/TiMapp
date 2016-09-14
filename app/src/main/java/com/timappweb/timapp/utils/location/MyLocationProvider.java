@@ -108,6 +108,7 @@ public class MyLocationProvider implements
     // Getters
 
     public boolean isGPSEnabled(){
+        if (!hasLocationPermission()) return false;
         return mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 

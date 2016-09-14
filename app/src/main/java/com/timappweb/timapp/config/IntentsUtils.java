@@ -36,6 +36,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.location.MyLocationProvider;
 
 public class IntentsUtils {
 
@@ -160,6 +161,10 @@ public class IntentsUtils {
     public static void locate(Context context) {
         if (!requireLogin(context, false))
             return;
+        if (!LocationManager.getLocationProvider().isGPSEnabled()){
+            Toast.makeText(context, R.string.ask_user_to_enable_gps, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
             return;

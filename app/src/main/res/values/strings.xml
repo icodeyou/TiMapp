@@ -93,7 +93,7 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="drawer_close">Drawer close</string>
     <string name="action_filter">Filter</string>
     <string name="search_hint">Type a tag</string>
-    <string name="waiting_for_location">Getting your location</string>
+    <string name="waiting_for_location">Waiting for your location..</string>
     <string name="skip">Skip</string>
     <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
     <string name="error_require_login">You must be logged in to perform this action</string>

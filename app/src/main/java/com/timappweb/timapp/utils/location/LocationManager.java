@@ -49,6 +49,9 @@ public class LocationManager {
             (System.currentTimeMillis() - lastLocation.getTime()) < ConfigurationProvider.rules().gps_min_time_delay;
     }
 
+    public static MyLocationProvider getLocationProvider() {
+        return locationProvider;
+    }
     /**
      * Check if there is a last location with a fine location
      * @return
@@ -147,6 +150,7 @@ public class LocationManager {
     public static void removeLocationListener(Object object) {
         listeners.remove(object);
     }
+
 
 
     // =============================================================================================
