@@ -45,6 +45,8 @@ import java.util.Observable;
 public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface{
 
     private static final String TAG = "PlaceEntity" ;
+    public static final String PROPERTY_PICTURE = "picture";
+    public static final String PROPERTY_POINTS = "points";
 
     // =============================================================================================
     // DATABASE
@@ -123,6 +125,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     // =============================================================================================
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private Picture backgroundPicture;
 
     public void addPropertyChangeListener(String field, PropertyChangeListener listener) {
         this.pcs.addPropertyChangeListener(field, listener);
@@ -550,8 +553,17 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public void setPoints(int points) {
-        this.pcs.firePropertyChange("points", this.getPoints(), points);
         this.points = points;
         this.loaded_time = Util.getCurrentTimeSec();
+        this.pcs.firePropertyChange(PROPERTY_POINTS, -1, points); // TODO set correct value for old value
+    }
+
+    public void setBackgroundPicture(Picture backgroundPicture) {
+        this.picture = backgroundPicture;
+        this.pcs.firePropertyChange(PROPERTY_PICTURE, null, backgroundPicture); // TODO set correct value for old value (warning: it does not trigger anything if old and new are the same)
+    }
+
+    public boolean isOwner(User currentUser) {
+        return this.user != null && this.user.equals(currentUser);
     }
 }

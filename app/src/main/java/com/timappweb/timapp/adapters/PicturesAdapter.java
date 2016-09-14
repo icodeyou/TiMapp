@@ -67,4 +67,12 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     public int getGridColumnNumber() {
         return gridColumnNumber;
     }
+
+    public Picture getPicture(int position) {
+        AbstractFlexibleItem item = getItem(position);
+        if (item instanceof PictureItem){
+            return ((PictureItem) item).getPicture();
+        }
+        return null;
+    }
 }

@@ -17,6 +17,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item> <!-- the contextual action bar will now overlay the action bar -->
 
         <!-- -->
         <item name="android:textColor">@color/textBlack</item>
@@ -32,9 +33,12 @@
         <!--<item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>-->
 
 
+
+
         <!-- Toolbar Theme / Apply white arrow -->
         <!--<item name="colorControlNormal">@color/textLight</item>-->
         <item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
+        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>
 
 
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
@@ -63,6 +67,14 @@
     </style>
 
     <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- White arrow -->
+        <item name="colorControlNormal">@android:color/white</item>
+        <!--Text Style -->
+        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.Text</item>
+    </style>
+
+    // TODO design action mode here
+    <style name="AppTheme.ActionMode" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!-- White arrow -->
         <item name="colorControlNormal">@android:color/white</item>
         <!--Text Style -->

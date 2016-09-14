@@ -225,6 +225,8 @@ You cannot add any space to a tag. To submit one, please press the touch "Done" 
     <string name="submit">Submit</string>
     <string name="text_final_button_viewpager">Let\'s get it started</string>
     <string name="explanation_gps_usage">Timapp require your location to find events around you. Please authorize us to get your location.</string>
+    <string name="action_set_picture_as_event_background">Set as event picture</string>
+    <string name="event_picture_updated">Event background picture has been updated</string>
 
     <plurals name="number_people_event">
         <item quantity="one">%d person</item>

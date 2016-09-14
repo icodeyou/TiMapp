@@ -77,6 +77,15 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
     }
 
+    public void showActionBar() {
+        this.getSupportActionBar().show();;
+    }
+
+    public void hideActionBar() {
+        this.getSupportActionBar().hide();;
+    }
+
+
     protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
         final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);

@@ -134,38 +134,32 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     // Places
 
-    /**
-     * Get eventPosts for a place
-     * @param id
-     */
-    @POST("eventPosts/place/{id}.json")
-    Call<List<EventPost>> viewTagsForPlace(@Path("id") int id);
 
     /**
      * Get most popular tags for a place
      * @param id
      */
-    @POST("tags/place/{id}.json")
+    @GET("tags/place/{id}.json")
     Call<List<Tag>> viewPopularTagsForPlace(@Path("id") long id);
 
     /**
      *
      * @param id
      */
-    @POST("Places/view/{id}.json")
+    @GET("Places/view/{id}.json")
     Call<Event> viewPlace(@Path("id") long id);
     /**
      *
      * @param id
      */
-    @POST("Places/points/{id}.json")
+    @GET("Places/points/{id}.json")
     Call<EventPointResponse> viewPointsPlace(@Path("id") long id);
 
     /**
      * Find places to display on the map
      * @param conditions
      */
-    @POST("Places/populars.json")
+    @GET("Places/populars.json")
     Call<List<Event>> bestPlaces(@QueryMap Map<String, String> conditions);
 
     /**
@@ -182,6 +176,9 @@ public interface WebServiceInterface {
     @GET("Places/index.json")
     Call<PaginatedResponse<Event>> places(@QueryMap Map<String, String> conditions);
 
+
+    @POST("Places/background_picture/{id}.json")
+    Call<RestFeedback> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
 
 
     // ---------------------------------------------------------------------------------------------

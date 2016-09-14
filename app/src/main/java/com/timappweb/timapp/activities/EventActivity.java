@@ -316,7 +316,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         if (!isEventLoaded){
             isEventLoaded = true;
 
-            event.addPropertyChangeListener("points", new PropertyChangeListener() {
+            event.addPropertyChangeListener(Event.PROPERTY_POINTS, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent event) {
                     if (EventActivity.this.event.isOver()){
@@ -327,6 +327,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     }
                 }
 
+            });
+            event.addPropertyChangeListener(Event.PROPERTY_PICTURE, new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent event) {
+                    updateEventBackground();
+                }
             });
 
             initFragments();
@@ -424,18 +430,15 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         fragmentPeople = (EventPeopleFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPeopleFragment.class.getName()));
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
         mFragmentAdapter = new EventPagerAdapter(getSupportFragmentManager(), mFragmentGroup.getFragments());
+
+
         mMaterialViewPager = (MaterialViewPager) findViewById(R.id.event_viewpager);
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
         //After set an adapter to the ViewPager
         mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
         mMaterialViewPager.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null), 0);
 
-        if (event.hasPicture()){
-            mMaterialViewPager.setImageUrl(event.getBackgroundUrl(), 0);
-        }
-        else{
-            mMaterialViewPager.setImageDrawable(event.getBackgroundImage(this), 0);
-        }
+        this.updateEventBackground();
         int numberOfFragments = mFragmentAdapter.getCount();
         mMaterialViewPager.getViewPager().setOffscreenPageLimit(numberOfFragments);
         mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener());
@@ -483,6 +486,15 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayUseLogoEnabled(false);
             actionBar.setHomeButtonEnabled(true);
+        }
+    }
+
+    public void updateEventBackground() {
+        if (event.hasPicture()){
+            mMaterialViewPager.setImageUrl(event.getBackgroundUrl(), 0);
+        }
+        else{
+            mMaterialViewPager.setImageDrawable(event.getBackgroundImage(this), 0);
         }
     }
 
