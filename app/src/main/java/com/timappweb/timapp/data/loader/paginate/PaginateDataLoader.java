@@ -33,7 +33,7 @@ public class PaginateDataLoader<T> {
         return pageInfo.hasNextPage();
     }
 
-    public boolean loadNextPage(){
+    public synchronized boolean loadNextPage(){
         if (!pageInfo.hasNextPage() || isLoading()){
             return false;
         }
@@ -41,7 +41,7 @@ public class PaginateDataLoader<T> {
         return loadCurrentPage();
     }
 
-    public synchronized boolean loadCurrentPage(){
+    public boolean loadCurrentPage(){
         if (isInCache(pageInfo.getCurrentPage())){
             List items = getCache(pageInfo.getCurrentPage());
             if (callback != null) callback.onLoadEnd(pageInfo, items);

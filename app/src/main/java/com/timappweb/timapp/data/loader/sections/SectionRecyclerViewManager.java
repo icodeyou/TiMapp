@@ -39,12 +39,15 @@ public class SectionRecyclerViewManager
     }
 
     @Override
-    public void onLoadMore() {
-        if (mDataLoader.isLoading())
+    public synchronized void onLoadMore() {
+        if (mDataLoader.isLoading()){
+            if (!mDataLoader.isLoading(SectionDataLoader.LoadType.MORE)){
+                hideLoadMoreProgress();
+            }
             return;
+        }
         if (!mDataLoader.loadMore()) {
-            setRefreshing(false);
-            mAdapter.removeProgressItem();
+            onLoadEndUI();
         }
     }
 
@@ -53,14 +56,13 @@ public class SectionRecyclerViewManager
         if (mDataLoader.isLoading())
             return;
         if (!mDataLoader.loadNewest()){
-            setRefreshing(false);
-            mAdapter.removeProgressItem();
+            onLoadEndUI();
         }
     }
 
+
     @Override
     public void onLoadEnd(SectionContainer.PaginatedSection section, List data) {
-        setRefreshing(false);
 
         if (this.mCallback != null){
             this.mCallback.onLoadEnd(section, data);
@@ -80,23 +82,18 @@ public class SectionRecyclerViewManager
                 break;
         }
 
-        //this.updateNoDataView();
+        this.onLoadEndUI();
     }
 
     @Override
     public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
-        setRefreshing(false);
-        mAdapter.removeProgressItem();
-
         if (section.getLoadType() == SectionDataLoader.LoadType.MORE){
             mAdapter.onLoadMoreComplete(null);
         }
-        //this.updateNoDataView();
 
         if (this.mCallback != null){
             this.mCallback.onLoadError(error, section);
         }
-
 
         if (error instanceof IOException) {
             Toast.makeText(mContext, R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
@@ -106,13 +103,15 @@ public class SectionRecyclerViewManager
         else{
             Toast.makeText(mContext, R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
         }
+
+        this.onLoadEndUI();
     }
 
     public void firstLoad() {
         if (mDataLoader.isLoading())
             return;
-        if (mDataLoader.firstLoad()){
-            setRefreshing(false);
+        if (!mDataLoader.firstLoad()){
+            onLoadEndUI();
         }
     }
 

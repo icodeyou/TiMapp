@@ -32,12 +32,12 @@ public class PaginateRecyclerViewManager
 
 
     @Override
-    public void onLoadMore() {
-        if (mDataLoader.isLoading())
+    public synchronized void onLoadMore() {
+        if (mDataLoader.isLoading()){
             return;
+        }
         if (!mDataLoader.loadNextPage()) {
-            setRefreshing(false);
-            mAdapter.removeProgressItem();
+            this.onLoadEndUI();
         }
     }
 

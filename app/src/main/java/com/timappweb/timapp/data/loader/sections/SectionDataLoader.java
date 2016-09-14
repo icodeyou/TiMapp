@@ -25,6 +25,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
 
 
     private long _lastLoad = 0;
+    private PaginatedSection currentLoadSection;
 
     public enum LoadType {MORE, UPDATE, NEWEST}
 
@@ -92,7 +93,10 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     }
 
     public boolean isLoading() {
-        return currentCallManager != null && !currentCallManager.isDone();
+        return currentLoadSection != null;
+    }
+    public boolean isLoading(LoadType type) {
+        return currentLoadSection != null && currentLoadSection.getLoadType() == type;
     }
 
     public SectionDataLoader setCallback(Callback<T> callback) {
@@ -137,24 +141,21 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         return this.loadNewest();
     }
 
-    private void load(PaginatedSection section) {
-        synchronized (this) {
-            if (this.useCache && this.cacheEngine.contains(section)) {
-                List<T> data = this.cacheEngine.get(section);
-                section.setStatus(LoadStatus.DONE);
-                if (callback != null) callback.onLoadEnd(section, data);
-            } else {
-                this.remoteLoad(section);
-            }
+    private synchronized void load(PaginatedSection section) {
+        currentLoadSection = section;
+        if (this.useCache && this.cacheEngine.contains(section)) {
+            List<T> data = this.cacheEngine.get(section);
+            section.setStatus(LoadStatus.DONE);
+            currentLoadSection = null;
+            if (callback != null) callback.onLoadEnd(section, data);
+        } else {
+            this.remoteLoad(section);
         }
     }
 
 
     public boolean loadNewest(){
         if (isLoading()){
-            return false;
-        }
-        if (!Util.isOlderThan(this._lastLoad, this.minDelayForceRefresh)){
             return false;
         }
         PaginatedSection section = sectionContainer.first();
@@ -243,6 +244,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {
+                        currentLoadSection = null;
                         switch (newSection.getLoadType()){
                             case NEWEST:
                                 SectionDataLoader.this._lastLoad = System.currentTimeMillis();

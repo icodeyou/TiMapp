@@ -90,4 +90,6 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	public ArrayList<AbstractFlexibleItem> getItemsCopy() {
 		return mItemsCopy;
 	}
+
+
 }

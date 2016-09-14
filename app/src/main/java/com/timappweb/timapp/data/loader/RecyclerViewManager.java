@@ -17,9 +17,14 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 /**
  * Created by Stephane on 12/09/2016.
  */
-public abstract class RecyclerViewManager<This>
-        implements FlexibleAdapter.EndlessScrollListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class RecyclerViewManager<This> implements
+        FlexibleAdapter.EndlessScrollListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        FlexibleAdapter.OnUpdateListener{
+
     private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
+
+    // ---------------------------------------------------------------------------------------------
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private long minDelayAutoRefresh;
@@ -36,26 +41,24 @@ public abstract class RecyclerViewManager<This>
         this.mContext = context;
     }
 
+
+    protected void onLoadEndUI() {
+        setRefreshing(false);
+        mAdapter.removeProgressItem();
+        this.onUpdateEmptyView(mAdapter.hasData() ? 1 : 0);
+    }
+
     public void setRefreshing(boolean state){
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(state);
     }
 
-    /*
-    protected void updateNoDataView() {
-        if (this.mNoDataView != null){
-            mNoDataView.setVisibility(mAdapter.hasData()
-                    ? View.GONE
-                    : View.VISIBLE);
-        }
-    }*/
+
+    protected void hideLoadMoreProgress() {
+        mAdapter.removeProgressItem();
+    }
 
     public This setNoDataView(final View noDataView) {
-        mAdapter.initializeListeners(new FlexibleAdapter.OnUpdateListener() {
-            @Override
-            public void onUpdateEmptyView(int size) {
-                noDataView.setVisibility(size == 0 ? View.VISIBLE : View.GONE);
-            }
-        });
+        mAdapter.initializeListeners(this);
         this.mNoDataView = noDataView;
         return (This) this;
     }
@@ -87,6 +90,13 @@ public abstract class RecyclerViewManager<This>
         mAdapter.setEndlessScrollThreshold(ENDLESS_SCROLL_THRESHOLD);
         return (This) this;
     }
+
+    @Override
+    public void onUpdateEmptyView(int size) {
+        if (mNoDataView != null) mNoDataView.setVisibility(size > 0 ? View.GONE : View.VISIBLE);
+    }
+
+    // ---------------------------------------------------------------------------------------------
 
     public static abstract class ItemTransformer<T> {
 
