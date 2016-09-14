@@ -30,16 +30,19 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * @warning event cannot be serialize anymore as there is a recursive dependency:
  *  Event -> BELONGS TO -> Picture -> BELONGS TO -> Event
  */
 @Table(name = "Event")
-public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface {
+public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface{
 
     private static final String TAG = "PlaceEntity" ;
 
@@ -117,6 +120,17 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Expose(serialize = false, deserialize = false)
     public double           distance = -1;
 
+    // =============================================================================================
+
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+
+    public void addPropertyChangeListener(String field, PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(field, listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
     // =============================================================================================
 
     public Event(){
@@ -533,5 +547,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return new Select().from(UserEvent.class)
                 .where("Event = ?", this.getId())
                 .orderBy("UserEvent.Created DESC");
+    }
+
+    public void setPoints(int points) {
+        this.pcs.firePropertyChange("points", this.getPoints(), points);
+        this.points = points;
+        this.loaded_time = Util.getCurrentTimeSec();
     }
 }

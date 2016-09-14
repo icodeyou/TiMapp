@@ -23,8 +23,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.UserEvent;
@@ -32,6 +34,7 @@ import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -181,23 +184,14 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         Log.d(TAG, "ExploreMapFragment.onResume()");
     }
 
-    public void updatePointsView(boolean increase) {
+    public void updatePointsView(int newPoints) {
         animator = new ValueAnimator();
         tvCountPoints.cancelTimer();
-        int initialPoints = tvCountPoints.getPoints(); //TODO Steph : get points from server instead of TextView
-        final int pointsAdded;
-        if(increase) {
-            pointsAdded = 300; //TODO Steph : Replace 300 by the number of points actually added on the server
-        } else {
-            pointsAdded = -300; //TODO Steph : Replace 300 by the number of points actually substracted on the server
-        }
+        int initialPoints = tvCountPoints.getPoints();
+        final int pointsAdded = newPoints - tvCountPoints.getPoints();
         int finalPoints = initialPoints + pointsAdded - TIMELAPSE_HOT_ANIM/1000;
-        if(initialPoints<pointsAdded && increase) {
-            finalPoints = 0;
-        }
 
-        Log.d(TAG, "Initial points : " + initialPoints);
-        Log.d(TAG, "Final points : " + finalPoints);
+        Log.d(TAG, "Initial points : " + initialPoints + ". Final points : " + finalPoints);
         animator.setObjectValues(initialPoints, finalPoints);
         animator.setDuration(TIMELAPSE_HOT_ANIM);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -247,34 +241,35 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             if (manager != null){
                 setStatusProgress(true);
 
-                manager .onResponse(new HttpCallback() {
+                manager
+                    .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser()))
+                    .onResponse(new HttpCallback() {
+                        @Override
+                        public void successful(Object feedback) {
 
-                    @Override
-                    public void successful(Object feedback) {
-                        updatePointsView(isChecked);
-                    }
+                        }
 
-                    @Override
-                    public void notSuccessful() {
-                        Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
-                        switchButton.setCheckedNoTrigger(!isChecked);
-                    }
+                        @Override
+                        public void notSuccessful() {
+                            Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
+                            switchButton.setCheckedNoTrigger(!isChecked);
+                        }
 
-                })
-                .onError(new RequestFailureCallback(){
-                    @Override
-                    public void onError(Throwable error) {
-                        Toast.makeText(eventActivity, R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
-                        switchButton.setCheckedNoTrigger(!isChecked);
-                    }
-                })
-                .onFinally(new HttpCallManager.FinallyCallback() {
-                    @Override
-                    public void onFinally(Response response, Throwable error) {
-                        setStatusProgress(false);
-                        isStatusLoading = false;
-                    }
-                });
+                    })
+                    .onError(new RequestFailureCallback(){
+                        @Override
+                        public void onError(Throwable error) {
+                            Toast.makeText(eventActivity, R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
+                            switchButton.setCheckedNoTrigger(!isChecked);
+                        }
+                    })
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
+                            setStatusProgress(false);
+                            isStatusLoading = false;
+                        }
+                    });
             }
         }
     }

@@ -15,6 +15,7 @@ import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.rest.io.responses.EventPointResponse;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
@@ -153,6 +154,12 @@ public interface WebServiceInterface {
      */
     @POST("Places/view/{id}.json")
     Call<Event> viewPlace(@Path("id") long id);
+    /**
+     *
+     * @param id
+     */
+    @POST("Places/points/{id}.json")
+    Call<EventPointResponse> viewPointsPlace(@Path("id") long id);
 
     /**
      * Find places to display on the map

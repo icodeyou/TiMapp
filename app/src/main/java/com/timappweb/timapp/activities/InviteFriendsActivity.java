@@ -85,7 +85,8 @@ public class InviteFriendsActivity extends BaseActivity
             progressview = findViewById(R.id.progress_view);
             initAdapterListFriends();
             mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout)
-                .setCallback(this);
+                .setCallback(this)
+                .refresh();
 
             getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mFriendsLoader);
         } catch (CannotSaveModelException e) {

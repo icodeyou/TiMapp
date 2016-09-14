@@ -142,11 +142,12 @@ public class SyncDataLoader<EntityType, This>
         launchSync(option);
     }
 
-    public void refresh() {
+    public This refresh() {
         if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(true);
         SyncAdapterOption option = syncOptions.clone()
                 .setDirection(RestQueryParams.SyncDirection.DOWN);
         launchSync(option);
+        return (This) this;
     }
 
     public void update() {

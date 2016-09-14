@@ -81,6 +81,7 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
                 .setCallback(this);
         mFriendsLoader.setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS, null, mFriendsLoader);
+        mFriendsLoader.refresh();
     }
 
     @Override
