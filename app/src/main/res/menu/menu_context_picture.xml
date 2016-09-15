@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_set_event_background"
-        android:title="@string/action_set_picture_as_event_background"
+        android:title="@string/action_set_picture_as_default"
         android:icon="@drawable/ic_coming_guy_black"
         app:showAsAction="always" />
 

@@ -26,10 +26,6 @@
 
             <include layout="@layout/toolbar_layout"/>
 
-            <include layout="@layout/no_connection_view"
-                android:background="@color/background"
-                android:id="@+id/no_connection_view"/>
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"

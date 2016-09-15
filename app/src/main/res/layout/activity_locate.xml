@@ -17,10 +17,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <include layout="@layout/no_connection_view"
-            android:id="@+id/no_connection_view"
-            android:background="@color/background"/>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

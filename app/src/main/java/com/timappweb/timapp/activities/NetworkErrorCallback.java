@@ -20,6 +20,6 @@ public class NetworkErrorCallback extends com.timappweb.timapp.rest.callbacks.Re
 
     @Override
     public void network(IOException error) {
-        Toast.makeText(context, R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
     }
 }

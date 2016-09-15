@@ -196,7 +196,8 @@ public class EventPicturesFragment extends EventBaseFragment implements
             public void onItemLongClick(int position) {
                 Log.d(TAG, "Long click on picture adapter item n°" + position);
                 Picture item = picturesAdapter.getPicture(position);
-                if (item != null && mActionModeHelper != null){
+                boolean currentUserOwnEvent = getEvent().isOwner(MyApplication.getCurrentUser());
+                if (item != null && mActionModeHelper != null && currentUserOwnEvent){
                     mActionModeHelper.onLongClick(eventActivity, position);
                 }
             }
@@ -285,7 +286,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     " and type: " + fileMimeType);
 
             if (file.length() > rules.picture_max_size){
-                this.showUploadFeedbackError(R.string.error_picture_too_big);
+                this.showUploadFeedbackError(R.string.cannot_resize_picture);
                 return;
             }
             else if (file.length() <= rules.picture_min_size){
@@ -333,7 +334,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     @Override
                     public void onError(Throwable error) {
                         Toast.makeText(EventPicturesFragment.this.getContext(),
-                                R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
+                                R.string.no_network_access, Toast.LENGTH_LONG).show();
                     }
                 })
                 .onFinally(new HttpCallManager.FinallyCallback() {

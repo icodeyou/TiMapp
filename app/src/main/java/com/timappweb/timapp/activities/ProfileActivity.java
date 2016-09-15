@@ -63,7 +63,6 @@ public class ProfileActivity extends BaseActivity  {
 
         tagsListView = (ListView) findViewById(R.id.listview_usertags);
         //loadingView = findViewById(R.remote_id.loading_view);
-        noConnectionView = findViewById(R.id.no_connection_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
         profilePicture = (SimpleDraweeView) findViewById(R.id.profile_picture);
 

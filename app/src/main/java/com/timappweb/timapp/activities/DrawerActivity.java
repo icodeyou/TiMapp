@@ -351,7 +351,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             case R.id.menu_item_explore:
                 IntentsUtils.home(this);
                 break;
-            case R.id.menu_item_tag_around:
+            case R.id.menu_item_add_event:
                 IntentsUtils.locate(this);
                 break;
             case R.id.menu_item_my_invitations:

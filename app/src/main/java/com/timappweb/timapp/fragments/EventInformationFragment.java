@@ -259,7 +259,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
                     .onError(new RequestFailureCallback(){
                         @Override
                         public void onError(Throwable error) {
-                            Toast.makeText(eventActivity, R.string.no_internet_connection_message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(eventActivity, R.string.no_network_access, Toast.LENGTH_SHORT).show();
                             switchButton.setCheckedNoTrigger(!isChecked);
                         }
                     })

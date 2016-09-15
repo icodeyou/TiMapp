@@ -75,7 +75,7 @@ public class PaginateRecyclerViewManager
         }
 
         if (error instanceof IOException) {
-            Toast.makeText(mContext, R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.no_network_access, Toast.LENGTH_LONG).show();
         } else if (error instanceof CannotSyncException) {
             Toast.makeText(mContext, ((CannotSyncException) error).getUserFeedback(), Toast.LENGTH_LONG).show();
         }

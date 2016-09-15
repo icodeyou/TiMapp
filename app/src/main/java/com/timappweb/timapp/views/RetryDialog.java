@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 
 /**
@@ -17,8 +16,8 @@ public class RetryDialog {
 
     public static void show(Context context, DialogInterface.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(context.getResources().getString(R.string.no_network_access_title));
-        builder.setMessage(context.getResources().getString(R.string.no_internet_connection_message));
+        builder.setTitle(context.getResources().getString(R.string.no_network_access));
+        builder.setMessage(context.getResources().getString(R.string.no_network_access));
         builder.setPositiveButton("Retry", listener);
         builder.create().show();
     }

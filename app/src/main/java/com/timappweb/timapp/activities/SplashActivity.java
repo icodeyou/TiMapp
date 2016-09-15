@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -51,7 +50,7 @@ public class SplashActivity extends BaseActivity {
                                 Log.e(TAG, "    - No event categories configuration");
                             }
                             ConfigurationProvider.reset();
-                            IntentsUtils.fatalError(SplashActivity.this, R.string.fatal_error_no_network_title, R.string.fatal_error_no_network_message);
+                            IntentsUtils.fatalError(SplashActivity.this, R.string.no_network_access, R.string.no_network_access);
                         }
                         else{
                             if (callsManager.isSuccess(ConfigurationProvider.CALL_ID_SPOT_CATEGORIES)

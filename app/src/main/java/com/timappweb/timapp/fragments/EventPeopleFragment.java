@@ -51,9 +51,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
     private Context                 context;
     private MyFlexibleAdapter       mPlaceUsersAdapter;
-    private View                    progressView;
-    private View                    noPostsView;
-    private View                    noConnectionView;
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton    postButton;
     private RecyclerView            mRecyclerView;
@@ -88,9 +85,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         super.onViewCreated(view, savedInstanceState);
         context = eventActivity.getBaseContext();
 
-        progressView = view.findViewById(R.id.progress_view);
-        noPostsView = view.findViewById(R.id.no_posts_view);
-        noConnectionView = view.findViewById(R.id.no_connection_view);
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
 

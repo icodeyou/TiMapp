@@ -170,7 +170,7 @@ public class SyncDataLoader<EntityType, This>
     public void onSyncError(Exception ex){
         if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(false);
         if (ex instanceof IOException){
-            Toast.makeText(context, R.string.no_internet_connection_message, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
         }
         else if (ex instanceof CannotSyncException){
             Toast.makeText(context, ((CannotSyncException)ex).getUserFeedback(), Toast.LENGTH_LONG).show();

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Titles Activities -->
+    <string name="title_activity_explore">Carte</string>
+    <string name="title_activity_place">Évenement</string>
+    <string name="title_activity_invite_friends">Motive les !</string>
+    <string name="title_activity_list_friends">Mes amis</string>
+    <string name="title_activity_invitations">Mes invitations</string>
+    <string name="title_activity_profile">Profil</string>
+    <string name="title_activity_filter">Recherche</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="title_activity_add_event">Ajouter un événement</string>
+    <string name="title_activity_add_spot">Attacher un lieu</string>
+    <string name="title_activity_share_app">Crie le sous les toits</string>
+    <string name="title_activity_edit_profile">Editer le profil</string>
+    <string name="title_activity_presentation">TiMapp, \'est quoi ?</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_locate">A proximité</string>
+
+    <!-- Navigation Drawer -->
+    <string name="nav_logout">Se déconnecter</string>
+    <string name="nav_login">Se connecter</string>
+    <string name="nav_share">Trouve d\'autres amis</string>
+    <string name="nav_community">Communauté</string>
+    <string name="nav_account">Mon compte</string>
+    <string name="nav_how_it_works">Comment ça marche ?</string>
+
+
+    <!-- Menus action bar-->
+    <string name="menu_share">Partager</string>
+    <string name="menu_edit_profile">Éditer le profil</string>
+    <string name="create_button">Créer</string>
+    <string name="search_button">Valider</string>
+    <string name="search_button_empty">Effacer la recherche</string>
+    <string name="invite_button">Inviter</string>
+    <string name="action_post">Post</string>
+    <string name="action_list">List</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_unselect_all">Unselect all</string>
+
+    <!-- Generic Messages -->
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="waiting_for_location">En attente de localisation</string>
+    <string name="skip">Ignorer</string>
+    <string name="no_friends">Vous n\'avez pas encore d\'amis qui utilisent TiMapp. Partage l\'application autour de toi avoir des amis, et profiter de nouvelles fonctionnalités !</string>
+    <!-- Errors -->
+    <string name="error_require_login">Vous devez être connecté pour effectuer cette action.</string>
+    <string name="no_network_access">Pas d\'accès internet.</string>
+    <string name="error_cannot_get_location">On dirait qu\'on t\'a perdu. Essaye de sortir dehors :)</string>
+    <string name="error_server_unavailable">Désolé, nos serveurs sont innaccessibles pour le moment. Merci de réessayer plus tard.</string>
+    <string name="fatal_error_unknown_reason_title">Désolé, une erreur est survenue. Merci de réessayer plus tard.</string>
+    <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
+    <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
+    <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>
+    <string name="no_fine_location">Votre localisation est imprécise. Assurez-vous que votre GPS est activé.</string>
+    <string name="toast_no_space">Vous ne pouvez pas ajouter d\'espace à votre tag.</string>
+    <string name="toast_no_tag">Un tag minimum est nécessaire.</string>
+    <string name="toast_too_many_tags_part_one">Il n\'est pas possible d\'ajouter plus de&#160;</string>
+    <string name="toast_too_many_tags_part_two">&#160;tags.</string>
+    <string name="toast_tag_already_chosen">Ce tag a déja été selectionné.</string>
+    <string name="toast_thanks_for_sharing">Merci !</string>
+    <string name="toast_profile_saved">Nouveau profil sauvegardé.</string>
+    <string name="cannot_save_your_profile">Erreur dans l\édition du profil.</string>
+    <string name="action_performed_not_successful">Désolé mais cette action n\'est pas disponible pour le moment. Merci de réessayer plus tard.</string>
+    <string name="form_invalid_input">Ce champ est invalide.</string>
+    <string name="data_already_refresh">Données à jour</string>
+    <string name="user_message_should_be_around_event_to_post">Rapproche de toi de l\événement pour poster ;)</string>
+    <string name="error_require_gps">Nous avons besoin de votre localisation pour cette opération.</string>
+    <string name="quota_wait_string">Merci d\'attendre %s avant le prochain post.</string>
+    <string name="quota_wait_not_defined">Merci d\'attendre %s avant le prochain post.</string>
+    <string name="cannot_upload_picture">L\'ajout de photo est impossible pour le moment. Merci de réessayer plus tard.</string>
+    <string name="cannot_resize_picture">Cette image est trop large. Prends-en une autre :)</string>
+    <string name="error_picture_too_small">Je n\'aime pas la qualité  de cette photo. Prends-en une autre :)</string>
+    <string name="cannot_facebook_login">Problème de connection avec Facebook. Merci de réessayer plus tard.</string>
+    <string name="please_update_app">Oups ! Une petite erreur a surgi. Si ce message apparaît à nouveau, assure-toi que l\'appli est à jour.</string>
+    <string name="upload_picture_in_progress">Merci d\'attendre  la fin du téléchargement de la photo.</string>
+    <string name="event_does_not_exists_anymore">Cet événement n\'existe plus. Redirection vers la carte.</string>
+    <string name="cannot_load_spot_around">Désolé mais nous ne pouvons pas charger les lieux à proximité.\nMerci de réessayer plus tard.</string>
+    <string name="explanation_gps_usage">TiMapp a besoin de votre localisation pour trouver les événements à proximité. Merci de nous donner l\'accès à votre localisation.</string>
+    <string name="ask_user_to_enable_gps">GPS désactivé. Merci de l\'activer pour charger les événements.</string>
+
+
+
+    <!-- Category selector -->
+    <string name="more">Plus</string>
+    <string name="pick_a_category">Choisissez une catégorie.</string>
+
+
+    <!-- Items List -->
+    <!-- item invitation -->
+    <string name="former_username">Nom d\'utilisateur</string>
+    <string name="former_time">Date d\'invitation</string>
+    <!-- item Event -->
+    <string name="counter_over">C\'est terminé !</string>
+
+
+    <!-- .................. Activities ...................................-->
+
+    <!-- EventActivity -->
+    <string name="cannot_notify_status">Vous ne pouvez pas changer votre statut pour l\'instant.</string>
+    <string name="share_place_text">http://Lien_de_la_place</string>
+    <string name="share_message_text">Hey, J\'ai découvert cette appli qui te permet de découvrir en temps réel ce qui se passe à proximité. Découvre le concept ici : http://www.timappweb.com</string>
+    <string name="share_message_subject">TiMapp</string>
+    <!-- Fragment Info -->
+    <string name="i_am_coming">J\'arrive</string>
+    <string name="i_am_here">Présent</string>
+    <!-- Fragment Picture -->
+    <string name="no_pic">Il n\'y a pas de encore de photo pour cet événement.</string>
+    <string name="uploading_pic">Téléchargement de la photo</string>
+    <string name="thanks_for_add_picture">Merci pour cette photo !</string>
+    <string name="action_set_picture_as_default">Choisir comme photo de défaut</string>
+    <string name="action_set_picture_as_event_background">Choisir comme photo de défaut</string>
+    <string name="event_picture_updated">La photo de défaut a été mise à jour.</string>
+    <!-- Fragment Tags -->
+    <string name="no_tags">Il n\'y a pas encore de tags pour cet événement.</string>
+    <string name="thanks_for_add_tag">Merci pour votre post !</string>
+    <!-- Fragment People -->
+    <string name="header_coming">En route</string>
+    <string name="header_invited">Amis invités</string>
+    <string name="header_here">Présents</string>
+    <plurals name="number_people_event">
+        <item quantity="one">%d personne</item>
+        <item quantity="other">%d personnes</item>
+    </plurals>
+
+    <!-- DrawerActivity + Map -->
+    <string name="drawer_open">Menu latéral ouvert</string>
+    <string name="drawer_close">Menu latéral fermé</string>
+    <string name="no_events_message1">Il n\'y a pas d\'événements dans cette zone!</string>
+    <string name="text_no_event">Il n\'y a pas d\'événements à afficher ici.</string>
+
+
+    <!-- LocateActivity  -->
+    <string name="text_activity_locate">Est-ce que votre événement existe déja ?</string>
+    <string name="address_found">Adresse trouvée</string>
+
+    <!-- AddEventActivity -->
+    <string name="hint_write_description">Description</string>
+
+    <!-- AddTagsActivity  -->
+    <!--TODO : Dupplicates strings here -->
+    <string name="search_hint">Écrire un tag ici</string>
+    <string name="searchview_hint_no_tags">Écrire un tag ici</string>
+    <string name="searchview_hint_few_tags_part_one">Vous pouvez ajouter jusqu\'à&#160;</string>
+    <string name="searchview_hint_few_tags_part_two">&#160;tags</string>
+    <string name="menu_search_tags">Rechercher des tags</string>
+
+    <!-- FilterActivity -->
+    <string name="hint_searchview_filter">Rechercher</string>
+
+    <!-- AddEventActivity -->
+    <string name="hint_event_name">Nom de l\'évenement</string>
+
+    <!-- AddSpotActivity -->
+    <string name="hint_spot_name">Nom du lieu</string>
+
+    <!-- ShareActivity -->
+    <string name="text_share_activity">TiMapp est plus sympa avec des amis. Cliquez sur le bouton rouge pour partager l\'application.</string>
+    <string name="subject_share_activity">Partagez TiMapp avec vos amis</string>
+
+    <!-- LoginActivity -->
+    <string name="welcome_to_timapp">Bienvenue sur TiMapp</string>
+    <string name="posts_shared">Posts</string>
+    <string name="events_created">Événements créés</string>
+    <string name="slogan">Find. Enjoy. Share.</string>
+
+
+    <!-- ProfileActivity -->
+    <string name="define_yourself_tag">DéfinieToi</string>
+    <string name="newbie_tag">Newbie</string>
+
+
+    <!-- EditProfileActivity -->
+    <!-- TODO : Take server configuration for maximum tags -->
+    <string name="text_tags_left_3">3 tags restants</string>
+    <string name="text_tags_left_2">2 tags restants</string>
+    <string name="text_tags_left_1">1 tag restants</string>
+    <string name="edit_first_profile1">Bien joué !</string>
+    <string name="edit_first_profile2">Vos tags seront maintenant affichés sur votre profil. Vous pouvez les changer à tout moment.</string>
+    <string name="define_yourself">Definis toi</string>
+    <string name="submit">Valider</string>
+
+    <!-- InvitationsActivities -->
+    <string name="text_no_invitations">Pas d\'invitations pour le moment</string>
+    <string name="friend_already_invited">Invitation déja envoyée !</string>
+
+    <!-- InviteFriendsActivity -->
+    <plurals name="action_friend_selected">
+        <item quantity="zero">Clique pour sélectionner</item>
+        <item quantity="one">%d sélectionné</item>
+        <item quantity="other">%d sélectionnés</item>
+    </plurals>
+
+    <!-- PresentationActivity -->
+    <string name="two_ways_to_explore">Deux façons d\'explorer!</string>
+    <string name="presentation_two_text"><![CDATA[Avec TiMapp,\n trouve et partage les événements qui se déroulent actuellement.]]></string>
+    <string name="post_pics_and_tags">Poste des photos et des tags</string>
+    <string name="invite_people">Invite de gens</string>
+    <string name="text_p_four">Ajoute les événements autour de toi en choisissant un nom et une catégorie.</string>
+    <string name="share_page_p_one">Les posts fournissent un retour en temps réel de la communauté.</string>
+    <string name="share_page_p_two">Vous pouvez seulement posté si vous êtes localisés sur l\événement.</string>
+    <string name="title_p_three">Trouve des événements</string>
+    <string name="title_p_four">Crée des évéments</string>
+    <string name="title_p_five">Partage</string>
+    <string name="title_p_six">Points de popularité</string>
+    <string name="title_p_seven">Prêt ?</string>
+    <string name="popularity_page_one">Chaque événement a un nombre de points représentant sa popularité.</string>
+    <string name="popularity_page_two">Mais le nombre augmente quand les utilisateurs postent.</string>
+    <string name="popularity_page_three">Ce nombre est en fait un compte à rebours</string>
+    <string name="text_final_button_viewpager">GO</string>
+
+
+</resources>

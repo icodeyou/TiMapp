@@ -157,6 +157,7 @@ public class ExploreFragment extends Fragment{
                 blurBackground.setVisibility(View.VISIBLE);
                 menu.findItem(R.id.action_list).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.list_close));
             } else {
+                //TODO : Cette action n'est jamais appelée
                 Toast.makeText(getContext(), R.string.text_no_event, Toast.LENGTH_SHORT).show();
             }
         } else {
