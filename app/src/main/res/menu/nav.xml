@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/menu_title_community">
+    <item android:title="@string/nav_community">
         <menu>
             <item android:id="@+id/menu_item_viewpager" android:icon="@drawable/question_mark"
-                android:title="@string/how_it_works" />
+                android:title="@string/nav_how_it_works" />
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_dialog_map"
                 android:title="@string/nav_explore" />
             <item android:id="@+id/menu_item_tag_around" android:icon="@drawable/plus_grey"
@@ -24,7 +24,7 @@
         </menu>
     </item>
 
-    <item android:title="@string/menu_title_account">
+    <item android:title="@string/nav_account">
         <menu>
             <item android:id="@+id/menu_item_profile" android:icon="@drawable/ic_profile"
                 android:title="@string/nav_profile" />

@@ -139,7 +139,7 @@ public class EditProfileActivity extends BaseActivity{
                         .onResponse(new HttpCallback() {
                             @Override
                             public void successful(Object feedback) {
-                                Toast.makeText(getApplicationContext(), R.string.profile_saved, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.toast_profile_saved, Toast.LENGTH_LONG).show();
                                 finishActivityResult();
                             }
 
