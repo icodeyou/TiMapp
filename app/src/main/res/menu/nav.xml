@@ -6,7 +6,7 @@
             <item android:id="@+id/menu_item_viewpager" android:icon="@drawable/question_mark"
                 android:title="@string/nav_how_it_works" />
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_dialog_map"
-                android:title="@string/title_activity_explore" />
+                android:title="@string/title_activity_explore" android:visible="false"/>
             <item android:id="@+id/menu_item_add_event" android:icon="@drawable/plus_grey"
                 android:title="@string/title_activity_add_event" />
             <item android:id="@+id/menu_item_my_invitations" android:icon="@android:drawable/ic_dialog_email"
