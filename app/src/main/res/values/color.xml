@@ -60,7 +60,7 @@
     <color name="smoke">#d6ffffff</color>
     <color name="light_smoke">#aeffffff</color>
     <color name="elevation_gray">#40000000</color>
-    <color name="elevation_black">#cb000000</color>
+    <color name="elevation_black">#77000000</color>
     <color name="elevation_white">#b9ffffff</color>
 
     <!-- Buttons -->
