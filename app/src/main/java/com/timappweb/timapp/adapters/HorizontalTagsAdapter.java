@@ -165,6 +165,10 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         return ConfigurationProvider.rules().posts_max_tags_number;
     }
 
+    public int getMinTags() {
+        return ConfigurationProvider.rules().posts_min_tag_number;
+    }
+
     /*
     public ArrayList<String> getStringsFromTags() {
         ArrayList<String> res = new ArrayList<String>();
