@@ -1,6 +1,8 @@
 package com.timappweb.timapp.rest.callbacks;
 
+import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
@@ -34,6 +36,13 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
                     }
                 })
                 .perform();
+        if (actionType == QuotaType.ADD_PICTURE || actionType == QuotaType.ADD_TAGS){
+            if (EventStatusManager.hasCurrentEvent() && !EventStatusManager.getCurrentEvent().equals(event)){
+                // TODO add here status permanentely (we need the sync id from the server...)
+                EventStatusManager.setCurrentEvent(event);
+            }
+
+        }
     }
 
 

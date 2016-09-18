@@ -143,7 +143,7 @@ public class EventStatusManager {
         }
         // If we add the GONE status to our current event
         if (userEvent.status == UserEventStatusEnum.GONE){
-            if (currentEvent != null && currentEvent.getId() == userEvent.event.getId()){
+            if (currentEvent != null && currentEvent.equals(userEvent.event)){
                 setCurrentEvent(null);
             }
         }
