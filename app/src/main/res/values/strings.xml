@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
 
     <!-- .................. Don't depend on the language ..........................-->
-    <string name="app_name">TiMapp</string>
-    <string name="squarecamera__app_name">@string/app_name</string>
-    <string name="db_name">database_timapp</string>
-    <string name="p_key_one">TiMapp Presentation (1)</string>
-    <string name="p_key_two">TiMapp Presentation (2)</string>
-    <string name="p_key_three">TiMapp Presentation (3)</string>
-    <string name="p_key_four">TiMapp Presentation (4)</string>
-    <string name="p_key_five">TiMapp Presentation (5)</string>
-    <string name="p_key_six">TiMapp Presentation (6)</string>
-    <string name="p_key_seven">TiMapp Presentation (7)</string>
-    <string name="app_id">1634741340120823</string>
-    <string name="namespace">timappweb</string>
-    <string name="sync_account_type">timapp.timappweb.com</string>
-    <string name="content_authority_config">com.timappweb.timapp.config.provider</string>
-    <string name="content_authority_data">com.timappweb.timapp.data.provider.data</string>
-    <string name="content_authority_user">com.timappweb.timapp.data.provider.user</string>
-    <string name="error_message_no_address_found">No address found</string>
-    <string name="error_message_service_not_available">Service not available</string>
-    <string name="error_message_invalid_lat_long_used">Invalid latitude or longitude used</string>
+    <string name="app_name" translatable="false">TiMapp</string>
+    <string name="squarecamera__app_name" translatable="false">@string/app_name</string>
+    <string name="db_name" translatable="false">database_timapp</string>
+    <string name="p_key_one" translatable="false">TiMapp Presentation (1)</string>
+    <string name="p_key_two" translatable="false">TiMapp Presentation (2)</string>
+    <string name="p_key_three" translatable="false">TiMapp Presentation (3)</string>
+    <string name="p_key_four" translatable="false">TiMapp Presentation (4)</string>
+    <string name="p_key_five" translatable="false">TiMapp Presentation (5)</string>
+    <string name="p_key_six" translatable="false">TiMapp Presentation (6)</string>
+    <string name="p_key_seven" translatable="false">TiMapp Presentation (7)</string>
+    <string name="app_id" translatable="false">1634741340120823</string>
+    <string name="namespace" translatable="false">timappweb</string>
+    <string name="sync_account_type" translatable="false">timapp.timappweb.com</string>
+    <string name="content_authority_config" translatable="false">com.timappweb.timapp.config.provider</string>
+    <string name="content_authority_data" translatable="false">com.timappweb.timapp.data.provider.data</string>
+    <string name="content_authority_user" translatable="false">com.timappweb.timapp.data.provider.user</string>
+    <string name="error_message_no_address_found" translatable="false">No address found</string>
+    <string name="error_message_service_not_available" translatable="false">Service not available</string>
+    <string name="error_message_invalid_lat_long_used" translatable="false">Invalid latitude or longitude used</string>
     <!-- Dev Strings -->
-    <string name="dev_name">Concert improvisé :D</string>
-    <string name="dev_description">Cet endroit est sympa, surtout
+    <string name="dev_name" translatable="false">Concert improvisé :D</string>
+    <string name="dev_description" translatable="false">Cet endroit est sympa, surtout
         grâce à Lucia qui s’est mise à danser sur le bar.</string>
     <!-- ...........................................................................-->
 
@@ -141,7 +141,6 @@
             <string name="no_tags">No tags yet.</string>
             <string name="thanks_for_add_tag">Thank you for your tags !</string>
         <!-- Fragment People -->
-            <string name="no_people">Nobody has posted here.</string>
             <string name="header_coming">On their way</string>
             <string name="header_invited">Friends invited</string>
             <string name="header_here">Here</string>
