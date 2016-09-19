@@ -19,6 +19,7 @@ import java.io.IOException;
  */
 public class ImageSaver {
 
+    private static final String TAG = "ImageSaver";
     private String directoryName = "images";
     private String fileName = "image.png";
     private Context context;
@@ -100,7 +101,7 @@ public class ImageSaver {
             inputStream = new FileInputStream(createFile());
             return BitmapFactory.decodeStream(inputStream);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         } finally {
             try {
                 if (inputStream != null) {

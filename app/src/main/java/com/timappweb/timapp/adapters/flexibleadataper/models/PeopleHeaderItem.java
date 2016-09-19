@@ -59,4 +59,10 @@ public class PeopleHeaderItem extends ExpandableHeaderItem {
         }
         this.count = count;
     }
+
+    @Override
+    public void removeSubItems() {
+        this._moreDataItem = null;
+        super.removeSubItems();
+    }
 }
