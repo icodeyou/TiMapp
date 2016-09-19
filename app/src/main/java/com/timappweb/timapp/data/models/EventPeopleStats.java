@@ -8,8 +8,8 @@ import com.google.gson.annotations.Expose;
 public class EventPeopleStats {
 
     @Expose
-    public int count_here;
+    public int here;
 
     @Expose
-    public int count_coming;
+    public int coming;
 }

@@ -315,7 +315,12 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                     }
 
                     @Override
-                    protected List getEntries(@NotNull PaginatedResponse body) {
+                    protected List getEntries(@NotNull PaginatedResponse<EventsInvitation> body) {
+                        if (body.items != null){
+                            for (EventsInvitation invitation: body.items){
+                                invitation.user_source = MyApplication.getCurrentUser();
+                            }
+                        }
                         return body.items;
                     }
                 })
@@ -380,7 +385,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     private Event extractEvent(Bundle extras) throws CannotSyncException {
         long eventId = extras.getLong(SYNC_PARAM_EVENT_ID, -1);
         if (eventId == -1) {
-            Log.e(TAG, "Invalid sync key. Please provide a sync key");
+            Log.e(TAG, "Invalid sync key for event. Please provide key to sync adapter: " + SYNC_PARAM_EVENT_ID);
             throw new MissingSyncParameterException(SYNC_PARAM_EVENT_ID);
         }
         Event event = Event.loadByRemoteId(Event.class, eventId);
@@ -393,7 +398,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     private long extractRemoteId(Bundle extras){
         int id = extras.getInt(SYNC_ID_KEY, -1);
         if (id == -1) {
-            Log.e(TAG, "Invalid sync key. Please provide a sync key");
+            Log.e(TAG, "Invalid sync key for id. Please provide key to sync adapter: " + SYNC_ID_KEY);
             throw new InvalidParameterException();
         }
         return id;

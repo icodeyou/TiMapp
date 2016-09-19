@@ -27,9 +27,10 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     private long _lastLoad = 0;
     private PaginatedSection currentLoadSection;
 
+
     public enum LoadType {MORE, UPDATE, NEWEST}
 
-    private static final String TAG = "PaginatedDataLoader";
+    private static final String TAG = "SectionDataLoader";
 
     // ---------------------------------------------------------------------------------------------
 
@@ -123,7 +124,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
      * @return
      */
     public boolean loadMore(){
-        if (_isFullyLoaded || isLoading()){
+        if (_isFullyLoaded){
             return false;
         }
         PaginatedSection lastSection = sectionContainer.last();
@@ -132,18 +133,27 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         //if (newSection.getEnd() == -1) return false;
 
         newSection.setLoadType(LoadType.MORE);
-        sectionContainer.addSection(newSection);
-        this.load(newSection);
-        return true;
+        return this.load(newSection);
     }
 
-    public boolean firstLoad() {
-        return this.loadNewest();
-    }
 
-    private synchronized void load(PaginatedSection section) {
+    /**
+     * Only one load at a time garantee!
+     * @param section
+     * @return true if load start, false otherwise
+     */
+    private boolean load(PaginatedSection section) {
+        synchronized (this) {
+            if (isLoading()) {
+                Log.d(TAG, "Already loading another section. Abort: " + section);
+                return false;
+            }
+            Log.d(TAG, "Start loading a new section: " + section);
+            sectionContainer.addSection(section);
+        }
         currentLoadSection = section;
         if (this.useCache && this.cacheEngine.contains(section)) {
+            Log.d(TAG, "    - Using cache for section" + section);
             List<T> data = this.cacheEngine.get(section);
             section.setStatus(LoadStatus.DONE);
             currentLoadSection = null;
@@ -151,13 +161,11 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         } else {
             this.remoteLoad(section);
         }
+        return true;
     }
 
 
     public boolean loadNewest(){
-        if (isLoading()){
-            return false;
-        }
         PaginatedSection section = sectionContainer.first();
         // Check if we need to load newest
         if (        section == null
@@ -165,8 +173,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
             PaginatedSection newSection = createNewerSection(section);
             if (section == null || newSection.getEnd() > 0){
                 newSection.setLoadType(LoadType.NEWEST);
-                this.load(newSection);
-                return true;
+                return this.load(newSection);
             }
         }
         return false;
@@ -182,23 +189,18 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     }
 
     private void remoteLoad(final PaginatedSection newSection) {
+        Log.d(TAG, "    - Start remote load for section: " + newSection);
         currentCallManager = dataProvider.remoteLoad(newSection)
                 .onResponse(new HttpCallback<ResponseSyncWrapper<T>>() {
                     @Override
                     public void successful(ResponseSyncWrapper<T> feedback) {
                         // Update min and max ids
                         if (feedback.getCount() > 0){
-                            if (newSection.getLoadType() == LoadType.NEWEST){
-                                newSection.setEnd(feedback.getLimit() == feedback.getCount() ? formatter.format(feedback.getLastItem()) : newSection.getEnd());
-                                newSection.setStart(formatter.format(feedback.getFirstItem()));
+                            if (newSection.getEnd() == -1) {
+                                newSection.setEnd(formatter.format(feedback.getLastItem()));
                             }
-                            else {
-                                if (newSection.getEnd() == -1) {
-                                    newSection.setEnd(formatter.format(feedback.getLastItem()));
-                                }
-                                if (newSection.getStart() == -1) {
-                                    newSection.setStart(formatter.format(feedback.getFirstItem()));
-                                }
+                            if (newSection.getStart() == -1) {
+                                newSection.setStart(formatter.format(feedback.getFirstItem()));
                             }
                         }
                         // if no more data => set loadmore done
@@ -217,7 +219,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                             }
                         }
 
-                        Log.d(TAG, "Section loaded with success: " + newSection);
+                        Log.d(TAG, "    - Section loaded with success: " + newSection);
                         newSection.setStatus(LoadStatus.DONE);
                         if (useCache && cacheEngine != null){
                             cacheEngine.add(newSection, feedback.items);
@@ -227,7 +229,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
 
                     @Override
                     public void notSuccessful() {
-                        Log.e(TAG, "Cannot load section: " + newSection + ". HTTP code: " + this.response.code());
+                        Log.e(TAG, "    - Cannot load section: " + newSection + ". HTTP code: " + this.response.code());
                         newSection.setStatus(LoadStatus.ERROR);
                         if (callback != null) callback.onLoadError(new CannotSyncException("Server response is not successfull", 0), newSection);
 
@@ -236,7 +238,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                 .onError(new RequestFailureCallback(){
                     @Override
                     public void onError(Throwable error) {
-                        Log.e(TAG, "Cannot load section: " + newSection + ". Error: " + error.getMessage());
+                        Log.e(TAG, "     - Cannot load section: " + newSection + ". Error: " + error.getMessage());
                         newSection.setStatus(LoadStatus.ERROR);
                         if (callback != null) callback.onLoadError(error, newSection);
                     }

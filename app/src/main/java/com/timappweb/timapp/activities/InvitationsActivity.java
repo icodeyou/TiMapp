@@ -39,6 +39,7 @@ public class InvitationsActivity extends BaseActivity implements
 
     private String              TAG                             = "ListFriendsActivity";
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
+    private static final int    MIN_DELAY_AUTO_REFRESH         = 2 * 3600 * 1000;
     public static int    LOCAL_LOAD_LIMIT                = 5;
     private static final int    REMOTE_LOAD_LIMIT               = 5;
 
@@ -49,6 +50,7 @@ public class InvitationsActivity extends BaseActivity implements
     private View noInvitationsView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private SectionDataLoader mDataLoader;
+    private SectionRecyclerViewManager mRecyclerViewManager;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -69,19 +71,9 @@ public class InvitationsActivity extends BaseActivity implements
         initInvitationAdapter();
         initDataLoader();
 
-        new SectionRecyclerViewManager(this, adapter, mDataLoader)
-                .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventsInvitation>() {
-                    @Override
-                    public AbstractFlexibleItem createItem(EventsInvitation data) {
-                        return new InvitationItem(data);
-                    }
-                })
-                .setNoDataView(noInvitationsView)
-                .setCallback(this)
-                .setSwipeRefreshLayout(mSwipeRefreshLayout)
-                .enableEndlessScroll()
-                .firstLoad();
     }
+
+
 
     private void initDataLoader() {
         SectionDataProviderInterface<EventsInvitation> mDataProvider = new SectionDataProviderInterface() {
@@ -114,8 +106,22 @@ public class InvitationsActivity extends BaseActivity implements
                 .useCache(false)
                 .setDataProvider(mDataProvider);
 
-        mDataLoader.firstLoad();
+        this.mRecyclerViewManager = new SectionRecyclerViewManager(this, adapter, mDataLoader)
+                .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventsInvitation>() {
+                    @Override
+                    public AbstractFlexibleItem createItem(EventsInvitation data) {
+                        return new InvitationItem(data);
+                    }
+                })
+                .setNoDataView(noInvitationsView)
+                .setCallback(this)
+                .setSwipeRefreshLayout(mSwipeRefreshLayout)
+                .enableEndlessScroll()
+                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .firstLoad();
     }
+
 
     private void initInvitationAdapter() {
         recyclerView.setHasFixedSize(true);

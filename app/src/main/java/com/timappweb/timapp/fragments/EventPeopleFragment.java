@@ -19,8 +19,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.activities.NetworkErrorCallback;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
-import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
+import com.timappweb.timapp.adapters.flexibleadataper.models.PeopleHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
@@ -30,6 +30,8 @@ import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
@@ -42,7 +44,7 @@ import com.timappweb.timapp.views.SwipeRefreshLayout;
 import org.greenrobot.eventbus.EventBus;
 
 
-public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener {
+public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener, android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private static final String     TAG                             = "EventTagsFragment";
     private static final long       MAX_UPDATE_DELAY                = 3600 * 1000;
@@ -54,9 +56,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton    postButton;
     private RecyclerView            mRecyclerView;
-    private ExpandableHeaderItem    mExpandableHereHeader;
-    private ExpandableHeaderItem    mExpandableComingHeader;
-    private ExpandableHeaderItem    mExpandableInviteHeader;
+    private PeopleHeaderItem    mExpandableHereHeader;
+    private PeopleHeaderItem    mExpandableComingHeader;
+    private PeopleHeaderItem    mExpandableInviteHeader;
     private Loader<List<EventsInvitation>> mInviteLoader;
     private UserStatusLoader userStatusLoader;
     private InviteSentLoader inviteSentLoader;
@@ -98,15 +100,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
             mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
         }
 
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                userStatusLoader.refresh();
-                if (MyApplication.isLoggedIn()) {
-                    inviteSentLoader.refresh();
-                }
-            }
-        });
+        mSwipeLayout.setOnRefreshListener(this);
     }
 
     private void initUserStatusLoader() {
@@ -115,6 +109,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         UserEvent.class,
                         getEvent().getPeopleQuery(),
                         false))
+                .setSyncOptions(new SyncAdapterOption().setType(DataSyncAdapter.SYNC_TYPE_EVENT_USERS).setLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, getEvent().getRemoteId()))
                 .setSwipeAndRefreshLayout(mSwipeLayout, false)
                 .setCallback(new SyncDataLoader.Callback<UserEvent>() {
                     @Override
@@ -136,11 +131,13 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         }
                         mPlaceUsersAdapter.expand(mExpandableHereHeader);
                         mPlaceUsersAdapter.expand(mExpandableComingHeader);
+                        EventPeopleFragment.this.loadPeopleStats();
                     }
 
                     @Override
                     public void onLoadError(Throwable error) {
-
+                        // TODO
+                        Log.e(TAG, "Load error: " + error.getMessage());
                     }
                 });
     }
@@ -152,6 +149,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         MyApplication.getCurrentUser().getInviteSentQuery(getEvent().getId()),
                         false))
                 .setSwipeAndRefreshLayout(mSwipeLayout, false)
+                .setSyncOptions(new SyncAdapterOption().setType(DataSyncAdapter.SYNC_TYPE_INVITE_SENT).setLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, getEvent().getRemoteId()))
                 .setCallback(new SyncDataLoader.Callback<EventsInvitation>() {
                     @Override
                     public void onLoadEnd(List<EventsInvitation> data) {
@@ -165,27 +163,29 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
                     @Override
                     public void onLoadError(Throwable error) {
-
+                        // TODO
+                        Log.e(TAG, "Load error: " + error.getMessage());
                     }
                 });
     }
 
 
-    // TODO
+    /**
+     *
+     */
     public void loadPeopleStats(){
         RestClient.buildCall(RestClient.service().eventPeopleStats(getEvent().getRemoteId()))
             .onResponse(new HttpCallback<EventPeopleStats>() {
                 @Override
                 public void successful(EventPeopleStats peopleStat) {
-                    // TODO
-                }
+                    mExpandableHereHeader.setCount(peopleStat.here, mPlaceUsersAdapter);
+                    mExpandableComingHeader.setCount(peopleStat.coming, mPlaceUsersAdapter);
 
-                @Override
-                public void notSuccessful() {
-
+                    // TODO store in local
                 }
             })
-            .onError(new NetworkErrorCallback(getContext()));
+            .onError(new NetworkErrorCallback(getContext()))
+            .perform();
     }
 
     @Override
@@ -197,17 +197,14 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     @Override
     public void onStart() {
         super.onStart();
-        if (mInviteLoader!= null){
-            mInviteLoader.forceLoad();
-        }
-        EventBus.getDefault().register(userStatusLoader);
-        EventBus.getDefault().register(inviteSentLoader);
+        if (userStatusLoader != null) EventBus.getDefault().register(userStatusLoader);
+        if (inviteSentLoader != null) EventBus.getDefault().register(inviteSentLoader);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(userStatusLoader);
-        EventBus.getDefault().unregister(inviteSentLoader);
+        if (userStatusLoader != null) EventBus.getDefault().unregister(userStatusLoader);
+        if (inviteSentLoader != null) EventBus.getDefault().unregister(inviteSentLoader);
         super.onStop();
     }
 
@@ -215,18 +212,18 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //Settings for FlipView
-        FlipView.resetLayoutAnimationDelay(true, 1000L);
+        FlipView.resetLayoutAnimationDelay(true, 1000L); // TODO cst
 
         mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
         mPlaceUsersAdapter.setPermanentDelete(true);
 
-        mExpandableInviteHeader = new ExpandableHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
+        mExpandableInviteHeader = new PeopleHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
         mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
 
-        mExpandableComingHeader = new ExpandableHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
+        mExpandableComingHeader = new PeopleHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
         mPlaceUsersAdapter.addSection(mExpandableComingHeader);
 
-        mExpandableHereHeader = new ExpandableHeaderItem("HERE", context.getResources().getString(R.string.header_here));
+        mExpandableHereHeader = new PeopleHeaderItem("HERE", context.getResources().getString(R.string.header_here));
         mPlaceUsersAdapter.addSection(mExpandableHereHeader);
 
         mPlaceUsersAdapter.addItem(0, new PlaceHolderItem("PLACEHOLDER0"));
@@ -263,21 +260,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 R.drawable.divider, 0));//Increase to add gap between sections (Works only with LinearLayout!)
 
-        //Add FastScroll to the RecyclerView, after the Adapter has been attached the RecyclerView!!!
-        //mPlaceUsersAdapter.setFastScroller((FastScroller) getActivity().findViewById(R.id.fast_scroller),
-        //        Utils.getColorAccent(getActivity()), (MainActivity) getActivity());
-
-        //Experimenting NEW features (v5.0.0)
-        //mPlaceUsersAdapter.setLongPressDragEnabled(true);//Enable long press to drag items
-
-        //Show Headers at startUp! (not necessary if Headers are also Expandable)
-        //mAdapter.setDisplayHeadersAtStartUp(true);
-        //Add sample item on the top (not belongs to the library)
-        //mPlaceUsersAdapter.addUserLearnedSelection(savedInstanceState == null);
-
-        //SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout_place_people);
-        //mListener.onFragmentChange(swipeRefreshLayout, mRecyclerView, SelectableAdapter.MODE_IDLE);
-
         mRecyclerView.setAdapter(mPlaceUsersAdapter);
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
@@ -285,6 +267,16 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     @Override
     public void onTabSelected() {
         mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void onRefresh() {
+        if (userStatusLoader != null) {
+            userStatusLoader.refresh();
+        }
+        if (inviteSentLoader != null) {
+            inviteSentLoader.refresh();
+        }
     }
 
 

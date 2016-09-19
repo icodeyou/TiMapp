@@ -11,6 +11,9 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
+import eu.davidea.flexibleadapter.items.IFlexible;
+import eu.davidea.flexibleadapter.items.IHeader;
+import eu.davidea.flexibleadapter.items.ISectionable;
 
 /**
  *
@@ -53,7 +56,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		return size;
 	}
 
-	public void addSubItem(ExpandableHeaderItem headerItem, SubUserItem item) {
+	public void addSubItem(ExpandableHeaderItem headerItem, ISectionable item) {
 		int size = headerItem.getSubItems() != null ? headerItem.getSubItems().size(): 0;
 		if (headerItem.isExpanded()){
 			addItemToSection(item, headerItem, size);
@@ -79,6 +82,10 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		this.removeItemsOfType(R.layout.progress_item);
 	}
 
+	/**
+	 * For filtering purpose. The data copy must be done first
+	 * @return
+     */
 	public ArrayList<AbstractFlexibleItem> createItemsCopy() {
 		mItemsCopy = new ArrayList<>(getItemCount());
 		for (int i = 0; i < getItemCount(); i++){
