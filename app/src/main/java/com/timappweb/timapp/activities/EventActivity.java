@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.timappweb.timapp.R;
@@ -50,6 +51,7 @@ import com.timappweb.timapp.views.RetryDialog;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import io.fabric.sdk.android.Fabric;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -102,7 +104,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-
             mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
             loader = findViewById(R.id.progress_view);
             pageTitle = (TextView) findViewById(R.id.title_event);

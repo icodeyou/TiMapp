@@ -15,12 +15,6 @@
                 android:title="@string/title_activity_list_friends" />
             <item android:id="@+id/menu_item_share" android:icon="@drawable/ic_social_share"
                 android:title="@string/nav_share" />
-            <!--
-            <item android:remote_id="@+remote_id/layout_spot" android:iconUrl="@android:drawable/ic_menu_send"
-                android:title="Spot" />
-            <item android:remote_id="@+remote_id/layout_event" android:iconUrl="@android:drawable/ic_menu_send"
-                android:title="Event" />
-                -->
         </menu>
     </item>
 
@@ -37,10 +31,12 @@
         </menu>
     </item>
 
-    <item android:title="Development shortcuts">
+    <item android:title="Development shortcuts" android:visible="false" android:id="@+id/menu_development_shortcut">
         <menu>
             <item android:id="@+id/menu_item_dummy_event" android:icon="@drawable/ic_map_light"
                 android:title="Dummy event" />
+            <item android:id="@+id/menu_item_crash_app" android:icon="@drawable/ic_map_light"
+                android:title="Crash app" />
         </menu>
     </item>
 </menu>

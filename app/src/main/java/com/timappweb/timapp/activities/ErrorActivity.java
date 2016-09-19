@@ -3,8 +3,11 @@ package com.timappweb.timapp.activities;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by stephane on 3/29/2016.

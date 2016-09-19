@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 //apply plugin: 'com.android.databinding'
 
 android {
     signingConfigs {
         config {
-            keyAlias 'timapp'
-            keyPassword 'LIyhoSOoo'
-            storeFile file('C:/Users/Jack/Documents/Jack Documents/Serious/Apps/TieMapp docs/keystore.jks')
-            storePassword 'LIyhoSOoo'
+            keyAlias 'timapp-dev'
+            keyPassword 'timappdev'
+            storeFile file('./../keystore-dev.jks')
+            storePassword 'timappdev'
         }
     }
     dataBinding {
@@ -43,7 +44,6 @@ android {
             minifyEnabled false
             debuggable true
             resValue "string", "api_base_url", "http://uat.timappweb.com/api/"
-            signingConfig signingConfigs.config
         }
     }
     // http://tools.android.com/tech-docs/unit-testing-support#TOC-Method-...-not-mocked.-
@@ -63,6 +63,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
         maven { url = "http://dl.bintray.com/davideas/maven" }
+        maven { url 'https://maven.fabric.io/public' }
     }
 }
 
@@ -104,7 +105,11 @@ dependencies {
     //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 
     //----------------------------------------------------------------------------------------------
+    // Crashlytics
 
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
+        transitive = true;
+    }
     // APP
 
     //Needed for Facebook - added by Jack

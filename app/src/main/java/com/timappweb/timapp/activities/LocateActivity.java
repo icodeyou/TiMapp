@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventsAdapter;
@@ -35,6 +36,8 @@ import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListene
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class LocateActivity extends BaseActivity implements LocationManager.LocationListener, PaginateDataLoader.Callback {
 

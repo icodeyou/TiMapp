@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -26,6 +27,7 @@ import com.timappweb.timapp.utils.location.MyLocationProvider;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import retrofit2.Call;
 
 public class BaseActivity extends AppCompatActivity {
@@ -49,6 +51,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
     }
 
     @Override

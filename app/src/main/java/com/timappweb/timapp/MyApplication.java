@@ -25,6 +25,9 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import retrofit2.Call;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+
 public class MyApplication extends com.activeandroid.app.Application {
 
     private static final String TAG = "MyApplication";
@@ -90,7 +93,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
         AbstractSyncAdapter.initializeSyncAdapter(this);
-
     }
 
 

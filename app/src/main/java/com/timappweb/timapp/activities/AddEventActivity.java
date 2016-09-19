@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -60,6 +61,7 @@ import com.timappweb.timapp.views.CategorySelectorView;
 
 import java.io.IOException;
 
+import io.fabric.sdk.android.Fabric;
 import retrofit2.Response;
 
 

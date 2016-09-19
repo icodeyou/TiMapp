@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonObject;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
@@ -51,6 +52,7 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import retrofit2.Response;
 
 public class AddTagActivity extends BaseActivity{

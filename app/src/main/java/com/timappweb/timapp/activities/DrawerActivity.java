@@ -27,8 +27,10 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLogoutListener;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
@@ -40,6 +42,8 @@ import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
+
+import io.fabric.sdk.android.Fabric;
 //import android.support.design.widget.FloatingActionButton;
 
 
@@ -121,7 +125,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_drawer);
-
         //Import toolbar without calling function initToolbar, because of the toggle button
         toolbar = (Toolbar) findViewById(R.id.toolbar_id);
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
@@ -134,6 +137,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (savedInstanceState == null) {
             changeCurrentFragment(FragmentId.Explore);
         }
+
     }
 
     @Override
@@ -249,6 +253,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         navigationView.getMenu().findItem(R.id.menu_item_settings).setVisible(false);
         navigationView.getMenu().findItem(R.id.menu_item_my_invitations).setVisible(isLoggedIn);
         navigationView.getMenu().findItem(R.id.menu_item_share).setVisible(isLoggedIn);
+        navigationView.getMenu().findItem(R.id.menu_development_shortcut).setVisible(BuildConfig.DEBUG);
 
         MenuItem item = menu.findItem(R.id.action_clear_filter);
         if(exploreFragment != null) {
@@ -386,6 +391,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             case R.id.menu_item_dummy_event:
                 IntentsUtils.viewSpecifiedEvent(this, DummyEventFactory.create());
                 break;
+            case R.id.menu_item_crash_app:
+                throw new RuntimeException("Simulate crash!");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
