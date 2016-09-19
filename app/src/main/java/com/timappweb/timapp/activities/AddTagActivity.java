@@ -232,6 +232,8 @@ public class AddTagActivity extends BaseActivity{
         // If we ever want to update the keyboard by calling setImeOptions,
         // we need to clear the focus of the searchview.
         int numberTags = searchAndSelectTagManager.getSelectedTags().size();
+        menu.findItem(R.id.action_post).setEnabled(numberTags>=selectedTagsRV.getMinTags());
+
         if(numberTags == selectedTagsRV.getMaxTags()-1) {
             searchView.setVisibility(View.VISIBLE);
             return true;

@@ -31,11 +31,6 @@
 
             <include layout="@layout/sticky_header_layout"/>
 
-            <TextView
-                style="@style/NoDataView"
-                android:id="@+id/no_posts_view"
-                android:text="@string/no_people"/>
-
         </FrameLayout>
 
     </FrameLayout>

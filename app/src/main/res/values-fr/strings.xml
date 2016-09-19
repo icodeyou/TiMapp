@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Titles Activities -->
     <string name="title_activity_explore">Carte</string>
     <string name="title_activity_place">Évenement</string>
@@ -65,7 +64,7 @@
     <string name="action_performed_not_successful">Désolé mais cette action n\'est pas disponible pour le moment. Merci de réessayer plus tard.</string>
     <string name="form_invalid_input">Ce champ est invalide.</string>
     <string name="data_already_refresh">Données à jour</string>
-    <string name="user_message_should_be_around_event_to_post">Rapproche de toi de l\événement pour poster ;)</string>
+    <string name="user_message_should_be_around_event_to_post">Rapproche de toi de l\'événement pour poster ;)</string>
     <string name="error_require_gps">Nous avons besoin de votre localisation pour cette opération.</string>
     <string name="quota_wait_string">Merci d\'attendre %s avant le prochain post.</string>
     <string name="quota_wait_not_defined">Merci d\'attendre %s avant le prochain post.</string>

@@ -3,7 +3,6 @@ package com.timappweb.timapp;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sromku.simple.fb.Permission;
@@ -11,18 +10,14 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.config.AuthProvider;
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
-import com.timappweb.timapp.sync.user.UserSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
@@ -106,7 +101,7 @@ public class MyApplication extends com.activeandroid.app.Application {
                 Permission.USER_FRIENDS,
         };
         SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
-                .setAppId(getResources().getString(R.string.app_id))
+                .setAppId(getResources().getString(R.string.facebook_app_id))
                 .setNamespace(getResources().getString(R.string.namespace))
                 .setPermissions(permissions)
                 .build();
