@@ -5,6 +5,5 @@ package com.timappweb.timapp.data.loader;
  */
 public interface DataLoaderInterface {
 
-    boolean firstLoad();
 
 }

@@ -61,6 +61,11 @@ public class SyncAdapterOption implements SyncHistory.HistoryItemInterface, Clon
         bundle.putDouble(key + "nelongitude", bounds.northeast.longitude);
     }
 
+    public SyncAdapterOption setLong(String key, long value) {
+        bundle.putLong(key, value);
+        return this;
+    }
+
 
     // ---------------------------------------------------------------------------------------------
 

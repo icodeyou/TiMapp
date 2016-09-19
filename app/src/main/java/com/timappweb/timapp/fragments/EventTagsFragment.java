@@ -113,7 +113,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
                         false))
                 .setCallback(this)
                 .setSwipeAndRefreshLayout(mSwipeRefreshLayout);
-        eventTagLoader.getSyncOptions().setType(DataSyncAdapter.SYNC_TYPE_EVENT_TAGS);
+        eventTagLoader.getSyncOptions().setType(DataSyncAdapter.SYNC_TYPE_EVENT_TAGS).setLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, getEvent().getRemoteId());
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

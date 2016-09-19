@@ -66,6 +66,10 @@ public class ExpandableHeaderItem<T extends IFlexible>
 		return mSubItems;
 	}
 
+	public int getSubItemsCount(){
+		return mSubItems != null ? mSubItems.size() : 0;
+	}
+
 	public final boolean hasSubItems() {
 		return mSubItems!= null && mSubItems.size() > 0;
 	}
@@ -117,8 +121,6 @@ public class ExpandableHeaderItem<T extends IFlexible>
 		} else {
 			holder.mTitle.setText(getTitle());
 		}
-		int count = adapter.getCurrentChildren(this).size();
-		setSubtitle(holder.getFrontView().getContext().getResources().getQuantityString(R.plurals.number_people_event, count, count));
 		holder.mSubtitle.setText(getSubtitle());
 	}
 

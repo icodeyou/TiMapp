@@ -148,8 +148,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     .setSwipeRefreshLayout(mSwipeRefreshLayout)
                     .enableEndlessScroll()
                     .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                    .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
-                    .firstLoad();
+                    .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH);
 
         } catch (Exception e) {
             IntentsUtils.home(getContext());

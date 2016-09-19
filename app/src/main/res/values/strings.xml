@@ -150,6 +150,11 @@
                 <item quantity="other">%d people</item>
             </plurals>
 
+            <plurals name="number_people_event_remaining" >
+                <item quantity="one">%d more person...</item>
+                <item quantity="other">%d more people...</item>
+            </plurals>
+
     <!-- DrawerActivity + Map -->
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer close</string>

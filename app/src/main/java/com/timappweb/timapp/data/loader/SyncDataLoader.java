@@ -128,18 +128,9 @@ public class SyncDataLoader<EntityType, This>
         // }
         //else{
             SyncAdapterOption option = syncOptions.clone()
-                    .setDirection(RestQueryParams.SyncDirection.DOWN)
-                    .setMaxId(getMinRemoteId() - 1);
+                    .setDirection(RestQueryParams.SyncDirection.DOWN);
             launchSync(option);
         //}
-    }
-
-    public void newest() {
-        if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(true);
-        SyncAdapterOption option = syncOptions.clone()
-                .setDirection(RestQueryParams.SyncDirection.DOWN)
-                .setMinId(getMaxRemoteId() + 1);
-        launchSync(option);
     }
 
     public This refresh() {
@@ -148,15 +139,6 @@ public class SyncDataLoader<EntityType, This>
                 .setDirection(RestQueryParams.SyncDirection.DOWN);
         launchSync(option);
         return (This) this;
-    }
-
-    public void update() {
-        if (mSwipeAndRefreshLayout != null) mSwipeAndRefreshLayout.setRefreshing(true);
-        SyncAdapterOption option = syncOptions.clone()
-                .setDirection(RestQueryParams.SyncDirection.DOWN)
-                .setMaxId(getMaxRemoteId())
-                .setMinId(getMinRemoteId());
-        launchSync(option);
     }
 
     private void launchSync(SyncAdapterOption option) {
@@ -200,14 +182,6 @@ public class SyncDataLoader<EntityType, This>
     }
     public SyncHistory.HistoryItemInterface getHistoryItemInterface() {
         return historyItemInterface;
-    }
-
-    public long getMaxRemoteId() {
-        return Integer.MAX_VALUE;
-    }
-
-    public long getMinRemoteId() {
-        return 0;
     }
 
     public This setMinDelayAutoRefresh(long minDelayAutoRefresh) {

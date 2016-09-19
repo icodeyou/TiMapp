@@ -75,6 +75,7 @@ public class SectionRecyclerViewManager
                 mAdapter.onLoadMoreComplete(items);
                 break;
             case NEWEST:
+                // TODO disable onLoadMore first load and there is not enough data. It will prevent one useless call
                 mAdapter.addBeginning(items);
                 break;
             case UPDATE:
@@ -107,12 +108,17 @@ public class SectionRecyclerViewManager
         this.onLoadEndUI();
     }
 
-    public void firstLoad() {
+    /**
+     * Do not call this method if endless scroll is enabled otherwise it will fetch data twice
+     */
+    public SectionRecyclerViewManager firstLoad() {
         if (mDataLoader.isLoading())
-            return;
-        if (!mDataLoader.firstLoad()){
+            return this;
+
+        if (!mDataLoader.loadNewest()){
             onLoadEndUI();
         }
+        return this;
     }
 
 }
