@@ -26,8 +26,8 @@ android {
         applicationId "com.timappweb.timapp"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
@@ -38,7 +38,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "api_base_url", "http://api.timappweb.com/api/"
             signingConfig signingConfigs.config
-            debuggable true
         }
         debug {
             minifyEnabled false

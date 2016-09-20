@@ -52,7 +52,7 @@
     <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
     <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
     <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>
-    <string name="no_fine_location">Localisation imprécise.\nMerci de créer les événements en dehors des établissements :)</string>
+    <string name="no_fine_location">Localisation imprécise.\nSi tu sors à l\extérieur, ça marchera à coup sûr ;)</string>
     <string name="toast_no_space">Vous ne pouvez pas ajouter d\'espace à votre tag.</string>
     <string name="toast_no_tag">Un tag minimum est nécessaire.</string>
     <string name="toast_too_many_tags_part_one">Il n\'est pas possible d\'ajouter plus de&#160;</string>
@@ -78,7 +78,7 @@
     <string name="cannot_load_spot_around">Désolé mais nous ne pouvons pas charger les lieux à proximité.\nMerci de réessayer plus tard.</string>
     <string name="explanation_gps_usage">TiMapp a besoin de votre localisation pour trouver les événements à proximité. Merci de nous donner l\'accès à votre localisation.</string>
     <string name="ask_user_to_enable_gps">GPS désactivé. Merci de l\'activer pour créer un événement.</string>
-
+    <string name="error_camera">Une erreur est survenue lors de l\'ajout de photo. Veuillez réessayer plus tard.</string>
 
 
     <!-- Category selector -->
@@ -193,12 +193,12 @@
 
     <!-- PresentationActivity -->
     <string name="two_ways_to_explore">Deux façons d\'explorer!</string>
-    <string name="presentation_two_text"><![CDATA[Avec TiMapp,\n trouve et partage les événements qui se déroulent actuellement.]]></string>
-    <string name="post_pics_and_tags">Poste des photos et des tags</string>
-    <string name="invite_people">Invite de gens</string>
+    <string name="presentation_two_text">Avec TiMapp,\n trouve et partage les événements qui se déroulent actuellement.</string>
+    <string name="post_pics_and_tags">Photos et tags</string>
+    <string name="invite_people">Invite tes amis</string>
     <string name="text_p_four">Ajoute les événements autour de toi en choisissant un nom et une catégorie.</string>
     <string name="share_page_p_one">Les posts fournissent un retour en temps réel de la communauté.</string>
-    <string name="share_page_p_two">Vous pouvez seulement posté si vous êtes localisés sur l\événement.</string>
+    <string name="share_page_p_two">Vous pouvez seulement poster si vous êtes localisés sur l\événement.</string>
     <string name="title_p_three">Trouve des événements</string>
     <string name="title_p_four">Crée des évéments</string>
     <string name="title_p_five">Partage</string>
