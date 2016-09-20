@@ -4,7 +4,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.view.DraweeView;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,8 +41,7 @@ public class PictureUtility {
         /*Picasso.with(context).load(f)
                 .resize(imageMaxWidth, imageMaxHeight)
                 .onlyScaleDown()
-                .into(getTarget(f.getAbsolutePath()));*/
-
+                .into(getTarget(f.getAbsolutePath()));
         FileInputStream fis = new FileInputStream(f);
         Bitmap b = BitmapFactory.decodeStream(fis);
         if (b == null){
@@ -39,7 +51,33 @@ public class PictureUtility {
         b = PictureUtility.resize(b, imageMaxWidth, imageMaxHeight);
         fis.close();
         PictureUtility.persistImage(b, f);
+        return f;*/
+        Log.d(TAG, "File size before compression : "+f.length());
+
+        Bitmap b = BitmapFactory.decodeFile(f.getPath());
+        //TODO : Decrease Max width and max height on server config, and remove the 0.5 coef.
+        Bitmap out = Bitmap.createScaledBitmap(b, imageMaxWidth/2, imageMaxHeight/2, false);
+
+        FileOutputStream fOut = new FileOutputStream(f);
+
+        try {
+            out.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            b.recycle();
+            out.recycle();
+        } catch (Exception e) {
+            Log.e(TAG, "Error compressing picture");
+        }
+
+        Log.d(TAG, "File size after compression : "+f.length());
+        Log.d(TAG, "Width max : " + ConfigurationProvider.rules().picture_max_width);
+        Log.d(TAG, "Height max : " + ConfigurationProvider.rules().picture_max_height);
+        Log.d(TAG, "Size max : " + ConfigurationProvider.rules().picture_max_size);
+
+
         return f;
+
     }
     /**
      * reduces the size of the image

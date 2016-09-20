@@ -51,6 +51,7 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
+import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
@@ -68,6 +69,8 @@ import com.timappweb.timapp.views.SwipeRefreshLayout;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -103,6 +106,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
         initVariables(root);
 
         initAdapter();
+        initConfigEasyImage();
         initActionModeHelper(SelectableAdapter.MODE_SINGLE);
         return root;
     }
@@ -113,6 +117,13 @@ public class EventPicturesFragment extends EventBaseFragment implements
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
+    }
+
+    private void initConfigEasyImage() {
+        EasyImage.configuration(eventActivity)
+                .setImagesFolderName(getString(R.string.app_name))
+                .saveInAppExternalFilesDir()
+                .setCopyExistingPicturesToPublicLocation(true);
     }
 
     private void initActionModeHelper(int mode) {
@@ -157,17 +168,32 @@ public class EventPicturesFragment extends EventBaseFragment implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==IntentsUtils.REQUEST_CAMERA) {
-            Log.d(TAG, "Result request camera");
-            eventActivity.setCurrentPageSelected(EventActivity.PAGER_PICTURE);
-            if (resultCode != Activity.RESULT_OK){
-                Log.e(TAG, "Activity result for requesting camera returned a non success code: " + resultCode);
-                return;
+    public void onActivityResult(int requestCode, final int resultCode, final Intent data) {
+        EasyImage.handleActivityResult(requestCode, resultCode, data, eventActivity, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                Toast.makeText(eventActivity, R.string.error_camera, Toast.LENGTH_SHORT).show();
             }
-            Uri photoUri = data.getData();
-            uploadPicture(photoUri);
-        }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                Log.d(TAG, "Result request camera");
+                eventActivity.setCurrentPageSelected(EventActivity.PAGER_PICTURE);
+                if (resultCode != Activity.RESULT_OK){
+                    Log.e(TAG, "Activity result for requesting camera returned a non success code: " + resultCode);
+                    return;
+                }
+                uploadPicture(imageFile);
+            }
+
+            @Override
+            public void onCanceled(EasyImage.ImageSource source, int type) {
+                if (source == EasyImage.ImageSource.CAMERA) {
+                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(eventActivity);
+                    if (photoFile != null) photoFile.delete();
+                }
+            }
+        });
     }
 
     private void initAdapter() {
@@ -257,16 +283,14 @@ public class EventPicturesFragment extends EventBaseFragment implements
     }
     /**
      * Only one upload at a time.
-     * @param fileUri
+     * @param file
      */
-    public void uploadPicture(final Uri fileUri) {
+    public void uploadPicture(File file) {
         if (uploadView.getVisibility() == View.VISIBLE){
             Toast.makeText(getContext(), R.string.upload_picture_in_progress, Toast.LENGTH_SHORT).show();
             return;
         }
         setUploadVisibility(true);
-        // create upload service client
-        File file = new File(fileUri.getPath());
 
         try {
             ApplicationRules rules = ConfigurationProvider.rules();
@@ -276,8 +300,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     " has size: " + Util.byteToKB(file.length()) +
                     ". Max size: " + Util.byteToKB(rules.picture_max_size));
 
-            // TODO
-            //file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
+            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 
             Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.config;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,10 @@ import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
+
+import pl.aprilapps.easyphotopicker.EasyImage;
+import pl.tajchert.nammu.Nammu;
+import pl.tajchert.nammu.PermissionCallback;
 
 public class IntentsUtils {
 
@@ -183,26 +188,21 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void addPicture(Activity activity) {
-        if (!requireLogin(activity, false))
+    public static void addPictureFromFragment(Context context, final Fragment fragment) {
+        if (!requireLogin(context, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
             return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
-            return;
-        }
-        Intent startCustomCameraIntent = new Intent(activity, CameraActivity.class);
-        activity.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
-    }
 
-    public static void addPictureFromFragment(Context context, Fragment fragment) {
-        if (!requireLogin(context, false))
-            return;
-        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
-            return;
-        }
-        Intent startCustomCameraIntent = new Intent(context, CameraActivity.class);
-        fragment.startActivityForResult(startCustomCameraIntent, REQUEST_CAMERA);
+        Nammu.askForPermission(fragment.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
+            @Override
+            public void permissionGranted() {
+                EasyImage.openCamera(fragment, 0);
+            }
+
+            @Override
+            public void permissionRefused() {
+
+            }
+        });
     }
 
     public static void addTags(Activity activity, Event event) {

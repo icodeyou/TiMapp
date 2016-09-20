@@ -76,7 +76,7 @@
             <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
             <string name="fatal_error_unknown_reason_title">Something bad happened...</string>
             <string name="fatal_error_unknown_reason_message">Sorry, but something went wrong. You need to restart your application. If this message appear again, try updating your application.</string>
-            <string name="no_fine_location">We don\'t have a fine location. Make sure your gps is enabled.</string>
+            <string name="no_fine_location">We don\'t have a fine location. Go outside and it will definitely work.</string>
             <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
             <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
             <string name="toast_no_space">You cannot add any space to a tag. To submit one, please press the touch "Done" of your keyboard.</string>
@@ -103,7 +103,8 @@
             <string name="error_picture_too_small">The picture quality seems to be very bad. Try to take another one please.</string>
             <string name="cannot_load_spot_around">Sorry but we cannot load places around you for now. \nTry again later</string>
             <string name="explanation_gps_usage">Timapp requires your location to find events around you. Please authorize us to get your location.</string>
-            <string name="ask_user_to_enable_gps">GPS is disabled on your device. Activate it to load the nearby events.</string>
+            <string name="ask_user_to_enable_gps">GPS is disabled on your device. Activate it to create a place.</string>
+            <string name="error_camera">Something bad happened when taking a picture. Please try again later.</string>
 
 
 
