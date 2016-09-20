@@ -91,6 +91,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
+        //gradle v24 : abc_ic_ab_back_material
         final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
         upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);

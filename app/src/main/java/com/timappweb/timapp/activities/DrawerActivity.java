@@ -44,6 +44,7 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import io.fabric.sdk.android.Fabric;
+import pl.aprilapps.easyphotopicker.EasyImage;
 //import android.support.design.widget.FloatingActionButton;
 
 
@@ -390,6 +391,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             // DEV
             case R.id.menu_item_dummy_event:
                 IntentsUtils.viewSpecifiedEvent(this, DummyEventFactory.create());
+                break;
+            case R.id.menu_item_test_cam:
+                EasyImage.openCamera(this, 0);
                 break;
             case R.id.menu_item_crash_app:
                 throw new RuntimeException("Simulate crash!");

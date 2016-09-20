@@ -1,18 +1,14 @@
 package com.timappweb.timapp.activities;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -24,7 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.timappweb.timapp.R;
@@ -36,9 +31,9 @@ import com.timappweb.timapp.data.models.SyncHistory;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.fragments.EventBaseFragment;
 import com.timappweb.timapp.fragments.EventInformationFragment;
+import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.fragments.EventTagsFragment;
-import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -50,8 +45,10 @@ import com.timappweb.timapp.views.RetryDialog;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 
-import io.fabric.sdk.android.Fabric;
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -191,15 +188,10 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     Log.d(TAG, "Result OK from InviteFriendsActivity");
                 }
                 break;
-            case IntentsUtils.REQUEST_CAMERA:
-                if(resultCode==RESULT_OK) {
-                    setCurrentPageSelected(PAGER_PICTURE);
-                    Log.d(TAG, "Result OK from InviteFriendsActivity");
-                }
-                break;
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -522,7 +514,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     //////////////////////////////////////////////////////////////////////////////
 
     // Check for camera permission in MashMallow
-    public void requestForCameraPermission() {
+    /*public void requestForCameraPermission() {
         final String permission = Manifest.permission.CAMERA;
         if (ContextCompat.checkSelfPermission(this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -536,7 +528,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             // Start CameraActivity
             IntentsUtils.addPicture(this);
         }
-    }
+    }*/
 
     public Event getEvent() {
         return event;

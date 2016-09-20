@@ -52,7 +52,7 @@
     <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
     <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
     <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>
-    <string name="no_fine_location">Votre localisation est imprécise. Assurez-vous que votre GPS est activé.</string>
+    <string name="no_fine_location">Localisation imprécise.\nMerci de créer les événements en dehors des établissements :)</string>
     <string name="toast_no_space">Vous ne pouvez pas ajouter d\'espace à votre tag.</string>
     <string name="toast_no_tag">Un tag minimum est nécessaire.</string>
     <string name="toast_too_many_tags_part_one">Il n\'est pas possible d\'ajouter plus de&#160;</string>
@@ -77,7 +77,7 @@
     <string name="event_does_not_exists_anymore">Cet événement n\'existe plus. Redirection vers la carte.</string>
     <string name="cannot_load_spot_around">Désolé mais nous ne pouvons pas charger les lieux à proximité.\nMerci de réessayer plus tard.</string>
     <string name="explanation_gps_usage">TiMapp a besoin de votre localisation pour trouver les événements à proximité. Merci de nous donner l\'accès à votre localisation.</string>
-    <string name="ask_user_to_enable_gps">GPS désactivé. Merci de l\'activer pour charger les événements.</string>
+    <string name="ask_user_to_enable_gps">GPS désactivé. Merci de l\'activer pour créer un événement.</string>
 
 
 

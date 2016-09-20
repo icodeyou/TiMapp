@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorPrimaryVeryDark">#8c1e1e</color>
     <color name="colorPrimaryTransparent">#D9D32F2F</color>
-    <color name="colorPrimaryDarkTransparent">#D9D32F2F</color>
+    <color name="colorPrimaryDarkTransparent">#8ad32f2f</color>
     <color name="colorWhiteTransparent50">#80FFFFFF</color>
     <color name="colorBlackTransparent50">#80000000</color>
     <color name="colorAccent">#f44336</color>

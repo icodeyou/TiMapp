@@ -212,7 +212,9 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     @Override
     public void onTabSelected() {
-        mScrollView.smoothScrollTo(0,0);
+        if(mScrollView!=null) {
+            mScrollView.smoothScrollTo(0,0);
+        }
     }
 
     @Override

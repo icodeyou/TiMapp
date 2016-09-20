@@ -266,7 +266,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
     @Override
     public void onTabSelected() {
-        mRecyclerView.smoothScrollToPosition(0);
+        if(mRecyclerView!=null) {
+            mRecyclerView.smoothScrollToPosition(0);
+        }
     }
 
     @Override

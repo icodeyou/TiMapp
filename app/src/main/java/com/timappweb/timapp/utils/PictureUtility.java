@@ -1,10 +1,25 @@
 package com.timappweb.timapp.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.view.DraweeView;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.iceteck.silicompressorr.SiliCompressor;
+import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,19 +32,23 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import id.zelory.compressor.Compressor;
+
 /**
  * Created by stephane on 3/31/2016.
  */
 public class PictureUtility {
 
     private static final String TAG = "PictureUtility";
+    private static final int MAX_TIMES_COMPRESS = 10;
+    private static final int COMPRESSION_QUALITY = 80;
 
-    public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
+    public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight, Context context) throws IOException {
+        //With Picasso
         /*Picasso.with(context).load(f)
                 .resize(imageMaxWidth, imageMaxHeight)
                 .onlyScaleDown()
-                .into(getTarget(f.getAbsolutePath()));*/
-
+                .into(getTarget(f.getAbsolutePath()));
         FileInputStream fis = new FileInputStream(f);
         Bitmap b = BitmapFactory.decodeStream(fis);
         if (b == null){
@@ -39,7 +58,42 @@ public class PictureUtility {
         b = PictureUtility.resize(b, imageMaxWidth, imageMaxHeight);
         fis.close();
         PictureUtility.persistImage(b, f);
-        return f;
+        return f;*/
+
+        //With library : https://github.com/Tourenathan-G5organisation/SiliCompressor
+        /*for(int i=1; i <= MAX_TIMES_COMPRESS; i++) {
+            //compress image
+            Bitmap newBitmap = SiliCompressor.with(context).getCompressBitmap(Uri.fromFile(f).toString(),true);
+        }
+
+        FileOutputStream fOut = new FileOutputStream(f);
+        try {
+            newBitmap.compress(Bitmap.CompressFormat.PNG, 0, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error compressing picture");
+        }*/
+
+        Log.d(TAG, "File size before compression : "+f.length());
+        Log.d(TAG, "Width max : " + ConfigurationProvider.rules().picture_max_width);
+        Log.d(TAG, "Height max : " + ConfigurationProvider.rules().picture_max_height);
+        Log.d(TAG, "Size max : " + ConfigurationProvider.rules().picture_max_size);
+
+        File newFile = new Compressor.Builder(context)
+                .setMaxWidth(imageMaxWidth)
+                .setMaxHeight(imageMaxHeight)
+                .setQuality(COMPRESSION_QUALITY)
+                .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                .build()
+                .compressToFile(f);
+
+        Log.d(TAG, "File size after compressing : "+newFile.length());
+
+        return newFile;
+
     }
     /**
      * reduces the size of the image
