@@ -170,6 +170,8 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.github.jkwiecien:EasyImage:1.2.4'
     compile 'com.github.tajchert:nammu:1.1.1'
+    compile 'id.zelory:compressor:1.0.2'
+
     // @warning WTF is that shit! It makes GSON parser throws stack overflow errors
 
     //compile 'com.google.android.gms:play-services-appindexing:8.3.0'

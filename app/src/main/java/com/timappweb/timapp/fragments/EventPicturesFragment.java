@@ -2,9 +2,11 @@ package com.timappweb.timapp.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.iceteck.silicompressorr.SiliCompressor;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
@@ -93,6 +96,9 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private PicturesAdapter             picturesAdapter;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private RefreshableRecyclerView     mRecyclerView;
+    private View                        bottomSheet;
+
+    private BottomSheetBehavior<View> bottomSheetBehaviour;
     private SectionDataLoader mDataLoader;
     private ActionModeHelper mActionModeHelper;
 
@@ -105,11 +111,14 @@ public class EventPicturesFragment extends EventBaseFragment implements
         View root = inflater.inflate(R.layout.fragment_event_pictures, container, false);
         initVariables(root);
 
+        bottomSheetBehaviour = BottomSheetBehavior.from(bottomSheet);
+
         initAdapter();
         initConfigEasyImage();
         initActionModeHelper(SelectableAdapter.MODE_SINGLE);
         return root;
     }
+
 
     private void initVariables(View root) {
         noPicView = root.findViewById(R.id.no_pictures_view);
@@ -117,12 +126,14 @@ public class EventPicturesFragment extends EventBaseFragment implements
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
+
+        bottomSheet = root.findViewById( R.id.bottom_sheet );
     }
 
     private void initConfigEasyImage() {
         EasyImage.configuration(eventActivity)
                 .setImagesFolderName(getString(R.string.app_name))
-                .saveInAppExternalFilesDir()
+                .saveInRootPicturesDirectory()
                 .setCopyExistingPicturesToPublicLocation(true);
     }
 
@@ -225,6 +236,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                 if (item != null && mActionModeHelper != null && currentUserOwnEvent){
                     mActionModeHelper.onLongClick(eventActivity, position);
                 }
+                bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
         mRecyclerView.setAdapter(picturesAdapter);
@@ -300,7 +312,8 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     " has size: " + Util.byteToKB(file.length()) +
                     ". Max size: " + Util.byteToKB(rules.picture_max_size));
 
-            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
+            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height, getContext());
+
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 
             Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +
@@ -412,7 +425,9 @@ public class EventPicturesFragment extends EventBaseFragment implements
 
     @Override
     public void onTabSelected() {
-        mRecyclerView.smoothScrollToPosition(0);
+        if(mRecyclerView!=null) {
+            mRecyclerView.smoothScrollToPosition(0);
+        }
     }
 
 
