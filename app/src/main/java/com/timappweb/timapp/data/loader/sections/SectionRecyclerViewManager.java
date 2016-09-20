@@ -53,8 +53,9 @@ public class SectionRecyclerViewManager
 
     @Override
     public void onRefresh() {
-        if (mDataLoader.isLoading())
+        if (mDataLoader.isLoading()){
             return;
+        }
         if (!mDataLoader.loadNewest()){
             onLoadEndUI();
         }

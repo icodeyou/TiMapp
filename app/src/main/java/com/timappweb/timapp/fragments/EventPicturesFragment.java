@@ -77,8 +77,8 @@ public class EventPicturesFragment extends EventBaseFragment implements
         ActionMode.Callback{
 
     private static final String         TAG                             = "EventPicturesFragment";
-    private static final long           REMOTE_LOAD_LIMIT               = 6;
-    public static int                   PICUTRE_GRID_COLUMN_NB          = 2;
+    private static final long           REMOTE_LOAD_LIMIT               = 10;
+    public static int                   PICTURE_GRID_COLUMN_NB          = 2;
     private static final long           MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
     private static final long           MIN_DELAY_AUTO_REFRESH          = 10 * 60 * 1000;
 
@@ -111,7 +111,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
         noPicView = root.findViewById(R.id.no_pictures_view);
         uploadView = root.findViewById(R.id.upload_view);
         mRecyclerView = (RefreshableRecyclerView) root.findViewById(R.id.pictures_rv);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICUTRE_GRID_COLUMN_NB));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICTURE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
     }
 
@@ -171,7 +171,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
     }
 
     private void initAdapter() {
-        picturesAdapter = new PicturesAdapter(getActivity(), PICUTRE_GRID_COLUMN_NB);
+        picturesAdapter = new PicturesAdapter(getActivity(), PICTURE_GRID_COLUMN_NB);
         picturesAdapter.setAutoScrollOnExpand(true);
         picturesAdapter.setHandleDragEnabled(true);
         picturesAdapter.setAnimationOnScrolling(true);

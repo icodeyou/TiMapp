@@ -1,16 +1,15 @@
 package com.timappweb.timapp.data.models;
 
-        import com.activeandroid.annotation.Column;
-        import com.activeandroid.annotation.Table;
-        import com.activeandroid.query.From;
-        import com.activeandroid.query.Select;
-        import com.google.gson.annotations.Expose;
-        import com.timappweb.timapp.data.entities.PlaceUserInterface;
-        import com.timappweb.timapp.data.entities.SocialProvider;
-        import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
+import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.data.entities.PlaceUserInterface;
+import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
-        import java.io.Serializable;
-        import java.util.List;
+import java.util.List;
 
 @Table(name = "User")
 public class User extends SyncBaseModel implements PlaceUserInterface {

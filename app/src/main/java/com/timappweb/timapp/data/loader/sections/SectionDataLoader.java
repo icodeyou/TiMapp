@@ -93,10 +93,10 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         return _isFullyLoaded;
     }
 
-    public boolean isLoading() {
+    public synchronized boolean isLoading() {
         return currentLoadSection != null;
     }
-    public boolean isLoading(LoadType type) {
+    public synchronized boolean isLoading(LoadType type) {
         return currentLoadSection != null && currentLoadSection.getLoadType() == type;
     }
 
@@ -124,7 +124,9 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
      * @return
      */
     public boolean loadMore(){
+        Log.d(TAG, "Trigger a @loadMore()");
         if (_isFullyLoaded){
+            Log.d(TAG, "    - Abort, already  fully loaded");
             return false;
         }
         PaginatedSection lastSection = sectionContainer.last();
@@ -145,18 +147,17 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     private boolean load(PaginatedSection section) {
         synchronized (this) {
             if (isLoading()) {
-                Log.d(TAG, "Already loading another section. Abort: " + section);
+                Log.d(TAG, "    - Already loading another section. Abort: " + section);
                 return false;
             }
-            Log.d(TAG, "Start loading a new section: " + section);
-            sectionContainer.addSection(section);
+            Log.d(TAG, "    - Init loading new section: " + section);
+            currentLoadSection = section;
         }
-        currentLoadSection = section;
         if (this.useCache && this.cacheEngine.contains(section)) {
             Log.d(TAG, "    - Using cache for section" + section);
             List<T> data = this.cacheEngine.get(section);
             section.setStatus(LoadStatus.DONE);
-            currentLoadSection = null;
+            onLoadSectionEnd();
             if (callback != null) callback.onLoadEnd(section, data);
         } else {
             this.remoteLoad(section);
@@ -166,6 +167,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
 
 
     public boolean loadNewest(){
+        Log.d(TAG, "Trigger a @loadNewest()");
         PaginatedSection section = sectionContainer.first();
         // Check if we need to load newest
         if (        section == null
@@ -179,11 +181,11 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         return false;
     }
 
-    public PaginatedSection createNewerSection(PaginatedSection section) {
+    private PaginatedSection createNewerSection(PaginatedSection section) {
         return new PaginatedSection(-1, section != null ? section.start + (this.getOrder() == PaginateDirection.ASC ? 1 : -1) : -1);
     }
 
-    public PaginatedSection createOlderSection(PaginatedSection section) {
+    private PaginatedSection createOlderSection(PaginatedSection section) {
         long start = section == null ? -1 : section.end + (this.getOrder() == PaginateDirection.ASC ? -1 : 1);
         return new PaginatedSection(start, -1);
     }
@@ -206,15 +208,15 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                         // if no more data => set loadmore done
                         if (newSection.getLoadType() == LoadType.MORE){
                             _isFullyLoaded = feedback.getCount() <= 0 || feedback.up_to_date;
+                                Log.d(TAG, "    - Has more data = " + !_isFullyLoaded + " (count = " + feedback.getCount() + ", up to date = " + feedback.up_to_date + ")");
                         }
                         // If data does not meet, remove older ones...
                         else if (newSection.getLoadType() == LoadType.NEWEST){
                             if (feedback.getCount() == feedback.getLimit()){
                                 PaginatedSection section = sectionContainer.findOlderSection(newSection);
                                 if (section == null){
-                                    Log.d(TAG, "Clearing sections...");
+                                    Log.d(TAG, "    - Sections does not follow, clearing older sections...");
                                     sectionContainer.clear();
-                                    sectionContainer.addSection(newSection);
                                 }
                             }
                         }
@@ -246,17 +248,31 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {
-                        currentLoadSection = null;
                         switch (newSection.getLoadType()){
                             case NEWEST:
                                 SectionDataLoader.this._lastLoad = System.currentTimeMillis();
                                 break;
                         }
+                        onLoadSectionEnd();
                     }
                 })
                 .perform();
     }
 
+    private synchronized void onLoadSectionEnd(){
+        if (currentLoadSection == null){
+            return; // Should not happen...
+        }
+        if (currentLoadSection.getEnd() == -1 || currentLoadSection.getStart() == -1){
+            // If no data we don't add the section
+            Log.d(TAG, "    - [END] No data for this section. " + currentLoadSection);
+        }
+        else{
+            Log.i(TAG, "    - [END] Adding section: " + currentLoadSection);
+            sectionContainer.addSection(currentLoadSection);
+        }
+        currentLoadSection = null;
+    }
     /**
      *
      * @param <T>
