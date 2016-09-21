@@ -60,9 +60,6 @@ public class QuotaManager {
         return (UserActivity) res;
     }
 
-    public boolean checkQuota(int quotaTypeId){
-        return checkQuota(quotaTypeId, false);
-    }
 
     public boolean checkQuota(int quotaTypeId, boolean showMessage){
         if (!MyApplication.isLoggedIn()){

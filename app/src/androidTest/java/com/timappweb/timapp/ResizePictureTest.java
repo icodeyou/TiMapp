@@ -55,8 +55,8 @@ public class ResizePictureTest {
         assertNotNull(file);
         assertTrue(file.exists() && file.isFile());
         Log.i(TAG, "File size before resizing: " + file.length() / (1024*1024) + "MB");
-        file = PictureUtility.resize(file, 1000, 1000);
-        Log.i(TAG, "File size after resizing: " + file.length() / (1024*1024) + "MB");
+        //file = PictureUtility.resize(file, 1000, 1000);
+        //Log.i(TAG, "File size after resizing: " + file.length() / (1024*1024) + "MB");
     }
 
     @Test

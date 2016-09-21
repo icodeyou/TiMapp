@@ -57,9 +57,9 @@ public class AddEventActivityTest{
         apiCallIdlingResource = new ApiCallIdlingResource();
         Espresso.registerIdlingResources(apiCallIdlingResource);
 
-        AddEventActivity activity = mActivityRule.getActivity();
+        mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
 
-        mockLocationProvider = MockLocationProvider.createGPSProvider(activity);
+        mockLocationProvider = MockLocationProvider.createGPSProvider(mActivityRule.getActivity());
         mockLocationProvider.pushLocation(MockLocation.START_TEST);
         //progressIdlingResource = new ProgressIdlingResource(activity, activity.getProgressBar());
         //Espresso.registerIdlingResources(progressIdlingResource);

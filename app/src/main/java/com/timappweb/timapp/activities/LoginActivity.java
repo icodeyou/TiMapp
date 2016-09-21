@@ -137,7 +137,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 setProgressVisibility(true);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("access_token", accessToken);
-                params.put("app_id", InstanceID.getInstance(LoginActivity.this).getId());
+                params.put("app_id", InstanceID.getInstance(LoginActivity.this).getId());               // TODO fix it crashes
 
                 Call<RestFeedback> call = RestClient.service().facebookLogin(params);
                 RestClient.buildCall(call)

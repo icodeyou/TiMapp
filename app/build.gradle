@@ -175,6 +175,7 @@ dependencies {
     // @warning WTF is that shit! It makes GSON parser throws stack overflow errors
 
     //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
+    androidTestCompile 'junit:junit:4.12'
 }
 
 task wrapper(type: Wrapper) {
