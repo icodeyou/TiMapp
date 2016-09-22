@@ -1,22 +1,36 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -30,7 +44,9 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.EventStatusManager;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
@@ -48,10 +64,16 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.CategorySelectorView;
 
+import java.io.File;
+import java.io.IOException;
+
+import pl.aprilapps.easyphotopicker.DefaultCallback;
+import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Response;
 
 
@@ -76,11 +98,23 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private GoogleMap                   gMap;
     private ActivityAddEventBinding     mBinding;
     private View                        mBtnAddSpot;
+    private View                        mBtnAddPic;
     private View                        mSpotContainer;
-    //private AddressResultReceiver       mAddressResultReceiver;
-    private View.OnClickListener        displayHideCategories;
+    private ScrollView                  scrollView;
+    private SimpleDraweeView            simpleDraweeView;
+    private View                        icPicture;
+    private View                        icPictureValidate;
+    private View                        icSpot;
+    private View                        icSpotValidate;
+    private TextView                    icSpotText;
+    private TextView                    icPictureText;
 
-    private MenuItem postButton;
+    private MenuItem                    postButton;
+
+    //private AddressResultReceiver       mAddressResultReceiver;
+    private HttpCallManager clientCall;
+    private File        pictureSelected;
+    private View.OnClickListener onSpotClickListener;
     private Location mFineLocation  = null;
 
     //----------------------------------------------------------------------------------------------
@@ -99,6 +133,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         descriptionET = (EditText)  findViewById(R.id.description_edit_text);
         eventNameET = (EditText) findViewById(R.id.event_name);
+        scrollView = (ScrollView) findViewById(R.id.scrollview);
+        simpleDraweeView = (SimpleDraweeView) findViewById(R.id.image_event);
 
         categorySelector = (CategorySelectorView) findViewById(R.id.category_selector);
 
@@ -106,17 +142,75 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mapView = (MapView) findViewById(R.id.map);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
+        mBtnAddPic = findViewById(R.id.attach_picture);
         mSpotContainer = findViewById(R.id.spot_container);
+
+        icPicture = findViewById(R.id.picture);
+        icPictureValidate = findViewById(R.id.picture_validate);
+        icPictureText= (TextView) findViewById(R.id.picture_text);
+        icSpot = findViewById(R.id.spot);
+        icSpotValidate = findViewById(R.id.spot_validate);
+        icSpotText = (TextView) findViewById(R.id.spot_text);
+
         mBinding.setEvent(new Event());
 
+        initContextMenu();
         initEts();
         initAdapterAndManager();
         setListeners();
         //initViewPager();
-        initEvents();
         initMap();
 
         updateEventLocation();
+    }
+
+    private void initContextMenu() {
+        registerForContextMenu(simpleDraweeView);
+        registerForContextMenu(mBtnAddPic);
+        registerForContextMenu(mSpotContainer);
+        registerForContextMenu(mBtnAddSpot);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if(v == mBtnAddPic) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.context_menu_edit_picture, menu);
+        }
+        else if (v == mBtnAddSpot) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.context_menu_edit_spot, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_picture:
+                IntentsUtils.addPictureFromActivity(this);
+                return true;
+            case R.id.action_remove_picture:
+                simpleDraweeView.setVisibility(View.GONE);
+                pictureSelected = null;
+                icPicture.setVisibility(View.VISIBLE);
+                icPictureValidate.setVisibility(View.GONE);
+                icPictureText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                return true;
+            case R.id.action_edit_spot:
+                IntentsUtils.pinSpot(AddEventActivity.this, mBinding.getEvent().getSpot());
+                return true;
+            case R.id.action_remove_spot:
+                mBinding.setEvent(mBinding.getEvent().setSpot(null));
+                icSpot.setVisibility(View.VISIBLE);
+                icSpotValidate.setVisibility(View.GONE);
+                icSpotText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     private void initDebugView() {
@@ -124,19 +218,15 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         descriptionET.setText(getResources().getString(R.string.dev_description));
     }
 
-    private void initEvents() {
-        /*
-        mButtonAddPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.addPicture(AddEventActivity.this);
-            }
-        });*/
-    }
-
     @Override
     public void onBackPressed() {
-        finish();
+        if(clientCall != null) {
+            clientCall.cancel();
+            progressView.setVisibility(View.GONE);
+        }
+        else {
+            finish();
+        }
     }
     //----------------------------------------------------------------------------------------------
     //Private methods
@@ -302,7 +392,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void setListeners() {
-
         //If click on editText when Not Focused
         View.OnFocusChangeListener onEtFocus = new View.OnFocusChangeListener() {
             @Override
@@ -322,72 +411,78 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         descriptionET.setOnFocusChangeListener(onEtFocus);
         descriptionET.setOnClickListener(onEtClick);
 
-        mBtnAddSpot.setOnClickListener(new View.OnClickListener() {
+        categorySelector.setOnCrossClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.pinSpot(AddEventActivity.this);
+                scrollView.fullScroll(View.FOCUS_UP);
             }
         });
+
+        View.OnClickListener onPicClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pictureSelected==null) {
+                    IntentsUtils.addPictureFromActivity(AddEventActivity.this);
+                }
+                else {
+                    openContextMenu(mBtnAddPic);
+                }
+            }
+        };
+
+        onSpotClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mBinding.getEvent().getSpot() == null) {
+                    IntentsUtils.pinSpot(AddEventActivity.this);
+                } else {
+                    openContextMenu(mBtnAddSpot);
+                }
+            }
+        };
+
+        View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                closeContextMenu();
+                return true;
+            }
+        };
+
+        mBtnAddPic.setOnClickListener(onPicClickListener);
+        simpleDraweeView.setOnClickListener(onPicClickListener);
+        mBtnAddSpot.setOnClickListener(onSpotClickListener);
+        mSpotContainer.setOnClickListener(onSpotClickListener);
+
+        mBtnAddPic.setOnLongClickListener(onLongClickListener);
+        mBtnAddSpot.setOnLongClickListener(onLongClickListener);
 
         eventNameET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(postButton!=null) {
+                if (postButton != null) {
                     setButtonValidation();
                 }
             }
         });
-
-        /*eventNameET.setHandleDismissingKeyboard(new BackCatchEditText.HandleDismissingKeyboard() {
-            @Override
-            public void dismissKeyboard() {
-                imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
-                eventNameET.clearFocus();
-            }
-        });*/
-
-        mSpotContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Spot spot = mBinding.getEvent().getSpot();
-                if (spot != null) {
-                    IntentsUtils.pinSpot(AddEventActivity.this, spot);
-                }
-            }
-        });
-
-/*
-        spotView.setOnSpotClickListener(new OnSpotClickListener() {
-            @Override
-            public void onEditClick() {
-                IntentsUtils.pinSpot(context);
-            }
-
-            @Override
-            public void onRemoveClick() {
-                spot = null;
-                spotView.setVisibility(View.GONE);
-                //pinView.setVisibility(View.VISIBLE);
-            }
-        });*/
     }
+
 
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {
             Spot spot = SerializeHelper.unpackModel(bundle.getString(IntentsUtils.KEY_SPOT), Spot.class);
             mBinding.getEvent().setSpot(spot);
-            mBtnAddSpot.setVisibility(View.GONE);
             mSpotContainer.setVisibility(View.VISIBLE);
-            //mClusterManagerSpot.addItem(spot);
-            //mClusterManagerSpot.cluster();
         }
     }
 
@@ -439,58 +534,93 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mapView.onCreate(null);
         mapView.getMapAsync(this);
 
-        //setUpClusterer();
-    }
-/*
-
-    private void setUpClusterer(){
-        Log.i(TAG, "Setting up cluster!");
-        // Initialize the manager with the context and the map.
-        mClusterManagerSpot = new ClusterManager<Spot>(this, gMap);
-        mClusterManagerSpot.setRenderer(new SpotClusterRenderer(this, gMap, mClusterManagerSpot));
-        mClusterManagerSpot.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Spot>() {
-            @Override
-            public boolean onClusterClick(Cluster<Spot> cluster) {
-                Log.d(TAG, "You clicked on a cluster");
-                // TODO
-                return true;
-            }
-        });
-        mClusterManagerSpot.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Spot>() {
-            @Override
-            public boolean onClusterItemClick(Spot item) {
-                Log.d(TAG, "You clicked on a cluster item: " + item);
-                mBinding.getEvent().setSpot(item);
-                return true;
-            }
-
-        });
-        mClusterManagerSpot.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Spot>());
-        gMap.setOnMarkerClickListener(mClusterManagerSpot);
-    }*/
-
+     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
         eventNameET.clearFocus();
         switch (requestCode){
             case IntentsUtils.REQUEST_PICK_SPOT:
                 if(resultCode == RESULT_OK){
                     Log.d(TAG, "extracting bundle Spot");
+                    updateUiAfterPickSpot();
+
                     extractSpot(data.getExtras());
-                }
-                break;
-            case IntentsUtils.ACTION_ADD_EVENT_PICTURE:
-                if(resultCode==RESULT_OK) {
-                    // TODO
-                    Log.d(TAG, "Result OK from AddEventPicture");
                 }
                 break;
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
         super.onActivityResult(requestCode, resultCode, data);
+
+        final Activity activity = this;
+        EasyImage.handleActivityResult(requestCode, resultCode, data, activity, new DefaultCallback() {
+            @Override
+            public void onImagePickerError(Exception e, EasyImage.ImageSource source, int type) {
+                Toast.makeText(activity, R.string.error_camera, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
+                Log.d(TAG, "Result request camera");
+                if (resultCode != Activity.RESULT_OK){
+                    Log.e(TAG, "Activity result for requesting camera returned a non success code: " + resultCode);
+                    Toast.makeText(activity, R.string.error_camera, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                simpleDraweeView.setImageURI(Uri.fromFile(imageFile));
+
+                Bitmap bmp = BitmapFactory.decodeFile(imageFile.toString());
+                try {
+                    bmp = PictureUtility.rotateBitmapIfNeeded(bmp, imageFile);
+                } catch (IOException e) {
+                    Log.e(TAG, "Couldn't rotate image");
+                    e.printStackTrace();
+                }
+                int imageHeight = bmp.getHeight();
+                int imageWidth = bmp.getWidth();
+                float ratio = (float) imageWidth/imageHeight;
+
+                simpleDraweeView.setVisibility(View.VISIBLE);
+                ViewGroup.LayoutParams params = simpleDraweeView.getLayoutParams();
+                params.height = (int) (simpleDraweeView.getWidth()/ratio);
+                simpleDraweeView.setLayoutParams(params);
+
+                updateUiAfterPickTure();
+
+                pictureSelected = imageFile;
+
+            }
+
+            @Override
+            public void onCanceled(EasyImage.ImageSource source, int type) {
+                if (source == EasyImage.ImageSource.CAMERA) {
+                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(activity);
+                    if (photoFile != null) photoFile.delete();
+                }
+            }
+        });
     }
+
+    private void updateUiAfterPickSpot() {
+        scrollView.smoothScrollTo(0,0);
+        icSpot.setVisibility(View.GONE);
+        icSpotValidate.setVisibility(View.VISIBLE);
+        icSpotText.setTextColor(ContextCompat.getColor(this, R.color.selection_button_add_event));
+        icSpot.setEnabled(false);
+    }
+
+    private void updateUiAfterPickTure() {
+        //TODO : Scroll To Bottom doesn't work first time
+        scrollView.fullScroll(View.FOCUS_DOWN);
+
+        icPicture.setVisibility(View.GONE);
+        icPictureValidate.setVisibility(View.VISIBLE);
+        icPictureText.setTextColor(ContextCompat.getColor(this, R.color.selection_button_add_event));
+        icPicture.setEnabled(false);
+    }
+
+
 
     /**
      * Update event location.

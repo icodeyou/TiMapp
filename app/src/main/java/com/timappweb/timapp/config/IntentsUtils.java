@@ -4,12 +4,13 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.desmond.squarecamera.CameraActivity;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddEventActivity;
@@ -19,13 +20,13 @@ import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.EditProfileActivity;
 import com.timappweb.timapp.activities.ErrorActivity;
 import com.timappweb.timapp.activities.EventActivity;
+import com.timappweb.timapp.activities.EventPicturesActivity;
 import com.timappweb.timapp.activities.FilterActivity;
 import com.timappweb.timapp.activities.InvitationsActivity;
 import com.timappweb.timapp.activities.InviteFriendsActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.activities.LocateActivity;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.activities.EventPicturesActivity;
 import com.timappweb.timapp.activities.PresentationActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
@@ -37,7 +38,6 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.utils.location.MyLocationProvider;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
@@ -192,17 +192,42 @@ public class IntentsUtils {
         if (!requireLogin(context, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
             return;
 
-        Nammu.askForPermission(fragment.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
-            @Override
-            public void permissionGranted() {
-                EasyImage.openCamera(fragment, 0);
-            }
+        int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            EasyImage.openCamera(fragment, 0);
+        } else {
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+            Nammu.askForPermission(fragment.getActivity(), permissions, new PermissionCallback() {
+                @Override
+                public void permissionGranted() {
+                    EasyImage.openCamera(fragment, 0);
+                }
 
-            @Override
-            public void permissionRefused() {
+                @Override
+                public void permissionRefused() {
 
-            }
-        });
+                }
+            });
+        }
+    }
+
+    public static void addPictureFromActivity(final Activity activity) {
+        int permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            EasyImage.openCamera(activity, 0);
+        } else {
+            Nammu.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
+                @Override
+                public void permissionGranted() {
+                    EasyImage.openCamera(activity, 0);
+                }
+
+                @Override
+                public void permissionRefused() {
+
+                }
+            });
+        }
     }
 
     public static void addTags(Activity activity, Event event) {
@@ -251,6 +276,9 @@ public class IntentsUtils {
 
 
     public static void postEvent(Context context, Event event, int action) {
+        if(!requireLogin(context,false)) {
+            return;
+        }
         if (context instanceof EventActivity){
             ((EventActivity)context).parseActionParameter(action);
         }

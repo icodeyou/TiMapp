@@ -27,10 +27,10 @@
         android:layout_margin="5dp"
         android:padding="15dp"
         android:layout_gravity="center"
-        tools:src="@drawable/ic_category_unknown"
+        tools:src="@drawable/category_unknown"
         android:background="@drawable/radius_simple_background_primary"
         fresco:actualImageScaleType="fitCenter"
-        fresco:placeholderImage="@drawable/ic_category_unknown"
+        fresco:placeholderImage="@drawable/category_unknown"
         app:imageDrawable="@{spot.getCategory().getIconDrawable()}"/>
 
         <LinearLayout

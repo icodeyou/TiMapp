@@ -109,24 +109,24 @@
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_camera"
                 style="@style/MiniFab"
-                app:fab_icon="@drawable/ic_camera_white"
+                app:fab_icon="@drawable/camera_white"
                 android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_tag"
                 style="@style/MiniFab"
-                app:fab_icon="@drawable/ic_hashtag_white"
+                app:fab_icon="@drawable/hashtag_white"
                 android:visibility="@{event.isUserAround() ? View.VISIBLE : View.GONE}"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_invite"
-                app:fab_icon="@drawable/ic_people"
+                app:fab_icon="@drawable/people"
                 style="@style/MiniFab"/>
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_coming"
                 style="@style/MiniFab"
-                app:fab_icon="@drawable/ic_coming_guy_white"
+                app:fab_icon="@drawable/coming_guy_white"
                 android:visibility="@{!event.isUserAround() ? View.VISIBLE : View.GONE}"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>

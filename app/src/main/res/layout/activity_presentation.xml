@@ -17,11 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginRight="@dimen/margin_separator_button"
-            android:layout_marginLeft="@dimen/margin_separator_button"
-            android:background="@color/LightGrey"/>
+            style="@style/DividerHorizontal"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,11 +27,7 @@
                 style="@style/ButtonPresentation"
                 android:text="Skip"/>
             <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_separator_button"
-                android:layout_marginBottom="@dimen/margin_separator_button"
-                android:background="@color/LightGrey"/>
+                style="@style/DividerVertical"/>
             <Button
                 android:id="@+id/next_button"
                 style="@style/ButtonPresentation"

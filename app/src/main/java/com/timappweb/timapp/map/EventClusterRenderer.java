@@ -63,7 +63,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
     protected void onBeforeClusterItemRendered(Event event, MarkerOptions markerOptions) {
         ImageView categoryImage= new ImageView(context);
         categoryImage.setImageDrawable(event.getCategoryWithDefault().getIconDrawable(this.context));
-        //categoryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_category_unknown));
+        //categoryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.category_unknown));
         categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
         categoryImage.setBackgroundResource(event.getLevelBackground());
         categoryImage.setDrawingCacheEnabled(true);

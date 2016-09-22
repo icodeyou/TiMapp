@@ -11,7 +11,7 @@
         android:layout_height="@dimen/ic_place"
         android:padding="10dp"
         android:layout_gravity="center"
-        tools:src="@drawable/ic_category_unknown"/>
+        tools:src="@drawable/category_unknown"/>
     <TextView
         android:id="@+id/category_name"
         android:layout_width="wrap_content"

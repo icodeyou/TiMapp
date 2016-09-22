@@ -12,7 +12,6 @@ import android.util.Log;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.EventCategory;
 
 /**
  * Created by stephane on 4/2/2016.
@@ -66,7 +65,7 @@ public class NotificationFactory {
             int placeId = Integer.valueOf(bundle.getString("place_id"));
 
             Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
-            int categoryId = R.drawable.ic_category_unknown; // TODO set proper category
+            int categoryId = R.drawable.category_unknown; // TODO set proper category
             return NotificationFactory.build(context, categoryId, title, body, resultIntent);
     }
 }

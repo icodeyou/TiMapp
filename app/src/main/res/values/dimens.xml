@@ -110,6 +110,7 @@
     <dimen name="min_header_height">150dp</dimen>
     <dimen name="spot_height_add_event">200dp</dimen>
     <dimen name="map_height">250dp</dimen>
+    <dimen name="map_height_add_event">150dp</dimen>
     <dimen name="paddingBottomDefault">6dp</dimen>
     <dimen name="cardMarginBottom">10dp</dimen>
     <dimen name="padding_small">4dp</dimen>
@@ -160,8 +161,11 @@
     <dimen name="margin_map_fab">11dp</dimen>
     <dimen name="width_post_button_drawer">60dp</dimen>
     <dimen name="margin_bottom_nav_header">30dp</dimen>
-    <dimen name="margin_separator_button">10dp</dimen>
+    <dimen name="margin_separator">10dp</dimen>
     <dimen name="margin_icons_presentation_four">50dp</dimen>
     <dimen name="dim_image_status">50dp</dimen>
+    <dimen name="corner_map">20dp</dimen>
+    <dimen name="width_divider">1dp</dimen>
+    <dimen name="margin_cards_scroll">5dp</dimen>
 
 </resources>

@@ -46,21 +46,21 @@
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/action_camera"
                         style="@style/DrawerFab"
-                        android:src="@drawable/ic_camera_white"/>
+                        android:src="@drawable/camera_white"/>
                 </FrameLayout>
                 <FrameLayout
                     style="@style/WidthWeightOne">
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/action_tag"
                         style="@style/DrawerFab"
-                        android:src="@drawable/ic_hashtag_white"/>
+                        android:src="@drawable/hashtag_white"/>
                 </FrameLayout>
                 <FrameLayout
                     style="@style/WidthWeightOne">
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/action_invite"
                         style="@style/DrawerFab"
-                        android:src="@drawable/ic_people"/>
+                        android:src="@drawable/people"/>
                 </FrameLayout>
             </LinearLayout>
         </RelativeLayout>

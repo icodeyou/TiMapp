@@ -18,7 +18,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginBottom="3dp"
-            android:src="@drawable/ic_hot" />
+            android:src="@drawable/hot" />
 
         <com.timappweb.timapp.views.SimpleTimerView
             android:id="@+id/points_text"

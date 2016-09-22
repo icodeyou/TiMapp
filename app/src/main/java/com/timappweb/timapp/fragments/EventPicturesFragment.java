@@ -308,7 +308,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     " has size: " + Util.byteToKB(file.length()) +
                     ". Max size: " + Util.byteToKB(rules.picture_max_size));
 
-            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height, getContext());
+            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
 
             MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
 

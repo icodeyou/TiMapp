@@ -16,7 +16,7 @@
             android:layout_marginBottom="10dp"
             android:background="@color/background"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_log_in_with_facebook"/>
+            android:src="@drawable/log_in_with_facebook"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

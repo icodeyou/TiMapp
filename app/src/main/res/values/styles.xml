@@ -555,10 +555,25 @@
         <item name="android:elevation">@dimen/cardview_default_elevation</item>
     </style>
 
-    <style name="ButtonPresentation" parent="WidthWeightOne">
+    <style name="ButtonBottom" parent="WidthWeightOne">
         <item name="android:layout_height">@dimen/height_bottom_button</item>
         <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="ButtonPresentation" parent="ButtonBottom">
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ButtonAddEvent" parent="ButtonBottom">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextButtonDefault" parent="TextSmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="WidthWeightOne">
@@ -567,4 +582,32 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="CardViewMap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="cardCornerRadius">@dimen/activity_horizontal_margin</item>
+    </style>
+
+
+    <style name="IconDefault">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="DividerHorizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/width_divider</item>
+        <item name="android:layout_marginRight">@dimen/margin_separator</item>
+        <item name="android:layout_marginLeft">@dimen/margin_separator</item>
+        <item name="android:background">@color/LightGrey</item>
+    </style>
+
+    <style name="DividerVertical">
+        <item name="android:layout_width">@dimen/width_divider</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/margin_separator</item>
+        <item name="android:layout_marginBottom">@dimen/margin_separator</item>
+        <item name="android:background">@color/LightGrey</item>
+    </style>
 </resources>

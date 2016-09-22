@@ -41,6 +41,7 @@ public class CategorySelectorView extends LinearLayout {
 
     private int colorBackground = 0;
     private Animation slideIn;
+    private OnClickListener onCrossClickListener;
 
 
     public CategorySelectorView(Context context) {
@@ -91,12 +92,19 @@ public class CategorySelectorView extends LinearLayout {
                     lowerView();
                 } else {
                     expandView();
+                    if(onCrossClickListener!=null) {
+                        onCrossClickListener.onClick(v);
+                    }
                 }
             }
         } ;
 
         moreBtn.setOnClickListener(displayHideCategories);
         selectedCategoryView.setOnClickListener(displayHideCategories);
+    }
+
+    public void setOnClickListener() {
+
     }
 
     private void initRv() {
@@ -154,4 +162,7 @@ public class CategorySelectorView extends LinearLayout {
         lowerView();
     }
 
+    public void setOnCrossClickListener(OnClickListener onClickListener) {
+        this.onCrossClickListener = onClickListener;
+    }
 }

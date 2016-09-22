@@ -10,7 +10,7 @@
     <!-- TODO later a picture can be flagged as inapropriate
     <item android:id="@+id/action_flag"
         android:title="@string/action_flag"
-        android:icon="@drawable/ic_action_share"
+        android:icon="@drawable/action_share"
         app:showAsAction="always" />-->
 
 </menu>

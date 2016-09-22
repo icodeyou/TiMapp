@@ -136,6 +136,8 @@
 
     <!-- AddEventActivity -->
     <string name="hint_write_description">Description</string>
+    <string name="picture">Photo</string>
+    <string name="place">Lieu</string>
 
     <!-- AddTagsActivity  -->
     <!--TODO : Dupplicates strings here -->
@@ -150,6 +152,7 @@
 
     <!-- AddEventActivity -->
     <string name="hint_event_name">Nom de l\'évenement</string>
+    <string name="attach_a_place">Lieu</string>
 
     <!-- AddSpotActivity -->
     <string name="hint_spot_name">Nom du lieu</string>
@@ -166,7 +169,7 @@
 
 
     <!-- ProfileActivity -->
-    <string name="define_yourself_tag">DéfinieToi</string>
+    <string name="define_yourself_tag">DéfinisToi</string>
     <string name="newbie_tag">Newbie</string>
 
 

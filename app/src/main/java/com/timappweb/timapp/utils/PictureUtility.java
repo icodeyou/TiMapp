@@ -3,9 +3,13 @@ package com.timappweb.timapp.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +33,7 @@ public class PictureUtility {
     private static final int MAX_TIMES_COMPRESS = 10;
     private static final int COMPRESSION_QUALITY = 80;
 
-    public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight, Context context) throws IOException {
+    public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
         //With Picasso
         /*Picasso.with(context).load(f)
                 .resize(imageMaxWidth, imageMaxHeight)
@@ -66,7 +70,7 @@ public class PictureUtility {
         Log.d(TAG, "Height max : " + ConfigurationProvider.rules().picture_max_height);
         Log.d(TAG, "Size max : " + ConfigurationProvider.rules().picture_max_size);
 
-        File newFile = new Compressor.Builder(context)
+        File newFile = new Compressor.Builder(MyApplication.getApplicationBaseContext())
                 .setMaxWidth(imageMaxWidth)
                 .setMaxHeight(imageMaxHeight)
                 .setQuality(COMPRESSION_QUALITY)
@@ -108,6 +112,36 @@ public class PictureUtility {
         }
 
         return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+    public static Bitmap rotateBitmapIfNeeded(Bitmap bitmap, File file) throws IOException {
+        //From http://stackoverflow.com/questions/14066038/why-image-captured-using-camera-intent-gets-rotated-on-some-devices-in-android
+        ExifInterface ei = new ExifInterface(file.getAbsolutePath());
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        Bitmap newBitmap;
+        switch(orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                newBitmap= rotateImage(bitmap, 90);
+                return newBitmap;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                newBitmap= rotateImage(bitmap, 180);
+                return newBitmap;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                newBitmap= rotateImage(bitmap, 270);
+                return newBitmap;
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                return bitmap;
+        }
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
     }
 
     private static void persistImage(Bitmap bitmap, File file) throws IOException {

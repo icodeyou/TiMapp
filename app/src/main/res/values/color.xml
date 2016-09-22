@@ -62,6 +62,7 @@
     <color name="elevation_gray">#40000000</color>
     <color name="elevation_black">#77000000</color>
     <color name="elevation_white">#b9ffffff</color>
+    <color name="selection_button_add_event">@color/DarkGray</color>
 
     <!-- Buttons -->
     <color name="background_top_invitation">#1d1d1d</color>

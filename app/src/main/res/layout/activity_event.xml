@@ -46,18 +46,18 @@
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
                     android:id="@+id/action_camera"
-                    fab:fab_icon="@drawable/ic_camera_white"
-                    style="@style/MiniFab"/>
+                    fab:fab_icon="@drawable/camera_white"
+                    style="@style/MiniFab" />
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
                     android:id="@+id/action_tag"
-                    fab:fab_icon="@drawable/ic_hashtag_white"
+                    fab:fab_icon="@drawable/hashtag_white"
                     style="@style/MiniFab"/>
 
                 <com.getbase.floatingactionbutton.FloatingActionButton
                     android:id="@+id/action_invite"
-                    fab:fab_icon="@drawable/ic_people"
-                    style="@style/MiniFab"/>
+                    style="@style/MiniFab"
+                    app:fab_icon="@drawable/people" />
 
             </com.getbase.floatingactionbutton.FloatingActionsMenu>
         </RelativeLayout>

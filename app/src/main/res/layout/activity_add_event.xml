@@ -2,7 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
     <data>
         <import type="android.view.View"/>
         <import type="android.graphics.drawable.Drawable"/>
@@ -28,106 +29,138 @@
             layout="@layout/toolbar_layout_secondary"/>
 
         <ScrollView
+            android:id="@+id/scrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/layout_bottom"
             android:layout_below="@+id/layout_toolbar">
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.timappweb.timapp.views.CategorySelectorView
-                    android:id="@+id/category_selector"
-                    app:color_background="@color/colorSecondary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-                <!--<FrameLayout
+                android:layout_height="wrap_content">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorSecondary">
-                    style="@style/whiteFormEditText"
-                </FrameLayout>-->
+                    android:orientation="vertical">
 
-                <!-- c'est le message d'erreur concernant aucun champs (par example quota dépassés) -->
-                <TextView
-                    style="@style/ValidationErrorMessage"
-                    tools:text="This is an error message youhou! Errors are not cool but it's a necessary evil! Bouya!"
-                    android:text='@{errors.getFullMessage()}'
-                    android:visibility='@{errors.hasFullMessage() ? View.VISIBLE : View.GONE}'/>
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/event_name"
-                    style="@style/labeledFormEditText"
-                    android:hint="@string/hint_event_name"
-                    android:nextFocusForward="@+id/description_edit_text"
-                    android:text="@={event.name}"
-                    app:errorText='@{errors.getError("Places.name")}'/>
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    xmlns:app="http://schemas.android.com/tools"
-                    android:id="@+id/description_edit_text"
-                    style="@style/formLabeledMultilineText"
-                    android:hint="@string/hint_write_description"
-                    android:text="@={event.description}"
-                    app:errorText='@{errors.getError("Places.description")}'/>
-
-                <TextView
-                    style="@style/ValidationErrorMessage"
-                    tools:text="Error concerning the spot"
-                    android:text='@{errors.getError("Places.spot")}'
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:visibility='@{errors.hasError("Places.spot") ? View.VISIBLE : View.GONE}'/>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/spot_height_add_event"
-                    android:layout_margin="10dp">
-                    <com.google.android.gms.maps.MapView
-                        android:id="@+id/map"
+                    <com.timappweb.timapp.views.CategorySelectorView
+                        android:id="@+id/category_selector"
+                        app:color_background="@color/colorSecondary"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/ValidationErrorMessage"
+                        tools:text="Here is the error that doesn't concern any EditText field. (ex: quota)"
+                        android:text='@{errors.getFullMessage()}'
+                        android:visibility='@{errors.hasFullMessage() ? View.VISIBLE : View.GONE}'/>
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/event_name"
+                        style="@style/labeledFormEditText"
+                        android:hint="@string/hint_event_name"
+                        android:nextFocusForward="@+id/description_edit_text"
+                        android:text="@={event.name}"
+                        app:errorText='@{errors.getError("Places.name")}'/>
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        xmlns:app="http://schemas.android.com/tools"
+                        android:id="@+id/description_edit_text"
+                        style="@style/formLabeledMultilineText"
+                        android:hint="@string/hint_write_description"
+                        android:text="@={event.description}"
+                        app:errorText='@{errors.getError("Places.description")}'/>
+
+                    <TextView
+                        style="@style/ValidationErrorMessage"
+                        tools:text="Error concerning the spot"
+                        android:text='@{errors.getError("Places.spot")}'
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:visibility='@{errors.hasError("Places.spot") ? View.VISIBLE : View.GONE}'/>
                     <LinearLayout
-                        android:id="@+id/button_add_spot"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:visibility="visible"
-                        android:background="@drawable/background_attach_event_button">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:padding="10dp"
-                            android:src="@drawable/plus_grey"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:padding="20dp"
-                            android:gravity="center"
-                            style="@style/TextDefault"
-                            android:textColor="@color/textMute"
-                            android:text="Attach a place"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/spot_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:visibility="gone"
-                        android:background="@drawable/background_attach_event_button">
-                        <include layout="@layout/layout_spot"
-                            android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/margin_cards_scroll"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:id="@+id/spot_container"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            bind:spot="@{event.spot}"/>
+                            android:gravity="center"
+                            android:visibility="gone">
+                            <include layout="@layout/layout_spot"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                bind:spot="@{event.spot}"/>
+                        </LinearLayout>
+                        <include
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/map_height"
+                            layout="@layout/map" />
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/image_event"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/margin_cards_scroll"
+                            fresco:roundedCornerRadius="@dimen/corner_map"
+                            fresco:actualImageScaleType="centerCrop"
+                            fresco:placeholderImage="@drawable/placeholder_picture" />
                     </LinearLayout>
-
-                </RelativeLayout>
-
-            </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
         </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+            <View
+                style="@style/DividerHorizontal"/>
+            <LinearLayout
+                android:id="@+id/buttons_add_event"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:id="@+id/attach_picture"
+                    style="@style/ButtonAddEvent">
+                    <ImageView
+                        android:id="@+id/picture_validate"
+                        style="@style/IconDefault"
+                        android:src="@drawable/ic_validate_primary"
+                        android:visibility="gone"/>
+                    <ImageView
+                        android:id="@+id/picture"
+                        style="@style/IconDefault"
+                        android:src="@drawable/ic_camera_primary"/>
+                    <TextView
+                        android:id="@+id/picture_text"
+                        style="@style/TextButtonDefault"
+                        android:text="@string/picture"/>
+                </LinearLayout>
+                <View
+                    style="@style/DividerVertical"
+                    android:background="@color/colorAccentLight"/>
+                <LinearLayout
+                    android:id="@+id/button_add_spot"
+                    style="@style/ButtonAddEvent">
+                    <ImageView
+                        android:id="@+id/spot_validate"
+                        style="@style/IconDefault"
+                        android:src="@drawable/ic_validate_primary"
+                        android:visibility="gone"/>
+                    <ImageView
+                        android:id="@+id/spot"
+                        style="@style/IconDefault"
+                        android:src="@drawable/ic_place_primary"/>
+                    <TextView
+                        android:id="@+id/spot_text"
+                        style="@style/TextButtonDefault"
+                        android:text="@string/place"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 
         <include
             android:layout_width="match_parent"

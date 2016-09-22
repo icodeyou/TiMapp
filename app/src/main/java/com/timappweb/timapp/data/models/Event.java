@@ -436,9 +436,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         }
     }
 
-    public void setSpot(Spot spot) {
+    public Event setSpot(Spot spot) {
         this.spot = spot;
         notifyPropertyChanged(BR.spot);
+        return this;
     }
 
     public void setCategory(EventCategory category) {

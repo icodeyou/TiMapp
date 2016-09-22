@@ -73,7 +73,7 @@
                                 style="@style/imageIconSmall"
                                 android:layout_margin="2dp"
                                 android:background="@drawable/radius_simple_background_black"
-                                tools:src="@drawable/ic_category_unknown"
+                                tools:src="@drawable/category_unknown"
                                 app:imageDrawable="@{event.getCategoryWithDefault().getIconDrawable()}"
                                 />
 
@@ -91,7 +91,7 @@
 
                             <ImageView
                                 style="@style/imageIcon"
-                                android:src="@drawable/ic_clock"
+                                android:src="@drawable/clock"
                                 android:id="@+id/imageView2" />
 
                             <TextView
@@ -154,7 +154,7 @@
                                 android:id="@+id/ic_status"
                                 android:layout_width="@dimen/dim_image_status"
                                 android:layout_height="@dimen/dim_image_status"
-                                android:src="@{event.isUserAround() ? @drawable/gps : @drawable/ic_coming_guy_black}"
+                                android:src="@{event.isUserAround() ? @drawable/gps : @drawable/coming_guy_black}"
                                 android:padding="10dp"/>
 
                             <ProgressBar
@@ -190,19 +190,10 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/map_height">
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:cardCornerRadius="20dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginLeft="2dp">
-
-                        <com.google.android.gms.maps.MapView
-                            android:id="@+id/map"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
-                    </android.support.v7.widget.CardView>
+                    android:layout_height="@dimen/map_height"
+                    android:layout_marginRight="@dimen/margin_cards_scroll"
+                    android:layout_marginLeft="@dimen/margin_cards_scroll">
+                    <include layout="@layout/map" />
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/button_nav"
                         android:layout_width="50dp"
@@ -216,7 +207,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_margin="@dimen/fab_map_margin"
-                        android:src="@drawable/ic_map_light"/>-->
+                        android:src="@drawable/map_light"/>-->
 
                 </RelativeLayout>
             </LinearLayout>

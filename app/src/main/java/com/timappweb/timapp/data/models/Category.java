@@ -55,7 +55,7 @@ public abstract class Category extends SyncBaseModel{
 
     public Drawable getIconDrawable(Context context) {
         return this._iconDrawable != null ? this._iconDrawable:
-                context.getResources().getDrawable(R.drawable.ic_category_unknown);
+                context.getResources().getDrawable(R.drawable.category_unknown);
     }
 
     public void loadIconFromAPI(final Context context) {

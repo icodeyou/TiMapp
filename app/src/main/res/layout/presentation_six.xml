@@ -11,7 +11,7 @@
         style="@style/LinearLayoutPFour">
         <ImageView
             style="@style/ImageLayoutFour"
-            android:src="@drawable/ic_hot"/>
+            android:src="@drawable/hot"/>
         <TextView
             style="@style/TextLayoutFour"
             android:text="@string/popularity_page_one"/>
