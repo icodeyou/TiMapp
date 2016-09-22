@@ -32,4 +32,5 @@ allprojects {
 
 ext {
     supportLibraryVersion = '23.4.0'
+    googlePlayLibraryVersion = '9.4.0'
 }

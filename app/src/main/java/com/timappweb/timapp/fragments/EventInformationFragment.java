@@ -84,7 +84,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
         initVariables(view);
 
-        tvCountPoints.initTimer(getEvent().getPoints());
         View btnRequestNavigation = view.findViewById(R.id.button_nav);
         btnRequestNavigation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,13 +107,18 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        tvCountPoints.initTimer(getEvent().getPoints());
+    }
+
     private void initVariables(View view) {
         mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
         mapView = (MapView) view.findViewById(R.id.map);
         distanceText = (TextView) view.findViewById(R.id.distance_text);
         eventCategoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
 
-        final Event event = eventActivity.getEvent();
         mainLayout = view.findViewById(R.id.main_layout);
         statusTv = (TextView) view.findViewById(R.id.status_text);
         flameView = view.findViewById(R.id.points_icon);

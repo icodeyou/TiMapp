@@ -48,7 +48,7 @@ public class PictureSectionDataLoaderTest extends ApplicationTestCase<Applicatio
         SectionDataLoader mDataLoader = new SectionDataLoader<Picture>()
                 .setFormatter(SyncBaseModel.getPaginatedFormater())
                 .setOrder(SectionContainer.PaginateDirection.ASC)
-                .setMinDelayRefresh(minDelayForceRefresh)
+                .setMinDelayAutoRefresh(minDelayForceRefresh)
                 .setCacheEngine(new DBCacheEngine<Picture>(Picture.class) {
                     @Override
                     protected String getHashKey() {

@@ -166,6 +166,12 @@
     <string name="text_activity_locate">Does your event already exist ?</string>
     <string name="address_found">Address found</string>
 
+
+
+    <!-- SplashActivity  -->
+    <string name="cannot_load_server_configuration_title">Cannot start app</string>
+    <string name="cannot_load_server_configuration_msg">WMake sure you have an internet access.</string>
+
     <!-- AddEventActivity -->
     <string name="hint_write_description">Description</string>
 
@@ -239,6 +245,7 @@
     <string name="popularity_page_two">But it is increased when people post pictures and tags</string>
     <string name="popularity_page_three">This number is in fact a timer</string>
     <string name="text_final_button_viewpager">Let\'s get it started</string>
+    <string name="retry_button">Retry</string>
 
 
 </resources>

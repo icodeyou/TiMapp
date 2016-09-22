@@ -47,6 +47,7 @@ public class PaginateRecyclerViewManager
             return;
 
         mDataLoader.clear();
+        mAdapter.removeAll();
         if (!mDataLoader.loadNextPage()){
             setRefreshing(false);
         }

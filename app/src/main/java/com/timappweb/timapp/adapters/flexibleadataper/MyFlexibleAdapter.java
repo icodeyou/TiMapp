@@ -99,4 +99,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	}
 
 
+	public void removeAll() {
+		this.removeRange(0, getItemCount());
+	}
 }

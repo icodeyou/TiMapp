@@ -130,10 +130,11 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'io.reactivex:rxandroid:1.0.1'
     //7.8.0 may be needed for the emulator.
-    compile 'com.google.android.gms:play-services-ads:8.3.0'
-    compile 'com.google.android.gms:play-services-identity:8.3.0'
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
-    compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile "com.google.android.gms:play-services-ads:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.android.gms:play-services-gcm:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion"
+    //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
     //compile 'com.google.android.gms:play-services:8.4.0'
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
@@ -174,7 +175,6 @@ dependencies {
 
     // @warning WTF is that shit! It makes GSON parser throws stack overflow errors
 
-    //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
     androidTestCompile 'junit:junit:4.12'
 }
 

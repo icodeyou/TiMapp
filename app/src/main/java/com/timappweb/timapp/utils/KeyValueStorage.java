@@ -33,12 +33,14 @@ public class KeyValueStorage {
         editor.commit();
     }
 
+
     public <T> T get(String key, Class<T> type) {
         Gson gson = new Gson();
         String json = this.pref.getString(key, null);
         if (json == null) return null;
         return (T) gson.fromJson(json, type);
     }
+
 
     public void clear(String key) {
         SharedPreferences.Editor editor = pref.edit();

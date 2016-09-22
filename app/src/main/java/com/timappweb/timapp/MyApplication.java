@@ -9,6 +9,7 @@ import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
+import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.config.AuthProvider;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.entities.SearchFilter;
@@ -158,5 +159,11 @@ public class MyApplication extends com.activeandroid.app.Application {
 
     public static void clearStoredData() {
         KeyValueStorage.in().clear().commit();
+    }
+
+    public static void restart(Context context) {
+        Intent intent = new Intent(context, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK );
+        context.startActivity(intent);
     }
 }

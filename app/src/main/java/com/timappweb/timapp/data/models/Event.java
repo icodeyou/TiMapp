@@ -566,4 +566,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public boolean isOwner(User currentUser) {
         return this.user != null && this.user.equals(currentUser);
     }
+
+    public boolean hasLocation() {
+        return false;
+    }
 }

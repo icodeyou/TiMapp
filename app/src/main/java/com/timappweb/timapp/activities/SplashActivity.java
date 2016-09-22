@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,6 +12,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
+import com.timappweb.timapp.views.RetryDialog;
 
 /**
  * Created by stephane on 3/26/2016.
@@ -24,6 +26,10 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.loadConfig();
+    }
+
+    private void loadConfig() {
 
         final MultipleHttpCallManager callsManager = ConfigurationProvider.load(this);
 
@@ -49,8 +55,15 @@ public class SplashActivity extends BaseActivity {
                             if (!ConfigurationProvider.hasEventCategoriesConfig()) {
                                 Log.e(TAG, "    - No event categories configuration");
                             }
-                            ConfigurationProvider.reset();
-                            IntentsUtils.fatalError(SplashActivity.this, R.string.no_network_access, R.string.no_network_access);
+                            ConfigurationProvider.clearStaticVariables();
+                            RetryDialog.show(SplashActivity.this, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    SplashActivity.this.loadConfig();
+                                }
+                            }, getString(R.string.cannot_load_server_configuration_title),
+                                    getString(R.string.cannot_load_server_configuration_msg));
                         }
                         else{
                             if (callsManager.isSuccess(ConfigurationProvider.CALL_ID_SPOT_CATEGORIES)
@@ -76,8 +89,8 @@ public class SplashActivity extends BaseActivity {
                                 IntentsUtils.login(SplashActivity.this);
                             }
                             MyApplication.updateLastLaunch();
+                            finish();
                         }
-                        finish();
                     }
 
                     @Override
