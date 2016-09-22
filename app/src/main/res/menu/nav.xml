@@ -35,6 +35,8 @@
         <menu>
             <item android:id="@+id/menu_item_dummy_event" android:icon="@drawable/map_light"
                 android:title="Dummy event" />
+            <item android:id="@+id/menu_item_dev_clear_config" android:icon="@drawable/map_light"
+                android:title="Clear Config" />
             <item android:id="@+id/menu_item_crash_app" android:icon="@drawable/map_light"
                 android:title="Crash app" />
             <item android:id="@+id/menu_item_test_cam" android:icon="@drawable/plus_grey"

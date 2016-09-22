@@ -40,6 +40,7 @@
 
     <!-- Generic Messages -->
     <string name="alert_dialog_ok">Ok</string>
+    <string name="retry_button">Réessayer</string>
     <string name="waiting_for_location">En attente de localisation</string>
     <string name="skip">Ignorer</string>
     <string name="no_friends">Vous n\'avez pas encore d\'amis qui utilisent TiMapp. Partage l\'application autour de toi avoir des amis, et profiter de nouvelles fonctionnalités !</string>
@@ -71,7 +72,7 @@
     <string name="cannot_upload_picture">L\'ajout de photo est impossible pour le moment. Merci de réessayer plus tard.</string>
     <string name="cannot_resize_picture">Cette image est trop large. Prends-en une autre :)</string>
     <string name="error_picture_too_small">Je n\'aime pas la qualité  de cette photo. Prends-en une autre :)</string>
-    <string name="cannot_facebook_login">Problème de connection avec Facebook. Merci de réessayer plus tard.</string>
+    <string name="cannot_facebook_login">Problème de connexion avec Facebook. Merci de réessayer plus tard.</string>
     <string name="please_update_app">Oups ! Une petite erreur a surgi. Si ce message apparaît à nouveau, assure-toi que l\'appli est à jour.</string>
     <string name="upload_picture_in_progress">Merci d\'attendre  la fin du téléchargement de la photo.</string>
     <string name="event_does_not_exists_anymore">Cet événement n\'existe plus. Redirection vers la carte.</string>
@@ -138,6 +139,10 @@
     <string name="hint_write_description">Description</string>
     <string name="picture">Photo</string>
     <string name="place">Lieu</string>
+    <string name="edit_the_place">Editer le lieu</string>
+    <string name="remove_the_place">Supprimer le lieu</string>
+    <string name="edit_the_picture">Changer la photo</string>
+    <string name="remove_the_picture">Supprimer l\'image</string>
 
     <!-- AddTagsActivity  -->
     <!--TODO : Dupplicates strings here -->
@@ -156,6 +161,10 @@
 
     <!-- AddSpotActivity -->
     <string name="hint_spot_name">Nom du lieu</string>
+
+    <!-- SplashActivity  -->
+    <string name="cannot_load_server_configuration_title">Impossible de démarrer l\'application. Veuillez réessayer plus tard.</string>
+    <string name="cannot_load_server_configuration_msg">Assurez-vous d\'avoir une connexion internet.</string>
 
     <!-- ShareActivity -->
     <string name="text_share_activity">TiMapp est plus sympa avec des amis. Cliquez sur le bouton rouge pour partager l\'application.</string>

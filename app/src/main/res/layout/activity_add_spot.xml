@@ -22,6 +22,11 @@
     <include
         layout="@layout/progressview_fullscreen" />
 
+    <TextView
+        android:id="@+id/no_data_view"
+        style="@style/NoDataView"
+        android:text="@string/no_data_spot"/>
+
     <com.timappweb.timapp.views.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

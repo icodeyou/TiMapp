@@ -3,10 +3,10 @@
 
     <item android:id="@+id/action_edit_picture"
         android:icon="@drawable/ic_camera_primary"
-        android:title="Change photo" />
+        android:title="@string/edit_the_picture" />
 
     <item android:id="@+id/action_remove_picture"
         android:icon="@drawable/cross"
-        android:title="Remove the picture" />
+        android:title="@string/remove_the_picture" />
 
 </menu>

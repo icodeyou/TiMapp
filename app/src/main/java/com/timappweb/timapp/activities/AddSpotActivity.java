@@ -80,7 +80,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private SpotsAdapter mAdapter;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
     private View                                    progressView;
-
+    private View                                    noDataView;
     private PaginateDataLoader mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
@@ -107,10 +107,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         etNameSpot = (EditText) findViewById(R.id.name_spot);
         mSwipeAndRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         progressView = findViewById(R.id.progress_view);
+        noDataView = findViewById(R.id.no_data_view);
 
-        //TODO Jack : Remove progressView somewhere
-        //TODO Jack : No data view = Where are you ? Indicate a category and a name for your current place. Then click on the button CREATE.
-        // (TUTO: If the place already exists in the list below, you can just select it.)
+        // TODO : TUTO (ShowCaseView): If the place already exists in the list below, you can just select it.
 
         initEditText();
         initAdapters();
@@ -126,7 +125,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 })
                 .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
                 .setCallback(this)
-                // .setNoDataView(noDataView) TODO: Jack uncomment this to set the no data view
+                .setNoDataView(noDataView)
                 ;
 
         if (LocationManager.hasLastLocation()){
@@ -136,6 +135,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
 
     private void initDataLoader() {
+        //TODO Steph : progressView.setVisibility(View.VISIBLE);
         PaginateDataLoader.DataProvider<EventsInvitation> mDataProvider = new PaginateDataLoader.DataProvider<EventsInvitation>() {
             @Override
             public HttpCallManager<PaginatedResponse<EventsInvitation>> remoteLoad(PaginateDataLoader.PaginateRequestInfo info) {

@@ -495,8 +495,14 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     protected void onRestart() {
         super.onRestart();
-        eventNameET.clearFocus();
-        descriptionET.clearFocus();
+        if(eventNameET.hasFocus()) {
+            eventNameET.clearFocus();
+            descriptionET.clearFocus();
+        }
+        else if(descriptionET.hasFocus()) {
+            descriptionET.clearFocus();
+            eventNameET.clearFocus();
+        }
         imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
     }
 
@@ -544,7 +550,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 if(resultCode == RESULT_OK){
                     Log.d(TAG, "extracting bundle Spot");
                     updateUiAfterPickSpot();
-
                     extractSpot(data.getExtras());
                 }
                 break;

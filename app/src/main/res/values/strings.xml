@@ -66,6 +66,7 @@
 
     <!-- Generic Messages -->
     <string name="alert_dialog_ok">Ok</string>
+    <string name="retry_button">Réessayer</string>
     <string name="waiting_for_location">Waiting for your location</string>
     <string name="skip">Skip</string>
     <string name="no_friends">You don\'t have any Facebook friends using TiMapp. Share the app with them to get the best experience !</string>
@@ -166,15 +167,17 @@
     <string name="text_activity_locate">Does your event already exist ?</string>
     <string name="address_found">Address found</string>
 
-
-
     <!-- SplashActivity  -->
-    <string name="cannot_load_server_configuration_title">Cannot start app</string>
-    <string name="cannot_load_server_configuration_msg">WMake sure you have an internet access.</string>
+    <string name="cannot_load_server_configuration_title">Cannot start app. Please try again later.</string>
+    <string name="cannot_load_server_configuration_msg">Make sure you have an internet access.</string>
 
     <!-- AddEventActivity -->
     <string name="hint_write_description">Description</string>
     <string name="attach_a_place">Place</string>
+    <string name="edit_the_place">Edit the place</string>
+    <string name="remove_the_place">Remove the place</string>
+    <string name="edit_the_picture">Change photo</string>
+    <string name="remove_the_picture">Remove the picture</string>
 
     <!-- AddTagsActivity  -->
     <string name="search_hint">Type a tag</string>
@@ -249,12 +252,9 @@
     <string name="popularity_page_two">But it is increased when people post pictures and tags</string>
     <string name="popularity_page_three">This number is in fact a timer</string>
     <string name="text_final_button_viewpager">Let\'s get it started</string>
-    <string name="edit_the_place">Edit the place</string>
-    <string name="remove_the_place">Remove the place</string>
-    <string name="retry_button">Retry</string>
-
 
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
+    <string name="no_data_spot">Indicate a category and a name for your current place. Then click on the button CREATE.</string>
 
 </resources>
