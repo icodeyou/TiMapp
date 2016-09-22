@@ -39,6 +39,7 @@ import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
@@ -437,7 +438,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void initMap(){
         mapView.onCreate(null);
         mapView.getMapAsync(this);
-        super.initMapUI(mapView.getMap(), false);
 
         //setUpClusterer();
     }
@@ -531,6 +531,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is now ready!");
         gMap = googleMap;
+        MapFactory.initMap(gMap, false);
 
         if (LocationManager.hasLastLocation()){
             updateMapCenter(LocationManager.getLastLocation());

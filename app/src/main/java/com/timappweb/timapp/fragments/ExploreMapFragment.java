@@ -178,19 +178,12 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             }
         });
 
-        mapView.getMap().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                hideEvent();
-            }
-        });
-
         btnAddEvent.setOnClickListener(exploreFragment.getFabClickListener());
 
         fabLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lastLocation!=null) {
+                if(lastLocation!=null && gMap != null) {
                     LatLng currentPosition = MyLocationProvider.convert(lastLocation);
                     gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition,ZOOM_LEVEL_CENTER_MAP));
                 }
@@ -321,9 +314,17 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
     private void initMap(GoogleMap googleMap) {
         gMap = googleMap;
-        MapFactory.initMap(gMap);
+        MapFactory.initMap(gMap, true);
         gMap.getUiSettings().setMapToolbarEnabled(false);
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+
+        gMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                hideEvent();
+            }
+        });
     }
 
 
@@ -356,17 +357,18 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     }
 
     /**
-     * TODO: check if we need to send back a copy instead ?
+     * @warning: bounds can be null
      * @return
      */
     public LatLngBounds getMapBounds(){
+        if (gMap == null) return null;
         /*
         LatLngBounds cpyBounds;
         LatLngBounds bounds = mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
         synchronized (bounds){
             cpyBounds = new LatLngBounds(bounds.southwest, bounds.northeast);
         }*/
-        return  mapView.getMap().getProjection().getVisibleRegion().latLngBounds;
+        return  gMap.getProjection().getVisibleRegion().latLngBounds;
     }
 
     public void updateMapData(){
@@ -383,26 +385,30 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     }
 
     private void updateMapDisplay() {
-        List<Event> events = history.getInsideBoundsItems(getMapBounds());
-        mClusterManagerPost.clearItems();
-        mClusterManagerPost.addItems(events);
-        mClusterManagerPost.cluster();
+        LatLngBounds bounds = getMapBounds();
+        if (bounds != null){
+            List<Event> events = history.getInsideBoundsItems(getMapBounds());
+            mClusterManagerPost.clearItems();
+            mClusterManagerPost.addItems(events);
+            mClusterManagerPost.cluster();
+        }
     }
 
     private void setUpClusterer(){
         Log.i(TAG, "Setting up cluster!");
-
-        final GoogleMap map = mapView.getMap();
+        if (gMap == null){
+            throw new InternalError("Trying to @setUpClusterer() but gMap is NULL");
+        }
 
         // Initialize the manager with the context and the map.
-        mClusterManagerPost = new ClusterManager<>(getActivity(), map);
-        mClusterManagerPost.setRenderer(new EventClusterRenderer(getActivity(), map, mClusterManagerPost));
+        mClusterManagerPost = new ClusterManager<>(getActivity(), gMap);
+        mClusterManagerPost.setRenderer(new EventClusterRenderer(getActivity(), gMap, mClusterManagerPost));
         mClusterManagerPost.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
             @Override
             public boolean onClusterClick(Cluster<Event> cluster) {
 
                 // If zoom level is too big, go to list (TODO global parameter)
-                if (currentZoomLevel > map.getMaxZoomLevel() - 2){
+                if (currentZoomLevel > gMap.getMaxZoomLevel() - 2){
                     exploreFragment.actionList();
                     return true;
                 }
@@ -415,7 +421,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                 }
                 LatLngBounds bounds = builder.build();
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
-                map.animateCamera(cameraUpdate);
+                gMap.animateCamera(cameraUpdate);
 
                 hideEvent();
                 return true;
@@ -433,8 +439,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         });
         //If we want to redirect to the place after second click, please set another listener  to the map
         // new OnMarkerClickListener() and return false to cancel center on map.
-        map.setOnMarkerClickListener(mClusterManagerPost);
-        map.setOnCameraChangeListener(new OnCameraChangeListener());
+        gMap.setOnMarkerClickListener(mClusterManagerPost);
+        gMap.setOnCameraChangeListener(new OnCameraChangeListener());
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
@@ -449,7 +455,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         MarkerOptions markerOptions = event.getMarkerOption();
         markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker_secondary","drawable", getContext().getPackageName())));
         markerOptions.anchor(0.5f,0.5f); //center Marker Bitmap
-        selectingMarker = gMap.addMarker(markerOptions);
+        if (gMap != null)  selectingMarker = gMap.addMarker(markerOptions);
     }
 
     private void removeCurrentMarker() {

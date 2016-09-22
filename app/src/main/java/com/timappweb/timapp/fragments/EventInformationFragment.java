@@ -168,11 +168,10 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is now ready!");
         gMap = googleMap;
-        MapFactory.initMap(gMap);
+        MapFactory.initMap(gMap, false);
         Event event = eventActivity.getEvent();
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
         gMap.addMarker(event.getMarkerOption());
-        eventActivity.initMapUI(mapView.getMap(), false);
     }
 
     @Override
