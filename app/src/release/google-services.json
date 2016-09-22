@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "826786244567",
+    "firebase_url": "https://api-project-826786244567.firebaseio.com",
+    "project_id": "api-project-826786244567",
+    "storage_bucket": "api-project-826786244567.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826786244567:android:155fe6e90d33d00a",
+        "android_client_info": {
+          "package_name": "com.timappweb.timapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826786244567-1dm55lt5k5hvthoim849v6o3npkcl3l3.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "826786244567-3iqas9hda6i1b49aroa4pe1eppiq6kgb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7cVpTr590GWnf2uD1kb4SYxF-kKqpphc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-75917221-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

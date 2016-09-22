@@ -2,6 +2,7 @@ package com.timappweb.timapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -46,7 +47,7 @@ public class MyApplication extends com.activeandroid.app.Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        //MultiDex.install(this);
+        MultiDex.install(this);
     }
 
 

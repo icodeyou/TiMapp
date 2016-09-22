@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services' // Google Clound Messaging
+apply plugin: 'io.fabric'   // Crash reporting
+apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
 
 android {
@@ -116,7 +117,7 @@ dependencies {
 
     //compile 'com.facebook.android:facebook-android-sdk:4.7'
 
-    //compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.1'    // Used by Google Play Service and Mutltidex application
 
     //Android support
     compile "com.android.support:preference-v7:$rootProject.ext.supportLibraryVersion"
