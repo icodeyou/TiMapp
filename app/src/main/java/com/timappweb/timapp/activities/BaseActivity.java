@@ -105,16 +105,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void initMapUI(GoogleMap gMap, boolean gestureEnabled) {
-        gMap.setIndoorEnabled(true);
-        gMap.setMyLocationEnabled(true);
-        gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        gMap.getUiSettings().setScrollGesturesEnabled(gestureEnabled);
-        gMap.getUiSettings().setRotateGesturesEnabled(gestureEnabled);
-        gMap.getUiSettings().setTiltGesturesEnabled(gestureEnabled);
-        gMap.getUiSettings().setMapToolbarEnabled(false);
-    }
-
     protected void setSearchview(Menu menu) {
         //Set search item
         MenuItem searchItem = menu.findItem(R.id.action_search);

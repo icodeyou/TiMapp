@@ -19,6 +19,8 @@ public class PaginateDataLoader<T> {
     DataProvider dataProvider;
     PaginateRequestInfo pageInfo;
     private HttpCallManager remoteCall;
+    private long minDelayForceRefresh;
+    private long minDelayAutoRefresh;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -113,6 +115,16 @@ public class PaginateDataLoader<T> {
 
     public PaginateDataLoader setDataProvider(DataProvider dataProvider) {
         this.dataProvider = dataProvider;
+        return this;
+    }
+
+    public PaginateDataLoader<T> setMinDelayForceRefresh(long minDelayForceRefresh) {
+        this.minDelayForceRefresh = minDelayForceRefresh;
+        return this;
+    }
+
+    public PaginateDataLoader<T> setMinDelayAutoRefresh(long minDelayAutoRefresh) {
+        this.minDelayAutoRefresh = minDelayAutoRefresh;
         return this;
     }
 

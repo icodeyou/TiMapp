@@ -33,6 +33,7 @@ import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
@@ -391,6 +392,11 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             // DEV
             case R.id.menu_item_dummy_event:
                 IntentsUtils.viewSpecifiedEvent(this, DummyEventFactory.create());
+                break;
+            case R.id.menu_item_dev_clear_config:
+                ConfigurationProvider.clearAll();
+                MyApplication.restart(this);
+                finish();
                 break;
             case R.id.menu_item_test_cam:
                 EasyImage.openCamera(this, 0);

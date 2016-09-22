@@ -8,6 +8,7 @@ import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
+import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     private long _lastLoad = 0;
     private PaginatedSection currentLoadSection;
 
+    private long minDelayForceRefresh;
+    private long minDelayAutoRefresh;
 
     public enum LoadType {MORE, UPDATE, NEWEST}
 
@@ -34,13 +37,12 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
 
     // ---------------------------------------------------------------------------------------------
 
-    private long minDelayForceRefresh;
     protected SectionDataProviderInterface dataProvider;
     protected SectionContainer sectionContainer;
     protected SectionBoundsFormatter formatter;
     protected Callback<T> callback;
     private boolean useCache;
-    private CacheEngine cacheEngine;
+    private CacheEngine<T> cacheEngine;
 
     protected boolean _isFullyLoaded;
     //protected long _lastUpdate;
@@ -105,7 +107,12 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         return this;
     }
 
-    public SectionDataLoader setMinDelayRefresh(long minDelayForceRefresh) {
+    public SectionDataLoader setMinDelayAutoRefresh(long minDelayAutoRefresh) {
+        this.minDelayAutoRefresh = minDelayAutoRefresh;
+        return this;
+    }
+
+    public SectionDataLoader setMinDelayForceRefresh(long minDelayForceRefresh) {
         this.minDelayForceRefresh = minDelayForceRefresh;
         return this;
     }
@@ -139,6 +146,37 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
     }
 
 
+    public boolean loadNewest() {
+        Log.d(TAG, "Trigger a @loadNewest()");
+
+        if (this.requireLoadNewest()) {
+            Log.d(TAG, "Min delay to force refresh is not respected. Cancel load newest.");
+            return false;
+        }
+
+        PaginatedSection section = sectionContainer.first();
+        // Check if we need to load newest
+        if (section == null
+                || section.isStatus(LoadStatus.DONE)) {
+            PaginatedSection newSection = createNewerSection(section);
+            if (section == null || newSection.getEnd() > 0) {
+                newSection.setLoadType(LoadType.NEWEST);
+                return this.load(newSection);
+            }
+        }
+        return false;
+    }
+
+
+    public long getLastLoadNewest() {
+        return 0; // TODO
+    }
+
+    private boolean requireLoadNewest() {
+        return this.minDelayForceRefresh > 0 &&
+                (System.currentTimeMillis() - this.getLastLoadNewest()) <= this.minDelayForceRefresh;
+    }
+
     /**
      * Only one load at a time garantee!
      * @param section
@@ -165,21 +203,6 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
         return true;
     }
 
-
-    public boolean loadNewest(){
-        Log.d(TAG, "Trigger a @loadNewest()");
-        PaginatedSection section = sectionContainer.first();
-        // Check if we need to load newest
-        if (        section == null
-                ||  section.isStatus(LoadStatus.DONE)){
-            PaginatedSection newSection = createNewerSection(section);
-            if (section == null || newSection.getEnd() > 0){
-                newSection.setLoadType(LoadType.NEWEST);
-                return this.load(newSection);
-            }
-        }
-        return false;
-    }
 
     private PaginatedSection createNewerSection(PaginatedSection section) {
         return new PaginatedSection(-1, section != null ? section.start + (this.getOrder() == PaginateDirection.ASC ? 1 : -1) : -1);
@@ -258,6 +281,7 @@ public class SectionDataLoader<T> implements DataLoaderInterface {
                 })
                 .perform();
     }
+
 
     private synchronized void onLoadSectionEnd(){
         if (currentLoadSection == null){

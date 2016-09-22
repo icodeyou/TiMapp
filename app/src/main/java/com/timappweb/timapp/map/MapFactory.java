@@ -10,10 +10,15 @@ import com.timappweb.timapp.utils.location.MyLocationProvider;
  */
 public class MapFactory {
 
-    public static void initMap(GoogleMap gMap){
+    public static void initMap(GoogleMap gMap, boolean gestureEnabled){
         if (MyLocationProvider.hasLocationPermission()){
             gMap.setMyLocationEnabled(true);
         }
         gMap.setIndoorEnabled(true);
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);
+        gMap.getUiSettings().setScrollGesturesEnabled(gestureEnabled);
+        gMap.getUiSettings().setRotateGesturesEnabled(gestureEnabled);
+        gMap.getUiSettings().setTiltGesturesEnabled(gestureEnabled);
+        gMap.getUiSettings().setMapToolbarEnabled(false);
     }
 }

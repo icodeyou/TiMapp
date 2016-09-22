@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
@@ -33,7 +32,6 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import io.fabric.sdk.android.Fabric;
 
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
@@ -90,7 +88,8 @@ public class InvitationsActivity extends BaseActivity implements
         mDataLoader = new SectionDataLoader<EventsInvitation>()
                 .setFormatter(SyncBaseModel.getPaginatedFormater())
                 .setOrder(SectionContainer.PaginateDirection.ASC)
-                .setMinDelayRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setCacheEngine(new DBCacheEngine<EventsInvitation>(EventsInvitation.class){
                     @Override
                     protected String getHashKey() {
@@ -120,8 +119,6 @@ public class InvitationsActivity extends BaseActivity implements
                 .setCallback(this)
                 .setSwipeRefreshLayout(mSwipeRefreshLayout)
                 .enableEndlessScroll()
-                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                 .firstLoad();
     }
 

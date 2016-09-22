@@ -69,7 +69,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         rvEvents = (RecyclerView) findViewById(R.id.list_events);
 
         initRvAndAdapter();
-        LocationManager.addOnLocationChangedListener(this);
 
         mEventLoaderModel = new MapAreaLoaderCallback<Event>();
         mEventLoaderModel
@@ -112,6 +111,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     protected void onStart() {
         super.onStart();
+        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
     }
 
@@ -184,7 +184,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
     // INNER CLASSES
-
+/*
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
@@ -199,7 +199,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
                 Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).show();
             }
         }
-    }
+    }*/
 
 
 }

@@ -27,8 +27,6 @@ public abstract class RecyclerViewManager<This> implements
     // ---------------------------------------------------------------------------------------------
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private long minDelayAutoRefresh;
-    private long minDelayForceRefresh;
     private View mNoDataView;
 
     protected RecyclerViewManager.ItemTransformer mItemTransformer;
@@ -62,17 +60,6 @@ public abstract class RecyclerViewManager<This> implements
         this.mNoDataView = noDataView;
         return (This) this;
     }
-
-    public This setMinDelayAutoRefresh(long minDelayAutoRefresh) {
-        this.minDelayAutoRefresh = minDelayAutoRefresh;
-        return (This) this;
-    }
-
-    public This setMinDelayForceRefresh(long minDelayForceRefresh) {
-        this.minDelayForceRefresh = minDelayForceRefresh;
-        return (This) this;
-    }
-
 
     public This setItemTransformer(RecyclerViewManager.ItemTransformer transformer){
         this.mItemTransformer = transformer;

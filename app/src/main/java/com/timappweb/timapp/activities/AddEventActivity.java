@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -18,10 +15,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -34,7 +29,6 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.QuotaManager;
@@ -43,25 +37,21 @@ import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallbackBinding;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
 
-import java.io.IOException;
-
-import io.fabric.sdk.android.Fabric;
 import retrofit2.Response;
 
 
@@ -87,10 +77,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private ActivityAddEventBinding     mBinding;
     private View                        mBtnAddSpot;
     private View                        mSpotContainer;
-    private AddressResultReceiver       mAddressResultReceiver;
+    //private AddressResultReceiver       mAddressResultReceiver;
     private View.OnClickListener        displayHideCategories;
 
     private MenuItem postButton;
+    private Location mFineLocation  = null;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -116,20 +107,16 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
         mSpotContainer = findViewById(R.id.spot_container);
-
-        Event event = new Event();
-        if (LocationManager.hasLastLocation()){
-            event.setLocation(LocationManager.getLastLocation());
-        }
-        mBinding.setEvent(event);
+        mBinding.setEvent(new Event());
 
         initEts();
         initAdapterAndManager();
         setListeners();
         //initViewPager();
-        initLocationListener();
         initEvents();
         initMap();
+
+        updateEventLocation();
     }
 
     private void initDebugView() {
@@ -154,18 +141,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     //----------------------------------------------------------------------------------------------
     //Private methods
 
-    /**
-     * Load places once user name is known
-     */
-    private void initLocationListener() {
-        LocationManager.addOnLocationChangedListener(this);
-        LocationManager.start(this);
-
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
+        LocationManager.addOnLocationChangedListener(this);
+        LocationManager.start(this);
     }
 
     @Override
@@ -188,10 +168,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_post:
-                if (LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)) {
+                if (mFineLocation != null) {
                     setProgressView(true);
                     Event event = mBinding.getEvent();
                     event.setCategory(eventCategorySelected);
+                    event.setLocation(mFineLocation);
                     submitEvent(event);
                 } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
@@ -295,7 +276,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     public void setButtonValidation() {
         String textAfterChange = eventNameET.getText().toString().trim();
-        boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange);
+        boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange)
+                && mFineLocation != null;
         postButton.setEnabled(isValid);
     }
 
@@ -456,7 +438,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void initMap(){
         mapView.onCreate(null);
         mapView.getMapAsync(this);
-        super.initMapUI(mapView.getMap(), false);
 
         //setUpClusterer();
     }
@@ -511,19 +492,46 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Update event location.
+     * If there is an up to date user location and if it's precise enough, we can stop requestion user location
+     * Otherwise it will go on util finding a precise enough location
+     */
+    private void updateEventLocation(){
+        Location newLocation = LocationManager.getLastLocation();
+        if (LocationManager.hasUpToDateLastLocation() && LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)){
+            Log.i(TAG, "A fine user location has been found: " + newLocation + ". Stopping location updates.");
+            mFineLocation = newLocation;
+            LocationManager.stop();
+            onFindLocationFound();
+        }
+        else if (LocationManager.hasLastLocation()){
+            updateMapCenter(newLocation);
+        }
+    }
+
+    private void onFindLocationFound() {
+        // TODO JACK : hide location loader here
+    }
     // =============================================================================================
+
+
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         Log.v(TAG, "User location changed!");
-        updateMapCenter(newLocation);
-        requestReverseGeocoding(newLocation);
+        if (mFineLocation == null){
+            updateEventLocation();
+            updateMapCenter(newLocation);
+        }
+        //requestReverseGeocoding(newLocation);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is now ready!");
         gMap = googleMap;
+        MapFactory.initMap(gMap, false);
 
         if (LocationManager.hasLastLocation()){
             updateMapCenter(LocationManager.getLastLocation());
@@ -532,6 +540,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     // =============================================================================================
 
+    /*
     private void requestReverseGeocoding(Location location){
         if (mAddressResultReceiver == null){
             mAddressResultReceiver = new AddressResultReceiver();
@@ -558,5 +567,5 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 mBinding.setAddress(resultData.getString(Constants.RESULT_DATA_KEY));
             }
         }
-    }
+    }*/
 }

@@ -17,7 +17,7 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.activities.NetworkErrorCallback;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PeopleHeaderItem;

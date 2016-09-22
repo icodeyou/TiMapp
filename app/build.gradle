@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services' // Google Clound Messaging
+apply plugin: 'io.fabric'   // Crash reporting
+apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
 
 android {
@@ -115,7 +116,7 @@ dependencies {
 
     //compile 'com.facebook.android:facebook-android-sdk:4.7'
 
-    //compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.1'    // Used by Google Play Service and Mutltidex application
 
     //Android support
     compile "com.android.support:preference-v7:$rootProject.ext.supportLibraryVersion"
@@ -129,10 +130,11 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'io.reactivex:rxandroid:1.0.1'
     //7.8.0 may be needed for the emulator.
-    compile 'com.google.android.gms:play-services-ads:8.3.0'
-    compile 'com.google.android.gms:play-services-identity:8.3.0'
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
-    compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile "com.google.android.gms:play-services-ads:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.android.gms:play-services-gcm:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion"
+    //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
     //compile 'com.google.android.gms:play-services:8.4.0'
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
@@ -173,7 +175,6 @@ dependencies {
 
     // @warning WTF is that shit! It makes GSON parser throws stack overflow errors
 
-    //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
     androidTestCompile 'junit:junit:4.12'
 }
 

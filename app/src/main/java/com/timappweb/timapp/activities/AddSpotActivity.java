@@ -125,8 +125,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                     }
                 })
                 .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
-                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
-                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
                 .setCallback(this)
                 // .setNoDataView(noDataView) TODO: Jack uncomment this to set the no data view
                 ;
@@ -154,6 +152,8 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
 
         };
         mDataLoader = new PaginateDataLoader<EventsInvitation>()
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
                 .setCallback(this)
                 .setDataProvider(mDataProvider);
     }
@@ -276,8 +276,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
     private void setCategory(SpotCategory spotCategory) {
-        Spot spot = currentSpot;
-        spot.setCategory(spotCategory);
+        currentSpot.setCategory(spotCategory);
         categorySelector.selectCategoryUI(spotCategory.name,spotCategory.getIconDrawable(AddSpotActivity.this));
         etNameSpot.requestFocus();
     }

@@ -1,4 +1,4 @@
-package com.timappweb.timapp.activities;
+package com.timappweb.timapp.rest.callbacks;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class NetworkErrorCallback extends com.timappweb.timapp.rest.callbacks.RequestFailureCallback {
 
-    private final Context context;
+    protected final Context context;
 
     public NetworkErrorCallback(Context context) {
         this.context = context;

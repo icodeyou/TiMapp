@@ -33,6 +33,8 @@
 
     <item android:title="Development shortcuts" android:visible="false" android:id="@+id/menu_development_shortcut">
         <menu>
+            <item android:id="@+id/menu_item_dev_clear_config" android:icon="@drawable/ic_map_light"
+                android:title="Clear config" />
             <item android:id="@+id/menu_item_dummy_event" android:icon="@drawable/ic_map_light"
                 android:title="Dummy event" />
             <item android:id="@+id/menu_item_crash_app" android:icon="@drawable/ic_map_light"

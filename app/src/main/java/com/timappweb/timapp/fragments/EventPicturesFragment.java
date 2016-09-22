@@ -21,7 +21,7 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.activities.NetworkErrorCallback;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -83,7 +83,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private static final long           REMOTE_LOAD_LIMIT               = 10;
     public static int                   PICTURE_GRID_COLUMN_NB          = 2;
     private static final long           MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
-    private static final long           MIN_DELAY_AUTO_REFRESH          = 10 * 60 * 1000;
+    private static final long           MIN_DELAY_AUTO_REFRESH          = 5 * 60 * 1000;
 
     private static final int            INDEX_CONTEXTUAL_MENU_ITEM_SET_BACKGROUND = 0;
     // ---------------------------------------------------------------------------------------------
@@ -165,9 +165,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
                     })
                     .setNoDataView(noPicView)
                     .setSwipeRefreshLayout(mSwipeRefreshLayout)
-                    .enableEndlessScroll()
-                    .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                    .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH);
+                    .enableEndlessScroll();
 
         } catch (Exception e) {
             IntentsUtils.home(getContext());
@@ -253,7 +251,8 @@ public class EventPicturesFragment extends EventBaseFragment implements
         mDataLoader = new SectionDataLoader<Picture>()
                 .setFormatter(SyncBaseModel.getPaginatedFormater())
                 .setOrder(SectionContainer.PaginateDirection.ASC)
-                .setMinDelayRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setCacheEngine(new DBCacheEngine<Picture>(Picture.class){
                     @Override
                     protected String getHashKey() {

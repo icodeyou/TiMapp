@@ -37,6 +37,7 @@ import com.timappweb.timapp.fragments.EventTagsFragment;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
@@ -219,6 +220,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
             loader.setVisibility(View.VISIBLE);
             Call<Event> call = RestClient.service().viewPlace(eventId);
+            Log.i(TAG, "Loading event with id: " + eventId + ". Existing event: " + event);
             RestClient.buildCall(call)
                     .onResponse(new HttpCallback<Event>() {
                         @Override
@@ -239,23 +241,17 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                             EventActivity.this.onEventOver();
                         }
                     })
-                    .onError(new NetworkErrorCallback(this){
+                    .onError(new RetryOnErrorCallback(EventActivity.this, new RetryOnErrorCallback.OnRetryCallback() {
                         @Override
-                        public void onError(Throwable error) {
-                            RetryDialog.show(EventActivity.this, new DialogInterface.OnClickListener(){
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        dialog.dismiss();
-                                        EventActivity.this.loadEvent();
-                                    } catch (CannotSaveModelException e) {
-
-                                    }
-                                }
-                            });
-
+                        public void onRetry() {
+                            try {
+                                EventActivity.this.loadEvent();
+                            } catch (CannotSaveModelException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, e.getMessage());
+                            }
                         }
-                    })
+                    }))
                     .onFinally(new HttpCallManager.FinallyCallback() {
                         @Override
                         public void onFinally(Response response, Throwable error) {
@@ -266,6 +262,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
         else{
             event = (Event) event.requireLocalId();
+            Log.i(TAG, "Using cached event: " + event);
             onEventLoaded();
         }
     }

@@ -11,15 +11,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonObject;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
@@ -32,7 +28,6 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.data.models.UserTag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.listeners.OnAddTagListener;
@@ -43,6 +38,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventPostMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
@@ -52,7 +48,6 @@ import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
 import retrofit2.Response;
 
 public class AddTagActivity extends BaseActivity{

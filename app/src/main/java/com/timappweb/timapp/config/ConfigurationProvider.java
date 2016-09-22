@@ -1,16 +1,11 @@
 package com.timappweb.timapp.config;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Category;
 import com.timappweb.timapp.data.models.EventCategory;
@@ -19,9 +14,7 @@ import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.utils.ImageSaver;
 import com.timappweb.timapp.utils.KeyValueStorage;
-import com.timappweb.timapp.utils.PictureUtility;
 
 import java.util.List;
 
@@ -220,6 +213,8 @@ public class ConfigurationProvider{
         ConfigurationProvider.clearApplicationRules();
         ConfigurationProvider.clearSpotCategories();
         ConfigurationProvider.clearEventCategories();
+
+        ConfigurationProvider.clearStaticVariables();
     }
 
     private static void clearEventCategories() {
@@ -242,9 +237,10 @@ public class ConfigurationProvider{
         }
     }
 
-    public static void reset(){
+    public static void clearStaticVariables(){
         eventCategories = null;
         spotCategories = null;
+        applicationRules = null;
     }
 
 

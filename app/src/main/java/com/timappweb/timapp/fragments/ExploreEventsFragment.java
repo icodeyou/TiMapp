@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -98,9 +99,12 @@ public class ExploreEventsFragment extends Fragment {
         Log.d(TAG, "ExploreEventsFragment is now selected");
         Log.d(TAG, "Loading "+ eventsAdapter.getData().size()+" places in List");
         eventsAdapter.clear();
-        ExploreMapFragment exploreMapFragment = exploreFragment.getExploreMapFragment();
-        List<Event> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(exploreMapFragment.getMapBounds());
-        eventsAdapter.setData(markers);
+
+        LatLngBounds bounds =  exploreFragment.getExploreMapFragment().getMapBounds();
+        if (bounds != null){
+            List<Event> markers = exploreFragment.getAreaRequestHistory().getInsideBoundsItems(bounds);
+            eventsAdapter.setData(markers);
+        }
 
         return eventsAdapter.getData().size()!=0;
     }

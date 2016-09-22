@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
@@ -31,6 +28,7 @@ import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
@@ -42,7 +40,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
-import io.fabric.sdk.android.Fabric;
 import retrofit2.Call;
 import retrofit2.Response;
 
