@@ -16,6 +16,7 @@ import com.timappweb.timapp.utils.ActivityHelper;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,12 +36,22 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class LoginActivityTest {
+public class LoginActivityTest extends AbstractActivityTest{
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(
             LoginActivity.class);
 
+    @Before
+    public void setUp() throws Exception {
+        this.systemAnimations(false);
+        this.idlingApiCall();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        this.resetAsBeforeTest();
+    }
 
     @Test
     public void testSkip() {
@@ -49,13 +60,13 @@ public class LoginActivityTest {
 
         ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
+
     @Test
     public void testLogin() {
         onView(withId(R.id.facebook_login_button))
                 .perform(click());
 
-        // TODO wait for facebook..
-        // ActivityHelper.assertCurrentActivity(DrawerActivity.class);
+        ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
 
 }

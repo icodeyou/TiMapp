@@ -107,7 +107,6 @@ public class ConfigurationProvider{
                     .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, new Select().from(SpotCategory.class)){
                         @Override
                         public void successful(List<SpotCategory> categories) {
-                            super.successful(categories);
                             downloadIcons(context, categories);
                         }
                     });
@@ -115,7 +114,6 @@ public class ConfigurationProvider{
                     .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, new Select().from(EventCategory.class)){
                         @Override
                         public void successful(List<EventCategory> categories) {
-                            super.successful(categories);
                             downloadIcons(context, categories);
                         }
                     });

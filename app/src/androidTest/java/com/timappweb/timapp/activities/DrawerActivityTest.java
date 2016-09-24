@@ -37,4 +37,8 @@ public class DrawerActivityTest {
     }
 
 
+    @Test
+    public void testOpenDrawer(){
+        // TODO
+    }
 }

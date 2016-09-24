@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 
+import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.views.RetryDialog;
 import com.twotoasters.jazzylistview.effects.TiltEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
@@ -116,9 +118,20 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        LocationManager.removeLocationListener(this);
+    }
+
+    @Override
     protected void onStop() {
-        LocationManager.stop();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocationManager.stop();
+        super.onDestroy();
     }
 
     @Override
@@ -138,7 +151,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
     @Override
     public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
-        Log.d(TAG, "Loading " + data.size() + " viewPlace(s)");
+        Log.d(TAG, "Loading " + data.size() + " event(s) around user.");
         EventsAdapter placeAdapter = ((EventsAdapter) rvEvents.getAdapter());
         placeAdapter.clear();
         if (data.size() != 0) {
@@ -156,7 +169,15 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
         progressView.setVisibility(View.GONE);
-        // TODO
+        RetryDialog.show(this, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mEventLoaderModel
+                        .clear()
+                        .loadNextPage();
+            }
+        });
     }
     // ---------------------------------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------

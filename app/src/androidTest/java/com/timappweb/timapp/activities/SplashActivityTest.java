@@ -7,14 +7,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.activities.AddEventActivity;
-import com.timappweb.timapp.activities.DrawerActivity;
-import com.timappweb.timapp.activities.PresentationActivity;
-import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.MockLocationProvider;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 
 import org.junit.After;
@@ -33,9 +27,8 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class StartAppTest {
+public class SplashActivityTest extends AbstractActivityTest {
 
-    private ApiCallIdlingResource apiCallIdlingResource;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule =
@@ -44,13 +37,13 @@ public class StartAppTest {
 
     @Before
     public void setUp() throws Exception {
-        apiCallIdlingResource = new ApiCallIdlingResource();
-        Espresso.registerIdlingResources(apiCallIdlingResource);
+        this.idlingApiCall();
+        this.systemAnimations(false);
     }
 
     @After
-    public void unregisterIntentServiceIdlingResource() {
-        Espresso.unregisterIdlingResources(apiCallIdlingResource);
+    public void tearDown() throws Exception {
+        this.resetAsBeforeTest();
     }
 
     /*

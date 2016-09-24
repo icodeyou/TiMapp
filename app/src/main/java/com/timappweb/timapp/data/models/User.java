@@ -6,7 +6,7 @@ import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.util.List;

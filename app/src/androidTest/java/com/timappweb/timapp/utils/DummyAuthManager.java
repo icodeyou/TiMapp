@@ -1,6 +1,10 @@
 package com.timappweb.timapp.utils;
 
-import com.timappweb.timapp.config.AuthProviderInterface;
+import android.content.Context;
+
+import com.timappweb.timapp.auth.AuthManager;
+import com.timappweb.timapp.auth.AuthManagerInterface;
+import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
@@ -9,7 +13,7 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
  */
 
 
-public class DummyAuthProvider implements AuthProviderInterface {
+public class DummyAuthManager implements AuthManagerInterface {
     @Override
     public String getToken() {
         return "fejiopzjpf2938020ezpjfpezoCEDEfez";
@@ -31,7 +35,7 @@ public class DummyAuthProvider implements AuthProviderInterface {
     }
 
     @Override
-    public boolean login(User user, String token, String accessToken) {
+    public boolean login(Context context, Object serverResponse, String accessToken) throws AuthManager.CannotLoginException {
         return false;
     }
 

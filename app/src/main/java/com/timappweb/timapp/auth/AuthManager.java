@@ -1,22 +1,28 @@
-package com.timappweb.timapp.config;
+package com.timappweb.timapp.auth;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
+import com.google.android.gms.iid.InstanceID;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.utils.KeyValueStorage;
+
+import java.util.HashMap;
 
 
 /**
  * Created by stephane on 4/26/2016.
  */
-public class AuthProvider implements AuthProviderInterface{
+public class AuthManager implements AuthManagerInterface<RestFeedback>{
 
     private static final String TAG                     = "AuthProvider";
     public static final int     TOKEN_CHECK_DELAY       = 3600;
@@ -28,6 +34,9 @@ public class AuthProvider implements AuthProviderInterface{
     private static final String KEY_LOGIN_TIME          = "LoginTime";
     public static final String  KEY_ID                  = "user.id";
 
+
+    private HashMap<String, AuthProviderInterface>  mAuthProviders = new HashMap<>();
+
     private boolean             _isUserLoaded           = false;
     private User                currentUser             = null;
     private SocialProvider      _socialProviderType;
@@ -37,6 +46,7 @@ public class AuthProvider implements AuthProviderInterface{
     public String getToken() {
         return KeyValueStorage.out().getString(KEY_TOKEN, null);
     }
+
     public String getSocialProviderToken() {
         return KeyValueStorage.out().getString(SOCIAL_PROVIDER_TOKEN, null);
     }
@@ -73,21 +83,40 @@ public class AuthProvider implements AuthProviderInterface{
         return null;
     }
 
-    public boolean login(User user, String token, String accessToken) {
+    public boolean login(Context context, RestFeedback feedback, String accessToken) throws CannotLoginException {
         try{
+            int userId = Integer.parseInt(feedback.data.get("id"));
+            User user = User.loadByRemoteId(User.class, userId);
+            if (user == null) user = new User();
+
+            String token = feedback.data.get("token");
+            user.username = feedback.data.get("username");
+            user.provider_uid = feedback.data.get("social_id");
+            user.provider = SocialProvider.FACEBOOK;
+            user.remote_id = Integer.parseInt(feedback.data.get("id"));
+            user.app_id = InstanceID.getInstance(context).getId();
             setCurrentUser(user);
             KeyValueStorage.in()
                     .putString(KEY_TOKEN, token)
                     .putLong(KEY_LOGIN_TIME, System.currentTimeMillis());
             setSocialProvider(SocialProvider.FACEBOOK, accessToken);
+            Log.i(TAG, "Trying to login user: " + user);
+            requestGcmToken(context);
+            QuotaManager.sync();
             return true;
         } catch (CannotSaveModelException e) {
-            Log.e(TAG, "Cannot set current user: " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new CannotLoginException("Cannot save model:" + e.getMessage());
         }
     }
 
+
+    public static void requestGcmToken(Context context) {
+        Log.d(TAG, "Starting IntentService to update user token");
+        Intent intent = new Intent(context, RegistrationIntentService.class);
+        //intent.putExtra(Constants.RECEIVER, mResultReceiver);
+        //intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
+        context.startService(intent);
+    }
     public User getCurrentUser() {
         if (!_isUserLoaded){
             _isUserLoaded = true;
@@ -129,4 +158,18 @@ public class AuthProvider implements AuthProviderInterface{
     }
 
 
+    public AuthManager addAuthProvider(AuthProviderInterface provider){
+        this.mAuthProviders.put(provider.getId(), provider);
+        return this;
+    }
+
+    public AuthProviderInterface getProvider(String providerId) {
+        return this.mAuthProviders.get(providerId);
+    }
+
+    public class CannotLoginException extends Exception {
+        public CannotLoginException(String s) {
+            super(s);
+        }
+    }
 }

@@ -60,7 +60,7 @@ public class MyLocationProvider implements
 
     private LocationListener    mLocationListener = null;   // Location listener for Location update callbacks
     private LocationRequest     mLocationRequest;           // Location request object
-    LocationManager             mLocationManager = null;    // LocationManager
+    private LocationManager     mLocationManager = null;    // LocationManager
 
     private Location            mLastLocation = null;       // The last name from any provider
     private boolean             mRequestingLocationUpdates = true;  // Enable or disable name requests
@@ -82,6 +82,7 @@ public class MyLocationProvider implements
         this.setLocationListener(mLocationListener);
         Log.d(TAG, "Localisation API has been set up!");
     }
+
 
     protected synchronized void initGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this.activity)
@@ -193,8 +194,8 @@ public class MyLocationProvider implements
         //https://developers.google.com/android/reference/com/google/android/gms/location/SettingsApi
 
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .setAlwaysShow(true)
                 .addLocationRequest(mLocationRequest);
-        builder.setAlwaysShow(true);
 
         PendingResult<LocationSettingsResult> result =
                 LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
@@ -327,8 +328,8 @@ public class MyLocationProvider implements
         criteria.setSpeedRequired(false);
         return criteria;
     }
+
     /**
-     * TODO not implemented
      */
     public void requestMultipleUpdates(){
         Criteria c = this.getBestCriteria();
@@ -355,7 +356,8 @@ public class MyLocationProvider implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "Connection failed");
+        Log.e(TAG, "Connection failed: " + connectionResult);
+        // TODO
     }
 
 
@@ -386,6 +388,9 @@ public class MyLocationProvider implements
         }
     }
 
+    public GoogleApiClient getGoogleApiClient() {
+        return mGoogleApiClient;
+    }
 }
 
 /*

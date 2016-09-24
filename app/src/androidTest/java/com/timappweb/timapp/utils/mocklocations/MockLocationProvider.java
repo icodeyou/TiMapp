@@ -1,10 +1,9 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.mocklocations;
 
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -13,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
  *
  * From: https://mobiarch.wordpress.com/2012/07/17/testing-with-mock-location-data-in-android/
  */
-public class MockLocationProvider {
+public class MockLocationProvider extends AbstractMockLocationProvider {
     String providerName;
     Context ctx;
 
@@ -28,17 +27,19 @@ public class MockLocationProvider {
         lm.setTestProviderEnabled(providerName, true);
     }
 
+    @Override
     public Location pushLocation(LatLng ll) {
-        return this.pushLocation(ll.latitude, ll.longitude);
+        Location mockLocation = createMockLocation(providerName, ll.latitude, ll.longitude);
+        return this.pushLocation(mockLocation);
     }
 
-    public Location pushLocation(double lat, double lon) {
+    @Override
+    public Location pushLocation(Location loc) {
         LocationManager lm = (LocationManager) ctx.getSystemService(
                 Context.LOCATION_SERVICE);
 
-        Location mockLocation = createMockLocation(providerName, lat, lon);
-        lm.setTestProviderLocation(providerName, mockLocation);
-        return mockLocation;
+        lm.setTestProviderLocation(providerName, loc);
+        return loc;
     }
 
     public void shutdown() {
@@ -48,20 +49,6 @@ public class MockLocationProvider {
     }
 
     // ---------------------------------------------------------------------------------------------
-
-    public static Location createMockLocation(String providerName, double lat, double lon){
-        Location mockLocation = new Location(providerName);
-        mockLocation.setLatitude(lat);
-        mockLocation.setLongitude(lon);
-        mockLocation.setAltitude(0);
-        mockLocation.setAccuracy(10);
-        mockLocation.setSpeed(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            mockLocation.setElapsedRealtimeNanos(System.currentTimeMillis() * 1000);
-        }
-        mockLocation.setTime(System.currentTimeMillis());
-        return mockLocation;
-    }
 
     public static MockLocationProvider createGPSProvider(Activity activity){
         return new MockLocationProvider(LocationManager.GPS_PROVIDER, activity);

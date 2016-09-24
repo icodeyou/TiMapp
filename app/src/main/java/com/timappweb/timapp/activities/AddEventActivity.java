@@ -9,8 +9,6 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -24,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -44,9 +41,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.EventStatusManager;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
@@ -59,10 +54,12 @@ import com.timappweb.timapp.map.MapFactory;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
+import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallbackBinding;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
+import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.SerializeHelper;
@@ -116,6 +113,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private File        pictureSelected;
     private View.OnClickListener onSpotClickListener;
     private Location mFineLocation  = null;
+    private View mWaitingForLocationLayout;
+    private TextView mWaitingForLocationText;
 
     //----------------------------------------------------------------------------------------------
     //Override
@@ -144,6 +143,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mBtnAddSpot = findViewById(R.id.button_add_spot);
         mBtnAddPic = findViewById(R.id.attach_picture);
         mSpotContainer = findViewById(R.id.spot_container);
+        mWaitingForLocationLayout = findViewById(R.id.waiting_for_location_layout);
+        mWaitingForLocationText = (TextView) findViewById(R.id.text_waiting_for_location);
 
         icPicture = findViewById(R.id.picture);
         icPictureValidate = findViewById(R.id.picture_validate);
@@ -161,7 +162,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         //initViewPager();
         initMap();
 
-        updateEventLocation();
+        if (BuildConfig.BUILD_TYPE == "debugTest"){
+            findViewById(R.id.progress_bar).setVisibility(View.GONE);
+        }
     }
 
     private void initContextMenu() {
@@ -183,6 +186,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.context_menu_edit_spot, menu);
         }
+
+        // @warning: we must wait that the menu has been created to call this function.
+        // Otherwise we could have a null pointer on the menu when updating button visibility
+        updateEventLocation();
     }
 
     @Override
@@ -234,14 +241,19 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     protected void onStart() {
         super.onStart();
-        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
     }
 
     @Override
     protected void onStop() {
-        LocationManager.stop();
         super.onStop();
+        LocationManager.removeLocationListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        LocationManager.stop();
+        super.onDestroy();
     }
 
     @Override
@@ -263,7 +275,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     Event event = mBinding.getEvent();
                     event.setCategory(eventCategorySelected);
                     event.setLocation(mFineLocation);
-                    submitEvent(event);
+                    submitEvent(event, pictureSelected);
                 } else if (LocationManager.hasLastLocation()) {
                     Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
                 } else {
@@ -318,50 +330,56 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         }
     }
 
-    private void submitEvent(final Event event){
+    private void submitEvent(final Event event, File photo){
         Log.d(TAG, "Submit event " + event.toString());
-        RestClient
-            .post(ResourceUrlMapping.MODEL_EVENT, AddEventMapper.toJson(event))
-                .onResponse(new AutoMergeCallback(event))
-                .onResponse(new FormErrorsCallbackBinding(mBinding))
-                .onResponse(new HttpCallback<JsonObject>() {
-                    @Override
-                    public void successful(JsonObject feedback) {
-                        try {
-                            Log.d(TAG, "Event has been successfully added");
-                            event.setAuthor(MyApplication.getCurrentUser());
-                            event.deepSave();
-                            long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                            QuotaManager.instance().add(QuotaType.ADD_EVENT);
-                            EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
-                        }
-                        catch (Exception ex){
-                            setProgressView(false);
-                            Log.e(TAG, "Cannot get EventUser id from server response");
-                        }
-                        finally {
-                            IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
-                        }
-                    }
 
-                    @Override
-                    public void notSuccessful() {
-                        if (response.code() != 400){
-                            Toast.makeText(AddEventActivity.this, R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+        try {
+            RestClient.buildCall(RestClient.service().addPlace(AddEventMapper.toJson(event), photo != null ? new AddPictureMapper(photo).build() : null))
+                    .onResponse(new AutoMergeCallback(event))
+                    .onResponse(new FormErrorsCallbackBinding(mBinding))
+                    .onResponse(new FormErrorsCallback(this, "Pictures"))
+                    .onResponse(new HttpCallback<JsonObject>() {
+                        @Override
+                        public void successful(JsonObject feedback) {
+                            try {
+                                Log.d(TAG, "Event has been successfully added");
+                                event.setAuthor(MyApplication.getCurrentUser());
+                                event.deepSave();
+                                long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
+                                QuotaManager.instance().add(QuotaType.ADD_EVENT);
+                                EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
+                            }
+                            catch (Exception ex){
+                                setProgressView(false);
+                                Log.e(TAG, "Cannot get EventUser id from server response");
+                            }
+                            finally {
+                                IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                            }
                         }
-                    }
-                })
-                .onError(new NetworkErrorCallback(this))
-                .onFinally(new HttpCallManager.FinallyCallback() {
-                    @Override
-                    public void onFinally(Response response, Throwable error) {
-                        if (response == null || !response.isSuccessful()){
+
+                    })
+                    .onError(new NetworkErrorCallback(this))
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
                             setProgressView(false);
                         }
-                    }
 
-                })
-                .perform();
+                    })
+                    .perform();
+        } catch (AddPictureMapper.CannotUploadPictureException e) {
+            Log.e(TAG, "Cannot resize picture: " + photo.getAbsolutePath() + ". " + e.getMessage());
+            this.showUploadFeedbackError(e.getResId());
+            if (BuildConfig.DEBUG){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void showUploadFeedbackError(int msg){
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        setProgressView(false);
     }
 
     public void setButtonValidation() {
@@ -489,6 +507,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public void onPause() {
         mapView.onPause();
+        LocationManager.stop();
         super.onPause();
     }
 
@@ -508,10 +527,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     @Override
     public void onResume() {
-        mapView.onResume();
         super.onResume();
-        Log.d(TAG, "ExploreMapFragment.onResume()");
+        mapView.onResume();
         this.loadMapIfNeeded();
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     private void loadMapIfNeeded() {
@@ -530,16 +549,17 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void updateMapCenter(Location location){
-        LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
-        gMap.clear();
-        gMap.addMarker(new MarkerOptions().position(coordinates));
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_LEVEL_CENTER_MAP));
+        if (gMap != null){
+            LatLng coordinates = new LatLng(location.getLatitude(), location.getLongitude());
+            gMap.clear();
+            gMap.addMarker(new MarkerOptions().position(coordinates));
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_LEVEL_CENTER_MAP));
+        }
     }
 
     private void initMap(){
         mapView.onCreate(null);
         mapView.getMapAsync(this);
-
      }
 
     @Override
@@ -629,24 +649,35 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     /**
      * Update event location.
-     * If there is an up to date user location and if it's precise enough, we can stop requestion user location
-     * Otherwise it will go on util finding a precise enough location
+     * If there is an up to date user location and if it's precise enough, we can stop requesting user location
+     * Otherwise it will go on util finding a fine enough location
      */
     private void updateEventLocation(){
+        if (!LocationManager.hasLastLocation()){
+            Log.i(TAG, "We don't have user location yet.");
+            return;
+        }
+
         Location newLocation = LocationManager.getLastLocation();
-        if (LocationManager.hasUpToDateLastLocation() && LocationManager.hasFineLocation(ConfigurationProvider.rules().gps_min_accuracy_add_place)){
+        int accuracyRequired = ConfigurationProvider.rules().gps_min_accuracy_add_place;
+        if (LocationManager.hasUpToDateLastLocation() && LocationManager.hasFineLocation(accuracyRequired)){
             Log.i(TAG, "A fine user location has been found: " + newLocation + ". Stopping location updates.");
             mFineLocation = newLocation;
             LocationManager.stop();
-            onFindLocationFound();
+            onFineLocationFound();
         }
-        else if (LocationManager.hasLastLocation()){
+        else {
+            Log.d(TAG, "The new location is not precise enough to add an event: " + newLocation.getAccuracy() + " > " + accuracyRequired);
             updateMapCenter(newLocation);
+            if (BuildConfig.DEBUG){
+                mWaitingForLocationText.setText(getString(R.string.waiting_for_location) + " (Gps accuracy: " + newLocation.getAccuracy() + ")");
+            }
         }
     }
 
-    private void onFindLocationFound() {
-        // TODO JACK : hide location loader here
+    private void onFineLocationFound() {
+        setButtonValidation();
+        mWaitingForLocationLayout.setVisibility(View.GONE);
     }
     // =============================================================================================
 

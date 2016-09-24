@@ -81,6 +81,28 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_cards_scroll"
                         android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/waiting_for_location_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_below="@+id/layout_spot"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/padding_small">
+                            <ProgressBar
+                                style="@style/SmallFormIconGroup"
+                                android:id="@+id/progress_bar"/>
+                            <TextView
+                                style="@style/TextDefault"
+                                android:textColor="@color/textMute"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="@{@string/waiting_for_location}"
+                                android:id="@+id/text_waiting_for_location"
+                                android:singleLine="false"/>
+                        </LinearLayout>
+
                         <LinearLayout
                             android:id="@+id/spot_container"
                             android:layout_width="match_parent"

@@ -78,7 +78,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     // ---------------------------------------------------------------------------------------------
 
     private Event                       event;
-    private int                         eventId;
+    private long                        eventId;
 
     private EventPicturesFragment       fragmentPictures;
     private EventTagsFragment           fragmentTags;
@@ -120,13 +120,11 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     @Override
     protected void onStart() {
         super.onStart();
-        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
     }
 
     @Override
     protected void onStop() {
-        LocationManager.stop();
         super.onStop();
     }
 
@@ -167,11 +165,14 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     @Override
     protected void onPause() {
+        LocationManager.removeLocationListener(this);
         super.onPause();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
@@ -530,11 +531,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     public Event getEvent() {
         return event;
     }
-
-    public int getEventId() {
-        return eventId;
-    }
-
 
     @Override
     protected void onDestroy() {

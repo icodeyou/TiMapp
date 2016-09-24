@@ -12,7 +12,7 @@ import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.ExploreHelper;
-import com.timappweb.timapp.utils.MockLocationProvider;
+import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 
 import org.junit.After;

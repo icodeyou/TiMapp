@@ -5,10 +5,10 @@ import android.support.test.espresso.ViewInteraction;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.AddSpotActivity;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.viewinteraction.contextmenu.ContextMenuInteraction;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -75,9 +75,15 @@ public class AddEventForm  extends FormHelper {
 
     public AddEventForm addSpot() {
         onView(withId(R.id.button_add_spot))
-                .perform(scrollTo())
                 .perform(click());
         ActivityHelper.assertCurrentActivity(AddSpotActivity.class);
+        return this;
+    }
+
+    public AddEventForm addPicture() {
+        onView(withId(R.id.attach_picture))
+                .perform(click());
+        // TODO
         return this;
     }
 
@@ -105,9 +111,16 @@ public class AddEventForm  extends FormHelper {
     }
 
     public AddEventForm editSpot() {
-        onView(withId(R.id.spot_container))
-                .perform(scrollTo())
+        onView(withId(R.id.button_add_spot))
                 .perform(click());
+        ContextMenuInteraction.clickOn(R.id.action_edit_spot);
+        return this;
+    }
+
+    public AddEventForm removeSpot() {
+        onView(withId(R.id.button_add_spot))
+                .perform(click());
+        ContextMenuInteraction.clickOn(R.id.action_remove_spot);
         return this;
     }
 

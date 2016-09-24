@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.config.AuthProviderInterface;
-import com.timappweb.timapp.data.entities.SocialProvider;
+import com.timappweb.timapp.auth.AuthManagerInterface;
+import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Spot;
@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -57,7 +58,7 @@ public class RestClient {
     private OkHttpClient httpClient;
     private final String baseUrl;
     private final Gson gson;
-    private final AuthProviderInterface authProvider;
+    private final AuthManagerInterface authManager;
     private LinkedList<HttpCallManager> pendingCalls = new LinkedList<>();
     private String _socialProviderToken = null;
     private SocialProvider _socialProviderType = null;
@@ -82,7 +83,7 @@ public class RestClient {
     }
 
 
-    public static void init(Application app, String baseUrl, AuthProviderInterface authProvider){
+    public static void init(Application app, String baseUrl, AuthManagerInterface authProvider){
         conn = new RestClient(app, baseUrl, authProvider);
     }
 
@@ -91,10 +92,10 @@ public class RestClient {
 
     private static Retrofit.Builder builder = null;
 
-    protected RestClient(Application app, String baseUrl, AuthProviderInterface authProvider){
+    protected RestClient(Application app, String baseUrl, AuthManagerInterface authProvider){
         this.app = app;
         this.baseUrl = baseUrl;
-        this.authProvider = authProvider;
+        this.authManager = authProvider;
         this.pendingCalls = new LinkedList<HttpCallManager>();
 
         Log.i(TAG, "Initializing server connection at " + baseUrl);
@@ -124,7 +125,7 @@ public class RestClient {
 
     public OkHttpClient.Builder getHttpBuilder(){
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
-                .addInterceptor(new SessionRequestInterceptor(authProvider))
+                .addInterceptor(new SessionRequestInterceptor(authManager))
                 .addInterceptor(new LogRequestInterceptor())
                 .readTimeout(HTTP_PARAM_READ_TIMEOUT, TimeUnit.SECONDS)
                 .connectTimeout(HTTP_PARAM_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
@@ -159,7 +160,7 @@ public class RestClient {
      * */
     public void logoutUser(){
         // Clearing all data from Shared Preferences
-        this.authProvider.logout();
+        this.authManager.logout();
 
         // After logout redirect user to Login UserActivity
         Intent i = new Intent(app, LoginActivity.class);
@@ -193,6 +194,10 @@ public class RestClient {
 
     public static HttpCallManager post(String url, JsonObject object) {
         Call call = RestClient.restService().post(url, object);
+        return buildCall(call);
+    }
+    public static HttpCallManager post(String url,  JsonObject object, RequestBody file) {
+        Call call = RestClient.restService().post(url, object, file);
         return buildCall(call);
     }
 

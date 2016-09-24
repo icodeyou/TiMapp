@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -34,30 +32,38 @@ public class MultipleHttpCallManager {
 
             @Override
             protected Void doInBackground(Void... params) {
-                for (Map.Entry<String, HttpCallManager> entry: callsManager.entrySet()){
-                    try {
-                        if (!entry.getValue().getCall().isExecuted())
-                            entry.getValue().execute();
-                    } catch (IOException e) {
-                        return null;
-                    }
-                }
+                MultipleHttpCallManager.this.execute();
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                if (MultipleHttpCallManager.this.callback != null) {
-                    MultipleHttpCallManager.this.callback.onPostExecute();
-                    if (MultipleHttpCallManager.this.isAllSuccess()) {
-                        MultipleHttpCallManager.this.callback.onAllSuccess();
-                    } else {
-                        MultipleHttpCallManager.this.callback.onSomeFailure();
-                    }
-                }
+                MultipleHttpCallManager.this.callCallbacks();
             }
 
         }.execute();
+    }
+
+    public void execute(){
+        for (Map.Entry<String, HttpCallManager> entry: callsManager.entrySet()){
+            try {
+                if (!entry.getValue().getCall().isExecuted())
+                    entry.getValue().execute();
+            } catch (IOException e) {
+                return;
+            }
+        }
+    }
+
+    private void callCallbacks(){
+        if (MultipleHttpCallManager.this.callback != null) {
+            MultipleHttpCallManager.this.callback.onPostExecute();
+            if (MultipleHttpCallManager.this.isAllSuccess()) {
+                MultipleHttpCallManager.this.callback.onAllSuccess();
+            } else {
+                MultipleHttpCallManager.this.callback.onSomeFailure();
+            }
+        }
     }
 
     public MultipleHttpCallManager setCallback(Callback callback) {

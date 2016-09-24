@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -27,12 +28,12 @@ public class LocationManager {
     private static Location                 lastLocation        = null;
     private static com.google.android.gms.location.LocationListener     mLocationListener   = null;
     private static MyLocationProvider       locationProvider    = null;
-    private static List<LocationListener>   listeners           = new LinkedList<>();;
+    private static List<LocationListener>   listeners           = new LinkedList<>();
 
     // =============================================================================================
 
     public static void setLastLocation(Location l) {
-        Log.i(TAG, "Location has changed: " + l.toString());
+        Log.v(TAG, "Location has changed: " + l.toString());
         lastLocation = l;
     }
 
@@ -71,10 +72,11 @@ public class LocationManager {
 
 
     private static void initLocationListener(){
+        if (mLocationListener != null) return;
         mLocationListener = new com.google.android.gms.location.LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Location tmpLocation = lastLocation;
+                Location tmpLocation = lastLocation; // TODO BUG copy ?
                 setLastLocation(location);
                 for (LocationListener listener : listeners){
                     listener.onLocationChanged(location, tmpLocation);
@@ -102,7 +104,7 @@ public class LocationManager {
 
 
     public static void start(Activity activity){
-        Log.v(TAG, "Starting location manager");
+        Log.d(TAG, "Starting location manager");
         initLocationListener();
         initLocationProvider(activity);
         locationProvider.connect();
@@ -114,7 +116,7 @@ public class LocationManager {
     }
 
     public static void stop(){
-        Log.v(TAG, "Stopping location manager");
+        Log.d(TAG, "Stopping location manager");
         listeners.clear();
         if (locationProvider != null) {
             locationProvider.disconnect();

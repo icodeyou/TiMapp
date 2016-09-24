@@ -19,8 +19,8 @@ import static java.util.regex.Pattern.matches;
  */
 public class FormHelper {
 
-    protected static void typeIn(ViewInteraction inputName, String content){
-        inputName
+    protected static ViewInteraction typeIn(ViewInteraction inputName, String content){
+        return inputName
                 .perform(clearText())
                 .perform(typeText(content), closeSoftKeyboard());
     }

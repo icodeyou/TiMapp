@@ -1,13 +1,17 @@
 package com.timappweb.timapp.rest.callbacks;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
 import com.timappweb.timapp.rest.io.responses.RestValidationErrorParser;
+
+import java.net.HttpURLConnection;
 
 /**
  * Created by Stephane on 19/08/2016.
@@ -25,6 +29,13 @@ public class FormErrorsCallback extends HttpCallback {
     }
 
     @Override
+    public void notSuccessful() {
+        if (this.response.code() != HttpURLConnection.HTTP_BAD_REQUEST){
+            Toast.makeText(context, context.getString(R.string.action_performed_not_successful), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void badRequest(RestValidationError validationError) {
         RestValidationErrorParser errors = validationError.getErrors();
 
@@ -32,7 +43,6 @@ public class FormErrorsCallback extends HttpCallback {
             Toast.makeText(this.context, errors.get(prefix+".Quota"), Toast.LENGTH_SHORT).show();
         }
         else if (toastFeedback != 0){
-            Context context = MyApplication.getApplicationBaseContext();
             Toast.makeText(context, context.getString(this.toastFeedback), Toast.LENGTH_LONG).show();
         }
         else if (validationError.hasMessage()){

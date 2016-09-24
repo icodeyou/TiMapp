@@ -13,7 +13,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.MockLocationProvider;
+import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.PickTagsForm;
@@ -32,15 +32,13 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddEventTagActivityTest {
+public class AddEventTagActivityTest  extends AbstractActivityTest{
 
-    public static final int EVENT_ID = 562;
 
     @Rule
     public ActivityTestRule<AddTagActivity> mActivityRule = new ActivityTestRule<>(
             AddTagActivity.class, false, false);
     private ApiCallIdlingResource apiCallIdlingResource;
-    private MockLocationProvider mockLocationProvider;
 
     @Before
     public void setUp() throws Exception {
@@ -50,8 +48,7 @@ public class AddEventTagActivityTest {
         Intent intent = IntentsUtils.buildIntentAddTags(MyApplication.getApplicationBaseContext(), dummyEvent);
         mActivityRule.launchActivity(intent);
 
-        mockLocationProvider = MockLocationProvider.createGPSProvider(mActivityRule.getActivity());
-        Location lastLocation = mockLocationProvider.pushLocation(MockLocation.START_TEST);
+        Location lastLocation = this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         LocationManager.setLastLocation(lastLocation);
         apiCallIdlingResource = new ApiCallIdlingResource();
         Espresso.registerIdlingResources(apiCallIdlingResource);

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest.services;
 
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.models.Event;
@@ -29,7 +30,9 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -44,10 +47,9 @@ public interface WebServiceInterface {
     Call<PaginatedResponse<Spot>> spots(@QueryMap Map<String, String> query);
 
     // ---------------------------------------------------------------------------------------------
-
-    // Event
-    @POST("places/add")
-    Call<RestFeedback> addPlace(@Body Event event);
+    @Multipart
+    @POST("Places/add.json")
+    Call<JsonObject> addPlace(@Part("place") JsonObject data, @Part("photo") RequestBody file);
 
 
     // ---------------------------------------------------------------------------------------------
@@ -94,7 +96,7 @@ public interface WebServiceInterface {
     Call<User>  profile(@Path("id") long userId);
 
     @POST("users/facebook_login.json")
-    Call<RestFeedback>  facebookLogin(@Body Map<String,String> accessToken);
+    Call<RestFeedback>  facebookLogin(@Body JsonObject accessToken);
 
     @GET("users/friends.json")
     Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);

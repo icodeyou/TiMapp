@@ -6,11 +6,14 @@ import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
@@ -21,6 +24,10 @@ public interface RestInterface {
 
     @POST("/api/{model}/add.json")
     Call<JsonObject> post(@Path("model") String model, @Body JsonObject data);
+
+    @Multipart
+    @POST("/api/{model}/add.json")
+    Call<JsonObject> post(@Path("model") String model, @Part("data") JsonObject data, @Part("picture") RequestBody file);
 
     @PUT("/api/{model}/edit/{id}.json")
     Call<JsonObject> put(@Path("model") String model, @Path("id") long id, @Body JsonObject data);

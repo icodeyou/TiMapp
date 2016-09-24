@@ -2,7 +2,8 @@ package com.timappweb.timapp.rest.io.interceptors;
 
 import android.util.Log;
 
-import com.timappweb.timapp.config.AuthProviderInterface;
+import com.timappweb.timapp.auth.AuthManagerInterface;
+import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.config.ServerHeader;
 import com.timappweb.timapp.rest.RestClient;
 
@@ -23,10 +24,10 @@ public class SessionRequestInterceptor implements Interceptor
 {
 
     private static final String TAG = "Interceptor";
-    private final AuthProviderInterface auth;
+    private final AuthManagerInterface auth;
 
-    public SessionRequestInterceptor(AuthProviderInterface authProvider) {
-        this.auth = authProvider;
+    public SessionRequestInterceptor(AuthManagerInterface authManager) {
+        this.auth = authManager;
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.MockLocationProvider;
+import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services' // Google Clound Messaging
 apply plugin: 'io.fabric'   // Crash reporting
 apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
@@ -37,15 +36,25 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "api_base_url", "http://api.timappweb.com/api/"
             signingConfig signingConfigs.config
+            resValue "string", "api_base_url", "http://api.timappweb.com/api/"
+            resValue "string", "facebook_app_id", "1634741340120823"
         }
         debug {
             minifyEnabled false
             debuggable true
-            resValue "string", "api_base_url", "http://uat.timappweb.com/api/"
+            resValue "string", "api_base_url", "http://dev.timappweb.com/api/"
+            resValue "string", "facebook_app_id", "1728731634055126"
+        }
+        debugTest {
+            minifyEnabled false
+            debuggable true
+            resValue "string", "api_base_url", "http://test.timappweb.com/api/"
+            resValue "string", "facebook_app_id", "1731017757159847"
         }
     }
+
+    testBuildType "debugTest"
     // http://tools.android.com/tech-docs/unit-testing-support#TOC-Method-...-not-mocked.-
     // For using Log methods in unit tests. Check for new solutions in future releases
     testOptions {
@@ -100,6 +109,8 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+    androidTestCompile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    androidTestCompile 'junit:junit:4.12'
     // Optional -- UI testing with UI Automator
 
     //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
@@ -111,7 +122,9 @@ dependencies {
         transitive = true;
     }
     // APP
-
+    // Indirect dependency between prod and test. We need this line to make sure there is'nt a conflict
+    // @link(https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK)
+    compile 'com.parse.bolts:bolts-android:1.4.0'
     //Needed for Facebook - added by Jack
 
     //compile 'com.facebook.android:facebook-android-sdk:4.7'
@@ -173,11 +186,11 @@ dependencies {
     compile 'com.github.tajchert:nammu:1.1.1'
     compile 'id.zelory:compressor:1.0.2'
 
-    // @warning WTF is that shit! It makes GSON parser throws stack overflow errors
-
-    androidTestCompile 'junit:junit:4.12'
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
+
+
+apply plugin: 'com.google.gms.google-services' // Google Clound Messaging

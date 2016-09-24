@@ -33,7 +33,7 @@ public class EventStatusManager {
     private static EventStatusManager _instance = null;
     private static Event currentEvent;
 
-    public static boolean isCurrentEvent(int eventId) {
+    public static boolean isCurrentEvent(long eventId) {
         return currentEvent != null && currentEvent.getRemoteId() == eventId;
     }
 

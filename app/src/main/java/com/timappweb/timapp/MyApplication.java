@@ -11,7 +11,8 @@ import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.SplashActivity;
-import com.timappweb.timapp.config.AuthProvider;
+import com.timappweb.timapp.auth.AuthManager;
+import com.timappweb.timapp.auth.AuthManagerFactory;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.data.models.User;
@@ -27,9 +28,6 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import retrofit2.Call;
 
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-
 public class MyApplication extends com.activeandroid.app.Application {
 
     private static final String TAG = "MyApplication";
@@ -37,11 +35,15 @@ public class MyApplication extends com.activeandroid.app.Application {
 
 
     public static SearchFilter searchFilter = new SearchFilter();
-    public static AuthProvider auth;
+    public static AuthManager auth;
     private static Context _appContext;
 
     public static Context getApplicationBaseContext(){
         return _appContext;
+    }
+
+    public static AuthManager getAuthManager() {
+        return auth;
     }
 
     @Override
@@ -69,16 +71,6 @@ public class MyApplication extends com.activeandroid.app.Application {
         return auth.getCurrentUser();
     }
 
-    public static boolean login(Context context, User user, String token, String accessToken){
-        if (auth.login(user, token, accessToken)){
-            return true;
-        }
-        return false;
-    }
-    public static boolean login(User user, String token, String accessToken){
-        return login(MyApplication.getApplicationBaseContext(), user, token, accessToken);
-    }
-
     @Override
     public void onCreate(){
         super.onCreate();
@@ -88,8 +80,8 @@ public class MyApplication extends com.activeandroid.app.Application {
         _appContext = getApplicationContext();
 
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
-        MyApplication.auth = new AuthProvider();
-        RestClient.init(this, getResources().getString(R.string.api_base_url), MyApplication.auth);
+        MyApplication.auth = AuthManagerFactory.create();
+        RestClient.init(this, getResources().getString(R.string.api_base_url), MyApplication.getAuthManager());
         KeyValueStorage.init(this, RestClient.instance().getGson());
         initFacebookPermissions(); // Useless because friend are loaded from the server ... ? TODO move from here
         JodaTimeAndroid.init(this);
@@ -140,14 +132,6 @@ public class MyApplication extends com.activeandroid.app.Application {
                     }
                 })
                 .perform();
-    }
-
-    public static void requestGcmToken(Context context) {
-        Log.d(TAG, "Starting IntentService to update user token");
-        Intent intent = new Intent(context, RegistrationIntentService.class);
-        //intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        //intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
-        context.startService(intent);
     }
 
     public static boolean isFirstLaunch() {

@@ -1,17 +1,20 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
-import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.auth.FacebookAuthProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.fixtures.EventsFixture;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.SystemAnimations;
-import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
+import com.timappweb.timapp.utils.annotations.AuthState;
+import com.timappweb.timapp.utils.annotations.ConfigState;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 import com.timappweb.timapp.utils.viewinteraction.ViewEventHelper;
 
@@ -21,7 +24,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
@@ -33,32 +35,33 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ViewEventActivityTest {
-
-    public static final int EVENT_ID = 562;
+public class ViewEventActivityTest extends AbstractActivityTest{
 
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
     private ViewEventHelper viewEventHelper;
-    private SystemAnimations systemAnimations;
-    private ApiCallIdlingResource apiCallIdlingResource;
+
 
     @Before
     public void startActivity(){
-        systemAnimations = new SystemAnimations(getInstrumentation().getContext());
-        apiCallIdlingResource = new ApiCallIdlingResource();
-        systemAnimations.disableAll();
-        Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EVENT_ID);
+        this.systemAnimations(false);
+        this.idlingApiCall();
+
+        Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EventsFixture.getPublicEvent());
         mActivityRule.launchActivity(intent);
-        Espresso.registerIdlingResources(apiCallIdlingResource);
         viewEventHelper = new ViewEventHelper();
+
+        super.beforeTest();
     }
 
     @After
     public void after(){
-        systemAnimations.enableAll();
-        Espresso.unregisterIdlingResources(apiCallIdlingResource);
+        this.resetAsBeforeTest();
     }
+
+    // ---------------------------------------------------------------------------------------------
+    // Tests
+    // ---------------------------------------------------------------------------------------------
 
     @Test
     public void testAddPicture() {
@@ -66,10 +69,19 @@ public class ViewEventActivityTest {
     }
 
     @Test
+    @AuthState(check = AuthState.LoginState.YES)
+    @ConfigState
+    @CreateAuthAction(replaceIfExists = false)
+    @CreateConfigAction
     public void testAddTags() {
         viewEventHelper.addTags();
     }
+
     @Test
+    @AuthState(check = AuthState.LoginState.YES)
+    @ConfigState
+    @CreateAuthAction(replaceIfExists = false)
+    @CreateConfigAction
     public void testAddPeople() {
         viewEventHelper.invitePeople();
         ActivityHelper.assertCurrentActivity(InviteFriendsActivity.class);
@@ -89,6 +101,8 @@ public class ViewEventActivityTest {
     }
 
     @Test
+    @ConfigState
+    @CreateConfigAction
     public void testViewPicture() {
         viewEventHelper.viewPicture(0);
 
@@ -98,7 +112,10 @@ public class ViewEventActivityTest {
 
         ActivityHelper.assertCurrentActivity(EventPicturesActivity.class);
     }
+
     @Test
+    @ConfigState
+    @CreateConfigAction
     public void startNavigation() {
         viewEventHelper.startNavigation();
     }

@@ -34,41 +34,11 @@ public class PictureUtility {
     private static final int COMPRESSION_QUALITY = 80;
 
     public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
-        //With Picasso
-        /*Picasso.with(context).load(f)
-                .resize(imageMaxWidth, imageMaxHeight)
-                .onlyScaleDown()
-                .into(getTarget(f.getAbsolutePath()));
-        FileInputStream fis = new FileInputStream(f);
-        Bitmap b = BitmapFactory.decodeStream(fis);
-        if (b == null){
-            fis.close();
-            throw new IOException("Cannot decode input stream: " + f);
-        }
-        b = PictureUtility.resize(b, imageMaxWidth, imageMaxHeight);
-        fis.close();
-        PictureUtility.persistImage(b, f);
-        return f;*/
-
-        //With library : https://github.com/Tourenathan-G5organisation/SiliCompressor
-        /*for(int i=1; i <= MAX_TIMES_COMPRESS; i++) {
-            //compress image
-            Bitmap newBitmap = SiliCompressor.with(context).getCompressBitmap(Uri.fromFile(f).toString(),true);
-        }
-
-        FileOutputStream fOut = new FileOutputStream(f);
-        try {
-            newBitmap.compress(Bitmap.CompressFormat.PNG, 0, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-            Log.e(TAG, "Error compressing picture");
-        }*/
-
-        Log.d(TAG, "File size before compression : "+f.length());
-        Log.d(TAG, "Width max : " + ConfigurationProvider.rules().picture_max_width);
-        Log.d(TAG, "Height max : " + ConfigurationProvider.rules().picture_max_height);
-        Log.d(TAG, "Size max : " + ConfigurationProvider.rules().picture_max_size);
+        Log.d(TAG, "BEFORE COMPRESSION: " +
+                "Photo '"+ f.getAbsolutePath() + "'" +
+                " Size: " + Util.byteToKB(f.length()));
+        Log.v(TAG, "    - Width max : " + imageMaxWidth);
+        Log.v(TAG, "    - Height max : " + imageMaxHeight);
 
         File newFile = new Compressor.Builder(MyApplication.getApplicationBaseContext())
                 .setMaxWidth(imageMaxWidth)
@@ -80,7 +50,9 @@ public class PictureUtility {
                 .build()
                 .compressToFile(f);
 
-        Log.d(TAG, "File size after compressing : "+newFile.length());
+        Log.i(TAG, "After picture compression of '"+ f.getAbsolutePath() + "'" +
+                " Size: " + Util.byteToKB(f.length()));
+
 
         return newFile;
 

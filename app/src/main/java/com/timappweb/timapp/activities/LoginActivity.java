@@ -21,28 +21,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.iid.InstanceID;
+import com.google.gson.JsonObject;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.listeners.OnLoginListener;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.auth.AuthProviderInterface;
+import com.timappweb.timapp.auth.FacebookAuthProvider;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.config.QuotaManager;
-import com.timappweb.timapp.data.entities.SocialProvider;
-import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
-import retrofit2.Call;
 
 
 /**
@@ -135,58 +128,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             public void onLogin(final String accessToken, List<Permission> acceptedPermissions, List<Permission> declinedPermissions) {
                 Log.i(TAG, "Logging in");
                 setProgressVisibility(true);
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("access_token", accessToken);
-                params.put("app_id", InstanceID.getInstance(LoginActivity.this).getId());               // TODO fix it crashes
-
-                Call<RestFeedback> call = RestClient.service().facebookLogin(params);
-                RestClient.buildCall(call)
-                        //.onResponse(new AutoMergeCallback(user))
-                        .onResponse(new HttpCallback<RestFeedback>() {
-                            @Override
-                            public void successful(RestFeedback feedback) {
-                                try{
-                                    int userId = Integer.parseInt(feedback.data.get("id"));
-                                    User user = User.loadByRemoteId(User.class, userId);
-                                    if (user == null) user = new User();
-
-                                    String token = feedback.data.get("token");
-                                    user.username = feedback.data.get("username");
-                                    user.provider_uid = feedback.data.get("social_id");
-                                    user.provider = SocialProvider.FACEBOOK;
-                                    user.remote_id = Integer.parseInt(feedback.data.get("id"));
-                                    user.app_id = InstanceID.getInstance(LoginActivity.this).getId();
-                                    //MyApplication.updateGoogleMessagingToken(LoginActivity.this);
-                                    Log.i(TAG, "Trying to login user: " + user);
-                                    MyApplication.login(getApplicationContext(), user, token, accessToken);
-                                    MyApplication.requestGcmToken(LoginActivity.this);
-                                    IntentsUtils.lastActivityBeforeLogin(LoginActivity.this);
-
-                                    QuotaManager.sync();
-                                }
-                                catch (Exception ex){
-                                    Log.e(TAG, "Cannot parse server response for login: " + ex.getMessage());
-                                    ex.printStackTrace();
-                                    Toast.makeText(LoginActivity.this, R.string.error_server_unavailable, Toast.LENGTH_LONG).show();
-                                    setProgressVisibility(false);
-                                }
-                            }
-
-                            @Override
-                            public void notSuccessful() {
-                                setProgressVisibility(false);
-                                Log.i(TAG, "User attempt to connect with wrong credential");
-                                Toast.makeText(LoginActivity.this, R.string.cannot_facebook_login, Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .onError(new RequestFailureCallback(){
-                            @Override
-                            public void onError(Throwable error) {
-                                setProgressVisibility(false);
-                                Toast.makeText(LoginActivity.this, R.string.no_network_access, Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .perform();
+                LoginActivity.this.facebookServerLogin(accessToken);
             }
 
             @Override
@@ -216,6 +158,36 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 mSimpleFacebook.login(onLoginListener);
             }
         });
+    }
+
+    private void facebookServerLogin(final String facebookAccessToken) {
+        JsonObject payload = FacebookAuthProvider.createPayload(facebookAccessToken, InstanceID.getInstance(LoginActivity.this).getId());
+
+        MyApplication
+                .getAuthManager()
+                .getProvider(FacebookAuthProvider.PROVIDER_ID)
+                .login(payload, new AuthProviderInterface.AuthAttemptCallback<RestFeedback>() {
+
+                    @Override
+                    public void onSuccess(RestFeedback feedback) {
+                        IntentsUtils.redirectToLastActivity(LoginActivity.this);
+                        LoginActivity.this.finish();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable exception) {
+                        if (exception instanceof IOException){
+                            setProgressVisibility(false);
+                            Toast.makeText(LoginActivity.this, R.string.no_network_access, Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Log.e(TAG, "User attempt to connect with wrong facebook token");
+                            setProgressVisibility(false);
+                            Toast.makeText(LoginActivity.this, R.string.cannot_facebook_login, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
     }
 
 

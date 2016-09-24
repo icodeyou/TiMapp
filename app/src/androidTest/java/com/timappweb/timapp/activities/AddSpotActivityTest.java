@@ -6,7 +6,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
-import com.timappweb.timapp.utils.MockLocationProvider;
+import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 
 import org.junit.Before;
 import org.junit.Rule;

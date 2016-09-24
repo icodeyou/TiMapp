@@ -7,27 +7,28 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Intent;
-import android.support.test.espresso.AppNotIdleException;
+import android.location.Location;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.DisableQuotaRequestInterceptor;
-import com.timappweb.timapp.utils.MockLocationProvider;
-import com.timappweb.timapp.utils.TestUtil;
+import com.timappweb.timapp.utils.mocklocations.MockFusedLocationProvider;
+import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
+import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.mocklocations.AbstractMockLocationProvider;
 import com.timappweb.timapp.utils.viewinteraction.AddEventForm;
 import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
-import com.timappweb.timapp.utils.idlingresource.ProgressIdlingResource;
-import com.timappweb.timapp.utils.viewinteraction.ViewEventHelper;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
@@ -41,11 +42,9 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddEventActivityTest{
+public class AddEventActivityTest extends AbstractActivityTest {
 
-    private ProgressIdlingResource progressIdlingResource;
-    private MockLocationProvider mockLocationProvider;
-    private ApiCallIdlingResource apiCallIdlingResource;
+    private static final String TAG = "AddEventActivityTest";
 
 
     @Rule
@@ -54,25 +53,30 @@ public class AddEventActivityTest{
 
     @Before
     public void setUp() throws Exception {
-        apiCallIdlingResource = new ApiCallIdlingResource();
-        Espresso.registerIdlingResources(apiCallIdlingResource);
+        this.systemAnimations(false);
+        this.idlingApiCall();
 
         mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
-
-        mockLocationProvider = MockLocationProvider.createGPSProvider(mActivityRule.getActivity());
-        mockLocationProvider.pushLocation(MockLocation.START_TEST);
-        //progressIdlingResource = new ProgressIdlingResource(activity, activity.getProgressBar());
-        //Espresso.registerIdlingResources(progressIdlingResource);
         assertTrue(MyApplication.isLoggedIn());
+
+        this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
+            @Override
+            public Location getNextLocation() {
+                Log.d(TAG, "Creating new location");
+                return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.latitude, MockLocation.START_TEST.longitude);
+            }
+        }, 2000);
+
     }
 
     @After
     public void unregisterIntentServiceIdlingResource() {
-        Espresso.unregisterIdlingResources(apiCallIdlingResource);
+        this.resetAsBeforeTest();
     }
 
     @Test
     public void postNewEventNoSpot() {
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         this.disableQuota();
 
         String eventName = DummyEventFactory.uniqName();
@@ -84,7 +88,6 @@ public class AddEventActivityTest{
                 .setDescription(eventDescription)
                 .submit();
 
-        // TODO wait for load done..
         ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
 
@@ -92,6 +95,8 @@ public class AddEventActivityTest{
     @Test
     public void postNewEventWithExistingSpot() throws InterruptedException {
         this.disableQuota();
+
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
 
         String eventName = DummyEventFactory.uniqName();
         String eventDescription = "This is the big description for my event!";
@@ -179,7 +184,6 @@ public class AddEventActivityTest{
 
     @Test
     public void postExistingEvent() {
-        // TODO
         String eventName = "Existing event";
         String eventDescription = "";
 

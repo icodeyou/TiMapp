@@ -70,6 +70,7 @@ public class IntentsUtils {
     public static final String KEY_SPOT = "spot";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TITLE = "title";
+    public static final String KEY_EVENT_ID = "event_id";
 
     public static void login(Context context){
         login(context, true);
@@ -289,9 +290,9 @@ public class IntentsUtils {
         }
     }
 
-    public static Intent buildIntentViewPlace(Context context, int placeId) {
+    public static Intent buildIntentViewPlace(Context context, long eventId) {
         Intent intent = new Intent(context, EventActivity.class);
-        intent.putExtra("place_id", placeId);
+        intent.putExtra(KEY_EVENT_ID, eventId); // TODO cst
         return  intent;
     }
     public static Intent buildIntentViewPlace(Context context, Event event) {
@@ -349,7 +350,7 @@ public class IntentsUtils {
      * before being redirected to the login activity
      * TODO implement
      */
-    public static void lastActivityBeforeLogin(Activity activity) {
+    public static void redirectToLastActivity(Activity activity) {
         home(activity);
     }
 
@@ -430,12 +431,12 @@ public class IntentsUtils {
     }
 
 
-    public static int extractPlaceId(Intent intent) {
+    public static long extractPlaceId(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return -1;
         }
-        return extras.getInt("place_id", Integer.valueOf(extras.getString("place_id", "-1"))); // usefull for notifications
+        return extras.getLong(KEY_EVENT_ID, Long.valueOf(extras.getString(KEY_EVENT_ID, "-1"))); // usefull for notifications
     }
 
     public static Spot extractSpot(Intent intent) {

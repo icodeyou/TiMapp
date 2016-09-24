@@ -1,4 +1,4 @@
-package com.timappweb.timapp.data.entities;
+package com.timappweb.timapp.auth;
 
 /**
  * Created by stephane on 2/18/2016.

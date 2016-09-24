@@ -37,6 +37,7 @@ import com.timappweb.timapp.data.loader.paginate.PaginateRecyclerViewManager;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
@@ -75,7 +76,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     private EditText                                etNameSpot;
     private RecyclerView                            spotsRv;
     private CategorySelectorView                    categorySelector;
-    private AddressResultReceiver                   mAddressResultReceiver;
+    //private AddressResultReceiver                   mAddressResultReceiver;
     private Menu                                    menu;
     private SpotsAdapter mAdapter;
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
@@ -89,13 +90,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_spot);
-
-        if (!LocationManager.hasUpToDateLastLocation()){
-            Log.e(TAG, "User launch AddSpotActivity without a up to date location. Refused");
-            // TODO use feedback
-            finish();
-            return;
-        }
 
         //Toolbar
         this.initToolbar(true);
@@ -150,6 +144,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 return RestClient.buildCall(RestClient.service().spots(options.toMap()));
             }
 
+
         };
         mDataLoader = new PaginateDataLoader<EventsInvitation>()
                 .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
@@ -195,7 +190,10 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         mAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
-                currentSpot = mAdapter.getSpot(position);
+                try {
+                    currentSpot = (Spot) mAdapter.getSpot(position).requireLocalId();
+                } catch (CannotSaveModelException e) {
+                }
                 finishActivityResult(currentSpot);
                 return false;
             }
@@ -309,6 +307,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
 
+    /*
     private void requestReverseGeocoding(Location location){
         if (mAddressResultReceiver == null){
             mAddressResultReceiver = new AddressResultReceiver();
@@ -316,6 +315,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         currentSpot.setLocation(location);
         ReverseGeocodingHelper.request(AddSpotActivity.this, location, mAddressResultReceiver);
     }
+    */
     // =============================================================================================
 
     @Override
@@ -361,7 +361,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     }
 
     // =============================================================================================
-
+/*
     class AddressResultReceiver extends ResultReceiver {
 
         public AddressResultReceiver() {
@@ -376,5 +376,5 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 currentSpot.setAddress(addressOutput);
             }
         }
-    }
+    }*/
 }

@@ -62,7 +62,7 @@ public class NotificationFactory {
             String body = notification.getString("body");
             String title = notification.getString("title");
             String icon = notification.getString("icon");
-            int placeId = Integer.valueOf(bundle.getString("place_id"));
+            long placeId = Long.valueOf(bundle.getString("place_id")); // TODO cst
 
             Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
             int categoryId = R.drawable.category_unknown; // TODO set proper category

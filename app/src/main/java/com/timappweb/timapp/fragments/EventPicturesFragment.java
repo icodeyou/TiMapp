@@ -3,6 +3,7 @@ package com.timappweb.timapp.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.view.ActionMode;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
@@ -47,12 +49,13 @@ import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
+import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
+import com.timappweb.timapp.rest.io.serializers.MultipartBuilder;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.utils.PictureUtility;
-import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
@@ -66,8 +69,6 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.helpers.ActionModeHelper;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -293,7 +294,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
      * Only one upload at a time.
      * @param file
      */
-    public void uploadPicture(File file) {
+    public void uploadPicture(@NonNull File file) {
         if (uploadView.getVisibility() == View.VISIBLE){
             Toast.makeText(getContext(), R.string.upload_picture_in_progress, Toast.LENGTH_SHORT).show();
             return;
@@ -301,35 +302,7 @@ public class EventPicturesFragment extends EventBaseFragment implements
         setUploadVisibility(true);
 
         try {
-            ApplicationRules rules = ConfigurationProvider.rules();
-            // Compress the file
-            Log.d(TAG, "BEFORE COMPRESSION: " +
-                    "Photo '"+ file.getAbsolutePath() + "'" +
-                    " has size: " + Util.byteToKB(file.length()) +
-                    ". Max size: " + Util.byteToKB(rules.picture_max_size));
-
-            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
-
-            MediaType fileMimeType = MediaType.parse(Util.getMimeType(file.getAbsolutePath()));
-
-            Log.d(TAG, "AFTER COMPRESSION: Photo '"+ file.getAbsolutePath() + "'" +
-                    " has size: " + Util.byteToKB(file.length()) +
-                    " and type: " + fileMimeType);
-
-            if (file.length() > rules.picture_max_size){
-                this.showUploadFeedbackError(R.string.cannot_resize_picture);
-                return;
-            }
-            else if (file.length() <= rules.picture_min_size){
-                this.showUploadFeedbackError(R.string.error_picture_too_small);
-                return;
-            }
-
-            RequestBody body = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("photo", file.getName(),
-                            RequestBody.create(fileMimeType, file))
-                    .build();
+            RequestBody body = new AddPictureMapper(file).build();
 
             final Event event = eventActivity.getEvent();
             final Picture picture = new Picture();
@@ -353,22 +326,10 @@ public class EventPicturesFragment extends EventBaseFragment implements
                                 R.string.thanks_for_add_picture, Toast.LENGTH_LONG).show();
                     }
 
-                    @Override
-                    public void notSuccessful() {
-                        if (this.response.code() != HttpURLConnection.HTTP_BAD_REQUEST){
-                            Log.e(TAG, "Cannot upload picture. API response: " + this.response.code());
-                            Toast.makeText(getContext(), R.string.cannot_upload_picture, Toast.LENGTH_LONG).show();
-                        }
-                    }
                 })
-                .onError(new RequestFailureCallback(){
-                    @Override
-                    public void onError(Throwable error) {
-                        Toast.makeText(EventPicturesFragment.this.getContext(),
-                                R.string.no_network_access, Toast.LENGTH_LONG).show();
-                    }
-                })
+                .onError(new NetworkErrorCallback(getContext()))
                 .onFinally(new HttpCallManager.FinallyCallback() {
+
                     @Override
                     public void onFinally(Response response, Throwable error) {
                         setUploadVisibility(false);
@@ -377,10 +338,12 @@ public class EventPicturesFragment extends EventBaseFragment implements
                 .perform();
 
         }
-        catch (Exception e) {
-            Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath());
-            e.printStackTrace();
-            this.showUploadFeedbackError(R.string.cannot_resize_picture);
+        catch (AddPictureMapper.CannotUploadPictureException e) {
+            Log.e(TAG, "Cannot resize picture: " + file.getAbsolutePath() + ". " + e.getMessage());
+            this.showUploadFeedbackError(e.getResId());
+            if (BuildConfig.DEBUG){
+                e.printStackTrace();
+            }
         }
     }
 

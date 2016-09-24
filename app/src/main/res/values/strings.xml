@@ -13,7 +13,6 @@
     <string name="p_key_five" translatable="false">TiMapp Presentation (5)</string>
     <string name="p_key_six" translatable="false">TiMapp Presentation (6)</string>
     <string name="p_key_seven" translatable="false">TiMapp Presentation (7)</string>
-    <string name="facebook_app_id" translatable="false">1634741340120823</string>
     <string name="namespace" translatable="false">timappweb</string>
     <string name="sync_account_type" translatable="false">timapp.timappweb.com</string>
     <string name="content_authority_config" translatable="false">com.timappweb.timapp.config.provider</string>
@@ -256,5 +255,6 @@
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
     <string name="no_data_spot">Indicate a category and a name for your current place. Then click on the button CREATE.</string>
+    <string name="cannot_read_this_picture">We cannot open this picture, please take another one.</string>
 
 </resources>

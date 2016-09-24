@@ -1,62 +1,62 @@
 package com.timappweb.timapp;
 
-import android.app.Activity;
+import android.app.Application;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.timappweb.timapp.activities.DrawerActivity;
+import com.google.repacked.apache.commons.io.IOUtils;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.activities.LoginActivity;
-import com.timappweb.timapp.data.models.Picture;
+import com.timappweb.timapp.utils.IOUtil;
 import com.timappweb.timapp.utils.PictureUtility;
+import com.timappweb.timapp.utils.ResourceHelper;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
+import java.io.InputStream;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.
  */
-@RunWith(AndroidJUnit4.class)
-@LargeTest
-public class ResizePictureTest {
+public class ResizePictureTest extends ApplicationTestCase<Application> {
 
-    private static final String TAG = "UploadPictureTest"
-            ;
-    @Rule
-    public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(
-            EventActivity.class);
+    private static final String TAG = "UploadPictureTest";
+
+    public ResizePictureTest() {
+        super(Application.class);
+    }
+
+    @Before
+    public void setUp(){
+
+    }
 
     @Test
     public void testResizeFile() throws IOException {
-        //URL url = Thread.currentThread().getContextClassLoader().getResource("pictures/big_light.jpg");
-        URL url = this.getClass().getClassLoader().getResource("pictures/big_light.jpg");
-        assertNotNull(url);
-        File file = new File(url.getPath());
+        String resFile = "res/raw/big_light.jpg";
+        File file =  ResourceHelper.getFile(this, resFile);
         assertNotNull(file);
-        assertTrue(file.exists() && file.isFile());
-        Log.i(TAG, "File size before resizing: " + file.length() / (1024*1024) + "MB");
-        //file = PictureUtility.resize(file, 1000, 1000);
-        //Log.i(TAG, "File size after resizing: " + file.length() / (1024*1024) + "MB");
+        assertTrue("Make sure file '"+resFile+"' exists", file.exists());
+        assertTrue("Make sure file '"+resFile+"' is a valid file", file.isFile());
+        File newFile = PictureUtility.resize(file, 1000, 1000);
+
+        Log.i(TAG, "File size after resizing: " + file.length() / (1024*1024) + "MB");
+        assertTrue("Resizing the file should make the size smaller.", file.length() > newFile.length());
     }
 
     @Test
