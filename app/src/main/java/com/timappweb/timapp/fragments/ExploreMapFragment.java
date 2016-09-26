@@ -484,7 +484,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             }
 
             previousZoomLevel = cameraPosition.zoom;
-            mClusterManagerPost.onCameraChange(cameraPosition);
+            mClusterManagerPost.cluster();
 
             // Updating datas
             updateMapData();

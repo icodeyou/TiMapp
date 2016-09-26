@@ -5,7 +5,7 @@
     <!-- .................. Don't depend on the language ..........................-->
     <string name="app_name" translatable="false">TiMapp</string>
     <string name="squarecamera__app_name" translatable="false">@string/app_name</string>
-    <string name="db_name" translatable="false">database_timapp</string>
+    <string name="db_name" translatable="false">database_timapp_activeandroid</string>
     <string name="p_key_one" translatable="false">TiMapp Presentation (1)</string>
     <string name="p_key_two" translatable="false">TiMapp Presentation (2)</string>
     <string name="p_key_three" translatable="false">TiMapp Presentation (3)</string>

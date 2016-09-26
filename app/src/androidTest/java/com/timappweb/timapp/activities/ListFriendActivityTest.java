@@ -7,9 +7,13 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,19 +28,36 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ListFriendActivityTest {
+public class ListFriendActivityTest extends AbstractActivityTest {
 
     @Rule
     public ActivityTestRule<ListFriendsActivity> mActivityRule = new ActivityTestRule<>(
             ListFriendsActivity.class, false, false);
 
+
     @Before
+    public void setUp() throws Exception {
+        this.idlingApiCall();
+        this.systemAnimations(false);
+        this.startActivity();
+
+        super.beforeTest();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        this.resetAsBeforeTest();
+    }
+
     public void startActivity(){
         Intent intent = new Intent(MyApplication.getApplicationBaseContext(), ListFriendsActivity.class);
         mActivityRule.launchActivity(intent);
-        assertTrue(MyApplication.isLoggedIn());
     }
 
+    // ---------------------------------------------------------------------------------------------
+
+    @CreateConfigAction
+    @CreateAuthAction
     @Test
     public void testViewUserProfile() {
         new RecyclerViewHelper(R.id.rv_friends)

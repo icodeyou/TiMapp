@@ -7,6 +7,7 @@ import com.facebook.GraphResponse;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.auth.FacebookAuthProvider;
 import com.timappweb.timapp.utils.facebook.FacebookApiHelper;
 
@@ -14,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Created by Stephane on 24/09/2016.
@@ -34,6 +37,7 @@ public class UsersFixture {
         return FacebookAuthProvider.createPayload(accessToken, appId);
     }
 
+
     public static <T> T getLoginPayload(String id){
         final JSONObject[] data = new JSONObject[1];
         FacebookApiHelper.getUsers(
@@ -42,6 +46,9 @@ public class UsersFixture {
                         data[0] = response.getJSONObject();
                     }
                 }).executeAndWait();
+
+        assertNotNull("Cannot get any facebook access token to performs tests. Please make sure there are test user for the facebook app id "
+                + MyApplication.getApplicationBaseContext().getString(R.string.facebook_app_id), data[0]);
 
         try {
             String userAppId = InstanceID.getInstance(MyApplication.getApplicationBaseContext()).getId();

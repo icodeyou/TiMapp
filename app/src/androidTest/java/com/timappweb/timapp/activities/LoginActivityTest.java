@@ -12,6 +12,8 @@ import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.annotations.AuthState;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 
@@ -54,6 +56,8 @@ public class LoginActivityTest extends AbstractActivityTest{
     }
 
     @Test
+    @AuthState(logging = AuthState.LoginState.NO)
+    @CreateConfigAction
     public void testSkip() {
         onView(ViewMatchers.withId(R.id.skip_loggin_button))
                 .perform(click());
@@ -62,6 +66,8 @@ public class LoginActivityTest extends AbstractActivityTest{
     }
 
     @Test
+    @AuthState(logging = AuthState.LoginState.NO)
+    @CreateConfigAction
     public void testLogin() {
         onView(withId(R.id.facebook_login_button))
                 .perform(click());

@@ -13,6 +13,8 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
@@ -38,7 +40,8 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
     @Rule
     public ActivityTestRule<AddTagActivity> mActivityRule = new ActivityTestRule<>(
             AddTagActivity.class, false, false);
-    private ApiCallIdlingResource apiCallIdlingResource;
+
+    // ---------------------------------------------------------------------------------------------
 
     @Before
     public void setUp() throws Exception {
@@ -48,18 +51,22 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
         Intent intent = IntentsUtils.buildIntentAddTags(MyApplication.getApplicationBaseContext(), dummyEvent);
         mActivityRule.launchActivity(intent);
 
-        Location lastLocation = this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
-        LocationManager.setLastLocation(lastLocation);
-        apiCallIdlingResource = new ApiCallIdlingResource();
-        Espresso.registerIdlingResources(apiCallIdlingResource);
+        this.idlingApiCall();
+        this.systemAnimations(false);
+
+        super.beforeTest();
     }
 
     @After
-    public void unregisterIntentServiceIdlingResource() {
-        Espresso.unregisterIdlingResources(apiCallIdlingResource);
+    public void tearDown() {
+        this.resetAsBeforeTest();
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void pickTags() {
         TestUtil.sleep(3000);
         new PickTagsForm()

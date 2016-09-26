@@ -18,6 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -31,13 +32,16 @@ public class ActivityHelper {
      * @param activityClass
      */
     public static void assertCurrentActivity(Class<? extends Activity> activityClass) {
+        if (getActivityInstance() == null){
+            TestUtil.sleep(100);
+        }
         assertCurrentActivity(activityClass, getActivityInstance());
     }
 
     public static void assertCurrentActivity(Class<? extends Activity> activityClass, Activity currentActivity) {
-        checkNotNull(currentActivity);
-        checkNotNull(activityClass);
-        assertTrue(currentActivity.getClass().isAssignableFrom(activityClass));
+        assertNotNull("You cannot pass a null argument to this function", activityClass);
+        assertNotNull("Current activity is null", currentActivity);
+        assertTrue("Current activity should be " + activityClass.getName() + " but is " + currentActivity.getClass().getName(), currentActivity.getClass().isAssignableFrom(activityClass));
     }
 
     public static Activity getActivityInstance(){

@@ -20,11 +20,13 @@ public class ViewEventHelper {
 
     private final ViewInteraction viewPager;
     private final RecyclerViewHelper pictureRV;
+    private final EventActionButtons actionBtns;
     private int currentPosition = EventActivity.INITIAL_FRAGMENT_PAGE;
 
     public ViewEventHelper() {
         viewPager = onView(withId(R.id.event_viewpager));
         pictureRV = new RecyclerViewHelper(R.id.pictures_rv);
+        actionBtns = new EventActionButtons();
     }
 
     public ViewEventHelper swipeToPictureTab(){
@@ -46,18 +48,16 @@ public class ViewEventHelper {
 
 
     public ViewEventHelper addPicture(){
-        EventActionButtons.toggle();
-        EventActionButtons.camera();
+        actionBtns.camera();
         return this;
     }
     public ViewEventHelper addTags(){
-        EventActionButtons.toggle();
-        EventActionButtons.tags();
+        actionBtns
+                .tags();
         return this;
     }
     public ViewEventHelper invitePeople(){
-        EventActionButtons.toggle();
-        EventActionButtons.invite();
+        actionBtns.invite();
         return this;
     }
 

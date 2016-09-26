@@ -1,5 +1,7 @@
 package com.timappweb.timapp.utils.viewinteraction;
 
+import android.support.test.espresso.ViewInteraction;
+
 import com.timappweb.timapp.R;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -15,28 +17,45 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  */
 public class EventActionButtons {
 
-    public static void camera(){
+    private final ViewInteraction mMainBtn;
+    private boolean mIsOpen = false;
+
+    public EventActionButtons() {
+        mMainBtn = onView(withId(R.id.multiple_actions));
+    }
+
+    public void camera(){
+        if (!mIsOpen){
+            toggle();
+        }
         actionClick(R.id.action_camera);
     }
 
-    public static  void tags(){
+    public void tags(){
+        if (!mIsOpen){
+            toggle();
+        }
         actionClick(R.id.action_tag);
     }
 
-    public static  void invite(){
+    public void invite(){
+        if (!mIsOpen){
+            toggle();
+        }
         actionClick(R.id.action_invite);
     }
 
-    public static  void toggle(){
-        actionClick(R.id.multiple_actions);
+    public void toggle(){
+        mMainBtn.perform(click());
+        this.mIsOpen = !this.mIsOpen;
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    private static void actionClick(int id) {
+    private void actionClick(int id) {
         onView(withId(id))
-                .check(matches(isDisplayed()))
-                .check(matches(isEnabled()))
+                //.check(matches(isDisplayed()))
+                //.check(matches(isEnabled()))
                 .perform(click());
     }
 

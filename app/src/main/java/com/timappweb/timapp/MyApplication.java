@@ -1,14 +1,17 @@
 package com.timappweb.timapp;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sromku.simple.fb.Permission;
 import com.sromku.simple.fb.SimpleFacebook;
 import com.sromku.simple.fb.SimpleFacebookConfiguration;
+import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.auth.AuthManager;
@@ -28,7 +31,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import retrofit2.Call;
 
-public class MyApplication extends com.activeandroid.app.Application {
+public class MyApplication extends Application {
 
     private static final String TAG = "MyApplication";
     private static final String KEY_LAST_START = "last_app_start";
@@ -52,6 +55,11 @@ public class MyApplication extends com.activeandroid.app.Application {
         MultiDex.install(this);
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        ActiveAndroid.dispose();
+    }
 
     /**
      * @return true if user is logged in
@@ -78,7 +86,7 @@ public class MyApplication extends com.activeandroid.app.Application {
         //this.deleteDatabase(getString(R.string.db_name));
 
         _appContext = getApplicationContext();
-
+        ActiveAndroid.initialize(this);
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         MyApplication.auth = AuthManagerFactory.create();
         RestClient.init(this, getResources().getString(R.string.api_base_url), MyApplication.getAuthManager());
@@ -114,6 +122,15 @@ public class MyApplication extends com.activeandroid.app.Application {
         if (isLoggedIn()){
             auth.logout();
             RestClient.instance().logoutUser();
+
+            /*
+            mSimpleFacebook.logout(new OnLogoutListener() {
+                @Override
+                public void onLogout() {
+                    Log.i(TAG, "You are logged out");
+                }
+            });*/
+
         }
     }
     public static void updateGoogleMessagingToken(Context context, String token) {

@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'   // Crash reporting
 apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
 
+
 android {
     signingConfigs {
         config {
@@ -16,12 +17,11 @@ android {
         enabled = true
     }
     dexOptions {
-        incremental = true;
         preDexLibraries = false
         javaMaxHeapSize "4g"
     }
     compileSdkVersion 23
-    buildToolsVersion "23.0.3 "
+    buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.timappweb.timapp"
         minSdkVersion 16
@@ -39,6 +39,7 @@ android {
             signingConfig signingConfigs.config
             resValue "string", "api_base_url", "http://api.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1634741340120823"
+
         }
         debug {
             minifyEnabled false
@@ -76,6 +77,17 @@ allprojects {
     }
 }
 
+// Needed to resolve app vs test dependencies, specifically, transitive dependencies of
+// libraryq and libraryz. Forcing the use of the smaller version after regression testing.
+configurations.all {
+    // Indirect dependency between prod and test. We need this line to make sure there is'nt a conflict
+    // @link(https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK)
+    // @link(http://stackoverflow.com/questions/28641445/dependency-conflict-error-in-my-android-app-which-has-android-tests)
+    //androidTestCompile 'com.parse.bolts:bolts-android:1.2.0'
+    resolutionStrategy.force 'com.parse.bolts:bolts-android:1.2.0'
+    resolutionStrategy.force 'com.android.support:support-v4:23.4.0'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //
@@ -109,7 +121,7 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
-    androidTestCompile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    androidTestCompile 'com.facebook.android:facebook-android-sdk:4.7.0'
     androidTestCompile 'junit:junit:4.12'
     // Optional -- UI testing with UI Automator
 
@@ -122,10 +134,6 @@ dependencies {
         transitive = true;
     }
     // APP
-    // Indirect dependency between prod and test. We need this line to make sure there is'nt a conflict
-    // @link(https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK)
-    compile 'com.parse.bolts:bolts-android:1.4.0'
-    //Needed for Facebook - added by Jack
 
     //compile 'com.facebook.android:facebook-android-sdk:4.7'
 
@@ -136,9 +144,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
-    //compile 'com.android.support:cardview-v7:23.1.1'
+    //compile "com.android.support:cardview-v7:$rootProject.ext.supportLibraryVersion" // Required by FB SDK
 
-    compile 'com.google.maps.android:android-maps-utils:0.4'
+    compile 'com.google.maps.android:android-maps-utils:0.4.3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'io.reactivex:rxandroid:1.0.1'
@@ -147,12 +155,12 @@ dependencies {
     compile "com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion"
-    //compile 'com.google.android.gms:play-services-appindexing:8.3.0'
+    //compile "com.google.android.gms:play-services-appindexing:$rootProject.ext.googlePlayLibraryVersion"
     //compile 'com.google.android.gms:play-services:8.4.0'
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
     compile 'com.github.davidpizarro:autolabelui:1.0.1'
-    compile 'com.sromku:simple-fb:4.1.1'
+    compile 'com.sromku:simple-fb:4.1.1'                    // TODO Change library or upddate because conflict
     compile 'com.github.boxme:squarecamera:1.1.0'
     //compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
 
@@ -163,12 +171,13 @@ dependencies {
     //compile 'com.pkmmte.view:circularimageview:1.1'
 
     //compile 'com.squareup.picasso:picasso:2.5.2'
-    compile('com.facebook.fresco:fresco:0.9.0') {
+
+    compile('com.facebook.fresco:fresco:0.9.0') { // TODO update to 0.14.0
         exclude module: 'bolts-android'
         exclude module: 'support-v4'
     }
     compile 'com.github.ongakuer:PhotoDraweeView:a14f105'
-    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    compile 'com.github.scallacs:ActiveAndroid:4d785cb'
     compile 'net.danlew:android.joda:2.9.3'
     compile('com.github.florent37:materialviewpager:1.1.3@aar') {
         transitive = true

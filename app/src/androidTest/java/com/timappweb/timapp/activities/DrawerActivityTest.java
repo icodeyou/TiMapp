@@ -25,7 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class DrawerActivityTest {
+public class DrawerActivityTest extends AbstractActivityTest{
 
     @Rule
     public ActivityTestRule<DrawerActivity> mActivityRule = new ActivityTestRule<>(
@@ -36,6 +36,7 @@ public class DrawerActivityTest {
 
     }
 
+    // ---------------------------------------------------------------------------------------------
 
     @Test
     public void testOpenDrawer(){

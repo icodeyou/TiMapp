@@ -1,6 +1,7 @@
 package com.timappweb.timapp.config;
 
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.util.Log;
 
 import com.activeandroid.query.Delete;
@@ -107,6 +108,7 @@ public class ConfigurationProvider{
                     .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, new Select().from(SpotCategory.class)){
                         @Override
                         public void successful(List<SpotCategory> categories) {
+                            super.successful(categories);
                             downloadIcons(context, categories);
                         }
                     });
@@ -114,6 +116,7 @@ public class ConfigurationProvider{
                     .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, new Select().from(EventCategory.class)){
                         @Override
                         public void successful(List<EventCategory> categories) {
+                            super.successful(categories);
                             downloadIcons(context, categories);
                         }
                     });

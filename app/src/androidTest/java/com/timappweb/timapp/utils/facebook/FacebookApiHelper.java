@@ -13,6 +13,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Created by Stephane on 24/09/2016.
@@ -22,7 +23,9 @@ public class FacebookApiHelper {
 
     private static final String TAG = "FacebookApiHelper";
     private static String mAppId;
-    private static String mSecretToken = "WCbQwangC-_k5S8-AVPGz4rFnTs";
+    private static String mSecretToken = "07a7d5929a61221b51a45b2f7864a56a"; // @warining
+    private static String mAccessToken = null;
+    private static String mRedirectUrl;
 
     public static void init(){
         Context context = MyApplication.getApplicationBaseContext();
@@ -31,20 +34,40 @@ public class FacebookApiHelper {
 
 
     public static String buildAppAccessTokenString(){
-        return mAppId + "|" + mSecretToken;
+        if (mAccessToken != null){
+            return mAccessToken;
+        }
+
+        new GraphRequest(
+                null, //AccessToken.getCurrentAccessToken(),
+                "oauth/access_token?client_id="+mAppId+"&client_secret=" + mSecretToken + "&grant_type=client_credentials&redirect_uri=" + mRedirectUrl,
+                null,
+                HttpMethod.POST,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        // TODO assert result
+                        try {
+                            mAccessToken = response.getJSONObject().getString("access_token");
+                        } catch (JSONException e) {
+                            mAccessToken = null;
+                        }
+                    }
+                }
+        ).executeAndWait();
+
+        if (mAccessToken == null){
+            throw new InternalError("Cannot get facebook access token for this app. Please check your credential");
+        }
+
+        return mAccessToken;
     }
 
     public static void init(Context context){
-        mAppId = context.getString(R.string.facebook_app_id);
-
-        Log.i(TAG, "@init() with app id: " + mAppId + " (access_token: " + buildAppAccessTokenString() + ")");
         FacebookSdk.sdkInitialize(context);
-
-        //AccessToken accessToken = new AccessToken(buildAppAccessTokenString(), mAppId, mAppId, null, null, null, null, null);
-        //AccessToken.setCurrentAccessToken(accessToken);
-
-        //Log.i(TAG, "Using access token: " +  AccessToken.getCurrentAccessToken());
-        //AccessToken.setCurrentAccessToken(AccessToken.crnew AccessToken("1731017757159847|WCbQwangC-_k5S8-AVPGz4rFnTs", mAppId, null);
+        mAppId = context.getString(R.string.facebook_app_id);
+        mRedirectUrl = "http://timappweb.com";
+        Log.i(TAG, "@init() with app id: " + mAppId + " (access_token: " + buildAppAccessTokenString() + ")");
     }
 
     /**
@@ -59,10 +82,15 @@ public class FacebookApiHelper {
      * @return
      */
     public static GraphRequest getUsers(GraphRequest.Callback callback){
+        String query = "/"+mAppId+"/accounts/test-users";
+        Bundle params = new Bundle();
+        params.putString("access_token", buildAppAccessTokenString());
+        //params.putString("access_token", buildAppAccessTokenString());
+        Log.i(TAG, "Requesting app users to url: " + query);
         return new GraphRequest(
                 null, //AccessToken.getCurrentAccessToken(),
-                "/"+mAppId+"/accounts/test-users?access_token=" + buildAppAccessTokenString(),
-                null,
+                query,
+                params,
                 HttpMethod.POST,
                 callback
         );

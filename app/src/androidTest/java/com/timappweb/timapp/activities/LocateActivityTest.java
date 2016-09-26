@@ -1,24 +1,21 @@
 package com.timappweb.timapp.activities;
 
-import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.timappweb.timapp.MyApplication;
+import android.support.test.runner.AndroidJUnit4;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
-import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
-import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.
@@ -26,9 +23,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class LocateActivityTest {
-
-    private MockLocationProvider mockLocation;
+public class LocateActivityTest extends AbstractActivityTest{
 
     @Rule
     public ActivityTestRule<LocateActivity> mActivityRule = new ActivityTestRule<>(
@@ -39,33 +34,42 @@ public class LocateActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        LocateActivity currentActivity = mActivityRule.getActivity();
-
-        assertTrue(MyApplication.isLoggedIn());
+        this.idlingApiCall();
+        this.systemAnimations(false);
+        super.beforeTest();
         eventRV = new RecyclerViewHelper(R.id.list_events);
-        mockLocation = MockLocationProvider.createGPSProvider(currentActivity);
-        mockLocation.pushLocation(MockLocation.START_TEST);
-
-        Espresso.registerIdlingResources(new ApiCallIdlingResource());
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
     }
 
+    @After
+    public void tearDown() throws Exception {
+        this.resetAsBeforeTest();
+    }
+
+
     @Test
+    @CreateAuthAction
+    @CreateConfigAction
     public void testExistingEvent() {
-        mockLocation.pushLocation(MockLocation.MANY_SPOTS);
+        this.getMockLocationProvider().pushLocation(MockLocation.MANY_SPOTS);
         eventRV.checkItemCount(3);
     }
 
     @Test
+    @CreateAuthAction
+    @CreateConfigAction
     public void testNoExistingEvent() {
-        mockLocation.pushLocation(MockLocation.NO_SPOT);
+        this.getMockLocationProvider().pushLocation(MockLocation.NO_SPOT);
         ActivityHelper.assertCurrentActivity(AddEventActivity.class);
     }
 
 
     @Test
+    @CreateAuthAction
+    @CreateConfigAction
     public void testLocationChanged() {
         eventRV.checkItemCount(3);
-        mockLocation.pushLocation(MockLocation.NO_SPOT);
+        this.getMockLocationProvider().pushLocation(MockLocation.NO_SPOT);
         eventRV.checkItemCount(0);
     }
 

@@ -27,9 +27,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -44,9 +41,7 @@ import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.location.LocationManager;
 
-import io.fabric.sdk.android.Fabric;
 import pl.aprilapps.easyphotopicker.EasyImage;
-//import android.support.design.widget.FloatingActionButton;
 
 
 public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, LocationManager.LocationListener {
@@ -64,7 +59,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private Toolbar                     toolbar;
     private ExploreFragment             exploreFragment;
 
-    private SimpleFacebook              mSimpleFacebook;
     private View fab;
 
     private boolean                     backPressedOnce;
@@ -160,7 +154,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         super.onResume();
         updateEventViewInHeader();
         registerReceiver(syncBroadcastReceiver, syncIntentFilter);
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
         if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
             mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location_map, null);
             Button skipLocation = (Button) mWaitForLocationLayout.findViewById(R.id.action_skip);
@@ -194,7 +187,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -381,12 +373,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 break;
             case R.id.menu_item_logout:
                 IntentsUtils.logout(this);
-                mSimpleFacebook.logout(new OnLogoutListener() {
-                    @Override
-                    public void onLogout() {
-                    Log.i(TAG, "You are logged out");
-                    }
-                });
                 finish();
                 break;
             // DEV

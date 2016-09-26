@@ -1,11 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.support.test.espresso.Espresso;
-import android.util.Log;
 
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -14,9 +10,13 @@ import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
+import com.timappweb.timapp.utils.annotations.ClearAuth;
+import com.timappweb.timapp.utils.annotations.ClearConfig;
+import com.timappweb.timapp.utils.annotations.ClearFirstStart;
 import com.timappweb.timapp.utils.annotations.ConfigState;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
+import com.timappweb.timapp.utils.annotations.CreateLastLaunch;
 import com.timappweb.timapp.utils.facebook.FacebookApiHelper;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -43,24 +43,38 @@ public class AbstractActivityTest {
     @Rule
     public TestAnnotated testAnnoted = new TestAnnotated();
 
-    public void beforeTest(){
+    public void beforeTest() {
         FacebookApiHelper.init();
 
+        if (testAnnoted.getClearAuth() != null) {
+            MyApplication.logout();
+        }
+        if (testAnnoted.getClearFirstStart() != null) {
+            MyApplication.clearStoredData();
+        }
+        if (testAnnoted.getClearConfig() != null) {
+            ConfigurationProvider.clearAll();
+        }
 
         CreateConfigAction createConfigAction = testAnnoted.getCreateConfigAction();
-        if (createConfigAction != null){
-            if (createConfigAction.replaceIfExists()){
+        if (createConfigAction != null) {
+            if (createConfigAction.replaceIfExists()) {
                 ConfigurationProvider.clearAll();
             }
-            if (!ConfigurationProvider.hasFullConfiguration()){
+            if (!ConfigurationProvider.hasFullConfiguration()) {
                 ConfigurationProvider
                         .load(MyApplication.getApplicationBaseContext())
                         .execute();
             }
         }
-        if (testAnnoted.getCreateAuthAction() != null){
+
+        if (testAnnoted.getCreateLastLaunch() != null){
+            MyApplication.updateLastLaunch();
+        }
+
+        if (testAnnoted.getCreateAuthAction() != null) {
             CreateAuthAction createAuthAction = testAnnoted.getCreateAuthAction();
-            if (!MyApplication.isLoggedIn() || createAuthAction.replaceIfExists()){
+            if (!MyApplication.isLoggedIn() || createAuthAction.replaceIfExists()) {
                 UsersFixture.init();
 
                 MyApplication
@@ -81,16 +95,16 @@ public class AbstractActivityTest {
             }
         }
 
-        if (testAnnoted.getAuthState() != null){
+        if (testAnnoted.getAuthState() != null) {
             assertTrue("User must be logged in to perform this test",
-                    testAnnoted.getAuthState().check() != AuthState.LoginState.YES || MyApplication.isLoggedIn());
-            if (testAnnoted.getAuthState().check() == AuthState.LoginState.NO){
+                    testAnnoted.getAuthState().logging() != AuthState.LoginState.YES || MyApplication.isLoggedIn());
+            if (testAnnoted.getAuthState().logging() == AuthState.LoginState.NO) {
                 MyApplication.getAuthManager().logout();
                 assertTrue("User must NOT be logged in to perform this test", !MyApplication.isLoggedIn());
             }
         }
 
-        if (testAnnoted.getConfigState() != null){
+        if (testAnnoted.getConfigState() != null) {
             assertTrue("Rules should be loaded in app state to perform this test",
                     ConfigurationProvider.hasRulesConfig() == testAnnoted.getConfigState().rules());
             assertTrue("Event categories should be loaded in app state to perform this test",
@@ -133,6 +147,10 @@ public class AbstractActivityTest {
         private ConfigState configState;
         private CreateAuthAction createAuthAction;
         private CreateConfigAction createConfigAction;
+        private ClearAuth clearAuth;
+        private ClearConfig clearConfig;
+        private ClearFirstStart clearFirstStart;
+        private CreateLastLaunch createLastLaunch;
 
         @Override
         protected void starting( Description description) {
@@ -140,6 +158,10 @@ public class AbstractActivityTest {
             configState = description.getAnnotation( ConfigState.class);
             createAuthAction = description.getAnnotation( CreateAuthAction.class);
             createConfigAction = description.getAnnotation( CreateConfigAction.class);
+            clearAuth = description.getAnnotation( ClearAuth.class);
+            clearConfig = description.getAnnotation( ClearConfig.class);
+            clearFirstStart = description.getAnnotation( ClearFirstStart.class);
+            createLastLaunch = description.getAnnotation( CreateLastLaunch.class);
         }
 
         public AuthState getAuthState() {
@@ -156,6 +178,22 @@ public class AbstractActivityTest {
 
         public CreateConfigAction getCreateConfigAction() {
             return createConfigAction;
+        }
+
+        public ClearAuth getClearAuth() {
+            return clearAuth;
+        }
+
+        public ClearConfig getClearConfig() {
+            return clearConfig;
+        }
+
+        public ClearFirstStart getClearFirstStart() {
+            return clearFirstStart;
+        }
+
+        public CreateLastLaunch getCreateLastLaunch() {
+            return createLastLaunch;
         }
     }
 }

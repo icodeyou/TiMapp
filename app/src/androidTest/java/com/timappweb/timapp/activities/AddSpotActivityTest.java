@@ -5,6 +5,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
 import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 
@@ -23,7 +25,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddSpotActivityTest {
+public class AddSpotActivityTest extends AbstractActivityTest{
 
     private AddSpotForm addSpotForm;
     private MockLocationProvider mockLocation;
@@ -34,14 +36,15 @@ public class AddSpotActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        assertTrue(MyApplication.isLoggedIn());
         addSpotForm = new AddSpotForm();
-
-        mockLocation = MockLocationProvider.createGPSProvider(mActivityRule.getActivity());
-        //mockLocation.pushLocation(MockLocation.START_TEST);
+        super.beforeTest();
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void testExistingSpots() {
         addSpotForm
                 .getExistingSpotList()
@@ -51,6 +54,8 @@ public class AddSpotActivityTest {
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void createNewSpot(){
         addSpotForm
                 .assertSubmitDisabled()
@@ -61,11 +66,15 @@ public class AddSpotActivityTest {
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void testFilterSpot() {
 
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void testNoUpToDateLocation() {
 
     }

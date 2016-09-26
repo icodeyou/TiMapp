@@ -30,11 +30,8 @@ public class RemoteMasterSyncHttpCallback<T extends SyncBaseModel> extends HttpC
             new MultipleEntriesSyncPerformer<>(remoteEntries, localData.<T>execute())
                     .setCallback(new RemoteMasterSyncCallback())
                     .perform();
-        } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
-        } catch (HttpResponseSyncException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "Error while sync: " + e.getMessage()); // TODO
         }
     }
 }

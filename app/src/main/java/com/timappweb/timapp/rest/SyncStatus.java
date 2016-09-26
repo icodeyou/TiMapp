@@ -3,7 +3,6 @@ package com.timappweb.timapp.rest;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.google.repacked.antlr.v4.codegen.model.Sync;
 import com.timappweb.timapp.data.models.MyModel;
 
 /**

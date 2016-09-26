@@ -8,6 +8,9 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
+import com.timappweb.timapp.utils.annotations.AuthState;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.EditUserProfileForm;
 
 import org.junit.After;
@@ -45,7 +48,11 @@ public class ProfileActivityTest extends AbstractActivityTest{
         assertTrue(MyApplication.isLoggedIn());
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     @Test
+    @CreateAuthAction
+    @CreateConfigAction
     public void testEditProfile() {
         ActivityHelper
                 .btnClick(R.id.action_edit_profile);
@@ -65,6 +72,8 @@ public class ProfileActivityTest extends AbstractActivityTest{
 
     // TODO test view other user profile
     @Test
+    @AuthState(logging = AuthState.LoginState.NO)
+    @CreateConfigAction
     public void testViewOtherProfile() {
         // Test load correctly
         // Test cannot edit tags

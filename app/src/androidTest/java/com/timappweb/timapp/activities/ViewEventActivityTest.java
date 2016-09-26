@@ -7,7 +7,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.auth.FacebookAuthProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.fixtures.EventsFixture;
 import com.timappweb.timapp.utils.ActivityHelper;
@@ -39,12 +38,12 @@ public class ViewEventActivityTest extends AbstractActivityTest{
 
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
-    private ViewEventHelper viewEventHelper;
 
+    private ViewEventHelper viewEventHelper;
 
     @Before
     public void startActivity(){
-        this.systemAnimations(false);
+        //this.systemAnimations(false);
         this.idlingApiCall();
 
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EventsFixture.getPublicEvent());
@@ -66,19 +65,21 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     @Test
     public void testAddPicture() {
         viewEventHelper.addPicture();
+
     }
 
     @Test
-    @AuthState(check = AuthState.LoginState.YES)
+    @AuthState(logging = AuthState.LoginState.YES)
     @ConfigState
     @CreateAuthAction(replaceIfExists = false)
     @CreateConfigAction
     public void testAddTags() {
         viewEventHelper.addTags();
+        ActivityHelper.assertCurrentActivity(AddTagActivity.class);
     }
 
     @Test
-    @AuthState(check = AuthState.LoginState.YES)
+    @AuthState(logging = AuthState.LoginState.YES)
     @ConfigState
     @CreateAuthAction(replaceIfExists = false)
     @CreateConfigAction

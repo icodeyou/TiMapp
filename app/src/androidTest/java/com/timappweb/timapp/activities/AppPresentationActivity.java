@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertTrue;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AppPresentationActivity {
+public class AppPresentationActivity extends AbstractActivityTest{
 
     private PresentationPager presentationPager;
 
@@ -36,10 +36,7 @@ public class AppPresentationActivity {
         this.presentationPager = new PresentationPager();
     }
 
-    @After
-    public void unregisterIntentServiceIdlingResource() {
-
-    }
+    // ---------------------------------------------------------------------------------------------
 
     @Test
     public void navigate() {

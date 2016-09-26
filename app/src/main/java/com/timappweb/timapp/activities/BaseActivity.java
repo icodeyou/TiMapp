@@ -20,6 +20,7 @@ import android.view.WindowManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -51,7 +52,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
     }
 
     @Override

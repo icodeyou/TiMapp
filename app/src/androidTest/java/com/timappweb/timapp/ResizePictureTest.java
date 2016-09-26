@@ -2,33 +2,17 @@ package com.timappweb.timapp;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.test.ApplicationTestCase;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
-import com.google.repacked.apache.commons.io.IOUtils;
-import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.utils.IOUtil;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.ResourceHelper;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.

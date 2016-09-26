@@ -10,6 +10,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.ExploreHelper;
 import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
@@ -29,10 +31,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ExploreActivityTest {
+public class ExploreActivityTest extends AbstractActivityTest {
 
     private ExploreHelper exploreHelper;
-    private MockLocationProvider mockLocation;
     private ApiCallIdlingResource apiCallIdlingResource;
 
     @Rule
@@ -41,25 +42,31 @@ public class ExploreActivityTest {
 
 
     @Before
-    public void initUserSession() {
-        apiCallIdlingResource = new ApiCallIdlingResource();
-        Espresso.registerIdlingResources(apiCallIdlingResource);
+    public void setUp() throws Exception {
+        this.idlingApiCall();
+        this.systemAnimations(false);
+        super.beforeTest();
+
         exploreHelper = new ExploreHelper();
-        mockLocation = MockLocationProvider.createGPSProvider(mActivityRule.getActivity());
-        mockLocation.pushLocation(MockLocation.START_TEST);
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
     }
 
     @After
-    public void afterTest(){
-        Espresso.unregisterIdlingResources(apiCallIdlingResource);
+    public void tearDown() throws Exception {
+        this.resetAsBeforeTest();
     }
 
+    // ---------------------------------------------------------------------------------------------
+
+
     @Test
+    @CreateConfigAction
     public void testClickOnMenu() {
         exploreHelper.openDrawer();
     }
 
     @Test
+    @CreateConfigAction
     public void testClickOnEventOnMap() throws UiObjectNotFoundException {
         exploreHelper
                 .getMap()
@@ -68,6 +75,7 @@ public class ExploreActivityTest {
     }
 
     @Test
+    @CreateConfigAction
     public void testClickOnEventInList() {
         TestUtil.sleep(3000);
         exploreHelper
@@ -78,6 +86,8 @@ public class ExploreActivityTest {
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void testAddEvent() {
         exploreHelper
                 .addEvent();
@@ -87,6 +97,8 @@ public class ExploreActivityTest {
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void testTryAddEventClickExistingEvent() {
         exploreHelper.addEvent();
         ActivityHelper.assertCurrentActivity(LocateActivity.class);
@@ -96,6 +108,7 @@ public class ExploreActivityTest {
     }
 
     @Test
+    @CreateConfigAction
     public void testShowEventList() {
         exploreHelper.openList();
     }

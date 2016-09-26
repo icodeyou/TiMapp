@@ -1,7 +1,5 @@
 package com.timappweb.timapp.utils.annotations;
 
-import com.timappweb.timapp.data.models.User;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,13 +10,6 @@ import java.lang.annotation.Target;
  */
 @Retention( value = RetentionPolicy.RUNTIME)
 @Target( value = { ElementType.METHOD})
-public @interface AuthState {
+public @interface ClearFirstStart {
 
-    LoginState logging() default LoginState.ANY;
-
-    enum LoginState{
-        YES,
-        NO,
-        ANY
-    }
 }

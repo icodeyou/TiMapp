@@ -20,6 +20,8 @@ import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.DisableQuotaRequestInterceptor;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.mocklocations.MockFusedLocationProvider;
 import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
@@ -35,8 +37,6 @@ import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.
- *
- * @warning User must be already logged in to perform this test suite
  *
  * TODO: disable quota on server and local side for tests to work properly
  */
@@ -57,7 +57,6 @@ public class AddEventActivityTest extends AbstractActivityTest {
         this.idlingApiCall();
 
         mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
-        assertTrue(MyApplication.isLoggedIn());
 
         this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
             @Override
@@ -67,14 +66,19 @@ public class AddEventActivityTest extends AbstractActivityTest {
             }
         }, 2000);
 
+        super.beforeTest();
     }
 
     @After
-    public void unregisterIntentServiceIdlingResource() {
+    public void tearDown() {
         this.resetAsBeforeTest();
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void postNewEventNoSpot() {
         this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         this.disableQuota();
@@ -93,6 +97,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
 
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void postNewEventWithExistingSpot() throws InterruptedException {
         this.disableQuota();
 
@@ -118,6 +124,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void postNewEventWithNewSpot() {
         this.disableQuota();
 
@@ -144,6 +152,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
 
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void postValidationErrors() {
         String eventName = "O";
         String eventDescription = "";
@@ -165,6 +175,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
      * Test that we can edit a spot newly created
      */
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void reditCreatedSpot() {
         String spotName = "My new spot unique";
 
@@ -183,6 +195,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
     }
 
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void postExistingEvent() {
         String eventName = "Existing event";
         String eventDescription = "";
@@ -200,6 +214,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
 
     // TODO
     @Test
+    @CreateConfigAction
+    @CreateAuthAction
     public void noValidGpsLocation() {
 
     }

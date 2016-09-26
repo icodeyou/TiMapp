@@ -9,6 +9,13 @@ import android.test.suitebuilder.annotation.LargeTest;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.TestUtil;
+import com.timappweb.timapp.utils.annotations.ClearAuth;
+import com.timappweb.timapp.utils.annotations.ClearConfig;
+import com.timappweb.timapp.utils.annotations.ClearFirstStart;
+import com.timappweb.timapp.utils.annotations.CreateAuthAction;
+import com.timappweb.timapp.utils.annotations.CreateConfigAction;
+import com.timappweb.timapp.utils.annotations.CreateLastLaunch;
 import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 
 import org.junit.After;
@@ -39,6 +46,8 @@ public class SplashActivityTest extends AbstractActivityTest {
     public void setUp() throws Exception {
         this.idlingApiCall();
         this.systemAnimations(false);
+        super.beforeTest();
+        startActivity();
     }
 
     @After
@@ -46,6 +55,8 @@ public class SplashActivityTest extends AbstractActivityTest {
         this.resetAsBeforeTest();
     }
 
+
+    //----------------------------------------------------------------------------------------------
     /*
     @Test
     public void testStartNoInternetNoConfig() {
@@ -62,49 +73,37 @@ public class SplashActivityTest extends AbstractActivityTest {
         setApplicationData();
         startActivity();
     }*/
-    //----------------------------------------------------------------------------------------------
 
     @Test
+    @ClearConfig
+    @ClearFirstStart
     public void testFirstStart() {
-        clearConfigurationData();
-        clearFirstStart();
-        startActivity();
-
+        TestUtil.sleep(5000);
         ActivityHelper.assertCurrentActivity(PresentationActivity.class);
     }
 
     @Test
+    @ClearAuth
+    @ClearConfig
+    @CreateLastLaunch
     public void testStartInternetNoConfig() {
-        clearConfigurationData();
-        startActivity();
-
-        ActivityHelper.assertCurrentActivity(DrawerActivity.class);
+        TestUtil.sleep(5000);
+        ActivityHelper.assertCurrentActivity(LoginActivity.class);
     }
 
     @Test
+    @CreateConfigAction
+    @ClearAuth
+    @CreateLastLaunch
     public void testStartInternetAndConfig() {
-        setApplicationData();
-        startActivity();
-
-        ActivityHelper.assertCurrentActivity(DrawerActivity.class);
+        TestUtil.sleep(5000);
+        ActivityHelper.assertCurrentActivity(LoginActivity.class);
     }
 
     // ---------------------------------------------------------------------------------------------
 
     private void startActivity() {
-        mActivityRule.launchActivity(new Intent());
-    }
-
-    private void clearConfigurationData(){
-        ConfigurationProvider.clearAll();
-    }
-
-    private void setApplicationData() {
-        // TODO
-    }
-
-    private void clearFirstStart() {
-        MyApplication.clearStoredData();
+        mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), SplashActivity.class));
     }
 
 }
