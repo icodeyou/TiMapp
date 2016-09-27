@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,7 +26,9 @@ import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.io.Serializable;
@@ -34,13 +37,13 @@ import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class EditProfileActivity extends BaseActivity{
 
     public static final String EXTRA_KEY_TAG_LIST  = "tag_list";
     private static final String TAG                 = "EditProfileActivity";
 
-    private Activity context = this;
     private InputMethodManager imm;
 
     private HorizontalTagsRecyclerView horizontalTagsRecyclerView;
@@ -134,7 +137,9 @@ public class EditProfileActivity extends BaseActivity{
 
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public synchronized void onClick(View v) {
+                buttonSubmit.setEnabled(false);
+                Log.v(TAG, "Submitting user tags");
                 Map<String, String> data = new HashMap<>();
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
                 RestClient.buildCall(call)
@@ -149,7 +154,15 @@ public class EditProfileActivity extends BaseActivity{
                             public void notSuccessful() {
                                 Toast.makeText(getApplicationContext(), R.string.cannot_save_your_profile, Toast.LENGTH_LONG).show();
                             }
-                        });
+                        })
+                        .onError(new NetworkErrorCallback(EditProfileActivity.this))
+                        .onFinally(new HttpCallManager.FinallyCallback() {
+                            @Override
+                            public void onFinally(Response response, Throwable error) {
+                                buttonSubmit.setEnabled(true);
+                            }
+                        })
+                        .perform();
             }
         });
 

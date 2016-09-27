@@ -19,6 +19,7 @@ import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +68,9 @@ public class ExploreActivityTest extends AbstractActivityTest {
 
     @Test
     @CreateConfigAction
+    @Ignore
     public void testClickOnEventOnMap() throws UiObjectNotFoundException {
+        // TODO
         exploreHelper
                 .getMap()
                 .clickOnMarker("Concert improv")
@@ -104,7 +107,7 @@ public class ExploreActivityTest extends AbstractActivityTest {
         ActivityHelper.assertCurrentActivity(LocateActivity.class);
         new RecyclerViewHelper(R.id.list_events)
                 .clickItem(0);
-        ActivityHelper.assertCurrentActivity(AddEventActivity.class);
+        ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
 
     @Test

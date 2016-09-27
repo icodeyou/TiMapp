@@ -1,5 +1,6 @@
 package com.timappweb.timapp.fixtures;
 
+import android.hardware.camera2.params.Face;
 import android.util.Log;
 
 import com.facebook.GraphRequest;
@@ -16,7 +17,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 /**
  * Created by Stephane on 24/09/2016.
@@ -28,9 +31,7 @@ public class UsersFixture {
     public static HashMap<String, Object> loginPayloads = new HashMap<>();
 
     public static void init(){
-        loginPayloads.put("facebook_user", createFacebookLoginPayload(
-                "EAAYmWfqD8acBAHfBtcmSZBYvcWD0qrQuYcSgN4Am4VYZC2LsWpnUQJH9EvvuRijIqhAE6guubiwrAMlPWSZBaZBv0Mz5ipaIBXeZAmn0S0RdaHwfXMcyrxZBrNPPCXXWOPKzwZALIeSfK3MR0dZBc2sF9burlmqknSzWXhMBtEZA4BN36ZAmKgBBW0",
-                ""));
+
     }
 
     public static JsonObject createFacebookLoginPayload(String accessToken, String appId){
@@ -38,23 +39,13 @@ public class UsersFixture {
     }
 
 
-    public static <T> T getLoginPayload(String id){
-        final JSONObject[] data = new JSONObject[1];
-        FacebookApiHelper.getUsers(
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        data[0] = response.getJSONObject();
-                    }
-                }).executeAndWait();
+    public static JsonObject getLoginPayload(String facebookId){
+        FacebookApiHelper.TestUser testUser = FacebookApiHelper.getUser(facebookId);
 
         assertNotNull("Cannot get any facebook access token to performs tests. Please make sure there are test user for the facebook app id "
-                + MyApplication.getApplicationBaseContext().getString(R.string.facebook_app_id), data[0]);
+                + MyApplication.getApplicationBaseContext().getString(R.string.facebook_app_id), testUser);
 
-        try {
-            String userAppId = InstanceID.getInstance(MyApplication.getApplicationBaseContext()).getId();
-            return (T) createFacebookLoginPayload(data[0].getString("access_token"), userAppId);
-        } catch (JSONException e) {
-            throw new InternalError("Test bad config: " + e.getMessage());
-        }
+        String userAppId = InstanceID.getInstance(MyApplication.getApplicationBaseContext()).getId();
+        return createFacebookLoginPayload(testUser.getAccessToken(), userAppId);
     }
 }

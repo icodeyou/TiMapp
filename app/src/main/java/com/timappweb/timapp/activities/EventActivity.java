@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventPagerAdapter;
@@ -95,6 +96,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private FloatingActionButton        btnActionTag;
     private FloatingActionButton        btnActionInvite;
     private View                        loader;
+    private FloatingActionsMenu btnAction;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -105,6 +107,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             mBinding = DataBindingUtil.setContentView(this, R.layout.activity_event);
             loader = findViewById(R.id.progress_view);
             pageTitle = (TextView) findViewById(R.id.title_event);
+            btnAction = (FloatingActionsMenu)findViewById(R.id.multiple_actions);
             btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
             btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
             btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
@@ -269,6 +272,13 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void initListeners() {
+
+        btnAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Main button action clicked!");
+            }
+        });
 
         btnActionTag.setOnClickListener(new View.OnClickListener() {
             @Override

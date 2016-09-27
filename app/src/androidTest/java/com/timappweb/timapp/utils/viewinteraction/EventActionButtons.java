@@ -26,29 +26,30 @@ public class EventActionButtons {
 
     public void camera(){
         if (!mIsOpen){
-            toggle();
+            actionClick(R.id.action_camera);
         }
         actionClick(R.id.action_camera);
     }
 
     public void tags(){
         if (!mIsOpen){
-            toggle();
+            actionClick(R.id.action_tag);
         }
         actionClick(R.id.action_tag);
     }
 
     public void invite(){
         if (!mIsOpen){
-            toggle();
+            actionClick(R.id.action_invite);
         }
         actionClick(R.id.action_invite);
     }
 
+    /*
     public void toggle(){
         mMainBtn.perform(click());
         this.mIsOpen = !this.mIsOpen;
-    }
+    }*/
 
     // ---------------------------------------------------------------------------------------------
 

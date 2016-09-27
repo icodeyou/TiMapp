@@ -16,8 +16,8 @@ public class DummyUserFactory {
 
     public static User create(){
         User user = new User();
-        user.setUsername("Stephane " + createCounter);
-        user.remote_id = createCounter;
+        user.setUsername("Bob " + createCounter);
+        user.remote_id = createCounter+1;
         createCounter++;
         return user;
     }

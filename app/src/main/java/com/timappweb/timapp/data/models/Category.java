@@ -27,16 +27,16 @@ public abstract class Category extends SyncBaseModel{
         if (this._iconDrawable != null){
             return;
         }
-        Log.d(TAG, "Trying to load icon from local storage: " + this.getIconLocalFilename());
         Bitmap bitmap = new ImageSaver(context).
                 setFileName(this.getIconLocalFilename()).
                 setDirectoryName(ICON_DIRECTORY_NAME).
                 load();
         if (bitmap != null){
+            Log.d(TAG, "Loading icon from local storage: " + ICON_DIRECTORY_NAME + "/" + this.getIconLocalFilename());
             this._iconDrawable = new BitmapDrawable(context.getResources(), bitmap);
         }
         else{
-            Log.e(TAG, "Cannot load icon from local storage: " + this.getIconLocalFilename());
+            Log.e(TAG, "Cannot load icon from local storage: " + ICON_DIRECTORY_NAME + "/" + this.getIconLocalFilename());
             this.loadIconFromAPI(context);
         }
     }

@@ -1,7 +1,9 @@
 package com.timappweb.timapp.activities;
 
 import android.support.test.espresso.Espresso;
+import android.util.Log;
 
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -66,6 +68,7 @@ public class AbstractActivityTest {
                         .load(MyApplication.getApplicationBaseContext())
                         .execute();
             }
+            assertTrue("Cannot load full app configuration from the server: ", ConfigurationProvider.hasFullConfiguration());
         }
 
         if (testAnnoted.getCreateLastLaunch() != null){
@@ -76,11 +79,12 @@ public class AbstractActivityTest {
             CreateAuthAction createAuthAction = testAnnoted.getCreateAuthAction();
             if (!MyApplication.isLoggedIn() || createAuthAction.replaceIfExists()) {
                 UsersFixture.init();
-
+                JsonObject loginPayload = UsersFixture.getLoginPayload(createAuthAction.payloadId());
+                Log.i(TAG, "@BeforeTest: Login with payload: " + loginPayload);
                 MyApplication
                         .getAuthManager()
                         .getProvider(createAuthAction.providerId())
-                        .login(UsersFixture.getLoginPayload(createAuthAction.payloadId()), new AuthProviderInterface.AuthAttemptCallback<RestFeedback>() {
+                        .login(loginPayload, new AuthProviderInterface.AuthAttemptCallback<RestFeedback>() {
                             @Override
                             public void onSuccess(RestFeedback feedback) {
                                 assertTrue("User must be logged in", MyApplication.isLoggedIn());

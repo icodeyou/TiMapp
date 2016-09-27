@@ -8,6 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
@@ -46,13 +47,13 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
     @Before
     public void setUp() throws Exception {
         Event dummyEvent = DummyEventFactory.create();
-        dummyEvent = (Event) dummyEvent.mySave();
+        dummyEvent.setCategory(ConfigurationProvider.eventCategories().get(0));
+        dummyEvent = dummyEvent.deepSave();
+        this.idlingApiCall();
+        this.systemAnimations(false);
 
         Intent intent = IntentsUtils.buildIntentAddTags(MyApplication.getApplicationBaseContext(), dummyEvent);
         mActivityRule.launchActivity(intent);
-
-        this.idlingApiCall();
-        this.systemAnimations(false);
 
         super.beforeTest();
     }

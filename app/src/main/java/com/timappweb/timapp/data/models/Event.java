@@ -214,6 +214,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 ", created=" + created +
                 ", category=" + (event_category != null ? event_category.getName() : "NONE") +
                 ", spot=" + (spot != null ? spot.getName() : "No spot") +
+                ", author=" + (user != null ? user.username : "No author") +
                 ", picture=" + (picture != null ? picture.getUrl() : "No picture") +
                 '}';
     }

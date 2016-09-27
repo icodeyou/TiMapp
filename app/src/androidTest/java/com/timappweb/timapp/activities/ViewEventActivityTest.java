@@ -10,6 +10,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.fixtures.EventsFixture;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
 import com.timappweb.timapp.utils.annotations.ConfigState;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
@@ -65,7 +66,7 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     @Test
     public void testAddPicture() {
         viewEventHelper.addPicture();
-
+        // TODO take the picture
     }
 
     @Test
@@ -75,6 +76,7 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     @CreateConfigAction
     public void testAddTags() {
         viewEventHelper.addTags();
+        TestUtil.sleep(1000);
         ActivityHelper.assertCurrentActivity(AddTagActivity.class);
     }
 

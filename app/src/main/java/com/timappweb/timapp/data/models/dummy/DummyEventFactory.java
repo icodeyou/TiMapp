@@ -21,8 +21,9 @@ public class DummyEventFactory {
         event.name = uniqName();
         event.latitude = 12;
         event.longitude = 13;
+        event.setAuthor(DummyUserFactory.create());
         event.setSpot(DummySpotFactory.create());
-        event.setCategory(new EventCategory("party"));
+        event.setCategory(DummyEventCategoryFactory.create());
         event.description = "La fête de la musique c'est vraiment une occasion en or pour venir écouter une multitude de genre musicaux différents." +
                 " C'est vraiment cool alors il ne faut pas rater ça!!";
         return event;

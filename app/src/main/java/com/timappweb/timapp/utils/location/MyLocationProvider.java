@@ -65,6 +65,8 @@ public class MyLocationProvider implements
     private Location            mLastLocation = null;       // The last name from any provider
     private boolean             mRequestingLocationUpdates = true;  // Enable or disable name requests
 
+    private GoogleApiClient.ConnectionCallbacks mConnectionCallback = null;
+
     // ---------------------------------------------------------------------------------------------
     // static
 
@@ -352,6 +354,9 @@ public class MyLocationProvider implements
     @Override
     public void onConnectionSuspended(int i) {
         Log.e(TAG, "Connection suspended");
+        if (mConnectionCallback != null){
+            this.mConnectionCallback.onConnectionSuspended(i);
+        }
     }
 
     @Override
@@ -367,11 +372,15 @@ public class MyLocationProvider implements
      */
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.e(TAG, "Google name api onConnected()");
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (mRequestingLocationUpdates && hasLocationPermission()) {
-            startLocationUpdates();
+        Log.i(TAG, "Google location udpdate onConnected()");
+        if (hasLocationPermission()){
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (mRequestingLocationUpdates) {
+                startLocationUpdates();
+            }
+        }
+        if (mConnectionCallback != null){
+            this.mConnectionCallback.onConnected(connectionHint);
         }
     }
 
@@ -390,6 +399,10 @@ public class MyLocationProvider implements
 
     public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
+    }
+
+    public void setConnectionCallback(GoogleApiClient.ConnectionCallbacks mConnectionCallback) {
+        this.mConnectionCallback = mConnectionCallback;
     }
 }
 

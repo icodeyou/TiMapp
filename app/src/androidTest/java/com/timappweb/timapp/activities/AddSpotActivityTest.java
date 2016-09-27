@@ -69,13 +69,13 @@ public class AddSpotActivityTest extends AbstractActivityTest{
     @CreateConfigAction
     @CreateAuthAction
     public void testFilterSpot() {
-
+        // TODO
     }
 
     @Test
     @CreateConfigAction
     @CreateAuthAction
     public void testNoUpToDateLocation() {
-
+        // TODO
     }
 }

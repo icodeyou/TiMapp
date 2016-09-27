@@ -18,6 +18,6 @@ public @interface CreateAuthAction {
 
     String providerId() default FacebookAuthProvider.PROVIDER_ID;
 
-    String payloadId() default "facebook_user";
+    String payloadId() default "124230051371760";
 
 }
