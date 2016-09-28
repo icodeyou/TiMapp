@@ -176,7 +176,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 public void successful(EventPeopleStats peopleStat) {
                     mExpandableHereHeader.setCount(peopleStat.here, mPlaceUsersAdapter);
                     mExpandableComingHeader.setCount(peopleStat.coming, mPlaceUsersAdapter);
-
                     // TODO store in local
                 }
             })
@@ -266,14 +265,14 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     }
 
     private void loadPeopleStatusIfNeeded() {
-        Log.d(TAG, "Loading people");
         if (mUserStatusLoader != null) return;
+        Log.d(TAG, "Loading people");
         mUserStatusLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, userStatusLoader);
     }
 
     private void loadInviteSentIfNeeded() {
-        Log.d(TAG, "Loading invite sent by user");
         if (mInviteLoader != null) return;
+        Log.d(TAG, "Loading invite sent by user");
         mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
     }
 

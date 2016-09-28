@@ -4,6 +4,8 @@ import android.support.test.espresso.ViewInteraction;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
+import com.timappweb.timapp.adapters.PicturesAdapter;
+import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.utils.ActivityHelper;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -63,7 +65,7 @@ public class ViewEventHelper {
 
     public ViewEventHelper viewPicture(int position){
         swipeToPictureTab();
-        pictureRV.clickItem(position);
+        pictureRV.clickItem(EventPicturesFragment.PICTURE_GRID_COLUMN_NB + position);
         return this;
     }
 
@@ -78,11 +80,11 @@ public class ViewEventHelper {
     private void swipeTo(final int position){
         while (currentPosition != position){
             if (currentPosition > position ){
-                viewPager.perform(swipeLeft());
+                viewPager.perform(swipeRight());
                 currentPosition--;
             }
             else{
-                viewPager.perform(swipeRight());
+                viewPager.perform(swipeLeft());
                 currentPosition++;
             }
         }

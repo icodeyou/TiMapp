@@ -11,6 +11,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 
 public class SimpleTimerView extends TextSwitcher {
@@ -44,7 +45,8 @@ public class SimpleTimerView extends TextSwitcher {
     }
 
     public void initTimer(long initialms) {
-        if(BuildConfig.BUILD_TYPE != "debugTest" && countDownTimer == null && initialms > 0) {
+        if(MyApplication.getApplicationBaseContext().getResources().getBoolean(R.bool.event_animateCountDownTimer)
+                && countDownTimer == null && initialms > 0) {
             countDownTimer = new CountDownTimer(initialms*1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {

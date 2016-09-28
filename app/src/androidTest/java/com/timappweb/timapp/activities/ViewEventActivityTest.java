@@ -64,14 +64,14 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     // ---------------------------------------------------------------------------------------------
 
     @Test
+    @CreateAuthAction(replaceIfExists = false)
+    @CreateConfigAction
     public void testAddPicture() {
         viewEventHelper.addPicture();
         // TODO take the picture
     }
 
     @Test
-    @AuthState(logging = AuthState.LoginState.YES)
-    @ConfigState
     @CreateAuthAction(replaceIfExists = false)
     @CreateConfigAction
     public void testAddTags() {
@@ -81,8 +81,6 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     }
 
     @Test
-    @AuthState(logging = AuthState.LoginState.YES)
-    @ConfigState
     @CreateAuthAction(replaceIfExists = false)
     @CreateConfigAction
     public void testAddPeople() {
@@ -108,12 +106,11 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     @CreateConfigAction
     public void testViewPicture() {
         viewEventHelper.viewPicture(0);
-
+        TestUtil.sleep(1000);
         ActivityHelper.assertCurrentActivity(EventPicturesActivity.class);
-
         ActivityHelper.goBack();
-
-        ActivityHelper.assertCurrentActivity(EventPicturesActivity.class);
+        TestUtil.sleep(1000);
+        ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
 
     @Test

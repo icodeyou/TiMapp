@@ -107,6 +107,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
     private void loadDataIfNeeded() {
         if (mTagLoader != null) return;
+        Log.v(TAG, "Loading tags");
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
     }

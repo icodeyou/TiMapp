@@ -18,6 +18,7 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 public class PicturesAdapter extends MyFlexibleAdapter {
 
+
     private int gridColumnNumber;
 
     //private String baseUrl = "";

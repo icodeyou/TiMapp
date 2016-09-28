@@ -9,6 +9,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
@@ -61,6 +62,7 @@ public class ListFriendActivityTest extends AbstractActivityTest {
     @CreateAuthAction
     @Test
     public void testViewUserProfile() {
+        TestUtil.sleep(3000); // Tmp fix, while there are no loader on friends activity
         new RecyclerViewHelper(R.id.rv_friends)
                 .checkItemCount(greaterThan(0))
                 .clickItem(0);

@@ -164,7 +164,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         //initViewPager();
         initMap();
 
-        if (BuildConfig.BUILD_TYPE == "debugTest"){
+        if (!this.getResources().getBoolean(R.bool.eventcard_showProgressBarLocation)){
             findViewById(R.id.progress_bar).setVisibility(View.GONE);
         }
     }

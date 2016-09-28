@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
@@ -326,6 +327,8 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             mDataLoader.loadNextPage();
         }
         else {
+            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).show();
+            mSwipeAndRefreshLayout.setEnabled(true);
             mDataLoader
                     .clear()
                     .loadNextPage();

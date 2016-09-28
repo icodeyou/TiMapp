@@ -256,5 +256,6 @@
     <!-- A traduire ! -->
     <string name="no_data_spot">Indicate a category and a name for your current place. Then click on the button CREATE.</string>
     <string name="cannot_read_this_picture">We cannot open this picture, please take another one.</string>
+    <string name="user_location_changed_reload_data">Your location has changed, reloading spots ...</string>
 
 </resources>

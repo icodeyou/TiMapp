@@ -33,7 +33,7 @@
                 app:viewpager_headerAdditionalHeight="@dimen/header_additional_height"
                 app:viewpager_displayToolbarWhenSwipe="true"
                 app:viewpager_transparentToolbar="false"
-                app:viewpager_animatedHeaderImage="true"
+                app:viewpager_animatedHeaderImage="@bool/event_animateHeaderImage"
                 app:viewpager_disableToolbar="false"
                 app:viewpager_pagerTitleStrip="@layout/event_pager_tabs"
                 />

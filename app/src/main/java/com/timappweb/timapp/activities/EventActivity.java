@@ -433,7 +433,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
         mFragmentAdapter = new EventPagerAdapter(getSupportFragmentManager(), mFragmentGroup.getFragments());
 
-
         mMaterialViewPager = (MaterialViewPager) findViewById(R.id.event_viewpager);
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
         //After set an adapter to the ViewPager
