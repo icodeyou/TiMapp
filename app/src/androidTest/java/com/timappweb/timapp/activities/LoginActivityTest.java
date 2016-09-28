@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.facebook.FacebookActivity;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
@@ -72,7 +73,11 @@ public class LoginActivityTest extends AbstractActivityTest{
         onView(withId(R.id.facebook_login_button))
                 .perform(click());
 
-        ActivityHelper.assertCurrentActivity(DrawerActivity.class);
+        ActivityHelper.assertCurrentActivity(FacebookActivity.class);
+
+        // TODO add interaction with facebook login
+        // THEN
+        // ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }
 
 }

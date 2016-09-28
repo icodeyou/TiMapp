@@ -49,7 +49,7 @@ public interface WebServiceInterface {
     Call<PaginatedResponse<Spot>> spots(@QueryMap Map<String, String> query);
 
     // ---------------------------------------------------------------------------------------------
-    @Multipart
+    //@Multipart
     @POST("Places/add.json")
     Call<JsonObject> addPlace(@Body MultipartBody data);
 

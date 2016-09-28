@@ -7,7 +7,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,8 +31,6 @@ import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.List;
-
-import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -65,18 +62,13 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_event_tags, container, false);
-        initVariables(view);
-
-        return view;
-
-    }
-
-    private void initVariables(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_tags);
         noTagsView = view.findViewById(R.id.no_tags_view);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
+        return view;
+
     }
 
     @Override
@@ -96,13 +88,10 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
 
-        initEventTagLoader();
-
-        mTagLoader = getLoaderManager()
-                .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
+        initDataLoader();
     }
 
-    private void initEventTagLoader() {
+    private void initDataLoader(){
         eventTagLoader = new EventTagLoader(this.getContext())
                 .setMinDelayAutoRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setMinDelayForceRefresh(MIN_DELAY_AUTO_REFRESH)
@@ -114,6 +103,12 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
                 .setCallback(this)
                 .setSwipeAndRefreshLayout(mSwipeRefreshLayout);
         eventTagLoader.getSyncOptions().setType(DataSyncAdapter.SYNC_TYPE_EVENT_TAGS).setLong(DataSyncAdapter.SYNC_PARAM_EVENT_ID, getEvent().getRemoteId());
+    }
+
+    private void loadDataIfNeeded() {
+        if (mTagLoader != null) return;
+        mTagLoader = getLoaderManager()
+                .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -133,12 +128,6 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     public void onResume() {
         super.onResume();
         //LocationManager.addOnLocationChangedListener(this);
-        eventTagLoader.refresh();
-    }
-    @Override
-    public void onPause() {
-        super.onResume();
-        //LocationManager.removeLocationListener(this);
     }
 
     @Override
@@ -177,6 +166,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         if (mRecyclerView != null){
             mRecyclerView.smoothScrollToPosition(0);
         }
+        loadDataIfNeeded();
     }
 
     // =============================================================================================

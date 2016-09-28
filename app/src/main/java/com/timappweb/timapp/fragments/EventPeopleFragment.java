@@ -62,6 +62,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     private Loader<List<EventsInvitation>> mInviteLoader;
     private UserStatusLoader userStatusLoader;
     private InviteSentLoader inviteSentLoader;
+    private Loader<List<UserEvent>> mUserStatusLoader;
 
     //private RecyclerViewMaterialAdapter mAdapter;
 
@@ -90,17 +91,12 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
 
+        mSwipeLayout.setOnRefreshListener(this);
+
         initUserStatusLoader();
-
-
-        //new DynamicListLoader(this, mPlaceUsersAdapter)
-        getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, userStatusLoader);
         if (MyApplication.isLoggedIn()){
             initInviteSentLoader();
-            mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
         }
-
-        mSwipeLayout.setOnRefreshListener(this);
     }
 
     private void initUserStatusLoader() {
@@ -173,7 +169,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     /**
      *
      */
-    public void loadPeopleStats(){
+    private void loadPeopleStats(){
         RestClient.buildCall(RestClient.service().eventPeopleStats(getEvent().getRemoteId()))
             .onResponse(new HttpCallback<EventPeopleStats>() {
                 @Override
@@ -186,12 +182,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
             })
             .onError(new NetworkErrorCallback(getContext()))
             .perform();
-    }
-
-    @Override
-    public void onResume() {
-        Log.v(TAG, "onResume()");
-        super.onResume();
     }
 
     @Override
@@ -269,6 +259,22 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         if(mRecyclerView!=null) {
             mRecyclerView.smoothScrollToPosition(0);
         }
+        loadPeopleStatusIfNeeded();
+        if (MyApplication.isLoggedIn()) {
+            loadInviteSentIfNeeded();
+        }
+    }
+
+    private void loadPeopleStatusIfNeeded() {
+        Log.d(TAG, "Loading people");
+        if (mUserStatusLoader != null) return;
+        mUserStatusLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, userStatusLoader);
+    }
+
+    private void loadInviteSentIfNeeded() {
+        Log.d(TAG, "Loading invite sent by user");
+        if (mInviteLoader != null) return;
+        mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
     }
 
     @Override

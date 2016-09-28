@@ -189,7 +189,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
                 .setCategory(0)
                 .assertSubmitDisabled()
                 .setName(eventName)
-                .assertSubmitEnabled()
+                .assertSubmitEnabled() // We also need to wait for gps location....
                 .setDescription(eventDescription)
                 .submit();
 
@@ -214,7 +214,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
                 .setCategory(1)
                 .submit();
 
-        addEventForm.editSpot();
+        addEventForm.editSpot(); // TODO Manage click on ContextMenu -_-
 
         addSpotForm.checkNameEquals(spotName);
         // TODO check category too
