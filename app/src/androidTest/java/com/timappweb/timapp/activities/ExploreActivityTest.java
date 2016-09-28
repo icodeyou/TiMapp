@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * Created by Stephane on 17/08/2016.
@@ -84,6 +85,7 @@ public class ExploreActivityTest extends AbstractActivityTest {
         exploreHelper
                 .openList()
                 .getListEvent()
+                .checkItemCount(greaterThan(0))
                 .clickItem(0);
         ActivityHelper.assertCurrentActivity(EventActivity.class);
     }

@@ -206,7 +206,7 @@ public class RestClient {
         final HttpCallManager<T> callManager = new HttpCallManager<>(call);
         RestClient.instance().pendingCalls.add(callManager);
         callManager
-                .onFinally(new HttpCallManager.FinallyCallback(){
+                .onFinally(new HttpCallManager.FinallyCallback<T>(){
                     @Override
                     public void onFinally(Response response, Throwable error) {
                         RestClient.instance().pendingCalls.remove(callManager);

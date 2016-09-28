@@ -26,6 +26,7 @@ import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
+import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class InvitationsActivity extends BaseActivity implements
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
     private static final int    MIN_DELAY_AUTO_REFRESH         = 2 * 3600 * 1000;
     public static int    LOCAL_LOAD_LIMIT                = 5;
-    private static final int    REMOTE_LOAD_LIMIT               = 5;
+    private static final int    REMOTE_LOAD_LIMIT               = LOCAL_LOAD_LIMIT;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -74,6 +75,30 @@ public class InvitationsActivity extends BaseActivity implements
 
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocationManager.start(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocationManager.stop();
+    }
+
+    @Override
+    protected void onPause() {
+        //LocationManager.removeLocationListener(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //LocationManager.addOnLocationChangedListener(this);
+    }
 
 
     private void initDataLoader() {

@@ -81,7 +81,7 @@ public class AddEventForm  extends FormHelper {
     }
 
     public AddEventForm addPicture() {
-        onView(withId(R.id.attach_picture))
+        onView(withId(R.id.button_add_picture))
                 .perform(click());
         // TODO
         return this;
@@ -123,7 +123,6 @@ public class AddEventForm  extends FormHelper {
         ContextMenuInteraction.clickOn(R.id.action_remove_spot);
         return this;
     }
-
     /*
     public AddEventForm waitLoadDone() throws InterruptedException {
         this.assertLoader();

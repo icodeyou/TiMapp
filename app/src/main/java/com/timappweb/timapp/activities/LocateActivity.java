@@ -74,7 +74,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
         mEventLoaderModel = new MapAreaLoaderCallback<Event>();
         mEventLoaderModel
-                .setCallback(this)
                 .setDataProvider(new PaginateDataLoader.DataProvider() {
                     @Override
                     public HttpCallManager<PaginatedResponse> remoteLoad(PaginateDataLoader.PaginateRequestInfo info) {
@@ -87,10 +86,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
                         return RestClient.buildCall(RestClient.service().places(options.toMap()));
                     }
                 });
-
-        if (LocationManager.hasLastLocation()){
-            mEventLoaderModel.loadNextPage();
-        }
 
     }
 
@@ -115,6 +110,11 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         super.onStart();
         LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
+        mEventLoaderModel.setCallback(this);
+        if (LocationManager.hasLastLocation()){
+            mEventLoaderModel.loadNextPage();
+        }
+
     }
 
     @Override
@@ -126,6 +126,8 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     protected void onStop() {
         super.onStop();
+        mEventLoaderModel.setCallback(null);
+        mEventLoaderModel.stop();
     }
 
     @Override

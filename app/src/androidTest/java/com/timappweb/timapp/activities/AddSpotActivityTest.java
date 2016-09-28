@@ -5,22 +5,22 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
 import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 /**
  * Created by Stephane on 17/08/2016.
- *
- * @warning User must be already logged in to perform this test suite
  *
  */
 @RunWith(AndroidJUnit4.class)
@@ -46,17 +46,18 @@ public class AddSpotActivityTest extends AbstractActivityTest{
     @CreateConfigAction
     @CreateAuthAction
     public void testExistingSpots() {
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         addSpotForm
                 .getExistingSpotList()
-                .checkItemCount(3) // TODO
-                .scrollToBottom()
-                .checkLoadingMore();
+                .checkItemCount(greaterThanOrEqualTo(1));
+                //.scrollToBottom();
     }
 
     @Test
     @CreateConfigAction
     @CreateAuthAction
     public void createNewSpot(){
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         addSpotForm
                 .assertSubmitDisabled()
                 .setName("New name")
@@ -68,6 +69,7 @@ public class AddSpotActivityTest extends AbstractActivityTest{
     @Test
     @CreateConfigAction
     @CreateAuthAction
+    @Ignore
     public void testFilterSpot() {
         // TODO
     }
@@ -75,6 +77,7 @@ public class AddSpotActivityTest extends AbstractActivityTest{
     @Test
     @CreateConfigAction
     @CreateAuthAction
+    @Ignore
     public void testNoUpToDateLocation() {
         // TODO
     }

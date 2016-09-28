@@ -24,6 +24,7 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,8 +69,10 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
     @Test
     @CreateConfigAction
     @CreateAuthAction
+    @Ignore
     public void pickTags() {
-        TestUtil.sleep(3000);
+        // This test is not working yet, we need to find a way to perform actions on
+        // com.greenfrvr.hashtagview.HashtagView
         new PickTagsForm()
             .pick(0)
             .pick(3)

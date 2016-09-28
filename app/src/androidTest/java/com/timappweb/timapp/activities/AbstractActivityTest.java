@@ -139,11 +139,15 @@ public class AbstractActivityTest {
     }
 
     public AbstractMockLocationProvider getMockLocationProvider() {
+        assertTrue("This activity does not seem to have started the LocationManager. Add call LocationManager.start(this) in the @onStart() of the current activity",
+                LocationManager.getLocationProvider() != null);
         if (mMockLocationProvider == null){
             mMockLocationProvider = MockFusedLocationProvider.create(LocationManager.getLocationProvider().getGoogleApiClient());
         }
         return mMockLocationProvider;
     }
+
+    //public class TestSuiteAnnoted extends TestWatcher{}
 
     public class TestAnnotated extends TestWatcher {
 

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -96,6 +97,12 @@ public class QuotaManager {
 
     public UserQuota getQuota(int quotaTypeId) {
         return MyApplication.getCurrentUser().getQuota(quotaTypeId);
+    }
+
+    public static void clear() {
+        new Delete()
+                .from(UserQuota.class)
+                .execute();
     }
 
     // ---------------------------------------------------------------------------------------------

@@ -51,7 +51,6 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.MapFactory;
-import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
@@ -69,8 +68,11 @@ import com.timappweb.timapp.views.CategorySelectorView;
 import java.io.File;
 import java.io.IOException;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
+import retrofit2.Call;
 import retrofit2.Response;
 
 
@@ -141,7 +143,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mapView = (MapView) findViewById(R.id.map);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
-        mBtnAddPic = findViewById(R.id.attach_picture);
+        mBtnAddPic = findViewById(R.id.button_add_picture);
         mSpotContainer = findViewById(R.id.spot_container);
         mWaitingForLocationLayout = findViewById(R.id.waiting_for_location_layout);
         mWaitingForLocationText = (TextView) findViewById(R.id.text_waiting_for_location);
@@ -334,7 +336,18 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         Log.d(TAG, "Submit event " + event.toString());
 
         try {
-            RestClient.buildCall(RestClient.service().addPlace(AddEventMapper.toJson(event), photo != null ? new AddPictureMapper(photo).build() : null))
+            Call call;
+            if (photo != null){
+                MultipartBody body = new AddPictureMapper(photo)
+                        .getBuilder()
+                        .add(AddEventMapper.toJson(event), null)
+                        .build();
+                call = RestClient.service().addPlace(body);
+            }
+            else{
+                call = RestClient.service().addPlace(AddEventMapper.toJson(event));
+            }
+            RestClient.<JsonObject>buildCall(call)
                     .onResponse(new AutoMergeCallback(event))
                     .onResponse(new FormErrorsCallbackBinding(mBinding))
                     .onResponse(new FormErrorsCallback(this, "Pictures"))
@@ -352,6 +365,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                             catch (Exception ex){
                                 setProgressView(false);
                                 Log.e(TAG, "Cannot get EventUser id from server response");
+                                // TODO
                             }
                             finally {
                                 IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);

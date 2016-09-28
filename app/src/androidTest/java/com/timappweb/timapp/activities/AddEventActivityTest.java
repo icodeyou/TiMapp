@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.rest.RestClient;
@@ -61,12 +63,13 @@ public class AddEventActivityTest extends AbstractActivityTest {
         this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
             @Override
             public Location getNextLocation() {
-                Log.d(TAG, "Creating new location");
+                Log.v(TAG, "Creating new mock location from route");
                 return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.latitude, MockLocation.START_TEST.longitude);
             }
         }, 2000);
 
         super.beforeTest();
+
     }
 
     @After
@@ -90,6 +93,27 @@ public class AddEventActivityTest extends AbstractActivityTest {
                 .setCategory(1)
                 .setName(eventName)
                 .setDescription(eventDescription)
+                .submit();
+
+        ActivityHelper.assertCurrentActivity(EventActivity.class);
+    }
+
+    @Test
+    @CreateConfigAction
+    @CreateAuthAction
+    @Ignore
+    public void postNewEventWithPicture() {
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
+        this.disableQuota();
+
+        String eventName = DummyEventFactory.uniqName();
+        String eventDescription = "This is the big description for my event!";
+
+        new AddEventForm()
+                .setCategory(1)
+                .setName(eventName)
+                .setDescription(eventDescription)
+                .addPicture()
                 .submit();
 
         ActivityHelper.assertCurrentActivity(EventActivity.class);
@@ -127,6 +151,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
     @CreateConfigAction
     @CreateAuthAction
     public void postNewEventWithNewSpot() {
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         this.disableQuota();
 
         String eventName = DummyEventFactory.uniqName();
@@ -155,6 +180,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
     @CreateConfigAction
     @CreateAuthAction
     public void postValidationErrors() {
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         String eventName = "O";
         String eventDescription = "";
 
@@ -198,6 +224,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
     @CreateConfigAction
     @CreateAuthAction
     public void postExistingEvent() {
+        this.disableQuota();
+        this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         String eventName = "Existing event";
         String eventDescription = "";
 
@@ -213,6 +241,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
 
 
     // TODO
+    @Ignore
     @Test
     @CreateConfigAction
     @CreateAuthAction
@@ -222,6 +251,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
     // ---------------------------------------------------------------------------------------------
 
     private void disableQuota() {
+        QuotaManager.clear();
         RestClient.instance().getHttpBuilder()
                 .addInterceptor(new DisableQuotaRequestInterceptor());
         RestClient.instance().buildHttpClient();

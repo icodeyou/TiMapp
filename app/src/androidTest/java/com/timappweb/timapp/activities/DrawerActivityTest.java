@@ -12,6 +12,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.dummy.DummyUserFactory;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
+@Ignore
 public class DrawerActivityTest extends AbstractActivityTest{
 
     @Rule

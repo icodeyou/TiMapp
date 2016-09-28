@@ -54,6 +54,9 @@ public class FacebookApiHelper {
                     @Override
                     public void onCompleted(GraphResponse response) {
                         // TODO assert result
+                        if (response.getError() != null){
+                            throw new InternalError("Cannot get access token for testing. Response: " + response.getError());
+                        }
                         try {
                             mAccessToken = response.getJSONObject().getString("access_token");
                         } catch (JSONException e) {

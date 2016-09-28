@@ -6,6 +6,7 @@ import com.timappweb.timapp.exceptions.UnknownCategoryException;
 
 import java.io.File;
 
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**

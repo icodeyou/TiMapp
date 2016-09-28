@@ -28,6 +28,7 @@ public class MockFusedLocationProvider extends AbstractMockLocationProvider {
     private final LinkedList<Location> pendingLocations;
 
     private MockFusedLocationProvider(GoogleApiClient googleApiClient) {
+        Log.w(TAG, "Initializing mock fused location provider");
         this.mGoogleApiClient = googleApiClient;
         pendingLocations = new LinkedList<>();
         if (this.mGoogleApiClient.isConnected()){
@@ -38,10 +39,13 @@ public class MockFusedLocationProvider extends AbstractMockLocationProvider {
             public void onConnected(@Nullable Bundle bundle) {
                 Log.w(TAG, "onConnected() SETTING MOCK MODE FOR LOCATION PROVIDER");
                 LocationServices.FusedLocationApi.setMockMode(mGoogleApiClient, true);
-                for (Location location: pendingLocations){
-                    pushLocation(location);
+                if (pendingLocations.size() > 0){
+                    Log.w(TAG, "Pushing delayed mock locations. Count=" + pendingLocations.size());
+                    for (Location location: pendingLocations){
+                        pushLocation(location);
+                    }
+                    pendingLocations.clear();
                 }
-                pendingLocations.clear();
             }
 
             @Override
@@ -64,9 +68,11 @@ public class MockFusedLocationProvider extends AbstractMockLocationProvider {
     @Override
     public Location pushLocation(Location loc) {
         if (this.mGoogleApiClient.isConnected()){
+            Log.d(TAG, "Pushing mock location: " + loc);
             LocationServices.FusedLocationApi.setMockLocation(this.mGoogleApiClient, loc);
         }
         else{
+            Log.w(TAG, "GoogleApiClient is not connected yet. Adding location on todo ("+ loc + ")");
             pendingLocations.add(loc);
         }
         return loc;

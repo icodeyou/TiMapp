@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <LinearLayout
-                    android:id="@+id/attach_picture"
+                    android:id="@+id/button_add_picture"
                     style="@style/ButtonAddEvent">
                     <ImageView
                         android:id="@+id/picture_validate"

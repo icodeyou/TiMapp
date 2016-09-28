@@ -3,6 +3,7 @@ package com.timappweb.timapp.utils.viewinteraction;
 
 import android.support.test.espresso.ViewInteraction;
 
+import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.R;
 
 import static android.support.test.espresso.Espresso.onView;

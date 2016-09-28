@@ -7,16 +7,17 @@ import android.support.test.runner.AndroidJUnit4;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
+import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 /**
  * Created by Stephane on 17/08/2016.
  *
@@ -60,6 +61,7 @@ public class LocateActivityTest extends AbstractActivityTest{
     @CreateConfigAction
     public void testNoExistingEvent() {
         this.getMockLocationProvider().pushLocation(MockLocation.NO_SPOT);
+        TestUtil.sleep(3000);
         ActivityHelper.assertCurrentActivity(AddEventActivity.class);
     }
 
@@ -68,7 +70,8 @@ public class LocateActivityTest extends AbstractActivityTest{
     @CreateAuthAction
     @CreateConfigAction
     public void testLocationChanged() {
-        eventRV.checkItemCount(3);
+        this.getMockLocationProvider().pushLocation(MockLocation.MANY_SPOTS);
+        eventRV.checkItemCount(greaterThanOrEqualTo(1));
         this.getMockLocationProvider().pushLocation(MockLocation.NO_SPOT);
         eventRV.checkItemCount(0);
     }

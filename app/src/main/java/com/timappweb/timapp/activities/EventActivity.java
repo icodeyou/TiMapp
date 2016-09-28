@@ -121,17 +121,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        LocationManager.start(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_event, menu);
         return true;
@@ -164,6 +153,18 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocationManager.start(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocationManager.stop();
     }
 
     @Override

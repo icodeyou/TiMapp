@@ -24,6 +24,7 @@ import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -33,6 +34,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -49,7 +51,10 @@ public interface WebServiceInterface {
     // ---------------------------------------------------------------------------------------------
     @Multipart
     @POST("Places/add.json")
-    Call<JsonObject> addPlace(@Part("place") JsonObject data, @Part("photo") RequestBody file);
+    Call<JsonObject> addPlace(@Body MultipartBody data);
+
+    @POST("Places/add.json")
+    Call<JsonObject> addPlace(@Body JsonObject data);
 
 
     // ---------------------------------------------------------------------------------------------

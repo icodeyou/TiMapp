@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * Created by Stephane on 17/08/2016.
@@ -61,6 +62,7 @@ public class ListFriendActivityTest extends AbstractActivityTest {
     @Test
     public void testViewUserProfile() {
         new RecyclerViewHelper(R.id.rv_friends)
+                .checkItemCount(greaterThan(0))
                 .clickItem(0);
         ActivityHelper.assertCurrentActivity(ProfileActivity.class);
     }

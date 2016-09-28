@@ -14,7 +14,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.greaterThan;
 
 /**
@@ -71,10 +70,6 @@ public class RecyclerViewHelper {
         return this;
     }
 
-    public RecyclerViewHelper checkLoadingMore() {
-        // TODO
-        return this;
-    }
 
     public RecyclerView getRecyclerView() {
         if (ActivityHelper.getActivityInstance() != null){

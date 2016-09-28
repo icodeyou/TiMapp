@@ -128,6 +128,13 @@ public class PaginateDataLoader<T> {
         return this;
     }
 
+    public void stop() {
+        if (remoteCall != null){
+            remoteCall.cancel();
+            remoteCall = null;
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------
 
     /**

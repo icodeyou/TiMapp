@@ -35,9 +35,13 @@ public class AddPictureMapper {
     }
 
     public RequestBody build() {
-        return new MultipartBuilder()
-                .add("photo", this.file)
+        return getBuilder()
                 .build();
+    }
+
+    public MultipartBuilder getBuilder(){
+        return new MultipartBuilder()
+                .add("photo", this.file);
     }
 
     public class CannotUploadPictureException extends Exception {
