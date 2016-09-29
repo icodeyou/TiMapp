@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.google.android.gms.location.LocationServices;
@@ -35,8 +36,7 @@ public abstract class AbstractMockLocationProvider {
     }
 
     public void route(final MockLocationRoute route, final long delay){
-        /*
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(Looper.getMainLooper());
 
         final Runnable r = new Runnable() {
             public void run() {
@@ -48,7 +48,7 @@ public abstract class AbstractMockLocationProvider {
                 }
             }
         };
-        handler.postDelayed(r, delay);*/
+        handler.postDelayed(r, delay);
     }
 
     public interface MockLocationRoute {

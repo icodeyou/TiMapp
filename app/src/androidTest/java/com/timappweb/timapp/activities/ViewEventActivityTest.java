@@ -87,6 +87,7 @@ public class ViewEventActivityTest extends AbstractActivityTest{
         viewEventHelper.invitePeople();
         ActivityHelper.assertCurrentActivity(InviteFriendsActivity.class);
 
+        TestUtil.sleep(5000);
         new RecyclerViewHelper(R.id.rv_friends)
                 .clickItem(0)
                 .clickItem(1);

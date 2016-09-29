@@ -509,6 +509,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         });
     }
 
+    public Event getEvent(){
+        return mBinding.getEvent();
+    }
+
+    public Location getFineLocation(){
+        return mFineLocation;
+    }
 
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {

@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.auth.AuthManagerInterface;
-import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Spot;
@@ -47,24 +46,22 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestClient {
 
     private static final String TAG = "RestClient";
-    private static final String SQL_DATE_FORMAT = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
     private static final long HTTP_PARAM_READ_TIMEOUT = 30;
     private static final long HTTP_PARAM_CONNECTION_TIMEOUT = 35;
 
-    //private static final String SQL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:SSSZ"; // http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
     private static RestClient conn = null;
     //private static HttpCallback defaultHttpCallback;
     private final Application app;                      // TODO remove this dependency. It will make it easier to Unit test
+    private final GsonBuilder gsonBuilder;
+    private final OkHttpClient.Builder httpClientBuilder;
     private OkHttpClient httpClient;
     private final String baseUrl;
-    private final Gson gson;
+    private Gson gson;
     private final AuthManagerInterface authManager;
     private LinkedList<HttpCallManager> pendingCalls = new LinkedList<>();
-    private String _socialProviderToken = null;
-    private SocialProvider _socialProviderType = null;
-
-
     private Retrofit retrofit;
+    protected WebServiceInterface service;
+    protected RestInterface restService;
 
 
     // KEY ID
@@ -87,48 +84,49 @@ public class RestClient {
         conn = new RestClient(app, baseUrl, authProvider);
     }
 
-    protected WebServiceInterface service;
-    protected RestInterface restService;
+    private static Retrofit.Builder retrofitBuilder = null;
 
-    private static Retrofit.Builder builder = null;
-
+    /**
+     * TODO replace by a factory
+     * @param app
+     * @param baseUrl
+     * @param authProvider
+     */
     protected RestClient(Application app, String baseUrl, AuthManagerInterface authProvider){
         this.app = app;
         this.baseUrl = baseUrl;
         this.authManager = authProvider;
-        this.pendingCalls = new LinkedList<HttpCallManager>();
-
-        Log.i(TAG, "Initializing server connection at " + baseUrl);
-
-        this.buildHttpClient();
-
-        this.gson =  new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
-                .registerTypeAdapter(Event.class, new EventDeserializer())
-                .registerTypeAdapter(Spot.class, new SpotDeserializer())
-                .create();
-
-        builder = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(this.httpClient);
-
-        this.createService();
-        Log.i(TAG, "Create connection with web service done!");
-
-    }
-
-    public void buildHttpClient() {
-        this.httpClient = getHttpBuilder().build();
-    }
-
-    public OkHttpClient.Builder getHttpBuilder(){
-        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
+        this.pendingCalls = new LinkedList<>();
+        this.httpClientBuilder = new OkHttpClient.Builder()
                 .addInterceptor(new SessionRequestInterceptor(authManager))
                 .addInterceptor(new LogRequestInterceptor())
                 .readTimeout(HTTP_PARAM_READ_TIMEOUT, TimeUnit.SECONDS)
                 .connectTimeout(HTTP_PARAM_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
+        this.gsonBuilder = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
+                .registerTypeAdapter(Event.class, new EventDeserializer())
+                .registerTypeAdapter(Spot.class, new SpotDeserializer());
+        Log.i(TAG, "Initializing server connection at " + baseUrl);
+        this.buildAll();
+        Log.i(TAG, "Create connection with web service done!");
+
+    }
+
+    public void buildAll() {
+        this.gson =  gsonBuilder.create();
+        this.httpClient = getHttpBuilder().build();
+        this.retrofitBuilder = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(this.httpClient);
+        this.retrofit = retrofitBuilder.build();
+        this.service =  retrofit.create(WebServiceInterface.class);
+        this.restService = retrofit.create(RestInterface.class);
+        Log.i(TAG, "Building rest client done!");
+    }
+
+    public OkHttpClient.Builder getHttpBuilder(){
         return httpClientBuilder;
     }
 
@@ -136,14 +134,8 @@ public class RestClient {
         return this.gson;
     }
 
-    public void createService(){
-        this.retrofit = builder.build();
-        this.service =  retrofit.create(WebServiceInterface.class);
-        this.restService = retrofit.create(RestInterface.class);
-    }
-
     public <T> T createService(Class<T> service){
-        return builder.build().create(service);
+        return retrofit.create(service);
     }
 
 

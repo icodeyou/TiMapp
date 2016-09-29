@@ -7,6 +7,7 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
@@ -94,6 +95,7 @@ public class ExploreActivityTest extends AbstractActivityTest {
     @CreateConfigAction
     @CreateAuthAction
     public void testAddEvent() {
+        QuotaManager.clear();
         exploreHelper
                 .addEvent();
         ActivityHelper.assertCurrentActivity(LocateActivity.class);
@@ -105,6 +107,7 @@ public class ExploreActivityTest extends AbstractActivityTest {
     @CreateConfigAction
     @CreateAuthAction
     public void testTryAddEventClickExistingEvent() {
+        QuotaManager.clear();
         exploreHelper.addEvent();
         ActivityHelper.assertCurrentActivity(LocateActivity.class);
         new RecyclerViewHelper(R.id.list_events)

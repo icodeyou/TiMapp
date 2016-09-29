@@ -1,6 +1,7 @@
 package com.timappweb.timapp.activities;
 
 import android.support.test.espresso.Espresso;
+import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -9,6 +10,7 @@ import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.fixtures.UsersFixture;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
@@ -30,6 +32,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -146,6 +149,18 @@ public class AbstractActivityTest {
         }
         return mMockLocationProvider;
     }
+
+    protected void waitForFineLocation(ActivityTestRule<AddEventActivity> mActivityRule) {
+        ActivityHelper.assertCurrentActivity(AddEventActivity.class);
+        assertNotNull(mActivityRule.getActivity());
+        if (mActivityRule.getActivity().getFineLocation() == null) {
+            Log.w(TAG, "Start waiting for fine location");
+            while  (mActivityRule.getActivity().getFineLocation() == null){
+                TestUtil.sleep(100);
+            }
+        }
+    }
+
 
     //public class TestSuiteAnnoted extends TestWatcher{}
 
