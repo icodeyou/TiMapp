@@ -6,6 +6,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.fixtures.MockLocation;
+import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.AddSpotForm;
@@ -47,6 +48,7 @@ public class AddSpotActivityTest extends AbstractActivityTest{
     @CreateAuthAction
     public void testExistingSpots() {
         this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
+        TestUtil.sleep(5000);
         addSpotForm
                 .getExistingSpotList()
                 .checkItemCount(greaterThanOrEqualTo(1));

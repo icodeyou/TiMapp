@@ -15,7 +15,7 @@ public class DisableQuotaRequestInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request.Builder requestBuilder = chain.request().newBuilder()
-                .header(ServerHeader.XQUOTA_ENABLED, "0");
+                .header(ServerHeader.XQUOTA_DISABLED, "1");
 
         Request request = requestBuilder.build();
         return chain.proceed(request);

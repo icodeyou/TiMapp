@@ -30,6 +30,7 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     private static final String TAG = "PlaceEntity" ;
     public static final String PROPERTY_PICTURE = "picture";
     public static final String PROPERTY_POINTS = "points";
+    private static final String PROPERTY_LOCATION = "location";
 
     // =============================================================================================
     // DATABASE
@@ -454,6 +456,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public void setLocation(Location location) {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+        pcs.firePropertyChange(PROPERTY_LOCATION, null, location);
     }
 
     public Drawable getBackgroundImage(Context context){
@@ -567,9 +570,5 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public boolean isOwner(User currentUser) {
         return this.user != null && this.user.equals(currentUser);
-    }
-
-    public boolean hasLocation() {
-        return false;
     }
 }

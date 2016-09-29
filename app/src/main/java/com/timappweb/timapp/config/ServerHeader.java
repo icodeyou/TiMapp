@@ -6,5 +6,5 @@ package com.timappweb.timapp.config;
 public class ServerHeader {
 
     public static final String XPLATFORM = "X-Platform";
-    public static final String XQUOTA_ENABLED = "X-Quota-Enabled";
+    public static final String XQUOTA_DISABLED = "X-Quota-Disabled";
 }
