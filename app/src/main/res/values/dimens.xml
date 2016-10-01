@@ -167,5 +167,6 @@
     <dimen name="corner_map">20dp</dimen>
     <dimen name="width_divider">1dp</dimen>
     <dimen name="margin_cards_scroll">5dp</dimen>
+    <dimen name="share_button">100dp</dimen>
 
 </resources>

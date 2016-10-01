@@ -138,13 +138,15 @@
         <item name="android:text">There is nothing yet</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:textSize">@dimen/text_big</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">italic</item>
         <item name="android:gravity">center</item>
         <item name="android:visibility">gone</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingLeft">@dimen/default_text_padding</item>
+        <item name="android:paddingRight">@dimen/default_text_padding</item>
     </style>
+
     <style name="Fab">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
@@ -228,6 +230,7 @@
 
     <style name="TextMultiLines" parent="TextDefault" >
         <item name="android:singleLine">false</item>
+        <item name="android:padding">10dp</item>
     </style>
 
     <style name="TextTiny" parent="TextDefault">
@@ -256,6 +259,13 @@
 
     <style name="TextItalic" parent="TextDefault">
         <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ShareText" parent="TextMultiLines">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!--.................... Présentation .........................................-->

@@ -72,7 +72,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public EventPeopleFragment() {}
+    public EventPeopleFragment() {
+        setTitle(R.string.title_fragment_people);
+    }
 
 
     @Nullable

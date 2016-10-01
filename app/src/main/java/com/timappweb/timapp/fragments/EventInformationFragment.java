@@ -75,6 +75,11 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     private boolean isStatusLoading = false;
 
+
+    public EventInformationFragment() {
+        setTitle(R.string.title_fragment_info);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -1,18 +1,24 @@
 package com.timappweb.timapp.adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 
+
+import com.timappweb.timapp.fragments.EventBaseFragment;
 
 import java.util.List;
 
 public class EventPagerAdapter extends FragmentPagerAdapter {
 
-    private final List<Fragment> fragments;
+    private final List<EventBaseFragment> fragments;
+    private final Context context;
 
-    public EventPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public EventPagerAdapter(Context context, FragmentManager fm, List<EventBaseFragment> fragments) {
         super(fm);
+        this.context = context;
         this.fragments = fragments;
     }
 
@@ -48,17 +54,6 @@ public class EventPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
-            case 0:
-                return "Info";
-            case 1:
-                return "Pictures";
-            case 2:
-                return "Tags";
-            case 3:
-                return "People";
-            default:
-                return "Other";
-        }
+        return context.getString(fragments.get(position).getTitle());
     }
 }

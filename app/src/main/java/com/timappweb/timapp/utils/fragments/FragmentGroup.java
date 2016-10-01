@@ -11,12 +11,12 @@ import java.util.List;
  * Created by stephane on 5/20/2016.
  */
 
-public class FragmentGroup{
+public class FragmentGroup<T extends Fragment>{
 
     private static final String ARG_POSITION = "position";
 
     Context context;
-    List<Fragment> fragments;
+    List<T> fragments;
 
     public FragmentGroup(Context context) {
         this.context = context;
@@ -27,7 +27,7 @@ public class FragmentGroup{
         return new FragmentGroup(context);
     }
 
-    public Fragment add(Fragment fragment) {
+    public T add(T fragment) {
         Bundle args = new Bundle();
         args.putInt(ARG_POSITION, fragments.size());
         fragment.setArguments(args);
@@ -35,7 +35,7 @@ public class FragmentGroup{
         return fragment;
     }
 
-    public List<Fragment> getFragments() {
+    public List<T> getFragments() {
         return fragments;
     }
 

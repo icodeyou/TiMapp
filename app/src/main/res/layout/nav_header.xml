@@ -10,11 +10,10 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <View
-            android:id="@+id/gradient_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_bottom_nav_header"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_bottom_nav_header" />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_above="@+id/gradient_view"/>
 
         <ImageView
             android:id="@+id/no_events_layout"
@@ -22,16 +21,24 @@
             android:layout_height="wrap_content"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
-            android:layout_above="@+id/gradient_view"
-            android:background="@color/white"
             android:src="@drawable/logotimapp"
             android:visibility="visible"/>
+
+        <View
+            android:id="@+id/gradient_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_bottom_nav_header"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/gradient_bottom_nav_header" />
 
         <RelativeLayout
             android:id="@+id/event_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <include layout="@layout/header_event_activity"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+            <include
+                android:id="@+id/nav_background_event"
+                layout="@layout/header_event_activity"
                 bind:event="@{event}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

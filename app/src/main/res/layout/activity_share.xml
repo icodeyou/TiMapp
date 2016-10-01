@@ -13,18 +13,13 @@
         android:orientation="vertical">
         <ImageView
             android:id="@+id/share_button"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/share_button"
             android:layout_height="100dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/share_button"/>
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            style="@style/ShareText"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_huge"
             android:text="@string/subject_share_activity"/>
     </LinearLayout>
 
@@ -33,10 +28,7 @@
         android:layout_height="match_parent"
         android:gravity="center">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="40dp"
-            android:textSize="@dimen/text_normal"
+            style="@style/TextMultiLines"
             android:textStyle="italic"
             android:text="@string/text_share_activity"
             android:gravity="center"/>

@@ -17,6 +17,7 @@ public class MapFactory {
         gMap.setIndoorEnabled(true);
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
         gMap.getUiSettings().setMapToolbarEnabled(false);
+        gMap.getUiSettings().setCompassEnabled(false);
         gMap.getUiSettings().setScrollGesturesEnabled(gestureEnabled);
         gMap.getUiSettings().setRotateGesturesEnabled(gestureEnabled);
         gMap.getUiSettings().setTiltGesturesEnabled(gestureEnabled);

@@ -100,6 +100,10 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private SectionDataLoader mDataLoader;
     private ActionModeHelper mActionModeHelper;
 
+    public EventPicturesFragment() {
+        setTitle(R.string.title_fragment_pictures);
+    }
+
     // ---------------------------------------------------------------------------------------------
 
     @Nullable

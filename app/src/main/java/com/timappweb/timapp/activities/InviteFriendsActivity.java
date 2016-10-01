@@ -249,6 +249,7 @@ public class InviteFriendsActivity extends BaseActivity
     @Override
     public void onStart() {
         super.onStart();
+        progressview.setVisibility(View.VISIBLE);
         EventBus.getDefault().register(mFriendsLoader);
     }
 
@@ -261,6 +262,7 @@ public class InviteFriendsActivity extends BaseActivity
     @Override
     public void onLoadEnd(List<UserFriend> data) {
         mAdapter.setData(data);
+        progressview.setVisibility(View.GONE);
         if (data != null && data.size() > 0){
             initializeSelection();
         }
@@ -268,6 +270,7 @@ public class InviteFriendsActivity extends BaseActivity
 
     @Override
     public void onLoadError(Throwable error) {
+        progressview.setVisibility(View.GONE);
         // TODO
     }
 

@@ -280,14 +280,17 @@ public class IntentsUtils {
         if(!requireLogin(context,false)) {
             return;
         }
+        if(!event.isUserAround() && ( action == ACTION_TAGS || action == ACTION_CAMERA ) ) {
+            Toast.makeText(context, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
+            return;
+        }
         if (context instanceof EventActivity){
             ((EventActivity)context).parseActionParameter(action);
+            return;
         }
-        else {
-            Intent intent = buildIntentViewPlace(context, event);
-            intent.putExtra(KEY_ACTION, action);
-            context.startActivity(intent);
-        }
+        Intent intent = buildIntentViewPlace(context, event);
+        intent.putExtra(KEY_ACTION, action);
+        context.startActivity(intent);
     }
 
     public static Intent buildIntentViewPlace(Context context, long eventId) {
@@ -455,4 +458,11 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
+    public static void actionShareApp(Context context) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_message_text));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.share_message_subject));
+        context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
 }

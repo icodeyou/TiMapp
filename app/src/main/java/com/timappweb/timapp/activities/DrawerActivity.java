@@ -81,6 +81,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private View inviteButton;
     private View noEventLayout;
     private View eventLayout;
+    private View eventBackground;
     private ActivityDrawerBinding mBinding;
 
     // ---------------------------------------------------------------------------------------------
@@ -297,6 +298,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         cameraButton = findViewById(R.id.action_camera);
         tagButton = findViewById(R.id.action_tag);
         inviteButton = findViewById(R.id.action_invite);
+        eventBackground = findViewById(R.id.nav_background_event);
         noEventLayout = findViewById(R.id.no_events_layout);
         eventLayout = findViewById(R.id.event_layout);
     }
@@ -329,6 +331,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 @Override
                 public void onClick(View v) {
                     IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
+                }
+            });
+            eventBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.viewSpecifiedEvent(context, event);
                 }
             });
         }

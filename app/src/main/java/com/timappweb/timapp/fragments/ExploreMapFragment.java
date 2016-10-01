@@ -56,7 +56,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                PADDING__MAP                    = 140;
     private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
     private static final int                TIME_ZOOM_ANIM                  = 500;
-    private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
+    private static final int                PADDING_ZOOM_CLUSTER            = 500;
+    private float                           ZOOM_LEVEL_CENTER_MAP           = 17.0f;
     private Marker                          selectingMarker;
     private Location                        lastLocation;
 
@@ -79,7 +80,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private View                            filterTagsContainer;
     private SimpleTimerView                 tvCountPoints;
     private View                            btnAddEvent;
-    private View                            fabLoc;
+    private View gpsCenterButton;
     private View                            cameraButton;
     private View                            tagButton;
     private View                            inviteButton;
@@ -123,7 +124,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
         btnAddEvent = root.findViewById(R.id.fab_button_add_event);
-        fabLoc = root.findViewById(R.id.fab_button_location);
+        gpsCenterButton = root.findViewById(R.id.fab_button_location);
         cameraButton = root.findViewById(R.id.action_camera);
         tagButton = root.findViewById(R.id.action_tag);
         inviteButton = root.findViewById(R.id.action_invite);
@@ -180,12 +181,18 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
         btnAddEvent.setOnClickListener(exploreFragment.getFabClickListener());
 
-        fabLoc.setOnClickListener(new View.OnClickListener() {
+        gpsCenterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(lastLocation!=null && gMap != null) {
                     LatLng currentPosition = MyLocationProvider.convert(lastLocation);
-                    gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition,ZOOM_LEVEL_CENTER_MAP));
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(currentPosition)      // Sets latitude and longitude
+                            .zoom(ZOOM_LEVEL_CENTER_MAP)  // Sets the zoom
+                            .bearing(0)                   // Initialize the orientation of the camera
+                            .tilt(0)                      // Initialize tilt of the camera
+                            .build();                     // Creates a CameraPosition from the builder
+                    gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });
@@ -272,7 +279,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             translateDown.setInterpolator(new DecelerateInterpolator());
 
             btnAddEvent.startAnimation(translateDown);
-            fabLoc.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.appear));
+            gpsCenterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.appear));
 
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
             eventView.startAnimation(slideOut);
@@ -420,7 +427,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                     builder.include(m.getPosition());
                 }
                 LatLngBounds bounds = builder.build();
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, PADDING_ZOOM_CLUSTER);
                 gMap.animateCamera(cameraUpdate);
 
                 hideEvent();

@@ -42,6 +42,6 @@
             android:src="@drawable/cross_blue"/>
         <TextView
             style="@style/TextLayoutFour"
-            android:text="When the popularity timer reaches zero, the event is removed from the map"/>
+            android:text="@string/popularity_page_four"/>
     </LinearLayout>
 </LinearLayout>

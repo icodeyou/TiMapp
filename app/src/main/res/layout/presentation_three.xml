@@ -21,7 +21,7 @@
             <TextView
                 style="@style/TextLegendPresentation"
                 android:textColor="@color/white"
-                android:text="Map"/>
+                android:text="@string/map"/>
         </LinearLayout>
         <LinearLayout
             style="@style/WidthWeightOne"
@@ -31,7 +31,7 @@
                 android:src="@drawable/screenshot_list"/>
             <TextView
                 style="@style/TextLegendPresentation"
-                android:text="List"/>
+                android:text="@string/list"/>
         </LinearLayout>
     </LinearLayout>
     <me.grantland.widget.AutofitTextView

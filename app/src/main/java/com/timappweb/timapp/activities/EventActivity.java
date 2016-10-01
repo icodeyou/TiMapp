@@ -87,7 +87,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private EventInformationFragment    fragmentInformation;
 
     private boolean                     isEventLoaded               = false;
-    private FragmentGroup               mFragmentGroup;
+    private FragmentGroup<EventBaseFragment>               mFragmentGroup;
     private MaterialViewPager           mMaterialViewPager;
     private EventPagerAdapter           mFragmentAdapter;
     private TextView                    pageTitle;
@@ -284,20 +284,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         btnActionTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!event.isUserAround()){
-                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
             }
         });
         btnActionCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!event.isUserAround()){
-                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
             }
         });
@@ -426,12 +418,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         mFragmentGroup = FragmentGroup.createGroup(this);
-        fragmentInformation = (EventInformationFragment) mFragmentGroup.add(Fragment.instantiate(this, EventInformationFragment.class.getName()));
-        fragmentPictures = (EventPicturesFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPicturesFragment.class.getName()));
-        fragmentTags = (EventTagsFragment) mFragmentGroup.add(Fragment.instantiate(this, EventTagsFragment.class.getName()));
-        fragmentPeople = (EventPeopleFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPeopleFragment.class.getName()));
+        fragmentInformation = (EventInformationFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventInformationFragment.class.getName()));
+        fragmentPictures = (EventPicturesFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventPicturesFragment.class.getName()));
+        fragmentTags = (EventTagsFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventTagsFragment.class.getName()));
+        fragmentPeople = (EventPeopleFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventPeopleFragment.class.getName()));
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
-        mFragmentAdapter = new EventPagerAdapter(getSupportFragmentManager(), mFragmentGroup.getFragments());
+        mFragmentAdapter = new EventPagerAdapter(this, getSupportFragmentManager(), mFragmentGroup.getFragments());
 
         mMaterialViewPager = (MaterialViewPager) findViewById(R.id.event_viewpager);
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);

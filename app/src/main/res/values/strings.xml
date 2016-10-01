@@ -105,6 +105,8 @@
             <string name="explanation_gps_usage">Timapp requires your location to find events around you. Please authorize us to get your location.</string>
             <string name="ask_user_to_enable_gps">GPS is disabled on your device. Activate it to create a place.</string>
             <string name="error_camera">Something bad happened when taking a picture. Please try again later.</string>
+            <string name="cannot_read_this_picture">We cannot open this picture, please take another one.</string>
+
 
 
 
@@ -127,6 +129,11 @@
     <string name="share_place_text">http://Lien_de_la_place</string>
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
+    <string name="title_fragment_info">Info</string>
+    <string name="title_fragment_pictures">Pictures</string>
+    <string name="title_fragment_tags">Tags</string>
+    <string name="title_fragment_people">People</string>
+    <string name="title_fragment_other">Other</string>
         <!-- Fragment Info -->
             <string name="i_am_coming">I\'m coming</string>
             <string name="i_am_here">I\'m here</string>
@@ -196,9 +203,11 @@
 
     <!-- AddSpotActivity -->
     <string name="hint_spot_name">Name of the place</string>
+    <string name="no_data_spot">Indicate a category and a name for your current place. Then click on the button CREATE.</string>
+    <string name="user_location_changed_reload_data">Your location has changed, reloading spots ...</string>
 
     <!-- ShareActivity -->
-    <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the big red button to invite some of your friends.</string>
+    <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the red button to invite them.</string>
     <string name="subject_share_activity">Share TiMapp with your friends !</string>
 
     <!-- LoginActivity -->
@@ -235,27 +244,29 @@
     </plurals>
 
     <!-- PresentationActivity -->
-    <string name="two_ways_to_explore">Two ways to explore !</string>
+    <string name="next">Next</string>
     <string name="presentation_two_text"><![CDATA[With TiMapp,\n find & share geoloated events that are happening right now.]]></string>
-    <string name="post_pics_and_tags">Post pics &amp; tags</string>
-    <string name="invite_people">Invite people</string>
+    <string name="title_p_three">Explore</string>
+    <string name="two_ways_to_explore">Two modes</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
+    <string name="title_p_four">Inform people</string>
     <string name="text_p_four">Add the events around you on the map by choosing a name and a category.</string>
     <string name="share_page_p_one">Your posts provide Real Time Rating for the community</string>
     <string name="share_page_p_two">You can only post if you\'re located in an event.</string>
-    <string name="title_p_three">Find events</string>
-    <string name="title_p_four">Create an event</string>
     <string name="title_p_five">Share</string>
+    <string name="post_pics_and_tags">Post pics &amp; tags</string>
+    <string name="invite_people">Invite friends</string>
     <string name="title_p_six">Popularity</string>
     <string name="title_p_seven">Ready to go ?</string>
     <string name="popularity_page_one">Each event has a number of points representing its popularity</string>
     <string name="popularity_page_two">But it is increased when people post pictures and tags</string>
     <string name="popularity_page_three">This number is in fact a timer</string>
+    <string name="popularity_page_four">When the popularity timer reaches zero, the event is removed from the map</string>
     <string name="text_final_button_viewpager">Let\'s get it started</string>
 
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
-    <string name="no_data_spot">Indicate a category and a name for your current place. Then click on the button CREATE.</string>
-    <string name="cannot_read_this_picture">We cannot open this picture, please take another one.</string>
-    <string name="user_location_changed_reload_data">Your location has changed, reloading spots ...</string>
+    <string name="dummy_string">Dummy String</string>
 
 </resources>
