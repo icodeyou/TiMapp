@@ -58,6 +58,7 @@ public class InviteFriendsActivity extends BaseActivity
     private FriendsLoader               mFriendsLoader;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private View                        progressview;
+    private View                        shareButton;
     private List<EventsInvitation>      _cachedInvitations;
     // ---------------------------------------------------------------------------------------------
 
@@ -75,6 +76,7 @@ public class InviteFriendsActivity extends BaseActivity
         }
 
         setContentView(R.layout.activity_invite_friends);
+        shareButton = findViewById(R.id.share_button);
 
         try {
             event = (Event) event.requireLocalId();
@@ -92,6 +94,17 @@ public class InviteFriendsActivity extends BaseActivity
             IntentsUtils.home(this);
             finish();
         }
+
+        initListener();
+    }
+
+    private void initListener() {
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.actionShareApp(InviteFriendsActivity.this);
+            }
+        });
     }
 
 

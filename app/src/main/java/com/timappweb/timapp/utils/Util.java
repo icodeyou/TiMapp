@@ -84,7 +84,8 @@ public class Util {
 
     public static String secondsTimestampToPrettyTime(long created) {
         PrettyTime p = new PrettyTime();
-        return p.format(new Date(created * 1000));
+        String pFormated = p.format(new Date(created * 1000));
+        return Util.capitalize(pFormated);
     }
     public static String secondsDurationToPrettyTime(int duration) {
         PeriodFormatterBuilder builder = new PeriodFormatterBuilder()

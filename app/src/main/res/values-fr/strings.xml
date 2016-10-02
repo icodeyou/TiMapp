@@ -112,6 +112,7 @@
     <!-- Fragment Info -->
     <string name="i_am_coming">J\'arrive</string>
     <string name="i_am_here">Présent</string>
+    <string name="next_to_you">A proximité</string>
     <!-- Fragment Picture -->
     <string name="no_pic">Il n\'y a pas de encore de photo pour cet événement.</string>
     <string name="uploading_pic">Téléchargement de la photo</string>

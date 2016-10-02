@@ -1,6 +1,10 @@
 package com.timappweb.timapp.utils;
 
+import android.content.res.Resources;
 import android.location.Location;
+
+import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -42,7 +46,7 @@ public class DistanceHelper {
     public static String prettyPrint(double dist) {
         String distString = String.valueOf(dist);
         if (dist < 30){
-            return "Next to you"; // TODO string resource
+            return MyApplication.getApplicationBaseContext().getResources().getString(R.string.next_to_you);
         }
         else if (dist<1000) {
             return distString + " m";
