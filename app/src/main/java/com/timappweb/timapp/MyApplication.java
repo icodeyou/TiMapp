@@ -8,10 +8,6 @@ import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.sromku.simple.fb.Permission;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.SimpleFacebookConfiguration;
-import com.sromku.simple.fb.listeners.OnLogoutListener;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.auth.AuthManager;
@@ -22,7 +18,6 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
-import com.timappweb.timapp.services.RegistrationIntentService;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
@@ -82,34 +77,16 @@ public class MyApplication extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-
         //this.deleteDatabase(getString(R.string.db_name));
-
         _appContext = getApplicationContext();
         ActiveAndroid.initialize(this);
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         MyApplication.auth = AuthManagerFactory.create();
         RestClient.init(this, getResources().getString(R.string.api_base_url), MyApplication.getAuthManager());
         KeyValueStorage.init(this, RestClient.instance().getGson());
-        initFacebookPermissions(); // Useless because friend are loaded from the server ... ? TODO move from here
         JodaTimeAndroid.init(this);
         QuotaManager.init(getApplicationContext()); // TODO must be unitialized only for logged in users
         AbstractSyncAdapter.initializeSyncAdapter(this);
-    }
-
-
-    private void initFacebookPermissions() {
-        Permission[] permissions = new Permission[] {
-                Permission.USER_PHOTOS,
-                Permission.EMAIL,
-                Permission.USER_FRIENDS,
-        };
-        SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
-                .setAppId(getResources().getString(R.string.facebook_app_id))
-                .setNamespace(getResources().getString(R.string.namespace))
-                .setPermissions(permissions)
-                .build();
-        SimpleFacebook.setConfiguration(configuration);
     }
 
     public static void redirectLogin(Context currentContext){

@@ -1,9 +1,17 @@
 package com.timappweb.timapp.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -17,16 +25,46 @@ import com.timappweb.timapp.views.RetryDialog;
 /**
  * Created by stephane on 3/26/2016.
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "SplashActivity";
     private static final String CALL_ID_TOKEN = "check_token";
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.loadConfig();
+
+        // Build GoogleApiClient with AppInvite API for receiving deep links
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(AppInvite.API)
+                .build();
+
+        // Check if this app was launched from a deep link. Setting autoLaunchDeepLink to true
+        // would automatically launch the deep link if one is found.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(@NonNull AppInviteInvitationResult result) {
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract deep link from Intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    Log.d(TAG, "Received deep link: " + deepLink);
+                                    // Handle the deep link. For example, open the linked
+                                    // content, or apply promotional credit to the user's
+                                    // account.
+
+                                } else {
+                                    Log.d(TAG, "getInvitation: no deep link found.");
+                                }
+                            }
+                        });
     }
 
     private void loadConfig() {
@@ -101,4 +139,8 @@ public class SplashActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

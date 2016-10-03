@@ -1,51 +1,29 @@
 package com.timappweb.timapp.services;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.activeandroid.util.Log;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
-
-import java.io.IOException;
 
 /**
  * Created by stephane on 4/3/2016.
  */
-public class MyInstanceIDListenerService extends com.google.android.gms.iid.InstanceIDListenerService {
+public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
 
     private static final String TAG = "MyInstanceIDListenerService";
-    private final InstanceID iid;
-    //private ArrayList<TokenItem> tokens;
 
+    /**
+     * Called if InstanceID token is updated. This may occur if the security of
+     * the previous token had been compromised. Note that this is also called
+     * when the InstanceID token is initially generated, so this is where
+     * you retrieve the token.
+     */
+    // [START refresh_token]
+    @Override
     public void onTokenRefresh() {
-        refreshAllTokens();
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        MyApplication.updateGoogleMessagingToken(getApplicationContext(), refreshedToken);
     }
 
-    public MyInstanceIDListenerService() {
-      //  this.tokens = new ArrayList<>();
-        iid = InstanceID.getInstance(this);
-    }
-
-    private void refreshAllTokens() {
-        // assuming you have defined TokenList as
-        // some generalized store for your tokens
-        //for(TokenItem tokenItem : this.tokens) {
-            try {
-                String token = iid.getToken(getString(R.string.gcm_defaultSenderId),
-                        GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-                MyApplication.updateGoogleMessagingToken(getApplicationContext(), token);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // send this tokenItem.token to your server
-        //}
-    }
-    
-    
-/*
-    private class TokenItem {
-        public String token;
-        public String authorizedEntity;
-        public java.lang.String scope;
-        public Bundle options;
-    }*/
 }

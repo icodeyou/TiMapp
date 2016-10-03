@@ -68,7 +68,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
             @Override
             public Location getNextLocation() {
                 Log.v(TAG, "Creating new mock location from route");
-                return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.latitude, MockLocation.START_TEST.longitude);
+                return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.get, MockLocation.START_TEST.longitude);
             }
         }, 2000);
 

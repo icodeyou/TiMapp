@@ -37,15 +37,6 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
    <!-- <uses-permission android:name="android.permission.READ_CONTACTS" />-->
 
-    <!--
-     FOR GCM
-    -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <permission android:name="${applicationId}.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
-
     <!--android:debuggable="true" has been removed -->
     <application
         android:name=".MyApplication"
@@ -70,7 +61,6 @@
         // TODO for production set models to speed up launch
         <meta-data  android:name=""AA_MODELS"
             android:value="${applicationId}.data.models.UserActivity" />-->
-
 
         <!-- SYNC ADAPTERS ===================================================================== -->
         <!-- ConfigSyncAdapter's dummy authentication service -->
@@ -166,6 +156,12 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <!--<action android:name="android.intent.action.VIEW"/>-->
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="example.com" android:scheme="http"/>
+                <data android:host="example.com" android:scheme="https"/>
             </intent-filter>
         </activity>
 
@@ -201,40 +197,22 @@
             android:exported="false" >
         </service>
 
-        <service android:name=".services.RegistrationIntentService" android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
-            </intent-filter>
-        </service>
-
-        <receiver
-            android:name=".receivers.MyGcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.example.gcm" />
-            </intent-filter>
-        </receiver>
-
         <!--
         <service android:name=".services.MyInstanceIDListenerService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID"/>
             </intent-filter>
-        </service>-->
-        <service
-            android:name=".services.MyGcmListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
         </service>
         <service
-            android:name=".services.MyInstanceIDListenerService"
-            android:exported="false">
+            android:name=".services.MyGcmListenerService">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>-->
+        <service
+            android:name=".services.MyFcmListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 

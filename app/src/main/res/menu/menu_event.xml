@@ -6,7 +6,7 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/action_share"
         android:title="@string/menu_share"
-        android:visible="false"/>
+        android:visible="true"/>
 
     <!--<item
         android:id="@+id/action_reload"

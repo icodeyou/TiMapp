@@ -13,6 +13,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.config.IntentsUtils;
 
+import java.util.Map;
+
 /**
  * Created by stephane on 4/2/2016.
  */
@@ -52,20 +54,25 @@ public class NotificationFactory {
 
 
 
-    public static int invite(Context context, Bundle bundle) {
-            Bundle notification = bundle.getBundle("notification");
-            if (notification == null){
-                Log.e(TAG, "Received a null notification");
+    public static int invite(Context context, Map<String, String> data) {
+            //Bundle notification = data.get("notification");
+            //if (notification == null){
+        //    Log.e(TAG, "Received a null notification");
+        //       return -1;
+        //  }
+            try {
+                Log.v(TAG, "Received notification " + data);
+                String body = data.get("body");
+                String title = data.get("title");
+                String icon = data.get("icon");
+                long placeId = Long.valueOf(data.get("place_id")); // TODO cst
+                Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
+                int categoryId = R.drawable.category_unknown; // TODO set proper category
+                return NotificationFactory.build(context, categoryId, title, body, resultIntent);
+            }
+            catch (Exception ex){
+                Log.e(TAG, "Error while parsing the notification: " + ex.getMessage());
                 return -1;
             }
-            Log.v(TAG, ":notification " + notification);
-            String body = notification.getString("body");
-            String title = notification.getString("title");
-            String icon = notification.getString("icon");
-            long placeId = Long.valueOf(bundle.getString("place_id")); // TODO cst
-
-            Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
-            int categoryId = R.drawable.category_unknown; // TODO set proper category
-            return NotificationFactory.build(context, categoryId, title, body, resultIntent);
     }
 }

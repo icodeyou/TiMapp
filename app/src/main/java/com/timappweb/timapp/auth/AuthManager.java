@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.google.android.gms.iid.InstanceID;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.User;
@@ -13,7 +12,7 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.services.RegistrationIntentService;
+import com.timappweb.timapp.services.MyInstanceIDListenerService;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public class AuthManager implements AuthManagerInterface<RestFeedback>{
             user.provider_uid = feedback.data.get("social_id");
             user.provider = SocialProvider.FACEBOOK;
             user.remote_id = Integer.parseInt(feedback.data.get("id"));
-            user.app_id = InstanceID.getInstance(context).getId();
+           // user.app_id = InstanceID.getInstance(context).getId();
             setCurrentUser(user);
             KeyValueStorage.in()
                     .putString(KEY_TOKEN, token)
@@ -112,7 +111,7 @@ public class AuthManager implements AuthManagerInterface<RestFeedback>{
 
     public static void requestGcmToken(Context context) {
         Log.d(TAG, "Starting IntentService to update user token");
-        Intent intent = new Intent(context, RegistrationIntentService.class);
+        Intent intent = new Intent(context, MyInstanceIDListenerService.class);
         //intent.putExtra(Constants.RECEIVER, mResultReceiver);
         //intent.putExtra(Constants.LOCATION_DATA_EXTRA, location);
         context.startService(intent);

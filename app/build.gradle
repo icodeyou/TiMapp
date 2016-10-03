@@ -84,7 +84,7 @@ configurations.all {
     // @link(https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK)
     // @link(http://stackoverflow.com/questions/28641445/dependency-conflict-error-in-my-android-app-which-has-android-tests)
     //androidTestCompile 'com.parse.bolts:bolts-android:1.2.0'
-    resolutionStrategy.force 'com.parse.bolts:bolts-android:1.2.0'
+    //resolutionStrategy.force 'com.parse.bolts:bolts-android:1.2.0'
     resolutionStrategy.force 'com.android.support:support-v4:23.4.0'
 }
 
@@ -106,10 +106,7 @@ dependencies {
     androidTestCompile "com.android.support:support-annotations:$rootProject.ext.supportLibraryVersion"
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    // Optional -- Hamcrest library
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
-    // Optional -- UI testing with Espresso
-
     //androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 
     // We need to explude recyclerview-v7 otherwise there is a compatibility error between espresso and the recyclerview
@@ -121,7 +118,6 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
-    androidTestCompile 'com.facebook.android:facebook-android-sdk:4.7.0'
     androidTestCompile 'junit:junit:4.12'
     // Optional -- UI testing with UI Automator
 
@@ -135,10 +131,9 @@ dependencies {
     }
     // APP
 
-    //compile 'com.facebook.android:facebook-android-sdk:4.7'
 
     compile 'com.android.support:multidex:1.0.1'    // Used by Google Play Service and Mutltidex application
-
+    compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     //Android support
     compile "com.android.support:preference-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
@@ -150,17 +145,20 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'io.reactivex:rxandroid:1.0.1'
-    //7.8.0 may be needed for the emulator.
+
+    compile "com.google.firebase:firebase-core:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-ads:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion"
-    compile "com.google.android.gms:play-services-gcm:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion"
-    //compile "com.google.android.gms:play-services-appindexing:$rootProject.ext.googlePlayLibraryVersion"
-    //compile 'com.google.android.gms:play-services:8.4.0'
+    compile "com.google.android.gms:play-services-maps:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.firebase:firebase-auth:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.firebase:firebase-invites:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.firebase:firebase-messaging:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.firebase:firebase-crash:$rootProject.ext.googlePlayLibraryVersion"
+
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
     compile 'com.github.davidpizarro:autolabelui:1.0.1'
-    compile 'com.sromku:simple-fb:4.1.1'                    // TODO Change library or upddate because conflict
     compile 'com.github.boxme:squarecamera:1.1.0'
     //compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
 

@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -43,14 +42,10 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.RetryDialog;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -130,7 +125,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                setDefaultShareIntent();
+                shareEvent();
                 return true;
             case android.R.id.home:
                 //http://stackoverflow.com/questions/19999619/navutils-navigateupto-does-not-start-any-activity
@@ -511,7 +506,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
 
-    private void setDefaultShareIntent() {
+    private void shareEvent() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text));

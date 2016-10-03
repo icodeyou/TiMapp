@@ -162,7 +162,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         initAdapterAndManager();
         setListeners();
         //initViewPager();
-        initMap();
 
         if (!this.getResources().getBoolean(R.bool.eventcard_showProgressBarLocation)){
             findViewById(R.id.progress_bar).setVisibility(View.GONE);
@@ -557,7 +556,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void loadMapIfNeeded() {
         try {
             if (gMap == null){
-                gMap = mapView.getMap();
+                //mapView.onCreate(null); // ???
+                mapView.getMapAsync(this);
             }
             Location location = LocationManager.getLastLocation();
             if (location != null){
@@ -577,11 +577,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates, ZOOM_LEVEL_CENTER_MAP));
         }
     }
-
-    private void initMap(){
-        mapView.onCreate(null);
-        mapView.getMapAsync(this);
-     }
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
