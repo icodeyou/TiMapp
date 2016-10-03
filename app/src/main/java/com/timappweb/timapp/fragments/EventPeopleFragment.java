@@ -247,9 +247,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 return true;
             }
         });
-        //mRecyclerView.setItemAnimator(new SlideInRightAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                R.drawable.divider, 0));//Increase to add gap between sections (Works only with LinearLayout!)
 
         mRecyclerView.setAdapter(mPlaceUsersAdapter);
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);

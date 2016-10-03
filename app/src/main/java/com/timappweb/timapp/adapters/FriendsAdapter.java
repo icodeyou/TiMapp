@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
-import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.data.models.UserFriend;
 
@@ -19,9 +18,7 @@ public class FriendsAdapter extends MyFlexibleAdapter {
     }
 
     public void setData(List<UserFriend> friends) {
-        removeItemsOfType(R.layout.item_userplace);
-        removeItemsOfType(R.layout.item_usertags);
-        removeItemsOfType(R.layout.item_friend);
+        removeItemsOfType(R.layout.item_user);
         addData(friends);
     }
 

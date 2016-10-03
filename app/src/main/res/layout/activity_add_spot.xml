@@ -25,6 +25,7 @@
     <TextView
         android:id="@+id/no_data_view"
         style="@style/NoDataView"
+        android:layout_height="wrap_content"
         android:text="@string/no_data_spot"/>
 
     <com.timappweb.timapp.views.SwipeRefreshLayout

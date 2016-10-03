@@ -161,7 +161,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spots_max_name_length);
         etNameSpot.setFilters(f);
         etNameSpot.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etNameSpot.clearFocus();
+        etNameSpot.findFocus();
     }
 
     private void initAdapters() {
@@ -230,6 +230,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                     //Fill and Filter mItems with your custom list and automatically animate the changes
                     //Watch out! The original list must be a copy
                     mAdapter.filterItems(mAdapter.getItemsCopy(), 200L);
+                    if(mAdapter.getItemCount() == 0) {
+                        noDataView.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 setButtonValidation();

@@ -2,11 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/action_edit_picture"
-        android:icon="@drawable/ic_camera_primary"
         android:title="@string/edit_the_picture" />
 
     <item android:id="@+id/action_remove_picture"
-        android:icon="@drawable/cross"
         android:title="@string/remove_the_picture" />
 
 </menu>

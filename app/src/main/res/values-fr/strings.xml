@@ -170,7 +170,7 @@
 
     <!-- AddSpotActivity -->
     <string name="hint_spot_name">Nom du lieu</string>
-    <string name="no_data_spot">Indique une catégorie et un lieu pour votre lieu actuel. Cliquez ensuite sur le bouton "Créer".</string>
+    <string name="no_data_spot">Indique un nom et une catégorie décrivant ton lieu. Ensuite, clique sur le bouton "Créer" pour valider.</string>
     <string name="user_location_changed_reload_data">Votre localisation a changé.\nRechargement des données</string>
 
     <!-- SplashActivity  -->
@@ -184,7 +184,7 @@
     <!-- LoginActivity -->
     <string name="welcome_to_timapp">Bienvenue sur TiMapp</string>
     <string name="posts_shared">Posts</string>
-    <string name="events_created">Événements créés</string>
+    <string name="events_created">Événements</string>
     <string name="slogan">Find. Enjoy. Share.</string>
 
 

@@ -37,27 +37,26 @@
             android:id="@+id/horizontal_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_gravity="center"
-            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/title_spot"
                 style="@style/TitleTwoLines"
+                android:padding="0dp"
+                android:layout_gravity="start"
                 android:textColor="@color/colorPrimary"
                 android:text="@{spot.name}"
                 tools:text="Terrain" />
 
             <TextView
-                style="@style/TextDefault"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                style="@style/TextItalic"
+                android:layout_gravity="start"
                 tools:text="Bar"
-                android:textSize="@dimen/text_normal"
-                android:text="@{spot.getCategory().name}"
-                android:id="@+id/textView5" />
+                android:text="@{spot.getCategory().name}" />
         </LinearLayout>
 </LinearLayout>
 </layout>

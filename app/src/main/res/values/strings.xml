@@ -205,7 +205,7 @@
 
     <!-- AddSpotActivity -->
     <string name="hint_spot_name">Name of the place</string>
-    <string name="no_data_spot">Indicate a category and a name for your current place. Then click on the button CREATE.</string>
+    <string name="no_data_spot">Indicate a name and a category for your current place. Then click on the button CREATE.</string>
     <string name="user_location_changed_reload_data">Your location has changed, reloading spots ...</string>
 
     <!-- ShareActivity -->
@@ -215,7 +215,7 @@
     <!-- LoginActivity -->
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
     <string name="posts_shared">Posts shared</string>
-    <string name="events_created">Events created</string>
+    <string name="events_created">Events</string>
     <string name="slogan">Find. Enjoy. Share.</string>
 
 

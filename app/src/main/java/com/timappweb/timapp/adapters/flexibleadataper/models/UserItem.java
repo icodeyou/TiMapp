@@ -1,38 +1,21 @@
 package com.timappweb.timapp.adapters.flexibleadataper.models;
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.databinding.ItemInvitationBinding;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
-import com.timappweb.timapp.listeners.HorizontalTagsTouchListener;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
-import com.timappweb.timapp.views.SimpleTimerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import eu.davidea.flexibleadapter.utils.DrawableUtils;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
@@ -66,7 +49,7 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
 
     @Override
     public int getLayoutRes() {
-        return R.layout.item_friend;
+        return R.layout.item_user;
     }
 
     @Override
@@ -122,11 +105,14 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
         FriendViewHolder(View itemView, FlexibleAdapter adapter) {
             super(itemView, adapter);
             cv = itemView.findViewById(R.id.cv);
-            personName = (TextView) itemView.findViewById(R.id.person_name);
-            personPhoto = (SimpleDraweeView) itemView.findViewById(R.id.person_photo);
+            personName = (TextView) itemView.findViewById(R.id.tv_username);
+            personPhoto = (SimpleDraweeView) itemView.findViewById(R.id.profile_picture);
             horizontalTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
 
-            Util.setSelectionsBackgroundAdapter(itemView, R.color.white, R.color.colorPrimary, R.color.colorAccentLight);
+            //TODO STEPH : Add tags !
+            horizontalTags.setVisibility(View.GONE);
+
+            Util.setSelectionsBackgroundAdapter(itemView, R.color.white, R.color.colorAccentLight, R.color.LightGrey);
         }
 
     }

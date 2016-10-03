@@ -75,7 +75,7 @@ public class PictureItem  extends AbstractModelItem<PictureItem.PictureViewHolde
         PictureViewHolder(View itemView, final FlexibleAdapter adapter) {
             super(itemView, adapter);
             ivPicture = (SimpleDraweeView) itemView.findViewById(R.id.picture);
-            Util.setSelectionsBackgroundAdapter(itemView, R.color.black, R.color.white, R.color.LightGreen);
+            Util.setSelectionsBackgroundAdapter(itemView, R.color.black, R.color.colorPrimaryVeryDark, R.color.white);
         }
     }
 }

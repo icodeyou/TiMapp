@@ -48,6 +48,7 @@ import com.timappweb.timapp.views.RetryDialog;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.zip.GZIPOutputStream;
 
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -277,6 +278,11 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO : this is a workaround to enable scroll behind Fab when it's collapsed
+                int visibility = btnAction.isExpanded() ? View.VISIBLE : View.GONE;
+                btnActionTag.setVisibility(visibility);
+                btnActionCamera.setVisibility(visibility);
+                btnActionInvite.setVisibility(visibility);
                 Log.d(TAG, "Main button action clicked!");
             }
         });

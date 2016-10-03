@@ -66,7 +66,7 @@ public class SubUserItem extends AbstractModelItem<SubUserItem.UserViewHolder>
 
 	@Override
 	public int getLayoutRes() {
-		return R.layout.item_userplace;
+		return R.layout.item_user;
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class SubUserItem extends AbstractModelItem<SubUserItem.UserViewHolder>
 			Uri uri = Uri.parse(pic);
 			holder.ivProfilePicture.setImageURI(uri);
 		}
-		holder.tvTime.setText(user.getTimeCreated());
+		//holder.tvTime.setText(user.getTimeCreated());
 		holder.user = user;
 
 		//This "if-else" is just an example of what you can do with item animation
@@ -138,11 +138,9 @@ public class SubUserItem extends AbstractModelItem<SubUserItem.UserViewHolder>
 			tvTime = (TextView) itemView.findViewById(R.id.tv_time);
 			rvPostTags = (RecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
 			ivProfilePicture = (SimpleDraweeView) itemView.findViewById(R.id.profile_picture);
-		}
 
-		@Override
-		public float getActivationElevation() {
-			return Utils.dpToPx(4f, itemView.getContext());
+			rvPostTags.setVisibility(View.GONE);
+            Util.setSelectionsBackgroundAdapter(itemView, R.color.white, R.color.colorAccentLight, R.color.LightGrey);
 		}
 
 		@Override
