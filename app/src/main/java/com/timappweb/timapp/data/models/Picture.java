@@ -6,6 +6,7 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
@@ -93,6 +94,10 @@ public class Picture extends SyncBaseModel {
                 ", event=" + event +
                 ", user=" + user +
                 '}';
+    }
+
+    public String getTimeCreated() {
+        return Util.millisTimestampToPrettyTime(created);
     }
 
     public void setEvent(Event event) {

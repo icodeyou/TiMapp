@@ -117,9 +117,10 @@
     <string name="no_pic">Il n\'y a pas de encore de photo pour cet événement.</string>
     <string name="uploading_pic">Téléchargement de la photo</string>
     <string name="thanks_for_add_picture">Merci pour cette photo !</string>
-    <string name="action_set_picture_as_default">Choisir comme photo de défaut</string>
+    <string name="action_set_picture_as_default">Mettre en Arrière-Plan</string>
     <string name="action_set_picture_as_event_background">Choisir comme photo de défaut</string>
     <string name="event_picture_updated">La photo de défaut a été mise à jour.</string>
+    <string name="selection">Sélection</string>
     <!-- Fragment Tags -->
     <string name="no_tags">Il n\'y a pas encore de tags pour cet événement.</string>
     <string name="thanks_for_add_tag">Merci pour votre post !</string>

@@ -13,6 +13,7 @@ import com.timappweb.timapp.data.models.Picture;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 

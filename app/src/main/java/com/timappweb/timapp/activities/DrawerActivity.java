@@ -39,6 +39,7 @@ import com.timappweb.timapp.databinding.ActivityDrawerBinding;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -127,7 +128,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setStatusBarColor(R.color.status_bar_map);
+        Util.setStatusBarColor(this,R.color.status_bar_map);
         initDrawer();
         backPressedOnce = false;
 

@@ -77,20 +77,13 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
 
     @Override
     public void bindViewHolder(final FlexibleAdapter adapter, FriendViewHolder holder, int position, List payloads) {
-        Context context = MyApplication.getApplicationBaseContext();
-        //holder.selectedView.setVisibility(View.GONE);
         UserItem item = (UserItem) adapter.getItem(position);
         User friend = item.getUser();
         holder.personName.setText(friend.getUsername());
 
-        // Selection background
-        DrawableUtils.setBackground(holder.itemView,
-                DrawableUtils.getSelectableBackgroundCompat(
-                        context.getResources().getColor(R.color.background_selected_button),
-                        Color.WHITE,
-                        context.getResources().getColor(R.color.red)));
-
-
+        /*// Horizontal Tags Adapter. WORKING
+        //...............................................
+        Context context = MyApplication.getApplicationBaseContext();
         //Listener Horizontal Scroll View
         // Make it scrollable but it's also possible to click. Other wise if user click on tags
         // It does not react as a click on the whole element.
@@ -113,7 +106,7 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
         } else {
             horizontalTagsAdapter.setData(friend.getTags());
         }
-
+*/
         //User pic
         Uri uri = Uri.parse(friend.getProfilePictureUrl());
         holder.personPhoto.setImageURI(uri);
@@ -132,6 +125,8 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
             personName = (TextView) itemView.findViewById(R.id.person_name);
             personPhoto = (SimpleDraweeView) itemView.findViewById(R.id.person_photo);
             horizontalTags = (HorizontalTagsRecyclerView) itemView.findViewById(R.id.rv_horizontal_tags);
+
+            Util.setSelectionsBackgroundAdapter(itemView, R.color.white, R.color.colorPrimary, R.color.colorAccentLight);
         }
 
     }

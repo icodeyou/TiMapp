@@ -59,12 +59,19 @@
 
     </RelativeLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Test Bottom sheet"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
         android:background="@color/white"
-        android:visibility="gone"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"/>
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+        <TextView
+            android:id="@+id/text_info_pic"
+            style="@style/TextDefault"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:text="Time Created"/>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

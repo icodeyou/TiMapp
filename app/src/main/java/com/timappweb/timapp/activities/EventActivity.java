@@ -434,7 +434,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         this.updateEventBackground();
         int numberOfFragments = mFragmentAdapter.getCount();
         mMaterialViewPager.getViewPager().setOffscreenPageLimit(numberOfFragments);
-        mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener());
+        mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener(INITIAL_FRAGMENT_PAGE));
 
         /*
         Change header image and color
@@ -558,6 +558,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     // =============================================================================================
     private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
+        private int lastPosition;
+
+        public MyOnPageChangeListener(int initialFragmentPage) {
+            this.lastPosition = initialFragmentPage;
+        }
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             //Log.d(TAG, "onPageScrolled: " + position);
@@ -567,6 +573,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         public void onPageSelected(int position) {
             Log.d(TAG, "Page " + position + " is now selected.");
             ((OnTabSelectedListener)mFragmentAdapter.getItem(position)).onTabSelected();
+            ((OnTabSelectedListener)mFragmentAdapter.getItem(lastPosition)).onTabUnselected();
+            lastPosition = position;
         }
 
         @Override

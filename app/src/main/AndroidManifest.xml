@@ -436,6 +436,7 @@
         <activity android:name=".activities.AddEventActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
+            android:theme="@style/SecondaryToolbarTheme"
             android:parentActivityName=".activities.ProfileActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

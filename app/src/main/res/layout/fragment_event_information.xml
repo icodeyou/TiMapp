@@ -97,7 +97,7 @@
                             <TextView
                                 android:id="@+id/time_place"
                                 style="@style/TextInfoEvent"
-                                android:text="@{event.getTime()}"
+                                android:text="@{event.getPrettyTimeCreated()}"
                                 tools:text="5 min ago"
                                 />
                         </RelativeLayout>

@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.utils.Util;
 
 public class PresentationActivity extends BaseActivity {
     private String          TAG                     = "PresentationActivity";
@@ -36,7 +37,7 @@ public class PresentationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presentation);
 
-        setStatusBarColor(R.color.black);
+        Util.setStatusBarColor(this, R.color.black);
 
         initViewPager();
         skipButton = findViewById(R.id.skip_button);

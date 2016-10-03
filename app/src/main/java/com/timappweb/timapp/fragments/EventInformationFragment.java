@@ -226,6 +226,11 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     }
 
     @Override
+    public void onTabUnselected() {
+
+    }
+
+    @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         if(!isStatusLoading) {
             updateUserStatusButton();

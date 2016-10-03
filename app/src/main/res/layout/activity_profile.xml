@@ -40,7 +40,7 @@
                     android:ellipsize="none"
                     android:maxLines="1"
                     android:textSize="@dimen/text_big"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center"
                     android:text="@{user.getUsername()}"
                     tools:text="Super Sayen"/>

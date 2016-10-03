@@ -62,6 +62,7 @@ import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.utils.SerializeHelper;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.CategorySelectorView;
 
@@ -127,8 +128,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_event);
 
         this.initToolbar(true);
-        this.setStatusBarColor(R.color.colorSecondaryDark);
-        this.extractSpot(savedInstanceState);
+        Util.setStatusBarColor(this, R.color.colorSecondaryDark);
+
+        extractSpot(savedInstanceState);
 
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -190,13 +190,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return points;
     }
 
-    public String getTime() {
-        if (this.eventPosts != null && eventPosts.size() > 0){
-            return eventPosts.get(eventPosts.size()-1).getPrettyTimeCreated();
-        }
-        return this.getPrettyTimeCreated();
-    }
-
     /**
      * Get the created as a pretty time format
      *

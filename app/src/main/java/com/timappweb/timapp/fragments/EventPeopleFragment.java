@@ -266,6 +266,11 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         }
     }
 
+    @Override
+    public void onTabUnselected() {
+
+    }
+
     private void loadPeopleStatusIfNeeded() {
         if (mUserStatusLoader != null) return;
         Log.d(TAG, "Loading people");

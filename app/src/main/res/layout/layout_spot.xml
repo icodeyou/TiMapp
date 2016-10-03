@@ -46,7 +46,7 @@
             <TextView
                 android:id="@+id/title_spot"
                 style="@style/TitleTwoLines"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimary"
                 android:text="@{spot.name}"
                 tools:text="Terrain" />
 

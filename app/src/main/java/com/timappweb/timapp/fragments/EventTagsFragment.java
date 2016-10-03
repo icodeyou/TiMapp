@@ -176,6 +176,11 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         loadDataIfNeeded();
     }
 
+    @Override
+    public void onTabUnselected() {
+
+    }
+
     // =============================================================================================
     /**
      */

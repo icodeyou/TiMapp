@@ -9,7 +9,7 @@
 
     <com.timappweb.timapp.views.CategorySelectorView
         android:id="@+id/category_selector"
-        app:color_background="@color/colorAccent"
+        app:color_background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

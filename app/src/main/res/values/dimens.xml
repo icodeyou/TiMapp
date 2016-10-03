@@ -169,4 +169,5 @@
     <dimen name="margin_cards_scroll">5dp</dimen>
     <dimen name="share_button">100dp</dimen>
 
+    <item name="shring_coef" type="dimen">90%</item>
 </resources>

@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
@@ -23,14 +24,11 @@ import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
-import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
-import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.DBCacheEngine;
-import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
@@ -45,22 +43,19 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
-import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
-import com.timappweb.timapp.rest.io.serializers.MultipartBuilder;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
 import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
-import com.timappweb.timapp.utils.PictureUtility;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.io.File;
-import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +71,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-public class EventPicturesFragment extends EventBaseFragment implements
-        OnTabSelectedListener,
+public class EventPicturesFragment extends EventBaseFragment implements OnTabSelectedListener,
         ActionMode.Callback{
 
     private static final String         TAG                             = "EventPicturesFragment";
@@ -95,10 +89,12 @@ public class EventPicturesFragment extends EventBaseFragment implements
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private RefreshableRecyclerView     mRecyclerView;
     private View                        bottomSheet;
+    private TextView                    textInfoPic;
 
     private BottomSheetBehavior<View> bottomSheetBehaviour;
     private SectionDataLoader mDataLoader;
     private ActionModeHelper mActionModeHelper;
+    private int lastPositionSelected = -1;
 
     public EventPicturesFragment() {
         setTitle(R.string.title_fragment_pictures);
@@ -129,7 +125,8 @@ public class EventPicturesFragment extends EventBaseFragment implements
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), PICTURE_GRID_COLUMN_NB));
         mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh_layout_place_picture);
 
-        bottomSheet = root.findViewById( R.id.bottom_sheet );
+        bottomSheet = root.findViewById( R.id.bottom_sheet);
+        textInfoPic = (TextView) root.findViewById(R.id.text_info_pic);
     }
 
     private void initConfigEasyImage() {
@@ -139,22 +136,10 @@ public class EventPicturesFragment extends EventBaseFragment implements
                 .setCopyExistingPicturesToPublicLocation(true);
     }
 
-    private void initActionModeHelper(int mode) {
-        //this = ActionMode.Callback instance
-        mActionModeHelper = new ActionModeHelper(picturesAdapter, R.menu.menu_context_picture, this) {
-                //Override to customize the title
-                @Override
-                public void updateContextTitle(int count) {
-
-                }
-            }
-            .withDefaultMode(mode);
-    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         try {
             if (eventActivity.getEvent() == null){
-                // TODO ???
                 throw new Exception("Cannot add picture for null event");
             }
             eventActivity.setEvent((Event) eventActivity.getEvent().requireLocalId());
@@ -209,34 +194,41 @@ public class EventPicturesFragment extends EventBaseFragment implements
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(getActivity(), PICTURE_GRID_COLUMN_NB);
+
         picturesAdapter.setAutoScrollOnExpand(true);
         picturesAdapter.setHandleDragEnabled(true);
         picturesAdapter.setAnimationOnScrolling(true);
         picturesAdapter.setAnimationOnReverseScrolling(true);
-        picturesAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
-            @Override
-            public boolean onItemClick(int position) {
-                Log.d(TAG, "Clicking on picture adapter item n°" + position);
-                AbstractFlexibleItem item = picturesAdapter.getItem(position);
-                if (item instanceof PictureItem){
-                    IntentsUtils.viewPicture(EventPicturesFragment.this.getActivity(),
-                            (position - picturesAdapter.getGridColumnNumber()),
-                            picturesAdapter.getPictureUris());
-                    return true;
-                }
-                return false;
-            }
-        });
         picturesAdapter.initializeListeners(new FlexibleAdapter.OnItemLongClickListener() {
             @Override
             public void onItemLongClick(int position) {
                 Log.d(TAG, "Long click on picture adapter item n°" + position);
-                Picture item = picturesAdapter.getPicture(position);
-                boolean currentUserOwnEvent = getEvent().isOwner(MyApplication.getCurrentUser());
-                if (item != null && mActionModeHelper != null && currentUserOwnEvent){
-                    mActionModeHelper.onLongClick(eventActivity, position);
+                selectPicUI(position);
+            }
+        });
+        picturesAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
+            @Override
+            public boolean onItemClick(int position) {
+                Log.d(TAG, "Clicking on picture adapter item n°" + position);
+                if(mActionModeHelper.getActionMode() == null) {
+                    AbstractFlexibleItem item = picturesAdapter.getItem(position);
+                    if(item instanceof PictureItem) {
+                        IntentsUtils.viewPicture(EventPicturesFragment.this.getActivity(),
+                                (position - picturesAdapter.getGridColumnNumber()),
+                                picturesAdapter.getPictureUris());
+                        return true;
+                    }
+                    return false;
                 }
-                bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+                else {
+                    if(lastPositionSelected != -1 && lastPositionSelected == position) {
+                        mActionModeHelper.destroyActionModeIfCan();
+                    }
+                    else {
+                        selectPicUI(position);
+                    }
+                    return true;
+                }
             }
         });
         mRecyclerView.setAdapter(picturesAdapter);
@@ -248,8 +240,27 @@ public class EventPicturesFragment extends EventBaseFragment implements
                 return true;
             }
         });
-        //mListener.onFragmentChange(mSwipeRefreshLayout, mRecyclerView, SelectableAdapter.MODE_IDLE);
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+    }
+
+    private void selectPicUI(int position) {
+        Picture item = picturesAdapter.getPicture(position);
+        if (item != null && mActionModeHelper != null){
+            mActionModeHelper.onLongClick(eventActivity, position);
+            textInfoPic.setText(item.getTimeCreated());
+        }
+        lastPositionSelected = position;
+    }
+
+    private void initActionModeHelper(int mode) {
+        mActionModeHelper = new ActionModeHelper(picturesAdapter, R.menu.menu_context_picture, this) {
+            //Override to customize the title
+            @Override
+            public void updateContextTitle(int count) {
+                mActionMode.setTitle(getContext().getString(R.string.selection));
+            }
+        }
+                .withDefaultMode(mode);
     }
 
     private void initDataLoader() {
@@ -357,7 +368,6 @@ public class EventPicturesFragment extends EventBaseFragment implements
     }
 
     private void setPictureAsEventBackground(final Picture picture) {
-        // TODO JACK loader
         Map<String, String> params = new HashMap();
         params.put("picture_id", String.valueOf(picture.getRemoteId())); // TODO cst
         RestClient.buildCall(RestClient.service().setBackgroundPicture(getEvent().getRemoteId(), params))
@@ -394,6 +404,12 @@ public class EventPicturesFragment extends EventBaseFragment implements
     }
 
 
+    @Override
+    public void onTabUnselected() {
+        mActionModeHelper.destroyActionModeIfCan();
+    }
+
+
     /**
      * Get currently selected picture or null if nothing is selected
      * @return
@@ -412,11 +428,10 @@ public class EventPicturesFragment extends EventBaseFragment implements
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        eventActivity.hideActionBar();
         boolean currentUserOwnEvent = getEvent().isOwner(MyApplication.getCurrentUser());
+        bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
         menu.getItem(INDEX_CONTEXTUAL_MENU_ITEM_SET_BACKGROUND)
                 .setVisible(currentUserOwnEvent);
-
         picturesAdapter.setMode(SelectableAdapter.MODE_SINGLE);
         return true;
     }
@@ -441,12 +456,11 @@ public class EventPicturesFragment extends EventBaseFragment implements
         }
     }
 
-
     @Override
     public void onDestroyActionMode(ActionMode mode) {
         picturesAdapter.setMode(SelectableAdapter.MODE_IDLE);
-        eventActivity.showActionBar();
+        lastPositionSelected = -1;
+        bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
-
 }
 

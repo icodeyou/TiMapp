@@ -1,11 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-    </style>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <!--<item name="android:windowActivityTransitions">true</item>
@@ -18,33 +14,36 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item> <!-- the contextual action bar will now overlay the action bar -->
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+
+        <!-- Toolbar Theme / Apply white arrow -->
+        <!--<item name="colorControlNormal">@color/textLight</item>-->
+        <!--<item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
+        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>-->
 
         <!-- -->
         <item name="android:textColor">@color/textBlack</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
 
         <!-- Material Theme -->
-        <item name="colorPrimary">@color/colorAccent</item> <!-- Toolbar -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item> <!-- Toolbar -->
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
 
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <!--<item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>-->
-
-
-
-
-        <!-- Toolbar Theme / Apply white arrow -->
-        <!--<item name="colorControlNormal">@color/textLight</item>-->
-        <item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
-        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>
-
 
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="21">true</item>-->
 
     </style>
+
+    <style name="SecondaryToolbarTheme" parent="AppTheme">
+        <item name="android:actionModeBackground">@color/colorSecondary</item>
+    </style>
+
 
     <style name="DefaultSwitch" parent="AppTheme">
         <!-- active thumb & track color  -->
@@ -367,7 +366,7 @@
         <item name="android:padding">10dp</item>
         <item name="android:background">@color/background</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:radius">0dp</item>
     </style>
@@ -449,7 +448,7 @@
 
     <style name="title2">
         <item name="android:textSize">@dimen/text_big</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingBottom">4dp</item>

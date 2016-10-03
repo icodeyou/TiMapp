@@ -137,13 +137,15 @@
         <!-- Fragment Info -->
             <string name="i_am_coming">I\'m coming</string>
             <string name="i_am_here">I\'m here</string>
+            <string name="next_to_you">Next to you</string>
         <!-- Fragment Picture -->
             <string name="no_pic">There isn\'t any picture here yet.</string>
             <string name="uploading_pic">Uploading picture</string>
             <string name="thanks_for_add_picture">Thanks for your picture</string>
-            <string name="action_set_picture_as_default">Set as default picture</string>
+            <string name="action_set_picture_as_default">Set as background</string>
             <string name="action_set_picture_as_event_background">Set as event picture</string>
             <string name="event_picture_updated">The default picture has been updated.</string>
+            <string name="selection">Selection</string>
 
     <!-- Fragment Tags -->
             <string name="no_tags">No tags yet.</string>
@@ -267,6 +269,6 @@
 
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
-    <string name="dummy_string">Dummy String</string>
+    <string name="dummy_string" translatable="false">Dummy String</string>
 
 </resources>
