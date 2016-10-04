@@ -1,7 +1,8 @@
 package com.timappweb.timapp.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -11,14 +12,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 
+
+@BindingMethods(@BindingMethod(type = SimpleTimerView.class, attribute = "myattrs:initialTime", method = "initBindingTime"))
 public class SimpleTimerView extends TextSwitcher {
     private static int COUNTDOWNINTERVAL = 1000;
 
-    private int initialTime = -1;
     private CountDownTimer countDownTimer;
 
     public SimpleTimerView(Context context) {
@@ -31,7 +32,7 @@ public class SimpleTimerView extends TextSwitcher {
 
         //Get attributes in XML
         //TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SimpleTimerView, 0, 0);
-        //initialTime = ta.getColor(R.styleable.SimpleTimerView_initialTime, -1);
+        //initialTimeMs = ta.getInteger(R.styleable.SimpleTimerView_initialTime, -1);
 
         init();
     }
@@ -50,17 +51,15 @@ public class SimpleTimerView extends TextSwitcher {
         Animation outAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.timer_out);
         this.setInAnimation(inAnimation);
         this.setOutAnimation(outAnimation);
-
-        //initTimer();
     }
 
-    public void initTimer(long initialMs) {
-        /*if(initialTime == -1) {
-            this.setVisibility(INVISIBLE);
-        }*/
+    public void initTimer(long initialTimeSec) {
+        if (countDownTimer != null){
+            countDownTimer.cancel();
+        }
         if(MyApplication.getApplicationBaseContext().getResources().getBoolean(R.bool.event_animateCountDownTimer)
-                && countDownTimer == null && initialMs > 0) {
-            countDownTimer = new CountDownTimer(initialMs*1000, COUNTDOWNINTERVAL) {
+                && initialTimeSec > 0) {
+            countDownTimer = new CountDownTimer(initialTimeSec *1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
                     SimpleTimerView.this.setText(String.valueOf(millisUntilFinished / 1000));
