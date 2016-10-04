@@ -397,10 +397,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     public void setButtonValidation() {
-        String textAfterChange = eventNameET.getText().toString().trim();
-        boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange)
-                && mFineLocation != null;
-        postButton.setEnabled(isValid);
+        if (postButton != null) {
+            String textAfterChange = eventNameET.getText().toString().trim();
+            boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange)
+                    && mFineLocation != null;
+            postButton.setEnabled(isValid);
+        }
     }
     //----------------------------------------------------------------------------------------------
     //Public methods
@@ -501,9 +503,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (postButton != null) {
-                    setButtonValidation();
-                }
+                setButtonValidation();
             }
         });
     }

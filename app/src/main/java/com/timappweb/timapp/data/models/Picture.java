@@ -18,9 +18,13 @@ public class Picture extends SyncBaseModel {
     // =============================================================================================
     // DATABASE
 
+    /*
     @Column(name = "Photo", notNull = true)
     @Expose(serialize = true, deserialize = true)
-    public String photo;
+    public String photo;*/
+    @Column(name = "Original", notNull = true)
+    @Expose(serialize = true, deserialize = true)
+    public String original;
 
     @Column(name = "Preview")
     @Expose(serialize = false, deserialize = true)
@@ -32,9 +36,10 @@ public class Picture extends SyncBaseModel {
     @SerializedName("thumbnail_square")
     public String square;
 
+    /*
     @Column(name = "PhotoDir", notNull = true)
     @Expose(serialize = false, deserialize = true)
-    public String photo_dir;
+    public String photo_dir;*/
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
     @Column(name = "Event", notNull = true, onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
@@ -47,9 +52,10 @@ public class Picture extends SyncBaseModel {
     @Expose(serialize = false, deserialize = true)
     public User user;
 
+    /*
     @Column(name = "BaseUrl")
     @Expose(serialize = false, deserialize = true)
-    public String base_url;
+    public String base_url;*/
 
     // =============================================================================================
     // Fields
@@ -62,7 +68,7 @@ public class Picture extends SyncBaseModel {
     // =============================================================================================
 
     public String getUrl(){
-        return  this.base_url + this.photo;
+        return  this.original;
     }
 
     public String getThumbnailUrl(ThumbnailType type){
@@ -86,11 +92,9 @@ public class Picture extends SyncBaseModel {
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", created=" + created +
-                ", photo='" + photo + '\'' +
                 ", card='" + card + '\'' +
                 ", square='" + square + '\'' +
-                ", photo_dir='" + photo_dir + '\'' +
-                ", base_url='" + base_url + '\'' +
+                ", original='" + original + '\'' +
                 ", event=" + event +
                 ", user=" + user +
                 '}';

@@ -65,7 +65,7 @@
         <!-- DATABASE CONFIGURATION -->
         <!-- pre populate db -->
         <meta-data android:name="AA_DB_NAME" android:value="@string/db_name" />
-        <meta-data android:name="AA_DB_VERSION" android:value="20" />
+        <meta-data android:name="AA_DB_VERSION" android:value="21" />
         <!--
         // TODO for production set models to speed up launch
         <meta-data  android:name=""AA_MODELS"
