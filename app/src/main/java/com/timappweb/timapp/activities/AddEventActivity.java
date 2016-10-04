@@ -246,18 +246,15 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     protected void onStart() {
         super.onStart();
         LocationManager.start(this);
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
+        Log.d(TAG, "onStop() Stopping LocationManager");
         LocationManager.removeLocationListener(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        LocationManager.stop();
-        super.onDestroy();
+        LocationManager.stop(this);
+        super.onStop();
     }
 
     @Override
@@ -528,13 +525,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     @Override
-    public void onPause() {
-        mapView.onPause();
-        LocationManager.stop();
-        super.onPause();
-    }
-
-    @Override
     protected void onRestart() {
         super.onRestart();
         if(eventNameET.hasFocus()) {
@@ -553,7 +543,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         super.onResume();
         mapView.onResume();
         this.loadMapIfNeeded();
-        LocationManager.addOnLocationChangedListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        mapView.onPause();
+        super.onPause();
+        LocationManager.removeLocationListener(this);
     }
 
     private void loadMapIfNeeded() {
@@ -686,7 +682,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         if (LocationManager.hasUpToDateLastLocation() && LocationManager.hasFineLocation(accuracyRequired)){
             Log.i(TAG, "A fine user location has been found: " + newLocation + ". Stopping location updates.");
             mFineLocation = newLocation;
-            LocationManager.stop();
+            LocationManager.stop(this);
             onFineLocationFound();
         }
         else {
@@ -708,10 +704,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
-        Log.v(TAG, "User location changed!");
-        if (mFineLocation == null){
-            updateEventLocation();
-            updateMapCenter(newLocation);
+        Log.d(TAG, "User location changed: " + newLocation);
+
+        synchronized (this){
+            if (mFineLocation == null){
+                updateEventLocation();
+                updateMapCenter(newLocation);
+            }
         }
         //requestReverseGeocoding(newLocation);
     }

@@ -81,6 +81,14 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Expose
     public double           longitude;
 
+    @Column(name = "BeginDate")
+    @Expose
+    public int           begin_date;
+
+    @Column(name = "EndDate")
+    @Expose
+    public int           end_date;
+
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
     @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
     @SerializedName("category")
@@ -195,8 +203,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      *
      * @return
      */
-    public String getPrettyTimeCreated() {
-        return Util.secondsTimestampToPrettyTime(this.created);
+    public String getPrettyTimeBegin() {
+        return Util.secondsTimestampToPrettyTime(this.begin_date);
     }
 
     @Override
@@ -205,8 +213,9 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
+                ", date='from " + new Date(begin_date*1000).toString() + " to "  + (end_date > 0 ? new Date(end_date*1000).toString() : '?') + '\'' +
                 ", location=(" + latitude + "," + longitude + ")" +
-                ", created=" + created +
+                ", created=" + new Date(created*1000).toString()  +
                 ", category=" + (event_category != null ? event_category.getName() : "NONE") +
                 ", spot=" + (spot != null ? spot.getName() : "No spot") +
                 ", author=" + (user != null ? user.username : "No author") +

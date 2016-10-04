@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
@@ -188,8 +189,12 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     @Override
     public void onStart() {
         super.onStart();
-        if (userStatusLoader != null) EventBus.getDefault().register(userStatusLoader);
-        if (inviteSentLoader != null) EventBus.getDefault().register(inviteSentLoader);
+        if (userStatusLoader != null) {
+            EventBus.getDefault().register(userStatusLoader);
+        }
+        if (inviteSentLoader != null){
+            EventBus.getDefault().register(inviteSentLoader);
+        }
     }
 
     @Override
@@ -272,12 +277,14 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         if (mUserStatusLoader != null) return;
         Log.d(TAG, "Loading people");
         mUserStatusLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, userStatusLoader);
+        userStatusLoader.refresh();
     }
 
     private void loadInviteSentIfNeeded() {
         if (mInviteLoader != null) return;
         Log.d(TAG, "Loading invite sent by user");
         mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
+        inviteSentLoader.refresh();
     }
 
     @Override

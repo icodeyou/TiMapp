@@ -67,7 +67,7 @@ public class SessionRequestInterceptor implements Interceptor
                             logout(); //go to login screen
                         }
 
-                        return response; //if token refresh failed - show error to user
+                        return response; //if token refresh failed - builder error to user
                     }
                 }
 

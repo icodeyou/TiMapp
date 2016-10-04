@@ -38,7 +38,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
 
         /**
-         * In some cases it may be useful to show a notification indicating to the user
+         * In some cases it may be useful to builder a notification indicating to the user
          * that a message was received.
          */
         //sendNotification(message);
@@ -46,7 +46,7 @@ public class MyGcmListenerService extends GcmListenerService {
     // [END receive_message]
 
     /**
-     * Create and show a simple notification containing the received GCM message.
+     * Create and builder a simple notification containing the received GCM message.
      *
      * @param message GCM message received.
      */

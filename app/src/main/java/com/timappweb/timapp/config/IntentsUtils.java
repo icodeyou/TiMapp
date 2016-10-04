@@ -172,7 +172,7 @@ public class IntentsUtils {
             return;
         }
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
             return;
         }
         Intent intent = new Intent(context, LocateActivity.class);
@@ -235,7 +235,7 @@ public class IntentsUtils {
         if (!requireLogin(activity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_TAGS, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
             return;
         }
 
@@ -255,7 +255,7 @@ public class IntentsUtils {
         if (!requireLogin(activity, false))
             return;
         //if (!QuotaManager.instance().checkQuota(QuotaType.INVITE_FRIEND, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
         //    return;
         //}
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
@@ -322,12 +322,12 @@ public class IntentsUtils {
         if (!requireLogin(activity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
             return;
         }
-        activity.finish();
         Intent intent = new Intent(activity, AddEventActivity.class);
         activity.startActivity(intent);
+        activity.finish();
     }
 
     public static void pinSpot(Activity activity) {
@@ -335,10 +335,16 @@ public class IntentsUtils {
     }
 
     public static void pinSpot(Activity activity, Spot spot) {
+        Log.d(TAG, "Trying to pin spot with location: " + LocationManager.getLastLocation());
+        if (!LocationManager.hasFineLocation() || !LocationManager.hasUpToDateLastLocation()){
+            Toast.makeText(MyApplication.getApplicationBaseContext(),
+                    R.string.waiting_for_location, Toast.LENGTH_LONG).show();
+            return;
+        }
         if (!requireLogin(activity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
-            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
             return;
         }
         Intent intent = new Intent(activity, AddSpotActivity.class);

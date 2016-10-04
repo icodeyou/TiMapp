@@ -13,6 +13,7 @@ import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class LocationManager {
     private static com.google.android.gms.location.LocationListener     mLocationListener   = null;
     private static MyLocationProvider       locationProvider    = null;
     private static List<LocationListener>   listeners           = new LinkedList<>();
+    private static HashSet<Activity> activities           = new HashSet<>(); // Activities that started the listener
 
     // =============================================================================================
 
@@ -100,11 +102,16 @@ public class LocationManager {
         if (!listeners.contains(locationListener)){
             listeners.add(locationListener);
         }
+        else{
+            Log.w(TAG, "Listener is already present: " + locationListener);
+        }
     }
 
 
     public static void start(Activity activity){
         Log.d(TAG, "Starting location manager");
+        if (!activities.contains(activity))
+            activities.add(activity);
         initLocationListener();
         initLocationProvider(activity);
         locationProvider.connect();
@@ -115,7 +122,13 @@ public class LocationManager {
         }
     }
 
-    public static void stop(){
+    public static void stop(Activity activity){
+        activities.remove(activity);
+        if (activities.size() > 0){
+            Log.d(TAG, "There are still " + activities.size() + " activity that require location updates");
+            return;
+        }
+
         Log.d(TAG, "Stopping location manager");
         listeners.clear();
         if (locationProvider != null) {

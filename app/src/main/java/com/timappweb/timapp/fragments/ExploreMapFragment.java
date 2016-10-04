@@ -303,6 +303,9 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         return MyApplication.searchFilter.tags!=null && MyApplication.searchFilter.tags.size()!=0;
     }
 
+    public GoogleMap getMap(){
+        return this.gMap;
+    }
 
     // ---------------------------------------------------------------------------------------------
 
@@ -359,8 +362,11 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private void centerMap(Location location,  GoogleMap.CancelableCallback  callback){
         if (gMap != null){
             needCenterMap = false;
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP), callback);
+            centerMap(MyLocationProvider.convert(location), callback);
         }
+    }
+    public void centerMap(LatLng latLng, GoogleMap.CancelableCallback  callback){
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_CENTER_MAP), callback);
     }
 
     /**

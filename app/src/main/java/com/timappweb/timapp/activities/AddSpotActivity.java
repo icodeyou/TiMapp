@@ -45,6 +45,7 @@ import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
@@ -57,7 +58,9 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import io.fabric.sdk.android.Fabric;
 
-public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback, PaginateDataLoader.Callback {
+public class AddSpotActivity extends BaseActivity implements
+        //LocationManager.LocationListener,
+        OnMapReadyCallback, PaginateDataLoader.Callback {
 
     private static final String         TAG                             = "AddSpotActivity";
     private static final float          ZOOM_LEVEL_CENTER_MAP           = 15.0f;
@@ -123,9 +126,10 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 .setNoDataView(noDataView)
                 ;
 
-        if (LocationManager.hasLastLocation()){
+        Util.appAssert(LocationManager.hasLastLocation(), TAG, "A last location must be set to add a spot");
+        //if (LocationManager.hasLastLocation()){
             mDataLoader.loadNextPage();
-        }
+        //}
     }
 
 
@@ -322,6 +326,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     */
     // =============================================================================================
 
+    /*
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         //requestReverseGeocoding(newLocation);
@@ -330,13 +335,14 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             mDataLoader.loadNextPage();
         }
         else {
-            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).builder();
             mSwipeAndRefreshLayout.setEnabled(true);
             mDataLoader
                     .clear()
                     .loadNextPage();
         }
     }
+    */
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -346,13 +352,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     protected void onStart() {
         super.onStart();
-        LocationManager.addOnLocationChangedListener(this);
+        //LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LocationManager.removeLocationListener(this);
+        //LocationManager.removeLocationListener(this);
     }
 
     @Override

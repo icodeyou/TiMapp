@@ -56,14 +56,17 @@ public class SplashActivity extends BaseActivity {
                                 Log.e(TAG, "    - No event categories configuration");
                             }
                             ConfigurationProvider.clearStaticVariables();
-                            RetryDialog.show(SplashActivity.this, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    SplashActivity.this.loadConfig();
-                                }
-                            }, getString(R.string.cannot_load_server_configuration_title),
-                                    getString(R.string.cannot_load_server_configuration_msg));
+                            RetryDialog.builder(SplashActivity.this, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        SplashActivity.this.loadConfig();
+                                    }
+                                }, getString(R.string.cannot_load_server_configuration_title),
+                                        getString(R.string.cannot_load_server_configuration_msg))
+                                .setCancelable(false)
+                                .create()
+                                .show();
                         }
                         else{
                             if (callsManager.isSuccess(ConfigurationProvider.CALL_ID_SPOT_CATEGORIES)

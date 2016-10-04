@@ -35,7 +35,7 @@ public class PeopleHeaderItem extends ExpandableHeaderItem {
 
     /**
      * Update the item count. If we have less data than the actual count, we are
-     * adding a new item to show the total count
+     * adding a new item to builder the total count
      * @param count
      */
     public void setCount(int count, MyFlexibleAdapter adapter) {

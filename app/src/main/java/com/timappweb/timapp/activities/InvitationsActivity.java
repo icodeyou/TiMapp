@@ -84,8 +84,8 @@ public class InvitationsActivity extends BaseActivity implements
 
     @Override
     protected void onStop() {
+        LocationManager.stop(this);
         super.onStop();
-        LocationManager.stop();
     }
 
     @Override

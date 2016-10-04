@@ -1,6 +1,7 @@
 package com.timappweb.timapp.fragments;
 
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
@@ -116,6 +117,12 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvCountPoints.initTimer(getEvent().getPoints());
+    }
+
+    @Override
+    public void onDestroyView() {
+        LocationManager.removeLocationListener(this);
+        super.onDestroyView();
     }
 
     private void initVariables(View view) {
@@ -242,17 +249,18 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         @Override
         public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
             Event event = getEvent();
+            Context context = MyApplication.getApplicationBaseContext();
             UserEventStatusEnum newStatus = isChecked
                     ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
                     :  UserEventStatusEnum.GONE;
 
             int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
-            statusTv.setTextColor(ContextCompat.getColor(getContext(),colorStatusText));
+            statusTv.setTextColor(ContextCompat.getColor(context,colorStatusText));
             if(progressStatus.getVisibility()==View.VISIBLE){
                 setStatusProgress(false);
             }
 
-            HttpCallManager manager = EventStatusManager.instance().add(getContext(), event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
+            HttpCallManager manager = EventStatusManager.instance().add(context, event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
             if (manager != null){
                 setStatusProgress(true);
 

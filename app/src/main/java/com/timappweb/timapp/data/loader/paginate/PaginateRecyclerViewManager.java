@@ -49,7 +49,7 @@ public class PaginateRecyclerViewManager
         mDataLoader.clear();
         mAdapter.removeAll();
         if (!mDataLoader.loadNextPage()){
-            setRefreshing(false);
+            this.onLoadEndUI();
         }
     }
 
@@ -64,11 +64,12 @@ public class PaginateRecyclerViewManager
             this.mCallback.onLoadEnd(info, data);
         }
          //this.updateNoDataView();
+        this.onLoadEndUI();
     }
 
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
-        setRefreshing(false);
+        this.onLoadEndUI();
         //this.updateNoDataView();
 
         if (this.mCallback != null){

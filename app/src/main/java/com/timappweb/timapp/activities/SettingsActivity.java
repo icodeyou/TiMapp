@@ -106,8 +106,8 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onStop() {
-        super.onStop();
         getDelegate().onStop();
+        super.onStop();
     }
 
     @Override

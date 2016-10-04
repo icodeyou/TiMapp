@@ -160,24 +160,24 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onStart() {
         super.onStart();
         LocationManager.start(this);
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
     protected void onStop() {
+        LocationManager.removeLocationListener(this);
+        LocationManager.stop(this);
         super.onStop();
-        LocationManager.stop();
     }
 
     @Override
     protected void onPause() {
-        LocationManager.removeLocationListener(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
@@ -257,7 +257,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                                 Log.e(TAG, e.getMessage());
                             }
                         }
-                    }))
+                    }).setCancelable(false))
                     .onFinally(new HttpCallManager.FinallyCallback() {
                         @Override
                         public void onFinally(Response response, Throwable error) {
