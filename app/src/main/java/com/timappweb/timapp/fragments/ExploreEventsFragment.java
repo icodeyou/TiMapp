@@ -68,9 +68,9 @@ public class ExploreEventsFragment extends Fragment {
 
         //set Jazzy Effect on Recycler View
         //Best effects : CardsEffect(), TiltEffect(), ZipperEffect().
-        JazzyRecyclerViewScrollListener jazzyRecyclerViewScrollListener = new JazzyRecyclerViewScrollListener();
-        jazzyRecyclerViewScrollListener.setTransitionEffect(new TiltEffect());
-        eventRecyclerView.addOnScrollListener(jazzyRecyclerViewScrollListener);
+        //JazzyRecyclerViewScrollListener jazzyRecyclerViewScrollListener = new JazzyRecyclerViewScrollListener();
+        //jazzyRecyclerViewScrollListener.setTransitionEffect(new TiltEffect());
+        //eventRecyclerView.addOnScrollListener(jazzyRecyclerViewScrollListener);
     }
 
     public void onResume(){

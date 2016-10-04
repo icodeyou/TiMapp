@@ -14,7 +14,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item> <!-- the contextual action bar will now overlay the action bar -->
-        <item name="actionMenuTextColor">@color/white</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
 
         <!-- Toolbar Theme / Apply white arrow -->
@@ -38,6 +37,11 @@
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="21">true</item>-->
 
+    </style>
+
+    <style name="WhiteMenuActionbar" parent="AppTheme">
+        <item name="actionMenuTextColor">@color/white</item> <!-- Action Menu items color -->
+        <item name="android:textColorSecondary">@color/White</item> <!-- Home Button Color -->
     </style>
 
     <style name="SecondaryToolbarTheme" parent="AppTheme">
@@ -87,10 +91,6 @@
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/colorPrimary</item>
-    </style>
-
-    <style name="EditProfileTheme" parent="AppTheme">
-        <item name="android:textColorSecondary">@color/White</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="AppTheme.ActionBarTheme">

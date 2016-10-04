@@ -12,7 +12,7 @@
         <ImageView
             style="@style/ImageLayoutFour"
             android:src="@drawable/hot"/>
-        <TextView
+        <me.grantland.widget.AutofitTextView
             style="@style/TextLayoutFour"
             android:text="@string/popularity_page_one"/>
     </LinearLayout>
@@ -21,7 +21,7 @@
         <ImageView
             style="@style/ImageLayoutFour"
             android:src="@drawable/rate_down_blue"/>
-        <TextView
+        <me.grantland.widget.AutofitTextView
             style="@style/TextLayoutFour"
             android:text="@string/popularity_page_three"/>
     </LinearLayout>
@@ -30,7 +30,7 @@
         <ImageView
             style="@style/ImageLayoutFour"
             android:src="@drawable/rate_up_primary"/>
-        <TextView
+        <me.grantland.widget.AutofitTextView
             style="@style/TextLayoutFour"
             android:text="@string/popularity_page_two"/>
     </LinearLayout>
@@ -40,7 +40,7 @@
             style="@style/ImageLayoutFour"
             android:padding="10dp"
             android:src="@drawable/cross_blue"/>
-        <TextView
+        <me.grantland.widget.AutofitTextView
             style="@style/TextLayoutFour"
             android:text="@string/popularity_page_four"/>
     </LinearLayout>

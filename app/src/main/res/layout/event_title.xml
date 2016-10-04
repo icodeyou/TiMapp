@@ -10,15 +10,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:gravity="center">
-        <me.grantland.widget.AutofitTextView
+        <TextView
             android:id="@+id/title_event"
-            style="@style/TextBold"
+            style="@style/TitleTwoLines"
+            android:gravity="center"
             android:textColor="@color/textLight"
             android:textSize="@dimen/title_event_card"
-            app:minTextSize="15dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
             android:text="@{event.name}"
-            tools:text="My very great event name and also very long cause i like long"/>
+            tools:text="Le match de l'année à Saint-Cassien"/>
     </LinearLayout>
 </layout>

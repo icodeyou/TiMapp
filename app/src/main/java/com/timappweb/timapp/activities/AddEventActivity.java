@@ -231,8 +231,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     @Override
     public void onBackPressed() {
-        if(clientCall != null) {
+        if(clientCall != null && clientCall.isDone()) {
             clientCall.cancel();
+            clientCall = null;
             progressView.setVisibility(View.GONE);
         }
         else {
@@ -349,7 +350,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             else{
                 call = RestClient.service().addPlace(AddEventMapper.toJson(event));
             }
-            RestClient.<JsonObject>buildCall(call)
+            clientCall = RestClient.<JsonObject>buildCall(call)
                     .onResponse(new AutoMergeCallback(event))
                     .onResponse(new FormErrorsCallbackBinding(mBinding))
                     .onResponse(new FormErrorsCallback(this, "Pictures"))
@@ -404,7 +405,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 && mFineLocation != null;
         postButton.setEnabled(isValid);
     }
-
     //----------------------------------------------------------------------------------------------
     //Public methods
 

@@ -1,6 +1,7 @@
 package com.timappweb.timapp.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import com.timappweb.timapp.R;
 
 public class SimpleTimerView extends TextSwitcher {
     private static int COUNTDOWNINTERVAL = 1000;
+
+    private int initialTime = -1;
     private CountDownTimer countDownTimer;
 
     public SimpleTimerView(Context context) {
@@ -25,6 +28,11 @@ public class SimpleTimerView extends TextSwitcher {
 
     public SimpleTimerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        //Get attributes in XML
+        //TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SimpleTimerView, 0, 0);
+        //initialTime = ta.getColor(R.styleable.SimpleTimerView_initialTime, -1);
+
         init();
     }
 
@@ -42,12 +50,17 @@ public class SimpleTimerView extends TextSwitcher {
         Animation outAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.timer_out);
         this.setInAnimation(inAnimation);
         this.setOutAnimation(outAnimation);
+
+        //initTimer();
     }
 
-    public void initTimer(long initialms) {
+    public void initTimer(long initialMs) {
+        /*if(initialTime == -1) {
+            this.setVisibility(INVISIBLE);
+        }*/
         if(MyApplication.getApplicationBaseContext().getResources().getBoolean(R.bool.event_animateCountDownTimer)
-                && countDownTimer == null && initialms > 0) {
-            countDownTimer = new CountDownTimer(initialms*1000, COUNTDOWNINTERVAL) {
+                && countDownTimer == null && initialMs > 0) {
+            countDownTimer = new CountDownTimer(initialMs*1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
                     SimpleTimerView.this.setText(String.valueOf(millisUntilFinished / 1000));

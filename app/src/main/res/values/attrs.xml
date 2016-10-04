@@ -25,5 +25,9 @@
         <attr name="tabBackgroundTextViewId" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="SimpleTimerView">
+        <attr name="initialTime" format="integer"/>
+    </declare-styleable>
+
 
 </resources>

@@ -104,14 +104,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         progressView = findViewById(R.id.progress_view);
         noDataView = findViewById(R.id.no_data_view);
 
-        // TODO : TUTO (ShowCaseView): If the place already exists in the list below, you can just select it.
-
         initEditText();
         initAdapters();
         setListeners();
         initDataLoader();
 
         new PaginateRecyclerViewManager(this, mAdapter, mDataLoader)
+                .setNoDataView(noDataView)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Spot>() {
                     @Override
                     public AbstractFlexibleItem createItem(Spot data) {
@@ -120,7 +119,6 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 })
                 .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
                 .setCallback(this)
-                .setNoDataView(noDataView)
                 ;
 
         if (LocationManager.hasLastLocation()){

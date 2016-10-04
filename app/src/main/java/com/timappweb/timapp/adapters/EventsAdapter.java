@@ -129,16 +129,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             int initialTime = event.getPoints();
             tvCountPoints.initTimer(initialTime);
 
-
-            // @warning: we cannot use binding for this because image cannot load.
-            //if (event.hasPicture()){
-            //    imageView.setImageURI(Uri.parse(Uri.decode(event.getPicture().getThumbnailUrl())));
-            //}
-            //else{
-            //    imageView.setImageDrawable(event.getBackgroundImage(imageView.getContext()));
-            //}
-
-            // TODO use binding
             try {
                 titleCategory.setText(Util.capitalize(event.getCategory().name));
             } catch (UnknownCategoryException e) {
