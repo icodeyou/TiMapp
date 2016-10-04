@@ -141,7 +141,7 @@
 
 
     <!-- LocateActivity  -->
-    <string name="text_activity_locate">Est-ce que votre événement existe déja ?</string>
+    <string name="text_activity_locate">Merci de vérifiez que votre événement n\'a pas déja été créé.</string>
     <string name="address_found">Adresse trouvée</string>
 
     <!-- AddEventActivity -->

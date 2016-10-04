@@ -307,7 +307,7 @@
             android:name=".activities.EventActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_place"
-            android:theme="@style/EditProfileTheme"
+            android:theme="@style/WhiteMenuActionbar"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -413,7 +413,7 @@
             android:label="@string/title_activity_edit_profile"
             android:windowSoftInputMode="adjustNothing|stateVisible"
             android:parentActivityName=".activities.ProfileActivity"
-            android:theme="@style/EditProfileTheme">
+            android:theme="@style/WhiteMenuActionbar">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

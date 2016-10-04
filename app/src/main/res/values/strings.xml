@@ -23,8 +23,8 @@
     <string name="error_message_invalid_lat_long_used" translatable="false">Invalid latitude or longitude used</string>
     <!-- Dev Strings -->
     <string name="dev_name" translatable="false">Concert improvisé :D</string>
-    <string name="dev_description" translatable="false">Cet endroit est sympa, surtout
-        grâce à Lucia qui s’est mise à danser sur le bar.</string>
+    <string name="dev_description" translatable="false">Un mec super doué s\'est mis à jouer du saxophone dans la rue !
+        Venez vite, c\'est impressionant :D</string>
     <!-- ...........................................................................-->
 
     <!-- Titles Activities -->
@@ -261,11 +261,11 @@
     <string name="invite_people">Invite friends</string>
     <string name="title_p_six">Popularity</string>
     <string name="title_p_seven">Ready to go ?</string>
-    <string name="popularity_page_one">Each event has a number of points representing its popularity</string>
-    <string name="popularity_page_two">But it is increased when people post pictures and tags</string>
-    <string name="popularity_page_three">This number is in fact a timer</string>
-    <string name="popularity_page_four">When the popularity timer reaches zero, the event is removed from the map</string>
-    <string name="text_final_button_viewpager">Let\'s get it started</string>
+    <string name="popularity_page_one">Each event has a number of points representing its popularity.</string>
+    <string name="popularity_page_two">But it is increased when people post pictures and tags.</string>
+    <string name="popularity_page_three">This number is in fact a timer.</string>
+    <string name="popularity_page_four">When the popularity timer reaches zero, the event is removed from the map.</string>
+    <string name="text_final_button_viewpager">Let\'s get it started.</string>
 
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/LightGrey">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background">
 
     <include android:id="@+id/toolbar_layout"
         layout="@layout/toolbar_layout" />
@@ -20,9 +21,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/TextPadding"
+            style="@style/TitleTwoLines"
             android:gravity="center"
-            android:text="@string/text_activity_locate"/>
+            android:text="@string/text_activity_locate"
+            tools:text="Vérifiez que votre événement n'a pas déja été créé."/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_events"
