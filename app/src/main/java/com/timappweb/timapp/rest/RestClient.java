@@ -18,13 +18,11 @@ import com.timappweb.timapp.rest.io.interceptors.SessionRequestInterceptor;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.deserializers.EventDeserializer;
-import com.timappweb.timapp.rest.io.deserializers.JsonConfDeserializer;
 import com.timappweb.timapp.rest.io.deserializers.SpotDeserializer;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.services.RestInterface;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
-import com.timappweb.timapp.configsync.SyncConfig;
 
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -104,7 +102,7 @@ public class RestClient {
                 .connectTimeout(HTTP_PARAM_CONNECTION_TIMEOUT, TimeUnit.SECONDS);
         this.gsonBuilder = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
+                //.registerTypeAdapter(SyncConfig.class, new JsonConfDeserializer())
                 .registerTypeAdapter(Event.class, new EventDeserializer())
                 .registerTypeAdapter(Spot.class, new SpotDeserializer());
         Log.i(TAG, "Initializing server connection at " + baseUrl);

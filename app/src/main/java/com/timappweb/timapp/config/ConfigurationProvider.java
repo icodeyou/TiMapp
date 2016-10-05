@@ -37,7 +37,6 @@ public class ConfigurationProvider{
     public static final String CALL_ID_EVENT_CATEGORIES = "event_categories";
     private static final long UPDATE_CONF_MAX_DELAY = 6 * 3600 * 1000;
 
-    private static HttpCallback listener;
     private static ApplicationRules applicationRules;
     private static List<EventCategory> eventCategories = null;
     private static List<SpotCategory> spotCategories = null;
