@@ -2,6 +2,7 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.views.SimpleTimerView;
 
 import org.ocpsoft.prettytime.PrettyTime;
 

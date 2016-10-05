@@ -241,11 +241,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             btnAddEvent.startAnimation(translateUp);
 
             exploreFragment.setSelectedEventForLoader(event);
-
-            tvCountPoints.cancelTimer();
-            tvCountPoints.initTimer(event.getPoints());
-            //TODO : might be better to initialize the timer through databinding
-        } catch (CannotSaveModelException e) {
+        }
+        catch (CannotSaveModelException e) {
             // should not happen
             Log.e(TAG, e.getMessage());
         }

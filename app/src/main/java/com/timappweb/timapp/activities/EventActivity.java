@@ -202,6 +202,15 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(this.isTaskRoot()) {
+            IntentsUtils.home(this);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     //Methods
     //////////////////////////////////////////////////////////////////////////////

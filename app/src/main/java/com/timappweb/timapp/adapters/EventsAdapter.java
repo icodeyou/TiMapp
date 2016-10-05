@@ -126,8 +126,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
 
         public void setEventInHolder(Event event) {
             mBinding.setEvent(event);
-            int initialTime = event.getPoints();
-            tvCountPoints.initTimer(initialTime);
 
             try {
                 titleCategory.setText(Util.capitalize(event.getCategory().name));
