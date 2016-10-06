@@ -42,4 +42,13 @@ public class ExploreMapHelper {
                 .check(matches(isClickable()))
                 .perform(click());
     }
+
+    /**
+     * TODO implement
+     * @return
+     */
+    public ExploreMapHelper clickOnCluster() {
+        throw new RuntimeException("Not implemented yet");
+        //return this;
+    }
 }

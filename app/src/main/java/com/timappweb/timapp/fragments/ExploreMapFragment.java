@@ -432,9 +432,11 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                 }
                 LatLngBounds bounds = builder.build();
                 // TODO can cause error : newLatLngBounds() View size is too small after padding is applied
-                double padding = DistanceHelper.distFrom(bounds.southwest, bounds.northeast) * PADDING_RATIO_ZOOM_CLUSTER;
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels; // TODO Jack substract top bar height
+                int padding = (int) (width * PADDING_RATIO_ZOOM_CLUSTER); // offset from edges of the map 12% of screen
                 Log.d(TAG, "PADDING FOR ZOOM IN MAP CLUSTER = " + padding + " meters");
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, (int)padding);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                 gMap.animateCamera(cameraUpdate);
 
                 hideEvent();

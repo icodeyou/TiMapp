@@ -68,7 +68,6 @@ public class ExploreActivityTest extends AbstractActivityTest {
         LocationManager.setLastLocation(fakeLocation);
 
         Intent mapIntent = new Intent(MyApplication.getApplicationBaseContext(), DrawerActivity.class);
-
         mActivityRule.launchActivity(mapIntent);
         exploreHelper = new ExploreHelper();
         super.beforeTest();
@@ -84,19 +83,23 @@ public class ExploreActivityTest extends AbstractActivityTest {
 
     @Test
     @CreateConfigAction
-    public void testClickOnMenu() {
-        exploreHelper.openDrawer();
+    @Ignore
+    public void testClickOnEventOnMap() throws UiObjectNotFoundException {
+        centerMapOnLocation(MockLocation.UNIQUE_EVENT);
+        exploreHelper
+                .getMap()
+                .clickOnMarker("Event alone")
+                .clickOnEventPreview();
     }
-
     @Test
     @CreateConfigAction
     @Ignore
-    public void testClickOnEventOnMap() throws UiObjectNotFoundException {
+    public void testOnClusterMap() throws UiObjectNotFoundException {
         centerMapOnLocation(MockLocation.START_TEST);
         // TODO
         exploreHelper
                 .getMap()
-                .clickOnMarker("Concert improv")
+                .clickOnCluster()
                 .clickOnEventPreview();
     }
 

@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -43,15 +42,10 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.RetryDialog;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.util.zip.GZIPOutputStream;
 
-import pl.aprilapps.easyphotopicker.DefaultCallback;
-import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -253,7 +247,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                         @Override
                         public void notFound() {
                             Toast.makeText(EventActivity.this, R.string.event_does_not_exists_anymore, Toast.LENGTH_SHORT).show();
-                            EventActivity.this.onEventOver();
+                            EventActivity.this.onEventInaccessible();
                         }
                     })
                     .onError(new RetryOnErrorCallback(EventActivity.this, new RetryOnErrorCallback.OnRetryCallback() {
@@ -328,8 +322,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             event.addPropertyChangeListener(Event.PROPERTY_POINTS, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent event) {
-                    if (EventActivity.this.event.isOver()){
-                        EventActivity.this.onEventOver();
+                    if (!EventActivity.this.event.isAccessible()){
+                        EventActivity.this.onEventInaccessible();
                     }
                     else{
                         if (fragmentInformation!= null && fragmentInformation.getView() != null) fragmentInformation.updatePointsView(EventActivity.this.event.getPoints());
@@ -351,7 +345,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         updateView();
     }
 
-    private void onEventOver() {
+    private void onEventInaccessible() {
         if (EventStatusManager.isCurrentEvent(eventId)){
             EventStatusManager.clearCurrentEvent();
         }

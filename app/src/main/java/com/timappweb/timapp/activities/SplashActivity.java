@@ -44,6 +44,7 @@ public class SplashActivity extends BaseActivity {
                 .setCallback(new MultipleHttpCallManager.Callback() {
                     @Override
                     public void onPostExecute() {
+                        // TODO do not retry everything
                         if (!ConfigurationProvider.hasFullConfiguration()){
                             Log.e(TAG, "Cannot load server configuration");
                             if (!ConfigurationProvider.hasRulesConfig()) {
@@ -77,7 +78,7 @@ public class SplashActivity extends BaseActivity {
 
                             if (MyApplication.isLoggedIn()){
                                 Event currentEvent = EventStatusManager.getCurrentEvent();
-                                if (currentEvent != null && !currentEvent.isOver()){
+                                if (currentEvent != null && currentEvent.isAccessible()){
                                     IntentsUtils.viewSpecifiedEvent(SplashActivity.this, currentEvent);
                                 }
                                 else{
@@ -103,5 +104,7 @@ public class SplashActivity extends BaseActivity {
                 .perform();
 
     }
+
+
 
 }

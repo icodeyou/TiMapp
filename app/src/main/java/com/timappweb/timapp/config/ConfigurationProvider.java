@@ -1,7 +1,6 @@
 package com.timappweb.timapp.config;
 
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.util.Log;
 
 import com.activeandroid.query.Delete;
@@ -93,7 +92,8 @@ public class ConfigurationProvider{
      */
     public static MultipleHttpCallManager load(final Context context){
 
-        MultipleHttpCallManager callManager = RestClient.mulipleCallsManager();
+        MultipleHttpCallManager callManager = RestClient.mulipleCallsManager()
+                .setExecutionMode(MultipleHttpCallManager.ExecutionMode.PARALLEL);
 
         if (!hasFullConfiguration() || !ConfigurationProvider.dataUpToDate()){
             callManager.addCall(CALL_ID_APPLICATION_RULES, RestClient.service().applicationRules())

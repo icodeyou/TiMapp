@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 
@@ -35,17 +36,13 @@ public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG     = "BaseActivity";
     protected SearchView                searchView;
-    private MyLocationProvider          locationProvider;
-    protected List<Call>                apiCalls = new LinkedList<>();
     public Toolbar mToolbar;
 
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "BaseActivity::onDestroy()");
-        for (Call call: apiCalls){
-            call.cancel();
-        }
+        RestClient.instance().cancelCalls();
         super.onDestroy();
     }
 

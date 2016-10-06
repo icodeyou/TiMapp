@@ -22,7 +22,7 @@ public class Picture extends SyncBaseModel {
     @Column(name = "Photo", notNull = true)
     @Expose(serialize = true, deserialize = true)
     public String photo;*/
-    @Column(name = "Original", notNull = true)
+    @Column(name = "OriginalUrl", notNull = false)
     @Expose(serialize = true, deserialize = true)
     public String original;
 

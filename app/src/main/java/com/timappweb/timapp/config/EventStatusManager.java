@@ -32,6 +32,7 @@ public class EventStatusManager {
     private static final String TAG = "EventStatusManager";
     private static EventStatusManager _instance = null;
     private static Event currentEvent;
+    private static LastCallInfo lastCallInfo;
 
     public static boolean isCurrentEvent(long eventId) {
         return currentEvent != null && currentEvent.getRemoteId() == eventId;
@@ -42,13 +43,11 @@ public class EventStatusManager {
         currentEvent = null;
     }
 
-
     private class LastCallInfo{
         public HttpCallManager httpCallManager;
         public UserEventStatusEnum status;
         public long eventId;
     }
-    private static LastCallInfo lastCallInfo;
 
     public static EventStatusManager instance(){
         if (_instance == null){
@@ -140,6 +139,8 @@ public class EventStatusManager {
                     .from(UserEvent.class)
                     .where("User = ? AND Status = ? AND Id != ?", userEvent.user.getId(), UserEventStatusEnum.HERE, userEvent.getId())
                     .execute();
+            // Cancel on remote side
+            // TODO
         }
         // If we add the GONE status to our current event
         if (userEvent.status == UserEventStatusEnum.GONE){

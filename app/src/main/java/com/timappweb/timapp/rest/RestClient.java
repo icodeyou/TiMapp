@@ -44,7 +44,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestClient {
 
     private static final String TAG = "RestClient";
-    private static final long HTTP_PARAM_READ_TIMEOUT = 30;
+    private static final long HTTP_PARAM_READ_TIMEOUT = 20;
     private static final long HTTP_PARAM_CONNECTION_TIMEOUT = 35;
 
     private static RestClient conn = null;
@@ -56,7 +56,7 @@ public class RestClient {
     private final String baseUrl;
     private Gson gson;
     private final AuthManagerInterface authManager;
-    private LinkedList<HttpCallManager> pendingCalls = new LinkedList<>();
+    private LinkedList<Cancelable> pendingCalls = new LinkedList<>();
     private Retrofit retrofit;
     protected WebServiceInterface service;
     protected RestInterface restService;
@@ -192,22 +192,36 @@ public class RestClient {
     }
 
     public static <T> HttpCallManager buildCall(final Call<T> call) {
-
         final HttpCallManager<T> callManager = new HttpCallManager<>(call);
-        RestClient.instance().pendingCalls.add(callManager);
+        RestClient.instance().addCall(callManager);
         callManager
                 .onFinally(new HttpCallManager.FinallyCallback<T>(){
                     @Override
                     public void onFinally(Response response, Throwable error) {
-                        RestClient.instance().pendingCalls.remove(callManager);
+
+                        RestClient.instance().removeCall(callManager);
                     }
                 });
 
         return callManager;
     }
 
+    private <T> void removeCall(HttpCallManager<T> callManager) {
+        synchronized (this.pendingCalls){
+            pendingCalls.remove(callManager);
+        }
+    }
+
     public static MultipleHttpCallManager mulipleCallsManager() {
-        return new MultipleHttpCallManager();
+        MultipleHttpCallManager callbackManager = new MultipleHttpCallManager();
+        RestClient.instance().addCall(callbackManager);
+        return callbackManager;
+    }
+
+    private void addCall(Cancelable callbackManager) {
+        synchronized (this.pendingCalls){
+            this.pendingCalls.add(callbackManager);
+        }
     }
 
     public static RestQueryParams buildPaginatedOptions(SectionContainer.PaginatedSection section) {
@@ -222,15 +236,38 @@ public class RestClient {
     }
 
     // ---------------------------------------------------------------------------------------------
-    // For testing purpose
 
-    public static boolean hasPendingCall() {
-        for (HttpCallManager call: RestClient.instance().pendingCalls){
-            if (!call.isDone()){
-                return true;
+    public boolean hasPendingCall() {
+        synchronized (this.pendingCalls) {
+            for (Cancelable call : this.pendingCalls) {
+                if (!call.isDone()) {
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    /**
+     * Must be call after activity top
+     */
+    public void cancelCalls(){
+        synchronized (this.pendingCalls) {
+            for (Cancelable call : this.pendingCalls) {
+                if (!call.isDone()) {
+                    call.cancel();
+                }
+            }
+            this.pendingCalls.clear();
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    //
+    public interface Cancelable{
+        void cancel();
+
+        boolean isDone();
     }
 
 }

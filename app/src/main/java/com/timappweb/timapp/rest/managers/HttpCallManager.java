@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest.managers;
 
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallbackGroup;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
@@ -14,10 +15,10 @@ import retrofit2.Response;
 /**
  * Created by stephane on 6/6/2016.
  */
-public class HttpCallManager<T> {
+public class HttpCallManager<T> implements RestClient.Cancelable{
 
     private final HttpCallbackGroup<T> callbackGroup;
-    private final Call<T> call;
+    private Call<T> call;
     private long callDelay;
     private Timer timer;
 
@@ -121,6 +122,11 @@ public class HttpCallManager<T> {
 
     public boolean isDone() {
         return callbackGroup.isDone();
+    }
+
+    public void retry() {
+        this.call = this.call.clone();
+        this.perform();
     }
 
     public interface FinallyCallback<ResponseBodyType>{

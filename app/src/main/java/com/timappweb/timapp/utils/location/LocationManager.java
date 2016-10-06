@@ -80,8 +80,13 @@ public class LocationManager {
             public void onLocationChanged(Location location) {
                 Location tmpLocation = lastLocation; // TODO BUG copy ?
                 setLastLocation(location);
-                for (LocationListener listener : listeners){
-                    listener.onLocationChanged(location, tmpLocation);
+                if (listeners.size() == 0){
+                    Log.w(TAG, "User location changed but there isn't any listener registered");
+                }
+                else{
+                    for (LocationListener listener : listeners){
+                        listener.onLocationChanged(location, tmpLocation);
+                    }
                 }
             }
         };

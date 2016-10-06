@@ -453,8 +453,20 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         this.event_category = category;
     }
 
+    /**
+     * Return true if this event is over.
+     * @return
+     */
     public boolean isOver(){
         return this.getPoints() <= 0;
+    }
+
+    /**
+     * Return true if this event can be accessed
+     * @return
+     */
+    public boolean isAccessible(){
+        return !this.isOver();
     }
 
     public void setLocation(Location location) {
