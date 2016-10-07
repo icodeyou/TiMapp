@@ -335,60 +335,52 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void submitEvent(final Event event, File photo){
         Log.d(TAG, "Submit event " + event.toString());
 
-        try {
-            Call call;
-            if (photo != null){
-                MultipartBody body = new AddPictureMapper(photo)
-                        .getBuilder()
-                        .add(AddEventMapper.toJson(event), null)
-                        .build();
-                call = RestClient.service().addPlace(body);
-            }
-            else{
-                call = RestClient.service().addPlace(AddEventMapper.toJson(event));
-            }
-            clientCall = RestClient.<JsonObject>buildCall(call)
-                    .onResponse(new AutoMergeCallback(event))
-                    .onResponse(new FormErrorsCallbackBinding(mBinding))
-                    .onResponse(new FormErrorsCallback(this, "Pictures"))
-                    .onResponse(new HttpCallback<JsonObject>() {
-                        @Override
-                        public void successful(JsonObject feedback) {
-                            try {
-                                Log.d(TAG, "Event has been successfully added");
-                                event.setAuthor(MyApplication.getCurrentUser());
-                                event.deepSave();
-                                long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                                QuotaManager.instance().add(QuotaType.ADD_EVENT);
-                                EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
-                            }
-                            catch (Exception ex){
-                                setProgressView(false);
-                                Log.e(TAG, "Cannot get EventUser id from server response");
-                                // TODO
-                            }
-                            finally {
-                                IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
-                            }
-                        }
-
-                    })
-                    .onError(new NetworkErrorCallback(this))
-                    .onFinally(new HttpCallManager.FinallyCallback() {
-                        @Override
-                        public void onFinally(Response response, Throwable error) {
-                            setProgressView(false);
-                        }
-
-                    })
-                    .perform();
-        } catch (AddPictureMapper.CannotUploadPictureException e) {
-            Log.e(TAG, "Cannot resize picture: " + photo.getAbsolutePath() + ". " + e.getMessage());
-            this.showUploadFeedbackError(e.getResId());
-            if (BuildConfig.DEBUG){
-                e.printStackTrace();
-            }
+        Call call;
+        if (photo != null){
+            MultipartBody body = new AddPictureMapper(photo)
+                    .getBuilder()
+                    .add(AddEventMapper.toJson(event), null)
+                    .build();
+            call = RestClient.service().addPlace(body);
         }
+        else{
+            call = RestClient.service().addPlace(AddEventMapper.toJson(event));
+        }
+        clientCall = RestClient.<JsonObject>buildCall(call)
+                .onResponse(new AutoMergeCallback(event))
+                .onResponse(new FormErrorsCallbackBinding(mBinding))
+                .onResponse(new FormErrorsCallback(this, "Pictures"))
+                .onResponse(new HttpCallback<JsonObject>() {
+                    @Override
+                    public void successful(JsonObject feedback) {
+                        try {
+                            Log.d(TAG, "Event has been successfully added");
+                            event.setAuthor(MyApplication.getCurrentUser());
+                            event.deepSave();
+                            long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
+                            QuotaManager.instance().add(QuotaType.ADD_EVENT);
+                            EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
+                        }
+                        catch (Exception ex){
+                            setProgressView(false);
+                            Log.e(TAG, "Cannot get EventUser id from server response");
+                            // TODO
+                        }
+                        finally {
+                            IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                        }
+                    }
+
+                })
+                .onError(new NetworkErrorCallback(this))
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(Response response, Throwable error) {
+                        setProgressView(false);
+                    }
+
+                })
+                .perform();
     }
 
     private void showUploadFeedbackError(int msg){
@@ -612,27 +604,34 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                     Toast.makeText(activity, R.string.error_camera, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                simpleDraweeView.setImageURI(Uri.fromFile(imageFile));
-
-                Bitmap bmp = BitmapFactory.decodeFile(imageFile.toString());
                 try {
-                    bmp = PictureUtility.rotateBitmapIfNeeded(bmp, imageFile);
-                } catch (IOException e) {
-                    Log.e(TAG, "Couldn't rotate image");
+                    //Compress image and display it in Simple Drawee View
+                    simpleDraweeView.setImageURI(Uri.fromFile(AddPictureMapper.compress(imageFile)));
+
+                    Bitmap bmp = BitmapFactory.decodeFile(imageFile.toString());
+                    try {
+                        bmp = PictureUtility.rotateBitmapIfNeeded(bmp, imageFile);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Couldn't rotate image");
+                        e.printStackTrace();
+                    }
+                    int imageHeight = bmp.getHeight();
+                    int imageWidth = bmp.getWidth();
+                    float ratio = (float) imageWidth/imageHeight;
+
+                    simpleDraweeView.setVisibility(View.VISIBLE);
+                    ViewGroup.LayoutParams params = simpleDraweeView.getLayoutParams();
+                    params.height = (int) (simpleDraweeView.getWidth()/ratio);
+                    simpleDraweeView.setLayoutParams(params);
+
+                    updateUiAfterPickTure();
+
+                    pictureSelected = imageFile;
+
+                } catch (AddPictureMapper.CannotUploadPictureException e) {
+                    Toast.makeText(AddEventActivity.this, R.string.error_camera, Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                int imageHeight = bmp.getHeight();
-                int imageWidth = bmp.getWidth();
-                float ratio = (float) imageWidth/imageHeight;
-
-                simpleDraweeView.setVisibility(View.VISIBLE);
-                ViewGroup.LayoutParams params = simpleDraweeView.getLayoutParams();
-                params.height = (int) (simpleDraweeView.getWidth()/ratio);
-                simpleDraweeView.setLayoutParams(params);
-
-                updateUiAfterPickTure();
-
-                pictureSelected = imageFile;
 
             }
 

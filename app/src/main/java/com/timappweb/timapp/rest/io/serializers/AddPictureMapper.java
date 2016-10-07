@@ -17,21 +17,29 @@ public class AddPictureMapper {
 
     private final File file;
 
-    public AddPictureMapper(File file) throws CannotUploadPictureException {
-        ApplicationRules rules = ConfigurationProvider.rules();
+    public AddPictureMapper(File file) {
+        this.file = file;
+    }
 
+    public static File compress(File file) throws CannotUploadPictureException{
+        ApplicationRules rules = ConfigurationProvider.rules();
         try{
-            this.file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
+            file = PictureUtility.resize(file, rules.picture_max_width, rules.picture_max_height);
         } catch (IOException e) {
             throw new CannotUploadPictureException(R.string.cannot_read_this_picture);
         }
-        if (this.file.length() > rules.picture_max_size){
+        if (file.length() > rules.picture_max_size){
             throw new CannotUploadPictureException(R.string.cannot_resize_picture);
         }
-        else if (this.file.length() <= rules.picture_min_size){
+        else if (file.length() <= rules.picture_min_size){
             throw new CannotUploadPictureException(R.string.error_picture_too_small);
         }
+        return file;
+    }
 
+    public AddPictureMapper compress() throws CannotUploadPictureException {
+        AddPictureMapper.compress(file);
+        return this;
     }
 
     public RequestBody build() {
@@ -44,7 +52,7 @@ public class AddPictureMapper {
                 .add("photo", this.file);
     }
 
-    public class CannotUploadPictureException extends Exception {
+    public static class CannotUploadPictureException extends Exception {
         private final int resId;
 
         public CannotUploadPictureException(int resId) {

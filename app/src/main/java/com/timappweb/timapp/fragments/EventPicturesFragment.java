@@ -317,7 +317,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         setUploadVisibility(true);
 
         try {
-            RequestBody body = new AddPictureMapper(file).build();
+            RequestBody body = new AddPictureMapper(file).compress().build();
 
             final Event event = eventActivity.getEvent();
             final Picture picture = new Picture();
