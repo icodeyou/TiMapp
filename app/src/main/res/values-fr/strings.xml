@@ -41,15 +41,16 @@
     <!-- Generic Messages -->
     <string name="alert_dialog_ok">Ok</string>
     <string name="retry_button">Réessayer</string>
-    <string name="waiting_for_location">En attente de localisation</string>
+    <string name="waiting_for_location">Localisation</string>
     <string name="skip">Ignorer</string>
     <string name="no_friends">Vous n\'avez pas encore d\'amis qui utilisent TiMapp. Partage l\'application autour de toi avoir des amis, et profiter de nouvelles fonctionnalités !</string>
     <!-- Errors -->
     <string name="error_require_login">Vous devez être connecté pour effectuer cette action.</string>
     <string name="no_network_access">Pas d\'accès internet.</string>
+    <string name="error_default">Une erreur est survenue. Merci de réessayer plus tard.</string>
     <string name="error_cannot_get_location">On dirait qu\'on t\'a perdu. Essaye de sortir dehors :)</string>
     <string name="error_server_unavailable">Désolé, nos serveurs sont innaccessibles pour le moment. Merci de réessayer plus tard.</string>
-    <string name="fatal_error_unknown_reason_title">Désolé, une erreur est survenue. Merci de réessayer plus tard.</string>
+    <string name="fatal_error_unknown_reason_title">Désolé, une erreur est survenue.</string>
     <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
     <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
     <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>
@@ -77,7 +78,7 @@
     <string name="upload_picture_in_progress">Merci d\'attendre  la fin du téléchargement de la photo.</string>
     <string name="event_does_not_exists_anymore">Cet événement n\'existe plus. Redirection vers la carte.</string>
     <string name="cannot_load_spot_around">Désolé mais nous ne pouvons pas charger les lieux à proximité.\nMerci de réessayer plus tard.</string>
-    <string name="explanation_gps_usage">TiMapp a besoin de votre localisation pour trouver les événements à proximité. Merci de nous donner l\'accès à votre localisation.</string>
+    <string name="explanation_gps_usage">TiMapp a besoin de votre localisation pour trouver et partager les événements à proximité. Merci de nous donner l\'accès à votre localisation.</string>
     <string name="ask_user_to_enable_gps">GPS désactivé. Merci de l\'activer pour créer un événement.</string>
     <string name="error_camera">Une erreur est survenue lors de l\'ajout de photo. Veuillez réessayer plus tard.</string>
     <string name="cannot_read_this_picture">Impossible d\'ouvrir cette photo, merci d\'en prendre une nouvelle.\nNotre équipe s\'excuse pour la gêne occasionnée.</string>

@@ -38,6 +38,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.location.MyLocationProvider;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
@@ -163,10 +164,13 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-
     public static void locate(Context context) {
         if (!requireLogin(context, false))
             return;
+        if(!MyLocationProvider.hasLocationPermission()) {
+            LocationManager.getLocationProvider().requestPermissions();
+            return;
+        }
         if (!LocationManager.getLocationProvider().isGPSEnabled()){
             Toast.makeText(context, R.string.ask_user_to_enable_gps, Toast.LENGTH_SHORT).show();
             return;
@@ -193,30 +197,37 @@ public class IntentsUtils {
         if (!requireLogin(context, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
             return;
 
-        int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+        int storageCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int cameraCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
+        if (storageCheck == PackageManager.PERMISSION_GRANTED && cameraCheck == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Permission 'WRITE EXTERNAL STORAGE' granted");
             EasyImage.openCamera(fragment, 0);
         } else {
-            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+            Log.i(TAG, "'WRITE EXTERNAL STORAGE' permission IS NOT granted. Asking permission");
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
             Nammu.askForPermission(fragment.getActivity(), permissions, new PermissionCallback() {
                 @Override
                 public void permissionGranted() {
+                    Log.i(TAG, "Permission granted.");
                     EasyImage.openCamera(fragment, 0);
                 }
 
                 @Override
                 public void permissionRefused() {
-
+                    Log.i(TAG, "Permission refused.");
                 }
             });
         }
     }
 
     public static void addPictureFromActivity(final Activity activity) {
+        //TODO : Use only one method instead of one for the activity, and another one for the fragment
         int permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             EasyImage.openCamera(activity, 0);
         } else {
+            Log.i(TAG, "'WRITE EXTERNAL STORAGE' permission IS NOT granted. Asking permission");
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
             Nammu.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
                 @Override
                 public void permissionGranted() {

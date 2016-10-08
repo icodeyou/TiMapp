@@ -10,12 +10,9 @@ import java.io.IOException;
 
 import okhttp3.RequestBody;
 
-/**
- * Created by Stephane on 23/09/2016.
- */
 public class AddPictureMapper {
 
-    private final File file;
+    private File file;
 
     public AddPictureMapper(File file) {
         this.file = file;
@@ -38,7 +35,7 @@ public class AddPictureMapper {
     }
 
     public AddPictureMapper compress() throws CannotUploadPictureException {
-        AddPictureMapper.compress(file);
+        this.file = AddPictureMapper.compress(file);
         return this;
     }
 
