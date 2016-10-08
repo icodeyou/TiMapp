@@ -207,25 +207,29 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 exploreMapFragment.hideEvent();
                 return;
             }
-            if (backPressedOnce) {
-                super.onBackPressed();
-                return;
-            }
-
-            this.backPressedOnce = true;
-            Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    backPressedOnce = false;
-                }
-            }, TIMELAPSE_BEFORE_BACK_EXIT);
         }
-        else {
+
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if(mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START); //GravityCompat.START refers to the left drawer.
+            return;
+        }
+
+        if (backPressedOnce) {
             super.onBackPressed();
+            return;
         }
+        this.backPressedOnce = true;
+        Toast.makeText(this, "Press back again to leave", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                backPressedOnce = false;
+            }
+        }, TIMELAPSE_BEFORE_BACK_EXIT);
+
     }
 
 

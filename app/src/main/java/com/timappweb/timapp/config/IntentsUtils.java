@@ -266,9 +266,9 @@ public class IntentsUtils {
     }
 
     public static void viewEventFromId(Activity activity, int id) {
-        activity.finish();
         Intent intent = buildIntentViewPlace(activity, id);
         activity.startActivity(intent);
+        activity.finish();
     }
 
     public static void viewSpecifiedEvent(Context context, Event event) {
