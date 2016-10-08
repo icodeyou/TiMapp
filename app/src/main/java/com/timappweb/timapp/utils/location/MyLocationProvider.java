@@ -128,7 +128,6 @@ public class MyLocationProvider implements
             this.requestPermissions();
             throw new NoLastLocationException("App does not have user permission for location yet");
         }
-
         if (this.mLastLocation != null){
             return mLastLocation;
         }
@@ -244,14 +243,9 @@ public class MyLocationProvider implements
             // this thread waiting for the user's response! After the user
             // sees the explanation, try again to request the permission.
             Toast.makeText(MyLocationProvider.this.activity, R.string.explanation_gps_usage, Toast.LENGTH_LONG).show();
-            DelayedCallHelper.create(3500, new DelayedCallHelper.Callback() {
-                @Override
-                public void onTime() {
-                    ActivityCompat.requestPermissions(MyLocationProvider.this.activity,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
-                }
-            });
+            ActivityCompat.requestPermissions(MyLocationProvider.this.activity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
         } else {
             // No explanation needed, we can request the permission.
             ActivityCompat.requestPermissions(this.activity,

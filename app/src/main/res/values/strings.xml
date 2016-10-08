@@ -66,7 +66,7 @@
     <!-- Generic Messages -->
     <string name="alert_dialog_ok">Ok</string>
     <string name="retry_button">Réessayer</string>
-    <string name="waiting_for_location">Waiting for your location</string>
+    <string name="waiting_for_location">Localization</string>
     <string name="skip">Skip</string>
     <string name="no_friends">You don\'t have any Facebook friends using TiMapp. Share the app with them to get the best experience !</string>
     <!-- Errors -->
@@ -103,8 +103,8 @@
             <string name="event_does_not_exists_anymore">This event does not exist anymore</string>
             <string name="error_picture_too_small">The picture quality seems to be very bad. Try to take another one please.</string>
             <string name="cannot_load_spot_around">Sorry but we cannot load places around you for now. \nTry again later</string>
-            <string name="explanation_gps_usage">Timapp requires your location to find events around you. Please authorize us to get your location.</string>
-            <string name="ask_user_to_enable_gps">GPS is disabled on your device. Activate it to create a place.</string>
+            <string name="explanation_gps_usage">Timapp requires your location to find and share events around you. Please authorize us to get your location.</string>
+            <string name="ask_user_to_enable_gps">GPS is disabled on your device. Activate it to create a place. If this</string>
             <string name="error_camera">Something bad happened when taking a picture. Please try again later.</string>
             <string name="cannot_read_this_picture">We cannot open this picture, please take another one.</string>
 
@@ -128,7 +128,7 @@
     <string name="share_message_text">Hey, check out this new app that lets you know what\'s going on in your city ! http://www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
     <string name="title_fragment_info">Info</string>
-    <string name="title_fragment_pictures">Pictures</string>
+    <string name="title_fragment_pictures">Photos</string>
     <string name="title_fragment_tags">Tags</string>
     <string name="title_fragment_people">People</string>
     <string name="title_fragment_other">Other</string>

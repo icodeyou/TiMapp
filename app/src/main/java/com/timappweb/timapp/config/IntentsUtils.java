@@ -38,6 +38,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.location.MyLocationProvider;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
@@ -163,10 +164,13 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-
     public static void locate(Context context) {
         if (!requireLogin(context, false))
             return;
+        if(!MyLocationProvider.hasLocationPermission()) {
+            LocationManager.getLocationProvider().requestPermissions();
+            return;
+        }
         if (!LocationManager.getLocationProvider().isGPSEnabled()){
             Toast.makeText(context, R.string.ask_user_to_enable_gps, Toast.LENGTH_SHORT).show();
             return;
