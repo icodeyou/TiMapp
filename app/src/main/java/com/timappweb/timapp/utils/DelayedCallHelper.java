@@ -1,11 +1,14 @@
 package com.timappweb.timapp.utils;
 
+import android.content.Context;
+import android.os.Handler;
+
 /**
  * Created by Stephane on 13/09/2016.
  */
 public class DelayedCallHelper {
 
-    public static Thread create(final int delay, final Callback callback){
+    public static Thread create(final long delay, final Callback callback){
         Thread thread = new Thread(){
             @Override
             public void run() {
@@ -13,7 +16,7 @@ public class DelayedCallHelper {
                     Thread.sleep(delay); // As I am using LENGTH_LONG in Toast
                     callback.onTime();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         };

@@ -3,6 +3,8 @@ package com.timappweb.timapp.fragments;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -41,7 +43,7 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.AreaDataCaching.OnDataChangeListener;
 import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
-import com.timappweb.timapp.utils.DistanceHelper;
+import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -52,12 +54,11 @@ import java.util.List;
 public class ExploreMapFragment extends Fragment implements LocationManager.LocationListener, OnMapReadyCallback {
 
     private static final String             TAG                             = "ExploreMapFragment";
-    private static final long               TIME_WAIT_MAP_VIEW              = 500;
     private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
-    private static final int                PADDING__MAP                    = 140;
     private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
     private static final int                TIME_ZOOM_ANIM                  = 500;
-    private static final double PADDING_RATIO_ZOOM_CLUSTER = 0.1;
+    private static final double             PADDING_RATIO_ZOOM_CLUSTER      = 0.1;
+    private static final int                DELAY_UPDATE_MAP_DATA_MILLIS    = 800;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 17.0f;
     private Marker                          selectingMarker;
     private Location                        lastLocation;
@@ -91,7 +92,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private FragmentExploreMapBinding       mBinding;
     private AreaRequestHistory              history;
     private Bundle                          mapBundle;
-
+    private Handler                         mMainHandler;
+    private Runnable                        mUpdateRunnable;
 
     private boolean                         needCenterMap           = true;
     // ---------------------------------------------------------------------------------------------
@@ -133,6 +135,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
         eventView = root.findViewById(R.id.event_view_layout_map);
         eventView.setVisibility(View.GONE);
+
+        mMainHandler = new Handler(getContext().getMainLooper());
 
         initListeners();
 
@@ -383,6 +387,10 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     }
 
     public void updateMapData(){
+        if (mUpdateRunnable != null){
+            mMainHandler.removeCallbacks(mUpdateRunnable);
+            mUpdateRunnable = null;
+        }
         final LatLngBounds bounds = getMapBounds();
         if (bounds == null) return;
         Log.d(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
@@ -502,8 +510,16 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             previousZoomLevel = cameraPosition.zoom;
             mClusterManagerPost.cluster();
 
-            // Updating datas
-            updateMapData();
+            if (mUpdateRunnable != null){
+                mMainHandler.removeCallbacks(mUpdateRunnable);
+            }
+            mUpdateRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    ExploreMapFragment.this.updateMapData();
+                }
+            };
+            mMainHandler.postDelayed(mUpdateRunnable, DELAY_UPDATE_MAP_DATA_MILLIS);
         }
     }
 }
