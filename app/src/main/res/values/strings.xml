@@ -72,9 +72,10 @@
     <!-- Errors -->
             <string name="error_require_login">You must be logged in to perform this action</string>
             <string name="no_network_access">No network access.</string>
+            <string name="error_default">An error occured. Please try again later.</string>
             <string name="error_cannot_get_location">Hey, where are you ? We lost you. Go out, breathe !</string>
             <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
-            <string name="fatal_error_unknown_reason_title">Something bad happened...</string>
+            <string name="fatal_error_unknown_reason_title">Something bad happened !</string>
             <string name="fatal_error_unknown_reason_message">Sorry, but something went wrong. You need to restart your application. If this message appear again, try updating your application.</string>
             <string name="no_fine_location">We don\'t have a fine location. Go outside and it will definitely work.</string>
             <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
@@ -106,9 +107,6 @@
             <string name="ask_user_to_enable_gps">GPS is disabled on your device. Activate it to create a place.</string>
             <string name="error_camera">Something bad happened when taking a picture. Please try again later.</string>
             <string name="cannot_read_this_picture">We cannot open this picture, please take another one.</string>
-
-
-
 
     <!-- Category selector -->
             <string name="more">More</string>

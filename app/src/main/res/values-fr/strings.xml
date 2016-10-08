@@ -47,9 +47,10 @@
     <!-- Errors -->
     <string name="error_require_login">Vous devez être connecté pour effectuer cette action.</string>
     <string name="no_network_access">Pas d\'accès internet.</string>
+    <string name="error_default">Une erreur est survenue. Merci de réessayer plus tard.</string>
     <string name="error_cannot_get_location">On dirait qu\'on t\'a perdu. Essaye de sortir dehors :)</string>
     <string name="error_server_unavailable">Désolé, nos serveurs sont innaccessibles pour le moment. Merci de réessayer plus tard.</string>
-    <string name="fatal_error_unknown_reason_title">Désolé, une erreur est survenue. Merci de réessayer plus tard.</string>
+    <string name="fatal_error_unknown_reason_title">Désolé, une erreur est survenue.</string>
     <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
     <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
     <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>

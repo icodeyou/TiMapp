@@ -41,7 +41,6 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.AreaDataCaching.OnDataChangeListener;
 import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
-import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -57,7 +56,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                PADDING__MAP                    = 140;
     private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
     private static final int                TIME_ZOOM_ANIM                  = 500;
-    private static final double PADDING_RATIO_ZOOM_CLUSTER = 0.1;
+    private static final double PADDING_RATIO_ZOOM_CLUSTER = 0.2;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 17.0f;
     private Marker                          selectingMarker;
     private Location                        lastLocation;
@@ -431,9 +430,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                     builder.include(m.getPosition());
                 }
                 LatLngBounds bounds = builder.build();
-                // TODO can cause error : newLatLngBounds() View size is too small after padding is applied
                 int width = getResources().getDisplayMetrics().widthPixels;
-                int height = getResources().getDisplayMetrics().heightPixels; // TODO Jack substract top bar height
+                int height = getResources().getDisplayMetrics().heightPixels;
                 int padding = (int) (width * PADDING_RATIO_ZOOM_CLUSTER); // offset from edges of the map 12% of screen
                 Log.d(TAG, "PADDING FOR ZOOM IN MAP CLUSTER = " + padding + " meters");
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);

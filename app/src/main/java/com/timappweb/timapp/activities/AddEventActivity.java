@@ -40,8 +40,8 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventCategoriesAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.EventStatusManager;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
@@ -70,7 +70,6 @@ import java.io.File;
 import java.io.IOException;
 
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
@@ -371,6 +370,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         }
                     }
 
+                    @Override
+                    public void notSuccessful() {
+                        Toast.makeText(AddEventActivity.this, R.string.error_default, Toast.LENGTH_SHORT).show();
+                        super.notSuccessful();
+                    }
                 })
                 .onError(new NetworkErrorCallback(this))
                 .onFinally(new HttpCallManager.FinallyCallback() {
@@ -628,8 +632,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
                     pictureSelected = imageFile;
 
-                } catch (AddPictureMapper.CannotUploadPictureException e) {
-                    Toast.makeText(AddEventActivity.this, R.string.error_camera, Toast.LENGTH_SHORT).show();
+                }
+                catch (AddPictureMapper.CannotUploadPictureException e) {
+                    Toast.makeText(AddEventActivity.this, getString(e.getResId()), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
 

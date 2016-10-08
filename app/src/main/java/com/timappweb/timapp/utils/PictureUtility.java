@@ -1,16 +1,13 @@
 package com.timappweb.timapp.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.ConfigurationProvider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +31,7 @@ public class PictureUtility {
     private static final int COMPRESSION_QUALITY = 80;
 
     public static File resize(@NotNull File f, int imageMaxWidth, int imageMaxHeight) throws IOException {
-        Log.d(TAG, "BEFORE COMPRESSION: " +
+        Log.i(TAG, "BEFORE COMPRESSION: " +
                 "Photo '"+ f.getAbsolutePath() + "'" +
                 " Size: " + Util.byteToKB(f.length()));
         Log.v(TAG, "    - Width max : " + imageMaxWidth);
@@ -50,8 +47,9 @@ public class PictureUtility {
                 .build()
                 .compressToFile(f);
 
-        Log.i(TAG, "After picture compression of '"+ f.getAbsolutePath() + "'" +
-                " Size: " + Util.byteToKB(f.length()));
+        Log.i(TAG, "AFTER COMPRESSION: " +
+                "Photo '"+ f.getAbsolutePath() + "'" +
+                " Size: " + Util.byteToKB(newFile.length()));
 
 
         return newFile;
