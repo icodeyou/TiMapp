@@ -17,13 +17,13 @@ public class RetryOnErrorCallback extends NetworkErrorCallback{
     private final OnRetryCallback callback;
     private boolean cancelable = true;
 
-    public RetryOnErrorCallback(Context context, OnRetryCallback callback) {
-        super(context);
+    public RetryOnErrorCallback(Activity activity, OnRetryCallback callback) {
+        super(activity);
         this.callback = callback;
     }
 
-    public RetryOnErrorCallback(Context context, final HttpCallManager remoteCall) {
-        this(context, new OnRetryCallback() {
+    public RetryOnErrorCallback(Activity activity, final HttpCallManager remoteCall) {
+        this(activity, new OnRetryCallback() {
             @Override
             public void onRetry() {
                 remoteCall.retry();
@@ -43,6 +43,9 @@ public class RetryOnErrorCallback extends NetworkErrorCallback{
                 Log.w(TAG, "Activity is finishing. Not retry required");
                 return ;
             }
+        }
+        else{
+            return;
         }
         RetryDialog.builder(context, new DialogInterface.OnClickListener(){
             @Override

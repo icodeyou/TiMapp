@@ -1,6 +1,6 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
@@ -28,7 +28,7 @@ import retrofit2.Response;
 public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
     private static final String TAG = "AreaDataLoaderFromAPI";
-    private Context mContext;
+    private Activity mActivity;
     private SearchFilter filter;
     private LoadingListener loadingListener;
 
@@ -41,8 +41,8 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
     // ---------------------------------------------------------------------------------------------
 
-    public AreaDataLoaderFromAPI(Context context, SearchFilter filter) {
-        this.mContext = context;
+    public AreaDataLoaderFromAPI(Activity activity, SearchFilter filter) {
+        this.mActivity = activity;
         this.filter = filter;
     }
 
@@ -108,7 +108,13 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                     }
 
                 })
-                .onError(new RetryOnErrorCallback(MyApplication.getApplicationBaseContext(), remoteCall))
+                .onError(new RetryOnErrorCallback(mActivity, new RetryOnErrorCallback.OnRetryCallback() {
+                    @Override
+                    public void onRetry() {
+                        if (loadingListener != null) loadingListener.onLoadStart();
+                        remoteCall.retry();
+                    }
+                }))
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {

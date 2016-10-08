@@ -67,7 +67,7 @@ public class ExploreFragment extends Fragment{
         containerEvents = (FrameLayout) root.findViewById(R.id.fragment_events);
         blurBackground = root.findViewById(R.id.blur_background);
 
-        dataLoader = new AreaDataLoaderFromAPI(this.getContext(), MyApplication.searchFilter);
+        dataLoader = new AreaDataLoaderFromAPI(this.getActivity(), MyApplication.searchFilter);
 
         initAddSpotButton();
         initFragments();

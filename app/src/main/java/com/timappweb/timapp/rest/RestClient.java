@@ -215,6 +215,7 @@ public class RestClient {
     public static MultipleHttpCallManager mulipleCallsManager() {
         MultipleHttpCallManager callbackManager = new MultipleHttpCallManager();
         RestClient.instance().addCall(callbackManager);
+        // TODO add callback and remove call
         return callbackManager;
     }
 
