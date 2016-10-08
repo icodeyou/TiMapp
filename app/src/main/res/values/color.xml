@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#D32F2F</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorPrimaryVeryDark">#8c1e1e</color>
     <color name="colorPrimaryTransparent">#D9D32F2F</color>
     <color name="colorPrimaryDarkTransparent">#8ad32f2f</color>
     <color name="colorWhiteTransparent50">#80FFFFFF</color>
     <color name="colorBlackTransparent50">#80000000</color>
-    <color name="colorAccent">#f44336</color>
+    <color name="colorAccent">#de5b51</color>
     <color name="colorAccentLight">#68f44336</color>
     <color name="colorSecondary">#2b3778</color>
     <color name="colorSecondaryExtaLight">#f9faff</color>
@@ -66,7 +65,7 @@
 
     <!-- Buttons -->
     <color name="background_top_invitation">#1d1d1d</color>
-    <color name="background_button">@color/colorPrimaryDark</color>
+    <color name="background_button">@color/colorPrimary</color>
     <color name="text_button">@color/background</color>
     <color name="background_selected_button">@color/colorAccent</color>
     <color name="background_selected_button_secondary">#ffefc6</color>

@@ -10,7 +10,9 @@ import com.timappweb.timapp.activities.DrawerActivity;
 import com.timappweb.timapp.activities.ListFriendsActivity;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.dummy.DummyUserFactory;
+import com.timappweb.timapp.utils.viewinteraction.ExploreHelper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -32,16 +34,27 @@ public class DrawerActivityTest extends AbstractActivityTest{
     @Rule
     public ActivityTestRule<DrawerActivity> mActivityRule = new ActivityTestRule<>(
             DrawerActivity.class);
+    private ExploreHelper exploreHelper;
 
     @Before
     public void beforeTest() {
+        exploreHelper = new ExploreHelper();
+        super.beforeTest();
+    }
 
+    @After
+    public void afterTest() {
+        super.resetAsBeforeTest();
     }
 
     // ---------------------------------------------------------------------------------------------
 
     @Test
     public void testOpenDrawer(){
-        // TODO
+        exploreHelper.openDrawer();
+
+        // TODO close it
     }
+
+    // TODO tests each links
 }

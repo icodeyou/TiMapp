@@ -39,6 +39,7 @@ import com.timappweb.timapp.databinding.ActivityDrawerBinding;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -47,6 +48,7 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, LocationManager.LocationListener {
 
     private static final String         TAG                                 = "DrawerActivity";
+    private static final String EXPLORE_FRAGMENT_TAG = "Explore";
     private static int                  TIMELAPSE_BEFORE_BACK_EXIT          = 2000;
 
     // ---------------------------------------------------------------------------------------------
@@ -81,6 +83,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     private View inviteButton;
     private View noEventLayout;
     private View eventLayout;
+    private View eventBackground;
     private ActivityDrawerBinding mBinding;
 
     // ---------------------------------------------------------------------------------------------
@@ -126,7 +129,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         mFrame = (FrameLayout) findViewById(R.id.content_frame);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setStatusBarColor(R.color.status_bar_map);
+        Util.setStatusBarColor(this,R.color.status_bar_map);
         initDrawer();
         backPressedOnce = false;
 
@@ -179,7 +182,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     protected void onStop() {
-        LocationManager.stop();
+        LocationManager.removeLocationListener(this);
+        LocationManager.stop(this);
         super.onStop();
     }
 
@@ -263,6 +267,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         return res;
     }
 
+    public ExploreMapFragment getExploreMapFragment(){
+        if (exploreFragment == null){
+            return null;
+        }
+        return exploreFragment.getExploreMapFragment();
+    }
 
     /* ============================================================================================*/
     /* DRAWER */
@@ -297,6 +307,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         cameraButton = findViewById(R.id.action_camera);
         tagButton = findViewById(R.id.action_tag);
         inviteButton = findViewById(R.id.action_invite);
+        eventBackground = findViewById(R.id.nav_background_event);
         noEventLayout = findViewById(R.id.no_events_layout);
         eventLayout = findViewById(R.id.event_layout);
     }
@@ -329,6 +340,12 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 @Override
                 public void onClick(View v) {
                     IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
+                }
+            });
+            eventBackground.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IntentsUtils.viewSpecifiedEvent(context, event);
                 }
             });
         }
@@ -403,39 +420,26 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     }
     /**
      * Swaps fragments in the main content view
+     *
+     * TODO remove !!!
      * @param position
      */
     private void changeCurrentFragment(int position) {
         // Create a new fragment according to the clicked item
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment newFragment = null;
-        String newFragmentTAG = "Explore";
 
-        Log.i(TAG, "You clicked on button " + position);
+        Log.i(TAG, "changeCurrentFragment() position=" + position);
 
-        switch (FragmentId.values()[position]){
-            default:
-                newFragmentTAG = "Explore";
-                newFragment = new ExploreFragment();
-                exploreFragment = (ExploreFragment) newFragment;
-        }
+        exploreFragment = new ExploreFragment();
 
         //Set The action bar Title
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(newFragmentTAG);
+            getSupportActionBar().setTitle(EXPLORE_FRAGMENT_TAG);
         }
-
-        // Get TAG of current fragment
-        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
-        String currentFragmentTAG = null;
-        if (currentFragment != null) {
-            currentFragmentTAG = currentFragment.getTag();
-        }
-
         // Insert the fragment by replacing any existing fragment,
         // only if the asked fragment isn't the same as the current fragment
         //if (currentFragmentTAG != newFragmentTAG) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, newFragment, newFragmentTAG).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, exploreFragment, EXPLORE_FRAGMENT_TAG).commit();
         //}
     }
 
@@ -457,15 +461,5 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
         }
     }
-
-    public void updateFabPosition(ListView placesViewer) {
-        int padding = placesViewer.getHeight();
-        fab.setPadding(0,0,0,padding);
-    }
-
-    public void clearFabPosition() {
-        fab.setPadding(0,0,0,0);
-    }
-
 
 }

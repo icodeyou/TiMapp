@@ -2,20 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="?android:attr/listPreferredItemHeight"
-	android:paddingTop="@dimen/margin_top"
-	android:paddingBottom="@dimen/margin_bottom"
-	android:background="?attr/selectableItemBackground">
+	android:layout_height="wrap_content"
+	android:background="@color/background">
 		
 		<TextView
 			android:id="@+id/title"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			style="@style/TextItalic"
+			android:padding="10dp"
+			android:layout_centerInParent="true"
 			android:ellipsize="end"
-			android:maxLines="1"
-			android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-			android:textColor="@color/textBlack"
-			tools:text="Title"/>
+			tools:text="30 more people ..."/>
 
 
 </RelativeLayout>

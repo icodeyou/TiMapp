@@ -9,8 +9,7 @@ public class AuthManagerFactory {
     }
 
     public static AuthManager create(){
-        return new AuthManager()
-                .addAuthProvider(new FacebookAuthProvider());
+        return new AuthManager();
     }
 
 }

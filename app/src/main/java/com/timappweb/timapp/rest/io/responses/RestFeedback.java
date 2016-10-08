@@ -25,7 +25,7 @@ public class RestFeedback extends RestResponse {
 
     @Expose
     @SerializedName("data")
-    public HashMap<String, String> data;
+    public JsonObject data;
 
     @Expose
     @SerializedName("validationErrors")
@@ -35,14 +35,6 @@ public class RestFeedback extends RestResponse {
 
     public String toString(){
         return "ServerObject[Success: " + success + " ("+code+"); message=" + message + ";]";
-    }
-
-    public int getIntData(String name) {
-        try {
-            return Integer.valueOf(this.data.get(name));
-        } catch (NumberFormatException ex){
-            return -1;
-        }
     }
 
 }

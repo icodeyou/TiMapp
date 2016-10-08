@@ -1,6 +1,8 @@
 package com.timappweb.timapp.views;
 
 import android.content.Context;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,12 +12,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 
+
+@BindingMethods(@BindingMethod(type = SimpleTimerView.class, attribute = "myattrs:initialTime", method = "initBindingTime"))
 public class SimpleTimerView extends TextSwitcher {
     private static int COUNTDOWNINTERVAL = 1000;
+
     private CountDownTimer countDownTimer;
 
     public SimpleTimerView(Context context) {
@@ -25,6 +29,11 @@ public class SimpleTimerView extends TextSwitcher {
 
     public SimpleTimerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        //Get attributes in XML
+        //TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SimpleTimerView, 0, 0);
+        //initialTimeMs = ta.getInteger(R.styleable.SimpleTimerView_initialTime, -1);
+
         init();
     }
 
@@ -44,10 +53,13 @@ public class SimpleTimerView extends TextSwitcher {
         this.setOutAnimation(outAnimation);
     }
 
-    public void initTimer(long initialms) {
+    public void initTimer(long initialTimeSec) {
+        if (countDownTimer != null){
+            countDownTimer.cancel();
+        }
         if(MyApplication.getApplicationBaseContext().getResources().getBoolean(R.bool.event_animateCountDownTimer)
-                && countDownTimer == null && initialms > 0) {
-            countDownTimer = new CountDownTimer(initialms*1000, COUNTDOWNINTERVAL) {
+                && initialTimeSec > 0) {
+            countDownTimer = new CountDownTimer(initialTimeSec *1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
                     SimpleTimerView.this.setText(String.valueOf(millisUntilFinished / 1000));

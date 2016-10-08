@@ -58,6 +58,7 @@ public class InviteFriendsActivity extends BaseActivity
     private FriendsLoader               mFriendsLoader;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private View                        progressview;
+    private View                        shareButton;
     private List<EventsInvitation>      _cachedInvitations;
     // ---------------------------------------------------------------------------------------------
 
@@ -75,6 +76,7 @@ public class InviteFriendsActivity extends BaseActivity
         }
 
         setContentView(R.layout.activity_invite_friends);
+        shareButton = findViewById(R.id.share_button);
 
         try {
             event = (Event) event.requireLocalId();
@@ -92,6 +94,17 @@ public class InviteFriendsActivity extends BaseActivity
             IntentsUtils.home(this);
             finish();
         }
+
+        initListener();
+    }
+
+    private void initListener() {
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentsUtils.actionShareApp(InviteFriendsActivity.this);
+            }
+        });
     }
 
 
@@ -249,6 +262,7 @@ public class InviteFriendsActivity extends BaseActivity
     @Override
     public void onStart() {
         super.onStart();
+        progressview.setVisibility(View.VISIBLE);
         EventBus.getDefault().register(mFriendsLoader);
     }
 
@@ -261,6 +275,7 @@ public class InviteFriendsActivity extends BaseActivity
     @Override
     public void onLoadEnd(List<UserFriend> data) {
         mAdapter.setData(data);
+        progressview.setVisibility(View.GONE);
         if (data != null && data.size() > 0){
             initializeSelection();
         }
@@ -268,6 +283,7 @@ public class InviteFriendsActivity extends BaseActivity
 
     @Override
     public void onLoadError(Throwable error) {
+        progressview.setVisibility(View.GONE);
         // TODO
     }
 

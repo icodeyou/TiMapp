@@ -1,5 +1,7 @@
 package com.timappweb.timapp.activities;
 
+import android.app.Activity;
+import android.location.Location;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
@@ -28,6 +30,7 @@ import com.timappweb.timapp.utils.mocklocations.AbstractMockLocationProvider;
 import com.timappweb.timapp.utils.mocklocations.MockFusedLocationProvider;
 
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
@@ -41,6 +44,7 @@ import static junit.framework.Assert.assertTrue;
 public class AbstractActivityTest {
 
     private static final String TAG = "AbstractActivityTest";
+    private static final int MAX_ITERATION_WAIT_FOR_FINE_LOCATION = 20;
     private SystemAnimations mSystemAnimations;
     private ApiCallIdlingResource mApiCallIdlingResource;
     private AbstractMockLocationProvider mMockLocationProvider;
@@ -146,21 +150,24 @@ public class AbstractActivityTest {
                 LocationManager.getLocationProvider() != null);
         if (mMockLocationProvider == null){
             mMockLocationProvider = MockFusedLocationProvider.create(LocationManager.getLocationProvider().getGoogleApiClient());
+
         }
         return mMockLocationProvider;
     }
 
-    protected void waitForFineLocation(ActivityTestRule<AddEventActivity> mActivityRule) {
-        ActivityHelper.assertCurrentActivity(AddEventActivity.class);
-        assertNotNull(mActivityRule.getActivity());
-        if (mActivityRule.getActivity().getFineLocation() == null) {
-            Log.w(TAG, "Start waiting for fine location");
-            while  (mActivityRule.getActivity().getFineLocation() == null){
-                TestUtil.sleep(100);
+
+    protected void waitForFineLocation(ActivityTestRule<? extends Activity> mActivityRule) {
+        int i = 0;
+        while (!LocationManager.hasFineLocation()){
+            TestUtil.sleep(100);
+            i++;
+            if (i > MAX_ITERATION_WAIT_FOR_FINE_LOCATION){
+                Log.e(TAG, "Cannot find user location !");
+                break;
             }
         }
-    }
 
+    }
 
     //public class TestSuiteAnnoted extends TestWatcher{}
 

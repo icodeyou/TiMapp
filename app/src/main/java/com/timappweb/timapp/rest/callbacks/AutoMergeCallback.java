@@ -3,14 +3,9 @@ package com.timappweb.timapp.rest.callbacks;
 import android.util.Log;
 
 import com.activeandroid.Model;
-import com.google.common.collect.ObjectArrays;
-import com.google.common.reflect.Reflection;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.ReflectionHelper;
 

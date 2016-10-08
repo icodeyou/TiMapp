@@ -80,6 +80,7 @@
     <string name="explanation_gps_usage">TiMapp a besoin de votre localisation pour trouver les événements à proximité. Merci de nous donner l\'accès à votre localisation.</string>
     <string name="ask_user_to_enable_gps">GPS désactivé. Merci de l\'activer pour créer un événement.</string>
     <string name="error_camera">Une erreur est survenue lors de l\'ajout de photo. Veuillez réessayer plus tard.</string>
+    <string name="cannot_read_this_picture">Impossible d\'ouvrir cette photo, merci d\'en prendre une nouvelle.\nNotre équipe s\'excuse pour la gêne occasionnée.</string>
 
 
     <!-- Category selector -->
@@ -99,19 +100,27 @@
 
     <!-- EventActivity -->
     <string name="cannot_notify_status">Vous ne pouvez pas changer votre statut pour l\'instant.</string>
-    <string name="share_place_text">http://Lien_de_la_place</string>
-    <string name="share_message_text">Hey, J\'ai découvert cette appli qui te permet de découvrir en temps réel ce qui se passe à proximité. Découvre le concept ici : http://www.timappweb.com</string>
+    <string name="share_place_text">Va voir cet évènement: %1$s</string>
+    <!--timappweb.com et pas timapp.fr car le détail du site ne s'affiche pas correctement pour timapp.fr lors du partage FB -->
+    <string name="share_message_text">Hey, j\'ai découvert une appli qui te permet de découvrir en temps réel ce qui se passe à proximité :D\nVa voir leur concept sur www.timappweb.com</string>
     <string name="share_message_subject">TiMapp</string>
+    <string name="title_fragment_info">Info</string>
+    <string name="title_fragment_pictures">Photos</string>
+    <string name="title_fragment_tags">Tags</string>
+    <string name="title_fragment_people">Monde</string>
+    <string name="title_fragment_other">Other</string>
     <!-- Fragment Info -->
     <string name="i_am_coming">J\'arrive</string>
     <string name="i_am_here">Présent</string>
+    <string name="next_to_you">A proximité</string>
     <!-- Fragment Picture -->
     <string name="no_pic">Il n\'y a pas de encore de photo pour cet événement.</string>
     <string name="uploading_pic">Téléchargement de la photo</string>
     <string name="thanks_for_add_picture">Merci pour cette photo !</string>
-    <string name="action_set_picture_as_default">Choisir comme photo de défaut</string>
+    <string name="action_set_picture_as_default">Mettre en Arrière-Plan</string>
     <string name="action_set_picture_as_event_background">Choisir comme photo de défaut</string>
     <string name="event_picture_updated">La photo de défaut a été mise à jour.</string>
+    <string name="selection">Sélection</string>
     <!-- Fragment Tags -->
     <string name="no_tags">Il n\'y a pas encore de tags pour cet événement.</string>
     <string name="thanks_for_add_tag">Merci pour votre post !</string>
@@ -132,7 +141,7 @@
 
 
     <!-- LocateActivity  -->
-    <string name="text_activity_locate">Est-ce que votre événement existe déja ?</string>
+    <string name="text_activity_locate">Merci de vérifiez que votre événement n\'a pas déja été créé.</string>
     <string name="address_found">Adresse trouvée</string>
 
     <!-- AddEventActivity -->
@@ -161,19 +170,21 @@
 
     <!-- AddSpotActivity -->
     <string name="hint_spot_name">Nom du lieu</string>
+    <string name="no_data_spot">Indique un nom et une catégorie décrivant ton lieu. Ensuite, clique sur le bouton "Créer" pour valider.</string>
+    <string name="user_location_changed_reload_data">Votre localisation a changé.\nRechargement des données</string>
 
     <!-- SplashActivity  -->
     <string name="cannot_load_server_configuration_title">Impossible de démarrer l\'application. Veuillez réessayer plus tard.</string>
     <string name="cannot_load_server_configuration_msg">Assurez-vous d\'avoir une connexion internet.</string>
 
     <!-- ShareActivity -->
-    <string name="text_share_activity">TiMapp est plus sympa avec des amis. Cliquez sur le bouton rouge pour partager l\'application.</string>
-    <string name="subject_share_activity">Partagez TiMapp avec vos amis</string>
+    <string name="text_share_activity">TiMapp est plus sympa avec des amis. Clique sur le bouton rouge pour partager l\'application.</string>
+    <string name="subject_share_activity">Partage TiMapp avec tes amis</string>
 
     <!-- LoginActivity -->
     <string name="welcome_to_timapp">Bienvenue sur TiMapp</string>
     <string name="posts_shared">Posts</string>
-    <string name="events_created">Événements créés</string>
+    <string name="events_created">Événements</string>
     <string name="slogan">Find. Enjoy. Share.</string>
 
 
@@ -204,22 +215,26 @@
     </plurals>
 
     <!-- PresentationActivity -->
-    <string name="two_ways_to_explore">Deux façons d\'explorer!</string>
+    <string name="next">Suivant</string>
     <string name="presentation_two_text">Avec TiMapp,\n trouve et partage les événements qui se déroulent actuellement.</string>
     <string name="post_pics_and_tags">Photos et tags</string>
     <string name="invite_people">Invite tes amis</string>
     <string name="text_p_four">Ajoute les événements autour de toi en choisissant un nom et une catégorie.</string>
     <string name="share_page_p_one">Les posts fournissent un retour en temps réel de la communauté.</string>
-    <string name="share_page_p_two">Vous pouvez seulement poster si vous êtes localisés sur l\événement.</string>
-    <string name="title_p_three">Trouve des événements</string>
-    <string name="title_p_four">Crée des évéments</string>
+    <string name="share_page_p_two">Tu peux seulement poster si tu es localisé sur l\'événement.</string>
+    <string name="title_p_three">Explore</string>
+    <string name="two_ways_to_explore">Deux modes de vue</string>
+    <string name="title_p_four">Crée des événements</string>
     <string name="title_p_five">Partage</string>
     <string name="title_p_six">Points de popularité</string>
     <string name="title_p_seven">Prêt ?</string>
     <string name="popularity_page_one">Chaque événement a un nombre de points représentant sa popularité.</string>
     <string name="popularity_page_two">Mais le nombre augmente quand les utilisateurs postent.</string>
     <string name="popularity_page_three">Ce nombre est en fait un compte à rebours</string>
+    <string name="popularity_page_four">Quand la popularité atteint Zéro, l\événement est supprimé de la carte.</string>
     <string name="text_final_button_viewpager">GO</string>
+    <string name="map">Carte</string>
+    <string name="list">Liste</string>
 
 
 </resources>

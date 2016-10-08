@@ -1,20 +1,24 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.fixtures.EventsFixture;
+import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
 import com.timappweb.timapp.utils.annotations.ConfigState;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
+import com.timappweb.timapp.utils.mocklocations.AbstractMockLocationProvider;
 import com.timappweb.timapp.utils.viewinteraction.RecyclerViewHelper;
 import com.timappweb.timapp.utils.viewinteraction.ViewEventHelper;
 
@@ -37,6 +41,7 @@ import static junit.framework.Assert.assertTrue;
 @LargeTest
 public class ViewEventActivityTest extends AbstractActivityTest{
 
+    private static final String TAG = "ViewEventActivityTest";
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
 
@@ -50,6 +55,16 @@ public class ViewEventActivityTest extends AbstractActivityTest{
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EventsFixture.getPublicEvent());
         mActivityRule.launchActivity(intent);
         viewEventHelper = new ViewEventHelper();
+
+        mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
+
+        this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
+            @Override
+            public Location getNextLocation() {
+                Log.v(TAG, "Creating new mock location from route");
+                return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.latitude, MockLocation.START_TEST.longitude);
+            }
+        }, 2000);
 
         super.beforeTest();
     }
@@ -67,6 +82,7 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     @CreateAuthAction(replaceIfExists = false)
     @CreateConfigAction
     public void testAddPicture() {
+        this.waitForFineLocation(mActivityRule);
         viewEventHelper.addPicture();
         // TODO take the picture
     }
@@ -75,6 +91,7 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     @CreateAuthAction(replaceIfExists = false)
     @CreateConfigAction
     public void testAddTags() {
+        this.waitForFineLocation(mActivityRule);
         viewEventHelper.addTags();
         TestUtil.sleep(1000);
         ActivityHelper.assertCurrentActivity(AddTagActivity.class);

@@ -52,6 +52,7 @@ public class EditProfileActivity extends BaseActivity{
     private TextView counterView;
     private View submitView;
     private Button buttonSubmit;
+    private View progressView;
 
     private int counterTags;
 
@@ -69,6 +70,7 @@ public class EditProfileActivity extends BaseActivity{
         counterView = (TextView) findViewById(R.id.counter_view);
         buttonSubmit = (Button) findViewById(R.id.button_submit);
         submitView = findViewById(R.id.submit_view);
+        progressView = findViewById(R.id.progress_view);
 
         init();
 
@@ -138,7 +140,7 @@ public class EditProfileActivity extends BaseActivity{
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public synchronized void onClick(View v) {
-                buttonSubmit.setEnabled(false);
+                progressView.setVisibility(View.VISIBLE);
                 Log.v(TAG, "Submitting user tags");
                 Map<String, String> data = new HashMap<>();
                 Call<RestFeedback> call = RestClient.service().editProfile(data);
@@ -159,7 +161,7 @@ public class EditProfileActivity extends BaseActivity{
                         .onFinally(new HttpCallManager.FinallyCallback() {
                             @Override
                             public void onFinally(Response response, Throwable error) {
-                                buttonSubmit.setEnabled(true);
+                                progressView.setVisibility(View.GONE);
                             }
                         })
                         .perform();

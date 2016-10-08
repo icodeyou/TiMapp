@@ -12,6 +12,7 @@ import com.github.florent37.materialviewpager.header.MaterialViewPagerImageHelpe
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.views.SimpleTimerView;
 
 /**
  * Created by stephane on 6/1/2016.
@@ -37,7 +38,7 @@ public class BindingHelper {
 
 
     // TODO REMOVE PICASSO
-    @BindingAdapter({"event:backgroundImage"})
+    @BindingAdapter({"app:event"})
     public static void setBackgroundImage(ImageView imageView, Event event) {
         if (event!= null){
             if (event.hasPicture()){
@@ -56,6 +57,14 @@ public class BindingHelper {
             }
         }
     }
+
+    @BindingAdapter("app:timerEvent")
+    public static void setEvent(SimpleTimerView timerView, Event event) {
+        if(event != null) {
+            timerView.initTimer(event.getPoints());
+        }
+    }
+
 
     @BindingAdapter("app:errorText")
     public static void setErrorMessage(MaterialEditText editText, CharSequence errorMessage) {

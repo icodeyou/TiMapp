@@ -13,6 +13,9 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <include layout="@layout/progressview_fullscreen" />
+
+
         <com.timappweb.timapp.views.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
@@ -26,12 +29,21 @@
 
         </com.timappweb.timapp.views.SwipeRefreshLayout>
 
-        <TextView
-            style="@style/NoDataView"
-            android:id="@+id/no_friends_view"
-            android:text="@string/no_friends"/>
-
-        <include layout="@layout/progressview_fullscreen" />
+        <RelativeLayout
+            android:id="@+id/no_data_view_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <TextView
+                style="@style/NoDataView"
+                android:id="@+id/no_friends_view"
+                android:text="@string/no_friends"/>
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_alignParentBottom="true"
+                layout="@layout/share_layout" />
+        </RelativeLayout>
 
     </RelativeLayout>
 

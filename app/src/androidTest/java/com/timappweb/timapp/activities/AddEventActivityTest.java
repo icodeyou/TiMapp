@@ -147,8 +147,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
                 .waitForExistingSpotLoad()
                 .selectExistingSpot(0);
 
-        addEventForm
-                .submit();
+        addEventForm.submit();
 
         ActivityHelper.assertCurrentActivity(EventActivity.class);
     }
@@ -273,7 +272,14 @@ public class AddEventActivityTest extends AbstractActivityTest {
     }
 
     private void waitForFineLocation() {
-        this.waitForFineLocation(mActivityRule);
+        ActivityHelper.assertCurrentActivity(AddEventActivity.class);
+        assertNotNull(mActivityRule.getActivity());
+        if (mActivityRule.getActivity().getFineLocation() == null) {
+            Log.w(TAG, "Start waiting for fine location");
+            while  (mActivityRule.getActivity().getFineLocation() == null){
+                TestUtil.sleep(100);
+            }
+        }
     }
 
 }

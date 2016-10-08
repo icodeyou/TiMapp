@@ -17,6 +17,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.MyHackyViewPager;
 
 import io.fabric.sdk.android.Fabric;
@@ -43,6 +44,8 @@ public class EventPicturesActivity extends FragmentActivity {
         page = (MyHackyViewPager)findViewById(R.id.view_pager);
         page.setAdapter(pagerAdapter);
 
+        Util.setStatusBarColor(this, R.color.black);
+
         int initialPosition = extractInitialPosition();
 
         page.setCurrentItem(initialPosition);
@@ -68,10 +71,6 @@ public class EventPicturesActivity extends FragmentActivity {
     }
 
     private class ScreenSlidePagerAdapter extends PagerAdapter {
-
-        /*public ScreenSlidePagerAdapter() {
-            return ;
-        }*/
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {

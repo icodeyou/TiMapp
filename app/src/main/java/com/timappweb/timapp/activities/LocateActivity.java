@@ -4,8 +4,6 @@ package com.timappweb.timapp.activities;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,14 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.EventsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.MapAreaLoaderCallback;
 import com.timappweb.timapp.data.loader.paginate.PaginateDataLoader;
@@ -35,11 +30,7 @@ import com.timappweb.timapp.views.RetryDialog;
 import com.twotoasters.jazzylistview.effects.TiltEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 public class LocateActivity extends BaseActivity implements LocationManager.LocationListener, PaginateDataLoader.Callback {
 
@@ -108,8 +99,8 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     protected void onStart() {
         super.onStart();
-        LocationManager.addOnLocationChangedListener(this);
         LocationManager.start(this);
+        LocationManager.addOnLocationChangedListener(this);
         mEventLoaderModel.setCallback(this);
         if (LocationManager.hasLastLocation()){
             mEventLoaderModel.loadNextPage();
@@ -120,20 +111,21 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     @Override
     protected void onResume() {
         super.onResume();
-        LocationManager.removeLocationListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
+        Log.d(TAG, "Stopping LocateActivity");
+        LocationManager.removeLocationListener(this);
+        LocationManager.stop(this);
         mEventLoaderModel.setCallback(null);
         mEventLoaderModel.stop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        LocationManager.stop();
-        super.onDestroy();
+        super.onStop();
     }
 
     @Override
@@ -164,22 +156,24 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
         }
         else {
             IntentsUtils.addPlace(LocateActivity.this);
-            finish();
         }
     }
 
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
         progressView.setVisibility(View.GONE);
-        RetryDialog.show(this, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mEventLoaderModel
-                        .clear()
-                        .loadNextPage();
-            }
-        });
+        RetryDialog.builder(this, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mEventLoaderModel
+                                .clear()
+                                .loadNextPage();
+                    }
+                })
+                .setCancelable(false)
+                .create()
+                .show();
     }
     // ---------------------------------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------
@@ -219,7 +213,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
             // Show a toast comment if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
-                Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).builder();
             }
         }
     }*/

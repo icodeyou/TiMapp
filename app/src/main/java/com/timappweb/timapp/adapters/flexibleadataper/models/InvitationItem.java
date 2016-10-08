@@ -106,10 +106,6 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
             mBinding.setEvent(eventInvitation.event);
             mBinding.setUser(eventInvitation.getUserSource());
 
-            //TODO : Following code is duplicated (method setEventInHolder() in class EventsAdapter)
-            int initialTime = eventInvitation.event.getPoints();
-            tvCountPoints.initTimer(initialTime);
-
             try {
                 titleCategory.setText(Util.capitalize(eventInvitation.event.getCategory().name));
             } catch (UnknownCategoryException e) {

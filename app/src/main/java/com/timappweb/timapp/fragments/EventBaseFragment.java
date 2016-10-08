@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.listeners.OnTabSelectedListener;
 
 /**
  * Created by stephane on 4/6/2016.
@@ -22,6 +24,7 @@ public abstract class EventBaseFragment extends BaseFragment {
 
     protected EventActivity eventActivity;
     protected OnCreateViewCallback createViewCallback;
+    private int mTitle = 0;
 
     @Nullable
     @Override
@@ -51,6 +54,19 @@ public abstract class EventBaseFragment extends BaseFragment {
     public void setCreateViewCallback(OnCreateViewCallback createViewCallback) {
         this.createViewCallback = createViewCallback;
     }
+
+    protected void setTitle(int title) {
+        mTitle = title;
+    }
+
+    public int getTitle() {
+        if(mTitle==0) {
+            return R.string.title_fragment_other;
+        }
+        return mTitle;
+    }
+
+
 
 
 }

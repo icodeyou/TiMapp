@@ -12,13 +12,11 @@ public interface AuthManagerInterface<ServerResponseType> {
 
     String getToken();
 
-    String getSocialProviderToken();
-
     void logout();
 
     HttpCallManager checkToken();
 
-    boolean login(Context context, ServerResponseType serverResponse, String accessToken) throws AuthManager.CannotLoginException;
+    boolean login(String providerId, ServerResponseType serverResponse) throws AuthManager.CannotLoginException;
 
     User getCurrentUser();
 

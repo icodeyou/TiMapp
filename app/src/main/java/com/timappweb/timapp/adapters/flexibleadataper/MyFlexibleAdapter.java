@@ -26,6 +26,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	protected Context mContext;
 	private ArrayList<AbstractFlexibleItem> mItemsCopy;
+	private OnItemLongClickListener mLongItemClickListener;
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -102,4 +103,13 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	public void removeAll() {
 		this.removeRange(0, getItemCount());
 	}
+
+	public OnItemLongClickListener getLongItemClickListener() {
+		return mLongItemClickListener;
+	}
+
+	public void setOnLongItemClickListener(FlexibleAdapter.OnItemLongClickListener onLongItemClickListener) {
+		this.mLongItemClickListener = onLongItemClickListener;
+	}
+
 }

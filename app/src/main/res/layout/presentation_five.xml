@@ -32,13 +32,13 @@
                 android:src="@drawable/presentation_invite_icon"/>
             <TextView
                 style="@style/TextLegendPresentation"
-                android:text="Invite people"/>
+                android:text="@string/invite_people"/>
         </LinearLayout>
     </LinearLayout>
     <TextView
         style="@style/TextMultilinesPresentation"
-        android:text="Your posts provide Real Time Rating for the community"/>
+        android:text="@string/share_page_p_one"/>
     <TextView
         style="@style/TextMultilinesPresentation"
-        android:text="You can only post if you're located in an event."/>
+        android:text="@string/share_page_p_two"/>
 </LinearLayout>

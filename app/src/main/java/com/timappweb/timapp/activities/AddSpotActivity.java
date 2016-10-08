@@ -45,6 +45,7 @@ import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
@@ -57,7 +58,9 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import io.fabric.sdk.android.Fabric;
 
-public class AddSpotActivity extends BaseActivity implements LocationManager.LocationListener, OnMapReadyCallback, PaginateDataLoader.Callback {
+public class AddSpotActivity extends BaseActivity implements
+        //LocationManager.LocationListener,
+        OnMapReadyCallback, PaginateDataLoader.Callback {
 
     private static final String         TAG                             = "AddSpotActivity";
     private static final float          ZOOM_LEVEL_CENTER_MAP           = 15.0f;
@@ -104,14 +107,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         progressView = findViewById(R.id.progress_view);
         noDataView = findViewById(R.id.no_data_view);
 
-        // TODO : TUTO (ShowCaseView): If the place already exists in the list below, you can just select it.
-
         initEditText();
         initAdapters();
         setListeners();
         initDataLoader();
 
         new PaginateRecyclerViewManager(this, mAdapter, mDataLoader)
+                .setNoDataView(noDataView)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Spot>() {
                     @Override
                     public AbstractFlexibleItem createItem(Spot data) {
@@ -120,12 +122,12 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                 })
                 .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
                 .setCallback(this)
-                .setNoDataView(noDataView)
                 ;
 
-        if (LocationManager.hasLastLocation()){
+        Util.appAssert(LocationManager.hasLastLocation(), TAG, "A last location must be set to add a spot");
+        //if (LocationManager.hasLastLocation()){
             mDataLoader.loadNextPage();
-        }
+        //}
     }
 
 
@@ -161,7 +163,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
         f[0] = new InputFilter.LengthFilter(ConfigurationProvider.rules().spots_max_name_length);
         etNameSpot.setFilters(f);
         etNameSpot.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        etNameSpot.clearFocus();
+        etNameSpot.findFocus();
     }
 
     private void initAdapters() {
@@ -230,6 +232,9 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
                     //Fill and Filter mItems with your custom list and automatically animate the changes
                     //Watch out! The original list must be a copy
                     mAdapter.filterItems(mAdapter.getItemsCopy(), 200L);
+                    if(mAdapter.getItemCount() == 0) {
+                        noDataView.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 setButtonValidation();
@@ -319,6 +324,7 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     */
     // =============================================================================================
 
+    /*
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         //requestReverseGeocoding(newLocation);
@@ -327,13 +333,14 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
             mDataLoader.loadNextPage();
         }
         else {
-            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).builder();
             mSwipeAndRefreshLayout.setEnabled(true);
             mDataLoader
                     .clear()
                     .loadNextPage();
         }
     }
+    */
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -343,13 +350,13 @@ public class AddSpotActivity extends BaseActivity implements LocationManager.Loc
     @Override
     protected void onStart() {
         super.onStart();
-        LocationManager.addOnLocationChangedListener(this);
+        //LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LocationManager.removeLocationListener(this);
+        //LocationManager.removeLocationListener(this);
     }
 
     @Override

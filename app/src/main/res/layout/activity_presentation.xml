@@ -25,13 +25,13 @@
             <Button
                 android:id="@+id/skip_button"
                 style="@style/ButtonPresentation"
-                android:text="Skip"/>
+                android:text="@string/skip"/>
             <View
                 style="@style/DividerVertical"/>
             <Button
                 android:id="@+id/next_button"
                 style="@style/ButtonPresentation"
-                android:text="Next"/>
+                android:text="@string/next"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

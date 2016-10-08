@@ -80,6 +80,7 @@ public abstract class RecyclerViewManager<This> implements
 
     @Override
     public void onUpdateEmptyView(int size) {
+        //TODO Steph : is never called after the method setNoDataView ==> mNoDataView always null
         if (mNoDataView != null) mNoDataView.setVisibility(size > 0 ? View.GONE : View.VISIBLE);
     }
 

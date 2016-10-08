@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:padding="@dimen/margin_fragments_event">
+        android:fitsSystemWindows="true">
 
         <com.timappweb.timapp.views.SwipeRefreshLayout
             android:layout_marginTop="@dimen/margin_fragments_event_additional_top"
@@ -39,32 +38,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center"
             android:background="@drawable/background_uploading"
             android:alpha="0.7"
             android:layout_centerInParent="true"
             android:visibility="gone">
             <com.crystal.crystalpreloaders.widgets.CrystalPreloader
-                android:layout_marginRight="@dimen/upload_tags_margin"
-                android:layout_marginEnd="@dimen/upload_tags_margin"
+                android:layout_margin="10dp"
                 style="@style/ProgressView"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                style="@style/TextDefault"
                 android:text="@string/uploading_pic"
-                android:textColor="@color/Black"
-                android:textSize="@dimen/text_normal"/>
+                tools:text="Téléchargement de la photo"/>
         </LinearLayout>
 
     </RelativeLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Test Bottom sheet"
-        android:background="@color/white"
-        android:visibility="gone"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"/>
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        android:background="@color/black"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+        <TextView
+            android:id="@+id/text_info_pic"
+            style="@style/TextDefault"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            tools:text="Time Created"/>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

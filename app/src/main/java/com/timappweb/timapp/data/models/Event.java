@@ -2,6 +2,7 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,7 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.views.SimpleTimerView;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -80,6 +82,14 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Column(name = "Longitude")
     @Expose
     public double           longitude;
+
+    @Column(name = "BeginDate")
+    @Expose
+    public int           begin_date;
+
+    @Column(name = "EndDate")
+    @Expose
+    public int           end_date;
 
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
     @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
@@ -190,20 +200,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return points;
     }
 
-    public String getTime() {
-        if (this.eventPosts != null && eventPosts.size() > 0){
-            return eventPosts.get(eventPosts.size()-1).getPrettyTimeCreated();
-        }
-        return this.getPrettyTimeCreated();
-    }
-
     /**
      * Get the created as a pretty time format
      *
      * @return
      */
-    public String getPrettyTimeCreated() {
-        return Util.secondsTimestampToPrettyTime(this.created);
+    public String getPrettyTimeBegin() {
+        return Util.secondsTimestampToPrettyTime(this.begin_date);
     }
 
     @Override
@@ -212,8 +215,9 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
+                ", date='from " + new Date(begin_date*1000).toString() + " to "  + (end_date > 0 ? new Date(end_date*1000).toString() : '?') + '\'' +
                 ", location=(" + latitude + "," + longitude + ")" +
-                ", created=" + created +
+                ", created=" + new Date(created*1000).toString()  +
                 ", category=" + (event_category != null ? event_category.getName() : "NONE") +
                 ", spot=" + (spot != null ? spot.getName() : "No spot") +
                 ", author=" + (user != null ? user.username : "No author") +
@@ -449,8 +453,20 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         this.event_category = category;
     }
 
+    /**
+     * Return true if this event is over.
+     * @return
+     */
     public boolean isOver(){
         return this.getPoints() <= 0;
+    }
+
+    /**
+     * Return true if this event can be accessed
+     * @return
+     */
+    public boolean isAccessible(){
+        return !this.isOver();
     }
 
     public void setLocation(Location location) {

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.config.IntentsUtils;
 
 public class ShareActivity extends BaseActivity {
 
@@ -29,13 +31,13 @@ public class ShareActivity extends BaseActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareApp();
+                IntentsUtils.actionShareApp(ShareActivity.this);
             }
         });
 
         shareButton.callOnClick();
     }
-
+    /*
     private void shareApp() {
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.share_message_subject))
                 .setMessage(getString(R.string.share_message_text))
@@ -44,7 +46,7 @@ public class ShareActivity extends BaseActivity {
                 //.setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

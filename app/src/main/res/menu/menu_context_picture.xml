@@ -4,7 +4,6 @@
 
     <item android:id="@+id/action_set_event_background"
         android:title="@string/action_set_picture_as_default"
-        android:icon="@drawable/default_pic"
         app:showAsAction="always" />
 
     <!-- TODO later a picture can be flagged as inapropriate

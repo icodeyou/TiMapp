@@ -82,6 +82,7 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
                 .setCallback(new MultipleHttpCallManager.Callback() {
                     @Override
                     public void onPostExecute() {
+                        // TODO do not retry everything
                         if (!ConfigurationProvider.hasFullConfiguration()){
                             Log.e(TAG, "Cannot load server configuration");
                             if (!ConfigurationProvider.hasRulesConfig()) {
@@ -94,14 +95,17 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
                                 Log.e(TAG, "    - No event categories configuration");
                             }
                             ConfigurationProvider.clearStaticVariables();
-                            RetryDialog.show(SplashActivity.this, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    SplashActivity.this.loadConfig();
-                                }
-                            }, getString(R.string.cannot_load_server_configuration_title),
-                                    getString(R.string.cannot_load_server_configuration_msg));
+                            RetryDialog.builder(SplashActivity.this, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        SplashActivity.this.loadConfig();
+                                    }
+                                }, getString(R.string.cannot_load_server_configuration_title),
+                                        getString(R.string.cannot_load_server_configuration_msg))
+                                .setCancelable(false)
+                                .create()
+                                .show();
                         }
                         else{
                             if (callsManager.isSuccess(ConfigurationProvider.CALL_ID_SPOT_CATEGORIES)
@@ -112,7 +116,7 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
 
                             if (MyApplication.isLoggedIn()){
                                 Event currentEvent = EventStatusManager.getCurrentEvent();
-                                if (currentEvent != null && !currentEvent.isOver()){
+                                if (currentEvent != null && currentEvent.isAccessible()){
                                     IntentsUtils.viewSpecifiedEvent(SplashActivity.this, currentEvent);
                                 }
                                 else{
@@ -143,4 +147,5 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
 }

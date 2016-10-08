@@ -24,7 +24,7 @@ public class ApiCallIdlingResource implements IdlingResource {
 
     @Override
     public boolean isIdleNow() {
-        isIdle = !RestClient.hasPendingCall();
+        isIdle = !RestClient.instance().hasPendingCall();
         if (isIdle && callback != null){
             callback.onTransitionToIdle();
         }

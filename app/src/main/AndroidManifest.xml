@@ -47,7 +47,7 @@
         android:largeHeap="true"
         tools:replace="android:theme">
 
-        <!-- CRASHLYTICS CONFIGURATION -->
+        <!-- CRASHLYTICS CONFIGURATION TODO set as config-->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="a165ce2069880f70815a9aec89228c4da0098c9b"
@@ -56,7 +56,7 @@
         <!-- DATABASE CONFIGURATION -->
         <!-- pre populate db -->
         <meta-data android:name="AA_DB_NAME" android:value="@string/db_name" />
-        <meta-data android:name="AA_DB_VERSION" android:value="19" />
+        <meta-data android:name="AA_DB_VERSION" android:value="21" />
         <!--
         // TODO for production set models to speed up launch
         <meta-data  android:name=""AA_MODELS"
@@ -160,8 +160,8 @@
                 <!--<action android:name="android.intent.action.VIEW"/>-->
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="example.com" android:scheme="http"/>
-                <data android:host="example.com" android:scheme="https"/>
+                <data android:host="timapp.fr" android:scheme="http"/>
+                <data android:host="timapp.fr" android:scheme="https"/>
             </intent-filter>
         </activity>
 
@@ -285,7 +285,7 @@
             android:name=".activities.EventActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_place"
-            android:theme="@style/EditProfileTheme"
+            android:theme="@style/WhiteMenuActionbar"
             android:parentActivityName=".activities.DrawerActivity" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -391,7 +391,7 @@
             android:label="@string/title_activity_edit_profile"
             android:windowSoftInputMode="adjustNothing|stateVisible"
             android:parentActivityName=".activities.ProfileActivity"
-            android:theme="@style/EditProfileTheme">
+            android:theme="@style/WhiteMenuActionbar">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -414,6 +414,7 @@
         <activity android:name=".activities.AddEventActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
+            android:theme="@style/SecondaryToolbarTheme"
             android:parentActivityName=".activities.ProfileActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

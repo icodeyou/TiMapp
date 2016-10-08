@@ -101,7 +101,10 @@ public interface WebServiceInterface {
     Call<User>  profile(@Path("id") long userId);
 
     @POST("users/facebook_login.json")
-    Call<RestFeedback>  facebookLogin(@Body JsonObject accessToken);
+    Call<RestFeedback>  facebookLogin(@Body JsonObject payload);
+
+    @POST("users/firebase_login.json")
+    Call<JsonObject>  firebaseLogin(@Body JsonObject payload);
 
     @GET("users/friends.json")
     Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);

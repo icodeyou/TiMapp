@@ -39,6 +39,7 @@ android {
             signingConfig signingConfigs.config
             resValue "string", "api_base_url", "http://api.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1634741340120823"
+            resValue "string", "google_maps_key", "AIzaSyA7cVpTr590GWnf2uD1kb4SYxF-kKqpphc"
 
         }
         debug {
@@ -46,12 +47,18 @@ android {
             debuggable true
             resValue "string", "api_base_url", "http://dev.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1728731634055126"
+            resValue "string", "google_maps_key", "AIzaSyD569ck3jUtYjiFgrKfdpfGFhUOMXgVDUw"
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
         }
         debugTest {
             minifyEnabled false
             debuggable true
             resValue "string", "api_base_url", "http://test.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1731017757159847"
+            resValue "string", "google_maps_key", "AIzaSyBRrBWDLzdqOoMY1nEZ5DISnNYZozqZ2Vw"
+            applicationIdSuffix '.test'
+            versionNameSuffix '-TEST'
         }
     }
 
@@ -158,7 +165,8 @@ dependencies {
 
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
-    compile 'com.github.davidpizarro:autolabelui:1.0.1'
+
+    //compile 'com.github.davidpizarro:autolabelui:1.0.1'
     compile 'com.github.boxme:squarecamera:1.1.0'
     //compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
 

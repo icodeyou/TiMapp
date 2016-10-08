@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 
@@ -35,17 +36,13 @@ public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG     = "BaseActivity";
     protected SearchView                searchView;
-    private MyLocationProvider          locationProvider;
-    protected List<Call>                apiCalls = new LinkedList<>();
     public Toolbar mToolbar;
 
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "BaseActivity::onDestroy()");
-        for (Call call: apiCalls){
-            call.cancel();
-        }
+        RestClient.instance().cancelCalls();
         super.onDestroy();
     }
 
@@ -97,14 +94,6 @@ public class BaseActivity extends AppCompatActivity {
         final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
         upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
-    }
-
-    protected void setStatusBarColor(int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(this, color));
-        }
     }
 
     protected void setSearchview(Menu menu) {

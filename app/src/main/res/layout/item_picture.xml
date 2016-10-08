@@ -15,14 +15,18 @@
   ~ limitations under the License.
   -->
 
-<com.facebook.drawee.view.SimpleDraweeView
+<FrameLayout
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/picture"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="1dp"
-    fresco:roundedCornerRadius="2dp"
-    fresco:viewAspectRatio="1"
-    fresco:actualImageScaleType="centerCrop"
-    fresco:placeholderImage="@drawable/placeholder_picture"/>
+    android:layout_height="wrap_content">
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        fresco:roundedCornerRadius="2dp"
+        fresco:viewAspectRatio="1"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/placeholder_picture"/>
+</FrameLayout>

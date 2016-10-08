@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
@@ -72,7 +73,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public EventPeopleFragment() {}
+    public EventPeopleFragment() {
+        setTitle(R.string.title_fragment_people);
+    }
 
 
     @Nullable
@@ -186,8 +189,12 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     @Override
     public void onStart() {
         super.onStart();
-        if (userStatusLoader != null) EventBus.getDefault().register(userStatusLoader);
-        if (inviteSentLoader != null) EventBus.getDefault().register(inviteSentLoader);
+        if (userStatusLoader != null) {
+            EventBus.getDefault().register(userStatusLoader);
+        }
+        if (inviteSentLoader != null){
+            EventBus.getDefault().register(inviteSentLoader);
+        }
     }
 
     @Override
@@ -245,9 +252,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 return true;
             }
         });
-        //mRecyclerView.setItemAnimator(new SlideInRightAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                R.drawable.divider, 0));//Increase to add gap between sections (Works only with LinearLayout!)
 
         mRecyclerView.setAdapter(mPlaceUsersAdapter);
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
@@ -264,16 +268,23 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         }
     }
 
+    @Override
+    public void onTabUnselected() {
+
+    }
+
     private void loadPeopleStatusIfNeeded() {
         if (mUserStatusLoader != null) return;
         Log.d(TAG, "Loading people");
         mUserStatusLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_USERS, null, userStatusLoader);
+        userStatusLoader.refresh();
     }
 
     private void loadInviteSentIfNeeded() {
         if (mInviteLoader != null) return;
         Log.d(TAG, "Loading invite sent by user");
         mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
+        inviteSentLoader.refresh();
     }
 
     @Override

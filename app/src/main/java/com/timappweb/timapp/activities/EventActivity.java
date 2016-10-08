@@ -40,6 +40,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.utils.DeepLinkFactory;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.location.LocationManager;
 
@@ -82,7 +83,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private EventInformationFragment    fragmentInformation;
 
     private boolean                     isEventLoaded               = false;
-    private FragmentGroup               mFragmentGroup;
+    private FragmentGroup<EventBaseFragment>               mFragmentGroup;
     private MaterialViewPager           mMaterialViewPager;
     private EventPagerAdapter           mFragmentAdapter;
     private TextView                    pageTitle;
@@ -154,24 +155,24 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     protected void onStart() {
         super.onStart();
         LocationManager.start(this);
+        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
     protected void onStop() {
+        LocationManager.removeLocationListener(this);
+        LocationManager.stop(this);
         super.onStop();
-        LocationManager.stop();
     }
 
     @Override
     protected void onPause() {
-        LocationManager.removeLocationListener(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
@@ -194,6 +195,15 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(this.isTaskRoot()) {
+            IntentsUtils.home(this);
+        } else {
+            super.onBackPressed();
+        }
     }
 
 
@@ -238,7 +248,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                         @Override
                         public void notFound() {
                             Toast.makeText(EventActivity.this, R.string.event_does_not_exists_anymore, Toast.LENGTH_SHORT).show();
-                            EventActivity.this.onEventOver();
+                            EventActivity.this.onEventInaccessible();
                         }
                     })
                     .onError(new RetryOnErrorCallback(EventActivity.this, new RetryOnErrorCallback.OnRetryCallback() {
@@ -251,7 +261,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                                 Log.e(TAG, e.getMessage());
                             }
                         }
-                    }))
+                    }).setCancelable(false))
                     .onFinally(new HttpCallManager.FinallyCallback() {
                         @Override
                         public void onFinally(Response response, Throwable error) {
@@ -272,6 +282,11 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO : this is a workaround to enable scroll behind Fab when it's collapsed
+                int visibility = btnAction.isExpanded() ? View.VISIBLE : View.GONE;
+                btnActionTag.setVisibility(visibility);
+                btnActionCamera.setVisibility(visibility);
+                btnActionInvite.setVisibility(visibility);
                 Log.d(TAG, "Main button action clicked!");
             }
         });
@@ -279,20 +294,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         btnActionTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!event.isUserAround()){
-                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
             }
         });
         btnActionCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!event.isUserAround()){
-                    Toast.makeText(EventActivity.this, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
-                    return;
-                }
                 IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
             }
         });
@@ -316,8 +323,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             event.addPropertyChangeListener(Event.PROPERTY_POINTS, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent event) {
-                    if (EventActivity.this.event.isOver()){
-                        EventActivity.this.onEventOver();
+                    if (!EventActivity.this.event.isAccessible()){
+                        EventActivity.this.onEventInaccessible();
                     }
                     else{
                         if (fragmentInformation!= null && fragmentInformation.getView() != null) fragmentInformation.updatePointsView(EventActivity.this.event.getPoints());
@@ -339,7 +346,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         updateView();
     }
 
-    private void onEventOver() {
+    private void onEventInaccessible() {
         if (EventStatusManager.isCurrentEvent(eventId)){
             EventStatusManager.clearCurrentEvent();
         }
@@ -421,12 +428,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void initFragments() {
         // Création de la liste de Fragments que fera défiler le PagerAdapter
         mFragmentGroup = FragmentGroup.createGroup(this);
-        fragmentInformation = (EventInformationFragment) mFragmentGroup.add(Fragment.instantiate(this, EventInformationFragment.class.getName()));
-        fragmentPictures = (EventPicturesFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPicturesFragment.class.getName()));
-        fragmentTags = (EventTagsFragment) mFragmentGroup.add(Fragment.instantiate(this, EventTagsFragment.class.getName()));
-        fragmentPeople = (EventPeopleFragment) mFragmentGroup.add(Fragment.instantiate(this, EventPeopleFragment.class.getName()));
+        fragmentInformation = (EventInformationFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventInformationFragment.class.getName()));
+        fragmentPictures = (EventPicturesFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventPicturesFragment.class.getName()));
+        fragmentTags = (EventTagsFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventTagsFragment.class.getName()));
+        fragmentPeople = (EventPeopleFragment) mFragmentGroup.add((EventBaseFragment) Fragment.instantiate(this, EventPeopleFragment.class.getName()));
         // Creation de l'adapter qui s'occupera de l'affichage de la liste de fragments
-        mFragmentAdapter = new EventPagerAdapter(getSupportFragmentManager(), mFragmentGroup.getFragments());
+        mFragmentAdapter = new EventPagerAdapter(this, getSupportFragmentManager(), mFragmentGroup.getFragments());
 
         mMaterialViewPager = (MaterialViewPager) findViewById(R.id.event_viewpager);
         mMaterialViewPager.getViewPager().setAdapter(mFragmentAdapter);
@@ -437,7 +444,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         this.updateEventBackground();
         int numberOfFragments = mFragmentAdapter.getCount();
         mMaterialViewPager.getViewPager().setOffscreenPageLimit(numberOfFragments);
-        mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener());
+        mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener(INITIAL_FRAGMENT_PAGE));
 
         /*
         Change header image and color
@@ -509,8 +516,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private void shareEvent() {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text));
-        startActivity(Intent.createChooser(sharingIntent, "Share using"));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text, DeepLinkFactory.shareEvent(event).build()));
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using_title)));
     }
 
     //Public methods
@@ -561,6 +568,12 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     // =============================================================================================
     private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
+        private int lastPosition;
+
+        public MyOnPageChangeListener(int initialFragmentPage) {
+            this.lastPosition = initialFragmentPage;
+        }
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             //Log.d(TAG, "onPageScrolled: " + position);
@@ -570,6 +583,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         public void onPageSelected(int position) {
             Log.d(TAG, "Page " + position + " is now selected.");
             ((OnTabSelectedListener)mFragmentAdapter.getItem(position)).onTabSelected();
+            ((OnTabSelectedListener)mFragmentAdapter.getItem(lastPosition)).onTabUnselected();
+            lastPosition = position;
         }
 
         @Override

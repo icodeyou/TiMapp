@@ -2,6 +2,8 @@ package com.timappweb.timapp.auth;
 
 import android.util.Log;
 
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.rest.RestClient;
@@ -22,7 +24,11 @@ public class FacebookAuthProvider implements AuthProviderInterface<JsonObject,Re
     public static final String PROVIDER_ID = "facebook";
     private static final String TAG = "FacebookAuthProvider";
 
-    public HttpCallManager login(final JsonObject payload, final AuthAttemptCallback<RestFeedback> callback){
+    public void logout(){
+        LoginManager.getInstance().logOut();
+    }
+
+    public HttpCallManager login(JsonObject payload, final AuthAttemptCallback<RestFeedback> callback){
         Log.i(TAG, "Request login with " + this.getId() + ". Payload=" + payload);
         Call<RestFeedback> call = RestClient.service().facebookLogin(payload);
         return RestClient.buildCall(call)
@@ -32,7 +38,7 @@ public class FacebookAuthProvider implements AuthProviderInterface<JsonObject,Re
                         try{
                             MyApplication
                                     .getAuthManager()
-                                    .login(MyApplication.getApplicationBaseContext(), feedback, payload.get("access_token").getAsString());
+                                    .login(PROVIDER_ID, feedback.data);
                             callback.onSuccess(feedback);
                         }
                         catch (Exception ex){
@@ -69,4 +75,11 @@ public class FacebookAuthProvider implements AuthProviderInterface<JsonObject,Re
         object.addProperty("app_id", appId);
         return object;
     }
+    /*
+    public static JsonObject createPayload(String accessToken, String appId) {
+        JsonObject object = new JsonObject();
+        object.addProperty("access_token", accessToken);
+        object.addProperty("app_id", appId);
+        return object;
+    }*/
 }

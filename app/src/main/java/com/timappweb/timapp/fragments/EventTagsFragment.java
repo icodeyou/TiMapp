@@ -57,16 +57,22 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
     // ---------------------------------------------------------------------------------------------
 
+    public EventTagsFragment() {
+        setTitle(R.string.title_fragment_tags);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_event_tags, container, false);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_tags);
         noTagsView = view.findViewById(R.id.no_tags_view);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
+
         return view;
 
     }
@@ -168,6 +174,11 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
             mRecyclerView.smoothScrollToPosition(0);
         }
         loadDataIfNeeded();
+    }
+
+    @Override
+    public void onTabUnselected() {
+
     }
 
     // =============================================================================================

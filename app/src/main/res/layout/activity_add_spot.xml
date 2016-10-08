@@ -9,7 +9,7 @@
 
     <com.timappweb.timapp.views.CategorySelectorView
         android:id="@+id/category_selector"
-        app:color_background="@color/colorAccent"
+        app:color_background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -25,6 +25,7 @@
     <TextView
         android:id="@+id/no_data_view"
         style="@style/NoDataView"
+        android:layout_height="wrap_content"
         android:text="@string/no_data_spot"/>
 
     <com.timappweb.timapp.views.SwipeRefreshLayout

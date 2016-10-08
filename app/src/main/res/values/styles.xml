@@ -1,11 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
-    </style>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <!--<item name="android:windowActivityTransitions">true</item>
@@ -18,33 +14,40 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item> <!-- the contextual action bar will now overlay the action bar -->
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+
+        <!-- Toolbar Theme / Apply white arrow -->
+        <!--<item name="colorControlNormal">@color/textLight</item>-->
+        <!--<item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
+        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>-->
 
         <!-- -->
         <item name="android:textColor">@color/textBlack</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
 
         <!-- Material Theme -->
-        <item name="colorPrimary">@color/colorAccent</item> <!-- Toolbar -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item> <!-- Toolbar -->
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
 
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <!--<item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>-->
-
-
-
-
-        <!-- Toolbar Theme / Apply white arrow -->
-        <!--<item name="colorControlNormal">@color/textLight</item>-->
-        <item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
-        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>
-
 
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
         <!--<item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="21">true</item>-->
 
     </style>
+
+    <style name="WhiteMenuActionbar" parent="AppTheme">
+        <item name="actionMenuTextColor">@color/white</item> <!-- Action Menu items color -->
+        <item name="android:textColorSecondary">@color/White</item> <!-- Home Button Color -->
+    </style>
+
+    <style name="SecondaryToolbarTheme" parent="AppTheme">
+        <item name="android:actionModeBackground">@color/colorSecondary</item>
+    </style>
+
 
     <style name="DefaultSwitch" parent="AppTheme">
         <!-- active thumb & track color  -->
@@ -88,10 +91,6 @@
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/colorPrimary</item>
-    </style>
-
-    <style name="EditProfileTheme" parent="AppTheme">
-        <item name="android:textColorSecondary">@color/White</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="AppTheme.ActionBarTheme">
@@ -138,16 +137,17 @@
         <item name="android:text">There is nothing yet</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:textSize">@dimen/text_big</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">italic</item>
         <item name="android:gravity">center</item>
         <item name="android:visibility">gone</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:paddingRight">5dp</item>
+        <item name="android:padding">@dimen/default_text_padding</item>
     </style>
+
     <style name="Fab">
-        <item name="android:layout_width">60dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
@@ -161,12 +161,22 @@
     </style>
 
     <style name="GetbaseFab" parent="Fab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/fab_margin_minus_twelve</item>
         <item name="fab_addButtonColorNormal">@color/colorPrimary</item>
         <!--<item name="fab_addButtonColorNormal">@color/colorSecondaryExtaLight</item>-->
         <item name="fab_addButtonColorPressed">@color/colorPrimaryVeryDark</item>
         <item name="fab_addButtonPlusIconColor">@color/white</item>
         <item name="fab_expandDirection">left</item>
+    </style>
+
+    <style name="MiniFab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fab_size">mini</item>
+        <item name="fab_colorNormal">@color/colorPrimary</item>
+        <item name="fab_colorPressed">@color/colorPrimaryVeryDark</item>
     </style>
 
     <style name="LightFab" parent="Fab">
@@ -189,14 +199,6 @@
         <item name="android:src">@drawable/location_button</item>
         <item name="android:layout_margin">@dimen/margin_map_fab</item>
         <item name="android:layout_alignParentBottom">false</item>
-    </style>
-
-    <style name="MiniFab">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="fab_size">mini</item>
-        <item name="fab_colorNormal">@color/colorPrimary</item>
-        <item name="fab_colorPressed">@color/colorPrimaryVeryDark</item>
     </style>
 
     <!-- Texts Styles-->
@@ -228,6 +230,7 @@
 
     <style name="TextMultiLines" parent="TextDefault" >
         <item name="android:singleLine">false</item>
+        <item name="android:padding">@dimen/small_text_padding</item>
     </style>
 
     <style name="TextTiny" parent="TextDefault">
@@ -256,6 +259,13 @@
 
     <style name="TextItalic" parent="TextDefault">
         <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ShareText" parent="TextMultiLines">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!--.................... Présentation .........................................-->
@@ -357,7 +367,7 @@
         <item name="android:padding">10dp</item>
         <item name="android:background">@color/background</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:radius">0dp</item>
     </style>
@@ -439,7 +449,7 @@
 
     <style name="title2">
         <item name="android:textSize">@dimen/text_big</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingBottom">4dp</item>

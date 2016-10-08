@@ -5,7 +5,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context="com.timappweb.timapp.activities.LoginActivity"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorPrimary"
     android:id="@+id/action_login">
 
     <ImageView

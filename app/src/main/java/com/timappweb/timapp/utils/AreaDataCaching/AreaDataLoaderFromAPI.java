@@ -4,10 +4,12 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
@@ -81,7 +83,8 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
         if (loadingListener!=null) loadingListener.onLoadStart();
 
-        RestClient.buildCall(call)
+        final HttpCallManager remoteCall = RestClient.buildCall(call);
+        remoteCall
                 .onResponse(new HttpCallback<List<Event>>() {
                     @Override
                     public void successful(List<Event> events) {
@@ -105,10 +108,11 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                     }
 
                 })
+                .onError(new RetryOnErrorCallback(MyApplication.getApplicationBaseContext(), remoteCall))
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {
-                        if (loadingListener!=null) loadingListener.onLoadEnd();
+                        if (loadingListener != null) loadingListener.onLoadEnd();
                     }
                 })
                 .perform();

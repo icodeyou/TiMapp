@@ -5,4 +5,5 @@ package com.timappweb.timapp.listeners;
  */
 public interface OnTabSelectedListener {
     void onTabSelected();
+    void onTabUnselected();
 }

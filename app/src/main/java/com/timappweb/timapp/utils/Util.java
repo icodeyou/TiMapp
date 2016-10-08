@@ -1,23 +1,31 @@
 package com.timappweb.timapp.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
-import com.flaviofaria.kenburnsview.MathUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 
 import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -25,6 +33,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import eu.davidea.flexibleadapter.utils.DrawableUtils;
 
 public class Util {
 
@@ -82,14 +92,24 @@ public class Util {
         return type;
     }
 
-    public static String secondsTimestampToPrettyTime(long created) {
+    //Get Pretty time from TimeStamp
+    public static String millisTimestampToPrettyTime(long created) {
         PrettyTime p = new PrettyTime();
-        return p.format(new Date(created * 1000));
+        String pFormated = p.format(new Date(created));
+        return Util.capitalize(pFormated);
     }
+    public static String secondsTimestampToPrettyTime(long created) {
+        return millisTimestampToPrettyTime(created*1000);
+    }
+
+    //Get PrettyTime From duration
     public static String secondsDurationToPrettyTime(int duration) {
         PeriodFormatterBuilder builder = new PeriodFormatterBuilder()
                 .appendDays()
                 .appendSuffix(" day", " days")
+                .appendSeparator(" ")
+                .appendHours()
+                .appendSuffix(" hour", " hours")
                 .appendSeparator(" and ")
                 .appendMinutes()
                 .appendSuffix(" min", " mins");
@@ -100,6 +120,9 @@ public class Util {
         }
         Period period =  new Period(duration * 1000);
         return builder.toFormatter().print(period.normalizedStandard());
+    }
+    public static String millisDurationToPrettyTime(int duration) {
+        return secondsDurationToPrettyTime(duration/1000);
     }
 
     public static String byteToKB(long size) {
@@ -123,10 +146,6 @@ public class Util {
         else{
             Log.e(TAG, msg);
         }
-    }
-
-    public static String millisTimestampToPrettyTime(long time) {
-        return secondsDurationToPrettyTime((int) (time / 1000));
     }
 
     public static Bitmap getBmpFromImgView(ImageView imageView, int iconDiameter) {
@@ -175,5 +194,30 @@ public class Util {
 
     public static boolean isOlderThan(long date, long duration) {
         return (System.currentTimeMillis()-date) > duration;
+    }
+
+    public static void changeColorActionBar(AppCompatActivity activity, int color) {
+        ActionBar bar = activity.getSupportActionBar();
+        if(bar!=null) {
+            bar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(activity, color)));
+        }
+    }
+
+    public static void setSelectionsBackgroundAdapter(View itemView, int unpressedColor, int rippleColor, int pressedColor) {
+        Context context = MyApplication.getApplicationBaseContext();
+
+        DrawableUtils.setBackground(itemView,
+                DrawableUtils.getSelectableBackgroundCompat(
+                        ContextCompat.getColor(context, rippleColor),
+                        ContextCompat.getColor(context, unpressedColor),
+                        ContextCompat.getColor(context, pressedColor)));
+    }
+
+    public static void setStatusBarColor(Activity activity, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(activity, color));
+        }
     }
 }

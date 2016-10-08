@@ -6,7 +6,6 @@
         android:title="@string/edit_the_place" />
 
     <item android:id="@+id/action_remove_spot"
-        android:icon="@drawable/cross"
         android:title="@string/remove_the_place" />
 
 </menu>

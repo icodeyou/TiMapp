@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "361229755289",
+    "firebase_url": "https://timapp-dev.firebaseio.com",
+    "project_id": "timapp-dev",
+    "storage_bucket": "timapp-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361229755289:android:155fe6e90d33d00a",
+        "android_client_info": {
+          "package_name": "com.timappweb.timapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361229755289-ffoqtrif15jrp4f1tr3ffitkrama0pe1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBEh9qo5eNr-2nQVgTGFx4JKRnpYox85DQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

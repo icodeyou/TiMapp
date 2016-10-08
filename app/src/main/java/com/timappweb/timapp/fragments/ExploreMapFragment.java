@@ -41,6 +41,7 @@ import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestItemFactory;
 import com.timappweb.timapp.utils.AreaDataCaching.OnDataChangeListener;
 import com.timappweb.timapp.utils.AreaDataCaching.RAMAreaRequestItem;
+import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -56,7 +57,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                PADDING__MAP                    = 140;
     private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
     private static final int                TIME_ZOOM_ANIM                  = 500;
-    private float                           ZOOM_LEVEL_CENTER_MAP           = 12.0f;
+    private static final double PADDING_RATIO_ZOOM_CLUSTER = 0.1;
+    private float                           ZOOM_LEVEL_CENTER_MAP           = 17.0f;
     private Marker                          selectingMarker;
     private Location                        lastLocation;
 
@@ -79,7 +81,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private View                            filterTagsContainer;
     private SimpleTimerView                 tvCountPoints;
     private View                            btnAddEvent;
-    private View                            fabLoc;
+    private View gpsCenterButton;
     private View                            cameraButton;
     private View                            tagButton;
     private View                            inviteButton;
@@ -123,7 +125,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
         tvCountPoints = (SimpleTimerView) root.findViewById(R.id.points_text);
         btnAddEvent = root.findViewById(R.id.fab_button_add_event);
-        fabLoc = root.findViewById(R.id.fab_button_location);
+        gpsCenterButton = root.findViewById(R.id.fab_button_location);
         cameraButton = root.findViewById(R.id.action_camera);
         tagButton = root.findViewById(R.id.action_tag);
         inviteButton = root.findViewById(R.id.action_invite);
@@ -180,12 +182,18 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
         btnAddEvent.setOnClickListener(exploreFragment.getFabClickListener());
 
-        fabLoc.setOnClickListener(new View.OnClickListener() {
+        gpsCenterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(lastLocation!=null && gMap != null) {
                     LatLng currentPosition = MyLocationProvider.convert(lastLocation);
-                    gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition,ZOOM_LEVEL_CENTER_MAP));
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(currentPosition)      // Sets latitude and longitude
+                            .zoom(ZOOM_LEVEL_CENTER_MAP)  // Sets the zoom
+                            .bearing(0)                   // Initialize the orientation of the camera
+                            .tilt(0)                      // Initialize tilt of the camera
+                            .build();                     // Creates a CameraPosition from the builder
+                    gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });
@@ -233,11 +241,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             btnAddEvent.startAnimation(translateUp);
 
             exploreFragment.setSelectedEventForLoader(event);
-
-            tvCountPoints.cancelTimer();
-            tvCountPoints.initTimer(event.getPoints());
-            //TODO : might be better to initialize the timer through databinding
-        } catch (CannotSaveModelException e) {
+        }
+        catch (CannotSaveModelException e) {
             // should not happen
             Log.e(TAG, e.getMessage());
         }
@@ -272,7 +277,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             translateDown.setInterpolator(new DecelerateInterpolator());
 
             btnAddEvent.startAnimation(translateDown);
-            fabLoc.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.appear));
+            gpsCenterButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.appear));
 
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
             eventView.startAnimation(slideOut);
@@ -296,6 +301,9 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         return MyApplication.searchFilter.tags!=null && MyApplication.searchFilter.tags.size()!=0;
     }
 
+    public GoogleMap getMap(){
+        return this.gMap;
+    }
 
     // ---------------------------------------------------------------------------------------------
 
@@ -352,8 +360,11 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private void centerMap(Location location,  GoogleMap.CancelableCallback  callback){
         if (gMap != null){
             needCenterMap = false;
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MyLocationProvider.convert(location), ZOOM_LEVEL_CENTER_MAP), callback);
+            centerMap(MyLocationProvider.convert(location), callback);
         }
+    }
+    public void centerMap(LatLng latLng, GoogleMap.CancelableCallback  callback){
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_CENTER_MAP), callback);
     }
 
     /**
@@ -420,7 +431,12 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                     builder.include(m.getPosition());
                 }
                 LatLngBounds bounds = builder.build();
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 150);
+                // TODO can cause error : newLatLngBounds() View size is too small after padding is applied
+                int width = getResources().getDisplayMetrics().widthPixels;
+                int height = getResources().getDisplayMetrics().heightPixels; // TODO Jack substract top bar height
+                int padding = (int) (width * PADDING_RATIO_ZOOM_CLUSTER); // offset from edges of the map 12% of screen
+                Log.d(TAG, "PADDING FOR ZOOM IN MAP CLUSTER = " + padding + " meters");
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                 gMap.animateCamera(cameraUpdate);
 
                 hideEvent();

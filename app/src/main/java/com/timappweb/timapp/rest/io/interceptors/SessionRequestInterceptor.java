@@ -34,7 +34,6 @@ public class SessionRequestInterceptor implements Interceptor
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
         String token = this.auth.getToken();
-        String providerToken = this.auth.getSocialProviderToken();
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
@@ -42,7 +41,7 @@ public class SessionRequestInterceptor implements Interceptor
                 .method(original.method(), original.body());
 
         if (auth.isLoggedIn()) {
-            setAuthHeader(requestBuilder, token, providerToken, original.url());
+            setAuthHeader(requestBuilder, token);
         }
 
         Request request = requestBuilder.build();
@@ -67,13 +66,13 @@ public class SessionRequestInterceptor implements Interceptor
                             logout(); //go to login screen
                         }
 
-                        return response; //if token refresh failed - show error to user
+                        return response; //if token refresh failed - builder error to user
                     }
                 }
 
                 if (auth.getToken() != null) { //retry requires new auth token,
                     Log.d(TAG, "retry request after refresh token...");
-                    setAuthHeader(requestBuilder, auth.getToken(), providerToken, original.url()); //set auth token to updated
+                    setAuthHeader(requestBuilder, auth.getToken()); //set auth token to updated
                     request = requestBuilder.build();
                     return chain.proceed(request); //repeat request with new token
                 }
@@ -84,7 +83,7 @@ public class SessionRequestInterceptor implements Interceptor
     }
 
 
-    private void setAuthHeader(Request.Builder builder, String token, String providerToken, HttpUrl url) {
+    private void setAuthHeader(Request.Builder builder, String token) {
         Log.d(TAG, "Request interceptor: User is logged in with token " + token);
         //HttpUrl newUrl = url.newBuilder()
         //        .addQueryParameter("_token", token)
@@ -93,10 +92,6 @@ public class SessionRequestInterceptor implements Interceptor
         builder
                 //.url(newUrl)
                 .header("Authorization", String.format("Bearer %s", token));
-        if (providerToken != null){
-            builder.header("SocialAccessToken", providerToken);
-        }
-
     }
 
     private int refreshToken() {
