@@ -1,17 +1,13 @@
 package com.timappweb.timapp.activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.appinvite.AppInviteInvitationResult;
-import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -20,6 +16,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
+import com.timappweb.timapp.utils.deeplinks.DeepLinkParser;
+import com.timappweb.timapp.utils.deeplinks.UrlParser;
 import com.timappweb.timapp.views.RetryDialog;
 
 /**
@@ -35,36 +33,13 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.loadConfig();
-
         // Build GoogleApiClient with AppInvite API for receiving deep links
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
                 .addApi(AppInvite.API)
                 .build();
 
-        // Check if this app was launched from a deep link. Setting autoLaunchDeepLink to true
-        // would automatically launch the deep link if one is found.
-        boolean autoLaunchDeepLink = true;
-        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
-                .setResultCallback(
-                        new ResultCallback<AppInviteInvitationResult>() {
-                            @Override
-                            public void onResult(@NonNull AppInviteInvitationResult result) {
-                                if (result.getStatus().isSuccess()) {
-                                    // Extract deep link from Intent
-                                    Intent intent = result.getInvitationIntent();
-                                    String deepLink = AppInviteReferral.getDeepLink(intent);
-                                    Log.d(TAG, "Received deep link: " + deepLink);
-                                    // Handle the deep link. For example, open the linked
-                                    // content, or apply promotional credit to the user's
-                                    // account.
-
-                                } else {
-                                    Log.d(TAG, "getInvitation: no deep link found.");
-                                }
-                            }
-                        });
+        this.loadConfig();
     }
 
     private void loadConfig() {
@@ -114,24 +89,8 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
                                 ConfigurationProvider.updateLastUpdateTime();
                             }
 
-                            if (MyApplication.isLoggedIn()){
-                                Event currentEvent = EventStatusManager.getCurrentEvent();
-                                if (currentEvent != null && currentEvent.isAccessible()){
-                                    IntentsUtils.viewSpecifiedEvent(SplashActivity.this, currentEvent);
-                                }
-                                else{
-                                    IntentsUtils.home(SplashActivity.this);
-                                }
-                            }
-                            else if (MyApplication.isFirstLaunch()){
-                                Log.i(TAG, "User starting app for the first time");
-                                IntentsUtils.presentApp(SplashActivity.this);
-                            }
-                            else{
-                                IntentsUtils.login(SplashActivity.this);
-                            }
-                            MyApplication.updateLastLaunch();
-                            finish();
+                            SplashActivity.this.onConfigLoaded();
+
                         }
                     }
 
@@ -143,9 +102,64 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
 
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    private void onConfigLoaded() {
+        this.checkDeepLink();
     }
 
+    private void continueToActivity(){
+        if (MyApplication.isLoggedIn()){
+            Event currentEvent = EventStatusManager.getCurrentEvent();
+            if (currentEvent != null && currentEvent.isAccessible()){
+                IntentsUtils.viewSpecifiedEvent(SplashActivity.this, currentEvent);
+            }
+            else{
+                IntentsUtils.home(SplashActivity.this);
+            }
+        }
+        else if (MyApplication.isFirstLaunch()){
+            Log.i(TAG, "User starting app for the first time");
+            IntentsUtils.presentApp(SplashActivity.this);
+        }
+        else{
+            IntentsUtils.login(SplashActivity.this);
+        }
+        MyApplication.updateLastLaunch();
+        finish();
+    }
+
+    private void checkDeepLink(){
+        boolean autoLaunchDeepLink = true;
+        new DeepLinkParser()
+                .addMatcher(new DeepLinkParser.DeepLinkCallback() {
+                    @Override
+                    public String getMask() {
+                        return "/events/view/:eventId";
+                    }
+
+                    @Override
+                    public boolean onMatch(UrlParser urlParser) {
+                        Long eventId = Long.valueOf(urlParser.getPart("eventId"));
+                        Log.d(TAG, "Deep link viewing event: " + eventId);
+                        if (eventId != null && eventId > 0) {
+                            IntentsUtils.viewEventFromId(SplashActivity.this, eventId);
+                            return true;
+                        }
+                        return false;
+                    }
+                })
+                .setNoMatchCallback(new DeepLinkParser.NoMatchCallback() {
+                    @Override
+                    public void onNoMatch() {
+                        SplashActivity.this.continueToActivity();
+                    }
+                })
+                .parse(mGoogleApiClient, this, autoLaunchDeepLink);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.e(TAG, "ERROR CONNECTING: " + connectionResult);
+        // TODO do we need to proceed to activity ?
+        this.continueToActivity();
+    }
 }

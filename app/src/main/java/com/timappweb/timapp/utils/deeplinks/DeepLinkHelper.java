@@ -1,4 +1,4 @@
-package com.timappweb.timapp.utils;
+package com.timappweb.timapp.utils.deeplinks;
 
 import android.net.Uri;
 import android.text.TextUtils;
@@ -51,7 +51,6 @@ public class DeepLinkHelper {
                 .scheme("https")
                 .authority(this._appCode + ".app.goo.gl")
                 .path("/")
-                .appendQueryParameter("link", this._deepLink)
                 .appendQueryParameter("apn", this._packageName);
 
         // If the deep link is used in an advertisement, this value must be set to 1.
@@ -73,7 +72,7 @@ public class DeepLinkHelper {
         }
 
         // Return the completed deep link.
-        return builder.build().toString();
+        return builder.build().toString() + "&link=" + this._deepLink;
     }
 
     public DeepLinkHelper isAdd(boolean add){
@@ -117,14 +116,15 @@ public class DeepLinkHelper {
     private String generateQueryParameters() throws UnsupportedEncodingException {
         StringBuilder queryParameters = new StringBuilder();
         //server purposes
-        queryParameters.append("?");
 
         if (!_customParameters.isEmpty()) {
+            queryParameters.append("?");
             for (Map.Entry<String, String> parameter : _customParameters.entrySet()) {
                 queryParameters.append(String.format("&%1s=%2s", parameter.getKey(), parameter.getValue()));
             }
         }
-        return URLEncoder.encode(queryParameters.toString(), "UTF-8");
+        //return URLEncoder.encode(queryParameters.toString(), "UTF-8");
+        return queryParameters.toString();
     }
 
 }

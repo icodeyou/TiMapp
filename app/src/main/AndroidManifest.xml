@@ -156,12 +156,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-
-                <!--<action android:name="android.intent.action.VIEW"/>-->
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="timapp.fr" android:scheme="http"/>
-                <data android:host="timapp.fr" android:scheme="https"/>
             </intent-filter>
         </activity>
 
@@ -178,6 +172,15 @@
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="timapp.fr" android:scheme="http"/>
+                <data android:host="timapp.fr" android:scheme="https"/>
+                <data android:host="https://qgnj7.app.goo.gl/" android:scheme="https"/>
+            </intent-filter>
         </activity>
 
         <!-- LOGIN ACTIVITY //////////////////////////////////////////////-->

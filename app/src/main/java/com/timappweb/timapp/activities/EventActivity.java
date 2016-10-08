@@ -40,7 +40,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
-import com.timappweb.timapp.utils.DeepLinkFactory;
+import com.timappweb.timapp.utils.deeplinks.DeepLinkFactory;
 import com.timappweb.timapp.utils.fragments.FragmentGroup;
 import com.timappweb.timapp.utils.location.LocationManager;
 

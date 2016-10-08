@@ -265,7 +265,7 @@ public class IntentsUtils {
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
 
-    public static void viewEventFromId(Activity activity, int id) {
+    public static void viewEventFromId(Activity activity, long id) {
         Intent intent = buildIntentViewPlace(activity, id);
         activity.startActivity(intent);
         activity.finish();
