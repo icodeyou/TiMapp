@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -101,13 +100,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 */
         setListeners();
 
-        final Activity that = this;
         Button skipLogin = (Button) findViewById(R.id.skip_loggin_button);
         skipLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.home(that);
-                finish();
+                IntentsUtils.getBackToParent(LoginActivity.this);
             }
         });
     }
@@ -115,7 +112,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @Override
     public void onBackPressed() {
         if(this.isTaskRoot()) {
-            IntentsUtils.home(this);
+            IntentsUtils.getBackToParent(this);
         } else {
             super.onBackPressed();
         }
@@ -171,8 +168,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
                     @Override
                     public void onSuccess(RestFeedback feedback) {
-                        IntentsUtils.redirectToLastActivity(LoginActivity.this);
-                        LoginActivity.this.finish();
+                        //TODO Jack : Redirect to the right activity (AddEventActivity, AddTagsActivity.. etc !
+                        IntentsUtils.getBackToParent(LoginActivity.this);
                     }
 
                     @Override

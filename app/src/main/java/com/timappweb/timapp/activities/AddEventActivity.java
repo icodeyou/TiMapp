@@ -236,7 +236,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             progressView.setVisibility(View.GONE);
         }
         else {
-            finish();
+            IntentsUtils.getBackToParent(this);
         }
     }
     //----------------------------------------------------------------------------------------------

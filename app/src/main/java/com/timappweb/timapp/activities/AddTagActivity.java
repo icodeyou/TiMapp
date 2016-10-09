@@ -80,7 +80,7 @@ public class AddTagActivity extends BaseActivity{
 
         if (!IntentsUtils.requireLogin(this, false)
                 || !LocationManager.hasLastLocation()){
-            finish();
+            IntentsUtils.getBackToParent(this);
             return;
         }
 
@@ -92,7 +92,7 @@ public class AddTagActivity extends BaseActivity{
 
         if (this.currentEvent == null){
             Log.d(TAG, "Event is null");
-            IntentsUtils.home(this);
+            IntentsUtils.getBackToParent(this);
             return;
         }
 

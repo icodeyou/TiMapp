@@ -71,8 +71,8 @@ public class InviteFriendsActivity extends BaseActivity
         }
         event = IntentsUtils.extractEvent(getIntent());
         if (event == null){
-            IntentsUtils.home(this);
-            finish();
+            IntentsUtils.getBackToParent(this);
+            return;
         }
 
         setContentView(R.layout.activity_invite_friends);
@@ -91,8 +91,8 @@ public class InviteFriendsActivity extends BaseActivity
 
             getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mFriendsLoader);
         } catch (CannotSaveModelException e) {
-            IntentsUtils.home(this);
-            finish();
+            IntentsUtils.getBackToParent(this);
+            return;
         }
 
         initListener();
@@ -128,11 +128,6 @@ public class InviteFriendsActivity extends BaseActivity
                 return true;
             case R.id.action_invite:
                 sendInvites();
-                return true;
-            case android.R.id.home:
-                finish();
-                //TODO : Workaround. navigateUpFromSameTask redirects to map
-                //NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return false;

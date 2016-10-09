@@ -90,7 +90,7 @@ public class SplashActivity extends BaseActivity {
                                 IntentsUtils.presentApp(SplashActivity.this);
                             }
                             else{
-                                IntentsUtils.login(SplashActivity.this);
+                                IntentsUtils.login(SplashActivity.this, true);
                             }
                             MyApplication.updateLastLaunch();
                             finish();

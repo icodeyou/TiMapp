@@ -207,7 +207,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             }
         }
 
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if(mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START); //GravityCompat.START refers to the left drawer.
             return;
@@ -367,7 +366,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 IntentsUtils.presentApp(this);
                 break;
             case R.id.menu_item_explore:
-                IntentsUtils.home(this);
                 break;
             case R.id.menu_item_add_event:
                 IntentsUtils.locate(this);
@@ -388,12 +386,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 IntentsUtils.settings(this);
                 break;
             case R.id.menu_item_login:
-                IntentsUtils.login(this);
+                IntentsUtils.login(this,false);
                 break;
             case R.id.menu_item_logout:
                 IntentsUtils.logout(this);
                 finish();
                 break;
+
             // DEV
             case R.id.menu_item_dummy_event:
                 IntentsUtils.viewSpecifiedEvent(this, DummyEventFactory.create());
@@ -410,8 +409,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 throw new RuntimeException("Simulate crash!");
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

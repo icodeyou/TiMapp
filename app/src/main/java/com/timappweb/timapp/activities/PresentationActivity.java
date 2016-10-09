@@ -83,7 +83,7 @@ public class PresentationActivity extends BaseActivity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.home(that);
+                IntentsUtils.getBackToParent(that);
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -173,7 +173,7 @@ public class PresentationActivity extends BaseActivity {
                 letsgetitstarted.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        IntentsUtils.loginOrRedirectHome(activity);
+                        IntentsUtils.loginOrBackToParent(activity);
                     }
                 });
             }
