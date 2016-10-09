@@ -145,6 +145,8 @@ public class ExploreFragment extends Fragment{
         super.onResume();
     }
 
+    
+
     public void actionList() {
         if(containerEvents.getVisibility()==View.GONE) {
             boolean isEventsOnMap = eventsFragment.onFragmentSelected(this);

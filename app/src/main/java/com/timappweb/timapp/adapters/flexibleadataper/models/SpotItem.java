@@ -1,16 +1,12 @@
 package com.timappweb.timapp.adapters.flexibleadataper.models;
 
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.AbstractModelItem;
-import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.databinding.LayoutSpotBinding;
 
@@ -54,6 +50,23 @@ public class SpotItem extends AbstractModelItem<SpotItem.SpotViewHolder>
 
     public Spot getSpot() {
         return spot;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        SpotItem spotItem = (SpotItem) o;
+
+        return spot != null ? spot.equals(spotItem.spot) : spotItem.spot == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return spot != null ? spot.hashCode() : 0;
     }
 
     @Override

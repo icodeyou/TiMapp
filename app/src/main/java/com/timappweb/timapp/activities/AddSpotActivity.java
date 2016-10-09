@@ -3,17 +3,14 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
-import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -30,7 +26,6 @@ import com.timappweb.timapp.adapters.SpotCategoriesAdapter;
 import com.timappweb.timapp.adapters.SpotsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SpotItem;
 import com.timappweb.timapp.config.ConfigurationProvider;
-import com.timappweb.timapp.config.Constants;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.PaginateDataLoader;
@@ -47,16 +42,13 @@ import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.utils.location.ReverseGeocodingHelper;
 import com.timappweb.timapp.views.CategorySelectorView;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.List;
 
-import com.timappweb.timapp.views.SwipeRefreshLayout;
-
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import io.fabric.sdk.android.Fabric;
 
 public class AddSpotActivity extends BaseActivity implements
         //LocationManager.LocationListener,
@@ -258,6 +250,10 @@ public class AddSpotActivity extends BaseActivity implements
                 finish();
                 return true;
             case R.id.action_create:
+                if (spotAlreadyExist()){
+                    Toast.makeText(AddSpotActivity.this, R.string.cannot_create_same_spot, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 finishActivityResult(currentSpot);
                 return true;
             default:
@@ -368,6 +364,16 @@ public class AddSpotActivity extends BaseActivity implements
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
         // If we need more logic
+    }
+
+    public boolean spotAlreadyExist() {
+        for (int i=0; i < mAdapter.getItemCount(); i++){
+            Spot spot = mAdapter.getSpot(i);
+            if (spot.name.equals(currentSpot.name)){
+                return true;
+            }
+        }
+        return false;
     }
 
     // =============================================================================================

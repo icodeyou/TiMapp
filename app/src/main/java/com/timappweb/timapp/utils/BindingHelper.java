@@ -2,15 +2,11 @@ package com.timappweb.timapp.utils;
 
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.florent37.materialviewpager.header.MaterialViewPagerImageHelper;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.squareup.picasso.Picasso;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.views.SimpleTimerView;
 
@@ -36,11 +32,10 @@ public class BindingHelper {
         imageView.setImageDrawable(resource);
     }
 
-
-    // TODO REMOVE PICASSO
     @BindingAdapter({"app:event"})
     public static void setBackgroundImage(ImageView imageView, Event event) {
         if (event!= null){
+            //TODO Steph : picture is null when 1)Open list 2)open event 3)goback 4)close list 5)open list again
             if (event.hasPicture()){
                 final String fullUrl = event.getBackgroundUrl();
                 // Temp solution
