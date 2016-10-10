@@ -117,7 +117,7 @@
     <dimen name="event_stats_height">70dp</dimen>
     <!--<dimen name="event_stats_height">80dp</dimen>-->
     <dimen name="height_header_event">200dp</dimen>
-    <dimen name="header_additional_height">3dp</dimen>
+    <dimen name="header_additional_height">8dp</dimen>
     <dimen name="loader_big">60dp</dimen>
 
     <!-- ========================================================================================-->

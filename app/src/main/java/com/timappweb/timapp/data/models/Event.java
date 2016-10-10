@@ -201,7 +201,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public String getPrettyTimeBegin() {
-        return Util.secondsTimestampToPrettyTime(this.begin_date);
+        return Util.millisTimestampToPrettyTime(this.begin_date);
     }
 
     @Override
