@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'   // Crash reporting
 apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
 

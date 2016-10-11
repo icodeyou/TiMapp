@@ -86,6 +86,14 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Expose
     public int              end_date;
 
+    @Column(name = "InactivityThreshold")
+    @Expose
+    public int              inactivity_threshold;
+
+    @Column(name = "LastActivity")
+    @Expose
+    public int              last_activity;
+
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
     @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
     @SerializedName("category")
@@ -454,8 +462,41 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public boolean isOver(){
-        //TODO : Return false if event is over
-        return true;
+        return getVisibilityStatus() == VisiblityStatus.OVER;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean hasVisibilityStatus(VisiblityStatus status){
+        return getVisibilityStatus() == status;
+    }
+
+    public boolean hasBegin(){
+        return this.start_date <= Util.getCurrentTimeSec();
+    }
+
+    enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
+
+    public VisiblityStatus getVisibilityStatus(){
+        if (!this.hasBegin()){
+            return VisiblityStatus.PLANNED;
+        }
+        else if (this.end_date != 0){
+            return this.end_date < Util.getCurrentTimeSec() ? VisiblityStatus.OVER : VisiblityStatus.ACTIVE;
+        }
+        else {
+            return Util.isOlderThan(this.inactivity_threshold, ConfigurationProvider.rules().place_max_inactivity_threshold)
+                    ? VisiblityStatus.OVER
+                    : (this.inactivity_threshold <= Util.getCurrentTimeSec())
+                        ? VisiblityStatus.INACTIVE
+                        : VisiblityStatus.ACTIVE;
+        }
+    }
+
+    public int getInactivityDuration(){
+        return Util.getCurrentTimeSec() - this.last_activity ;
     }
 
     /**

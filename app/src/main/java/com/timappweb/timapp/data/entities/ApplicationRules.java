@@ -20,6 +20,9 @@ public class ApplicationRules {
     public int max_invite_per_request = 20;
 
     @Expose
+    public int place_max_inactivity_threshold = 1800;
+
+    @Expose
     public long picture_min_size;
 
     @Expose
