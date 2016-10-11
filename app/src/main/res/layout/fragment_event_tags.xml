@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <include layout="@layout/material_view_pager_placeholder"/>
+
+    <TextView
+        style="@style/NoDataView"
+        android:id="@+id/no_tags_view"
         android:layout_marginTop="@dimen/margin_fragments_event_additional_top"
-        android:padding="@dimen/margin_fragments_event"
-        android:layout_gravity="center">
+        android:text="@string/no_tags"/>
+    <!--android:layout_below="@+id/sticky_header_layout"-->
 
-        <com.timappweb.timapp.views.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout_place_tags"
+    <com.timappweb.timapp.views.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout_place_tags"
+        android:layout_marginTop="@dimen/margin_fragments_event_additional_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.timappweb.timapp.views.RefreshableRecyclerView
+            android:id="@+id/list_tags"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:clipToPadding="true"
+            android:saveEnabled="false"
+            android:listSelector="@color/DarkGray"/>
 
-            <com.timappweb.timapp.views.RefreshableRecyclerView
-                android:id="@+id/list_tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="true"
-                android:saveEnabled="false"
-                android:listSelector="@color/DarkGray"/>
-        </com.timappweb.timapp.views.SwipeRefreshLayout>
-
-        <TextView
-            style="@style/NoDataView"
-            android:id="@+id/no_tags_view"
-            android:text="@string/no_tags"/>
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+    </com.timappweb.timapp.views.SwipeRefreshLayout>
+</LinearLayout>

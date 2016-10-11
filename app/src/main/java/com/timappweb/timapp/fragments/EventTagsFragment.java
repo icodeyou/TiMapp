@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
@@ -30,9 +31,9 @@ import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
-import java.util.List;
-
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 
 public class EventTagsFragment extends EventBaseFragment implements LocationManager.LocationListener, OnTabSelectedListener, SyncDataLoader.Callback<EventTag> {
@@ -54,6 +55,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     private Loader<List<EventTag>>          mTagLoader;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private EventTagLoader eventTagLoader;
+    private ObservableScrollView mObservable;
 
     // ---------------------------------------------------------------------------------------------
 

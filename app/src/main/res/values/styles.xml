@@ -140,8 +140,9 @@
         <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:visibility">gone</item>
+        <item name="android:background">@color/background</item>
         <item name="android:padding">@dimen/default_text_padding</item>
     </style>
 
