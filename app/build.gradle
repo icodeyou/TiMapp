@@ -39,7 +39,7 @@ android {
             signingConfig signingConfigs.config
             resValue "string", "api_base_url", "http://api.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1634741340120823"
-            resValue "string", "google_maps_key", "AIzaSyA7cVpTr590GWnf2uD1kb4SYxF-kKqpphc"
+            resValue "string", "google_maps_key", "AIzaSyAo_7l0xApOsaKv5hJzgRX73UfVtzguuz0"
 
         }
         debug {
@@ -47,7 +47,7 @@ android {
             debuggable true
             resValue "string", "api_base_url", "http://dev.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1728731634055126"
-            resValue "string", "google_maps_key", "AIzaSyD569ck3jUtYjiFgrKfdpfGFhUOMXgVDUw"
+            resValue "string", "google_maps_key", "AIzaSyBEh9qo5eNr-2nQVgTGFx4JKRnpYox85DQ" // @warning: duplicate used in google-services.json
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
         }

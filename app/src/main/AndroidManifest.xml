@@ -47,12 +47,6 @@
         android:largeHeap="true"
         tools:replace="android:theme">
 
-        <!-- CRASHLYTICS CONFIGURATION TODO set as config-->
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="a165ce2069880f70815a9aec89228c4da0098c9b"
-            />
-
         <!-- DATABASE CONFIGURATION -->
         <!-- pre populate db -->
         <meta-data android:name="AA_DB_NAME" android:value="@string/db_name" />
