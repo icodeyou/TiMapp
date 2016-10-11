@@ -6,8 +6,6 @@ import android.databinding.ViewDataBinding;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -129,23 +127,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 shareEvent();
                 return true;
             case android.R.id.home:
-                //http://stackoverflow.com/questions/19999619/navutils-navigateupto-does-not-start-any-activity
-
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent) || isTaskRoot()) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
+                this.exit();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -200,7 +182,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     @Override
     public void onBackPressed() {
         if(this.isTaskRoot()) {
-            IntentsUtils.home(this);
+            this.exit();
         } else {
             super.onBackPressed();
         }
@@ -210,9 +192,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     //Methods
     //////////////////////////////////////////////////////////////////////////////
 
-    private void exit(){
-        IntentsUtils.home(this);
-        finish();
+    public void exit(){
+        IntentsUtils.getBackToParent(this);
     }
 
     private void loadEvent() throws CannotSaveModelException {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
+import com.timappweb.timapp.utils.location.MyLocationProvider;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.tajchert.nammu.Nammu;
@@ -72,9 +74,6 @@ public class IntentsUtils {
     public static final String KEY_TITLE = "title";
     public static final String KEY_EVENT_ID = "event_id";
 
-    public static void login(Context context){
-        login(context, true);
-    }
     public static void login(Context context, boolean clear){
         Intent intent = new Intent(context, LoginActivity.class);
         if (clear)
@@ -82,15 +81,13 @@ public class IntentsUtils {
         context.startActivity(intent);
     }
 
-    public static void loginOrRedirectHome(Activity activity) {
+    public static void loginOrBackToParent(Activity activity) {
         if(!MyApplication.isLoggedIn()) {
-            login(activity);
-        } else {
-            if(activity.isTaskRoot()) {
-                home(activity);
-            } else {
-                activity.finish();
-            }
+            login(activity,false);
+            activity.finish();
+        }
+        else {
+            getBackToParent(activity);
         }
     }
 
@@ -101,10 +98,25 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void home(Context context) {
-        Intent intent = new Intent(context, DrawerActivity.class);
-        context.startActivity(intent);
+    public static void home(Activity activity) {
+        Intent intent = new Intent(activity, DrawerActivity.class);
+        activity.startActivity(intent);
+        activity.finish();
     }
+
+    public static void getBackToParent(Activity activity) {
+        // Documentation : https://developer.android.com/training/implementing-navigation/ancestral.html
+        Intent upIntent = NavUtils.getParentActivityIntent(activity);
+        if (NavUtils.shouldUpRecreateTask(activity, upIntent)||activity.isTaskRoot()) {
+            activity.startActivity(upIntent);
+            activity.finish();
+        } else {
+            // This activity is part of this app's task, so simply
+            // navigate up to the logical parent activity.
+            NavUtils.navigateUpTo(activity, upIntent);
+        }
+    }
+
     public static void fatalError(Context context, int idTitle, int idMessage) {
         Intent intent = new Intent(context, ErrorActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -163,10 +175,13 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-
     public static void locate(Context context) {
         if (!requireLogin(context, false))
             return;
+        if(!MyLocationProvider.hasLocationPermission()) {
+            LocationManager.getLocationProvider().requestPermissions();
+            return;
+        }
         if (!LocationManager.getLocationProvider().isGPSEnabled()){
             Toast.makeText(context, R.string.ask_user_to_enable_gps, Toast.LENGTH_SHORT).show();
             return;
@@ -193,39 +208,52 @@ public class IntentsUtils {
         if (!requireLogin(context, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
             return;
 
-        int permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+        int storageCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int cameraCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
+        if (storageCheck == PackageManager.PERMISSION_GRANTED && cameraCheck == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Permission 'WRITE EXTERNAL STORAGE' granted");
             EasyImage.openCamera(fragment, 0);
         } else {
-            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+            Log.i(TAG, "'WRITE EXTERNAL STORAGE' permission IS NOT granted. Asking permission");
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
             Nammu.askForPermission(fragment.getActivity(), permissions, new PermissionCallback() {
                 @Override
                 public void permissionGranted() {
+                    Log.i(TAG, "Permission granted.");
                     EasyImage.openCamera(fragment, 0);
                 }
 
                 @Override
                 public void permissionRefused() {
-
+                    Log.i(TAG, "Permission refused.");
                 }
             });
         }
     }
 
     public static void addPictureFromActivity(final Activity activity) {
-        int permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+        //TODO : Use only one method instead of one for the activity, and another one for the fragment
+        if (!requireLogin(activity, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
+            return;
+
+        int storageCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int cameraCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
+        if (storageCheck == PackageManager.PERMISSION_GRANTED && cameraCheck == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Permission 'WRITE EXTERNAL STORAGE' granted");
             EasyImage.openCamera(activity, 0);
         } else {
-            Nammu.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionCallback() {
+            Log.i(TAG, "'WRITE EXTERNAL STORAGE' permission IS NOT granted. Asking permission");
+            String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+            Nammu.askForPermission(activity, permissions, new PermissionCallback() {
                 @Override
                 public void permissionGranted() {
+                    Log.i(TAG, "Permission granted.");
                     EasyImage.openCamera(activity, 0);
                 }
 
                 @Override
                 public void permissionRefused() {
-
+                    Log.i(TAG, "Permission refused.");
                 }
             });
         }
@@ -318,16 +346,16 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void addPlace(Activity activity) {
-        if (!requireLogin(activity, false))
+    public static void addPlace(Activity locateActivity) {
+        if (!requireLogin(locateActivity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
             return;
         }
-        Intent intent = new Intent(activity, AddEventActivity.class);
-        activity.startActivity(intent);
-        activity.finish();
+        Intent intent = new Intent(locateActivity, AddEventActivity.class);
+        locateActivity.startActivity(intent);
+        locateActivity.finish();
     }
 
     public static void pinSpot(Activity activity) {
@@ -359,9 +387,6 @@ public class IntentsUtils {
      * before being redirected to the localLogin activity
      * TODO implement
      */
-    public static void redirectToLastActivity(Activity activity) {
-        home(activity);
-    }
 
     public static void settings(Context context) {
         if (!requireLogin(context, false))

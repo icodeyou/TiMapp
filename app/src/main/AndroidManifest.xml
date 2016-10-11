@@ -32,10 +32,10 @@
      To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
      option is required to comply with the Google+ Sign-In developer policies
     -->
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- To retrieve the account name (email) as part of sign-in: -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the localLogin form with the user's emails -->
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-   <!-- <uses-permission android:name="android.permission.READ_CONTACTS" />-->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!--To retrieve the account name (email) as part of sign-in -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!--To auto-complete the email text field in the login form with the user's emails -->
+    <!--<uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />-->
 
     <!--android:debuggable="true" has been removed -->
     <application
@@ -61,6 +61,7 @@
         // TODO for production set models to speed up launch
         <meta-data  android:name=""AA_MODELS"
             android:value="${applicationId}.data.models.UserActivity" />-->
+
 
         <!-- SYNC ADAPTERS ===================================================================== -->
         <!-- ConfigSyncAdapter's dummy authentication service -->
@@ -148,7 +149,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <!-- SPLACE ACTIVITY //////////////////////////////////////////////-->
+        <!-- SPLASH ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait"
@@ -190,9 +191,6 @@
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".activities.DrawerActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <service
@@ -234,33 +232,22 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- LOCATE ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.LocateActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_locate"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.DrawerActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- TAG ACTIVITY //////////////////////////////////////////////-->
         <activity android:name=".activities.AddTagActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.LocateActivity"
+            android:parentActivityName=".activities.EventActivity"
             android:windowSoftInputMode="adjustNothing|stateHidden" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.LocateActivity" />
         </activity>
 
 
@@ -268,14 +255,8 @@
         <activity
             android:name=".activities.AddSpotActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
             android:label="@string/title_activity_add_spot"
             android:parentActivityName=".activities.AddEventActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.AddEventActivity" />
-
             <intent-filter>
                 <action android:name="OPEN_PLACE_FROM_NOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -290,16 +271,10 @@
             android:label="@string/title_activity_place"
             android:theme="@style/WhiteMenuActionbar"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
-
             <intent-filter>
                 <action android:name="OPEN_PLACE_FROM_NOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
 
         <!-- VIEW PAGER ACTIVITY //////////////////////////////////////////////-->
@@ -308,35 +283,14 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_presentation"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- EVENTS PICTURES ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.EventPicturesActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
             android:label="@string/title_activity_place"
             android:parentActivityName=".activities.EventActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EventActivity" />
-
-        </activity>
-
-        <!-- CAMERA ACTIVITY //////////////////////////////////////////////-->
-        <activity
-            android:name="com.desmond.squarecamera.CameraActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".activities.EventActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EventActivity" />
         </activity>
 
         <!-- Add People ACTIVITY //////////////////////////////////////////////-->
@@ -345,10 +299,6 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_invite_friends"
             android:parentActivityName=".activities.EventActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EventActivity" />
         </activity>
 
         <!-- List People ACTIVITY //////////////////////////////////////////////-->
@@ -357,10 +307,6 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_list_friends"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- Invitations ACTIVITY //////////////////////////////////////////////-->
@@ -369,10 +315,6 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_invitations"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- PROFILE ACTIVITY //////////////////////////////////////////////-->
@@ -381,10 +323,6 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- EDIT PROFILE ACTIVITY //////////////////////////////////////////////-->
@@ -395,10 +333,6 @@
             android:windowSoftInputMode="adjustNothing|stateVisible"
             android:parentActivityName=".activities.ProfileActivity"
             android:theme="@style/WhiteMenuActionbar">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProfileActivity" />
         </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->
@@ -407,10 +341,6 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".activities.DrawerActivity" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- ADDPLACE ACTIVITY //////////////////////////////////////////////-->
@@ -418,11 +348,7 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_event"
             android:theme="@style/SecondaryToolbarTheme"
-            android:parentActivityName=".activities.ProfileActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProfileActivity" />
+            android:parentActivityName=".activities.LocateActivity">
         </activity>
 
         <!-- SHARE ACTIVITY //////////////////////////////////////////////-->
@@ -430,10 +356,6 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_share_app"
             android:parentActivityName=".activities.DrawerActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.DrawerActivity" />
         </activity>
 
         <!-- FACEBOOK ACTIVITY //////////////////////////////////////////////-->

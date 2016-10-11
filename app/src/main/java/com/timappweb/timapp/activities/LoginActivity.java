@@ -29,6 +29,11 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
 import retrofit2.Response;
+import com.timappweb.timapp.auth.AuthManager;
+import com.timappweb.timapp.auth.FacebookLoginProvider;
+import com.timappweb.timapp.auth.FirebaseAuthProvider;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
+import retrofit2.Response;
 
 
 /**
@@ -67,7 +72,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
         skipLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                IntentsUtils.home(LoginActivity.this);
+                IntentsUtils.getBackToParent(LoginActivity.this);
             }
         });
 
@@ -92,7 +97,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
     @Override
     public void onBackPressed() {
         if(this.isTaskRoot()) {
-            IntentsUtils.home(this);
+            IntentsUtils.getBackToParent(this);
         } else {
             super.onBackPressed();
         }
@@ -188,7 +193,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
 
     @Override
     public void onLogin() {
-        IntentsUtils.redirectToLastActivity(this);
+        IntentsUtils.getBackToParent(LoginActivity.this);
         finish();
     }
 

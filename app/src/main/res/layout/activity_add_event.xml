@@ -54,6 +54,12 @@
                         tools:text="Here is the error that doesn't concern any EditText field. (ex: quota)"
                         android:text='@{errors.getFullMessage()}'
                         android:visibility='@{errors.hasFullMessage() ? View.VISIBLE : View.GONE}'/>
+                    <TextView
+                        style="@style/ValidationErrorMessage"
+                        tools:text="Error concerning the spot"
+                        android:text='@{errors.getError("Places.spot")}'
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:visibility='@{errors.hasError("Places.spot") ? View.VISIBLE : View.GONE}'/>
 
                     <com.rengwuxian.materialedittext.MaterialEditText
                         android:id="@+id/event_name"
@@ -71,12 +77,6 @@
                         android:text="@={event.description}"
                         app:errorText='@{errors.getError("Places.description")}'/>
 
-                    <TextView
-                        style="@style/ValidationErrorMessage"
-                        tools:text="Error concerning the spot"
-                        android:text='@{errors.getError("Places.spot")}'
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:visibility='@{errors.hasError("Places.spot") ? View.VISIBLE : View.GONE}'/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

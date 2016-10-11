@@ -34,7 +34,8 @@ public class EventPicturesActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         IMAGES = IntentsUtils.extractPicture(getIntent());
         if (IMAGES == null){
-            IntentsUtils.home(this);
+            finish();
+            return;
         }
         setContentView(R.layout.activity_event_pictures);
         PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter();

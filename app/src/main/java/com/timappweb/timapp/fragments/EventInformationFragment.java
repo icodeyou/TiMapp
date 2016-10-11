@@ -27,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.EventStatusManager;
-import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.UserEvent;
@@ -38,6 +37,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.MySwitchCompat;
 import com.timappweb.timapp.views.SimpleTimerView;
@@ -173,6 +173,13 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     public void updateView(){
         mBinding.setEvent(getEvent());
+        DelayedCallHelper.create(3000, new DelayedCallHelper.Callback() {
+            @Override
+            public void onTime() {
+                //TODO : this is for debug. Remove and find another way
+                mBinding.setEvent(getEvent());
+            }
+        });
     }
 
 

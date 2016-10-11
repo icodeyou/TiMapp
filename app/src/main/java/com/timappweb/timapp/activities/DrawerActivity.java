@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.appinvite.AppInvite;
@@ -159,7 +157,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onRestart() {
         super.onRestart();
-        //updateMapData();
+        //TODO STEPH : Si on est dans la map => update Map Data // Liste => Update List Data.
     }
 
     @Override
@@ -219,7 +217,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             }
         }
 
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if(mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START); //GravityCompat.START refers to the left drawer.
             return;
@@ -384,7 +381,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 IntentsUtils.presentApp(this);
                 break;
             case R.id.menu_item_explore:
-                IntentsUtils.home(this);
                 break;
             case R.id.menu_item_add_event:
                 IntentsUtils.locate(this);
@@ -405,12 +401,13 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 IntentsUtils.settings(this);
                 break;
             case R.id.menu_item_login:
-                IntentsUtils.login(this);
+                IntentsUtils.login(this,false);
                 break;
             case R.id.menu_item_logout:
                 IntentsUtils.logout(this);
                 finish();
                 break;
+
             // DEV
             case R.id.menu_item_dummy_event:
                 IntentsUtils.viewSpecifiedEvent(this, DummyEventFactory.create());
@@ -427,8 +424,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 throw new RuntimeException("Simulate crash!");
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 

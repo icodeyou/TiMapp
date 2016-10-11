@@ -2,10 +2,10 @@ package com.timappweb.timapp.data.models;
 
 import android.content.Context;
 import android.databinding.Bindable;
-import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -28,17 +28,12 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.SimpleTimerView;
 
-import org.ocpsoft.prettytime.PrettyTime;
-
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * @warning event cannot be serialize anymore as there is a recursive dependency:
@@ -563,7 +558,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 return R.drawable.b4;
             case 4:
             default:
-                return R.drawable.b4;
+                Log.e(TAG, "The event has a wrong level !");
+                return R.drawable.b1;
         }
     }
 

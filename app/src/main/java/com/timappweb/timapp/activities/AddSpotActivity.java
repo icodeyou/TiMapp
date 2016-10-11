@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -249,6 +250,10 @@ public class AddSpotActivity extends BaseActivity implements
                 finish();
                 return true;
             case R.id.action_create:
+                if (spotAlreadyExist()){
+                    Toast.makeText(AddSpotActivity.this, R.string.cannot_create_same_spot, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 finishActivityResult(currentSpot);
                 return true;
             default:
@@ -359,6 +364,16 @@ public class AddSpotActivity extends BaseActivity implements
     @Override
     public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
         // If we need more logic
+    }
+
+    public boolean spotAlreadyExist() {
+        for (int i=0; i < mAdapter.getItemCount(); i++){
+            Spot spot = mAdapter.getSpot(i);
+            if (spot.name.equals(currentSpot.name)){
+                return true;
+            }
+        }
+        return false;
     }
 
     // =============================================================================================

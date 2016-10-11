@@ -158,7 +158,8 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                     .enableEndlessScroll();
 
         } catch (Exception e) {
-            IntentsUtils.home(getContext());
+            e.printStackTrace();
+            eventActivity.exit();
         }
         super.onViewCreated(view, savedInstanceState);
     }
