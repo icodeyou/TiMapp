@@ -63,7 +63,7 @@ public class SessionRequestInterceptor implements Interceptor
                     if(code != 2) { //if refresh token failed for some reason
                         if(code == 4){
                             //only if response is 400, 500 might mean that token was not updated
-                            logout(); //go to login screen
+                            logout(); //go to localLogin screen
                         }
 
                         return response; //if token refresh failed - builder error to user

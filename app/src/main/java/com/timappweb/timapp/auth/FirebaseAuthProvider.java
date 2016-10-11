@@ -14,6 +14,7 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 
 import retrofit2.Call;
 
@@ -72,38 +73,27 @@ public class FirebaseAuthProvider {
                         providerPayload.add("data", providerData);
                         providerPayload.addProperty("id", providerId);
                         payload.add("provider", providerPayload);
-                        FirebaseAuthProvider.this.serverLogin(providerId, payload);
+                        FirebaseAuthProvider.this.serverLogin(payload);
                     }
                 });
     }
 
 
-    private void serverLogin(final String providerId, JsonObject payload){
-        Log.i(TAG, "Request login with payload=" + payload);
+    private HttpCallManager serverLogin(final JsonObject payload){
+        Log.i(TAG, "Request localLogin with payload=" + payload);
 
-        Call<JsonObject> call = RestClient.service().firebaseLogin(payload);
-        RestClient.buildCall(call)
-                .onResponse(new HttpCallback<JsonObject>() {
+        return MyApplication.getAuthManager()
+                .logWith(new AuthManager.LoginMethod<JsonObject>() {
                     @Override
-                    public void successful(JsonObject feedback) {
-                        try {
-                            MyApplication
-                                    .getAuthManager()
-                                    .login(FirebaseAuthProvider.PROVIDER_ID, feedback);
-                            if (callback != null) callback.onFirebaseLoginSuccess(providerId);
-                        } catch (AuthManager.CannotLoginException e) {
-                            if (callback != null) callback.onFirebaseLoginFailure(providerId, e);
-                        }
+                    public Call<JsonObject> login(JsonObject data) {
+                        return RestClient.service().firebaseLogin(data);
                     }
 
-                })
-                .onError(new RequestFailureCallback(){
                     @Override
-                    public void onError(Throwable error) {
-                        if (callback != null) callback.onFirebaseLoginFailure(providerId, error);
+                    public void cancelLogin() {
+
                     }
-                })
-                .perform();
+                }, payload);
     }
 
     public JsonObject createFirebasePayload(AuthResult authResult){

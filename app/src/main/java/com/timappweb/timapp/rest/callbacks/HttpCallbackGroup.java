@@ -45,67 +45,77 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
             validationErrors = parseErrorBody(response, RestValidationError.class);//this.getValidationErrors();
         }
 
-        for (HttpCallback<ResponseBodyType> callback : responseCallbacks) {
-            callback.setResponse(response);
-            this.dispatchResponse(this.response, callback, this.validationErrors);
+        try{
+            for (HttpCallback<ResponseBodyType> callback : responseCallbacks) {
+                callback.setResponse(response);
+                this.dispatchResponse(this.response, callback, this.validationErrors);
+            }
         }
-        this.callFinallyCallbacks(false);
+        catch (Throwable ex){
+            Log.e(TAG, "Exception while dispathing response: " + ex);
+            this.error = ex;
+        }
+        this.callFinallyCallbacks();
     }
 
-    private void callFinallyCallbacks(boolean isFailure) {
+    private void callFinallyCallbacks() {
         for (HttpCallManager.FinallyCallback callback : finallyCallbacks) {
             callback.onFinally(response, error);
         }
     }
 
-    public static <ResponseBodyType> void dispatchResponse(Response<ResponseBodyType> response, HttpCallback<ResponseBodyType> callback, RestValidationError validationErrors) {
-        if (response.isSuccessful()) {
-            callback.successful(response.body());
+    public static <ResponseBodyType> void dispatchResponse(Response<ResponseBodyType> response,
+                                                           HttpCallback<ResponseBodyType> callback,
+                                                           RestValidationError validationErrors)
+        throws Throwable{
 
-            switch (response.code()) {
-                case HttpURLConnection.HTTP_OK:
-                    callback.ok(response.body());
-                    break;
-                case HttpURLConnection.HTTP_CREATED:
-                    callback.created(response.body());
-                    break;
-                case HttpURLConnection.HTTP_ACCEPTED:
-                    callback.accepted(response.body());
-                    break;
-            }
-        } else {
-            callback.notSuccessful();
-            // -----------------------------------------------------------------------------------------
-            if (response.code() >= 400 && response.code() < 500) {
-                callback.failure();
+            if (response.isSuccessful()) {
+                callback.successful(response.body());
 
                 switch (response.code()) {
-                    case HttpURLConnection.HTTP_BAD_REQUEST:
-                        callback.badRequest(validationErrors);
+                    case HttpURLConnection.HTTP_OK:
+                        callback.ok(response.body());
                         break;
-                    case HttpURLConnection.HTTP_FORBIDDEN:
-                        callback.forbidden();
+                    case HttpURLConnection.HTTP_CREATED:
+                        callback.created(response.body());
                         break;
-                    case HttpURLConnection.HTTP_UNAUTHORIZED:
-                        callback.unauthorized();
-                        break;
-                    case HttpURLConnection.HTTP_NOT_FOUND:
-                        callback.notFound();
+                    case HttpURLConnection.HTTP_ACCEPTED:
+                        callback.accepted(response.body());
                         break;
                 }
-            }
-            // -----------------------------------------------------------------------------------------
-            else if (response.code() >= 500 && response.code() < 600) {
-                callback.error();
+            } else {
+                callback.notSuccessful();
+                // -----------------------------------------------------------------------------------------
+                if (response.code() >= 400 && response.code() < 500) {
+                    callback.failure();
 
-                switch (response.code()) {
-                    case HttpURLConnection.HTTP_INTERNAL_ERROR:
-                        callback.internalError();
-                        break;
-                    // TODO add more
+                    switch (response.code()) {
+                        case HttpURLConnection.HTTP_BAD_REQUEST:
+                            callback.badRequest(validationErrors);
+                            break;
+                        case HttpURLConnection.HTTP_FORBIDDEN:
+                            callback.forbidden();
+                            break;
+                        case HttpURLConnection.HTTP_UNAUTHORIZED:
+                            callback.unauthorized();
+                            break;
+                        case HttpURLConnection.HTTP_NOT_FOUND:
+                            callback.notFound();
+                            break;
+                    }
+                }
+                // -----------------------------------------------------------------------------------------
+                else if (response.code() >= 500 && response.code() < 600) {
+                    callback.error();
+
+                    switch (response.code()) {
+                        case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                            callback.internalError();
+                            break;
+                        // TODO add more
+                    }
                 }
             }
-        }
     }
 
     public void onResponse(Call<ResponseBodyType> call) {
@@ -120,7 +130,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         for (RequestFailureCallback callback : failureCallbacks) {
             dispatchError(error, callback);
         }
-        this.callFinallyCallbacks(true);
+        this.callFinallyCallbacks();
     }
 
 

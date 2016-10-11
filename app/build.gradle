@@ -133,12 +133,6 @@ dependencies {
     //----------------------------------------------------------------------------------------------
     // Crashlytics
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
-        transitive = true;
-    }
-    // APP
-
-
     compile 'com.android.support:multidex:1.0.1'    // Used by Google Play Service and Mutltidex application
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     //Android support

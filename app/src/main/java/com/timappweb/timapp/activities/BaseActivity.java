@@ -2,10 +2,8 @@ package com.timappweb.timapp.activities;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -15,22 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.GoogleMap;
-import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.utils.location.MyLocationProvider;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
-import retrofit2.Call;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -48,8 +32,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!BuildConfig.DEBUG)
-            Fabric.with(this, new Crashlytics());
     }
 
     @Override

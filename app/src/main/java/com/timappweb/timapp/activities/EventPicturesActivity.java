@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -20,7 +19,6 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.MyHackyViewPager;
 
-import io.fabric.sdk.android.Fabric;
 import me.relex.photodraweeview.PhotoDraweeView;
 
 

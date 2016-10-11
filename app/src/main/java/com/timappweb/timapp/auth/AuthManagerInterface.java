@@ -16,8 +16,6 @@ public interface AuthManagerInterface<ServerResponseType> {
 
     HttpCallManager checkToken();
 
-    boolean login(String providerId, ServerResponseType serverResponse) throws AuthManager.CannotLoginException;
-
     User getCurrentUser();
 
     boolean isLoggedIn();

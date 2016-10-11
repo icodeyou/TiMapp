@@ -3,8 +3,6 @@ package com.timappweb.timapp.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -13,24 +11,20 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.BubbleCategoryAdapter;
+import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
-import com.timappweb.timapp.managers.SpanningGridLayoutManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.fabric.sdk.android.Fabric;
 
 public class FilterActivity extends BaseActivity {
     String TAG = "FilterActivity";

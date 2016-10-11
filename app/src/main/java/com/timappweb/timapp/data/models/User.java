@@ -34,13 +34,9 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
     @Expose(serialize = false, deserialize = true)
     public Integer count_places;
 
-    @Column(name = "ProviderUID")
+    @Column(name = "AvatarUrl")
     @Expose
-    public String provider_uid;
-
-    @Column(name = "Provider")
-    @Expose
-    public SocialProvider provider;
+    public String avatar_url;
 
     @Column(name = "Status")
     @Expose(serialize = false, deserialize = true)
@@ -109,7 +105,7 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
                 ", remote_id=" + remote_id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", provider_uid=" + provider +
+                ", avatar_url=" + avatar_url +
                 ", app_id=" + app_id +
                 ", google_messaging_token =" + google_messaging_token +
                 '}';
@@ -120,8 +116,7 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
     }
 
     public String getProfilePictureUrl() {
-        // TODO use server instead url instead ?
-        return "https://graph.facebook.com/" + this.provider_uid + "/picture?type=large";
+        return this.avatar_url;
     }
 
     @Override

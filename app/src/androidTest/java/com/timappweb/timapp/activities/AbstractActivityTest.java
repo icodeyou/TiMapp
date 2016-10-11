@@ -8,10 +8,13 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.fixtures.UsersFixture;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.TestUtil;
@@ -33,6 +36,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertNotNull;
@@ -90,16 +96,21 @@ public class AbstractActivityTest {
                 Log.i(TAG, "@BeforeTest: Login with payload: " + loginPayload);
                 MyApplication
                         .getAuthManager()
-                        .getProvider(createAuthAction.providerId())
-                        .login(loginPayload, new AuthProviderInterface.AuthAttemptCallback<RestFeedback>() {
+                        .logWith(new AuthManager.LoginMethod<JsonObject>() {
                             @Override
-                            public void onSuccess(RestFeedback feedback) {
-                                assertTrue("User must be logged in", MyApplication.isLoggedIn());
+                            public Call<JsonObject> login(JsonObject data) {
+                                return RestClient.service().facebookLogin(data);
                             }
 
                             @Override
-                            public void onFailure(Throwable exception) {
-                                assertTrue("Cannot login user to execute the test... Error: " + exception.toString(), false);
+                            public void cancelLogin() {
+
+                            }
+                        }, loginPayload)
+                        .onFinally(new HttpCallManager.FinallyCallback() {
+                            @Override
+                            public void onFinally(Response response, Throwable error) {
+                                assertTrue("User must be logged in", MyApplication.isLoggedIn());
                             }
                         });
                 TestUtil.sleep(10000);

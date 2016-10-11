@@ -1,12 +1,10 @@
 package com.timappweb.timapp.activities;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
@@ -15,16 +13,14 @@ import com.timappweb.timapp.data.loader.FriendsLoader;
 import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.utils.Util;
-
-import eu.davidea.flexibleadapter.FlexibleAdapter;
-import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import io.fabric.sdk.android.Fabric;
-
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.Callback<UserFriend> {
 

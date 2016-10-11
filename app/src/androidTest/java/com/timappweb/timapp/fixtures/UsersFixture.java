@@ -4,9 +4,9 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.auth.FacebookAuthProvider;
+import com.timappweb.timapp.auth.FacebookLoginProvider;
 import com.timappweb.timapp.utils.facebook.FacebookApiHelper;
-import java.util.HashMap;
+
 import static junit.framework.Assert.assertNotNull;
 
 /**
@@ -19,7 +19,7 @@ public class UsersFixture {
     }
 
     public static JsonObject createFacebookLoginPayload(String accessToken, String appId){
-        return FacebookAuthProvider.createPayload(accessToken, appId);
+        return FacebookLoginProvider.createPayload(accessToken, appId);
     }
 
 
@@ -30,7 +30,7 @@ public class UsersFixture {
                 + MyApplication.getApplicationBaseContext().getString(R.string.facebook_app_id), testUser);
 
 
-        String userAppId =  FirebaseInstanceId.getInstance().getId();
+        String userAppId = FirebaseInstanceId.getInstance().getId();
         return createFacebookLoginPayload(testUser.getAccessToken(), userAppId);
     }
 }

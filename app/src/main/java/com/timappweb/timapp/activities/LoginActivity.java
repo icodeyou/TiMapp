@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -17,29 +18,37 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.auth.AuthManager;
+import com.timappweb.timapp.auth.FacebookLoginProvider;
 import com.timappweb.timapp.auth.FirebaseAuthProvider;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.rest.managers.HttpCallManager;
+
+import retrofit2.Response;
 
 
 /**
- * NewActivity login screen that offers login via email/password.
+ * NewActivity localLogin screen that offers localLogin via email/password.
  */
-public class LoginActivity extends BaseActivity implements FirebaseAuthProvider.FirebaseLoginCallback {
+public class LoginActivity extends BaseActivity implements AuthManager.AuthStateChangedListener
+        //implements FirebaseAuthProvider.FirebaseLoginCallback
+        {
 
     private static final String TAG = "LoginActivity";
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Keep track of the localLogin task to ensure we can cancel it if requested.
      */
     private View layoutFb;
     private View progressView;
     private LoginButton loginButton;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mFacebookCallbackManager;
-    private FirebaseAuthProvider firebaseAuthProvider;
+    //private FirebaseAuthProvider firebaseAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +86,7 @@ public class LoginActivity extends BaseActivity implements FirebaseAuthProvider.
                 // ...
             }
         };*/
-        firebaseAuthProvider = new FirebaseAuthProvider().setCallback(this);
+        //firebaseAuthProvider = new FirebaseAuthProvider().setCallback(this);
     }
 
     @Override
@@ -93,11 +102,13 @@ public class LoginActivity extends BaseActivity implements FirebaseAuthProvider.
     public void onStart() {
         super.onStart();
         //mAuth.addAuthStateListener(mAuthListener);
+        MyApplication.getAuthManager().registerListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        MyApplication.getAuthManager().removeListener(this);
         /*
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
@@ -115,7 +126,17 @@ public class LoginActivity extends BaseActivity implements FirebaseAuthProvider.
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onFirebaseLoginSuccess:" + loginResult);
                 setProgressVisibility(true);
-                firebaseAuthProvider.facebookLogin(loginResult, LoginActivity.this);
+                MyApplication.getAuthManager()
+                        .logWith(new FacebookLoginProvider(), loginResult)
+                        .onFinally(new HttpCallManager.FinallyCallback() {
+                            @Override
+                            public void onFinally(Response response, Throwable error) {
+                                setProgressVisibility(false);
+                                if (error != null || !response.isSuccessful()){
+                                    Toast.makeText(LoginActivity.this, R.string.cannot_facebook_login, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
 
             @Override
@@ -166,6 +187,18 @@ public class LoginActivity extends BaseActivity implements FirebaseAuthProvider.
     }
 
     @Override
+    public void onLogin() {
+        IntentsUtils.redirectToLastActivity(this);
+        finish();
+    }
+
+    @Override
+    public void onLogout() {
+
+    }
+
+    /*
+    @Override
     public void onFirebaseLoginSuccess(String providerId) {
         setProgressVisibility(false);
         IntentsUtils.redirectToLastActivity(this);
@@ -174,6 +207,6 @@ public class LoginActivity extends BaseActivity implements FirebaseAuthProvider.
     @Override
     public void onFirebaseLoginFailure(String providerId, Throwable exception) {
         setProgressVisibility(false);
-    }
+    }*/
 }
 

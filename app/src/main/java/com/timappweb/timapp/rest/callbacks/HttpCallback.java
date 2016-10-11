@@ -18,7 +18,7 @@ public abstract class HttpCallback<T> {
      * Any 200-299 response
      * @param feedback
      */
-    public void successful(T feedback) {}
+    public void successful(T feedback) throws Exception{}
 
     /**
      * 200 response

@@ -11,6 +11,9 @@ import java.util.List;
 public class ApplicationRules {
 
     @Expose
+    public long token_duration = 86400;
+
+    @Expose
     public String tags_name_regex = "";
 
     @Expose

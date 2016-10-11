@@ -28,7 +28,7 @@ public class FacebookApiHelper {
 
     private static final String TAG = "FacebookApiHelper";
     private static String mAppId;
-    private static String mSecretToken = "07a7d5929a61221b51a45b2f7864a56a"; // @warining
+    private static String mSecretToken = "07a7d5929a61221b51a45b2f7864a56a";// TODO [critical] use configuration
     private static String mAccessToken = null;
     private static String mRedirectUrl;
 
@@ -67,7 +67,7 @@ public class FacebookApiHelper {
         ).executeAndWait();
 
         if (mAccessToken == null){
-            throw new InternalError("Cannot get facebook access token for this app. Please check your credential");
+            throw new InternalError("Cannot get facebook access token for this app. Please check your credentials");
         }
 
         return mAccessToken;
@@ -76,7 +76,7 @@ public class FacebookApiHelper {
     public static void init(Context context){
         FacebookSdk.sdkInitialize(context);
         mAppId = context.getString(R.string.facebook_app_id);
-        mRedirectUrl = "http://timappweb.com";
+        mRedirectUrl = "http://timappweb.com"; // TODO [critical] use configuration
         Log.i(TAG, "@init() with app id: " + mAppId + " (access_token: " + buildAppAccessTokenString() + ")");
     }
 

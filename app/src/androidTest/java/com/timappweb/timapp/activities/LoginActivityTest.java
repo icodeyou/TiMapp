@@ -75,7 +75,7 @@ public class LoginActivityTest extends AbstractActivityTest{
 
         ActivityHelper.assertCurrentActivity(FacebookActivity.class);
 
-        // TODO add interaction with facebook login
+        // TODO add interaction with facebook localLogin
         // THEN
         // ActivityHelper.assertCurrentActivity(DrawerActivity.class);
     }

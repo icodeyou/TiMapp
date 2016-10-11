@@ -7,7 +7,10 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
+import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.login.LoginManager;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.auth.AuthManager;
@@ -100,21 +103,19 @@ public class MyApplication extends Application {
             auth.logout();
             RestClient.instance().logoutUser();
 
-            /*
-            mSimpleFacebook.logout(new OnLogoutListener() {
-                @Override
-                public void onLogout() {
-                    Log.i(TAG, "You are logged out");
-                }
-            });*/
-
+            // TODO check is facebook login
+            if (!FacebookSdk.isInitialized()) {
+                FacebookSdk.sdkInitialize(MyApplication.getApplicationBaseContext());
+            }
+            LoginManager.getInstance().logOut();
         }
     }
     public static void updateGoogleMessagingToken(Context context, String token) {
         Log.i(TAG, "Updating token for GCM: " + token);
-        Call<RestFeedback> call = RestClient.service().updateGoogleMessagingToken(token);
+        // TODO use sync adapter
+        Call<Object> call = RestClient.service().updateGoogleMessagingToken(token);
         RestClient.buildCall(call)
-                .onResponse(new HttpCallback() {
+                .onResponse(new HttpCallback<Object>() {
                     @Override
                     public void successful(Object feedback) {
                         Log.d(TAG, "Update token success");

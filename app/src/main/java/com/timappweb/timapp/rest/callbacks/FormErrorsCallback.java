@@ -1,13 +1,9 @@
 package com.timappweb.timapp.rest.callbacks;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
 import com.timappweb.timapp.rest.io.responses.RestValidationErrorParser;
 
@@ -40,7 +36,7 @@ public class FormErrorsCallback extends HttpCallback {
         RestValidationErrorParser errors = validationError.getErrors();
 
         if (errors.has(prefix + ".Quota")){
-            Toast.makeText(this.context, errors.get(prefix+".Quota"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.context, errors.getMessage(prefix+".Quota"), Toast.LENGTH_SHORT).show();
         }
         else if (toastFeedback != 0){
             Toast.makeText(context, context.getString(this.toastFeedback), Toast.LENGTH_LONG).show();

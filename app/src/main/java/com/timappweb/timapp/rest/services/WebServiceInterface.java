@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonObject;
+import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.models.Event;
@@ -45,100 +46,121 @@ import retrofit2.http.QueryMap;
 public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
-    @GET("spots.json")
+    @GET("spots")
     Call<PaginatedResponse<Spot>> spots(@QueryMap Map<String, String> query);
 
     // ---------------------------------------------------------------------------------------------
-    //@Multipart
-    @POST("Places/add.json")
+    //  EVENTS
+
+    @POST("events/add")
     Call<JsonObject> addPlace(@Body MultipartBody data);
 
-    @POST("Places/add.json")
+    @POST("events/add")
     Call<JsonObject> addPlace(@Body JsonObject data);
+
+    @GET("events/view/{id}")
+    Call<Event> viewPlace(@Path("id") long id);
+
+    @GET("events/points/{id}")
+    Call<EventPointResponse> viewPointsPlace(@Path("id") long id);
+
+    @GET("events/populars")
+    Call<List<Event>> bestPlaces(@QueryMap Map<String, String> conditions);
+
+    //@GET("events/around_me")
+    //Call<List<Event>> eventAroundMe(@QueryMap Map<String, String> conditions);
+
+    @GET("events/index")
+    Call<PaginatedResponse<Event>> places(@QueryMap Map<String, String> conditions);
+
+
+    @POST("events/background_picture/{id}")
+    Call<RestFeedback> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
 
 
     // ---------------------------------------------------------------------------------------------
     // Event invites
-    @FormUrlEncoded
-    @POST("PlacesInvitations/invite/{placeId}.json")
-    Call<List<UserInvitationFeedback>> sendInvite(@Path("placeId") int placeId, @Field("ids[]") List<Long> ids);
 
-    @GET("PlacesInvitations/accept/{inviteId}.json")
+    @FormUrlEncoded
+    @POST("PlacesInvitations/invite/{eventId}")
+    Call<List<UserInvitationFeedback>> sendInvite(@Path("eventId") int eventId, @Field("ids[]") List<Long> ids);
+
+    @GET("PlacesInvitations/accept/{inviteId}")
     Call<RestFeedback> acceptInvite(@Path("inviteId") int inviteId);
 
-    @GET("PlacesInvitations/reject/{inviteId}.json")
+    @GET("PlacesInvitations/reject/{inviteId}")
     Call<RestFeedback> rejectInvite(@Path("inviteId") int inviteId);
 
-    @GET("PlacesInvitations/sent/{placeId}.json")
-    Call<PaginatedResponse<EventsInvitation>> invitesSent(@Path("placeId") long placeId);
+    @GET("PlacesInvitations/sent/{eventId}")
+    Call<PaginatedResponse<EventsInvitation>> invitesSent(@Path("eventId") long eventId);
 
-    //@GET("PlacesInvitations/sent.json")
+    //@GET("PlacesInvitations/sent")
     //Call<PaginatedResponse<EventsInvitation>> invitesSent();
 
-    @GET("PlacesInvitations/received.json")
+    @GET("PlacesInvitations/received")
     Call<ResponseSyncWrapper<EventsInvitation>> inviteReceived(@QueryMap Map<String,String> options);
 
 
     // ---------------------------------------------------------------------------------------------
     // Posts
 
-    @GET("eventPosts/eventPosts.json")
+    @GET("eventPosts/eventPosts")
     Call<List<EventPost>> listPosts(@QueryMap Map<String, String> conditions);
 
-    @POST("eventPosts/add.json")
+    @POST("eventPosts/add")
     Call<RestFeedback> addTags(@Body EventPost eventPost);
 
     // ---------------------------------------------------------------------------------------------
     // USER
 
-    @POST("users/login.json")
+    @POST("users/localLogin")
     Call<RestFeedback>  login(@Body User user);
 
-    @GET("users/check_token.json")
+    @GET("users/check_token")
     Call<RestFeedback>  checkToken();
 
-    @GET("users/profile/{id}.json")
+    @GET("users/profile/{id}")
     Call<User>  profile(@Path("id") long userId);
 
-    @POST("users/facebook_login.json")
-    Call<RestFeedback>  facebookLogin(@Body JsonObject payload);
+    @POST("users/facebook_login")
+    Call<JsonObject>  facebookLogin(@Body JsonObject payload);
 
-    @POST("users/firebase_login.json")
+    @POST("users/firebase_login")
     Call<JsonObject>  firebaseLogin(@Body JsonObject payload);
 
-    @GET("users/friends.json")
+    @GET("users/friends")
     Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);
 
-    @POST("users/edit.json")
+    @POST("users/edit")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);
 
-    @GET("Users/logout.json")
+    @GET("Users/logout")
     Call<RestFeedback> logout();
 
     @FormUrlEncoded
-    @POST("Users/update_google_messaging_token.json")
-    Call<RestFeedback> updateGoogleMessagingToken(@Field("token") String token);
+    @POST("Users/update_google_messaging_token")
+    Call<Object> updateGoogleMessagingToken(@Field("token") String token);
 
     // ---------------------------------------------------------------------------------------------
     // TAGS
-    @GET("Posts/trending_tags.json")
+    @GET("Posts/trending_tags")
     Call<List<Tag>> trendingTags(@QueryMap Map<String, String> conditions);
 
-    @GET("Tags/suggest/{term}.json")
+    @GET("Tags/suggest/{term}")
     Call<List<Tag>>  suggest(@Path("term") String term);
 
-    @GET("SpotsTags/eventPost/{id}.json")
+    @GET("SpotsTags/eventPost/{id}")
     Call<List<Tag>> loadTagsFromPost(@Path("id") int id);
 
 
     // ---------------------------------------------------------------------------------------------
     // Pictures
 
-    @POST("pictures/upload/{placeId}.json")
-    Call<RestFeedback> upload(@Path("placeId") int placeId,
+    @POST("pictures/upload/{eventId}")
+    Call<RestFeedback> upload(@Path("eventId") int eventId,
                               @Body RequestBody body);
 
-    @GET("pictures/place/{id}.json")
+    @GET("pictures/event/{id}")
     Call<ResponseSyncWrapper<Picture>> viewPicturesForPlace(@Path("id") long id, @QueryMap Map<String, String> options);
 
     // ---------------------------------------------------------------------------------------------
@@ -146,97 +168,45 @@ public interface WebServiceInterface {
 
 
     /**
-     * Get most popular tags for a place
+     * Get most popular tags for a event
      * @param id
      */
-    @GET("tags/place/{id}.json")
+    @GET("tags/event/{id}")
     Call<List<Tag>> viewPopularTagsForPlace(@Path("id") long id);
 
-    /**
-     *
-     * @param id
-     */
-    @GET("Places/view/{id}.json")
-    Call<Event> viewPlace(@Path("id") long id);
-    /**
-     *
-     * @param id
-     */
-    @GET("Places/points/{id}.json")
-    Call<EventPointResponse> viewPointsPlace(@Path("id") long id);
-
-    /**
-     * Find places to display on the map
-     * @param conditions
-     */
-    @GET("Places/populars.json")
-    Call<List<Event>> bestPlaces(@QueryMap Map<String, String> conditions);
-
-    /**
-     * Used to get all event that are in a area
-     * @param conditions
-     */
-    //@GET("Places/around_me.json")
-    //Call<List<Event>> placeAroundMe(@QueryMap Map<String, String> conditions);
-
-    /**
-     * Used to get all event that are around user position
-     * @param conditions"
-     */
-    @GET("Places/index.json")
-    Call<PaginatedResponse<Event>> places(@QueryMap Map<String, String> conditions);
-
-
-    @POST("Places/background_picture/{id}.json")
-    Call<RestFeedback> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
-
-
     // ---------------------------------------------------------------------------------------------
-    // PlacesUsers
-    /**
-     *
-     */
-    @POST("PlacesUsers/coming/{placeId}.json")
-    Call<UserEvent> notifyPlaceComing(@Path("placeId") long remoteId, @Body Map<String, String> conditions);
-    /**
-     *
-     */
-    @POST("PlacesUsers/gone/{placeId}.json")
-    Call<UserEvent> notifyPlaceGone(@Path("placeId") long id, @Body Map<String, String> conditions);
-    /**
-     *
-     */
-    @POST("PlacesUsers/here/{placeId}.json")
-    Call<UserEvent> notifyPlaceHere(@Path("placeId") long id, @Body Map<String, String> conditions);
+    // EventsUsers
 
-    /**
-     *
-     */
-    @POST("PlacesUsers/cancelComing/{placeId}.json")
-    Call<RestFeedback> cancelComing(@Path("placeId") long id);
+    @POST("PlacesUsers/coming/{eventId}")
+    Call<UserEvent> notifyPlaceComing(@Path("eventId") long remoteId, @Body Map<String, String> conditions);
 
-    /**
-     *
-     */
-    @POST("PlacesUsers/cancelHere/{placeId}.json")
-    Call<RestFeedback> cancelHere(@Path("placeId") long id);
+    @POST("PlacesUsers/gone/{eventId}")
+    Call<UserEvent> notifyPlaceGone(@Path("eventId") long id, @Body Map<String, String> conditions);
 
+    @POST("PlacesUsers/here/{eventId}")
+    Call<UserEvent> notifyPlaceHere(@Path("eventId") long id, @Body Map<String, String> conditions);
 
-    @POST("PlacesUsers/place/{id}.json")
-    Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") int placeId, @QueryMap Map<String, String> conditions);
+    @POST("PlacesUsers/cancelComing/{eventId}")
+    Call<RestFeedback> cancelComing(@Path("eventId") long id);
 
-    @POST("PlacesUsers/place/{id}.json")
-    Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") long placeId);
+    @POST("PlacesUsers/cancelHere/{eventId}")
+    Call<RestFeedback> cancelHere(@Path("eventId") long id);
 
-    @POST("PlacesUsers/user.json")
+    @POST("PlacesUsers/event/{id}")
+    Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") int eventId, @QueryMap Map<String, String> conditions);
+
+    @POST("PlacesUsers/event/{id}")
+    Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") long eventId);
+
+    @POST("PlacesUsers/user")
     Call<List<UserEvent>> placeStatus();
 
-
-    @GET("PlacesUsers/stats/{id}.json")
+    @GET("PlacesUsers/stats/{id}")
     Call<EventPeopleStats> eventPeopleStats(@Path("id") long eventId);
 
     // ---------------------------------------------------------------------------------------------
     // Quotas
+
     @GET("activity-quota/user-quotas")
     Call<List<UserQuota>> userQuotas();
 

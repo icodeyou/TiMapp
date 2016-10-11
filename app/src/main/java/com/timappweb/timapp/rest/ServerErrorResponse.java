@@ -1,4 +1,4 @@
-package com.timappweb.timapp.auth;
+package com.timappweb.timapp.rest;
 
 import retrofit2.Response;
 

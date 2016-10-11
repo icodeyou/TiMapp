@@ -356,7 +356,7 @@ public class IntentsUtils {
 
     /**
      * Redirect to the last activity we attempt to go
-     * before being redirected to the login activity
+     * before being redirected to the localLogin activity
      * TODO implement
      */
     public static void redirectToLastActivity(Activity activity) {

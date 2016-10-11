@@ -22,7 +22,7 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        Log.i(TAG, "Refreshing GCM token: " + refreshedToken);
         MyApplication.updateGoogleMessagingToken(getApplicationContext(), refreshedToken);
     }
 

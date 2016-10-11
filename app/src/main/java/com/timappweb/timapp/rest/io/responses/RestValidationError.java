@@ -53,7 +53,7 @@ public class RestValidationError extends RestResponse {
     }
 
     public String getError(String path){
-        return this.getErrors().get(path);
+        return this.getErrors().getMessage(path);
     }
 
     public boolean hasError(String path){
