@@ -1,5 +1,7 @@
 package com.timappweb.timapp.utils.annotations;
 
+import com.google.firebase.auth.FacebookAuthProvider;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
