@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_waiting_for_location"
-    android:background="@color/colorWhiteTransparent50">
+    android:background="@color/colorWhiteHalfTransparent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,9 +22,7 @@
             <com.crystal.crystalpreloaders.widgets.CrystalPreloader
                 style="@style/ProgressViewSmallWhite"/>
             <TextView
-                style="@style/NoDataView"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                style="@style/TextItalic"
                 android:padding="@dimen/default_text_padding"
                 android:textColor="@color/textLight"
                 android:text="@string/waiting_for_location"

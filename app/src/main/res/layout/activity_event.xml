@@ -37,6 +37,12 @@
                 app:viewpager_pagerTitleStrip="@layout/event_pager_tabs"
                 />
 
+            <View
+                android:id="@+id/over_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhiteHalfTransparent" />
+
             <com.getbase.floatingactionbutton.FloatingActionsMenu
                 android:id="@+id/multiple_actions"
                 android:layout_width="wrap_content"

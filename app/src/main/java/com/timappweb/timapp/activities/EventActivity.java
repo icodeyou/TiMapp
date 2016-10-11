@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,7 +91,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     private FloatingActionButton        btnActionTag;
     private FloatingActionButton        btnActionInvite;
     private View                        loader;
-    private FloatingActionsMenu btnAction;
+    private FloatingActionsMenu         btnAction;
+    private RelativeLayout              mainLayout;
+    private View                        overView;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -105,6 +108,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             btnActionCamera = (FloatingActionButton) findViewById(R.id.action_camera);
             btnActionTag = (FloatingActionButton) findViewById(R.id.action_tag);
             btnActionInvite = (FloatingActionButton) findViewById(R.id.action_invite);
+            mainLayout = (RelativeLayout) findViewById(R.id.activity_event_container);
+            overView = findViewById(R.id.over_view);
 
             initListeners();
             this.loadEvent();
@@ -260,17 +265,17 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private void initListeners() {
 
-        btnAction.setOnClickListener(new View.OnClickListener() {
+        /*btnAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO : this is a workaround to enable scroll behind Fab when it's collapsed
-                int visibility = btnAction.isExpanded() ? View.VISIBLE : View.GONE;
+                //This workaround doesn't work.
+                int visibility = btnAction.isExpanded() ? View.GONE : View.VISIBLE;
                 btnActionTag.setVisibility(visibility);
                 btnActionCamera.setVisibility(visibility);
                 btnActionInvite.setVisibility(visibility);
                 Log.d(TAG, "Main button action clicked!");
             }
-        });
+        });*/
 
         btnActionTag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,9 +327,22 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
             initFragments();
             parseIntentParameters();
+
+            updateOverView();
         }
 
         updateView();
+    }
+
+    private void updateOverView() {
+        if(event.isOver()) {
+            btnAction.setVisibility(View.GONE);
+            overView.setVisibility(View.VISIBLE);
+        }
+        else {
+            btnAction.setVisibility(View.VISIBLE);
+            overView.setVisibility(View.GONE);
+        }
     }
 
     private void onEventInaccessible() {

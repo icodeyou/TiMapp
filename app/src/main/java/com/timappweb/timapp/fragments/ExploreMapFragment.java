@@ -4,7 +4,6 @@ import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -58,7 +57,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                TIME_ZOOM_ANIM                  = 500;
     private static final int                DELAY_UPDATE_MAP_DATA_MILLIS    = 800;
     private static final double             PADDING_RATIO_ZOOM_CLUSTER = 0.2;
-    private float                           ZOOM_LEVEL_CENTER_MAP           = 17.0f;
+    private float                           ZOOM_LEVEL_CENTER_MAP           = 15.0f;
     private Marker                          selectingMarker;
     private Location                        lastLocation;
 

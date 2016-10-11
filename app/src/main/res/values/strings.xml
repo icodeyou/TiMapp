@@ -89,7 +89,8 @@
             <string name="action_performed_not_successful">Sorry but this action is not available right now. Try again later.</string>
             <string name="form_invalid_input">Please correct required fields before submitting.</string>
             <string name="data_already_refresh">Already up to date</string>
-            <string name="user_message_should_be_around_event_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
+            <string name="should_be_around_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
+            <string name="should_be_not_over_to_post">The event is over. Nobody can post anymore.\nThat\'s how real time works.</string>
             <string name="error_require_gps">We need your location to do that</string>
             <string name="quota_wait_string">Please wait %s before posting again</string>
             <string name="quota_wait_not_defined">Please wait %s before posting again</string>
@@ -115,7 +116,7 @@
         <string name="former_username">Username</string>
         <string name="former_time">Time</string>
         <!-- item Event -->
-        <string name="counter_over">Over !</string>
+        <string name="counter_over">It\'s over !</string>
 
 
     <!-- .................. Activities ...................................-->
