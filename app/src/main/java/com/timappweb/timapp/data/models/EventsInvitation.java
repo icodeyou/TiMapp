@@ -1,5 +1,7 @@
 package com.timappweb.timapp.data.models;
 
+import android.util.Log;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
@@ -63,6 +65,7 @@ public class EventsInvitation extends SyncBaseModel implements PlaceUserInterfac
 
     @Override
     public String getTimeCreated() {
+        Log.d("Debug pretty time", "Invitation created : "+created);
         return Util.secondsTimestampToPrettyTime(this.created);
     }
 

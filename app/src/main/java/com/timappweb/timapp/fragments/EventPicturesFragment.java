@@ -114,6 +114,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         initAdapter();
         initConfigEasyImage();
         initActionModeHelper(SelectableAdapter.MODE_SINGLE);
+
         return root;
     }
 
@@ -142,7 +143,8 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
             if (eventActivity.getEvent() == null){
                 throw new Exception("Cannot add picture for null event");
             }
-            eventActivity.setEvent((Event) eventActivity.getEvent().requireLocalId());
+            Event event = (Event) eventActivity.getEvent().requireLocalId();
+            eventActivity.setEvent(event);
 
             initDataLoader();
 

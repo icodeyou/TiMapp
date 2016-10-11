@@ -9,7 +9,7 @@
     <dimen name="small_text_padding">10dp</dimen>
     <dimen name="text_tiny">10dp</dimen>
     <dimen name="text_small">16dp</dimen>
-    <dimen name="text_normal">50dp</dimen>
+    <dimen name="text_normal">20dp</dimen>
     <dimen name="text_big">30dp</dimen>
     <dimen name="title_event_card">25dp</dimen>
     <dimen name="text_huge">40dp</dimen>

@@ -73,6 +73,10 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     private TextView                    statusTv;
     private View                        statusImage;
     private View                        progressStatus;
+    private View                        crossOverView;
+    private View                        pointsLayout;
+    private TextView                    overText;
+    private View                        statusLayout;
 
     private boolean isStatusLoading = false;
 
@@ -101,6 +105,16 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             }
         });
 
+        switchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getEvent() != null && getEvent().isOver()) {
+                    Toast.makeText(eventActivity, R.string.should_be_not_over_to_post, Toast.LENGTH_LONG).show();
+                    switchButton.setCheckedNoTrigger(false);
+                }
+            }
+        });
+
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
         mapView.onCreate(null);
@@ -117,6 +131,8 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvCountPoints.initTimer(getEvent().getPoints());
+
+        updateOverView();
     }
 
     @Override
@@ -139,8 +155,27 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         progressStatus = view.findViewById(R.id.status_progress);
         tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
         switchButton.setOnCheckedChangeListener(new OnStatusChangedListener());
+
+        crossOverView = view.findViewById(R.id.cross_overview);
+        pointsLayout = view.findViewById(R.id.points_layout);
+        overText = (TextView) view.findViewById(R.id.over_text);
+        statusLayout = view.findViewById(R.id.status_layout);
     }
 
+    private void updateOverView() {
+        if(eventActivity.getEvent() != null && eventActivity.getEvent().isOver()) {
+            crossOverView.setVisibility(View.VISIBLE);
+            pointsLayout.setVisibility(View.GONE);
+            overText.setVisibility(View.VISIBLE);
+            statusLayout.setVisibility(View.GONE);
+        }
+        else {
+            crossOverView.setVisibility(View.GONE);
+            pointsLayout.setVisibility(View.VISIBLE);
+            overText.setVisibility(View.GONE);
+            statusLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
     public void turnComingOn() {
         //TODO Steph: Find a better way than using a boolean
@@ -256,6 +291,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
         @Override
         public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
             Event event = getEvent();
+
             Context context = MyApplication.getApplicationBaseContext();
             UserEventStatusEnum newStatus = isChecked
                     ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)

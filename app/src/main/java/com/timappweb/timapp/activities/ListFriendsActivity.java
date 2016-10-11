@@ -114,7 +114,7 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
         mAdapter.setData(data);
         progressView.setVisibility(View.GONE);
         noFriendsView.setVisibility (mAdapter.hasData()
-                ? View.GONE
+                ? View.VISIBLE // todo gone
                 : View.VISIBLE);
     }
 

@@ -53,9 +53,10 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
     private RecyclerView                    mRecyclerView;
     private RecyclerViewMaterialAdapter     mAdapter;
     private Loader<List<EventTag>>          mTagLoader;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private EventTagLoader eventTagLoader;
-    private ObservableScrollView mObservable;
+    private SwipeRefreshLayout              mSwipeRefreshLayout;
+    private EventTagLoader                  eventTagLoader;
+    private ObservableScrollView            mObservable;
+    private View                            placeHolder;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -71,6 +72,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_tags);
         noTagsView = view.findViewById(R.id.no_tags_view);
+        placeHolder = view.findViewById(R.id.material_view_pager_placeholder);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
         mAdapter = new RecyclerViewMaterialAdapter(tagsAndCountersAdapter);
@@ -119,6 +121,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
@@ -162,7 +165,13 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         tagsAndCountersAdapter.clear();
         tagsAndCountersAdapter.addAll(data);
         mAdapter.notifyDataSetChanged();
-        noTagsView.setVisibility(data.size() == 0 ? View.VISIBLE : View.GONE);
+        setNoDataView(data.size() == 0 ? View.VISIBLE : View.GONE);
+    }
+
+    private void setNoDataView(int visibility) {
+        noTagsView.setVisibility(visibility);
+        placeHolder.setVisibility(visibility);
+
     }
 
     @Override

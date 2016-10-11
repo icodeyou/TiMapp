@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,31 +17,28 @@
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
                 <com.timappweb.timapp.views.RefreshableRecyclerView
                     android:id="@+id/rv_friends"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible"/>
-
         </com.timappweb.timapp.views.SwipeRefreshLayout>
 
         <RelativeLayout
             android:id="@+id/no_data_view_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
             <TextView
                 style="@style/NoDataView"
-                android:id="@+id/no_friends_layout"
                 android:text="@string/no_friends"/>
             <include
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_alignParentBottom="true"
                 layout="@layout/share_layout" />
         </RelativeLayout>
 
     </FrameLayout>
-
 </LinearLayout>

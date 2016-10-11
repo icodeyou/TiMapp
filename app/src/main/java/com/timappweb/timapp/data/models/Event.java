@@ -78,13 +78,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Expose
     public double           longitude;
 
-    @Column(name = "BeginDate")
+    @Column(name = "StartDate")
     @Expose
-    public int           begin_date;
+    public int              start_date;
 
     @Column(name = "EndDate")
     @Expose
-    public int           end_date;
+    public int              end_date;
 
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
     @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
@@ -201,7 +201,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public String getPrettyTimeBegin() {
-        return Util.millisTimestampToPrettyTime(this.begin_date);
+        Log.d("Debug pretty time", "Start date Event : " + start_date);
+        return Util.secondsTimestampToPrettyTime(this.start_date);
     }
 
     @Override
@@ -210,7 +211,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
-                ", date='from " + new Date(begin_date*1000).toString() + " to "  + (end_date > 0 ? new Date(end_date*1000).toString() : '?') + '\'' +
+                ", date='from " + new Date(start_date *1000).toString() + " to "  + (end_date > 0 ? new Date(end_date*1000).toString() : '?') + '\'' +
                 ", location=(" + latitude + "," + longitude + ")" +
                 ", created=" + new Date(created*1000).toString()  +
                 ", category=" + (event_category != null ? event_category.getName() : "NONE") +
@@ -453,7 +454,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public boolean isOver(){
-        return this.getPoints() <= 0;
+        //TODO : Return false if event is over
+        return true;
     }
 
     /**

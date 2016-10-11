@@ -29,7 +29,14 @@
                 android:padding="@dimen/margin_fragments_event"
                 android:background="@color/background"
                 android:layout_marginTop="3dp">
+                <TextView
+                    android:id="@+id/over_text"
+                    style="@style/TextBig"
+                    android:padding="@dimen/default_text_padding"
+                    android:textStyle="bold"
+                    android:text="@string/counter_over"/>
                 <LinearLayout
+                    android:id="@+id/points_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -41,10 +48,13 @@
                         bind:event="@{event}" />
                 </LinearLayout>
 
+                <include layout="@layout/divider_grey"
+                    android:visibility="@{event.getSpot() == null ? View.GONE : View.VISIBLE }"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center">
+                    android:gravity="start">
                     <include layout="@layout/layout_spot"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -130,6 +140,21 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/cross_overview"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/cross"
+                            android:alpha="0.05"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/status_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

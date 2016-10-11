@@ -66,7 +66,8 @@
     <string name="action_performed_not_successful">Désolé mais cette action n\'est pas disponible pour le moment. Merci de réessayer plus tard.</string>
     <string name="form_invalid_input">Ce champ est invalide.</string>
     <string name="data_already_refresh">Données à jour</string>
-    <string name="user_message_should_be_around_event_to_post">Rapproche de toi de l\'événement pour poster ;)</string>
+    <string name="should_be_around_to_post">Rapproche de toi de l\'événement pour poster ;)</string>
+    <string name="should_be_not_over_to_post">L\'événement est terminé, les posts aussi !\nNormal, c\'est du temps réel :).</string>
     <string name="error_require_gps">Nous avons besoin de votre localisation pour cette opération.</string>
     <string name="quota_wait_string">Merci d\'attendre %s avant le prochain post.</string>
     <string name="quota_wait_not_defined">Merci d\'attendre %s avant le prochain post.</string>
@@ -115,7 +116,7 @@
     <string name="i_am_here">Présent</string>
     <string name="next_to_you">A proximité</string>
     <!-- Fragment Picture -->
-    <string name="no_pic">Il n\'y a pas de encore de photo pour cet événement.</string>
+    <string name="no_pic">Il n\'y a pas encore de photos pour cet événement.</string>
     <string name="uploading_pic">Téléchargement de la photo</string>
     <string name="thanks_for_add_picture">Merci pour cette photo !</string>
     <string name="action_set_picture_as_default">Mettre en Arrière-Plan</string>

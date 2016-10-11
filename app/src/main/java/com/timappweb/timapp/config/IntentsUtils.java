@@ -308,8 +308,12 @@ public class IntentsUtils {
         if(!requireLogin(context,false)) {
             return;
         }
+        if(event.isOver()) {
+            Toast.makeText(context, R.string.should_be_not_over_to_post, Toast.LENGTH_LONG).show();
+            return;
+        }
         if(!event.isUserAround() && ( action == ACTION_TAGS || action == ACTION_CAMERA ) ) {
-            Toast.makeText(context, R.string.user_message_should_be_around_event_to_post, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.should_be_around_to_post, Toast.LENGTH_LONG).show();
             return;
         }
         if (context instanceof EventActivity){

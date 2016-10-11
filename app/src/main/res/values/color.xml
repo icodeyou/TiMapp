@@ -4,8 +4,8 @@
     <color name="colorPrimaryVeryDark">#8c1e1e</color>
     <color name="colorPrimaryTransparent">#D9D32F2F</color>
     <color name="colorPrimaryDarkTransparent">#8ad32f2f</color>
-    <color name="colorWhiteTransparent50">#80FFFFFF</color>
-    <color name="colorBlackTransparent50">#80000000</color>
+    <color name="colorWhiteHalfTransparent">#80FFFFFF</color>
+    <color name="colorBlackHalfTransparent">#41000000</color>
     <color name="colorAccent">#de5b51</color>
     <color name="colorAccentLight">#68f44336</color>
     <color name="colorSecondary">#2b3778</color>
@@ -14,11 +14,10 @@
     <color name="colorRefresh">@color/colorAccent</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
     <color name="TEST">#f44437</color>
-    <color name="transparent">#00000000</color>
+    <color name="transparent">#00ffffff</color>
     <color name="background">#f6f6f2</color>
-    <color name="background_dark">#f1f1ea</color>
+    <color name="background_dark">#deded7</color>
     <color name="background_semi_transparent">#71ffffff</color>
-    <color name="background_loading_map">#2c080808</color>
     <color name="background_card">@color/White</color>
     <color name="background_nav_header">@color/White</color>
     <color name="background_event_info">#d3ffffff</color>

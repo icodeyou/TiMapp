@@ -2,24 +2,19 @@ package com.timappweb.timapp.fragments;
 
 
 
-import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.listeners.OnTabSelectedListener;
 
-/**
- * Created by stephane on 4/6/2016.
- */
+
 public abstract class EventBaseFragment extends BaseFragment {
 
     protected EventActivity eventActivity;
@@ -57,6 +52,10 @@ public abstract class EventBaseFragment extends BaseFragment {
 
     protected void setTitle(int title) {
         mTitle = title;
+    }
+
+    protected Drawable getDarkBackgroundDrawable() {
+        return ContextCompat.getDrawable(eventActivity, R.drawable.cross_background_drawable);
     }
 
     public int getTitle() {
