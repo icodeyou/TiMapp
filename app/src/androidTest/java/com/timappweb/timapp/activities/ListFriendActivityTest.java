@@ -69,4 +69,5 @@ public class ListFriendActivityTest extends AbstractActivityTest {
         ActivityHelper.assertCurrentActivity(ProfileActivity.class);
     }
 
+    // TODO add test when user does not have any friends
 }

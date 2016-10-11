@@ -20,11 +20,6 @@ public class DummyAuthManager implements AuthManagerInterface {
     }
 
     @Override
-    public String getSocialProviderToken() {
-        return "fejiopzjpf2938020ezpjfpezoCEDEfez";
-    }
-
-    @Override
     public void logout() {
 
     }
@@ -34,10 +29,6 @@ public class DummyAuthManager implements AuthManagerInterface {
         return null;
     }
 
-    @Override
-    public boolean login(Context context, Object serverResponse, String accessToken) throws AuthManager.CannotLoginException {
-        return false;
-    }
 
     @Override
     public User getCurrentUser() {

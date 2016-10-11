@@ -142,6 +142,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
         progressView = findViewById(R.id.progress_view);
         mapView = (MapView) findViewById(R.id.map);
+        mapView.onCreate(null);
         //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
         mBtnAddPic = findViewById(R.id.button_add_picture);
@@ -543,8 +544,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public void onPause() {
         mapView.onPause();
-        super.onPause();
         LocationManager.removeLocationListener(this);
+        super.onPause();
     }
 
     private void loadMapIfNeeded() {

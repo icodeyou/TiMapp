@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:361229755289:android:155fe6e90d33d00a",
+        "mobilesdk_app_id": "1:361229755289:android:308ed4ee0e81e7e4",
         "android_client_info": {
-          "package_name": "com.timappweb.timapp"
+          "package_name": "com.timappweb.timapp.debug"
         }
       },
       "oauth_client": [

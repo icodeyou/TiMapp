@@ -90,7 +90,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private ExploreFragment                 exploreFragment;
     private FragmentExploreMapBinding       mBinding;
     private AreaRequestHistory              history;
-    private Bundle                          mapBundle;
     private Handler                         mMainHandler;
     private Runnable                        mUpdateRunnable;
 
@@ -120,7 +119,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         exploreFragment = (ExploreFragment) getParentFragment();
         setHasOptionsMenu(true);
         mapView = (MapView) root.findViewById(R.id.map);
-        mapView.onCreate(mapBundle);
+        mapView.onCreate(null);
         progressView = root.findViewById(R.id.progress_view);
         filterTagsRv = (HorizontalTagsRecyclerView) root.findViewById(R.id.search_tags);
         filterTagsContainer = root.findViewById(R.id.search_tags_container);
@@ -205,8 +204,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     @Override
     public void onPause() {
         mapView.onPause();
-        super.onPause();
         LocationManager.removeLocationListener(this);
+        super.onPause();
     }
 
     @Override

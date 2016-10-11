@@ -45,7 +45,6 @@ public class ProfileActivityTest extends AbstractActivityTest{
     public void startActivity(){
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), PROFILE_ID);
         mActivityRule.launchActivity(intent);
-        assertTrue(MyApplication.isLoggedIn());
     }
 
     // ---------------------------------------------------------------------------------------------
