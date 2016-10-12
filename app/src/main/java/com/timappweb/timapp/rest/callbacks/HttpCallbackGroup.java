@@ -52,7 +52,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
             }
         }
         catch (Throwable ex){
-            Log.e(TAG, "Exception while dispathing response: " + ex);
+            Log.e(TAG, "Exception while dispatching response: " + ex);
             this.error = ex;
         }
         this.callFinallyCallbacks();

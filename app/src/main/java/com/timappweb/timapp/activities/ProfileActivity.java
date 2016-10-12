@@ -174,19 +174,7 @@ public class ProfileActivity extends BaseActivity  {
         }
         switch (requestCode){
             case ACTIVITY_RESULT_EDIT_PROFILE:
-                try {
-                    // Get tags
-                    List<Tag> tags = (List<Tag>) data.getSerializableExtra(EditProfileActivity.EXTRA_KEY_TAG_LIST);
-                    Log.v(TAG, "Editing user tags: " + tags);
-                    if (tags != null){
-                        mUser.replaceAssociation(tags, UserTag.class);
-                        mUser.setTags(tags);
-                        updateView();
-                    }
-                } catch (CannotSaveModelException e) {
-                    // TODO toast
-                    e.printStackTrace();
-                }
+                updateView();
                 break;
         }
 

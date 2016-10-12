@@ -165,13 +165,6 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface, Pl
                 '}';
     }
 
-    public ArrayList getTagsToStringArray() {
-        ArrayList<String> res = new ArrayList<String>();
-        for (Tag tag : this.tags) {
-            res.add(tag.getName());
-        }
-        return res;
-    }
 
     public List<Tag> getTags() {
         return tags;

@@ -62,7 +62,8 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
     @ModelAssociation(
             type = ModelAssociation.Type.BELONGS_TO_MANY,
             saveStrategy = ModelAssociation.SaveStrategy.REPLACE,
-            joinModel = UserTag.class)
+            joinModel = UserTag.class,
+            targetModel = Tag.class)
     public List<Tag> tags;
 
     /**

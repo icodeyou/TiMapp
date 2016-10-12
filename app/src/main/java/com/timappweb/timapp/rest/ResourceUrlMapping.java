@@ -19,5 +19,6 @@ public class ResourceUrlMapping {
     public static final String MODEL_USER = "users";
     public static final String MODEL_TAG = "tags";
 
+
     public static final String MODEL_FRIENDS = "friends";
 }

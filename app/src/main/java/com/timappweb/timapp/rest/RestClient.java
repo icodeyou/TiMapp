@@ -182,12 +182,17 @@ public class RestClient {
         return conn.getRestService();
     }
 
-    public static HttpCallManager post(String url, JsonObject object) {
-        Call call = RestClient.restService().post(url, object);
+    public static HttpCallManager<JsonObject> post(String url, JsonObject object) {
+        Call<JsonObject> call = RestClient.restService().post(url, object);
         return buildCall(call);
     }
-    public static HttpCallManager post(String url,  JsonObject object, RequestBody file) {
-        Call call = RestClient.restService().post(url, object, file);
+    public static HttpCallManager<JsonObject> post(String url,  JsonObject object, RequestBody file) {
+        Call<JsonObject> call = RestClient.restService().post(url, object, file);
+        return buildCall(call);
+    }
+
+    public static HttpCallManager<JsonObject> put(String url, JsonObject object) {
+        Call<JsonObject> call = RestClient.restService().put(url, 0, object);
         return buildCall(call);
     }
 

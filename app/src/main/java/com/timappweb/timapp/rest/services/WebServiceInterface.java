@@ -135,7 +135,7 @@ public interface WebServiceInterface {
     Call<JsonObject> requestSyncFriends(@Path("providerId") String providerId, @Body JsonObject body);
 
     @POST("users/edit")
-    Call<RestFeedback> editProfile(@Body Map<String, String> user);
+    Call<User> editProfile(@Body JsonObject user);
 
     @GET("Users/logout")
     Call<RestFeedback> logout();

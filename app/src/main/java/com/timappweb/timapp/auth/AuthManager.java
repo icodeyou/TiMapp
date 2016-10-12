@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.facebook.login.LoginResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
@@ -151,6 +152,9 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
                     .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
                     .commit();
             Log.i(TAG, "Trying to localLogin user: " + user);
+
+            MyApplication.updateGoogleMessagingToken(MyApplication.getApplicationBaseContext(),
+                    FirebaseInstanceId.getInstance().getToken());
             requestGcmToken(MyApplication.getApplicationBaseContext());
             QuotaManager.sync();
             this.notifyLogin();
@@ -187,7 +191,6 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
     // ---------------------------------------------------------------------------------------------
 
     private static void requestGcmToken(Context context) {
-        // TODO is it still usefull with firebase ?
         Log.d(TAG, "Starting IntentService to update user token");
         Intent intent = new Intent(context, MyInstanceIDListenerService.class);
         //intent.putExtra(Constants.RECEIVER, mResultReceiver);

@@ -20,21 +20,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserTag;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.rest.ResourceUrlMapping;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
-import com.timappweb.timapp.rest.io.responses.RestFeedback;
+import com.timappweb.timapp.rest.io.serializers.EditProfileMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-import retrofit2.Call;
 import retrofit2.Response;
 
 public class EditProfileActivity extends BaseActivity{
@@ -72,7 +76,7 @@ public class EditProfileActivity extends BaseActivity{
 
         init();
 
-        initAdapter();
+        horizontalTagsAdapter = horizontalTagsRecyclerView.getAdapter();
         setListener();
     }
 
@@ -86,10 +90,6 @@ public class EditProfileActivity extends BaseActivity{
 
         //for hide/close keyboard
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-    }
-
-    private void initAdapter() {
-        horizontalTagsAdapter = (HorizontalTagsAdapter) horizontalTagsRecyclerView.getAdapter();
     }
 
 
@@ -140,19 +140,21 @@ public class EditProfileActivity extends BaseActivity{
             public synchronized void onClick(View v) {
                 progressView.setVisibility(View.VISIBLE);
                 Log.v(TAG, "Submitting user tags");
-                Map<String, String> data = new HashMap<>();
-                Call<RestFeedback> call = RestClient.service().editProfile(data);
-                RestClient.buildCall(call)
-                        .onResponse(new HttpCallback() {
+                final User user = MyApplication.getCurrentUser();
+                RestClient
+                        .put(ResourceUrlMapping.MODEL_USER, EditProfileMapper.toJson(horizontalTagsAdapter.getData()))
+                        .onResponse(new AutoMergeCallback(user))
+                        .onResponse(new HttpCallback<JsonObject>() {
                             @Override
-                            public void successful(Object feedback) {
-                                Toast.makeText(getApplicationContext(), R.string.toast_profile_saved, Toast.LENGTH_LONG).show();
+                            public void successful(JsonObject feedback) throws CannotSaveModelException {
+                                user.deepSave();
+                                Toast.makeText(EditProfileActivity.this, R.string.toast_profile_saved, Toast.LENGTH_LONG).show();
                                 finishActivityResult();
                             }
 
                             @Override
                             public void notSuccessful() {
-                                Toast.makeText(getApplicationContext(), R.string.cannot_save_your_profile, Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfileActivity.this, R.string.cannot_save_your_profile, Toast.LENGTH_LONG).show();
                             }
                         })
                         .onError(new NetworkErrorCallback(EditProfileActivity.this))
@@ -160,6 +162,9 @@ public class EditProfileActivity extends BaseActivity{
                             @Override
                             public void onFinally(Response response, Throwable error) {
                                 progressView.setVisibility(View.GONE);
+                                if (error != null){
+                                    Toast.makeText(EditProfileActivity.this, R.string.cannot_save_your_profile, Toast.LENGTH_LONG).show();
+                                }
                             }
                         })
                         .perform();
