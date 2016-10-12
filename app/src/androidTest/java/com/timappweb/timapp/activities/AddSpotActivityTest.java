@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddSpotActivityTest extends AbstractActivityTest{
+public class AddSpotActivityTest extends AbstractAcdtivityTest{
 
     private AddSpotForm addSpotForm;
     private MockLocationProvider mockLocation;

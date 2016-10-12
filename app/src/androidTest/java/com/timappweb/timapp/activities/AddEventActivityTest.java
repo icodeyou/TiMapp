@@ -281,5 +281,4 @@ public class AddEventActivityTest extends AbstractActivityTest {
             }
         }
     }
-
 }

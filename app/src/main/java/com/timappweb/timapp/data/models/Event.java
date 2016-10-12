@@ -481,8 +481,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
 
     public VisiblityStatus getVisibilityStatus(){
-        return VisiblityStatus.INACTIVE;
-        /*if (!this.hasBegin()){
+        //return VisiblityStatus.INACTIVE;
+        if (!this.hasBegin()){
             return VisiblityStatus.PLANNED;
         }
         else if (this.end_date != 0){
@@ -494,7 +494,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                     : (this.inactivity_threshold <= Util.getCurrentTimeSec())
                         ? VisiblityStatus.INACTIVE
                         : VisiblityStatus.ACTIVE;
-        }*/
+        }
     }
 
     public boolean isInactive() {
