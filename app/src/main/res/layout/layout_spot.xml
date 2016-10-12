@@ -28,7 +28,7 @@
         android:padding="15dp"
         android:layout_gravity="center"
         tools:src="@drawable/category_unknown"
-        android:background="@drawable/radius_simple_background_primary"
+        android:background="@drawable/radius_simple_background_black"
         fresco:actualImageScaleType="fitCenter"
         fresco:placeholderImage="@drawable/category_unknown"
         app:imageDrawable="@{spot.getCategory().getIconDrawable()}"/>
@@ -47,13 +47,14 @@
                 style="@style/TitleTwoLines"
                 android:padding="0dp"
                 android:layout_gravity="start"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/textBlack"
                 android:text="@{spot.name}"
                 tools:text="Terrain" />
 
             <TextView
                 android:id="@+id/textView5"
                 style="@style/TextItalic"
+                android:textColor="@color/textBlack"
                 android:layout_gravity="start"
                 tools:text="Bar"
                 android:text="@{spot.getCategory().name}" />

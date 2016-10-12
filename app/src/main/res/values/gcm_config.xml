@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="gcm_min_sdk_version">0</integer>
-    <string name="gcm_app_code">qgnj7</string>
-    <string name="gcm_view_event">http://www.timapp.fr/events/view/%1$d</string>
+    <string name="gcm_app_code" translatable="false">qgnj7</string>
+    <string name="gcm_view_event" translatable="false">http://www.timapp.fr/events/view/%1$d</string>
 </resources>

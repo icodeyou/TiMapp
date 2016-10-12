@@ -55,7 +55,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                MARGIN_BUTTON_LOCATE_MAP        = 120;
     private static final int                PRECISION_LAT_LONG_MAP          = 5 ;
     private static final int                TIME_ZOOM_ANIM                  = 500;
-    private static final int                DELAY_UPDATE_MAP_DATA_MILLIS    = 800;
+    private static final int                DELAY_UPDATE_MAP_DATA_MILLIS    = 500;
     private static final double             PADDING_RATIO_ZOOM_CLUSTER = 0.2;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 15.0f;
     private Marker                          selectingMarker;
@@ -282,6 +282,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
             Animation slideOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
             eventView.startAnimation(slideOut);
+
+            selectingMarker = null;
         }
     }
 
@@ -476,6 +478,10 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         markerOptions.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("marker_secondary","drawable", getContext().getPackageName())));
         markerOptions.anchor(0.5f,0.5f); //center Marker Bitmap
         if (gMap != null)  selectingMarker = gMap.addMarker(markerOptions);
+    }
+
+    public Marker getSelectingMarker() {
+        return selectingMarker;
     }
 
     private void removeCurrentMarker() {

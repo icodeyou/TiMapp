@@ -321,7 +321,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public static boolean isValidName(String name) {
-        return name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
+        return name != null && name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
     }
 
     private static int computeLevel(int points) {
@@ -462,6 +462,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public boolean isOver(){
+        //TODO : test this method
         return getVisibilityStatus() == VisiblityStatus.OVER;
     }
 
@@ -477,9 +478,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return this.start_date <= Util.getCurrentTimeSec();
     }
 
-    enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
+    public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
 
     public VisiblityStatus getVisibilityStatus(){
+        //return VisiblityStatus.INACTIVE;
         if (!this.hasBegin()){
             return VisiblityStatus.PLANNED;
         }
@@ -495,8 +497,17 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         }
     }
 
-    public int getInactivityDuration(){
+    public boolean isInactive() {
+        return getVisibilityStatus() == VisiblityStatus.INACTIVE;
+    }
+
+    public int getInactivityDurationSeconds(){
         return Util.getCurrentTimeSec() - this.last_activity ;
+    }
+
+    public String getPrettyInactivityDuration() {
+        int inactivityDuration = getInactivityDurationSeconds() ;
+        return Util.secondsDurationToPrettyTime(inactivityDuration);
     }
 
     /**
@@ -590,6 +601,9 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
 
     public int getLevelBackground() {
+        if(getVisibilityStatus() == VisiblityStatus.INACTIVE) {
+            return R.drawable.b0;
+        }
         switch (this.getLevel()) {
             case 0:
                 return R.drawable.b1;

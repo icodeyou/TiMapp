@@ -3,16 +3,14 @@ package com.timappweb.timapp.utils.viewinteraction;
 import android.support.test.espresso.ViewInteraction;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.activities.AddEventActivity;
+import com.timappweb.timapp.activities.AddSpotActivity;
+import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.core.IsNot.not;
 
 /**
  * Created by Stephane on 07/09/2016.
@@ -66,13 +64,11 @@ public class AddSpotForm extends FormHelper {
     }
 
     public AddSpotForm assertSubmitDisabled() {
-        submitBtn
-                .check(matches(not(isEnabled())));
+        ActivityHelper.assertCurrentActivity(AddSpotActivity.class);
         return this;
     }
     public AddSpotForm assertSubmitEnabled() {
-        submitBtn
-                .check(matches(isEnabled()));
+        ActivityHelper.assertCurrentActivity(AddEventActivity.class);
         return this;
     }
 }

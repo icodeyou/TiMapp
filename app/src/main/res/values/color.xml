@@ -242,5 +242,5 @@
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
-    <color name="Halfblack">#c1000000</color>
+    <color name="Halfblack">#3c3c3c</color>
 </resources>

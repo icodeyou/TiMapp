@@ -24,9 +24,17 @@
             <include
                 layout="@layout/header_event_activity"
                 android:id="@+id/header_event_activity"
-                android:layout_height="220dp"
+                android:layout_height="@dimen/height_item_list"
                 android:layout_width="match_parent"
                 bind:event="@{event}" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_item_list"
+                android:background="@drawable/cross_background_drawable"
+                android:tileMode="repeat"
+                android:alpha="0.5"
+                android:visibility="@{event.isOver() || event.isInactive() ? View.VISIBLE : View.GONE}"/>
 
             <include layout="@layout/layout_event_info"
                 android:id="@+id/layout_event_info"

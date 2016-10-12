@@ -23,7 +23,6 @@ import android.widget.ImageView;
 import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -109,10 +108,12 @@ public class Util {
                 .appendSuffix(" day", " days")
                 .appendSeparator(" ")
                 .appendHours()
-                .appendSuffix(" hour", " hours")
-                .appendSeparator(" and ")
-                .appendMinutes()
-                .appendSuffix(" min", " mins");
+                .appendSuffix(" hour", " hours");
+        if(duration<86400) {
+            builder .appendSeparator(" and ")
+                    .appendMinutes()
+                    .appendSuffix(" min", " mins");
+        }
         if (duration < 60) {
             builder .appendSeparator(" and ")
                     .appendSeconds()

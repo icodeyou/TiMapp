@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
 
-
 android {
     signingConfigs {
         config {
@@ -130,7 +129,6 @@ dependencies {
     //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 
     //----------------------------------------------------------------------------------------------
-    // Crashlytics
 
     compile 'com.android.support:multidex:1.0.1'    // Used by Google Play Service and Mutltidex application
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
