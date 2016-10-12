@@ -9,11 +9,11 @@
     <string name="title_activity_profile">Profil</string>
     <string name="title_activity_filter">Recherche</string>
     <string name="title_activity_settings">Paramètres</string>
-    <string name="title_activity_add_event">Ajouter un événement</string>
+    <string name="title_activity_add_event">Création</string>
     <string name="title_activity_add_spot">Attacher un lieu</string>
     <string name="title_activity_share_app">Crie le sous les toits</string>
     <string name="title_activity_edit_profile">Editer le profil</string>
-    <string name="title_activity_presentation">TiMapp, \'est quoi ?</string>
+    <string name="title_activity_presentation">TiMapp, c\'est quoi ?</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_locate">A proximité</string>
 
@@ -33,7 +33,7 @@
     <string name="search_button">Valider</string>
     <string name="search_button_empty">Effacer la recherche</string>
     <string name="invite_button">Inviter</string>
-    <string name="action_post">Post</string>
+    <string name="action_post">Publier</string>
     <string name="action_list">List</string>
     <string name="action_select_all">Select all</string>
     <string name="action_unselect_all">Unselect all</string>
@@ -54,7 +54,7 @@
     <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
     <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
     <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>
-    <string name="no_fine_location">Localisation imprécise.\nSi tu sors à l\extérieur, ça marchera à coup sûr ;)</string>
+    <string name="no_fine_location">Localisation imprécise.\nSi tu sors à l\'extérieur, ça marchera à coup sûr ;)</string>
     <string name="toast_no_space">Vous ne pouvez pas ajouter d\'espace à votre tag.</string>
     <string name="toast_no_tag">Un tag minimum est nécessaire.</string>
     <string name="toast_too_many_tags_part_one">Il n\'est pas possible d\'ajouter plus de&#160;</string>
@@ -147,13 +147,15 @@
     <string name="address_found">Adresse trouvée</string>
 
     <!-- AddEventActivity -->
-    <string name="hint_write_description">Description</string>
+    <string name="hint_write_description">Description, end time, cover ...</string>
     <string name="picture">Photo</string>
     <string name="place">Lieu</string>
     <string name="edit_the_place">Editer le lieu</string>
     <string name="remove_the_place">Supprimer le lieu</string>
     <string name="edit_the_picture">Changer la photo</string>
     <string name="remove_the_picture">Supprimer l\'image</string>
+    <string name="error_no_name">Trouve un nom sympa pour l\'événement :)</string>
+    <string name="error_no_category">Clique sur la catégorie qui convient le mieux !</string>
 
     <!-- AddTagsActivity  -->
     <!--TODO : Dupplicates strings here -->
@@ -183,6 +185,7 @@
     <!-- ShareActivity -->
     <string name="text_share_activity">TiMapp est plus sympa avec des amis. Clique sur le bouton rouge pour partager l\'application.</string>
     <string name="subject_share_activity">Partage TiMapp avec tes amis</string>
+    <string name="share_using_title">Partager avec</string>
 
     <!-- LoginActivity -->
     <string name="welcome_to_timapp">Bienvenue sur TiMapp</string>
@@ -232,9 +235,9 @@
     <string name="title_p_six">Points de popularité</string>
     <string name="title_p_seven">Prêt ?</string>
     <string name="popularity_page_one">Chaque événement a un nombre de points représentant sa popularité.</string>
+    <string name="popularity_page_three">Ce nombre diminue avec le temps.</string>
     <string name="popularity_page_two">Mais le nombre augmente quand les utilisateurs postent.</string>
-    <string name="popularity_page_three">Ce nombre est en fait un compte à rebours</string>
-    <string name="popularity_page_four">Quand la popularité atteint zéro, l\'événement est supprimé de la carte.</string>
+    <string name="popularity_page_four">Si l\'événement est trop longtemps inactif, l\'événement est supprimé de la carte.</string>
     <string name="text_final_button_viewpager">GO</string>
     <string name="map">Carte</string>
     <string name="list">Liste</string>

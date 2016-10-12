@@ -10,9 +10,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -261,7 +259,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_event, menu);
         postButton = menu.findItem(R.id.action_post);
-        setButtonValidation();
+        //setButtonValidation();
 
         if(BuildConfig.DEBUG) initDebugView();
         return true;
@@ -271,18 +269,30 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_post:
-                if (mFineLocation != null) {
-                    setProgressView(true);
-                    Event event = mBinding.getEvent();
-                    event.setCategory(eventCategorySelected);
-                    event.setLocation(mFineLocation);
-                    submitEvent(event, pictureSelected);
-                } else if (LocationManager.hasLastLocation()) {
-                    Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
-                } else {
+                if(!Event.isValidName(eventNameET.getText().toString().trim())) {
+                    Log.d(TAG, "Name is not valid");
+                    Toast.makeText(getBaseContext(), R.string.error_no_name, Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                if(eventCategorySelected == null) {
+                    Log.d(TAG, "Category is not valid");
+                    Toast.makeText(getBaseContext(), R.string.error_no_category, Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                if (mFineLocation == null) {
+                    if (LocationManager.hasLastLocation()) {
+                        Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
+                        return true;
+                    }
                     Log.d(TAG, "Click on add event before having a user location");
                     Toast.makeText(getBaseContext(), R.string.waiting_for_location, Toast.LENGTH_LONG).show();
+                    return true;
                 }
+                setProgressView(true);
+                Event event = mBinding.getEvent();
+                event.setCategory(eventCategorySelected);
+                event.setLocation(mFineLocation);
+                submitEvent(event, pictureSelected);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -324,11 +334,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void setProgressView(boolean bool) {
         progressView.setVisibility(bool ? View.VISIBLE : View.INVISIBLE);
-        if(bool) {
-            postButton.setEnabled(false);
-        } else {
-            setButtonValidation();
-        }
+        postButton.setEnabled(!bool);
     }
 
     private void submitEvent(final Event event, File photo){
@@ -394,10 +400,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     public void setButtonValidation() {
         if (postButton != null) {
-            String textAfterChange = eventNameET.getText().toString().trim();
-            boolean isValid = eventCategorySelected != null && Event.isValidName(textAfterChange)
-                    && mFineLocation != null;
-            postButton.setEnabled(isValid);
+
         }
     }
     //----------------------------------------------------------------------------------------------
@@ -413,7 +416,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public void setCategory(EventCategory eventCategory) {
         eventCategorySelected = eventCategory;
         categorySelector.selectCategoryUI(eventCategory.getName(),eventCategory.getIconDrawable(AddEventActivity.this));
-        setButtonValidation();
+        //setButtonValidation();
     }
 
     public EventCategory getEventCategorySelected() {
@@ -486,7 +489,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         mBtnAddPic.setOnLongClickListener(onLongClickListener);
         mBtnAddSpot.setOnLongClickListener(onLongClickListener);
 
-        eventNameET.addTextChangedListener(new TextWatcher() {
+        /*eventNameET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -501,7 +504,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             public void afterTextChanged(Editable s) {
                 setButtonValidation();
             }
-        });
+        });*/
     }
 
     public Event getEvent(){
@@ -695,7 +698,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void onFineLocationFound() {
-        setButtonValidation();
+        //setButtonValidation();
         mWaitingForLocationLayout.setVisibility(View.GONE);
     }
     // =============================================================================================

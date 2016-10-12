@@ -177,12 +177,14 @@
     <string name="cannot_load_server_configuration_msg">Make sure you have an internet access.</string>
 
     <!-- AddEventActivity -->
-    <string name="hint_write_description">Description</string>
+    <string name="hint_write_description">Description, heure de fin, prix ...</string>
     <string name="attach_a_place">Place</string>
     <string name="edit_the_place">Edit the place</string>
     <string name="remove_the_place">Remove the place</string>
     <string name="edit_the_picture">Change photo</string>
     <string name="remove_the_picture">Remove the picture</string>
+    <string name="error_no_name">Find a good event name :)</string>
+    <string name="error_no_category">Click on the category that suits the event !</string>
 
     <!-- AddTagsActivity  -->
     <string name="search_hint">Type a tag</string>
@@ -208,6 +210,7 @@
     <!-- ShareActivity -->
     <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the red button to invite them.</string>
     <string name="subject_share_activity">Share TiMapp with your friends !</string>
+    <string name="share_using_title">Share using</string>
 
     <!-- LoginActivity -->
     <string name="welcome_to_timapp">Welcome to TiMapp</string>
@@ -259,14 +262,13 @@
     <string name="title_p_six">Popularity</string>
     <string name="title_p_seven">Ready to go ?</string>
     <string name="popularity_page_one">Each event has a number of points representing its popularity.</string>
-    <string name="popularity_page_two">But it is increased when people post pictures and tags.</string>
-    <string name="popularity_page_three">This number is in fact a timer.</string>
-    <string name="popularity_page_four">When the popularity timer reaches zero, the event is removed from the map.</string>
+    <string name="popularity_page_two">However, the popularity points increase when people post pictures and tags.</string>
+    <string name="popularity_page_three">As time flies, the number decreases.</string>
+    <string name="popularity_page_four">If an event is inactive for too long, it is removed from the map.</string>
     <string name="text_final_button_viewpager">Let\'s get it started.</string>
 
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
     <string name="dummy_string" translatable="false">Dummy String</string>
-    <string name="share_using_title">Share using</string>
 
 </resources>

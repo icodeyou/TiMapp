@@ -50,6 +50,8 @@
     <dimen name="vertical_margin_confirm_button">10dp</dimen>
     <dimen name="height_bottom_button">60dp</dimen>
     <dimen name="width_border_white">4dp</dimen>
+    <dimen name="share_button">100dp</dimen>
+    <dimen name="padding_facebook_button">10dp</dimen>
 
     <!-- Text dimensions -->
     <dimen name="default_text_padding">15dp</dimen>
@@ -165,7 +167,6 @@
     <dimen name="corner_map">20dp</dimen>
     <dimen name="width_divider">1dp</dimen>
     <dimen name="margin_cards_scroll">5dp</dimen>
-    <dimen name="share_button">100dp</dimen>
 
     <item name="shring_coef" type="dimen">90%</item>
 </resources>
