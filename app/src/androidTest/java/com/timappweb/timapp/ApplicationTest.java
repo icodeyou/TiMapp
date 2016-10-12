@@ -32,7 +32,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         RestQueryParams params = new RestQueryParams();
         // -73.56681, 45.46865
         params.setBounds(new LatLngBounds(new LatLng(40, 0), new LatLng(50, 10)));
-        Call<List<Event>> call = RestClient.service().bestPlaces(params.toMap());
+        Call<List<Event>> call = RestClient.service().bestEvents(params.toMap());
         Response<List<Event>> response = call.execute();
         assertNotNull(response.body());
         List<Event> events = response.body();

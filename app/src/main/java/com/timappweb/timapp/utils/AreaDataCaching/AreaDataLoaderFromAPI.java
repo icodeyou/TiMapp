@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.listeners.LoadingListener;
@@ -69,7 +68,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
         final int requestId = this.requestCounter++;
 
-        Call<List<Event>> call = RestClient.service().bestPlaces(conditions.toMap());
+        Call<List<Event>> call = RestClient.service().bestEvents(conditions.toMap());
 
         final int itemRequestId = request.setPendingCall(call);
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);

@@ -65,7 +65,7 @@ public interface WebServiceInterface {
     Call<EventPointResponse> viewPointsPlace(@Path("id") long id);
 
     @GET("events/populars")
-    Call<List<Event>> bestPlaces(@QueryMap Map<String, String> conditions);
+    Call<List<Event>> bestEvents(@QueryMap Map<String, String> conditions);
 
     //@GET("events/around_me")
     //Call<List<Event>> eventAroundMe(@QueryMap Map<String, String> conditions);
@@ -128,8 +128,11 @@ public interface WebServiceInterface {
     @POST("users/firebase_login")
     Call<JsonObject>  firebaseLogin(@Body JsonObject payload);
 
-    @GET("users/friends")
+    @GET("UserFriends/index")
     Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);
+
+    @POST("UserFriends/request_sync/{providerId}")
+    Call<JsonObject> requestSyncFriends(@Path("providerId") String providerId, @Body JsonObject body);
 
     @POST("users/edit")
     Call<RestFeedback> editProfile(@Body Map<String, String> user);

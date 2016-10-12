@@ -4,6 +4,8 @@ import java.util.EnumMap;
 
 /**
  * Created by stephane on 2/18/2016.
+ *
+ * MUST BE SYNC WITH SERVER
  */
 public enum SocialProvider{
     FACEBOOK("facebook");

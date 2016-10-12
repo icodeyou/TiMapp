@@ -226,7 +226,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                 .setRemoteLoader(new RemoteLoader<List<Event>, Event>() {
                     @Override
                     protected Call getCall(HashMap<String, String> options) {
-                        return RestClient.service().bestPlaces(conditions.toMap());
+                        return RestClient.service().bestEvents(conditions.toMap());
                     }
                 })
                 .setLocalEntries(Event.findInArea(bounds, Event.class))
