@@ -34,7 +34,7 @@
                 android:background="@drawable/cross_background_drawable"
                 android:tileMode="repeat"
                 android:alpha="0.5"
-                android:visibility="@{event.isOver() ? View.VISIBLE : View.GONE}"/>
+                android:visibility="@{event.isOver() || event.isInactive() ? View.VISIBLE : View.GONE}"/>
 
             <include layout="@layout/layout_event_info"
                 android:id="@+id/layout_event_info"

@@ -57,16 +57,40 @@
                         android:id="@+id/layout_spot"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp">
+                        android:layout_marginBottom="5dp">
                         <include layout="@layout/layout_spot_minimized"
                             bind:spot="@{event.spot}"></include>
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/inactivity_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_below="@+id/layout_spot"
+                        android:orientation="horizontal"
+                        android:visibility="@{event.isInactive() ? View.VISIBLE : View.GONE}">
+                        <TextView
+                            style="@style/TitleInfoEvent"
+                            android:layout_width="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="@string/last_activity"/>
+                        <TextView
+                            style="@style/TextDefault"
+                            android:textColor="@color/textBlack"
+                            tools:text="Il y a 30min"
+                            android:text="@{event.getPrettyInactivityDuration()}"/>
+                    </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/distance_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_below="@+id/inactivity_layout"
                         android:layout_centerVertical="true"
-                        android:layout_below="@+id/layout_spot"
                         android:orientation="horizontal"
                         android:visibility="@{event.isOver() ? View.INVISIBLE : View.VISIBLE}">
                         <ProgressBar

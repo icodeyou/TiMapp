@@ -4,18 +4,16 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.LoadingListener;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.IntPoint;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,7 +45,6 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     }
 
 
-
     public void setClusterManager(ClusterManager<Event> mClusterManagerPost) {
         Log.d(TAG, "setClusterManager");
         this.mClusterManagerPlaces = mClusterManagerPost;
@@ -73,13 +70,6 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
         final int itemRequestId = request.setPendingCall(call);
         Log.i(TAG, "Request loading of area " + conditions.toString() + ". Request id: " + itemRequestId);
-
-        //TODO Steph : This might not be the correct way to do it. Find a way not to remove the selected event from the map during the loading.
-        if(selectedEvent!=null ) {
-            List<Event> selectedList = new ArrayList<>();
-            selectedList.add(selectedEvent);
-            request.setData(selectedList);
-        }
 
         if (loadingListener!=null) loadingListener.onLoadStart();
 

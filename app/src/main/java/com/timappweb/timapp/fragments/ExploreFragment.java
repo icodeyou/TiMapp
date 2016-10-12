@@ -103,12 +103,22 @@ public class ExploreFragment extends Fragment{
         dataLoader.setLoadingListener(new LoadingListener() {
             @Override
             public void onLoadStart() {
-                if (getExploreMapFragment() != null) getExploreMapFragment().setLoaderVisibility(true);
+                if (getExploreMapFragment() != null) {
+                    getExploreMapFragment().setLoaderVisibility(true);
+                    if(getExploreMapFragment().getSelectingMarker() != null) {
+                        getExploreMapFragment().getSelectingMarker().setVisible(false);
+                    }
+                }
             }
 
             @Override
             public void onLoadEnd() {
-                if (getExploreMapFragment() != null) getExploreMapFragment().setLoaderVisibility(false);
+                if (getExploreMapFragment() != null) {
+                    getExploreMapFragment().setLoaderVisibility(false);
+                    if(getExploreMapFragment().getSelectingMarker() != null) {
+                        getExploreMapFragment().getSelectingMarker().setVisible(true);
+                    }
+                }
             }
         });
 
