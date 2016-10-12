@@ -166,7 +166,7 @@ public class AddSpotActivity extends BaseActivity implements
             @Override
             public void onClick(int position) {
                 setCategory(spotCategoriesAdapterMain.getCategory(position));
-                setButtonValidation();
+                //setButtonValidation();
             }
         });
 
@@ -174,7 +174,7 @@ public class AddSpotActivity extends BaseActivity implements
             @Override
             public void onClick(int position) {
                 setCategory(spotCategoriesAdapterAll.getCategory(position));
-                setButtonValidation();
+                //setButtonValidation();
             }
         });
 
@@ -203,6 +203,21 @@ public class AddSpotActivity extends BaseActivity implements
     }
 
     private void setListeners() {
+        //If click on editText when Not Focused
+        etNameSpot.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                categorySelector.lowerView();
+            }
+        });
+
+        //If click on editText when Focused
+        etNameSpot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categorySelector.lowerView();
+            }
+        });
 
         etNameSpot.addTextChangedListener(new TextWatcher() {
             @Override
@@ -229,7 +244,7 @@ public class AddSpotActivity extends BaseActivity implements
                     }
                 }
 
-                setButtonValidation();
+                //setButtonValidation();
             }
         });
     }
@@ -239,7 +254,7 @@ public class AddSpotActivity extends BaseActivity implements
         this.menu = menu;
         getMenuInflater().inflate(R.menu.menu_add_spot, menu);
         getSpotAndBind();
-        setButtonValidation();
+        //setButtonValidation();
         return true;
     }
 
@@ -250,6 +265,14 @@ public class AddSpotActivity extends BaseActivity implements
                 finish();
                 return true;
             case R.id.action_create:
+                if(Spot.isValidName(currentSpot.getName())) {
+                    Toast.makeText(AddSpotActivity.this, R.string.error_no_name_spot, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                if(currentSpot.getCategory() == null) {
+                    Toast.makeText(AddSpotActivity.this, R.string.error_no_category_spot, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
                 if (spotAlreadyExist()){
                     Toast.makeText(AddSpotActivity.this, R.string.cannot_create_same_spot, Toast.LENGTH_SHORT).show();
                     return true;
@@ -287,10 +310,6 @@ public class AddSpotActivity extends BaseActivity implements
         intent.putExtra(IntentsUtils.KEY_SPOT, SerializeHelper.packModel(spot, Spot.class));
         setResult(Activity.RESULT_OK, intent);
         finish();
-    }
-
-    private void setButtonValidation() {
-        menu.findItem(R.id.action_create).setEnabled(currentSpot.isValid());
     }
 
     public int getNumberOfMainCategories() {

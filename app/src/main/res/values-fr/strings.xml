@@ -177,6 +177,8 @@
     <string name="no_data_spot">Indique un nom et une catégorie décrivant ton lieu. Ensuite, clique sur le bouton "Créer" pour valider.</string>
     <string name="user_location_changed_reload_data">Votre localisation a changé.\nRechargement des données</string>
     <string name="cannot_create_same_spot">Oh là ! Le lieu que tu as rentré est déja dans la liste, pas la peine d\'en créer un autre !</string>
+    <string name="error_no_name_spot">Trouve un nom sympa pour l\'événement :)</string>
+    <string name="error_no_category_spot">Clique sur la catégorie qui convient le mieux !</string>
 
     <!-- SplashActivity  -->
     <string name="cannot_load_server_configuration_title">Impossible de démarrer l\'application. Veuillez réessayer plus tard.</string>

@@ -206,6 +206,8 @@
     <string name="no_data_spot">Indicate a name and a category for your current place. Then click on the button CREATE.</string>
     <string name="user_location_changed_reload_data">Your location has changed, reloading spots ...</string>
     <string name="cannot_create_same_spot">Watch out ! The spot you typed already exists ! You can\'t create a new spot with the same name.</string>
+    <string name="error_no_category_spot">Click on the category that suits the spot !</string>
+    <string name="error_no_name_spot">Find a good spot name :)</string>
 
     <!-- ShareActivity -->
     <string name="text_share_activity">TiMapp is even more enjoyable with friends.\nClick the red button to invite them.</string>

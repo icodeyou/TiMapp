@@ -1,44 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
-    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <include layout="@layout/toolbar_layout" />
+
+    <com.timappweb.timapp.views.CategorySelectorView
+        android:id="@+id/category_selector"
+        app:color_background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/name_spot"
+        style="@style/labeledFormEditText"
+        android:hint="@string/hint_spot_name"
+        android:nextFocusForward="@+id/description_edit_text" />
+
+    <include
+        layout="@layout/progressview_fullscreen" />
+
+    <TextView
+        android:id="@+id/no_data_view"
+        style="@style/NoDataView"
+        android:layout_height="wrap_content"
+        android:text="@string/no_data_spot"/>
+
+    <com.timappweb.timapp.views.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <include layout="@layout/toolbar_layout" />
-
-        <com.timappweb.timapp.views.CategorySelectorView
-            android:id="@+id/category_selector"
-            app:color_background="@color/colorPrimary"
+        android:id="@+id/swipe_refresh_layout">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/spots_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/name_spot"
-            style="@style/labeledFormEditText"
-            android:hint="@string/hint_spot_name"
-            android:nextFocusForward="@+id/description_edit_text" />
-
-        <include
-            layout="@layout/progressview_fullscreen" />
-
-        <TextView
-            android:id="@+id/no_data_view"
-            style="@style/NoDataView"
-            android:layout_height="wrap_content"
-            android:text="@string/no_data_spot"/>
-
-        <com.timappweb.timapp.views.SwipeRefreshLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/swipe_refresh_layout">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/spots_rv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.timappweb.timapp.views.SwipeRefreshLayout>
-    </LinearLayout>
-</ScrollView>
+    </com.timappweb.timapp.views.SwipeRefreshLayout>
+</LinearLayout>

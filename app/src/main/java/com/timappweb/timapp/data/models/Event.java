@@ -321,7 +321,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public static boolean isValidName(String name) {
-        return name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
+        return name != null && name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
     }
 
     private static int computeLevel(int points) {
