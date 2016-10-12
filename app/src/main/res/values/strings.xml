@@ -135,6 +135,7 @@
             <string name="i_am_coming">I\'m coming</string>
             <string name="i_am_here">I\'m here</string>
             <string name="next_to_you">Next to you</string>
+            <string name="last_activity">Last activity :</string>
         <!-- Fragment Picture -->
             <string name="no_pic">There isn\'t any picture here yet.</string>
             <string name="uploading_pic">Uploading picture</string>

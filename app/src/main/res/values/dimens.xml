@@ -57,8 +57,8 @@
     <dimen name="default_text_padding">15dp</dimen>
     <dimen name="small_text_padding">8dp</dimen>
     <dimen name="text_tiny">8dp</dimen>
-    <dimen name="text_small">12dp</dimen>
-    <dimen name="text_normal">16dp</dimen>
+    <dimen name="text_small">14dp</dimen>
+    <dimen name="text_normal">17dp</dimen>
     <dimen name="text_big">23dp</dimen>
     <dimen name="title_event_card">18dp</dimen>
     <dimen name="text_huge">30dp</dimen>
@@ -167,6 +167,7 @@
     <dimen name="corner_map">20dp</dimen>
     <dimen name="width_divider">1dp</dimen>
     <dimen name="margin_cards_scroll">5dp</dimen>
+    <dimen name="height_item_list">220dp</dimen>
 
     <item name="shring_coef" type="dimen">90%</item>
 </resources>

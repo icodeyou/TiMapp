@@ -92,4 +92,7 @@ public class SimpleTimerView extends TextSwitcher {
         return points;
     }
 
+    public void setText(int string) {
+        setText(this.getResources().getString(string));
+    }
 }

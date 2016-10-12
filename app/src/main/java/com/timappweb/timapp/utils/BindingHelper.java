@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.github.florent37.materialviewpager.header.MaterialViewPagerImageHelper;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.views.SimpleTimerView;
 
@@ -56,7 +57,12 @@ public class BindingHelper {
     @BindingAdapter("app:timerEvent")
     public static void setEvent(SimpleTimerView timerView, Event event) {
         if(event != null) {
-            timerView.initTimer(event.getPoints());
+            if(event.isOver()) {
+                timerView.setText(R.string.counter_over);
+            }
+            else {
+                timerView.initTimer(event.getPoints());
+            }
         }
     }
 
