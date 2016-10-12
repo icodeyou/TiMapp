@@ -3,4 +3,11 @@
     <bool name="event_animateHeaderImage">false</bool>
     <bool name="event_animateCountDownTimer">true</bool>
     <bool name="eventcard_showProgressBarLocation">true</bool>
+
+
+    <string-array name="facebook_login_scope">
+        <item>email</item>
+        <item>public_profile</item>
+        <item>user_friends</item>
+    </string-array>
 </resources>

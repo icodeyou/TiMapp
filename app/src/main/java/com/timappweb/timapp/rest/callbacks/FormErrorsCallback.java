@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
-import com.timappweb.timapp.rest.io.responses.RestValidationErrorParser;
+import com.timappweb.timapp.rest.io.responses.ServerValidationParser;
 
 import java.net.HttpURLConnection;
 
@@ -33,7 +33,7 @@ public class FormErrorsCallback extends HttpCallback {
 
     @Override
     public void badRequest(RestValidationError validationError) {
-        RestValidationErrorParser errors = validationError.getErrors();
+        ServerValidationParser errors = validationError.getErrors();
 
         if (errors.has(prefix + ".Quota")){
             Toast.makeText(this.context, errors.getMessage(prefix+".Quota"), Toast.LENGTH_SHORT).show();

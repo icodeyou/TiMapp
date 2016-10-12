@@ -23,7 +23,7 @@ public class RestValidationError extends RestResponse {
 
     // =============================================================================================
 
-    private RestValidationErrorParser parsedErrors;
+    private ServerValidationParser parsedErrors;
 
     // =============================================================================================
 
@@ -45,9 +45,9 @@ public class RestValidationError extends RestResponse {
         return "RestValidationError[code: "+code+"; message=" + message + ";]";
     }
 
-    public RestValidationErrorParser getErrors(){
+    public ServerValidationParser getErrors(){
         if (this.parsedErrors == null){
-            this.parsedErrors = new RestValidationErrorParser(this.errors);
+            this.parsedErrors = new ServerValidationParser(this.errors);
         }
         return this.parsedErrors;
     }

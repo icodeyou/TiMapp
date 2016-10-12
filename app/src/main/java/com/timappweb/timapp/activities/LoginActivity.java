@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -125,7 +126,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
     private void initFacebookButton() {
         // Initialize Facebook Login button
         mFacebookCallbackManager = CallbackManager.Factory.create();
-        loginButton.setReadPermissions("email", "public_profile", "user_friends"); // TODO params
+        loginButton.setReadPermissions(getResources().getStringArray(R.array.facebook_login_scope));
         loginButton.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {

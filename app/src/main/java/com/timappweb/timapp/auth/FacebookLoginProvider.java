@@ -1,6 +1,5 @@
 package com.timappweb.timapp.auth;
 
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.firebase.iid.FirebaseInstanceId;

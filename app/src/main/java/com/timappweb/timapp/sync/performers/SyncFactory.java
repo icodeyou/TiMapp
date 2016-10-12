@@ -1,5 +1,6 @@
 package com.timappweb.timapp.sync.performers;
 
+import com.facebook.AccessToken;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserFriend;
@@ -23,6 +24,7 @@ import retrofit2.Call;
 public class SyncFactory {
 
     public static FullTableSyncPerformer syncFriends(final SyncResultMessage syncResultMessage) {
+
         return new FullTableSyncPerformer(UserFriend.class)
                 .setCallback(new FullTableSyncPerformer.Callback<UserFriend>() {
                     @Override
@@ -38,6 +40,9 @@ public class SyncFactory {
                 .setRemoteLoader(new DataSyncAdapter.RemoteLoader<ResponseSyncWrapper, UserFriend>() {
                     @Override
                     protected Call getCall(HashMap options) {
+                        AccessToken.refreshCurrentAccessTokenAsync();
+                        String accessToken = AccessToken.getCurrentAccessToken().getToken();
+                        options.put("fb_access_token", accessToken);
                         return RestClient.service().friends(options);
                     }
 

@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.location.Location;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
-import com.timappweb.timapp.fragments.ExploreMapFragment;
 import com.timappweb.timapp.utils.DistanceHelper;
-import com.timappweb.timapp.utils.Util;
 
 import java.util.HashSet;
 import java.util.LinkedList;
