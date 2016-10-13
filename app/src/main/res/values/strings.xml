@@ -234,7 +234,11 @@
     <string name="define_yourself">Define yourself</string>
     <string name="submit">Submit</string>
 
-    <!-- InvitationsActivities -->
+    <!-- ComingSoonActivity -->
+    <string name="coming_soon">Coming soon</string>
+    <string name="coming_soon_subtitle">Like us on Facebook and download the beta version !</string>
+
+    <!-- InvitationsActivity -->
     <string name="text_no_invitations">No invitation at the moment</string>
     <string name="friend_already_invited">Invitation already sent!</string>
 

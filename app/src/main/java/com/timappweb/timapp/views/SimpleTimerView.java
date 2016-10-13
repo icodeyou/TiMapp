@@ -1,10 +1,12 @@
 package com.timappweb.timapp.views;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,8 +21,11 @@ import com.timappweb.timapp.R;
 @BindingMethods(@BindingMethod(type = SimpleTimerView.class, attribute = "myattrs:initialTime", method = "initBindingTime"))
 public class SimpleTimerView extends TextSwitcher {
     private static int COUNTDOWNINTERVAL = 1000;
+    private static final long TIMELAPSE_HOT_ANIM = 2000;
+    private static final String TAG = "SimpleTimerView";
 
     private CountDownTimer countDownTimer;
+    private int remainingSeconds;
 
     public SimpleTimerView(Context context) {
         super(context);
@@ -54,6 +59,7 @@ public class SimpleTimerView extends TextSwitcher {
     }
 
     public void initTimer(long initialTimeSec) {
+        Log.d(TAG, "Inializing timer");
         if (countDownTimer != null){
             countDownTimer.cancel();
         }
@@ -62,7 +68,8 @@ public class SimpleTimerView extends TextSwitcher {
             countDownTimer = new CountDownTimer(initialTimeSec *1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
-                    SimpleTimerView.this.setText(String.valueOf(millisUntilFinished / 1000));
+                    remainingSeconds = (int) (millisUntilFinished / 1000);
+                    SimpleTimerView.this.setText(String.valueOf(remainingSeconds));
                 }
 
                 public void onFinish() {
@@ -94,5 +101,39 @@ public class SimpleTimerView extends TextSwitcher {
 
     public void setText(int string) {
         setText(this.getResources().getString(string));
+    }
+
+    public void animPointsTo(int newPoints) {
+        ValueAnimator animator = new ValueAnimator();
+        cancelTimer();
+
+        int initialPoints;
+        if(remainingSeconds>0) {
+            initialPoints = remainingSeconds;
+        }
+        else {
+            initialPoints = 0;
+        }
+
+        final int pointsAdded = newPoints - getPoints();
+        int finalPoints = (int) (initialPoints + pointsAdded - TIMELAPSE_HOT_ANIM/1000);
+
+        Log.d(TAG, "Initial points : " + initialPoints + ". Final points : " + finalPoints);
+        animator.setObjectValues(initialPoints, finalPoints);
+        animator.setDuration(TIMELAPSE_HOT_ANIM);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                setText(String.valueOf(animation.getAnimatedValue()));
+            }
+        });
+        animator.start();
+        if(finalPoints<=0) {
+            cancelTimer();
+            Log.d(TAG, "Set timer text to Over");
+            setText(getResources().getString(R.string.counter_over));
+        } else {
+            Log.d(TAG, "Initializing timer to " + finalPoints);
+            initTimer(finalPoints);
+        }
     }
 }
