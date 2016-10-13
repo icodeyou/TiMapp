@@ -110,7 +110,7 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
     private void continueToActivity(){
         if (MyApplication.isLoggedIn()){
             Event currentEvent = EventStatusManager.getCurrentEvent();
-            if (currentEvent != null && currentEvent.isAccessible()){
+            if (currentEvent != null){
                 IntentsUtils.viewSpecifiedEvent(SplashActivity.this, currentEvent);
             }
             else{

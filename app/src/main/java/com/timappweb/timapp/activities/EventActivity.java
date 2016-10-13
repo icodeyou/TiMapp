@@ -309,12 +309,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             event.addPropertyChangeListener(Event.PROPERTY_POINTS, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent event) {
-                    if (!EventActivity.this.event.isAccessible()){
-                        EventActivity.this.onEventInaccessible();
-                    }
-                    else{
-                        if (fragmentInformation!= null && fragmentInformation.getView() != null) fragmentInformation.updatePointsView(EventActivity.this.event.getPoints());
-                    }
+                    if (fragmentInformation!= null && fragmentInformation.getView() != null) fragmentInformation.updatePointsView(EventActivity.this.event.getPoints());
                 }
 
             });

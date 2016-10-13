@@ -513,13 +513,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return Util.secondsDurationToPrettyTime(inactivityDuration);
     }
 
-    /**
-     * Return true if this event can be accessed
-     * @return
-     */
-    public boolean isAccessible(){
-        return !this.isOver();
-    }
 
     public void setLocation(Location location) {
         this.latitude = location.getLatitude();
