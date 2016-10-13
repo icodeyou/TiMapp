@@ -155,7 +155,7 @@
     <dimen name="width_icon_pick_category">80dp</dimen>
     <dimen name="padding_event_bottom_view">10dp</dimen>
     <dimen name="width_locate_button">60dp</dimen>
-    <dimen name="padding_bottom_map">15dp</dimen>
+    <dimen name="padding_bottom_map">10dp</dimen>
     <dimen name="margin_medium">12dp</dimen>
     <dimen name="margin_top_layout_event_info">37dp</dimen>
     <dimen name="margin_map_fab">11dp</dimen>
@@ -167,7 +167,7 @@
     <dimen name="corner_map">20dp</dimen>
     <dimen name="width_divider">1dp</dimen>
     <dimen name="margin_cards_scroll">5dp</dimen>
-    <dimen name="height_item_list">220dp</dimen>
+    <dimen name="height_item_list">240dp</dimen>
 
     <item name="shring_coef" type="dimen">90%</item>
 </resources>

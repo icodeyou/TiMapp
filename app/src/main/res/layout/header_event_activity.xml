@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/cross"
+            android:src="@drawable/photo_event_default"
             android:alpha="1"
             app:event="@{event}"/>
 

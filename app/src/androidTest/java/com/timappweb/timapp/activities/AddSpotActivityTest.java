@@ -62,6 +62,7 @@ public class AddSpotActivityTest extends AbstractActivityTest{
         addSpotForm
                 .submit()
                 .setCategory(1)
+                .submit()
                 .setName("New name")
                 .submit()
                 .setCategory(2)
