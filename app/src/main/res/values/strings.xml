@@ -44,6 +44,7 @@
     <string name="nav_community">Community</string>
     <string name="nav_account">Account</string>
     <string name="nav_how_it_works">How it works</string>>
+    <string name="nav_add_event">Add an event</string>
     <!-- Menus action bar-->
     <string name="menu_share">Share</string>
     <string name="menu_edit_profile">Edit profile</string>
@@ -52,6 +53,7 @@
     <string name="search_button_empty">Clear Filter</string>
     <string name="invite_button">Invite</string>
     <string name="action_post">Post</string>
+    <string name="action_get_friends">Get Friends</string>
     <string name="action_list">List</string>
     <string name="action_select_all">Select all</string>
     <string name="action_unselect_all">Unselect all</string>

@@ -3,6 +3,8 @@ package com.timappweb.timapp.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.timappweb.timapp.R;
@@ -56,7 +58,6 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
 
         initAdapter();
         initLoader();
-        initListener();
     }
 
     private void initAdapter() {
@@ -88,13 +89,20 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
         mFriendsLoader.refresh();
     }
 
-    private void initListener() {
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.actionShareApp(ListFriendsActivity.this);
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_list_friends, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_get_friends:
+                IntentsUtils.actionShareApp(this);
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -114,7 +122,7 @@ public class ListFriendsActivity extends BaseActivity implements SyncDataLoader.
         mAdapter.setData(data);
         progressView.setVisibility(View.GONE);
         noFriendsView.setVisibility (mAdapter.hasData()
-                ? View.VISIBLE // todo gone
+                ? View.GONE
                 : View.VISIBLE);
     }
 

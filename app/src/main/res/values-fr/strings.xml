@@ -24,6 +24,7 @@
     <string name="nav_community">Communauté</string>
     <string name="nav_account">Mon compte</string>
     <string name="nav_how_it_works">Comment ça marche ?</string>
+    <string name="nav_add_event">Ajouter un événement</string>
 
 
     <!-- Menus action bar-->
@@ -34,6 +35,7 @@
     <string name="search_button_empty">Effacer la recherche</string>
     <string name="invite_button">Inviter</string>
     <string name="action_post">Publier</string>
+    <string name="action_get_friends">Trouver des amis</string>
     <string name="action_list">List</string>
     <string name="action_select_all">Select all</string>
     <string name="action_unselect_all">Unselect all</string>

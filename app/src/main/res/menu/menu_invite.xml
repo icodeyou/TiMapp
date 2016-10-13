@@ -15,4 +15,9 @@
         android:icon="@drawable/trashcan_white"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_get_friends"
+        android:title="@string/action_get_friends"
+        android:icon="@drawable/get_friends"
+        app:showAsAction="never" />
+
 </menu>

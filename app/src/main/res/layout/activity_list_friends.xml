@@ -24,21 +24,10 @@
                     android:visibility="visible"/>
         </com.timappweb.timapp.views.SwipeRefreshLayout>
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/no_data_view_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-            <TextView
-                style="@style/NoDataView"
-                android:text="@string/no_friends"/>
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_alignParentBottom="true"
-                layout="@layout/share_layout" />
-        </RelativeLayout>
+            style="@style/NoDataView"
+            android:text="@string/no_friends"/>
 
     </RelativeLayout>
 </LinearLayout>

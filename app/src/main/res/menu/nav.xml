@@ -8,7 +8,7 @@
             <item android:id="@+id/menu_item_explore" android:icon="@android:drawable/ic_dialog_map"
                 android:title="@string/title_activity_explore" android:visible="false"/>
             <item android:id="@+id/menu_item_add_event" android:icon="@drawable/plus_grey"
-                android:title="@string/title_activity_add_event" />
+                android:title="@string/nav_add_event" />
             <item android:id="@+id/menu_item_my_invitations" android:icon="@android:drawable/ic_dialog_email"
                 android:title="@string/title_activity_invitations" />
             <item android:id="@+id/menu_item_my_friends" android:icon="@drawable/people"
