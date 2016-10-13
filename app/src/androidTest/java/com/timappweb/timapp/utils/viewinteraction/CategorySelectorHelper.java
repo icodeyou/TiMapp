@@ -28,6 +28,8 @@ public class CategorySelectorHelper {
     public void selectByPosition(int position) {
         if (position >= CategorySelectorView.NUMBER_OF_MAIN_CATEGORIES){
             this.open();
+            this.close();
+            this.open();
             allCategories
                     .perform(RecyclerViewActions.actionOnItemAtPosition(position, click()));
         }

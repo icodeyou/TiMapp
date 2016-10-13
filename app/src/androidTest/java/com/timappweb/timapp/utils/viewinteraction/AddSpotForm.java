@@ -41,6 +41,17 @@ public class AddSpotForm extends FormHelper {
         return this;
     }
 
+    public AddSpotForm tryAll(String name) {
+        this.submit()
+                .setName("Test")
+                .submit()
+                .setCategory(2)
+                .setName("")
+                .submit()
+                .setName(name);
+        return this;
+    }
+
     public AddSpotForm selectExistingSpot(int position) {
         spotRV
                 .clickItem(position);
