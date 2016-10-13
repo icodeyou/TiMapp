@@ -12,8 +12,13 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.messaging.RemoteMessage.Notification;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
+import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.activities.SplashActivity;
+import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.utils.NotificationFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Stephane on 29/09/2016.
@@ -33,8 +38,15 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         String from = message.getFrom();
         Log.d(TAG, "Message received from: " + from);
         // Check if message contains a data payload.
+        Intent intent = null;
+
         if (message.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + message.getData());
+            Map<String, String> data = message.getData();
+            if (data.containsKey("place_id")){
+                long eventId = Long.parseLong(data.get("place_id"));
+                intent = IntentsUtils.buildIntentViewPlace(this, eventId);
+            }
         }
 
         // Check if message contains a notification payload.
@@ -47,7 +59,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification: " + notification);
             // Also if you intend on generating your own notifications as a result of a received FCM
             // message, here is where that should be initiated. See sendNotification method below.
-            sendNotification(notification);
+            if (intent == null){
+                intent = new Intent(this, SplashActivity.class);
+            }
+            sendNotification(notification, intent);
         }
     }
 
@@ -56,11 +71,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
      * Create and show a simple notification containing the received GCM message.
      *
      */
-    private void sendNotification(Notification notification) {
-        Intent intent = new Intent(this, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    private int sendNotification(Notification notification, Intent intent) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         Context context = MyApplication.getApplicationBaseContext();
-        int id = NotificationFactory.build(context,
+        return NotificationFactory.build(context,
                 R.drawable.ic_cloud, // TODO JACK set icon timapp notification
                 notification.getTitle() != null ? notification.getTitle() : context.getString(R.string.app_name),
                 notification.getBody(),

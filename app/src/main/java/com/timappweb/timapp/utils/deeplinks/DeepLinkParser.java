@@ -52,7 +52,7 @@ public class DeepLinkParser {
                                 if (result.getStatus().isSuccess()) {
                                     Intent intent = result.getInvitationIntent();
                                     String deepLink = AppInviteReferral.getDeepLink(intent);
-                                    Log.d(TAG, "Processing " + deepLink);
+                                    Log.i(TAG, "Processing " + deepLink);
                                     try {
                                         deepLink = new URL(deepLink).getPath();
                                      // Extract deep link from Intent
