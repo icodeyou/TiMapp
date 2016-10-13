@@ -72,9 +72,9 @@ public class AddEventForm  extends FormHelper {
 
     public AddEventForm tryAll(String name) {
         this.submit()
-            .setName(name)
+            .setName("Test")
             .submit()
-            .setCategory(4)
+            .setCategory(7)
             .setName("")
             .submit()
             .setName(name);
@@ -87,7 +87,7 @@ public class AddEventForm  extends FormHelper {
         return this;
     }
 
-    public AddEventForm addSpot() {
+    public AddEventForm openSpotActivity() {
         onView(withId(R.id.button_add_spot))
                 .perform(click());
         ActivityHelper.assertCurrentActivity(AddSpotActivity.class);

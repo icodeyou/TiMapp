@@ -12,9 +12,13 @@
     <!-- It doesn't matter for now because the list of friends is short.. But that may be annoying
      not to see clearly our selected friends with a long list of friends-->
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <TextView
+            style="@style/NoDataView"
+            android:id="@+id/no_invitations_view"
+            android:text="@string/text_no_invitations"/>
 
         <com.timappweb.timapp.views.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
@@ -31,11 +35,6 @@
             <!--android:listSelector="@android:color/transparent"-->
         </com.timappweb.timapp.views.SwipeRefreshLayout>
 
-        <TextView
-            style="@style/NoDataView"
-            android:id="@+id/no_invitations_view"
-            android:text="@string/text_no_invitations"/>
-
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

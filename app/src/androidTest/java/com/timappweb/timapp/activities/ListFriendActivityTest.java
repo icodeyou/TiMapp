@@ -7,7 +7,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
@@ -20,9 +19,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.greaterThan;
 
 /**
@@ -68,5 +64,12 @@ public class ListFriendActivityTest extends AbstractActivityTest {
         ActivityHelper.assertCurrentActivity(ProfileActivity.class);
     }
 
-    // TODO add test when user does not have any friends
+    @CreateConfigAction
+    @CreateAuthAction(payloadId = "132743310518589") //ID of User without friends
+    @Test
+    public void testNoDataView() {
+        TestUtil.sleep(3000); // Tmp fix, while there are no loader on friends activity
+        //TODO Refresh.
+    }
+
 }

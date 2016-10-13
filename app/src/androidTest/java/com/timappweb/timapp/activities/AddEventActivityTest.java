@@ -124,7 +124,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
 
         AddEventForm addEventForm = new AddEventForm()
                 .tryAll(eventName, eventDescription)
-                .addSpot();
+                .openSpotActivity();
 
         new AddSpotForm()
                 .waitForExistingSpotLoad()
@@ -149,11 +149,10 @@ public class AddEventActivityTest extends AbstractActivityTest {
 
         AddEventForm addEventForm = new AddEventForm()
                 .tryAll(eventName, eventDescription)
-                .addSpot();
+                .openSpotActivity();
 
         new AddSpotForm()
-                .setName(spotName)
-                .setCategory(0)
+                .tryAll(spotName)
                 .submit();
 
         ActivityHelper.assertCurrentActivity(AddEventActivity.class);
@@ -171,24 +170,12 @@ public class AddEventActivityTest extends AbstractActivityTest {
     public void postValidationErrors() {
         this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
         String wrongName = "O";
-        String validName = DummyEventFactory.uniqName();
 
-        AddEventForm addEventForm = new AddEventForm()
-                .tryAll(wrongName)
+        new AddEventForm()
+                .setName(wrongName)
                 .submit();
 
         ActivityHelper.assertCurrentActivity(AddEventActivity.class);
-
-        // Waiting for user fine location...
-        this.waitForFineLocation();
-
-        addEventForm
-                .setName(validName)
-                .submit();
-
-        ActivityHelper.assertCurrentActivity(EventActivity.class);
-
-        //addEventForm.assertNameError();
     }
 
     /***
@@ -202,13 +189,10 @@ public class AddEventActivityTest extends AbstractActivityTest {
         String spotName = "My new spot unique";
 
         AddEventForm addEventForm = new AddEventForm()
-                .addSpot();
+                .openSpotActivity();
 
         AddSpotForm addSpotForm = new AddSpotForm()
-                .submit()
-                .setName(spotName)
-                .submit()
-                .setCategory(1)
+                .tryAll(spotName)
                 .submit();
 
         addEventForm.editSpot(); // TODO Manage click on ContextMenu -_-
@@ -228,11 +212,7 @@ public class AddEventActivityTest extends AbstractActivityTest {
         String eventDescription = "";
 
         AddEventForm addEventForm = new AddEventForm()
-                .submit()
-                .setCategory(0)
-                .submit()
-                .setName(eventName)
-                .setDescription(eventDescription)
+                .tryAll(eventName, eventDescription)
                 .submit();
 
         ActivityHelper.assertCurrentActivity(AddEventActivity.class);

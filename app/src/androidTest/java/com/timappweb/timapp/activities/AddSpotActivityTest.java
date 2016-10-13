@@ -4,6 +4,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import com.timappweb.timapp.data.models.dummy.DummySpotFactory;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
@@ -57,15 +58,11 @@ public class AddSpotActivityTest extends AbstractActivityTest{
     @Test
     @CreateConfigAction
     @CreateAuthAction
-    public void createNewSpot(){
+    public void createNewSpot() {
         this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
+        String spotName = DummySpotFactory.uniqName();
         addSpotForm
-                .submit()
-                .setCategory(1)
-                .submit()
-                .setName("New name")
-                .submit()
-                .setCategory(2)
+                .tryAll(spotName)
                 .submit();
     }
 
