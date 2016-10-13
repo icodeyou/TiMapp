@@ -20,7 +20,7 @@ import retrofit2.Call;
 /**
  * Created by Stephane on 10/10/2016.
  */
-public class FacebookLoginProvider implements AuthManager.LoginMethod<LoginResult, AccessToken> {
+public class FacebookLoginProvider implements AuthManager.LoginMethod<JsonObject, AccessToken> {
     private static final String TAG = "FacebookLoginProvider";
 
     AccessTokenTracker mAccessTokenTracker;
@@ -66,8 +66,7 @@ public class FacebookLoginProvider implements AuthManager.LoginMethod<LoginResul
     }
 
     @Override
-    public Call<JsonObject> login(LoginResult loginResult) {
-        JsonObject data = createPayload(loginResult.getAccessToken().getToken(), FirebaseInstanceId.getInstance().getId());
+    public Call<JsonObject> login(JsonObject data) {
         return RestClient.service().facebookLogin(data);
     }
 
@@ -90,11 +89,19 @@ public class FacebookLoginProvider implements AuthManager.LoginMethod<LoginResul
         }
     }
 
+    @Override
+    public String getUid() throws AuthManager.NoProviderAccessTokenException {
+        if (AccessToken.getCurrentAccessToken() != null){
+            return AccessToken.getCurrentAccessToken().getUserId();
+        }
+        throw new AuthManager.NoProviderAccessTokenException();
+    }
 
-    public static JsonObject createPayload(String accessToken, String appId) {
+
+    public static JsonObject createPayload(String accessToken) {
         JsonObject object = new JsonObject();
         object.addProperty("access_token", accessToken);
-        object.addProperty("app_id", appId);
+        object.addProperty("app_id", FirebaseInstanceId.getInstance().getId());
         //object.addProperty("provider_id", SocialProvider.FACEBOOK.toString());
         return object;
     }

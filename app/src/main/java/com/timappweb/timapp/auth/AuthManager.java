@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.facebook.AccessToken;
-import com.facebook.login.LoginResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -17,9 +13,7 @@ import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.ServerErrorResponse;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.services.MyInstanceIDListenerService;
 import com.timappweb.timapp.utils.JsonAccessor;
@@ -27,7 +21,6 @@ import com.timappweb.timapp.utils.KeyValueStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,7 +39,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
     public static final String  KEY_IS_LOGIN            = "IsLoggedIn";
     private static final String KEY_LOGIN_TIME          = "LoginTime";
     public static final String  KEY_ID                  = "user.id";
-    public static final String  PROVIDER_ID                  = "provider.id";
+    public static final String KEY_PROVIDER_ID = "provider.id";
 
     // ---------------------------------------------------------------------------------------------
 
@@ -87,7 +80,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
 
     @Override
     public void logout() {
-        KeyValueStorage.clear(KEY_TOKEN, KEY_IS_LOGIN, KEY_ID);
+        KeyValueStorage.clear(KEY_TOKEN, KEY_IS_LOGIN, KEY_ID, KEY_PROVIDER_ID);
         FirebaseAuth.getInstance().signOut();
         currentUser = null;
         mCurrentProvider = null;
@@ -163,7 +156,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
             KeyValueStorage.in()
                     .putString(KEY_TOKEN, token)
                     .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
-                    .putString(PROVIDER_ID, loginMethod.getId().toString())
+                    .putString(KEY_PROVIDER_ID, loginMethod.getId().toString())
                     .commit();
             Log.i(TAG, "Trying to localLogin user: " + user);
 
@@ -180,7 +173,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
     }
 
     public void restoreSession(){
-        String providerStr = KeyValueStorage.out().getString(PROVIDER_ID, "");
+        String providerStr = KeyValueStorage.out().getString(KEY_PROVIDER_ID, "");
         SocialProvider provider = SocialProvider.fromString(providerStr);
         if (provider != null && this.hasProvider(provider)){
             Log.i(TAG, "Restoring session with provider: " + provider);
@@ -267,6 +260,16 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         this.mAuthProviders.put(instance.getId(), instance);
         return this;
     }
+
+    public boolean isLoggedWithProvider(SocialProvider provider, String uid) {
+        try {
+            return mCurrentProvider != null
+                    && mCurrentProvider == provider
+                    && getProvider(provider).getUid().equals(uid);
+        } catch (NoProviderAccessTokenException e) {
+            return false;
+        }
+    }
     // ---------------------------------------------------------------------------------------------
 
     public class CannotLoginException extends Exception {
@@ -296,10 +299,14 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         String getAccessToken() throws AuthManager.NoProviderAccessTokenException;
 
         void restoreSession();
+
+        String getUid() throws NoProviderAccessTokenException;
     }
 
     public static class NoProviderAccessTokenException extends Exception{
-
+        public NoProviderAccessTokenException() {
+            super("No provider token");
+        }
     }
 
     public class LoginFeedback extends JsonAccessor{

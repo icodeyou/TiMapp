@@ -5,9 +5,13 @@ import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 
+import com.facebook.login.LoginResult;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthManager;
+import com.timappweb.timapp.auth.FacebookLoginProvider;
+import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.fixtures.UsersFixture;
 import com.timappweb.timapp.rest.RestClient;
@@ -52,7 +56,7 @@ public class AbstractActivityTest {
     @Rule
     public TestAnnotated testAnnoted = new TestAnnotated();
 
-    public void beforeTest() {
+    public void beforeTest(){
         FacebookApiHelper.init();
 
         if (testAnnoted.getClearAuth() != null) {
@@ -84,45 +88,29 @@ public class AbstractActivityTest {
 
         if (testAnnoted.getCreateAuthAction() != null) {
             CreateAuthAction createAuthAction = testAnnoted.getCreateAuthAction();
-            if (!MyApplication.isLoggedIn() || createAuthAction.replaceIfExists()) {
+            if ( createAuthAction.replaceIfExists()
+                    || !MyApplication.isLoggedIn()
+                    || (!MyApplication.getAuthManager().isLoggedWithProvider(createAuthAction.providerId(), createAuthAction.payloadId()))) {
                 UsersFixture.init();
-                final JsonObject loginPayload = UsersFixture.getLoginPayload(createAuthAction.payloadId());
+                AuthManager.LoginMethod loginMethod = MyApplication.getAuthManager().getProvider(createAuthAction.providerId());
+                Object loginPayload = UsersFixture.getLoginPayload(createAuthAction.providerId(), createAuthAction.payloadId());
                 Log.i(TAG, "@BeforeTest: Login with payload: " + loginPayload);
-                MyApplication
-                        .getAuthManager()
-                        .logWith(new AuthManager.LoginMethod<JsonObject, String>() {
-                            @Override
-                            public Call<JsonObject> login(JsonObject data) {
-                                return RestClient.service().facebookLogin(data);
-                            }
-
-                            @Override
-                            public void cancelLogin() {
-
-                            }
-
-                            @Override
-                            public void onCurrentAccessTokenChanged(String oldAccessToken, String currentAccessToken) {
-
-                            }
-
-                            @Override
-                            public void onPermissionRevoked() {
-
-                            }
-
-                            @Override
-                            public String getAccessToken() throws AuthManager.NoProviderAccessTokenException {
-                                return loginPayload.get("access_token").getAsString();
-                            }
-                        }, loginPayload)
-                        .onFinally(new HttpCallManager.FinallyCallback() {
-                            @Override
-                            public void onFinally(Response response, Throwable error) {
-                                assertTrue("User must be logged in", MyApplication.isLoggedIn());
-                            }
-                        });
-                TestUtil.sleep(10000);
+                    MyApplication.getAuthManager()
+                            .logWith(loginMethod, loginPayload)
+                            .onFinally(new HttpCallManager.FinallyCallback() {
+                                @Override
+                                public void onFinally(Response response, Throwable error) {
+                                    synchronized (AbstractActivityTest.this){
+                                        AbstractActivityTest.this.notify();
+                                    }
+                                }
+                            });
+                synchronized (this){
+                    try {
+                        this.wait();
+                    } catch (InterruptedException e) {}
+                }
+                assertTrue("User must be logged in", MyApplication.isLoggedIn());
             }
         }
 

@@ -265,7 +265,7 @@ public class AddSpotActivity extends BaseActivity implements
                 finish();
                 return true;
             case R.id.action_create:
-                if(Spot.isValidName(currentSpot.getName())) {
+                if(!Spot.isValidName(currentSpot.getName())) {
                     Toast.makeText(AddSpotActivity.this, R.string.error_no_name_spot, Toast.LENGTH_SHORT).show();
                     return true;
                 }

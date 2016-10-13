@@ -17,6 +17,6 @@
             android:textColor="@color/textLight"
             android:textSize="@dimen/title_event_card"
             android:text="@{event.name}"
-            tools:text="Le match de l'année à Saint-Cassien"/>
+            tools:text="Le match de l'année à Saint-Cassien City !"/>
     </LinearLayout>
 </layout>

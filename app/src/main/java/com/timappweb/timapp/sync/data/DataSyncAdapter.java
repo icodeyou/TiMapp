@@ -27,6 +27,7 @@ import android.util.Log;
 import com.activeandroid.query.Delete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
@@ -213,6 +214,9 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
         }
         catch (Exception e) {
             Log.e(TAG, "Cannot sync: " + e.getMessage());
+            if (BuildConfig.DEBUG){
+                e.printStackTrace();
+            }
             syncResultMessage.setError(e);
             EventBus.getDefault().post(syncResultMessage);
         }

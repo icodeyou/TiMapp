@@ -261,7 +261,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         postButton = menu.findItem(R.id.action_post);
         //setButtonValidation();
 
-        if(BuildConfig.DEBUG) initDebugView();
+        if(BuildConfig.BUILD_TYPE == "debug") initDebugView();
         return true;
     }
 

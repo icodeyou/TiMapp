@@ -131,7 +131,7 @@ public interface WebServiceInterface {
     @GET("UserFriends/index")
     Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);
 
-    @POST("UserJsonObjectFriends/request_sync/{providerId}")
+    @POST("UserFriends/request_sync/{providerId}")
     Call<Void> requestSyncFriends(@Path("providerId") String providerId, @Body JsonObject body);
 
     @POST("users/edit")

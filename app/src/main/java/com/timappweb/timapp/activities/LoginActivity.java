@@ -17,6 +17,8 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.auth.AuthManager;
@@ -123,8 +125,10 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
                 Log.d(TAG, "facebook:onFirebaseLoginSuccess:" + loginResult);
                 setProgressVisibility(true);
                 FacebookLoginProvider facebookProvider = MyApplication.getAuthManager().getProvider(SocialProvider.FACEBOOK);
+                JsonObject data = FacebookLoginProvider.createPayload(loginResult.getAccessToken().getToken());
+
                 MyApplication.getAuthManager()
-                        .logWith(facebookProvider, loginResult)
+                        .logWith(facebookProvider, data)
                         .onFinally(new HttpCallManager.FinallyCallback() {
                             @Override
                             public void onFinally(Response response, Throwable error) {

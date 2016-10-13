@@ -41,9 +41,8 @@ public class ListFriendActivityTest extends AbstractActivityTest {
     public void setUp() throws Exception {
         this.idlingApiCall();
         this.systemAnimations(false);
-        this.startActivity();
-
         super.beforeTest();
+        this.startActivity();
     }
 
     @After

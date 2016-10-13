@@ -14,7 +14,6 @@ import com.timappweb.timapp.fixtures.EventsFixture;
 import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
-import com.timappweb.timapp.utils.annotations.AuthState;
 import com.timappweb.timapp.utils.annotations.ConfigState;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
@@ -30,9 +29,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.core.deps.guava.base.Preconditions.checkNotNull;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 17/08/2016.
@@ -55,9 +52,6 @@ public class ViewEventActivityTest extends AbstractActivityTest{
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EventsFixture.getPublicEvent());
         mActivityRule.launchActivity(intent);
         viewEventHelper = new ViewEventHelper();
-
-        //mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
-
         this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
             @Override
             public Location getNextLocation() {

@@ -1,6 +1,7 @@
 package com.timappweb.timapp.utils.annotations;
 
 import com.google.firebase.auth.FacebookAuthProvider;
+import com.timappweb.timapp.auth.SocialProvider;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,7 +17,7 @@ public @interface CreateAuthAction {
 
     boolean replaceIfExists() default false; // Replace the auth user if he is already logged in
 
-    String providerId() default FacebookAuthProvider.PROVIDER_ID;
+    SocialProvider providerId() default SocialProvider.FACEBOOK;
 
     String payloadId() default "124230051371760";
 
