@@ -1,11 +1,13 @@
 package com.timappweb.timapp.sync.performers;
 
 import android.hardware.camera2.params.Face;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserFriend;
@@ -28,20 +30,21 @@ import retrofit2.Call;
  */
 public class SyncFactory {
 
-    public static FullTableSyncPerformer syncFriends(final SyncResultMessage syncResultMessage) {
+    private static final String TAG = "SyncFactory";
 
-        if (!FacebookSdk.isInitialized()){
-            FacebookSdk.sdkInitialize(MyApplication.getApplicationBaseContext());
-        }
-        AccessToken.refreshCurrentAccessTokenAsync();
-        String accessToken = AccessToken.getCurrentAccessToken().getToken();
-        JsonObject options = new JsonObject();
-        options.addProperty("access_token", accessToken);
+    public static FullTableSyncPerformer syncFriends(final SyncResultMessage syncResultMessage) {
         try {
+            String accessToken = MyApplication.getAuthManager().getProviderToken();
+            JsonObject options = new JsonObject();
+            options.addProperty("access_token", accessToken);
             RestClient
                     .buildCall(RestClient.service().requestSyncFriends(SocialProvider.FACEBOOK.toString(), options))
                     .execute();
         } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        } catch (AuthManager.NoProviderAccessTokenException e) {
+            Log.e(TAG, e.getMessage());
             e.printStackTrace();
         }
 

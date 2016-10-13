@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.facebook.AccessToken;
 import com.facebook.login.LoginResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonElement;
@@ -25,6 +27,7 @@ import com.timappweb.timapp.utils.KeyValueStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,21 +46,43 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
     public static final String  KEY_IS_LOGIN            = "IsLoggedIn";
     private static final String KEY_LOGIN_TIME          = "LoginTime";
     public static final String  KEY_ID                  = "user.id";
+    public static final String  PROVIDER_ID                  = "provider.id";
 
     // ---------------------------------------------------------------------------------------------
 
-    private HashMap<String, AuthProviderInterface>  mAuthProviders = new HashMap<>();
+    //private HashMap<String, LoginMethod>  mAuthProviders = new HashMap<>();
     private boolean             _isUserLoaded           = false;
     private User                currentUser             = null;
     private List<AuthStateChangedListener> observers = new ArrayList<>();
 
+    private HashMap<SocialProvider, LoginMethod> mAuthProviders;
+    private SocialProvider mCurrentProvider;
+
     public AuthManager() {
         this.observers = new ArrayList<>();
+        this.mAuthProviders = new HashMap<>();
     }
 
     @Override
     public String getToken() {
-        return KeyValueStorage.out().getString(KEY_TOKEN, null);
+        return KeyValueStorage.out().getString(KEY_TOKEN, "");
+    }
+
+    public String getProviderToken() throws NoProviderAccessTokenException {
+        if (getCurrentProvider() == null){
+            Log.e(TAG, "User is not logged in with a provider");
+            throw new NoProviderAccessTokenException();
+        }
+        return getCurrentProvider().getAccessToken();
+    }
+
+    public LoginMethod getCurrentProvider(){
+        if (mCurrentProvider != null){
+            return this.mAuthProviders.get(this.mCurrentProvider);
+        }
+        else{
+            return null;
+        }
     }
 
     @Override
@@ -65,6 +90,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         KeyValueStorage.clear(KEY_TOKEN, KEY_IS_LOGIN, KEY_ID);
         FirebaseAuth.getInstance().signOut();
         currentUser = null;
+        mCurrentProvider = null;
 
         this.notifyLogout();
     }
@@ -120,20 +146,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         return null;
     }
 
-    public HttpCallManager remoteLogin(Call<JsonObject> call){
-        return RestClient.buildCall(call)
-                .onResponse(new HttpCallback<JsonObject>() {
-
-                    @Override
-                    public void successful(JsonObject feedback) throws CannotLoginException {
-                        AuthManager.this.localLogin(new LoginFeedback(feedback));
-                    }
-
-                })
-                .perform();
-    }
-
-    public boolean localLogin(LoginFeedback feedback) throws CannotLoginException {
+    public boolean localLogin(LoginMethod loginMethod, LoginFeedback feedback) throws CannotLoginException {
         try {
             int userId = (int) feedback.getUserId();
             User user = User.loadByRemoteId(User.class, userId);
@@ -150,6 +163,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
             KeyValueStorage.in()
                     .putString(KEY_TOKEN, token)
                     .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
+                    .putString(PROVIDER_ID, loginMethod.getId().toString())
                     .commit();
             Log.i(TAG, "Trying to localLogin user: " + user);
 
@@ -165,6 +179,20 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         }
     }
 
+    public void restoreSession(){
+        String providerStr = KeyValueStorage.out().getString(PROVIDER_ID, "");
+        SocialProvider provider = SocialProvider.fromString(providerStr);
+        if (provider != null && this.hasProvider(provider)){
+            Log.i(TAG, "Restoring session with provider: " + provider);
+            this.getProvider(provider).restoreSession();
+            mCurrentProvider = provider;
+        }
+    }
+
+    private boolean hasProvider(SocialProvider provider) {
+        return mAuthProviders.containsKey(provider);
+    }
+
     @Override
     public User getCurrentUser() {
         if (!_isUserLoaded){
@@ -175,6 +203,7 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
             }
             currentUser = User.loadByRemoteId(User.class, userId);
             Log.d(TAG, "Loading user form pref: " + currentUser);
+            this.restoreSession();
         }
 
         return currentUser;
@@ -185,9 +214,10 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         return getCurrentUser() != null;
     }
 
-    public AuthProviderInterface getProvider(String providerId) {
-        return this.mAuthProviders.get(providerId);
+    public <T extends LoginMethod> T getProvider(SocialProvider providerId) {
+        return (T) this.mAuthProviders.get(providerId);
     }
+
     // ---------------------------------------------------------------------------------------------
 
     private static void requestGcmToken(Context context) {
@@ -209,9 +239,19 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
                 .commit();
     }
 
-    public <InputType> HttpCallManager logWith(final LoginMethod<InputType> loginMethod, InputType data){
+    public <InputType> HttpCallManager logWith(final LoginMethod<InputType, ? extends Object> loginMethod, InputType data){
         Call call = loginMethod.login(data);
-        return this.remoteLogin(call)
+
+        return RestClient.buildCall(call)
+                .onResponse(new HttpCallback<JsonObject>() {
+
+                    @Override
+                    public void successful(JsonObject feedback) throws CannotLoginException {
+                        AuthManager.this.localLogin(loginMethod, new LoginFeedback(feedback));
+                        mCurrentProvider = loginMethod.getId();
+                    }
+
+                })
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {
@@ -219,7 +259,13 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
                             loginMethod.cancelLogin();
                         }
                     }
-                });
+                })
+                .perform();
+    }
+
+    public AuthManager addProvider(LoginMethod instance) {
+        this.mAuthProviders.put(instance.getId(), instance);
+        return this;
     }
     // ---------------------------------------------------------------------------------------------
 
@@ -235,11 +281,25 @@ public class AuthManager implements AuthManagerInterface<JsonObject>{
         void onLogout();
     }
 
-    public interface LoginMethod<InputType>{
+    public interface LoginMethod<InputType, AccessTokenType>{
+
+        SocialProvider getId();
 
         Call<JsonObject> login(InputType data);
 
         void cancelLogin();
+
+        void onCurrentAccessTokenChanged(AccessTokenType oldAccessToken, AccessTokenType currentAccessToken);
+
+        void onPermissionRevoked();
+
+        String getAccessToken() throws AuthManager.NoProviderAccessTokenException;
+
+        void restoreSession();
+    }
+
+    public static class NoProviderAccessTokenException extends Exception{
+
     }
 
     public class LoginFeedback extends JsonAccessor{

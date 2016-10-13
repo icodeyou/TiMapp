@@ -56,7 +56,7 @@ public class ViewEventActivityTest extends AbstractActivityTest{
         mActivityRule.launchActivity(intent);
         viewEventHelper = new ViewEventHelper();
 
-        mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
+        //mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
 
         this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
             @Override

@@ -1,7 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
-import android.location.Location;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
@@ -9,13 +8,10 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthManager;
-import com.timappweb.timapp.auth.AuthProviderInterface;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.fixtures.UsersFixture;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
@@ -33,7 +29,6 @@ import com.timappweb.timapp.utils.mocklocations.AbstractMockLocationProvider;
 import com.timappweb.timapp.utils.mocklocations.MockFusedLocationProvider;
 
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
@@ -41,7 +36,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -92,11 +86,11 @@ public class AbstractActivityTest {
             CreateAuthAction createAuthAction = testAnnoted.getCreateAuthAction();
             if (!MyApplication.isLoggedIn() || createAuthAction.replaceIfExists()) {
                 UsersFixture.init();
-                JsonObject loginPayload = UsersFixture.getLoginPayload(createAuthAction.payloadId());
+                final JsonObject loginPayload = UsersFixture.getLoginPayload(createAuthAction.payloadId());
                 Log.i(TAG, "@BeforeTest: Login with payload: " + loginPayload);
                 MyApplication
                         .getAuthManager()
-                        .logWith(new AuthManager.LoginMethod<JsonObject>() {
+                        .logWith(new AuthManager.LoginMethod<JsonObject, String>() {
                             @Override
                             public Call<JsonObject> login(JsonObject data) {
                                 return RestClient.service().facebookLogin(data);
@@ -105,6 +99,21 @@ public class AbstractActivityTest {
                             @Override
                             public void cancelLogin() {
 
+                            }
+
+                            @Override
+                            public void onCurrentAccessTokenChanged(String oldAccessToken, String currentAccessToken) {
+
+                            }
+
+                            @Override
+                            public void onPermissionRevoked() {
+
+                            }
+
+                            @Override
+                            public String getAccessToken() throws AuthManager.NoProviderAccessTokenException {
+                                return loginPayload.get("access_token").getAsString();
                             }
                         }, loginPayload)
                         .onFinally(new HttpCallManager.FinallyCallback() {

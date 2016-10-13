@@ -41,7 +41,7 @@ public abstract class AbstractMockLocationProvider {
         final Runnable r = new Runnable() {
             public void run() {
                 Location loc = route.getNextLocation();
-                Log.i(TAG, "GENERATING NEW MOCK LOCATION: " + loc);
+                Log.v(TAG, "Generating new mock location: " + loc);
                 if(loc != null) {
                     AbstractMockLocationProvider.this.pushLocation(new LatLng(loc.getLatitude(), loc.getLongitude()));
                     handler.postDelayed(this, delay);

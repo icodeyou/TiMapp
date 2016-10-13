@@ -1,7 +1,5 @@
 package com.timappweb.timapp.auth;
 
-import java.util.EnumMap;
-
 /**
  * Created by stephane on 2/18/2016.
  *
@@ -18,5 +16,16 @@ public enum SocialProvider{
 
     public String toString() {
         return this.name;
+    }
+
+    public static SocialProvider fromString(String text) {
+        if (text != null) {
+            for (SocialProvider b : SocialProvider.values()) {
+                if (text.equalsIgnoreCase(b.name)) {
+                    return b;
+                }
+            }
+        }
+        return null;
     }
 }

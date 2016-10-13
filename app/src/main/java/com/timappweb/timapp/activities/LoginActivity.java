@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -12,30 +11,21 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.auth.FirebaseUser;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.auth.FacebookLoginProvider;
-import com.timappweb.timapp.auth.FirebaseAuthProvider;
+import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
 import retrofit2.Response;
-import com.timappweb.timapp.auth.AuthManager;
-import com.timappweb.timapp.auth.FacebookLoginProvider;
-import com.timappweb.timapp.auth.FirebaseAuthProvider;
-import com.timappweb.timapp.rest.managers.HttpCallManager;
-import retrofit2.Response;
-
 
 /**
  * NewActivity localLogin screen that offers localLogin via email/password.
@@ -132,8 +122,9 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onFirebaseLoginSuccess:" + loginResult);
                 setProgressVisibility(true);
+                FacebookLoginProvider facebookProvider = MyApplication.getAuthManager().getProvider(SocialProvider.FACEBOOK);
                 MyApplication.getAuthManager()
-                        .logWith(new FacebookLoginProvider(), loginResult)
+                        .logWith(facebookProvider, loginResult)
                         .onFinally(new HttpCallManager.FinallyCallback() {
                             @Override
                             public void onFinally(Response response, Throwable error) {

@@ -3,7 +3,7 @@ package com.timappweb.timapp.rest.io.interceptors;
 import android.util.Log;
 
 import com.timappweb.timapp.auth.AuthManagerInterface;
-import com.timappweb.timapp.auth.AuthProviderInterface;
+
 import com.timappweb.timapp.config.ServerHeader;
 import com.timappweb.timapp.rest.RestClient;
 
