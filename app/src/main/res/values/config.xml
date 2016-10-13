@@ -6,7 +6,7 @@
     <bool name="event_animateCountDownTimer">true</bool>
     <bool name="eventcard_showProgressBarLocation">true</bool>
 
-    <string-array name="facebook_login_scope">
+    <string-array name="facebook_login_scope" translatable="false">
         <item>email</item>
         <item>public_profile</item>
         <item>user_friends</item>

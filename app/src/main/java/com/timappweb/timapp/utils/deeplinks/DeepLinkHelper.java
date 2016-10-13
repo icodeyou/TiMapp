@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class DeepLinkHelper {
     private static final String TAG = "DeepLinkHelper";
     private boolean _isAdd;
     private int _minVersion;
-    private String _appCode;
+    private String _authority;
     private String _packageName;
     private Map<String, String> _customParameters;
     private String _playStoreAppLink;
@@ -49,7 +48,7 @@ public class DeepLinkHelper {
         // Build the link with all required parameters
         Uri.Builder builder = new Uri.Builder()
                 .scheme("https")
-                .authority(this._appCode + ".app.goo.gl")
+                .authority(this._authority)
                 .path("/")
                 .appendQueryParameter("apn", this._packageName);
 
@@ -83,8 +82,8 @@ public class DeepLinkHelper {
         this._minVersion = version;
         return this;
     }
-    public DeepLinkHelper appCode(String _appCode) {
-        this._appCode = _appCode;
+    public DeepLinkHelper authority(String authority) {
+        this._authority = authority;
         return this;
     }
 

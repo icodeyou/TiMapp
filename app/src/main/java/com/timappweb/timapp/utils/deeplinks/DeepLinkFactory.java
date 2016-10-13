@@ -25,10 +25,10 @@ public class DeepLinkFactory {
     public static DeepLinkHelper build(){
         Resources resources = MyApplication.getApplicationBaseContext().getResources();
         int targetSdkVersion = resources.getInteger(R.integer.gcm_min_sdk_version);
-        String appCode = resources.getString(R.string.gcm_app_code);
+        String appCode = resources.getString(R.string.deep_link_host_firebasee);
 
         return new DeepLinkHelper()
-                .appCode(appCode)
+                .authority(appCode)
                 .minVersion(targetSdkVersion)
                 .packageName(MyApplication.getApplicationBaseContext().getPackageName());
     }
