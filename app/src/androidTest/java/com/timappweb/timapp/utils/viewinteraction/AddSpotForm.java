@@ -3,9 +3,6 @@ package com.timappweb.timapp.utils.viewinteraction;
 import android.support.test.espresso.ViewInteraction;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.AddEventActivity;
-import com.timappweb.timapp.activities.AddSpotActivity;
-import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -63,12 +60,4 @@ public class AddSpotForm extends FormHelper {
         checkFieldValue(inputName, s);
     }
 
-    public AddSpotForm assertSubmitDisabled() {
-        ActivityHelper.assertCurrentActivity(AddSpotActivity.class);
-        return this;
-    }
-    public AddSpotForm assertSubmitEnabled() {
-        ActivityHelper.assertCurrentActivity(AddEventActivity.class);
-        return this;
-    }
 }

@@ -10,9 +10,7 @@ import com.timappweb.timapp.utils.viewinteraction.contextmenu.ContextMenuInterac
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
@@ -67,9 +65,25 @@ public class AddEventForm  extends FormHelper {
     }
 
     public AddEventForm submit() {
-        this.assertSubmitEnabled();
         submitButton
                 .perform(click());
+        return this;
+    }
+
+    public AddEventForm tryAll(String name) {
+        this.submit()
+            .setName(name)
+            .submit()
+            .setCategory(4)
+            .setName("")
+            .submit()
+            .setName(name);
+        return this;
+    }
+
+    public AddEventForm tryAll(String name, String description) {
+        this.setDescription(description)
+            .tryAll(name);
         return this;
     }
 
@@ -95,18 +109,6 @@ public class AddEventForm  extends FormHelper {
     public AddEventForm assertLoader() {
         progressView
                 .check(matches(isDisplayed()));
-        return this;
-    }
-
-    public AddEventForm assertSubmitDisabled() {
-        // TODO
-        return this;
-    }
-
-    public AddEventForm assertSubmitEnabled() {
-        submitButton
-                .check(matches(isClickable()))
-                .check(matches(isEnabled()));
         return this;
     }
 
