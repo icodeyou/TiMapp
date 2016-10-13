@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- .................. Don't depend on the language ..........................-->
-    <string name="app_name" translatable="false">TiMapp</string>
     <string name="squarecamera__app_name" translatable="false">@string/app_name</string>
     <string name="db_name" translatable="false">database_timapp_activeandroid</string>
     <string name="p_key_one" translatable="false">TiMapp Presentation (1)</string>
@@ -12,10 +11,6 @@
     <string name="p_key_six" translatable="false">TiMapp Presentation (6)</string>
     <string name="p_key_seven" translatable="false">TiMapp Presentation (7)</string>
     <string name="namespace" translatable="false">timappweb</string>
-    <string name="sync_account_type" translatable="false">timapp.timappweb.com</string>
-    <string name="content_authority_config" translatable="false">com.timappweb.timapp.config.provider</string>
-    <string name="content_authority_data" translatable="false">com.timappweb.timapp.data.provider.data</string>
-    <string name="content_authority_user" translatable="false">com.timappweb.timapp.data.provider.user</string>
     <string name="error_message_no_address_found" translatable="false">No address found</string>
     <string name="error_message_service_not_available" translatable="false">Service not available</string>
     <string name="error_message_invalid_lat_long_used" translatable="false">Invalid latitude or longitude used</string>

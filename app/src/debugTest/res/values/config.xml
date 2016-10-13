@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">TiMapp Test</string>
     <!-- disable animations for automated tests -->
     <bool name="event_animateHeaderImage">false</bool>
     <bool name="event_animateCountDownTimer">false</bool>

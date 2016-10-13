@@ -3,6 +3,7 @@ package com.timappweb.timapp.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
+import com.timappweb.timapp.BuildConfig;
 
 /**
  * Created by stephane on 4/21/2016.
@@ -17,8 +18,12 @@ public class KeyValueStorage {
     private Gson gson;
     private SharedPreferences pref;
 
+    /**
+     * @param context
+     * @param gson
+     */
     public static void init(Context context, Gson gson){
-        instance = new KeyValueStorage(context.getSharedPreferences(context.getPackageName() + "_shared_pref", SHARED_PREF_PRIVATE_MODE), gson);
+        instance = new KeyValueStorage(context.getSharedPreferences(BuildConfig.APPLICATION_ID + ".shared_pref", SHARED_PREF_PRIVATE_MODE), gson);
     }
 
     private KeyValueStorage(SharedPreferences pref, Gson gson) {

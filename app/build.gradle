@@ -29,6 +29,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
+        resValue "string", "deep_link_host_timapp", "timapp.fr"
     }
     buildTypes {
         release {
@@ -38,7 +39,11 @@ android {
             resValue "string", "api_base_url", "http://api.timappweb.com/api/"
             resValue "string", "facebook_app_id", "1634741340120823"
             resValue "string", "google_maps_key", "AIzaSyAo_7l0xApOsaKv5hJzgRX73UfVtzguuz0"
-
+            resValue "string", "content_authority_config", "com.timappweb.timapp.config.provider"
+            resValue "string", "content_authority_data", "com.timappweb.timapp.data.provider.data"
+            resValue "string", "content_authority_user", "com.timappweb.timapp.data.provider.user"
+            resValue "string", "sync_account_type", "com.timappweb.timapp"
+            resValue "string", "deep_link_host_firebasee", "https://e5r7b.app.goo.gl/"
         }
         debug {
             minifyEnabled false
@@ -48,6 +53,11 @@ android {
             resValue "string", "google_maps_key", "AIzaSyBEh9qo5eNr-2nQVgTGFx4JKRnpYox85DQ" // @warning: duplicate used in google-services.json
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
+            resValue "string", "content_authority_config", "com.timappweb.timapp.debug.config.provider"
+            resValue "string", "content_authority_data", "com.timappweb.timapp.debug.data.provider.data"
+            resValue "string", "content_authority_user", "com.timappweb.timapp.debug.data.provider.user"
+            resValue "string", "sync_account_type", "com.timappweb.timapp.debug"
+            resValue "string", "deep_link_host_firebasee", "https://v2v3p.app.goo.gl/"
         }
         debugTest {
             minifyEnabled false
@@ -57,6 +67,11 @@ android {
             resValue "string", "google_maps_key", "AIzaSyBRrBWDLzdqOoMY1nEZ5DISnNYZozqZ2Vw"
             applicationIdSuffix '.test'
             versionNameSuffix '-TEST'
+            resValue "string", "content_authority_config", "com.timappweb.timapp.test.config.provider"
+            resValue "string", "content_authority_data", "com.timappweb.timapp.test.data.provider.data"
+            resValue "string", "content_authority_user", "com.timappweb.timapp.test.data.provider.user"
+            resValue "string", "sync_account_type", "com.timappweb.timapp.test"
+            resValue "string", "deep_link_host_firebasee", "https://qgnj7.app.goo.gl/"
         }
     }
 

@@ -112,7 +112,7 @@ public abstract class AbstractSyncAdapter extends AbstractThreadedSyncAdapter {
      *
      * @param context The context used to access the account service
      * @return a fake account.
-     * @throws java.lang.SecurityException TODO handle this error
+     * @throws java.lang.SecurityException TODO [critical] handle this error
      */
     public static Account getSyncAccount(Context context) {
         if (mAccount != null){
