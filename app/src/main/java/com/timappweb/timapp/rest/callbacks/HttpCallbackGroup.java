@@ -2,6 +2,7 @@ package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
 
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
@@ -54,6 +55,9 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         catch (Throwable ex){
             Log.e(TAG, "Exception while dispatching response: " + ex);
             this.error = ex;
+            if (BuildConfig.DEBUG){
+                ex.printStackTrace();
+            }
         }
         this.callFinallyCallbacks();
     }

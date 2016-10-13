@@ -43,7 +43,7 @@ android {
             resValue "string", "content_authority_data", "com.timappweb.timapp.data.provider.data"
             resValue "string", "content_authority_user", "com.timappweb.timapp.data.provider.user"
             resValue "string", "sync_account_type", "com.timappweb.timapp"
-            resValue "string", "deep_link_host_firebasee", "https://e5r7b.app.goo.gl/"
+            resValue "string", "deep_link_host_firebasee", "e5r7b.app.goo.gl"
         }
         debug {
             minifyEnabled false
@@ -57,7 +57,7 @@ android {
             resValue "string", "content_authority_data", "com.timappweb.timapp.debug.data.provider.data"
             resValue "string", "content_authority_user", "com.timappweb.timapp.debug.data.provider.user"
             resValue "string", "sync_account_type", "com.timappweb.timapp.debug"
-            resValue "string", "deep_link_host_firebasee", "https://v2v3p.app.goo.gl/"
+            resValue "string", "deep_link_host_firebasee", "v2v3p.app.goo.gl"
         }
         debugTest {
             minifyEnabled false
@@ -71,7 +71,7 @@ android {
             resValue "string", "content_authority_data", "com.timappweb.timapp.test.data.provider.data"
             resValue "string", "content_authority_user", "com.timappweb.timapp.test.data.provider.user"
             resValue "string", "sync_account_type", "com.timappweb.timapp.test"
-            resValue "string", "deep_link_host_firebasee", "https://qgnj7.app.goo.gl/"
+            resValue "string", "deep_link_host_firebasee", "qgnj7.app.goo.gl"
         }
     }
 

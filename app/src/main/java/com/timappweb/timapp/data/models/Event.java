@@ -479,10 +479,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return this.start_date <= Util.getCurrentTimeSec();
     }
 
-    public void setInactivityThreshold(int value) {
-        this.inactivity_threshold = value;
-        this.pcs.firePropertyChange(PROPERTY_INACTIVITY_THRESHOLD, -1, value); // TODO set correct value for old value
-    }
 
     public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
 
@@ -642,6 +638,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public void setBackgroundPicture(Picture backgroundPicture) {
         this.picture = backgroundPicture;
         this.pcs.firePropertyChange(PROPERTY_PICTURE, null, backgroundPicture); // TODO set correct value for old value (warning: it does not trigger anything if old and new are the same)
+    }
+
+    public void setInactivityThreshold(int value) {
+        this.inactivity_threshold = value;
+        this.pcs.firePropertyChange(PROPERTY_INACTIVITY_THRESHOLD, -1, value); // TODO set correct value for old value
     }
 
     public boolean isOwner(User currentUser) {
