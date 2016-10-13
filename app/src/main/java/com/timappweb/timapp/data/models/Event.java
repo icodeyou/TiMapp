@@ -46,6 +46,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public static final String PROPERTY_PICTURE = "picture";
     public static final String PROPERTY_POINTS = "points";
     private static final String PROPERTY_LOCATION = "location";
+    public static final String PROPERTY_INACTIVITY_THRESHOLD =  "inactivity_threshold";
 
     // =============================================================================================
     // DATABASE
@@ -476,6 +477,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public boolean hasBegin(){
         return this.start_date <= Util.getCurrentTimeSec();
+    }
+
+    public void setInactivityThreshold(int value) {
+        this.inactivity_threshold = value;
+        this.pcs.firePropertyChange(PROPERTY_INACTIVITY_THRESHOLD, -1, value); // TODO set correct value for old value
     }
 
     public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};

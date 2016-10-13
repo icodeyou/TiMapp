@@ -208,13 +208,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     public void updateView(){
         mBinding.setEvent(getEvent());
-        DelayedCallHelper.create(3000, new DelayedCallHelper.Callback() {
-            @Override
-            public void onTime() {
-                //TODO : this is for debug. Remove and find another way
-                mBinding.setEvent(getEvent());
-            }
-        });
     }
 
 

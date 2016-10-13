@@ -33,6 +33,7 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
                     @Override
                     public void successful(EventPointResponse eventPoint) {
                         event.setPoints(eventPoint.points);
+                        event.setInactivityThreshold(eventPoint.inactivity_threshold);
                     }
                 })
                 .perform();

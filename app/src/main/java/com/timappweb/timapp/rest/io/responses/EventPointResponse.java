@@ -10,4 +10,7 @@ public class EventPointResponse {
     @Expose
     public int points;
 
+    @Expose
+    public int inactivity_threshold;
+
 }
