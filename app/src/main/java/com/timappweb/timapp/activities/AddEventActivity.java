@@ -609,7 +609,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 }
                 try {
                     //Compress image and display it in Simple Drawee View
-                    simpleDraweeView.setImageURI(Uri.fromFile(AddPictureMapper.compress(imageFile)));
+                    File compressedFile = AddPictureMapper.compress(imageFile);
+                    simpleDraweeView.setImageURI(Uri.fromFile(compressedFile));
 
                     Bitmap bmp = BitmapFactory.decodeFile(imageFile.toString());
                     try {
@@ -629,7 +630,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
                     updateUiAfterPickTure();
 
-                    pictureSelected = imageFile;
+                    pictureSelected = compressedFile;
 
                 }
                 catch (AddPictureMapper.CannotUploadPictureException e) {
