@@ -21,6 +21,7 @@ import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PeopleHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
+import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPeopleStats;
@@ -50,7 +51,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
     // ---------------------------------------------------------------------------------------------
 
-    private Context                 context;
     private MyFlexibleAdapter       mPlaceUsersAdapter;
     private SwipeRefreshLayout mSwipeLayout;
     private FloatingActionButton    postButton;
@@ -87,7 +87,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        context = eventActivity.getBaseContext();
 
         mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_people);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list_people);
@@ -111,23 +110,20 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 .setCallback(new SyncDataLoader.Callback<UserEvent>() {
                     @Override
                     public void onLoadEnd(List<UserEvent> data) {
-                        mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
-                        mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
+                        if (mExpandableComingHeader != null) mPlaceUsersAdapter.removeItems(mExpandableComingHeader);
+                        if (mExpandableHereHeader != null) mPlaceUsersAdapter.removeItems(mExpandableHereHeader);
                         for (UserEvent userEvent: data){
                             SubUserItem item = new SubUserItem(userEvent.status.toString()+ "-" + String.valueOf(userEvent.getRemoteId()), userEvent.getUser());
-                            switch (userEvent.status){
-                                case COMING:
-                                    mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);
-                                    break;
-                                case HERE:
-                                    mPlaceUsersAdapter.addSubItem(mExpandableHereHeader, item);
-                                    break;
-                                default:
-                                    continue;
+                            if (userEvent.status == UserEventStatusEnum.COMING && mExpandableComingHeader != null) {
+                                mPlaceUsersAdapter.addSubItem(mExpandableComingHeader, item);
+
+                            }
+                            else if (userEvent.status == UserEventStatusEnum.HERE && mExpandableHereHeader != null){
+                                mPlaceUsersAdapter.addSubItem(mExpandableHereHeader, item);
                             }
                         }
-                        mPlaceUsersAdapter.expand(mExpandableHereHeader);
-                        mPlaceUsersAdapter.expand(mExpandableComingHeader);
+                        if (mExpandableHereHeader != null) mPlaceUsersAdapter.expand(mExpandableHereHeader);
+                        if (mExpandableComingHeader != null) mPlaceUsersAdapter.expand(mExpandableComingHeader);
                         EventPeopleFragment.this.loadPeopleStats();
                     }
 
@@ -171,17 +167,19 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
      *
      */
     private void loadPeopleStats(){
-        RestClient.buildCall(RestClient.service().eventPeopleStats(getEvent().getRemoteId()))
-            .onResponse(new HttpCallback<EventPeopleStats>() {
-                @Override
-                public void successful(EventPeopleStats peopleStat) {
-                    mExpandableHereHeader.setCount(peopleStat.here, mPlaceUsersAdapter);
-                    mExpandableComingHeader.setCount(peopleStat.coming, mPlaceUsersAdapter);
-                    // TODO store in local
-                }
-            })
-            .onError(new NetworkErrorCallback(getContext()))
-            .perform();
+        if (mExpandableHereHeader != null || mExpandableComingHeader != null){
+            RestClient.buildCall(RestClient.service().eventPeopleStats(getEvent().getRemoteId()))
+                    .onResponse(new HttpCallback<EventPeopleStats>() {
+                        @Override
+                        public void successful(EventPeopleStats peopleStat) {
+                            if (mExpandableHereHeader != null) mExpandableHereHeader.setCount(peopleStat.here, mPlaceUsersAdapter);
+                            if (mExpandableComingHeader != null) mExpandableComingHeader.setCount(peopleStat.coming, mPlaceUsersAdapter);
+                            // TODO store in local
+                        }
+                    })
+                    .onError(new NetworkErrorCallback(getContext()))
+                    .perform();
+        }
     }
 
     @Override
@@ -211,14 +209,19 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
         mPlaceUsersAdapter.setPermanentDelete(true);
 
-        mExpandableInviteHeader = new PeopleHeaderItem("INVITE", context.getResources().getString(R.string.header_invited));
+        mExpandableInviteHeader = new PeopleHeaderItem("INVITE", getResources().getString(R.string.header_invited));
         mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
 
-        mExpandableComingHeader = new PeopleHeaderItem("COMING", context.getResources().getString(R.string.header_coming));
-        mPlaceUsersAdapter.addSection(mExpandableComingHeader);
-
-        mExpandableHereHeader = new PeopleHeaderItem("HERE", context.getResources().getString(R.string.header_here));
-        mPlaceUsersAdapter.addSection(mExpandableHereHeader);
+        Log.d(TAG, "Event: " + getEvent());
+        if (!getEvent().isOver()) {
+            mExpandableComingHeader = new PeopleHeaderItem("COMING", getResources().getString(R.string.header_coming));
+            mPlaceUsersAdapter.addSection(mExpandableComingHeader);
+        }
+        if (getEvent().getVisibilityStatus() != Event.VisiblityStatus.PLANNED){
+            int resourceId = getEvent().isOver() ? R.string.header_were_here : R.string.header_here;
+            mExpandableHereHeader = new PeopleHeaderItem("HERE", getResources().getString(resourceId));
+            mPlaceUsersAdapter.addSection(mExpandableHereHeader);
+        }
 
         mPlaceUsersAdapter.addItem(0, new PlaceHolderItem("PLACEHOLDER0"));
 

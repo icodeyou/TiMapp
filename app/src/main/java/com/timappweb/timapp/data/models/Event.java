@@ -220,6 +220,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                 "db_id=" + this.getId() +
                 ", remote_id=" + remote_id +
                 ", name='" + name + '\'' +
+                ", visibility='" + getVisibilityStatus() + '\'' +
                 ", date='from " + new Date(start_date *1000).toString() + " to "  + (end_date > 0 ? new Date(end_date*1000).toString() : '?') + '\'' +
                 ", location=(" + latitude + "," + longitude + ")" +
                 ", created=" + new Date(created*1000).toString()  +
@@ -463,7 +464,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
      * @return
      */
     public boolean isOver(){
-        //TODO : test this method
         return getVisibilityStatus() == VisiblityStatus.OVER;
     }
 
