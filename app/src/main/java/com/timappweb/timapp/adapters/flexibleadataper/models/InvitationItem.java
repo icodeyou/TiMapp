@@ -1,24 +1,17 @@
 package com.timappweb.timapp.adapters.flexibleadataper.models;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.flexibleadataper.AbstractModelItem;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.databinding.ItemInvitationBinding;
 import com.timappweb.timapp.exceptions.UnknownCategoryException;
+import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SimpleTimerView;
 
@@ -34,10 +27,12 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 public class InvitationItem extends AbstractFlexibleItem<InvitationItem.InvitationsViewHolder> {
 
     private static final String TAG = "InvitationItem";
+    private final Context context;
     private EventsInvitation invitation;
 
-    public InvitationItem(EventsInvitation invitation) {
+    public InvitationItem(Context context, EventsInvitation invitation) {
         this.invitation = invitation;
+        this.context = context;
     }
 
     @Override
@@ -82,9 +77,6 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
         private SimpleTimerView tvCountPoints;
         private TextView titleCategory;
         private TextView titleEvent;
-        private final View cameraButton;
-        private final View tagButton;
-        private final View inviteButton;
 
         InvitationsViewHolder(View itemView, ItemInvitationBinding binding, FlexibleAdapter adapter) {
             super(itemView, adapter);
@@ -93,9 +85,6 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
             tvCountPoints = (SimpleTimerView) itemView.findViewById(R.id.points_text);
             titleCategory = (TextView) itemView.findViewById(R.id.title_category);
             titleEvent = (TextView) itemView.findViewById(R.id.name_event);
-            cameraButton = itemView.findViewById(R.id.action_camera);
-            tagButton = itemView.findViewById(R.id.action_tag);
-            inviteButton = itemView.findViewById(R.id.action_invite);
 
             titleCategory.setVisibility(View.VISIBLE);
             titleEvent.setVisibility(View.GONE);
@@ -112,26 +101,7 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
                 e.printStackTrace();
             }
 
-            // TODO do not set here
-            cameraButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.postEvent(MyApplication.getApplicationBaseContext(), eventInvitation.event, IntentsUtils.ACTION_CAMERA);
-                }
-            });
-            tagButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.postEvent(MyApplication.getApplicationBaseContext(), eventInvitation.event, IntentsUtils.ACTION_TAGS);
-                }
-            });
-            inviteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.postEvent(MyApplication.getApplicationBaseContext(), eventInvitation.event, IntentsUtils.ACTION_PEOPLE);
-                }
-            });
-
+            FabListenerFactory.setFabListener(context, itemView, eventInvitation.event);
 
             // Following line is important, it will force to load the variable in a custom view
             mBinding.executePendingBindings();

@@ -34,10 +34,6 @@ import java.util.List;
 
 public class LocateActivity extends BaseActivity implements LocationManager.LocationListener, PaginateDataLoader.Callback {
 
-    private static final double MIN_LOCATION_CHANGED_RELOAD_PLACE   = 500.0;
-    private static final long   UPDATE_SYNC_DELAY                   = 60 * 1000;
-    private static final int LOADER_ID_EVENT_AROUND                 = 0;
-    private static final int MARGIN_EVENT_MAX_REACHABLE             = 200;
     private String              TAG                                 = "LocateActivity";
 
     // ----------------------------------------------------------------------------------------------
@@ -90,7 +86,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_skip:
-                IntentsUtils.addPlace(LocateActivity.this);
+                IntentsUtils.addEvent(LocateActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -155,7 +151,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
             placeAdapter.notifyDataSetChanged();
         }
         else {
-            IntentsUtils.addPlace(LocateActivity.this);
+            IntentsUtils.addEvent(LocateActivity.this);
         }
     }
 

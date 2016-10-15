@@ -14,10 +14,10 @@ import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
-import com.timappweb.timapp.data.loader.sections.SectionRecyclerViewManager;
-import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
-import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.loader.sections.SectionContainer;
+import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
+import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
+import com.timappweb.timapp.data.loader.sections.SectionRecyclerViewManager;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.RestClient;
@@ -28,13 +28,12 @@ import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-
-import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 public class InvitationsActivity extends BaseActivity implements
         SectionDataLoader.Callback<EventsInvitation>{
@@ -137,7 +136,7 @@ public class InvitationsActivity extends BaseActivity implements
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventsInvitation>() {
                     @Override
                     public AbstractFlexibleItem createItem(EventsInvitation data) {
-                        return new InvitationItem(data);
+                        return new InvitationItem(InvitationsActivity.this, data);
                     }
                 })
                 .setNoDataView(noInvitationsView)

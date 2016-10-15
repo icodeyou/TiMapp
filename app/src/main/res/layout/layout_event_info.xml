@@ -24,8 +24,8 @@
                 android:background="@drawable/gradient_top_view_light"/>
             <LinearLayout
                 android:id="@+id/card_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/padding_bottom_map"
                 android:paddingBottom="@dimen/padding_bottom_map"
@@ -53,14 +53,12 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <LinearLayout
+                    <include layout="@layout/layout_spot_minimized"
                         android:id="@+id/layout_spot"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp">
-                        <include layout="@layout/layout_spot_minimized"
-                            bind:spot="@{event.spot}"></include>
-                    </LinearLayout>
+                        android:layout_marginBottom="5dp"
+                        bind:spot="@{event.spot}" />
 
                     <LinearLayout
                         android:id="@+id/inactivity_layout"

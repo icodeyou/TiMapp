@@ -42,6 +42,7 @@
 
     <!-- Generic Messages -->
     <string name="alert_dialog_ok">Ok</string>
+    <string name="alert_dialog_cancel">Annuler</string>
     <string name="retry_button">Réessayer</string>
     <string name="waiting_for_location">Localisation</string>
     <string name="skip">Ignorer</string>
@@ -69,7 +70,7 @@
     <string name="form_invalid_input">Ce champ est invalide.</string>
     <string name="data_already_refresh">Données à jour</string>
     <string name="should_be_around_to_post">Rapproche de toi de l\'événement pour poster ;)</string>
-    <string name="should_be_not_over_to_post">L\'événement est terminé, les posts aussi !\nNormal, c\'est du temps réel :).</string>
+    <string name="should_be_not_over_to_post">L\'événement est terminé, les posts aussi !\nNormal, c\'est du temps réel :)\nHésite pas à recréer l\'événement s\'il est encore d\'actualité</string>
     <string name="error_require_gps">Nous avons besoin de votre localisation pour cette opération.</string>
     <string name="quota_wait_string">Merci d\'attendre %s avant le prochain post.</string>
     <string name="quota_wait_not_defined">Merci d\'attendre %s avant le prochain post.</string>
@@ -159,6 +160,8 @@
     <string name="remove_the_picture">Supprimer l\'image</string>
     <string name="error_no_name">Trouve un nom sympa pour l\'événement :)</string>
     <string name="error_no_category">Clique sur la catégorie qui convient le mieux !</string>
+    <string name="confim_message_add_event">Abandonner la création de l\'événement ?</string>
+    <string name="alert_dialog_continue_addevent">Abandonner</string>
 
     <!-- AddTagsActivity  -->
     <!--TODO : Dupplicates strings here -->
@@ -213,6 +216,10 @@
     <string name="edit_first_profile2">Vos tags seront maintenant affichés sur votre profil. Vous pouvez les changer à tout moment.</string>
     <string name="define_yourself">Definis toi</string>
     <string name="submit">Valider</string>
+
+    <!-- ComingSoonActivity -->
+    <string name="coming_soon">Coming soon</string>
+    <string name="coming_soon_subtitle">Aimez notre page Facebook et participez au test beta !</string>
 
     <!-- InvitationsActivities -->
     <string name="text_no_invitations">Pas d\'invitations pour le moment</string>

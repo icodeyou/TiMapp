@@ -158,6 +158,10 @@
             android:name=".activities.ErrorActivity">
         </activity>
 
+        <activity
+            android:name=".activities.ComingSoonActivity">
+        </activity>
+
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
 
         <activity
@@ -251,18 +255,12 @@
             android:windowSoftInputMode="adjustNothing|stateHidden" >
         </activity>
 
-
         <!-- ADD SPOT ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.AddSpotActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_add_spot"
-            android:parentActivityName=".activities.AddEventActivity" >
-            <intent-filter>
-                <action android:name="OPEN_PLACE_FROM_NOTIFICATION" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
+            android:parentActivityName=".activities.AddEventActivity">
         </activity>
 
         <!-- PLACE ACTIVITY //////////////////////////////////////////////-->

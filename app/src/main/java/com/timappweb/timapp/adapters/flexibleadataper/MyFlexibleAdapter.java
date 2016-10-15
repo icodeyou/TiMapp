@@ -3,7 +3,6 @@ package com.timappweb.timapp.adapters.flexibleadataper;
 import android.content.Context;
 
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,8 +10,6 @@ import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-import eu.davidea.flexibleadapter.items.IFlexible;
-import eu.davidea.flexibleadapter.items.IHeader;
 import eu.davidea.flexibleadapter.items.ISectionable;
 
 /**
@@ -102,14 +99,6 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	public void removeAll() {
 		this.removeRange(0, getItemCount());
-	}
-
-	public OnItemLongClickListener getLongItemClickListener() {
-		return mLongItemClickListener;
-	}
-
-	public void setOnLongItemClickListener(FlexibleAdapter.OnItemLongClickListener onLongItemClickListener) {
-		this.mLongItemClickListener = onLongItemClickListener;
 	}
 
 }

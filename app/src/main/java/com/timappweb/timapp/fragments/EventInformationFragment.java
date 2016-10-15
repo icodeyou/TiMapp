@@ -37,7 +37,6 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.MySwitchCompat;
 import com.timappweb.timapp.views.SimpleTimerView;
@@ -47,7 +46,6 @@ import retrofit2.Response;
 
 public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener, LocationManager.LocationListener {
 
-    private static final int            TIMELAPSE_HOT_ANIM      = 2000;
     private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 2 * 1000;
     private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;
 
@@ -235,29 +233,7 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
     }
 
     public void updatePointsView(int newPoints) {
-        animator = new ValueAnimator();
-        tvCountPoints.cancelTimer();
-        int initialPoints = tvCountPoints.getPoints();
-        final int pointsAdded = newPoints - tvCountPoints.getPoints();
-        int finalPoints = initialPoints + pointsAdded - TIMELAPSE_HOT_ANIM/1000;
-
-        Log.d(TAG, "Initial points : " + initialPoints + ". Final points : " + finalPoints);
-        animator.setObjectValues(initialPoints, finalPoints);
-        animator.setDuration(TIMELAPSE_HOT_ANIM);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator animation) {
-                tvCountPoints.setText(String.valueOf(animation.getAnimatedValue()));
-            }
-        });
-        animator.start();
-        if(finalPoints==0) {
-            tvCountPoints.cancelTimer();
-            Log.d(TAG, "Set timer text to Over");
-            tvCountPoints.setText(getString(R.string.counter_over));
-        } else {
-            Log.d(TAG, "Initializing timer to " + finalPoints);
-            tvCountPoints.initTimer(finalPoints);
-        }
+        tvCountPoints.animPointsTo(newPoints);
     }
 
     @Override

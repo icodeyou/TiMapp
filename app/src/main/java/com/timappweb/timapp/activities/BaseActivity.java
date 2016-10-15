@@ -3,7 +3,6 @@ package com.timappweb.timapp.activities;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -92,7 +91,7 @@ public class BaseActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                NavUtils.navigateUpFromSameTask(that);
+                finish();
                 return false;
             }
         });

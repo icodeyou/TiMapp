@@ -4,7 +4,6 @@ import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,12 +24,12 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.EventPost;
+import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.listeners.OnAddTagListener;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.listeners.OnAddTagListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.rest.ResourceUrlMapping;
@@ -175,7 +174,7 @@ public class AddTagActivity extends BaseActivity{
                 postTags();
                 return true;
             case R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

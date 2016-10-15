@@ -231,11 +231,8 @@ public class IntentsUtils {
         }
     }
 
-    public static void addPictureFromActivity(final Activity activity) {
-        //TODO : Use only one method instead of one for the activity, and another one for the fragment
-        if (!requireLogin(activity, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
-            return;
-
+    public static void attachPictureToEvent(final Activity activity) {
+        // The code is duplicated here because the library doesn't require the same method when we call it from a fragment or an activity
         int storageCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int cameraCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA);
         if (storageCheck == PackageManager.PERMISSION_GRANTED && cameraCheck == PackageManager.PERMISSION_GRANTED) {
@@ -303,7 +300,6 @@ public class IntentsUtils {
         context.startActivity(buildIntentViewPlace(context, event));
     }
 
-
     public static void postEvent(Context context, Event event, int action) {
         if(!requireLogin(context,false)) {
             return;
@@ -350,7 +346,7 @@ public class IntentsUtils {
         activity.startActivity(intent);
     }
 
-    public static void addPlace(Activity locateActivity) {
+    public static void addEvent(Activity locateActivity) {
         if (!requireLogin(locateActivity, false))
             return;
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_EVENT, true)){
@@ -362,15 +358,15 @@ public class IntentsUtils {
         locateActivity.finish();
     }
 
-    public static void pinSpot(Activity activity) {
-        IntentsUtils.pinSpot(activity, null);
+    public static void attachSpot(Activity activity) {
+        IntentsUtils.attachSpot(activity, null);
     }
 
-    public static void pinSpot(Activity activity, Spot spot) {
+    public static void attachSpot(Activity activity, Spot spot) {
         Log.d(TAG, "Trying to pin spot with location: " + LocationManager.getLastLocation());
         if (!LocationManager.hasFineLocation() || !LocationManager.hasUpToDateLastLocation()){
             Toast.makeText(MyApplication.getApplicationBaseContext(),
-                    R.string.waiting_for_location, Toast.LENGTH_LONG).show();
+                    R.string.no_fine_location, Toast.LENGTH_LONG).show();
             return;
         }
         if (!requireLogin(activity, false))

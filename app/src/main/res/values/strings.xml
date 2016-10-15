@@ -59,7 +59,8 @@
     <string name="action_unselect_all">Unselect all</string>
 
     <!-- Generic Messages -->
-    <string name="alert_dialog_ok">Ok</string>
+    <string name="alert_dialog_ok">OK</string>
+    <string name="alert_dialog_cancel">Cancel</string>
     <string name="retry_button">Réessayer</string>
     <string name="waiting_for_location">Localization</string>
     <string name="skip">Skip</string>
@@ -67,7 +68,7 @@
     <!-- Errors -->
             <string name="error_require_login">You must be logged in to perform this action</string>
             <string name="no_network_access">No network access.</string>
-            <string name="error_default">An error occured. Please try again later.</string>
+            <string name="error_default">An error occurred. Please try again later.</string>
             <string name="error_cannot_get_location">Hey, where are you ? We lost you. Go out, breathe !</string>
             <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
             <string name="fatal_error_unknown_reason_title">Something bad happened !</string>
@@ -87,7 +88,7 @@
             <string name="form_invalid_input">Please correct required fields before submitting.</string>
             <string name="data_already_refresh">Already up to date</string>
             <string name="should_be_around_to_post">You are too far from the event to post something. Get a little bit closer ;)</string>
-            <string name="should_be_not_over_to_post">The event is over. Nobody can post anymore.\nThat\'s how real time works.</string>
+            <string name="should_be_not_over_to_post">The event is over. Nobody can post anymore.\nThat\'s how real time works.\nFeel free to create a new event if it is still trending !</string>
             <string name="error_require_gps">We need your location to do that</string>
             <string name="quota_wait_string">Please wait %s before posting again</string>
             <string name="quota_wait_not_defined">Please wait %s before posting again</string>
@@ -183,6 +184,8 @@
     <string name="remove_the_picture">Remove the picture</string>
     <string name="error_no_name">Find a good event name :)</string>
     <string name="error_no_category">Click on the category that suits the event !</string>
+    <string name="confim_message_add_event">Discard event ?</string>
+    <string name="alert_dialog_continue_addevent">Discard</string>
 
     <!-- AddTagsActivity  -->
     <string name="search_hint">Type a tag</string>
@@ -234,7 +237,11 @@
     <string name="define_yourself">Define yourself</string>
     <string name="submit">Submit</string>
 
-    <!-- InvitationsActivities -->
+    <!-- ComingSoonActivity -->
+    <string name="coming_soon">Coming soon</string>
+    <string name="coming_soon_subtitle">Like us on Facebook and download the beta version !</string>
+
+    <!-- InvitationsActivity -->
     <string name="text_no_invitations">No invitation at the moment</string>
     <string name="friend_already_invited">Invitation already sent!</string>
 
