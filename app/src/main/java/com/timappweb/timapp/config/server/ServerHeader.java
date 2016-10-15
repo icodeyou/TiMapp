@@ -1,7 +1,9 @@
-package com.timappweb.timapp.config;
+package com.timappweb.timapp.config.server;
 
 /**
  * Created by Stephane on 10/09/2016.
+ *
+ * Must be synchronized with server
  */
 public class ServerHeader {
 

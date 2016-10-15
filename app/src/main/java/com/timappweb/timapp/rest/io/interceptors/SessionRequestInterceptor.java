@@ -4,14 +4,13 @@ import android.util.Log;
 
 import com.timappweb.timapp.auth.AuthManagerInterface;
 
-import com.timappweb.timapp.config.ServerHeader;
+import com.timappweb.timapp.config.server.ServerHeader;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.io.IOException;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;

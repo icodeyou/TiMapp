@@ -1,6 +1,8 @@
 package com.timappweb.timapp.rest.callbacks;
 
 import android.content.Context;
+import android.util.Log;
+import android.util.MalformedJsonException;
 import android.widget.Toast;
 
 import com.timappweb.timapp.R;
@@ -12,6 +14,8 @@ import java.io.IOException;
  */
 public class NetworkErrorCallback extends com.timappweb.timapp.rest.callbacks.RequestFailureCallback {
 
+    private static final String TAG = "NetworkErrorCallback";
+
     protected final Context context;
 
     public NetworkErrorCallback(Context context) {
@@ -20,6 +24,12 @@ public class NetworkErrorCallback extends com.timappweb.timapp.rest.callbacks.Re
 
     @Override
     public void network(IOException error) {
-        Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "Received server error message: " + error.getMessage());
+        if (error instanceof MalformedJsonException){
+            Toast.makeText(context, R.string.error_message_service_not_available, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
+        }
     }
 }

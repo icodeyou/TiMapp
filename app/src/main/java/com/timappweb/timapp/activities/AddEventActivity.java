@@ -70,6 +70,7 @@ import com.timappweb.timapp.views.ConfirmDialog;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import okhttp3.MultipartBody;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -390,8 +391,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
                     @Override
                     public void notSuccessful() {
-                        Toast.makeText(AddEventActivity.this, R.string.error_default, Toast.LENGTH_SHORT).show();
-                        super.notSuccessful();
+                        if (this.response.code() != HttpURLConnection.HTTP_BAD_REQUEST){
+                            Toast.makeText(AddEventActivity.this, R.string.error_default, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
         if (photo != null){
@@ -402,23 +404,15 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
                     public void onFinally(Response response, Throwable error) {
-                        setProgressView(false);
+                        if (error != null || !response.isSuccessful()){
+                            setProgressView(false);
+                        }
                     }
 
                 })
                 .perform();
     }
 
-    private void showUploadFeedbackError(int msg){
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        setProgressView(false);
-    }
-
-    public void setButtonValidation() {
-        if (postButton != null) {
-
-        }
-    }
     //----------------------------------------------------------------------------------------------
     //Public methods
 

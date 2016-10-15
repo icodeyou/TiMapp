@@ -1,6 +1,6 @@
 package com.timappweb.timapp.utils;
 
-import com.timappweb.timapp.config.ServerHeader;
+import com.timappweb.timapp.config.server.ServerHeader;
 
 import java.io.IOException;
 
