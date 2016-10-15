@@ -2,7 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -120,7 +119,7 @@ public class FilterActivity extends BaseActivity {
 
         MyApplication.searchFilter.tags = new ArrayList<>(data);
         Log.d(TAG, "Selected tags: " + Tag.tagsToString(MyApplication.searchFilter.tags));
-        NavUtils.navigateUpFromSameTask(this);
+        finish();
     }
 
 
@@ -180,11 +179,6 @@ public class FilterActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        NavUtils.navigateUpFromSameTask(this);
     }
 
     public void setTopRvVisibility() {

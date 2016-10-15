@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -46,6 +47,7 @@ import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.ActivityAddEventBinding;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.MapFactory;
@@ -55,6 +57,7 @@ import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.FormErrorsCallbackBinding;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
+import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.io.serializers.AddEventMapper;
 import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
@@ -63,6 +66,7 @@ import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.CategorySelectorView;
+import com.timappweb.timapp.views.ConfirmDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -197,7 +201,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_picture:
-                IntentsUtils.addPictureFromActivity(this);
+                IntentsUtils.attachPictureToEvent(this);
                 return true;
             case R.id.action_remove_picture:
                 simpleDraweeView.setVisibility(View.GONE);
@@ -207,14 +211,13 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 icPictureText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
                 return true;
             case R.id.action_edit_spot:
-                IntentsUtils.pinSpot(AddEventActivity.this, mBinding.getEvent().getSpot());
+                IntentsUtils.attachSpot(AddEventActivity.this, mBinding.getEvent().getSpot());
                 return true;
             case R.id.action_remove_spot:
                 mBinding.setEvent(mBinding.getEvent().setSpot(null));
                 icSpot.setVisibility(View.VISIBLE);
                 icSpotValidate.setVisibility(View.GONE);
                 icSpotText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -285,7 +288,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         return true;
                     }
                     Log.d(TAG, "Click on add event before having a user location");
-                    Toast.makeText(getBaseContext(), R.string.waiting_for_location, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.no_fine_location, Toast.LENGTH_LONG).show();
                     return true;
                 }
                 setProgressView(true);
@@ -293,6 +296,23 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 event.setCategory(eventCategorySelected);
                 event.setLocation(mFineLocation);
                 submitEvent(event, pictureSelected);
+                return true;
+            case android.R.id.home:
+                ConfirmDialog.builder(this,
+                        null,
+                        getString(R.string.confim_message_add_event),
+                        getString(R.string.alert_dialog_continue_addevent),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which == DialogInterface.BUTTON_POSITIVE) {
+                                    IntentsUtils.getBackToParent(AddEventActivity.this);
+                                }
+                            }
+                        }
+                )
+                        .create()
+                        .show();;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -351,29 +371,21 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         else{
             call = RestClient.service().addPlace(AddEventMapper.toJson(event));
         }
-        clientCall = RestClient.<JsonObject>buildCall(call)
+        clientCall = RestClient.<JsonObject>buildCall(call);
+        clientCall
                 .onResponse(new AutoMergeCallback(event))
                 .onResponse(new FormErrorsCallbackBinding(mBinding))
                 .onResponse(new FormErrorsCallback(this, "Pictures"))
                 .onResponse(new HttpCallback<JsonObject>() {
                     @Override
-                    public void successful(JsonObject feedback) {
-                        try {
-                            Log.d(TAG, "Event has been successfully added");
-                            event.setAuthor(MyApplication.getCurrentUser());
-                            event.deepSave();
-                            long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
-                            QuotaManager.instance().add(QuotaType.ADD_EVENT);
-                            EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
-                        }
-                        catch (Exception ex){
-                            setProgressView(false);
-                            Log.e(TAG, "Cannot get EventUser id from server response");
-                            // TODO
-                        }
-                        finally {
-                            IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
-                        }
+                    public void successful(JsonObject feedback) throws CannotSaveModelException {
+                        Log.d(TAG, "Event has been successfully added");
+                        event.setAuthor(MyApplication.getCurrentUser());
+                        event.deepSave();
+                        long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
+                        QuotaManager.instance().add(QuotaType.ADD_EVENT);
+                        EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
+                        IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
                     }
 
                     @Override
@@ -381,7 +393,11 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         Toast.makeText(AddEventActivity.this, R.string.error_default, Toast.LENGTH_SHORT).show();
                         super.notSuccessful();
                     }
-                })
+                });
+        if (photo != null){
+            clientCall.onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.ADD_PICTURE, false));
+        }
+        clientCall
                 .onError(new NetworkErrorCallback(this))
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
@@ -454,7 +470,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             @Override
             public void onClick(View v) {
                 if(pictureSelected==null) {
-                    IntentsUtils.addPictureFromActivity(AddEventActivity.this);
+                    IntentsUtils.attachPictureToEvent(AddEventActivity.this);
                 }
                 else {
                     openContextMenu(mBtnAddPic);
@@ -466,7 +482,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             @Override
             public void onClick(View v) {
                 if (mBinding.getEvent().getSpot() == null) {
-                    IntentsUtils.pinSpot(AddEventActivity.this);
+                    IntentsUtils.attachSpot(AddEventActivity.this);
                 } else {
                     openContextMenu(mBtnAddSpot);
                 }

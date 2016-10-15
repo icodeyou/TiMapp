@@ -34,6 +34,7 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.databinding.FragmentExploreMapBinding;
+import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.map.EventClusterRenderer;
 import com.timappweb.timapp.map.MapFactory;
@@ -142,31 +143,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
     private void initListeners() {
 
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_CAMERA);
-            }
-        });
-        tagButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_TAGS);
-            }
-        });
-        inviteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_PEOPLE);
-            }
-        });
-        comingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(getContext(), mBinding.getEvent(), IntentsUtils.ACTION_COMING);
-            }
-        });
-
         eventView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,6 +205,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             event = (Event) event.requireLocalId();
             eventView.setVisibility(View.VISIBLE);
             mBinding.setEvent(event);
+
+            FabListenerFactory.setFabListener(getContext(), root, event);
 
             final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_alpha);
             eventView.startAnimation(slideIn);

@@ -160,37 +160,6 @@ public class MyLocationProvider implements
     // Permission related methodes
 
     public void askUserToEnableGPS() {
-        /*Context context = MyApplication.getApplicationBaseContext();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                activity);
-        alertDialogBuilder
-                .setMessage(context.getString(R.string.ask_user_to_enable_gps))
-                .setCancelable(false)
-                .setPositiveButton(context.getString(R.string.dialog_button_enable_gps),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                Intent callGPSSettingIntent = new Intent(
-                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                activity.startActivity(callGPSSettingIntent);
-                            }
-                        });
-        alertDialogBuilder.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        *//*
-                        try{
-                            NavUtils.navigateUpFromSameTask(activity);
-                        }
-                        catch (IllegalArgumentException ex){
-                            // If there is no up task, do nothing
-                        }*//*
-                    }
-                });
-        AlertDialog alert = alertDialogBuilder.create();
-        alert.builder();*/
-
         //Source
         //https://developers.google.com/android/reference/com/google/android/gms/location/SettingsApi
 

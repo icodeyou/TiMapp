@@ -132,6 +132,9 @@ public class InviteFriendsActivity extends BaseActivity
             case R.id.action_get_friends:
                 IntentsUtils.actionShareApp(this);
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return false;
         }

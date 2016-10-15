@@ -33,6 +33,7 @@ import com.timappweb.timapp.fragments.EventInformationFragment;
 import com.timappweb.timapp.fragments.EventPeopleFragment;
 import com.timappweb.timapp.fragments.EventPicturesFragment;
 import com.timappweb.timapp.fragments.EventTagsFragment;
+import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -111,8 +112,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             mainLayout = (RelativeLayout) findViewById(R.id.activity_event_container);
             overView = findViewById(R.id.over_view);
 
-            initListeners();
-            this.loadEvent();
+            //initListeners();
+            loadEvent();
         } catch (CannotSaveModelException e) {
             e.printStackTrace();
             this.exit();
@@ -277,25 +278,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             }
         });*/
 
-        btnActionTag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_TAGS);
-            }
-        });
-        btnActionCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_CAMERA);
-            }
-        });
-        btnActionInvite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentsUtils.postEvent(EventActivity.this, getEvent(), IntentsUtils.ACTION_PEOPLE);
-            }
-        });
-
     }
 
     /**
@@ -303,6 +285,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
      * @warning Method must be called only ONCE.
      */
     private void onEventLoaded() {
+        Log.d(TAG, "The popularity points are : "+event.getPoints());
+        FabListenerFactory.setFabListener(this, getWindow().getDecorView(), getEvent());
+
         if (!isEventLoaded){
             isEventLoaded = true;
 
@@ -445,38 +430,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         int numberOfFragments = mFragmentAdapter.getCount();
         mMaterialViewPager.getViewPager().setOffscreenPageLimit(numberOfFragments);
         mMaterialViewPager.getViewPager().addOnPageChangeListener(new MyOnPageChangeListener(INITIAL_FRAGMENT_PAGE));
-
-        /*
-        Change header image and color
-        mMaterialViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
-            @Override
-            public HeaderDesign getHeaderDesign(int page) {
-                Drawable drawable = null;
-                try {
-                    drawable = getResources().getDrawable(event.getCategory().getBigIcon());
-                } catch (UnknownCategoryException e) {
-                    drawable = getResources().getDrawable(R.drawable.image_else);
-                }
-                switch (page) {
-                    case 0:
-                        return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorAccent, drawable);
-                    case 1:
-                        return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorAccent, drawable);
-                    case 2:
-                        return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorAccent, drawable);
-                    case 3:
-                        return HeaderDesign.fromColorResAndDrawable(
-                                R.color.colorAccent, drawable);
-                }
-
-                //execute others actions if needed (ex : modify your header logo)
-
-                return null;
-            }
-        });*/
 
         //initToolbar(false);
         Toolbar toolbar = mMaterialViewPager.getToolbar();

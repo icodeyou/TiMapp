@@ -1,6 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,12 +25,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.appinvite.AppInviteInvitationResult;
-import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -43,12 +38,10 @@ import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.databinding.ActivityDrawerBinding;
 import com.timappweb.timapp.fragments.ExploreFragment;
 import com.timappweb.timapp.fragments.ExploreMapFragment;
+import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -334,31 +327,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             noEventLayout.setVisibility(View.GONE);
             eventLayout.setVisibility(View.VISIBLE);
 
-            final Activity context = this;
-            cameraButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_CAMERA);
-                }
-            });
-            tagButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_TAGS);
-                }
-            });
-            inviteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
-                }
-            });
-            eventBackground.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    IntentsUtils.viewSpecifiedEvent(context, event);
-                }
-            });
+            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), event);
         }
     }
 

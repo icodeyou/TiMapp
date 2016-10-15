@@ -73,7 +73,7 @@ public class SimpleTimerView extends TextSwitcher {
                 }
 
                 public void onFinish() {
-                    SimpleTimerView.this.setText(getResources().getString(R.string.counter_over));
+                    SimpleTimerView.this.setText("0");
                 }
             };
             countDownTimer.start();
