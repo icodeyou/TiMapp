@@ -103,16 +103,6 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
             }
         });
 
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(getEvent() != null && getEvent().isOver()) {
-                    Toast.makeText(eventActivity, R.string.should_be_not_over_to_post, Toast.LENGTH_LONG).show();
-                    switchButton.setCheckedNoTrigger(false);
-                }
-            }
-        });
-
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
         mapView.onCreate(null);

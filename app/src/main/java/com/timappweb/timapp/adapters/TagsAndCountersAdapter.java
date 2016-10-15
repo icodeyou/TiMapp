@@ -2,20 +2,16 @@ package com.timappweb.timapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,6 +47,10 @@ public class TagsAndCountersAdapter extends RecyclerView.Adapter<TagsAndCounters
 
     public void addAll(List data) {
         this.mData.addAll(data);
+    }
+
+    public EventTag getTag(int position) {
+        return this.mData.get(position-1);
     }
 
     public void clear() {

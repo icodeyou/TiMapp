@@ -102,7 +102,16 @@ public class AddTagActivity extends BaseActivity{
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressStartView = findViewById(R.id.progress_view);
 
+        setInitialTags();
         initClickSelectedTag();
+    }
+
+    private void setInitialTags() {
+        EventTag eventTag = IntentsUtils.extractEventTag(getIntent());
+        if(eventTag != null) {
+            selectedTagsRV.getAdapter().add(eventTag.tag);
+            suggestedTagsView.removeItem(eventTag.tag);
+        }
     }
 
 
@@ -202,6 +211,7 @@ public class AddTagActivity extends BaseActivity{
                 if (!searchAndSelectTagManager.hasSelectedTag(tag)){
                     if (searchAndSelectTagManager.addTag(tag.getName())){
                         suggestedTagsView.removeItem(item);
+                        //TODO : collapse action view
                         actionCounter();
                     }
                 }

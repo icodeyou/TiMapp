@@ -25,7 +25,7 @@ public class FabListenerFactory {
             cameraButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_CAMERA);
+                    IntentsUtils.postInEvent(context, event, IntentsUtils.ACTION_CAMERA);
                 }
             });
         }
@@ -34,7 +34,7 @@ public class FabListenerFactory {
             tagButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_TAGS);
+                    IntentsUtils.postInEvent(context, event, IntentsUtils.ACTION_TAGS);
                 }
             });
         }
@@ -43,7 +43,7 @@ public class FabListenerFactory {
             inviteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_PEOPLE);
+                    IntentsUtils.postInEvent(context, event, IntentsUtils.ACTION_PEOPLE);
                 }
             });
         }
@@ -52,7 +52,7 @@ public class FabListenerFactory {
             comingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    IntentsUtils.postEvent(context, event, IntentsUtils.ACTION_COMING);
+                    IntentsUtils.postInEvent(context, event, IntentsUtils.ACTION_COMING);
                 }
             });
         }
