@@ -49,6 +49,8 @@ import java.util.List;
 
 import retrofit2.Response;
 
+//TODO : searchAndSelectTagManager is used to add tags, but not to remove tags !
+
 public class AddTagActivity extends BaseActivity{
 
     private String TAG = "AddTagActivity";
@@ -57,7 +59,7 @@ public class AddTagActivity extends BaseActivity{
     // ---------------------------------------------------------------------------------------------
     //Views
     private HorizontalTagsRecyclerView              selectedTagsRV;
-    private View progressStartView;
+    private View                                    progressStartView;
     private Event                                   currentEvent = null;
 
     // @Bind(R.remote_id.hashtags1)
@@ -101,19 +103,17 @@ public class AddTagActivity extends BaseActivity{
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
         suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressStartView = findViewById(R.id.progress_view);
+        //progressStartView.setVisibility(View.VISIBLE);
 
-        setInitialTags();
         initClickSelectedTag();
     }
 
     private void setInitialTags() {
         EventTag eventTag = IntentsUtils.extractEventTag(getIntent());
         if(eventTag != null) {
-            selectedTagsRV.getAdapter().add(eventTag.tag);
-            suggestedTagsView.removeItem(eventTag.tag);
+            searchAndSelectTagManager.addTag(eventTag.tag.getName());
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,13 +142,16 @@ public class AddTagActivity extends BaseActivity{
 
                     @Override
                     public void onLoadEnds() {
+                       //TODO Steph : This method is not called after tags loading (because tags  > 30 ?)
                         progressStartView.setVisibility(View.GONE);
+                        suggestedTagsView.removeItem(searchAndSelectTagManager.getSelectedTags());
                         /*Animation animationTagsIn = AnimationUtils.loadAnimation(context, R.anim.appear_grow);
                         suggestedTagsView.setAnimation(animationTagsIn);*/
                     }
 
                     @Override
                     public void load(String term) {
+                        //progressStartView.setVisibility(View.VISIBLE);
                         int tagLimit = ConfigurationProvider.rules().tags_suggest_limit;
                         // Get local tags (suggest in first tag already added to this event, then tag that are in db order by popularity)
                         From query = Tag.querySuggestTagForEvent(currentEvent)
@@ -169,8 +172,8 @@ public class AddTagActivity extends BaseActivity{
                 });
         searchAndSelectTagManager.loadTags("");
 
-
         //Initialize Query hint in searchview
+        setInitialTags();
         actionCounter();
 
         return true;
@@ -199,7 +202,6 @@ public class AddTagActivity extends BaseActivity{
         }
     }
 
-
     //----------------------------------------------------------------------------------------------
     //Private methods
 
@@ -211,13 +213,12 @@ public class AddTagActivity extends BaseActivity{
                 if (!searchAndSelectTagManager.hasSelectedTag(tag)){
                     if (searchAndSelectTagManager.addTag(tag.getName())){
                         suggestedTagsView.removeItem(item);
-                        //TODO : collapse action view
+                        searchView.setIconified(false);
                         actionCounter();
                     }
                 }
             }
         });
-
         suggestedTagsView.setData(new LinkedList<Tag>(), new DataTransformTag());
     }
 

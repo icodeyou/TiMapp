@@ -134,6 +134,7 @@
     <string name="header_coming">En route</string>
     <string name="header_invited">Amis invités</string>
     <string name="header_here">Présents</string>
+    <string name="header_were_here">Ils étaient là</string>
     <plurals name="number_people_event">
         <item quantity="one">%d personne</item>
         <item quantity="other">%d personnes</item>

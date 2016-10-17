@@ -13,7 +13,7 @@ public class OnAddTagListener extends OnBasicQueryTagListener {
 
     @Override
     public void addTag(String query) {
-        super.addTag(query);
+        manager.addTag(query);
         addTagActivity.actionCounter();
     }
 }

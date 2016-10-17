@@ -86,9 +86,10 @@ public class SearchAndSelectTagManager {
     public boolean addTag(String tag) {
         if (horizontalAdapter.tryAddData(tag)){
             selectedTagsRecyclerView.scrollToEnd();
-            getSearchView().setIconified(true);
+            searchView.setQuery("",false);
             return true;
         }
+        searchView.setQuery(tag, false);
         return false;
     }
 
