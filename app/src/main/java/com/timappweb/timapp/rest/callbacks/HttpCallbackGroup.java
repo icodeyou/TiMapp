@@ -1,8 +1,11 @@
 package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
+import android.util.MalformedJsonException;
+import android.widget.Toast;
 
 import com.timappweb.timapp.BuildConfig;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
@@ -25,6 +28,7 @@ import retrofit2.Response;
 public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBodyType> {
 
     private static final String TAG = "HttpCallbackGroup";
+    private final Call<ResponseBodyType> call;
     private List<HttpCallback<ResponseBodyType>> responseCallbacks = new LinkedList<>();
     private List<RequestFailureCallback> failureCallbacks = new LinkedList<>();
     private List<HttpCallManager.FinallyCallback> finallyCallbacks = new LinkedList<>();
@@ -32,6 +36,10 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     private Response<ResponseBodyType> response = null;
     private Throwable error = null;
     private RestValidationError validationErrors;
+
+    public HttpCallbackGroup(Call<ResponseBodyType> call) {
+        this.call = call;
+    }
 
 
     public Response<ResponseBodyType> getResponse() {
@@ -130,9 +138,11 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     public void onFailure(Call<ResponseBodyType> call, Throwable error) {
         this.error = error;
         Log.e(TAG, "Request error: " + error);
-        error.printStackTrace();
+        //error.printStackTrace();
         for (RequestFailureCallback callback : failureCallbacks) {
-            dispatchError(error, callback);
+            if (!this.call.isCanceled()){
+                dispatchError(error, callback);
+            }
         }
         this.callFinallyCallbacks();
     }
@@ -165,7 +175,9 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
                 return errorConverter.convert(response.errorBody());
             } catch (IOException e) {
                 Log.e(TAG, "Cannot convert error body from rest response: " + e.getMessage());
-                e.printStackTrace();
+                if (BuildConfig.DEBUG){
+                    e.printStackTrace();
+                }
             }
         }
         return null;
@@ -183,6 +195,9 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         callback.onError(error);
         if (error instanceof IOException) {
             callback.network((IOException) error);
+        }
+        else if (error instanceof MalformedJsonException){
+            callback.unexpectedFormat(error);
         }
     }
 

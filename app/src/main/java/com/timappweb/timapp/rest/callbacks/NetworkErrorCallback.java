@@ -26,14 +26,17 @@ public class NetworkErrorCallback extends com.timappweb.timapp.rest.callbacks.Re
     @Override
     public void network(IOException error) {
         Log.e(TAG, "Received server error message: " + error.getMessage());
-        if (error instanceof MalformedJsonException){
-            Toast.makeText(context, R.string.error_message_service_not_available, Toast.LENGTH_SHORT).show();
-        }
         //else if (error instanceof SocketException){
         //    Log.e(TAG, "SocketException: " + error.getMessage());
         //}
-        else {
-            Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
-        }
+        Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void unexpectedFormat(Throwable error) {
+        Toast.makeText(context, R.string.error_message_service_not_available, Toast.LENGTH_SHORT).show();
     }
 }
+
+

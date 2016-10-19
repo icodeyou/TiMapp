@@ -7,7 +7,9 @@ import java.io.IOException;
  */
 public  class RequestFailureCallback {
 
-    public  void onError(Throwable error) {};
+    public  void onError(Throwable error) {}
 
-    public  void network(IOException error) {};
+    public  void network(IOException error) {}
+
+    public void unexpectedFormat(Throwable error) {}
 }

@@ -25,7 +25,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
     public HttpCallManager(Call<T> call) {
         this.call = call;
         this.callDelay = 0;
-        this.callbackGroup = new HttpCallbackGroup<>();
+        this.callbackGroup = new HttpCallbackGroup<>(this.call);
     }
 
     public HttpCallManager<T> onResponse(HttpCallback<T> httpCallback) {
@@ -125,7 +125,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
     }
 
     public void retry() {
-        this.cancel();;
+        this.cancel();
         this.call = this.call.clone();
         this.perform();
     }
