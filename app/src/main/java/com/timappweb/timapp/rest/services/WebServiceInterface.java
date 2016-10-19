@@ -1,12 +1,11 @@
 package com.timappweb.timapp.rest.services;
 
 import com.google.gson.JsonObject;
-import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
-import com.timappweb.timapp.data.models.EventPeopleStats;
+import com.timappweb.timapp.data.entities.EventPeopleStats;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SpotCategory;
@@ -32,12 +31,8 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**

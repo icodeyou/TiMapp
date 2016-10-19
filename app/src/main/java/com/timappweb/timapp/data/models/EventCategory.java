@@ -1,15 +1,9 @@
 package com.timappweb.timapp.data.models;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
-import com.timappweb.timapp.utils.PictureUtility;
 
 import java.util.List;
 
@@ -50,6 +44,7 @@ public class EventCategory extends Category{
     }
 
     // =============================================================================================
+
     public String getName() {
         return name;
     }

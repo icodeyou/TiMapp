@@ -1,13 +1,10 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
-
-import java.util.List;
 
 /**
  * Created by stephane on 5/5/2016.

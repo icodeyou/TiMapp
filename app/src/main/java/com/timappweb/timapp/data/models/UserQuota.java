@@ -7,8 +7,6 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -151,7 +149,6 @@ public class UserQuota extends SyncBaseModel {
 
         return true;
     }
-
 
 
     public static void increment(long userId, int type) {

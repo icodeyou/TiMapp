@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Delete;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,6 +40,8 @@ import java.util.List;
  */
 @Table(name = "Event")
 public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface{
+
+    public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
 
     private static final String TAG = "PlaceEntity" ;
     public static final String PROPERTY_PICTURE = "picture";
@@ -384,30 +385,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return result;
     }
 
-
-    public From getPicturesQuery() {
-        return new Select().from(Picture.class).where("Event = ?", this.getId()).orderBy("created DESC");
-    }
-
-    public List<Picture> getPictures() {
-        return getPicturesQuery().execute();
-    }
-
-    public List<UserEvent> getUsers() {
-        return new Select().from(UserEvent.class).where("Event = ?", this.getId()).execute();
-    }
-
-    public From getTagsQuery() {
-        return new Select()
-                .from(EventTag.class)
-                .where("EventTag.Event = ?", this.getId())
-                //.join(EventTag.class).on("Tag.Id = EventTag.Tag")
-                .orderBy("EventTag.CountRef DESC");
-    }
-    public void deleteTags() {
-        new Delete().from(EventTag.class).where("EventTag.Event = ?", this.getId()).execute();
-    }
-
     public List<EventTag> getTags() {
         return getTagsQuery().execute();
     }
@@ -479,12 +456,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return this.start_date <= Util.getCurrentTimeSec();
     }
 
-
-    public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
-
     public VisiblityStatus getVisibilityStatus(){
-        /*//For the tests
-        return VisiblityStatus.INACTIVE;*/
         if (!this.hasBegin()){
             return VisiblityStatus.PLANNED;
         }
@@ -512,7 +484,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         int inactivityDuration = getInactivityDurationSeconds() ;
         return Util.secondsDurationToPrettyTime(inactivityDuration);
     }
-
 
     public void setLocation(Location location) {
         this.latitude = location.getLatitude();
@@ -546,22 +517,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public void requestSync() {
         super.requestSync(MyApplication.getApplicationBaseContext(), DataSyncAdapter.SYNC_TYPE_EVENT);
-    }
-
-    /**
-     * Get invitation sent user
-     * @param currentUser
-     */
-    public List<EventsInvitation> getSentInvitationsByUser(User currentUser) {
-        List<EventsInvitation> invitations = new Select()
-                .from(EventsInvitation.class)
-                .where("Event = ? AND UserSource = ?", this.getId(), currentUser.getId())
-                .execute();
-        return invitations;
-    }
-
-    public long getPointsLong() {
-        return getPoints() * 1000;
     }
 
     public boolean hasPicture() {
@@ -616,12 +571,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         }
     }
 
-    public From getPeopleQuery() {
-        return new Select().from(UserEvent.class)
-                .where("Event = ?", this.getId())
-                .orderBy("UserEvent.Created DESC");
-    }
-
     public void setPoints(int points) {
         this.points = points;
         this.loaded_time = Util.getCurrentTimeSec();
@@ -640,5 +589,49 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public boolean isOwner(User currentUser) {
         return this.user != null && this.user.equals(currentUser);
+    }
+
+
+    // =============================================================================================
+
+
+
+    public List<Picture> getPictures() {
+        return getPicturesQuery().execute();
+    }
+
+    public List<UserEvent> getUsers() {
+        return new Select().from(UserEvent.class).where("Event = ?", this.getId()).execute();
+    }
+
+    /**
+     * Get invitation sent user
+     * @param currentUser
+     */
+    public List<EventsInvitation> getSentInvitationsByUser(User currentUser) {
+        List<EventsInvitation> invitations = new Select()
+                .from(EventsInvitation.class)
+                .where("Event = ? AND UserSource = ?", this.getId(), currentUser.getId())
+                .execute();
+        return invitations;
+    }
+
+    public From getPeopleQuery() {
+        return new Select().from(UserEvent.class)
+                .where("Event = ?", this.getId())
+                .orderBy("UserEvent.Created DESC");
+    }
+
+
+    public From getPicturesQuery() {
+        return new Select().from(Picture.class).where("Event = ?", this.getId()).orderBy("created DESC");
+    }
+
+    public From getTagsQuery() {
+        return new Select()
+                .from(EventTag.class)
+                .where("EventTag.Event = ?", this.getId())
+                //.join(EventTag.class).on("Tag.Id = EventTag.Tag")
+                .orderBy("EventTag.CountRef DESC");
     }
 }

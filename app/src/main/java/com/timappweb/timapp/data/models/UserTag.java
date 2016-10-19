@@ -1,6 +1,5 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;

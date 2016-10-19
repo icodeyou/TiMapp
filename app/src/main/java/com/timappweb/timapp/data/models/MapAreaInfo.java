@@ -11,7 +11,6 @@ import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.timappweb.timapp.data.queries.AreaQueryHelper;
 
 /**
  * Created by stephane on 4/26/2016.

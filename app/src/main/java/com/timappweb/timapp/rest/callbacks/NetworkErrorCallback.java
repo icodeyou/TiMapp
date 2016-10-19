@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.timappweb.timapp.R;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 /**
  * Created by Stephane on 13/08/2016.
@@ -28,6 +29,9 @@ public class NetworkErrorCallback extends com.timappweb.timapp.rest.callbacks.Re
         if (error instanceof MalformedJsonException){
             Toast.makeText(context, R.string.error_message_service_not_available, Toast.LENGTH_SHORT).show();
         }
+        //else if (error instanceof SocketException){
+        //    Log.e(TAG, "SocketException: " + error.getMessage());
+        //}
         else {
             Toast.makeText(context, R.string.no_network_access, Toast.LENGTH_LONG).show();
         }

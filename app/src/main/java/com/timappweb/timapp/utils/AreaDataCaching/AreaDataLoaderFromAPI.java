@@ -35,8 +35,6 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
     private int lastClear = -1;
     private AreaRequestHistory areaRequestHistory = null;
 
-    private Event selectedEvent;
-
     // ---------------------------------------------------------------------------------------------
 
     public AreaDataLoaderFromAPI(Activity activity, SearchFilter filter) {
@@ -121,11 +119,6 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
 
     public void setLoadingListener(LoadingListener loadingListener) {
         this.loadingListener = loadingListener;
-    }
-
-    public void setSelectedEvent(Event event) {
-        this.selectedEvent = event;
-        return;
     }
 
 

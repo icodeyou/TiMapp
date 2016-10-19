@@ -4,12 +4,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.models.UserActivity;
 import com.timappweb.timapp.data.models.UserQuota;
 import com.timappweb.timapp.sync.user.UserSyncAdapter;
 import com.timappweb.timapp.utils.Util;
@@ -42,23 +39,8 @@ public class QuotaManager {
         return inst;
     }
 
-    public UserActivity add(int quotaTypeId){
-        Log.d(TAG, "Adding user activity: " + quotaTypeId);
-        UserActivity userActivity = new UserActivity(quotaTypeId);
-        userActivity.save();
-
+    public void add(int quotaTypeId){
         UserQuota.increment(MyApplication.getCurrentUser().getId(), quotaTypeId);
-
-        return userActivity;
-    }
-
-    public UserActivity getLastActivity(QuotaType type){
-        Model res = new Select()
-                .from(UserActivity.class)
-                .where("QuotaType = ?", type)
-                //.orderBy("date_created DESC")
-                .executeSingle();
-        return (UserActivity) res;
     }
 
 

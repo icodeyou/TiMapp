@@ -187,9 +187,6 @@ public class ExploreFragment extends Fragment{
         return fabClickListener;
     }
 
-    public void setSelectedEventForLoader(Event selectedEvent) {
-        dataLoader.setSelectedEvent(selectedEvent);
-    }
 
     public ExploreEventsFragment getExploreEventsFragment() {
         return eventsFragment;

@@ -17,11 +17,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
-
-import static com.timappweb.timapp.data.models.annotations.ModelAssociation.Type.BELONGS_TO_MANY;
 
 /**
  * Created by stephane on 5/10/2016.

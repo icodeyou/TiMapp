@@ -5,14 +5,12 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
-import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 import java.util.List;
 
 @Table(name = "User")
-public class User extends SyncBaseModel implements PlaceUserInterface {
+public class User extends SyncBaseModel  {
     private static final String TAG = "UserEntity" ;
 
     // =============================================================================================
@@ -73,10 +71,6 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
 
     // =============================================================================================
 
-    public List<User> getFriends() {
-        return this.getFriendsQuery().execute();
-    }
-
     public User(){
 
     }
@@ -92,11 +86,12 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
         this.username = username;
     }
 
-    private static int dummyIndice = 0;
-    public static User createDummy(){
-        User user = new User("user"+dummyIndice+"@dummy.com", "dummy", "Dummy User " + dummyIndice);
-        dummyIndice++;
-        return user;
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -120,24 +115,8 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
         return this.avatar_url;
     }
 
-    @Override
-    public List<Tag> getTags() {
-        if (tags != null) return tags;
-        tags = new Select().from(Tag.class).innerJoin(UserTag.class).on("Tag.Id = UserTag.Tag AND UserTag.User = ?", this.getId()).execute();
-        return tags;
-    }
     public boolean hasTags() {
         return getTags().size() > 0;
-    }
-
-    @Override
-    public String getTimeCreated() {
-        return null;
-    }
-
-    @Override
-    public User getUser() {
-        return this;
     }
 
     public void setStatus(boolean status) {
@@ -148,15 +127,14 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
         return status;
     }
 
-    public String getTagsToString() {
-        return Tag.tagsToString(this.tags);
-    }
-
-    public List<Tag> setNewbieTag() {
-        return null;
-    }
 
     // =============================================================================================
+
+    public List<Tag> getTags() {
+        if (tags != null) return tags;
+        tags = new Select().from(Tag.class).innerJoin(UserTag.class).on("Tag.Id = UserTag.Tag AND UserTag.User = ?", this.getId()).execute();
+        return tags;
+    }
 
     @Override
     public boolean isSync(SyncBaseModel model) {
@@ -202,10 +180,6 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
                 .orderBy("id DESC");
     }
 
-    public From getInviteReceivedQuery(long placeId) {
-        return getInviteReceivedQuery().where("Event = ?", placeId);
-    }
-
     public List<EventsInvitation> getInviteReceived() {
         return this.getInviteReceivedQuery().execute();
     }
@@ -215,19 +189,8 @@ public class User extends SyncBaseModel implements PlaceUserInterface {
     }
 
 
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
     public UserQuota getQuota(int quotaTypeId) {
         return UserQuota.get(this.getId(), quotaTypeId);
-    }
-    public List<UserQuota> getQuotas() {
-        return new Select().from(UserQuota.class).where("User = ?", this.getId()).execute();
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
 

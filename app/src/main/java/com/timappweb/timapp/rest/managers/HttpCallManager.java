@@ -125,6 +125,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
     }
 
     public void retry() {
+        this.cancel();;
         this.call = this.call.clone();
         this.perform();
     }

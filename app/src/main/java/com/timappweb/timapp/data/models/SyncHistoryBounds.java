@@ -5,9 +5,7 @@ import android.util.Log;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.maps.android.geometry.Bounds;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 
 /**

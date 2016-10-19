@@ -6,15 +6,12 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.PlacesInvitationStatus;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
-import java.util.List;
-
 @Table(name = "EventsInvitation")
-public class EventsInvitation extends SyncBaseModel implements PlaceUserInterface {
+public class EventsInvitation extends SyncBaseModel {
 
     // =============================================================================================
     // Database
@@ -63,24 +60,17 @@ public class EventsInvitation extends SyncBaseModel implements PlaceUserInterfac
         this.user_target = user;
     }
 
-    @Override
     public String getTimeCreated() {
         Log.d("Debug pretty time", "Invitation created : "+created);
         return Util.secondsTimestampToPrettyTime(this.created);
     }
 
-    @Override
     public User getUser() {
         return this.user_target;
     }
 
     public User getUserSource() {
         return this.user_source;
-    }
-
-    @Override
-    public List<Tag> getTags() {
-        return null;
     }
 
     @Override

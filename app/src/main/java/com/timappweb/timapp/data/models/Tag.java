@@ -1,7 +1,5 @@
 package com.timappweb.timapp.data.models;
 
-import android.os.Parcelable;
-
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
@@ -9,7 +7,6 @@ import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.utils.SearchHistory;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Table(name = "Tag")
@@ -52,14 +49,6 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
         this.name = name;
     }
 
-    public int getCountRef() {
-        return count_ref;
-    }
-
-    public void setCountRef(int count_ref) {
-        this.count_ref = count_ref;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,10 +63,6 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
     @Override
     public int hashCode() {
         return name.hashCode();
-    }
-
-    public static Tag createDummy() {
-        return new Tag("DummyTag", 34);
     }
 
     public boolean isShortEnough() {

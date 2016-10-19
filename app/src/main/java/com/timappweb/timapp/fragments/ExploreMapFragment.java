@@ -218,8 +218,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             //translateUp.setInterpolator(new DecelerateInterpolator());
 
             btnAddEvent.startAnimation(translateUp);
-
-            exploreFragment.setSelectedEventForLoader(event);
         }
         catch (CannotSaveModelException e) {
             // should not happen

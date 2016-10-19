@@ -1,4 +1,4 @@
-package com.timappweb.timapp.data.models;
+package com.timappweb.timapp.data.entities;
 
 import com.google.gson.annotations.Expose;
 

@@ -1,26 +1,20 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
-import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.data.entities.PlaceUserInterface;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
-import com.timappweb.timapp.utils.Util;
-
-import java.util.List;
 
 /**
  * Join table for
  */
 @Table(name = "UserEvent")
-public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
+public class UserEvent extends SyncBaseModel  {
 
     private long MAX_STATUS_VALIDITY = 10800 * 1000; // Status validity is 3 hours
 
@@ -52,16 +46,59 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
     public UserEvent() {
     }
 
-    public UserEvent(int place_id, UserEventStatusEnum status) {
-        this.event = Event.loadByRemoteId(Event.class, place_id);
-        this.status = status;
-        this.created = Util.getCurrentTimeSec();
+    @Override
+    public String toString() {
+        return "UserEvent{" +
+                "event=" + event +
+                ", status=" + status +
+                ", user=" + user +
+                ", created=" + created +
+                '}';
     }
-    public UserEvent(User user, Event event, UserEventStatusEnum status) {
-        this.user = user;
-        this.event = event;
-        this.status = status;
-        this.created = Util.getCurrentTimeSec();
+
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public boolean isSync(SyncBaseModel model) {
+        if (model == null || !(model instanceof UserEvent)) return false;
+        UserEvent obj = (UserEvent) model;
+        return this.status == obj.status;
+    }
+
+
+    public boolean isStatusUpToDate() {
+        return (this.created - System.currentTimeMillis()) < MAX_STATUS_VALIDITY;
+    }
+
+    public static boolean hasStatus(Long userId, long placeId, UserEventStatusEnum status) {
+        UserEvent eventStatus = getStatus(placeId, userId);
+        if (eventStatus != null && !eventStatus.isStatusUpToDate()){
+            eventStatus.delete();
+            return false;
+        }
+        return eventStatus != null && eventStatus.status == status;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Get user status for a particular event
+     * @param eventId
+     * @param userId
+     * @return
+     */
+    public static UserEvent getStatus(long eventId, long userId){
+        return new Select()
+                .from(UserEvent.class)
+                .where("User = ? AND Event = ?", userId, eventId)
+                .orderBy("SyncId DESC")
+                .executeSingle();
+    }
+
+    public static void removeStatus(User user, Event event, UserEventStatusEnum status) {
+        new Delete().from(UserEvent.class).where("User = ? AND Event = ?", user.getId(), event.getId()).execute();
     }
 
     /**
@@ -81,70 +118,4 @@ public class UserEvent extends SyncBaseModel implements PlaceUserInterface {
         return lastHereStatus;
     }
 
-    @Override
-    public String toString() {
-        return "UserEvent{" +
-                "event=" + event +
-                ", status=" + status +
-                ", user=" + user +
-                ", created=" + created +
-                '}';
-    }
-
-    @Override
-    public List<Tag> getTags() {
-        return null;
-    }
-
-    @Override
-    public String getTimeCreated() {
-        return Util.millisTimestampToPrettyTime(this.created);
-    }
-
-    @Override
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public boolean isSync(SyncBaseModel model) {
-        if (model == null || !(model instanceof UserEvent)) return false;
-        UserEvent obj = (UserEvent) model;
-        return this.status == obj.status;
-    }
-
-
-    // ---------------------------------------------------------------------------------------------
-    public static boolean hasStatus(Long userId, long placeId, UserEventStatusEnum status) {
-        UserEvent eventStatus = getStatus(placeId, userId);
-        if (eventStatus != null && !eventStatus.isStatusUpToDate()){
-            eventStatus.delete();
-            return false;
-        }
-        return eventStatus != null && eventStatus.status == status;
-    }
-
-    /**
-     * Get user status for a particular event
-     * @param eventId
-     * @param userId
-     * @return
-     */
-    public static UserEvent getStatus(long eventId, long userId){
-        return new Select()
-                .from(UserEvent.class)
-                .where("User = ? AND Event = ?", userId, eventId)
-                .orderBy("SyncId DESC")
-                .executeSingle();
-    }
-
-
-
-    public boolean isStatusUpToDate() {
-        return (this.created - System.currentTimeMillis()) < MAX_STATUS_VALIDITY;
-    }
-
-    public static void removeStatus(User user, Event event, UserEventStatusEnum status) {
-        new Delete().from(UserEvent.class).where("User = ? AND Event = ?", user.getId(), event.getId()).execute();
-    }
 }

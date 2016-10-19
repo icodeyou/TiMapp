@@ -18,8 +18,8 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.Util;
 
 import java.lang.reflect.Field;
