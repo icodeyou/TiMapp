@@ -395,10 +395,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void openAddTagsActivity() {
-        if (!LocationManager.hasFineLocation()) {
-            Toast.makeText(this, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
-            return;
-        }
         IntentsUtils.addTags(EventActivity.this, event);
     }
 

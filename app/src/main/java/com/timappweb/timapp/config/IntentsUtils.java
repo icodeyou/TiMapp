@@ -34,6 +34,7 @@ import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPost;
+import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -64,6 +65,7 @@ public class IntentsUtils {
     public static final int ACTION_ADD_EVENT_PICTURE = 4;
 
     public static final String KEY_ACTION = "action";
+    public static final String KEY_TAG = "tag";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_USER = "user";
     public static final String VIEW_PICTURE_POSITION = "position";
@@ -205,7 +207,7 @@ public class IntentsUtils {
     }
 
     public static void addPictureFromFragment(Context context, final Fragment fragment) {
-        if (!requireLogin(context, false) || !QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
+        if (!QuotaManager.instance().checkQuota(QuotaType.ADD_PICTURE, true))
             return;
 
         int storageCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -256,16 +258,27 @@ public class IntentsUtils {
         }
     }
 
+    public static void checkAndAddTags(Activity activity, Event event, EventTag eventTag) {
+        if(checkingBeforePost(activity, event, ACTION_TAGS)) {
+            addTags(activity, event, eventTag);
+        };
+    }
+
     public static void addTags(Activity activity, Event event) {
-        if (!requireLogin(activity, false))
-            return;
+        addTags(activity, event, null);
+    }
+
+    public static void addTags(Activity activity, Event event, EventTag eventTag) {
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_TAGS, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).builder();
             return;
         }
 
-        Intent intent = buildIntentAddTags(activity, event);
-        activity.startActivityForResult(intent, REQUEST_TAGS);
+        Intent addtagsIntent = buildIntentAddTags(activity, event);
+
+        if(eventTag != null) addtagsIntent.putExtra(KEY_TAG, eventTag.getId());
+
+        activity.startActivityForResult(addtagsIntent , REQUEST_TAGS);
     }
 
     public static Intent buildIntentAddTags(Context context, Event event){
@@ -300,25 +313,42 @@ public class IntentsUtils {
         context.startActivity(buildIntentViewPlace(context, event));
     }
 
-    public static void postEvent(Context context, Event event, int action) {
+    public static boolean postInEvent(Context context, Event event, int action) {
+        if(checkingBeforePost(context, event, action)) {
+            if (context instanceof EventActivity){
+                ((EventActivity)context).parseActionParameter(action);
+                return true;
+            }
+            Intent intent = buildIntentViewPlace(context, event);
+            intent.putExtra(KEY_ACTION, action);
+            context.startActivity(intent);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private static boolean checkingBeforePost(Context context, Event event, int action) {
         if(!requireLogin(context,false)) {
-            return;
+            return false;
         }
         if(event.isOver()) {
+            //TODO : check that it is really over !
             Toast.makeText(context, R.string.should_be_not_over_to_post, Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
-        if(!event.isUserAround() && ( action == ACTION_TAGS || action == ACTION_CAMERA ) ) {
-            Toast.makeText(context, R.string.should_be_around_to_post, Toast.LENGTH_LONG).show();
-            return;
+        if(action == ACTION_TAGS || action == ACTION_CAMERA) {
+            if (!LocationManager.hasFineLocation()) {
+                Toast.makeText(context, R.string.error_cannot_get_location, Toast.LENGTH_LONG).show();
+                return false;
+            }
+            if(!event.isUserAround()) {
+                Toast.makeText(context, R.string.should_be_around_to_post, Toast.LENGTH_LONG).show();
+                return false;
+            }
         }
-        if (context instanceof EventActivity){
-            ((EventActivity)context).parseActionParameter(action);
-            return;
-        }
-        Intent intent = buildIntentViewPlace(context, event);
-        intent.putExtra(KEY_ACTION, action);
-        context.startActivity(intent);
+        return true;
     }
 
     public static Intent buildIntentViewPlace(Context context, long eventId) {
@@ -326,6 +356,7 @@ public class IntentsUtils {
         intent.putExtra(KEY_EVENT_ID, eventId); // TODO cst
         return  intent;
     }
+
     public static Intent buildIntentViewPlace(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
         Bundle extras = new Bundle();      // TODO use constant
@@ -481,6 +512,17 @@ public class IntentsUtils {
         catch (Exception ex){
             Log.e(TAG, "Error extracting spot: " + ex.getMessage());
             return null;
+        }
+    }
+
+
+    public static EventTag extractEventTag(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if(extras == null) {
+            return null;
+        }
+        else {
+            return EventTag.load(EventTag.class, extras.getLong(KEY_TAG));
         }
     }
 

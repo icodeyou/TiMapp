@@ -49,7 +49,7 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 public class DrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, LocationManager.LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String         TAG                                 = "DrawerActivity";
-    private static final String EXPLORE_FRAGMENT_TAG = "Explore";
+    private static final String         EXPLORE_FRAGMENT_TAG                = "Explore";
     private static int                  TIMELAPSE_BEFORE_BACK_EXIT          = 2000;
 
     // ---------------------------------------------------------------------------------------------
@@ -308,9 +308,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         View rootHeaderView = navigationView.getHeaderView(0);*/
 
-        cameraButton = findViewById(R.id.action_camera);
-        tagButton = findViewById(R.id.action_tag);
-        inviteButton = findViewById(R.id.action_invite);
         eventBackground = findViewById(R.id.nav_background_event);
         noEventLayout = findViewById(R.id.no_events_layout);
         eventLayout = findViewById(R.id.event_layout);
@@ -327,7 +324,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             noEventLayout.setVisibility(View.GONE);
             eventLayout.setVisibility(View.VISIBLE);
 
-            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), event);
+            FabListenerFactory.setFabListener(this, findViewById(R.id.nav_view), event);
         }
     }
 

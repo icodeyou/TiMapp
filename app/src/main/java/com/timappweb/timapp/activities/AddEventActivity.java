@@ -238,7 +238,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             progressView.setVisibility(View.GONE);
         }
         else {
-            IntentsUtils.getBackToParent(this);
+            showConfirmDialog();
         }
     }
     //----------------------------------------------------------------------------------------------
@@ -299,25 +299,29 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 submitEvent(event, pictureSelected);
                 return true;
             case android.R.id.home:
-                ConfirmDialog.builder(this,
-                        null,
-                        getString(R.string.confim_message_add_event),
-                        getString(R.string.alert_dialog_continue_addevent),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if(which == DialogInterface.BUTTON_POSITIVE) {
-                                    IntentsUtils.getBackToParent(AddEventActivity.this);
-                                }
-                            }
-                        }
-                )
-                        .create()
-                        .show();;
+                showConfirmDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showConfirmDialog() {
+        ConfirmDialog.builder(this,
+                null,
+                getString(R.string.confim_message_add_event),
+                getString(R.string.alert_dialog_continue_addevent),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which == DialogInterface.BUTTON_POSITIVE) {
+                            IntentsUtils.getBackToParent(AddEventActivity.this);
+                        }
+                    }
+                }
+        )
+                .create()
+                .show();;
     }
 
     private void initEts() {

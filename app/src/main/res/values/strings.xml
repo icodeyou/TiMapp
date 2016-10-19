@@ -142,14 +142,14 @@
             <string name="action_set_picture_as_event_background">Set as event picture</string>
             <string name="event_picture_updated">The default picture has been updated.</string>
             <string name="selection">Selection</string>
-
-    <!-- Fragment Tags -->
+        <!-- Fragment Tags -->
             <string name="no_tags">No tags yet.</string>
             <string name="thanks_for_add_tag">Thank you for your tags !</string>
         <!-- Fragment People -->
             <string name="header_coming">On their way</string>
             <string name="header_invited">Friends invited</string>
             <string name="header_here">Here</string>
+            <string name="header_were_here">They were here</string>
             <plurals name="number_people_event">
                 <item quantity="one">%d person</item>
                 <item quantity="other">%d people</item>
@@ -277,6 +277,5 @@
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
     <string name="dummy_string" translatable="false">Dummy String</string>
-    <string name="header_were_here" translatable="false">They were here</string>
 
 </resources>

@@ -91,7 +91,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         tagsAndCountersAdapter.setItemAdapterClickListener(new OnItemAdapterClickListener() {
             @Override
             public void onClick(int position) {
-                IntentsUtils.postEvent(eventActivity, eventActivity.getEvent(), IntentsUtils.ACTION_TAGS);
+                IntentsUtils.checkAndAddTags(eventActivity, eventActivity.getEvent(), tagsAndCountersAdapter.getTag(position));
             }
         });
         mRecyclerView.setAdapter(mAdapter);

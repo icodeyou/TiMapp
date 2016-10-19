@@ -11,9 +11,9 @@ public class OnAddTagListener extends OnBasicQueryTagListener {
         this.addTagActivity = addTagActivity;
     }
 
-    @Override
+         @Override
     public void addTag(String query) {
-        super.addTag(query);
+        manager.addTag(query);
         addTagActivity.actionCounter();
     }
 }

@@ -1,8 +1,6 @@
 package com.timappweb.timapp.listeners;
 
-import android.app.Instrumentation;
 import android.support.v7.widget.SearchView;
-import android.view.KeyEvent;
 
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 
@@ -21,30 +19,13 @@ public class OnBasicQueryTagListener implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if(newText.contains(" ")) {
-            if(newText.length()<2) {
-                //if this action is removed, onQueryTextChange will not be called
-                // the second time the spacebar is pressed.
-                simulateKeys();
-            }
-            newText = newText.substring(0, newText.length()-1);
-            addTag(newText);
+        if(newText.length() > 0 && newText.substring(newText.length()-1).equals(" ")) {
+            onQueryTextSubmit(newText.trim());
         }
         else {
             manager.suggestTag(newText);
         }
-        return false;
-    }
-
-    private void simulateKeys() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Instrumentation inst = new Instrumentation();
-                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_SPACE);
-                inst.sendKeyDownUpSync(KeyEvent.KEYCODE_DEL);
-            }
-        }).start();
+        return true;
     }
 
     public void addTag(String query) {
