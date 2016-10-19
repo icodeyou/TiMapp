@@ -45,6 +45,7 @@ import com.timappweb.timapp.rest.callbacks.FormErrorsCallback;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
+import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
@@ -328,8 +329,8 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
             picture.setUser(MyApplication.getCurrentUser());
 
             Call call = RestClient.instance().createService(PictureInterface.class).upload(event.getRemoteId(), body);
-            RestClient
-                .buildCall(call)
+            HttpCallManager callManager = RestClient.buildCall(call);
+            callManager
                 .onResponse(new AutoMergeCallback(picture))
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.ADD_PICTURE))
                 .onResponse(new FormErrorsCallback(getContext(), "Pictures"))
@@ -345,7 +346,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                     }
 
                 })
-                .onError(new NetworkErrorCallback(getContext()))
+                .onError(new RetryOnErrorCallback(getActivity(), callManager))
                 .onFinally(new HttpCallManager.FinallyCallback() {
 
                     @Override

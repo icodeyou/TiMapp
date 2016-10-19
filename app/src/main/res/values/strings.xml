@@ -277,6 +277,6 @@
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
     <string name="dummy_string" translatable="false">Dummy String</string>
-    <string name="header_were_here">They were here</string>
+    <string name="header_were_here" translatable="false">They were here</string>
 
 </resources>
