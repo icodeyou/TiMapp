@@ -71,7 +71,6 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
 public class EventPicturesFragment extends EventBaseFragment implements OnTabSelectedListener,
         ActionMode.Callback{
 
@@ -410,7 +409,9 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
 
     @Override
     public void onTabUnselected() {
-        mActionModeHelper.destroyActionModeIfCan();
+        if(mActionModeHelper != null) {
+            mActionModeHelper.destroyActionModeIfCan();
+        }
     }
 
 

@@ -132,8 +132,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         this.initToolbar(true);
         Util.setStatusBarColor(this, R.color.colorSecondaryDark);
 
-        extractSpot(savedInstanceState);
-
         //Initialize
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         descriptionET = (EditText)  findViewById(R.id.description_edit_text);
@@ -160,7 +158,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         icSpotValidate = findViewById(R.id.spot_validate);
         icSpotText = (TextView) findViewById(R.id.spot_text);
 
+        // @warning DO NOT MOVE
         mBinding.setEvent(new Event());
+        extractSpot(savedInstanceState);
+        // ------
 
         initContextMenu();
         initEts();
