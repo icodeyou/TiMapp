@@ -58,16 +58,13 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private static final int                TIME_ZOOM_ANIM                  = 500;
     private static final int                DELAY_UPDATE_MAP_DATA_MILLIS    = 500;
     private static final double             PADDING_RATIO_ZOOM_CLUSTER = 0.2;
+    private static final float              GO_TO_LIST_ZOOM_LEVEL = 2;
     private float                           ZOOM_LEVEL_CENTER_MAP           = 15.0f;
     private Marker                          selectingMarker;
     private Location                        lastLocation;
 
     // ---------------------------------------------------------------------------------------------
 
-    enum ZoomType {IN, OUT, NONE};
-    private ZoomType                        currentZoomMode                 = ZoomType.NONE;
-    private float                           previousZoomLevel = -1;
-    private float                           currentZoomLevel = -1;
 
     // Declare a variable for the cluster manager.
     private ClusterManager<Event>           mClusterManagerPost;
@@ -94,6 +91,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     private Runnable                        mUpdateRunnable;
 
     private boolean                         needCenterMap           = true;
+    private OnZoomChangeListener mOnCameraMoveListener;
     // ---------------------------------------------------------------------------------------------
 
     public AreaRequestHistory getHistory() {
@@ -212,11 +210,6 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             eventView.startAnimation(slideIn);
             Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
             Animation translateUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
-
-            //TranslateAnimation translateUp = new TranslateAnimation(0,0,eventView.getHeight(),0);
-            //translateUp.setDuration(getResources().getInteger(R.integer.time_slide_in_map));
-            //translateUp.setInterpolator(new DecelerateInterpolator());
-
             btnAddEvent.startAnimation(translateUp);
         }
         catch (CannotSaveModelException e) {
@@ -370,7 +363,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         if (bounds == null) return;
         Log.d(TAG, "Map bounds: " + bounds.southwest + " " + bounds.southwest);
 
-        if (!history.isInitialized() || currentZoomMode == ZoomType.OUT){
+        if (!history.isInitialized() || (mOnCameraMoveListener != null
+                && mOnCameraMoveListener.isZoomMode(OnZoomChangeListener.ZoomType.OUT))){
             // Remove previous cache and all markers
             history.resizeArea(bounds);
         }
@@ -401,8 +395,8 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             @Override
             public boolean onClusterClick(Cluster<Event> cluster) {
 
-                // If zoom level is too big, go to list (TODO global parameter)
-                if (currentZoomLevel > gMap.getMaxZoomLevel() - 2){
+                // If zoom level is too big, go to list
+                if (gMap.getCameraPosition().zoom > gMap.getMaxZoomLevel() - GO_TO_LIST_ZOOM_LEVEL){
                     exploreFragment.actionList();
                     return true;
                 }
@@ -438,7 +432,26 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         //If we want to redirect to the place after second click, please set another listener  to the map
         // new OnMarkerClickListener() and return false to cancel center on map.
         gMap.setOnMarkerClickListener(mClusterManagerPost);
-        gMap.setOnCameraChangeListener(new OnCameraChangeListener());
+
+        mOnCameraMoveListener = new OnZoomChangeListener(gMap){
+            @Override
+            public void onCameraMove() {
+                super.onCameraMove();
+                mClusterManagerPost.cluster();
+
+                if (mUpdateRunnable != null){
+                    mMainHandler.removeCallbacks(mUpdateRunnable);
+                }
+                mUpdateRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        ExploreMapFragment.this.updateMapData();
+                    }
+                };
+                mMainHandler.postDelayed(mUpdateRunnable, DELAY_UPDATE_MAP_DATA_MILLIS);
+            }
+        };
+        gMap.setOnCameraMoveListener(mOnCameraMoveListener);
         mClusterManagerPost.setAlgorithm(new RemovableNonHierarchicalDistanceBasedAlgorithm<Event>());
 
         this.exploreFragment.getDataLoader().setClusterManager(mClusterManagerPost);
@@ -468,10 +481,34 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
         return eventView.getVisibility()==View.VISIBLE;
     }
 
-    private class OnCameraChangeListener implements GoogleMap.OnCameraChangeListener{
+    private abstract static class OnZoomChangeListener implements GoogleMap.OnCameraMoveListener{
 
-        @Override
-        public void onCameraChange(CameraPosition cameraPosition) {
+        private final GoogleMap gMap;
+
+        public OnZoomChangeListener(GoogleMap gMap) {
+            this.currentZoomMode = ZoomType.NONE;
+            this.gMap = gMap;
+        }
+
+        enum ZoomType {IN, OUT, NONE}
+
+        private ZoomType                        currentZoomMode                 = ZoomType.NONE;
+        private float                           previousZoomLevel = -1;
+        private float                           currentZoomLevel = -1;
+
+
+
+        public boolean isZoomMode(ZoomType mode) {
+            return this.currentZoomMode == mode;
+        }
+
+        // TODO
+        public float getZoomDiffRatio(){
+            return Math.abs((this.previousZoomLevel - this.currentZoomLevel) / this.previousZoomLevel);
+        }
+
+        private void computeZoom(){
+            CameraPosition cameraPosition = this.gMap.getCameraPosition();
             Log.d(TAG, "Zoom level is now: " + cameraPosition.zoom);
 
             previousZoomLevel = currentZoomLevel;
@@ -486,18 +523,11 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             }
 
             previousZoomLevel = cameraPosition.zoom;
-            mClusterManagerPost.cluster();
+        }
 
-            if (mUpdateRunnable != null){
-                mMainHandler.removeCallbacks(mUpdateRunnable);
-            }
-            mUpdateRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    ExploreMapFragment.this.updateMapData();
-                }
-            };
-            mMainHandler.postDelayed(mUpdateRunnable, DELAY_UPDATE_MAP_DATA_MILLIS);
+        @Override
+        public void onCameraMove() {
+            this.computeZoom();
         }
     }
 }
