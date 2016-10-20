@@ -160,10 +160,6 @@
             android:name=".activities.ErrorActivity">
         </activity>
 
-        <activity
-            android:name=".activities.ComingSoonActivity">
-        </activity>
-
         <!-- EXPLORE ACTIVITY //////////////////////////////////////////////-->
 
         <activity

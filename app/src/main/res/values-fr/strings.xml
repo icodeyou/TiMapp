@@ -218,10 +218,6 @@
     <string name="define_yourself">Definis toi</string>
     <string name="submit">Valider</string>
 
-    <!-- ComingSoonActivity -->
-    <string name="coming_soon">Coming soon</string>
-    <string name="coming_soon_subtitle">Aimez notre page Facebook et participez au test beta !</string>
-
     <!-- InvitationsActivities -->
     <string name="text_no_invitations">Pas d\'invitations pour le moment</string>
     <string name="friend_already_invited">Invitation déja envoyée !</string>
