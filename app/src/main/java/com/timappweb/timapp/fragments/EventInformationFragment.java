@@ -183,6 +183,9 @@ public class EventInformationFragment extends EventBaseFragment implements OnMap
 
     public void updateUserStatusButton(){
         Event event = getEvent();
+        if(event == null) {
+            return; //TODO : Event is null sometimes but shouldn't be
+        }
         UserEvent statusInfo = EventStatusManager.getStatus(event);
         if (event.isUserAround()){
             switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.HERE);
