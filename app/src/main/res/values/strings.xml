@@ -254,12 +254,12 @@
 
     <!-- PresentationActivity -->
     <string name="next">Next</string>
-    <string name="presentation_two_text"><![CDATA[With TiMapp,\n find & share geoloated events that are happening right now.]]></string>
+    <string name="presentation_two_text"><![CDATA[With TiMapp,\n find & share geolocated events that are happening right now.]]></string>
     <string name="title_p_three">Explore</string>
     <string name="two_ways_to_explore">Two modes</string>
     <string name="map">Map</string>
     <string name="list">List</string>
-    <string name="title_p_four">Inform people</string>
+    <string name="title_p_four">Create</string>
     <string name="text_p_four">Add the events around you on the map by choosing a name and a category.</string>
     <string name="share_page_p_one">Your posts provide Real Time Rating for the community</string>
     <string name="share_page_p_two">You can only post if you\'re located in an event.</string>
@@ -268,7 +268,7 @@
     <string name="invite_people">Invite friends</string>
     <string name="title_p_six">Popularity</string>
     <string name="title_p_seven">Ready to go ?</string>
-    <string name="popularity_page_one">Each event has a number of points representing its popularity.</string>
+    <string name="popularity_page_one">Each event has points representing its popularity!</string>
     <string name="popularity_page_two">However, the popularity points increase when people post pictures and tags.</string>
     <string name="popularity_page_three">As time flies, the number decreases.</string>
     <string name="popularity_page_four">If an event is inactive for too long, it is removed from the map.</string>

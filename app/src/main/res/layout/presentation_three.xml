@@ -2,39 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/radius_simple_background_presentation"
+    android:background="@drawable/radius_simple_background_presentation_secondary"
     android:gravity="center" >
     <me.grantland.widget.AutofitTextView
         style="@style/TextTitlePresentation"
+        android:textColor="@color/colorPrimary"
         android:text="@string/title_p_three"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:orientation="horizontal">
+
         <LinearLayout
-            style="@style/WidthWeightOne"
+            style="@style/ScreenshotPresentation"
             android:orientation="vertical">
+            <TextView
+                style="@style/TextLegendPresentation"
+                android:text="@string/map" />
             <ImageView
                 style="@style/ImagePresentationThree"
                 android:src="@drawable/screenshot_map"/>
-            <TextView
-                style="@style/TextLegendPresentation"
-                android:textColor="@color/white"
-                android:text="@string/map"/>
         </LinearLayout>
+
         <LinearLayout
-            style="@style/WidthWeightOne"
+            style="@style/ScreenshotPresentation"
             android:orientation="vertical">
-            <ImageView
-                style="@style/ImagePresentationThree"
-                android:src="@drawable/screenshot_list"/>
             <TextView
                 style="@style/TextLegendPresentation"
                 android:text="@string/list"/>
+            <ImageView
+                style="@style/ImagePresentationThree"
+                android:src="@drawable/screenshot_list"/>
         </LinearLayout>
     </LinearLayout>
-    <me.grantland.widget.AutofitTextView
-        style="@style/TextInfoPresentation"
-        android:text="@string/two_ways_to_explore"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_height="match_parent"
+            android:padding="0dp"
+            android:layout_width="100dp"
+            android:src="@drawable/hot"/>
+        <me.grantland.widget.AutofitTextView
+            style="@style/TextMultiLines"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_normal"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:text="@string/popularity_page_one"/>
+    </LinearLayout>
 </LinearLayout>

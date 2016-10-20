@@ -2,43 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/radius_simple_background_presentation"
+    android:background="@drawable/radius_simple_background_presentation_secondary"
     android:gravity="center" >
     <me.grantland.widget.AutofitTextView
         style="@style/TextTitlePresentation"
+        android:textColor="@color/colorPrimary"
         android:text="@string/title_p_five"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        android:orientation="horizontal">
-        <LinearLayout
-            style="@style/WidthWeightOne"
-            android:orientation="vertical"
-            android:layout_marginBottom="@dimen/margin_icons_presentation_four">
-            <ImageView
-                style="@style/ImagePresentationFour"
-                android:src="@drawable/picandtags"/>
-            <TextView
-                style="@style/TextLegendPresentation"
-                android:text="@string/post_pics_and_tags"/>
-        </LinearLayout>
-        <LinearLayout
-            style="@style/WidthWeightOne"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/margin_icons_presentation_four">
-            <ImageView
-                style="@style/ImagePresentationFour"
-                android:src="@drawable/presentation_invite_icon"/>
-            <TextView
-                style="@style/TextLegendPresentation"
-                android:text="@string/invite_people"/>
-        </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageView
+            style="@style/ImagePresentationFour"
+            android:src="@drawable/picandtags"/>
+        <TextView
+            style="@style/TextLegendPresentation"
+            android:text="@string/post_pics_and_tags"/>
     </LinearLayout>
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageView
+            style="@style/ImagePresentationFour"
+            android:src="@drawable/presentation_invite_icon"/>
+        <TextView
+            style="@style/TextLegendPresentation"
+            android:text="@string/invite_people"/>
+    </LinearLayout>
+    <!--<TextView
         style="@style/TextMultilinesPresentation"
         android:text="@string/share_page_p_one"/>
     <TextView
         style="@style/TextMultilinesPresentation"
-        android:text="@string/share_page_p_two"/>
+        android:text="@string/share_page_p_two"/>-->
 </LinearLayout>

@@ -282,28 +282,28 @@
 
     <style name="TextInfoPresentation" parent="TextBig">
         <!--<item name="android:textStyle">italic</item>-->
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_weight">0.5</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:padding">@dimen/default_text_padding</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="TextLegendPresentation" parent="TextBold">
+    <style name="TextLegendPresentation" parent="TextBig">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/default_item_padding</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="ImagePresentationThree">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 
     <style name="ImagePresentationFour">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">80dp</item>
     </style>
 
     <style name="LinearLayoutPFour">
@@ -591,7 +591,11 @@
     <style name="WidthWeightOne">
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="ScreenshotPresentation" parent="WidthWeightOne">
+        <item name="android:padding">5dp</item>
     </style>
 
     <style name="CardViewMap">

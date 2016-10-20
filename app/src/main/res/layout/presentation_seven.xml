@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/radius_simple_background_presentation"
     android:gravity="center" >
     <me.grantland.widget.AutofitTextView
         style="@style/TextTitlePresentation"
@@ -10,15 +9,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="4">
         <Button
             android:id="@+id/final_button"
             style="@style/BigButton.BorderWhite"
             android:layout_centerInParent="true"
             android:text="@string/text_final_button_viewpager" />
     </RelativeLayout>
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/>
 </LinearLayout>

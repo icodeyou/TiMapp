@@ -243,11 +243,11 @@
     <string name="share_page_p_two">Tu peux seulement poster si tu es localisé sur l\'événement.</string>
     <string name="title_p_three">Explore</string>
     <string name="two_ways_to_explore">Deux modes de vue</string>
-    <string name="title_p_four">Crée des événements</string>
+    <string name="title_p_four">Informe</string>
     <string name="title_p_five">Partage</string>
     <string name="title_p_six">Points de popularité</string>
     <string name="title_p_seven">Prêt ?</string>
-    <string name="popularity_page_one">Chaque événement a un nombre de points représentant sa popularité.</string>
+    <string name="popularity_page_one">Des points pour les événements !</string>
     <string name="popularity_page_three">Ce nombre diminue avec le temps.</string>
     <string name="popularity_page_two">Mais le nombre augmente quand les utilisateurs postent.</string>
     <string name="popularity_page_four">Si l\'événement est trop longtemps inactif, l\'événement est supprimé de la carte.</string>
