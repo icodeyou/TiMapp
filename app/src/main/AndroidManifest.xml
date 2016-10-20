@@ -289,7 +289,6 @@
         <!-- EVENTS PICTURES ACTIVITY //////////////////////////////////////////////-->
         <activity
             android:name=".activities.EventPicturesActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_place"
             android:parentActivityName=".activities.EventActivity" >
         </activity>
