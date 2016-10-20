@@ -5,8 +5,8 @@ import android.util.Log;
 import com.activeandroid.ActiveAndroid;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.SyncAdapterOption;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.utils.Util;
 

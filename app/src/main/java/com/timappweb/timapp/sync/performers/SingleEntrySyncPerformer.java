@@ -4,16 +4,10 @@ import android.content.SyncResult;
 import android.util.Log;
 
 import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.rest.callbacks.HttpCallbackGroup;
-import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 
-import java.io.IOException;
-
-import retrofit2.Call;
 import retrofit2.Response;
 
 /**

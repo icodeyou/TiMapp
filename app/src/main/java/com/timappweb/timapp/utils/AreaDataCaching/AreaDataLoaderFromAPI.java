@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.google.maps.android.clustering.ClusterManager;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.entities.SearchFilter;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;

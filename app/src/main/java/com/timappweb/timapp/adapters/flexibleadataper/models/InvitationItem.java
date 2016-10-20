@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.databinding.ItemInvitationBinding;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SimpleTimerView;
@@ -95,10 +94,8 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
             mBinding.setEvent(eventInvitation.event);
             mBinding.setUser(eventInvitation.getUserSource());
 
-            try {
+            if (eventInvitation.event.hasCategory()) {
                 titleCategory.setText(Util.capitalize(eventInvitation.event.getCategory().name));
-            } catch (UnknownCategoryException e) {
-                e.printStackTrace();
             }
 
             FabListenerFactory.setFabListener(context, itemView, eventInvitation.event);

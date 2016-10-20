@@ -1,9 +1,4 @@
 package com.timappweb.timapp.utils.loaders;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -17,6 +12,12 @@ import com.activeandroid.Model;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 
 
 /**

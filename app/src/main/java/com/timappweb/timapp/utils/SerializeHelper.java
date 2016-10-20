@@ -1,27 +1,9 @@
 package com.timappweb.timapp.utils;
 
-import android.os.Bundle;
-import android.util.Log;
-
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-import com.google.gson.reflect.TypeToken;
-import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.rest.RestClient;
-
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.LinkedList;
-import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Converter;
 
 /**
  * Created by stephane on 6/2/2016.

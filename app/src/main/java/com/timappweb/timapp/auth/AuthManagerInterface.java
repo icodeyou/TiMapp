@@ -1,14 +1,12 @@
 package com.timappweb.timapp.auth;
 
-import android.content.Context;
-
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
 /**
  * Created by Stephane on 24/09/2016.
  */
-public interface AuthManagerInterface<ServerResponseType> {
+public interface AuthManagerInterface {
 
     String getToken();
 

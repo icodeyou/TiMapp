@@ -37,8 +37,6 @@ import eu.davidea.flexibleadapter.utils.DrawableUtils;
 
 public class Util {
 
-    private static long currentTimeMilli;
-
     public static String print(Location location) {
         return location.getLongitude()+"-"+location.getLatitude()+ " (Accuracy"+location.getAccuracy()+")";
     }

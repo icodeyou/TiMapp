@@ -6,10 +6,10 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -17,17 +17,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
-import com.timappweb.timapp.utils.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
 
+    private static final String TAG = "EventClusterRenderer";
     private final IconGenerator mIconGenerator;
     private final IconGenerator mClusterIconGenerator;
 
@@ -95,22 +93,6 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         markerOptions.anchor(0.5f,0.5f); // set marker centered on its location
     }
 
-    /*private Bitmap resize(Bitmap bmp, int newWidth, int newHeight) {
-        int width = bmp.getWidth();
-        int height = bmp.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE NewActivity MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(
-                bmp, 0, 0, width, height, matrix, false);
-        return resizedBitmap;
-    }*/
-
 
     @Override
     protected void onBeforeClusterRendered(Cluster<Event> cluster, MarkerOptions markerOptions) {
@@ -124,24 +106,18 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         for (Event p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            try {
-                if (!profilePhotos.containsKey(p.getCategory().getRemoteId())){
-                    Drawable drawable = null;
-                    try {
-                        drawable = p.getCategory().getIconDrawable(this.context);
-                        drawable.setBounds(0, 0, width, height);
-                        profilePhotos.put(p.getCategory().getRemoteId(), drawable);
-                    } catch (UnknownCategoryException e) {
-                        e.printStackTrace();
-                        // TODO
-                    }
-                }
-            } catch (UnknownCategoryException e) {
-                e.printStackTrace();
+            if (!p.hasCategory()){
+                continue;
+            }
+            if (!profilePhotos.containsKey(p.getCategory().getRemoteId())){
+                Drawable drawable = p.getCategory().getIconDrawable(this.context);
+                drawable.setBounds(0, 0, width, height);
+                profilePhotos.put(p.getCategory().getRemoteId(), drawable);
             }
         }
         // When there is no data because categories are not loaded correctly...
         if (profilePhotos.values().size() == 0){
+            Log.e(TAG, "No event with a category for this cluster: " + cluster+ ". Aborting rendering");
             return;
         }
         MultiDrawable multiDrawable = new MultiDrawable(new ArrayList<Drawable>(profilePhotos.values()));

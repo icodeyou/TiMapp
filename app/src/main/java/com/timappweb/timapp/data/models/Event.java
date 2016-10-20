@@ -22,7 +22,6 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.DistanceHelper;
 import com.timappweb.timapp.utils.Util;
@@ -237,27 +236,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return points > 0 ? points : 0;
     }
 
-    public String displayPoints() {
-        int points = this.points - (Util.getCurrentTimeSec() - this.loaded_time);
-        return points > 0 ? String.valueOf(points) : "0";
-    }
-
-    public String displayCountComing() {
-        return count_coming != null ? count_coming.toString() : "0";
-    }
-    public String displayCountHere() {
-        return count_here != null ? count_here.toString() : "0";
-    }
-
-
     public int getLevel(){
         return Event.computeLevel(this.getPoints());
     }
 
-    public EventCategory getCategory() throws UnknownCategoryException {
-        if (event_category == null){
-            throw new UnknownCategoryException(-1);
-        }
+    public EventCategory getCategory() {
         return event_category;
     }
 
@@ -415,14 +398,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     /**
-     * TODO remove when using category from the server
      * @return
      */
     public EventCategory getCategoryWithDefault() {
-        try {
+        if (this.event_category != null){
             return this.getCategory();
-        } catch (UnknownCategoryException e) {
-            return new EventCategory("else");
+        } else {
+            return new EventCategory("else"); // TODO use constante
         }
     }
 

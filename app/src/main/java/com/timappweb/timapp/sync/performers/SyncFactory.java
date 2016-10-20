@@ -1,10 +1,7 @@
 package com.timappweb.timapp.sync.performers;
 
-import android.hardware.camera2.params.Face;
 import android.util.Log;
 
-import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthManager;

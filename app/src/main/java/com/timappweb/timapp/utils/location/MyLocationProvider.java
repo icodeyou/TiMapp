@@ -2,10 +2,6 @@ package com.timappweb.timapp.utils.location;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
@@ -33,8 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.exceptions.NoLastLocationException;
-import com.timappweb.timapp.utils.DelayedCallHelper;
-import com.timappweb.timapp.utils.Util;
 
 /**
  * Created by stephane on 8/22/2015.

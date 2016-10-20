@@ -12,8 +12,6 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 
 import java.io.File;
 
-//TODO : Clean (it is useless for now)
-
 
 /*
  * This file provided by Facebook is for non-commercial testing and evaluation

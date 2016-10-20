@@ -1,11 +1,5 @@
 package com.timappweb.timapp.utils.AreaDataCaching;
 
-import android.util.Log;
-
-import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.utils.Util;
-
-import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;

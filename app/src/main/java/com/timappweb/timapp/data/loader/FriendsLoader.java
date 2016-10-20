@@ -1,20 +1,14 @@
 package com.timappweb.timapp.data.loader;
 
 import android.content.Context;
-import android.support.v4.content.Loader;
 
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.FriendsAdapter;
-import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
-
-import java.util.List;
-
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 /**

@@ -1,8 +1,6 @@
 package com.timappweb.timapp.sync.performers;
 
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
-import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 
 import java.io.IOException;
 

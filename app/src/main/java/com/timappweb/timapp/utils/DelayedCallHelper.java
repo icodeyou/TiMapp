@@ -1,8 +1,5 @@
 package com.timappweb.timapp.utils;
 
-import android.content.Context;
-import android.os.Handler;
-
 /**
  * Created by Stephane on 13/09/2016.
  */

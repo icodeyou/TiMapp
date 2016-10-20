@@ -30,7 +30,7 @@ import retrofit2.Response;
 /**
  * Created by stephane on 4/26/2016.
  */
-public class AuthManager implements AuthManagerInterface<JsonObject>{
+public class AuthManager implements AuthManagerInterface{
 
     private static final String TAG                     = "AuthProvider";
     public static final int     TOKEN_CHECK_DELAY       = 3600;

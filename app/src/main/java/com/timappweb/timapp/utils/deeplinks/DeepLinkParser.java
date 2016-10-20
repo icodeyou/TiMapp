@@ -10,8 +10,6 @@ import com.google.android.gms.appinvite.AppInviteInvitationResult;
 import com.google.android.gms.appinvite.AppInviteReferral;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.timappweb.timapp.activities.SplashActivity;
-import com.timappweb.timapp.config.IntentsUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;

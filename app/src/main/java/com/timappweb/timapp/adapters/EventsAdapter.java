@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.databinding.LayoutEventBinding;
-import com.timappweb.timapp.exceptions.UnknownCategoryException;
 import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.Util;
@@ -121,12 +120,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public void setEventInHolder(Event event) {
             mBinding.setEvent(event);
 
-            try {
+            if (event.hasCategory()) {
                 titleCategory.setText(Util.capitalize(event.getCategory().name));
-            } catch (UnknownCategoryException e) {
-                e.printStackTrace();
             }
-
             // Following line is important, it will force to load the variable in a custom view
             mBinding.executePendingBindings();
         }

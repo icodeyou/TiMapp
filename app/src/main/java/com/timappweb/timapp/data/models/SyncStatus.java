@@ -1,9 +1,8 @@
-package com.timappweb.timapp.rest;
+package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.data.models.MyModel;
 
 /**
  * Created by Stephane on 15/08/2016.

@@ -2,14 +2,12 @@ package com.timappweb.timapp.activities;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,14 +30,6 @@ public class BaseActivity extends AppCompatActivity {
         actionBar.setHomeButtonEnabled(true);
     }
 
-    public void showActionBar() {
-        this.getSupportActionBar().show();;
-    }
-
-    public void hideActionBar() {
-        this.getSupportActionBar().hide();;
-    }
-
 
     protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
@@ -53,7 +43,6 @@ public class BaseActivity extends AppCompatActivity {
         //Set search item
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.expandActionView();
-        final BaseActivity that = this;
 
         //Always display the searchview expanded in the action bar
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {

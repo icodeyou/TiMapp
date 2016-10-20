@@ -10,10 +10,10 @@ import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Category;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
-import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
+import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
+import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
 import java.util.List;
