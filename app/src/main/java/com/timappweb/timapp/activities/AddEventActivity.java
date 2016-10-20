@@ -541,6 +541,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     protected void onRestart() {
         super.onRestart();
+        // TODO [jack][clean] WTF !?
         if(eventNameET.hasFocus()) {
             eventNameET.clearFocus();
             descriptionET.clearFocus();

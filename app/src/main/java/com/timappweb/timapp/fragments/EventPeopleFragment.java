@@ -53,7 +53,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
     private MyFlexibleAdapter       mPlaceUsersAdapter;
     private SwipeRefreshLayout mSwipeLayout;
-    private FloatingActionButton    postButton;
     private RecyclerView            mRecyclerView;
     private PeopleHeaderItem    mExpandableHereHeader;
     private PeopleHeaderItem    mExpandableComingHeader;
@@ -97,6 +96,57 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         if (MyApplication.isLoggedIn()){
             initInviteSentLoader();
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (userStatusLoader != null) {
+            EventBus.getDefault().register(userStatusLoader);
+        }
+        if (inviteSentLoader != null){
+            EventBus.getDefault().register(inviteSentLoader);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        if (userStatusLoader != null) EventBus.getDefault().unregister(userStatusLoader);
+        if (inviteSentLoader != null) EventBus.getDefault().unregister(inviteSentLoader);
+        super.onStop();
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //Settings for FlipView
+        FlipView.resetLayoutAnimationDelay(true, 1000L); // TODO cst
+
+        mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
+        mPlaceUsersAdapter.setPermanentDelete(true);
+
+        mExpandableInviteHeader = new PeopleHeaderItem("INVITE", getResources().getString(R.string.header_invited));
+        mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
+
+        Log.d(TAG, "Event: " + getEvent());
+        if (!getEvent().isOver()) {
+            mExpandableComingHeader = new PeopleHeaderItem("COMING", getResources().getString(R.string.header_coming));
+            mPlaceUsersAdapter.addSection(mExpandableComingHeader);
+        }
+        if (getEvent().getVisibilityStatus() != Event.VisiblityStatus.PLANNED){
+            int resourceId = getEvent().isOver() ? R.string.header_were_here : R.string.header_here;
+            mExpandableHereHeader = new PeopleHeaderItem("HERE", getResources().getString(resourceId));
+            mPlaceUsersAdapter.addSection(mExpandableHereHeader);
+        }
+
+        mPlaceUsersAdapter.addItem(0, new PlaceHolderItem("PLACEHOLDER0"));
+
+
+        initializeRecyclerView(savedInstanceState);
+
+        //Settings for FlipView
+        FlipView.stopLayoutAnimation();
     }
 
     private void initUserStatusLoader() {
@@ -181,62 +231,8 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     .perform();
         }
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (userStatusLoader != null) {
-            EventBus.getDefault().register(userStatusLoader);
-        }
-        if (inviteSentLoader != null){
-            EventBus.getDefault().register(inviteSentLoader);
-        }
-    }
-
-    @Override
-    public void onStop() {
-        if (userStatusLoader != null) EventBus.getDefault().unregister(userStatusLoader);
-        if (inviteSentLoader != null) EventBus.getDefault().unregister(inviteSentLoader);
-        super.onStop();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //Settings for FlipView
-        FlipView.resetLayoutAnimationDelay(true, 1000L); // TODO cst
-
-        mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
-        mPlaceUsersAdapter.setPermanentDelete(true);
-
-        mExpandableInviteHeader = new PeopleHeaderItem("INVITE", getResources().getString(R.string.header_invited));
-        mPlaceUsersAdapter.addSection(mExpandableInviteHeader);
-
-        Log.d(TAG, "Event: " + getEvent());
-        if (!getEvent().isOver()) {
-            mExpandableComingHeader = new PeopleHeaderItem("COMING", getResources().getString(R.string.header_coming));
-            mPlaceUsersAdapter.addSection(mExpandableComingHeader);
-        }
-        if (getEvent().getVisibilityStatus() != Event.VisiblityStatus.PLANNED){
-            int resourceId = getEvent().isOver() ? R.string.header_were_here : R.string.header_here;
-            mExpandableHereHeader = new PeopleHeaderItem("HERE", getResources().getString(resourceId));
-            mPlaceUsersAdapter.addSection(mExpandableHereHeader);
-        }
-
-        mPlaceUsersAdapter.addItem(0, new PlaceHolderItem("PLACEHOLDER0"));
-
-
-        initializeRecyclerView(savedInstanceState);
-
-        //Settings for FlipView
-        FlipView.stopLayoutAnimation();
-    }
-
     @SuppressWarnings({"ConstantConditions", "NullableProblems"})
     private void initializeRecyclerView(Bundle savedInstanceState) {
-
-        //List<AbstractFlexibleItem> list = new LinkedList();
-
         //Experimenting NEW features (v5.0.0)
         mPlaceUsersAdapter.setAnimationOnScrolling(false);
         mPlaceUsersAdapter.setAnimationOnReverseScrolling(true);
@@ -287,6 +283,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         mInviteLoader = getLoaderManager().initLoader(EventActivity.LOADER_ID_INVITATIONS, null, inviteSentLoader);
         inviteSentLoader.refresh();
     }
+
 
     @Override
     public void onRefresh() {

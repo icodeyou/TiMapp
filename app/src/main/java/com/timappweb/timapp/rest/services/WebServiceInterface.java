@@ -120,9 +120,6 @@ public interface WebServiceInterface {
     @POST("users/facebook_login")
     Call<JsonObject>  facebookLogin(@Body JsonObject payload);
 
-    @POST("users/firebase_login")
-    Call<JsonObject>  firebaseLogin(@Body JsonObject payload);
-
     @GET("UserFriends/index")
     Call<ResponseSyncWrapper<UserFriend>> friends(@QueryMap Map<String,String> options);
 
@@ -153,10 +150,6 @@ public interface WebServiceInterface {
 
     // ---------------------------------------------------------------------------------------------
     // Pictures
-
-    @POST("pictures/upload/{eventId}")
-    Call<RestFeedback> upload(@Path("eventId") int eventId,
-                              @Body RequestBody body);
 
     @GET("pictures/event/{id}")
     Call<ResponseSyncWrapper<Picture>> viewPicturesForPlace(@Path("id") long id, @QueryMap Map<String, String> options);

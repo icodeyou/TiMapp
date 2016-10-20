@@ -21,33 +21,6 @@ public class BaseActivity extends AppCompatActivity {
     protected SearchView                searchView;
     public Toolbar mToolbar;
 
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "BaseActivity::onDestroy()");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     protected void initToolbar(boolean showTitle){
         mToolbar = (Toolbar) findViewById(R.id.toolbar_id);
         setSupportActionBar(mToolbar);

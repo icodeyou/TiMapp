@@ -36,20 +36,11 @@ public class ProfileActivity extends BaseActivity  {
     public static final int ACTIVITY_RESULT_EDIT_PROFILE = 1;
 
     private User mUser = null;
-
     private int userId;
-
-    private TextView tvUsername;
-    //private TextView tvAge;
-    private TextView tvCountTags;
-    private TextView tvCountPlaces;
     private ListView tagsListView;
-    private View loadingView;
     private View layoutTagsProfile;
-    private View noConnectionView;
     private SimpleDraweeView profilePicture;
     private UserLoader mLoader;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private ActivityProfileBinding mBinding;
 
 

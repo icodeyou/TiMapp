@@ -3,8 +3,6 @@ package com.timappweb.timapp.sync.performers;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
-import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
@@ -15,8 +13,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Response;
 
 /**
  * Created by stephane on 5/5/2016.

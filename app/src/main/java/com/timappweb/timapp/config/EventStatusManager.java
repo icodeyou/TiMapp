@@ -276,12 +276,13 @@ public class EventStatusManager {
         Event event = lastHereStatus.event;
         if (event.isOver()){
             // If event is hover but we didn't updated the data when it was done
+            // TODO [critical] it's not valid anymore i think...
             if (event.getLastSync() < event.getTimestampPoints()){
                 Log.i(TAG, "Request update for this event. It may be hover. " + event);
                 event.requestSync();
             }
-            // TODO Event is over and already sync so we must clear the status...
-            else{
+            // TODO [critical] Event is over and already sync so we must clear the status...
+            else {
                 Log.i(TAG, "Event is now over: " + event);
                 return null;
             }

@@ -154,16 +154,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case IntentsUtils.REQUEST_TAGS:
@@ -262,22 +252,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             Log.i(TAG, "Using cached event: " + event);
             onEventLoaded();
         }
-    }
-
-    private void initListeners() {
-
-        /*btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //This workaround doesn't work.
-                int visibility = btnAction.isExpanded() ? View.GONE : View.VISIBLE;
-                btnActionTag.setVisibility(visibility);
-                btnActionCamera.setVisibility(visibility);
-                btnActionInvite.setVisibility(visibility);
-                Log.d(TAG, "Main button action clicked!");
-            }
-        });*/
-
     }
 
     /**
@@ -469,37 +443,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using_title)));
     }
 
-    //Public methods
-    //////////////////////////////////////////////////////////////////////////////
-
-    // Check for camera permission in MashMallow
-    /*public void requestForCameraPermission() {
-        final String permission = Manifest.permission.CAMERA;
-        if (ContextCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                // Show permission rationale
-            } else {
-                // Handle the result in UserActivity#onRequestPermissionResult(int, String[], int[])
-                ActivityCompat.requestPermissions(this, new String[]{permission}, REQUEST_CAMERA);
-            }
-        } else {
-            // Start CameraActivity
-            IntentsUtils.addPicture(this);
-        }
-    }*/
-
     public Event getEvent() {
         return event;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    public boolean isUserAround() {
-        return this.event != null && this.event.isUserAround();
     }
 
     @Override

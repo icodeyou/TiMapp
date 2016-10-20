@@ -1,18 +1,13 @@
 package com.timappweb.timapp.sync.callbacks;
 
-import android.content.SyncResult;
 import android.util.Log;
 
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
-import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.util.Collection;
-import java.util.List;
-
-import retrofit2.Response;
 
 /**
  * Created by stephane on 5/5/2016.
@@ -29,14 +24,18 @@ public class RemoteMasterSyncCallback<EntitiyType extends SyncBaseModel> impleme
     public void onMatch(EntitiyType remoteModel, EntitiyType localModel) {
         try {
             if (!remoteModel.isSync(localModel)){
-                    localModel.merge(remoteModel);
-                Log.i(TAG, "Updating: " + localModel.toString());
+                localModel.merge(remoteModel);
+                Log.i(TAG, "    - Updating: " + localModel.toString());
             }
             else{
-                Log.i(TAG, "No action: " + localModel.toString());
+                Log.i(TAG, "    - No action: " + localModel.toString());
             }
         } catch (CannotSaveModelException e) {
             //throw CannotSyncException("Cannot save model: " + e.getMessage());
+            Log.e(TAG, "Error sync: " + e.getMessage());
+            if (BuildConfig.DEBUG){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -44,16 +43,19 @@ public class RemoteMasterSyncCallback<EntitiyType extends SyncBaseModel> impleme
         // Add new items
         for (EntitiyType m : values) {
             try {
-                Log.i(TAG, "Scheduling insert: " + m.toString());
+                Log.i(TAG, "    - Scheduling insert: " + m.toString());
                 m.deepSave();
             } catch (CannotSaveModelException e) {
-               // e.printStackTrace();
+                Log.e(TAG, "Error sync: " + e.getMessage());
+                if (BuildConfig.DEBUG){
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void onLocalOnly(EntitiyType localModel) {
-        Log.i(TAG, "Deleting: " + localModel.toString());
+        Log.i(TAG, "    - Deleting: " + localModel.toString());
         localModel.delete();
     }
 
