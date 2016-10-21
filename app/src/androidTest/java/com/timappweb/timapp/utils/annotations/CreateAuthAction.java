@@ -1,6 +1,5 @@
 package com.timappweb.timapp.utils.annotations;
 
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.timappweb.timapp.auth.SocialProvider;
 
 import java.lang.annotation.ElementType;

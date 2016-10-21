@@ -6,12 +6,15 @@ import android.support.test.rule.ActivityTestRule;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
+import com.timappweb.timapp.data.models.dummy.DummyTagFactory;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
 import com.timappweb.timapp.utils.viewinteraction.EditUserProfileForm;
+import com.timappweb.timapp.utils.viewinteraction.ProfileHelper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -53,19 +56,22 @@ public class ProfileActivityTest extends AbstractActivityTest{
     @CreateAuthAction
     @CreateConfigAction
     public void testEditProfile() {
-        ActivityHelper
-                .btnClick(R.id.action_edit_profile);
+        int TAG_NUMBER = 3;
+        ActivityHelper.btnClick(R.id.action_edit_profile);
 
         ActivityHelper.assertCurrentActivity(EditProfileActivity.class);
+        ProfileHelper profileHelper = new ProfileHelper();
 
-        new EditUserProfileForm() // TODO dynamic tag number
-                .addTag("One")
-                .addTag("Two")
-                .addTag("Three")
+        EditUserProfileForm editProfileForm = new EditUserProfileForm();
+        for (int i = 0; i < TAG_NUMBER; i++){
+            editProfileForm.addTag(DummyTagFactory.uniqName());
+        }
+        editProfileForm
                 .assertValid()
                 .submit();
-        TestUtil.sleep(2000);
+        //TestUtil.sleep(2000);
         ActivityHelper.assertCurrentActivity(ProfileActivity.class);
+        profileHelper.assertCountTags(TAG_NUMBER);
     }
 
 
@@ -76,5 +82,7 @@ public class ProfileActivityTest extends AbstractActivityTest{
     public void testViewOtherProfile() {
         // Test load correctly
         // Test cannot edit tags
+
+        // TEST refresh
     }
 }

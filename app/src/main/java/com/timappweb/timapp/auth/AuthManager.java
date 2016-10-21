@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
@@ -81,7 +80,6 @@ public class AuthManager implements AuthManagerInterface{
     @Override
     public void logout() {
         KeyValueStorage.clear(KEY_TOKEN, KEY_IS_LOGIN, KEY_ID, KEY_PROVIDER_ID);
-        FirebaseAuth.getInstance().signOut();
         currentUser = null;
         mCurrentProvider = null;
 

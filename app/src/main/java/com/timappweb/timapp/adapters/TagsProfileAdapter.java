@@ -10,17 +10,13 @@ import android.widget.TextView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Tag;
 
-import java.util.ArrayList;
-
 public class TagsProfileAdapter extends ArrayAdapter<Tag> {
-    private static final String TAG = "TagsProfileAdapter";
+
     private Context context;
-    private ArrayList<Tag> data;
 
     public TagsProfileAdapter(Context context) {
         super(context, R.layout.item_usertags);
         this.context = context;
-        this.data = new ArrayList<>();
     }
 
     @Override
@@ -41,9 +37,4 @@ public class TagsProfileAdapter extends ArrayAdapter<Tag> {
         return view;
     }
 
-    public void setDummyData() {
-        add(new Tag("ski"));
-        add(new Tag("hightech"));
-        add(new Tag("ledzeppelin"));
-    }
 }
