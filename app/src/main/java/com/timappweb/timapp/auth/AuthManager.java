@@ -80,6 +80,7 @@ public class AuthManager implements AuthManagerInterface{
     @Override
     public void logout() {
         KeyValueStorage.clear(KEY_TOKEN, KEY_IS_LOGIN, KEY_ID, KEY_PROVIDER_ID);
+        //FirebaseAuth.getInstance().signOut();
         currentUser = null;
         mCurrentProvider = null;
 
@@ -158,8 +159,11 @@ public class AuthManager implements AuthManagerInterface{
                     .commit();
             Log.i(TAG, "Trying to localLogin user: " + user);
 
-            MyApplication.updateGoogleMessagingToken(MyApplication.getApplicationBaseContext(),
-                    FirebaseInstanceId.getInstance().getToken());
+            String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+            if (firebaseToken != null){
+                MyApplication.updateGoogleMessagingToken(MyApplication.getApplicationBaseContext(),
+                        FirebaseInstanceId.getInstance().getToken());
+            }
             requestGcmToken(MyApplication.getApplicationBaseContext());
             QuotaManager.sync();
             this.notifyLogin();

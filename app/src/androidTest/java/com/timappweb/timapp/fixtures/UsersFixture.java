@@ -32,4 +32,8 @@ public class UsersFixture {
                 throw new InternalError("Invalid provider:" + provider);
         }
     }
+
+    public static int userIdWithTags() {
+        return 42;
+    }
 }

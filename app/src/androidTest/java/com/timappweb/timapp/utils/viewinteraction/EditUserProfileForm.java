@@ -39,8 +39,8 @@ public class EditUserProfileForm extends FormHelper {
     }
 
     public EditUserProfileForm submit() {
-        submitBtn
-                .perform(click());
+        TestUtil.sleep(250);
+        submitBtn.perform(click());
         return this;
     }
 

@@ -35,10 +35,10 @@ public class ListViewHelper<ItemType> {
         this.clazz = clazz;
     }
 
-    public ListViewHelper<ItemType> checkItemCount(int position){
+    public ListViewHelper<ItemType> checkItemCount(int count){
         onData(instanceOf(clazz))
                 .inAdapterView(allOf(withId(this.id), isDisplayed()))
-                .atPosition(position)
+                .atPosition(count-1)
                 .check(matches(isDisplayed()));
         return this;
     }

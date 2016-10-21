@@ -44,7 +44,8 @@ import com.timappweb.timapp.views.SimpleTimerView;
 import retrofit2.Response;
 
 
-public class EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener, LocationManager.LocationListener {
+public class
+EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener, LocationManager.LocationListener {
 
     private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 2 * 1000;
     private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;

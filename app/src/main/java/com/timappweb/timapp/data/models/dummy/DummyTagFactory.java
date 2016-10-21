@@ -4,6 +4,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.utils.Util;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -19,6 +20,23 @@ public class DummyTagFactory {
     }
 
     public static String uniqName() {
-        return "Tag" + UUID.randomUUID().toString().substring(0,10);
+        return "Tag" + randomString(10);
+    }
+
+    public static String invalidName() {
+        return UUID.randomUUID().toString().substring(0,10);
+    }
+
+    public static char randomChar(){
+        Random r = new Random();
+        return (char)(r.nextInt(26) + 'a');
+    }
+
+    public static String randomString(int size){
+        String res = "";
+        for (int i = 0; i < size; i++){
+            res += randomChar();
+        }
+        return res;
     }
 }

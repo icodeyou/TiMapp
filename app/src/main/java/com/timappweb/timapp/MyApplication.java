@@ -3,6 +3,7 @@ package com.timappweb.timapp;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -110,10 +111,12 @@ public class MyApplication extends Application {
             LoginManager.getInstance().logOut();
         }
     }
-    public static void updateGoogleMessagingToken(Context context, String token) {
+    public static void updateGoogleMessagingToken(@NonNull Context context, @NonNull String token) {
         Log.i(TAG, "Updating token for GCM: " + token);
         // TODO use sync adapter
-        Call<Object> call = RestClient.service().updateGoogleMessagingToken(token);
+        JsonObject data = new JsonObject();
+        data.addProperty("token", token); // TODO constant
+        Call<Object> call = RestClient.service().updateGoogleMessagingToken(data);
         RestClient.buildCall(call)
                 .onResponse(new HttpCallback<Object>() {
                     @Override

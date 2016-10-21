@@ -32,6 +32,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
@@ -132,9 +133,8 @@ public interface WebServiceInterface {
     @GET("Users/logout")
     Call<RestFeedback> logout();
 
-    @FormUrlEncoded
     @POST("Users/update_google_messaging_token")
-    Call<Object> updateGoogleMessagingToken(@Field("token") String token);
+    Call<Object> updateGoogleMessagingToken(@Body JsonObject options);
 
     // ---------------------------------------------------------------------------------------------
     // TAGS

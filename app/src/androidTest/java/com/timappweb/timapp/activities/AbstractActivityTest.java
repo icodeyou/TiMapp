@@ -1,26 +1,26 @@
 package com.timappweb.timapp.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 
-import com.facebook.login.LoginResult;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.JsonObject;
+import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.R;
 import com.timappweb.timapp.auth.AuthManager;
-import com.timappweb.timapp.auth.FacebookLoginProvider;
-import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.fixtures.UsersFixture;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SystemAnimations;
 import com.timappweb.timapp.utils.TestUtil;
 import com.timappweb.timapp.utils.annotations.AuthState;
 import com.timappweb.timapp.utils.annotations.ClearAuth;
 import com.timappweb.timapp.utils.annotations.ClearConfig;
+import com.timappweb.timapp.utils.annotations.ClearDB;
+import com.timappweb.timapp.utils.annotations.ClearDBTable;
 import com.timappweb.timapp.utils.annotations.ClearFirstStart;
 import com.timappweb.timapp.utils.annotations.ConfigState;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
@@ -36,7 +36,10 @@ import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-import retrofit2.Call;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Response;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -57,81 +60,9 @@ public class AbstractActivityTest {
     public TestAnnotated testAnnoted = new TestAnnotated();
 
     public void beforeTest(){
+        Log.i(TAG, "Initialize test...");
         FacebookApiHelper.init();
-
-        if (testAnnoted.getClearAuth() != null) {
-            MyApplication.logout();
-        }
-        if (testAnnoted.getClearFirstStart() != null) {
-            MyApplication.clearStoredData();
-        }
-        if (testAnnoted.getClearConfig() != null) {
-            ConfigurationProvider.clearAll();
-        }
-
-        CreateConfigAction createConfigAction = testAnnoted.getCreateConfigAction();
-        if (createConfigAction != null) {
-            if (createConfigAction.replaceIfExists()) {
-                ConfigurationProvider.clearAll();
-            }
-            if (!ConfigurationProvider.hasFullConfiguration()) {
-                ConfigurationProvider
-                        .load(MyApplication.getApplicationBaseContext())
-                        .execute();
-            }
-            assertTrue("Cannot load full app configuration from the server: ", ConfigurationProvider.hasFullConfiguration());
-        }
-
-        if (testAnnoted.getCreateLastLaunch() != null){
-            MyApplication.updateLastLaunch();
-        }
-
-        if (testAnnoted.getCreateAuthAction() != null) {
-            CreateAuthAction createAuthAction = testAnnoted.getCreateAuthAction();
-            if ( createAuthAction.replaceIfExists()
-                    || !MyApplication.isLoggedIn()
-                    || (!MyApplication.getAuthManager().isLoggedWithProvider(createAuthAction.providerId(), createAuthAction.payloadId()))) {
-                UsersFixture.init();
-                AuthManager.LoginMethod loginMethod = MyApplication.getAuthManager().getProvider(createAuthAction.providerId());
-                Object loginPayload = UsersFixture.getLoginPayload(createAuthAction.providerId(), createAuthAction.payloadId());
-                Log.i(TAG, "@BeforeTest: Login with payload: " + loginPayload);
-                    MyApplication.getAuthManager()
-                            .logWith(loginMethod, loginPayload)
-                            .onFinally(new HttpCallManager.FinallyCallback() {
-                                @Override
-                                public void onFinally(Response response, Throwable error) {
-                                    synchronized (AbstractActivityTest.this){
-                                        AbstractActivityTest.this.notify();
-                                    }
-                                }
-                            });
-                synchronized (this){
-                    try {
-                        this.wait();
-                    } catch (InterruptedException e) {}
-                }
-                assertTrue("User must be logged in", MyApplication.isLoggedIn());
-            }
-        }
-
-        if (testAnnoted.getAuthState() != null) {
-            assertTrue("User must be logged in to perform this test",
-                    testAnnoted.getAuthState().logging() != AuthState.LoginState.YES || MyApplication.isLoggedIn());
-            if (testAnnoted.getAuthState().logging() == AuthState.LoginState.NO) {
-                MyApplication.getAuthManager().logout();
-                assertTrue("User must NOT be logged in to perform this test", !MyApplication.isLoggedIn());
-            }
-        }
-
-        if (testAnnoted.getConfigState() != null) {
-            assertTrue("Rules should be loaded in app state to perform this test",
-                    ConfigurationProvider.hasRulesConfig() == testAnnoted.getConfigState().rules());
-            assertTrue("Event categories should be loaded in app state to perform this test",
-                    ConfigurationProvider.hasEventCategoriesConfig() == testAnnoted.getConfigState().eventCategories());
-            assertTrue("Spot categories should be loaded in app state to perform this test",
-                    ConfigurationProvider.hasSpotCategoriesConfig() == testAnnoted.getConfigState().spotCategories());
-        }
-
+        this.testAnnoted.execute();
     }
 
     public void systemAnimations(boolean enabled){
@@ -177,61 +108,177 @@ public class AbstractActivityTest {
 
     }
 
-    //public class TestSuiteAnnoted extends TestWatcher{}
+    public static class TestAnnotedMatcher{
+
+        private HashMap<Class<? extends Annotation>, Runnable> annotations;
+
+        public TestAnnotedMatcher() {
+            this.annotations = new HashMap<>();
+        }
+
+        public <T extends Annotation> void addMatcher(Class<T> clazz, Runnable<T> r) {
+            this.annotations.put(clazz, r);
+        }
+
+        public void execute(Description description){
+            Log.i(TAG, "Executing annotations...");
+            for (Map.Entry<? extends Class<? extends Annotation>, Runnable> entry: annotations.entrySet()){
+                Annotation annotation = description.getAnnotation(entry.getKey());
+                if (annotation != null){
+                    Log.i(TAG, "Executing annotation: " + entry.getKey().toString());
+                    entry.getValue().run(annotation);
+                }
+            }
+            Log.i(TAG, "End executing annotations...");
+        }
+    }
+
+    public interface Runnable<T extends Annotation>{
+        void run(T annotation);
+    }
+
 
     public class TestAnnotated extends TestWatcher {
 
-        private AuthState authState;
-        private ConfigState configState;
-        private CreateAuthAction createAuthAction;
-        private CreateConfigAction createConfigAction;
-        private ClearAuth clearAuth;
-        private ClearConfig clearConfig;
-        private ClearFirstStart clearFirstStart;
-        private CreateLastLaunch createLastLaunch;
+        private TestAnnotedMatcher matcher;
+        private Description description;
 
         @Override
         protected void starting( Description description) {
-            authState = description.getAnnotation( AuthState.class);
-            configState = description.getAnnotation( ConfigState.class);
-            createAuthAction = description.getAnnotation( CreateAuthAction.class);
-            createConfigAction = description.getAnnotation( CreateConfigAction.class);
-            clearAuth = description.getAnnotation( ClearAuth.class);
-            clearConfig = description.getAnnotation( ClearConfig.class);
-            clearFirstStart = description.getAnnotation( ClearFirstStart.class);
-            createLastLaunch = description.getAnnotation( CreateLastLaunch.class);
+            this.description = description;
+
+            this.matcher = new TestAnnotedMatcher();
+            matcher.addMatcher(ClearAuth.class, new Runnable<ClearAuth>() {
+                @Override
+                public void run(ClearAuth annotation) {
+                    MyApplication.logout();
+                }
+            });
+
+
+            matcher.addMatcher(ClearFirstStart.class, new Runnable<ClearFirstStart>() {
+                @Override
+                public void run(ClearFirstStart annotation) {
+                    MyApplication.clearStoredData();
+                }
+            });
+
+            matcher.addMatcher(ClearConfig.class, new Runnable<ClearConfig>() {
+                @Override
+                public void run(ClearConfig annotation) {
+                    ConfigurationProvider.clearAll();
+                }
+            });
+
+            matcher.addMatcher(ClearDB.class, new Runnable<ClearDB>() {
+                @Override
+                public void run(ClearDB annotation) {
+                    Context context = MyApplication.getApplicationBaseContext();
+                    String dbName = context.getString(R.string.db_name);
+                    context.deleteDatabase(dbName);
+                /*
+                Configuration dbConfiguration = new Configuration.Builder(context)
+                        .setDatabaseName(dbName)
+                        .setDatabaseVersion(12)
+                        .addModelClasses(MyClass.class)
+                        .create();
+                ActiveAndroid.initialize(dbConfiguration);*/
+                }
+            });
+
+            matcher.addMatcher(CreateConfigAction.class, new Runnable<CreateConfigAction>() {
+                @Override
+                public void run(CreateConfigAction annotation) {
+                    if (annotation.replaceIfExists()) {
+                        ConfigurationProvider.clearAll();
+                    }
+                    if (!ConfigurationProvider.hasFullConfiguration()) {
+                        ConfigurationProvider
+                                .load(MyApplication.getApplicationBaseContext())
+                                .execute();
+                    }
+                    assertTrue("Cannot load full app configuration from the server: ", ConfigurationProvider.hasFullConfiguration());
+                }
+            });
+
+            matcher.addMatcher(CreateLastLaunch.class, new Runnable<CreateLastLaunch>() {
+                @Override
+                public void run(CreateLastLaunch annotation) {
+                    MyApplication.updateLastLaunch();
+                }
+
+            });
+
+            matcher.addMatcher(CreateAuthAction.class, new Runnable<CreateAuthAction>() {
+                @Override
+                public void run(CreateAuthAction annotation) {
+                    if ( annotation.replaceIfExists()
+                            || !MyApplication.isLoggedIn()
+                            || (!MyApplication.getAuthManager().isLoggedWithProvider(annotation.providerId(), annotation.payloadId()))) {
+                        UsersFixture.init();
+                        AuthManager.LoginMethod loginMethod = MyApplication.getAuthManager().getProvider(annotation.providerId());
+                        Object loginPayload = UsersFixture.getLoginPayload(annotation.providerId(), annotation.payloadId());
+                        Log.i(TAG, "@BeforeTest: Login with payload: " + loginPayload);
+                        MyApplication.getAuthManager()
+                                .logWith(loginMethod, loginPayload)
+                                .onFinally(new HttpCallManager.FinallyCallback() {
+                                    @Override
+                                    public void onFinally(Response response, Throwable error) {
+                                        synchronized (AbstractActivityTest.this) {
+                                            AbstractActivityTest.this.notify();
+                                        }
+                                    }
+                                });
+                        synchronized (AbstractActivityTest.this) {
+                            try {
+                                AbstractActivityTest.this.wait();
+                            } catch (InterruptedException e) {
+                                Log.e(TAG, e.getMessage());
+                            }
+                        }
+                        assertTrue("User must be logged in", MyApplication.isLoggedIn());
+                    }
+                }
+
+            });
+
+            matcher.addMatcher(AuthState.class, new Runnable<AuthState>() {
+                @Override
+                public void run(AuthState annotation) {
+                    assertTrue("User must be logged in to perform this test",
+                            annotation.logging() != AuthState.LoginState.YES || MyApplication.isLoggedIn());
+                    if (annotation.logging() == AuthState.LoginState.NO) {
+                        MyApplication.getAuthManager().logout();
+                        assertTrue("User must NOT be logged in to perform this test", !MyApplication.isLoggedIn());
+                    }
+                }
+            });
+
+            matcher.addMatcher(ConfigState.class, new Runnable<ConfigState>() {
+                @Override
+                public void run(ConfigState annotation) {
+                    assertTrue("Rules should be loaded in app state to perform this test",
+                            ConfigurationProvider.hasRulesConfig() == annotation.rules());
+                    assertTrue("Event categories should be loaded in app state to perform this test",
+                            ConfigurationProvider.hasEventCategoriesConfig() == annotation.eventCategories());
+                    assertTrue("Spot categories should be loaded in app state to perform this test",
+                            ConfigurationProvider.hasSpotCategoriesConfig() == annotation.spotCategories());
+                }
+            });
+
+            matcher.addMatcher(ClearDBTable.class, new Runnable<ClearDBTable>() {
+                @Override
+                public void run(ClearDBTable annotation) {
+                    for (Class<? extends Model> model: annotation.models()){
+                        new Delete().from(model).execute();
+                    }
+                }
+            });
         }
 
-        public AuthState getAuthState() {
-            return authState;
+        public void execute(){
+            this.matcher.execute(this.description);
         }
 
-        public ConfigState getConfigState() {
-            return configState;
-        }
-
-        public CreateAuthAction getCreateAuthAction() {
-            return createAuthAction;
-        }
-
-        public CreateConfigAction getCreateConfigAction() {
-            return createConfigAction;
-        }
-
-        public ClearAuth getClearAuth() {
-            return clearAuth;
-        }
-
-        public ClearConfig getClearConfig() {
-            return clearConfig;
-        }
-
-        public ClearFirstStart getClearFirstStart() {
-            return clearFirstStart;
-        }
-
-        public CreateLastLaunch getCreateLastLaunch() {
-            return createLastLaunch;
-        }
     }
 }

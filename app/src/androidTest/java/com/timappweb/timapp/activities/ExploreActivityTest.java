@@ -158,7 +158,7 @@ public class ExploreActivityTest extends AbstractActivityTest {
         assertNotNull("Cannot center map if explore fragment is null", exploreMapFragment);
 
         // We must run the code on the main thread
-        Runnable runnable = new Runnable() {
+        java.lang.Runnable runnable = new java.lang.Runnable() {
             @Override
             public void run() {
                 //exploreMapFragment.centerMap(latLng, null);

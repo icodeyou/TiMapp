@@ -120,6 +120,7 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
         Log.v(TAG, "Loading tags");
         mTagLoader = getLoaderManager()
                 .initLoader(EventActivity.LOADER_ID_TAGS, null, eventTagLoader);
+        eventTagLoader.refresh();
     }
 
     @Override
@@ -134,12 +135,6 @@ public class EventTagsFragment extends EventBaseFragment implements LocationMana
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //LocationManager.addOnLocationChangedListener(this);
     }
 
     @Override
