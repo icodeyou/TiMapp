@@ -165,7 +165,7 @@ dependencies {
     compile "com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.android.gms:play-services-maps:$rootProject.ext.googlePlayLibraryVersion"
-    compile "com.google.firebase:firebase-auth:$rootProject.ext.googlePlayLibraryVersion"
+    //compile "com.google.firebase:firebase-auth:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.firebase:firebase-invites:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.firebase:firebase-messaging:$rootProject.ext.googlePlayLibraryVersion"
         compile "com.google.firebase:firebase-crash:$rootProject.ext.googlePlayLibraryVersion"
@@ -173,17 +173,7 @@ dependencies {
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
 
-    //compile 'com.github.davidpizarro:autolabelui:1.0.1'
-    compile 'com.github.boxme:squarecamera:1.1.0'
-    //compile 'com.timehop.stickyheadersrecyclerview:library:[0.4.3]@aar'
-
-    //compile 'org.jdeferred:jdeferred-android-aar:1.2.4'
     compile 'me.grantland:autofittextview:0.2.+'
-    //compile 'com.github.lsjwzh.RecyclerViewPager:lib:v1.1.0-beta5'
-
-    //compile 'com.pkmmte.view:circularimageview:1.1'
-
-    //compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile('com.facebook.fresco:fresco:0.9.0') { // TODO update to 0.14.0
         exclude module: 'bolts-android'
@@ -197,7 +187,7 @@ dependencies {
     }
     compile 'com.github.ksoichiro:android-observablescrollview'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile 'com.github.cdflynn:crossview:v1.0.1'
+    compile 'com.github.cdflynn:crossview:v1.0.1'               // A toggling Add/Remove button
     compile 'eu.davidea:flipview:1.1.1'
     compile 'eu.davidea:flexible-adapter:5.0.0-b7'
     compile 'com.getbase:floatingactionbutton:1.10.1'
