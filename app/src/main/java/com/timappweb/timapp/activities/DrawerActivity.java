@@ -286,10 +286,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        // set a custom shadow that overlays the main content when the drawer opens
-        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // --------------------------------
-        // To close and open the drawer
         mDrawerToggle = new MyActionBarDrawerToggle(this,mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
@@ -302,11 +298,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         if (navigationMenuView != null) {
             navigationMenuView.setVerticalScrollBarEnabled(false);
         }
-        /*getLayoutInflater().inflate(R.layout.nav_header, navigationView, false);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        ItemInvitationBinding mBinding  = DataBindingUtil.inflate(inflater, R.layout.item_invitation, this, false);
-
-        View rootHeaderView = navigationView.getHeaderView(0);*/
 
         eventBackground = findViewById(R.id.nav_background_event);
         noEventLayout = findViewById(R.id.no_events_layout);
@@ -333,7 +324,6 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                         @Override
                         public void onClick(View v) {
                             IntentsUtils.viewSpecifiedEvent(DrawerActivity.this, event);
-
                         }
                     });
                 }

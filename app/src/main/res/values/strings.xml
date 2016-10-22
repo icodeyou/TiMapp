@@ -116,8 +116,12 @@
         <!-- item invitation -->
         <string name="former_username">Username</string>
         <string name="former_time">Time</string>
-        <!-- item Event -->
-        <string name="counter_over">It\'s over !</string>
+
+    <!-- SimpleTimerView -->
+    <string name="counter_over">It\'s over !</string>
+    <string name="thousand">A thousand !</string>
+    <string name="two_thousands">Two thousands !</string>
+    <string name="three_thousands">Three thousands !</string>
 
 
     <!-- .................. Activities ...................................-->

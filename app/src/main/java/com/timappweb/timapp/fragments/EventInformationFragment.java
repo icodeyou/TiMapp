@@ -262,6 +262,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     }
 
     private void showActivatedButton(boolean activated) {
+        //TODO Jack : morphing animation!
         if(activated) {
             activatedStatusButton.setVisibility(View.VISIBLE);
             disabledStatusButton.setVisibility(View.INVISIBLE);
@@ -270,6 +271,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
             activatedStatusButton.setVisibility(View.INVISIBLE);
             disabledStatusButton.setVisibility(View.VISIBLE);
         }
+
         changeTextColor(activated);
     }
 

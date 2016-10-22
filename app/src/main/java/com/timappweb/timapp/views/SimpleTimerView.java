@@ -2,6 +2,7 @@ package com.timappweb.timapp.views;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
 import android.os.CountDownTimer;
@@ -60,15 +61,26 @@ public class SimpleTimerView extends TextSwitcher {
 
     public void initTimer(long initialTimeSec) {
         Log.d(TAG, "Inializing timer");
+        final Resources resources = MyApplication.getApplicationBaseContext().getResources();
         if (countDownTimer != null){
             countDownTimer.cancel();
         }
-        if(MyApplication.getApplicationBaseContext().getResources().getBoolean(R.bool.event_animateCountDownTimer)
+        if(resources.getBoolean(R.bool.event_animateCountDownTimer)
                 && initialTimeSec > 0) {
             countDownTimer = new CountDownTimer(initialTimeSec *1000, COUNTDOWNINTERVAL) {
 
                 public void onTick(long millisUntilFinished) {
                     remainingSeconds = (int) (millisUntilFinished / 1000);
+                    if(remainingSeconds == 1000) {
+                        SimpleTimerView.this.setText(resources.getString(R.string.thousand));
+                        return;
+                    } else if(remainingSeconds == 2000) {
+                        SimpleTimerView.this.setText(resources.getString(R.string.two_thousands));
+                        return;
+                    } else if(remainingSeconds == 3000) {
+                        SimpleTimerView.this.setText(resources.getString(R.string.three_thousands));
+                        return;
+                    }
                     SimpleTimerView.this.setText(String.valueOf(remainingSeconds));
                 }
 
