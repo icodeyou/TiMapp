@@ -26,8 +26,8 @@ android {
         applicationId "com.timappweb.timapp"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 7
-        versionName "1.0.2"
+        versionCode 9
+        versionName "1.0.4"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
