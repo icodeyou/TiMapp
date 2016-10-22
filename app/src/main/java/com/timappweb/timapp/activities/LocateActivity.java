@@ -209,7 +209,7 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
             // Show a toast comment if an address was found.
             if (resultCode == Constants.SUCCESS_RESULT) {
-                Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).builder();
+                Toast.makeText(getApplicationContext(), R.string.address_found, Toast.LENGTH_LONG).simpleMessage();
             }
         }
     }*/

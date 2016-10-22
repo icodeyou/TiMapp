@@ -16,26 +16,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="5dp"
-    android:paddingTop="5dp"
+    android:padding="5dp"
     android:visibility="@{spot == null ? View.GONE : View.VISIBLE}">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/big_image_category_spot"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_margin="5dp"
-        android:padding="15dp"
-        android:layout_gravity="center"
-        tools:src="@drawable/category_unknown"
-        android:background="@drawable/radius_simple_background_black"
-        fresco:actualImageScaleType="fitCenter"
-        fresco:placeholderImage="@drawable/category_unknown"
-        app:imageDrawable="@{spot.getCategory().getIconDrawable()}"/>
+    <FrameLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/big_image_category_spot"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            tools:src="@drawable/category_unknown"
+            android:background="@drawable/radius_simple_background_black"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:placeholderImage="@drawable/category_unknown"
+            app:imageDrawable="@{spot.getCategory().getIconDrawable()}"/>
+    </FrameLayout>
 
         <LinearLayout
             android:id="@+id/horizontal_linear_layout"
-            android:layout_width="match_parent"
+            android:layout_weight="1.5"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -49,7 +54,7 @@
                 android:layout_gravity="start"
                 android:textColor="@color/textBlack"
                 android:text="@{spot.name}"
-                tools:text="Terrain" />
+                tools:text="Terrain de football de Saint Cassien" />
 
             <TextView
                 android:id="@+id/textView5"

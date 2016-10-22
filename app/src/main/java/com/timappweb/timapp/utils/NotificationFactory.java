@@ -30,7 +30,7 @@ public class NotificationFactory {
                         .setSmallIcon(icon)
                         .setContentTitle(title)
                         .setContentText(text);
-// The stack builder object will contain an artificial back stack for the
+// The stack simpleMessage object will contain an artificial back stack for the
 // started UserActivity.
 // This ensures that navigating backward from the UserActivity leads out of
 // your application to the Home screen.

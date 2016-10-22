@@ -81,6 +81,8 @@
     <color name="textMute">#848484</color>
     <color name="textLight">#eeeeee</color>
     <color name="textWhite">@color/white</color>
+    <color name="textStatusDisabled">@color/black</color>
+    <color name="textStatusActivated">@color/colorPrimary</color>
 
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
     <!-- COLORS -->

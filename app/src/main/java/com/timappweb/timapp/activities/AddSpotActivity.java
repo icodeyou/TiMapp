@@ -348,7 +348,7 @@ public class AddSpotActivity extends BaseActivity implements
             mDataLoader.loadNextPage();
         }
         else {
-            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).builder();
+            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).simpleMessage();
             mSwipeAndRefreshLayout.setEnabled(true);
             mDataLoader
                     .clear()

@@ -148,8 +148,8 @@
     </style>
 
     <style name="Fab">
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_width">@dimen/size_big_fab</item>
+        <item name="android:layout_height">@dimen/size_big_fab</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_margin">@dimen/fab_margin</item>
@@ -195,6 +195,13 @@
         <item name="android:src">@drawable/new_event_button</item>
         <item name="android:layout_margin">@dimen/margin_map_fab</item>
         <item name="android:layout_alignParentBottom">false</item>
+    </style>
+
+
+    <style name="BigFabButton">
+        <item name="android:layout_width">@dimen/size_big_fab</item>
+        <item name="android:layout_height">@dimen/size_big_fab</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="LocationFab" parent="LightFab">
@@ -601,7 +608,8 @@
     <style name="CardViewMap">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="cardCornerRadius">@dimen/activity_horizontal_margin</item>
+        <item name="cardCornerRadius">10dp</item>
+        <item name="android:layout_margin">@dimen/margin_cards</item>
     </style>
 
 
@@ -626,4 +634,5 @@
         <item name="android:layout_marginBottom">@dimen/margin_separator</item>
         <item name="android:background">@color/LightGrey</item>
     </style>
+
 </resources>

@@ -185,7 +185,7 @@ public class MyLocationProvider implements
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't builder the dialog.
+                        // settings so we won't simpleMessage the dialog.
                         Log.e(TAG, "Settings change for gps location are not available");
                         break;
                 }
@@ -198,7 +198,7 @@ public class MyLocationProvider implements
     }
 
     public void requestPermissions() { //@NonNull String[] permissions, int requestCode){
-        // Should we builder an explanation?
+        // Should we simpleMessage an explanation?
         if (ActivityCompat.shouldShowRequestPermissionRationale(this.activity,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             Log.d(TAG, "Show request name explanation to the user");

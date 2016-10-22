@@ -68,20 +68,6 @@
                     myattrs:horizontal_tags_is_bold="false" />
             </LinearLayout>
         </LinearLayout>
-        <!--<RelativeLayout
-            android:id="@+id/selectedView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible">
-
-            <ImageView
-                android:layout_width="@dimen/width_checkbox_card"
-                android:layout_height="@dimen/width_checkbox_card"
-                android:alpha="0.7"
-                android:layout_marginStart="@dimen/padding_card_minus_two"
-                android:layout_marginLeft="@dimen/padding_card_minus_two"
-                android:src="@drawable/checkboxselected"/>
-        </RelativeLayout>-->
 
     </RelativeLayout>
 

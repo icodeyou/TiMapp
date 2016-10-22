@@ -65,7 +65,7 @@ public class SessionRequestInterceptor implements Interceptor
                             logout(); //go to localLogin screen
                         }
 
-                        return response; //if token refresh failed - builder error to user
+                        return response; //if token refresh failed - simpleMessage error to user
                     }
                 }
 

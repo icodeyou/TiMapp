@@ -59,8 +59,11 @@
     <string name="action_unselect_all">Unselect all</string>
 
     <!-- Generic Messages -->
+    <string name="launch_navigation_message">Do you want to launch the navigation ?</string>
     <string name="alert_dialog_ok">OK</string>
     <string name="alert_dialog_cancel">Cancel</string>
+    <string name="alert_dialog_yes">Yes</string>
+    <string name="alert_dialog_no">No</string>
     <string name="retry_button">Réessayer</string>
     <string name="waiting_for_location">Localization</string>
     <string name="skip">Skip</string>

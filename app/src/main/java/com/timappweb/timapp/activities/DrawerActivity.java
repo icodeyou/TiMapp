@@ -324,7 +324,20 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             noEventLayout.setVisibility(View.GONE);
             eventLayout.setVisibility(View.VISIBLE);
 
-            FabListenerFactory.setFabListener(this, findViewById(R.id.nav_view), event);
+            View navView = findViewById(R.id.nav_view);
+            if(navView != null) {
+                FabListenerFactory.setFabListener(this, navView, event);
+                View pictureBackgroundNav = navView.findViewById(R.id.nav_background_event);
+                if(pictureBackgroundNav != null) {
+                    pictureBackgroundNav.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            IntentsUtils.viewSpecifiedEvent(DrawerActivity.this, event);
+
+                        }
+                    });
+                }
+            }
         }
     }
 

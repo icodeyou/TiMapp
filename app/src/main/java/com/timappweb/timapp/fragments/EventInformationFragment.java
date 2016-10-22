@@ -1,20 +1,19 @@
 package com.timappweb.timapp.fragments;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +37,7 @@ import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.location.LocationManager;
-import com.timappweb.timapp.views.MySwitchCompat;
+import com.timappweb.timapp.views.ConfirmDialog;
 import com.timappweb.timapp.views.SimpleTimerView;
 
 import retrofit2.Response;
@@ -47,37 +46,29 @@ import retrofit2.Response;
 public class
 EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener, LocationManager.LocationListener {
 
-    private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 2 * 1000;
+    private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 0;
     private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;
 
     // -
 
     private static final String         TAG                     = "EventInformationFrag";
     private ObservableScrollView        mScrollView;
-    private TextView                    distanceText;
 
     private MapView                     mapView                 = null;
-    private GoogleMap                   gMap;
-    private ImageView                   eventCategoryIcon;
     private FragmentEventInformationBinding mBinding;
     private SimpleTimerView             tvCountPoints;
 
-    private ValueAnimator               animator;
-    private boolean                     hotPoints               = false;
-
-    private MySwitchCompat              switchButton;
-    private View                        rateButtons;
-    private View                        flameView;
-    private View                        mainLayout;
     private TextView                    statusTv;
-    private View                        statusImage;
     private View                        progressStatus;
     private View                        crossOverView;
     private View                        pointsLayout;
     private TextView                    overText;
     private View                        statusLayout;
+    private FloatingActionButton        activatedStatusButton;
+    private FloatingActionButton        disabledStatusButton;
 
     private boolean isStatusLoading = false;
+    private View btnRequestNavigation;
 
 
     public EventInformationFragment() {
@@ -92,28 +83,63 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         View view = mBinding.getRoot();
 
         initVariables(view);
-
-        View btnRequestNavigation = view.findViewById(R.id.button_nav);
-        btnRequestNavigation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Event event = getEvent();
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                        Uri.parse("http://maps.google.com/maps?daddr=" + event.latitude + "," + event.longitude)); // TODO constant
-                startActivity(intent);
-            }
-        });
+        setListeners();
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
         mapView.onCreate(null);
         mapView.getMapAsync(this);
 
-        updateView();
+        updateEventBinding();
         LocationManager.addOnLocationChangedListener(this);
-        updateUserStatusButton();
+        updateStatusButtonActivation();
 
         return view;
+    }
+
+    private void initVariables(View view) {
+        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
+        mapView = (MapView) view.findViewById(R.id.map);
+
+        statusTv = (TextView) view.findViewById(R.id.status_text);
+        activatedStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_activated);
+        disabledStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_disabled);
+        progressStatus = view.findViewById(R.id.status_progress);
+        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
+
+        crossOverView = view.findViewById(R.id.cross_overview);
+        pointsLayout = view.findViewById(R.id.points_layout);
+        overText = (TextView) view.findViewById(R.id.over_text);
+        statusLayout = view.findViewById(R.id.status_layout);
+        btnRequestNavigation = view.findViewById(R.id.button_nav);
+    }
+
+    private void setListeners() {
+        btnRequestNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchNavigation();
+            }
+        });
+        activatedStatusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeStatus(false);
+            }
+        });
+        disabledStatusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeStatus(true);
+            }
+        });
+    }
+
+    private void launchNavigation() {
+        Event event = getEvent();
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("http://maps.google.com/maps?daddr=" + event.latitude + "," + event.longitude)); // TODO constant
+        startActivity(intent);
     }
 
     @Override
@@ -128,27 +154,6 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     public void onDestroyView() {
         LocationManager.removeLocationListener(this);
         super.onDestroyView();
-    }
-
-    private void initVariables(View view) {
-        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-        mapView = (MapView) view.findViewById(R.id.map);
-        distanceText = (TextView) view.findViewById(R.id.distance_text);
-        eventCategoryIcon = (ImageView) view.findViewById(R.id.image_category_place);
-
-        mainLayout = view.findViewById(R.id.main_layout);
-        statusTv = (TextView) view.findViewById(R.id.status_text);
-        flameView = view.findViewById(R.id.points_icon);
-        switchButton = (MySwitchCompat) view.findViewById(R.id.switch_button);
-        statusImage = view.findViewById(R.id.ic_status);
-        progressStatus = view.findViewById(R.id.status_progress);
-        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
-        switchButton.setOnCheckedChangeListener(new OnStatusChangedListener());
-
-        crossOverView = view.findViewById(R.id.cross_overview);
-        pointsLayout = view.findViewById(R.id.points_layout);
-        overText = (TextView) view.findViewById(R.id.over_text);
-        statusLayout = view.findViewById(R.id.status_layout);
     }
 
     private void updateOverView() {
@@ -169,36 +174,118 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     public void turnComingOn() {
         //TODO Steph: Find a better way than using a boolean
         isStatusLoading = true;
-        switchButton.setChecked(true);
+        changeStatus(true);
     }
 
-    private void setStatusProgress(boolean isProgressViewEnabled) {
-        if(isProgressViewEnabled) {
-            statusImage.setVisibility(View.GONE);
-            progressStatus.setVisibility(View.VISIBLE);
-        } else {
-            statusImage.setVisibility(View.VISIBLE);
-            progressStatus.setVisibility(View.GONE);
+    private void changeStatus(final boolean activated) {
+        int visibilityAsked = activated ? View.VISIBLE : View.INVISIBLE;
+        if(activatedStatusButton.getVisibility() == visibilityAsked) {
+            return;
+        }
+
+        final Event event = getEvent();
+
+        final Context context = MyApplication.getApplicationBaseContext();
+        final UserEventStatusEnum newStatus = activated
+                ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
+                :  UserEventStatusEnum.GONE;
+
+        changeTextColor(activated);
+
+        HttpCallManager manager = EventStatusManager.instance().add(context, event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
+        if (manager != null){
+            if(activated) {
+                disabledStatusButton.setVisibility(View.INVISIBLE);
+            }
+            else {
+                activatedStatusButton.setVisibility(View.INVISIBLE);
+            }
+            manager
+                    .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser()))
+                    .onResponse(new HttpCallback() {
+                        @Override
+                        public void successful(Object feedback) {
+                            showActivatedButton(activated);
+                            if(newStatus == UserEventStatusEnum.COMING) {
+                                ConfirmDialog.yesNoMessage(getActivity(),
+                                        getString(R.string.launch_navigation_message),
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if(which == DialogInterface.BUTTON_POSITIVE) {
+                                                    launchNavigation();
+                                                }
+                                            }
+                                        }
+                                )
+                                        .create()
+                                        .show();;
+                            }
+                        }
+
+                        @Override
+                        public void notSuccessful() {
+                            Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
+                            showActivatedButton(!activated);
+                        }
+
+                    })
+                    .onError(new RequestFailureCallback(){
+                        @Override
+                        public void onError(Throwable error) {
+                            Toast.makeText(eventActivity, R.string.no_network_access, Toast.LENGTH_SHORT).show();
+                            showActivatedButton(!activated);
+                        }
+                    })
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
+                            isStatusLoading = false;
+                        }
+                    });
         }
     }
 
-    public void updateUserStatusButton(){
+    /*private void setStatusProgress(boolean isProgressViewEnabled) {
+        if(isProgressViewEnabled) {
+            activatedStatusButton.setVisibility(View.INVISIBLE);
+            disabledStatusButton.setVisibility(View.INVISIBLE);
+            progressStatus.setVisibility(View.VISIBLE);
+        } else {
+            progressStatus.setVisibility(View.INVISIBLE);
+        }
+    }*/
+
+    private void changeTextColor(boolean activated) {
+        int colorStatusText = activated ? R.color.textStatusActivated : R.color.textStatusDisabled;
+        statusTv.setTextColor(ContextCompat.getColor(getActivity(),colorStatusText));
+    }
+
+    private void showActivatedButton(boolean activated) {
+        if(activated) {
+            activatedStatusButton.setVisibility(View.VISIBLE);
+            disabledStatusButton.setVisibility(View.INVISIBLE);
+        }
+        else {
+            activatedStatusButton.setVisibility(View.INVISIBLE);
+            disabledStatusButton.setVisibility(View.VISIBLE);
+        }
+        changeTextColor(activated);
+    }
+
+    public void updateStatusButtonActivation(){
+        //This method checks if the button should be enabled and updates it
         Event event = getEvent();
         if(event == null) {
             return; //TODO : Event is null sometimes but shouldn't be
         }
         UserEvent statusInfo = EventStatusManager.getStatus(event);
-        if (event.isUserAround()){
-            switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.HERE);
-        }
-        else{
-            switchButton.setChecked(statusInfo != null && statusInfo.status == UserEventStatusEnum.COMING);
-        }
+        showActivatedButton(statusInfo != null &&  statusInfo.status != UserEventStatusEnum.GONE);
 
         mBinding.notifyChange();
     }
 
-    public void updateView(){
+    public void updateEventBinding(){
         mBinding.setEvent(getEvent());
     }
 
@@ -206,11 +293,10 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is now ready!");
-        gMap = googleMap;
-        MapFactory.initMap(gMap, false);
+        MapFactory.initMap(googleMap, false);
         Event event = eventActivity.getEvent();
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
-        gMap.addMarker(event.getMarkerOption());
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
+        googleMap.addMarker(event.getMarkerOption());
     }
 
     @Override
@@ -245,61 +331,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         if(!isStatusLoading) {
-            updateUserStatusButton();
-        }
-    }
-
-    private class OnStatusChangedListener implements CompoundButton.OnCheckedChangeListener {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-            Event event = getEvent();
-
-            Context context = MyApplication.getApplicationBaseContext();
-            UserEventStatusEnum newStatus = isChecked
-                    ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
-                    :  UserEventStatusEnum.GONE;
-
-            int colorStatusText = isChecked ? R.color.colorPrimary : R.color.DarkGray;
-            statusTv.setTextColor(ContextCompat.getColor(context,colorStatusText));
-            if(progressStatus.getVisibility()==View.VISIBLE){
-                setStatusProgress(false);
-            }
-
-            HttpCallManager manager = EventStatusManager.instance().add(context, event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
-            if (manager != null){
-                setStatusProgress(true);
-
-                manager
-                    .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser()))
-                    .onResponse(new HttpCallback() {
-                        @Override
-                        public void successful(Object feedback) {
-
-                        }
-
-                        @Override
-                        public void notSuccessful() {
-                            Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
-                            switchButton.setCheckedNoTrigger(!isChecked);
-                        }
-
-                    })
-                    .onError(new RequestFailureCallback(){
-                        @Override
-                        public void onError(Throwable error) {
-                            Toast.makeText(eventActivity, R.string.no_network_access, Toast.LENGTH_SHORT).show();
-                            switchButton.setCheckedNoTrigger(!isChecked);
-                        }
-                    })
-                    .onFinally(new HttpCallManager.FinallyCallback() {
-                        @Override
-                        public void onFinally(Response response, Throwable error) {
-                            setStatusProgress(false);
-                            isStatusLoading = false;
-                        }
-                    });
-            }
+            updateStatusButtonActivation();
         }
     }
 }

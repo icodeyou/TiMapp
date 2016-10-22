@@ -167,7 +167,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
                             .zoom(ZOOM_LEVEL_CENTER_MAP)  // Sets the zoom
                             .bearing(0)                   // Initialize the orientation of the camera
                             .tilt(0)                      // Initialize tilt of the camera
-                            .build();                     // Creates a CameraPosition from the builder
+                            .build();                     // Creates a CameraPosition from the simpleMessage
                     gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
@@ -403,7 +403,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
                 Log.d(TAG, "You clicked on a cluster");
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                //builder.include(cluster.getPosition());
+                //simpleMessage.include(cluster.getPosition());
                 for (Event m : cluster.getItems()) {
                     builder.include(m.getPosition());
                 }

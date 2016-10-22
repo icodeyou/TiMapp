@@ -47,7 +47,7 @@ public class InvitationActivityTest extends AbstractActivityTest{
         this.systemAnimations(false);
         mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), InvitationsActivity.class));
 
-        // We need a gps location to hide the progress bar that builder distance to the user
+        // We need a gps location to hide the progress bar that simpleMessage distance to the user
         this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
 
         super.beforeTest();

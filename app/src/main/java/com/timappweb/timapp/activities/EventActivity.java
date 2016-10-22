@@ -275,7 +275,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             event.addPropertyChangeListener(Event.PROPERTY_INACTIVITY_THRESHOLD, new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent event) {
-                    if (fragmentInformation!= null && fragmentInformation.getView() != null) fragmentInformation.updateView();
+                    if (fragmentInformation!= null && fragmentInformation.getView() != null) fragmentInformation.updateEventBinding();
                 }
             });
             event.addPropertyChangeListener(Event.PROPERTY_PICTURE, new PropertyChangeListener() {

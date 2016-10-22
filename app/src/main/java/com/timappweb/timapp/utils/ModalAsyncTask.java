@@ -15,7 +15,7 @@ public abstract class ModalAsyncTask extends AsyncTask<String, Void, Boolean> {
         this.dialog = new ProgressDialog(activity);
     }
 
-    /** progress dialog to builder user that the backup is processing. */
+    /** progress dialog to simpleMessage user that the backup is processing. */
     /** application context. */
     @Override
     protected void onPreExecute() {

@@ -165,7 +165,7 @@ public class ExploreActivityTest extends AbstractActivityTest {
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(latLng)      // Sets latitude and longitude
                         .zoom(16.0f)  // Sets the zoom
-                        .build();                     // Creates a CameraPosition from the builder
+                        .build();                     // Creates a CameraPosition from the simpleMessage
                 exploreMapFragment.getMap().animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         };

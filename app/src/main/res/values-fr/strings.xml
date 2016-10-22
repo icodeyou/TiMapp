@@ -26,7 +26,6 @@
     <string name="nav_how_it_works">Comment ça marche ?</string>
     <string name="nav_add_event">Ajouter un événement</string>
 
-
     <!-- Menus action bar-->
     <string name="menu_share">Partager</string>
     <string name="menu_edit_profile">Éditer le profil</string>
@@ -41,8 +40,11 @@
     <string name="action_unselect_all">Unselect all</string>
 
     <!-- Generic Messages -->
+    <string name="launch_navigation_message">Voulez-vous lancer l\'itinéraire GPS ?</string>
     <string name="alert_dialog_ok">Ok</string>
     <string name="alert_dialog_cancel">Annuler</string>
+    <string name="alert_dialog_yes">Oui</string>
+    <string name="alert_dialog_no">Non</string>
     <string name="retry_button">Réessayer</string>
     <string name="waiting_for_location">Localisation</string>
     <string name="skip">Ignorer</string>

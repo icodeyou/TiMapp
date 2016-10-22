@@ -3,7 +3,6 @@ package com.timappweb.timapp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,10 +20,10 @@ import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PeopleHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
+import com.timappweb.timapp.data.entities.EventPeopleStats;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.loader.SyncDataLoader;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.entities.EventPeopleStats;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
@@ -41,7 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
-import eu.davidea.flipview.FlipView;
 
 
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener, android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener {
@@ -120,8 +118,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //Settings for FlipView
-        FlipView.resetLayoutAnimationDelay(true, 1000L); // TODO cst
 
         mPlaceUsersAdapter = new MyFlexibleAdapter(getActivity());
         mPlaceUsersAdapter.setPermanentDelete(true);
@@ -144,9 +140,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
 
         initializeRecyclerView(savedInstanceState);
-
-        //Settings for FlipView
-        FlipView.stopLayoutAnimation();
     }
 
     private void initUserStatusLoader() {

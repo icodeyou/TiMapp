@@ -166,8 +166,10 @@
     <dimen name="dim_image_status">50dp</dimen>
     <dimen name="corner_map">20dp</dimen>
     <dimen name="width_divider">1dp</dimen>
-    <dimen name="margin_cards_scroll">5dp</dimen>
+    <dimen name="margin_cards">5dp</dimen>
     <dimen name="height_item_list">240dp</dimen>
+    <dimen name="size_big_fab">56dp</dimen>
+    <dimen name="margin_big_fab">8dp</dimen>
 
     <item name="shring_coef" type="dimen">90%</item>
 </resources>

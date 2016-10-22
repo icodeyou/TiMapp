@@ -80,8 +80,19 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_cards_scroll"
                         android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/spot_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:visibility="visible">
+                            <include layout="@layout/layout_spot"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                bind:spot="@{event.spot}"/>
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/waiting_for_location_layout"
@@ -104,17 +115,6 @@
                                 android:singleLine="false"/>
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/spot_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:visibility="gone">
-                            <include layout="@layout/layout_spot"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                bind:spot="@{event.spot}"/>
-                        </LinearLayout>
                         <include
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/map_height"
@@ -123,7 +123,7 @@
                             android:id="@+id/image_event"
                             android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:layout_marginTop="@dimen/margin_cards_scroll"
+                            android:layout_marginTop="@dimen/margin_cards"
                             fresco:roundedCornerRadius="@dimen/corner_map"
                             fresco:actualImageScaleType="centerCrop"
                             fresco:placeholderImage="@drawable/placeholder_picture" />
@@ -151,7 +151,7 @@
                     <ImageView
                         android:id="@+id/picture_validate"
                         style="@style/IconDefault"
-                        android:src="@drawable/ic_validate_primary"
+                        android:src="@drawable/ic_validate_grey"
                         android:visibility="gone"/>
                     <ImageView
                         android:id="@+id/picture"
@@ -171,7 +171,7 @@
                     <ImageView
                         android:id="@+id/spot_validate"
                         style="@style/IconDefault"
-                        android:src="@drawable/ic_validate_primary"
+                        android:src="@drawable/ic_validate_grey"
                         android:visibility="gone"/>
                     <ImageView
                         android:id="@+id/spot"

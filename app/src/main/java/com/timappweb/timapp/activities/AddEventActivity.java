@@ -96,7 +96,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private CategorySelectorView        categorySelector;
 
     // Data
-    private MapView                     mapView = null;
+    private MapView                     mapView;
     private GoogleMap                   gMap;
     private ActivityAddEventBinding     mBinding;
     private View                        mBtnAddSpot;
@@ -144,7 +144,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         progressView = findViewById(R.id.progress_view);
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(null);
-        //mButtonAddPicture = findViewById(R.id.button_take_picture);
         mBtnAddSpot = findViewById(R.id.button_add_spot);
         mBtnAddPic = findViewById(R.id.button_add_picture);
         mSpotContainer = findViewById(R.id.spot_container);
@@ -158,16 +157,12 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         icSpotValidate = findViewById(R.id.spot_validate);
         icSpotText = (TextView) findViewById(R.id.spot_text);
 
-        // @warning DO NOT MOVE
         mBinding.setEvent(new Event());
-        extractSpot(savedInstanceState);
-        // ------
 
         initContextMenu();
         initEts();
         initAdapterAndManager();
         setListeners();
-        //initViewPager();
 
         if (!this.getResources().getBoolean(R.bool.eventcard_showProgressBarLocation)){
             findViewById(R.id.progress_bar).setVisibility(View.GONE);
@@ -242,8 +237,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             showConfirmDialog();
         }
     }
-    //----------------------------------------------------------------------------------------------
-    //Private methods
 
     @Override
     protected void onStart() {
@@ -264,7 +257,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_event, menu);
         postButton = menu.findItem(R.id.action_post);
-        //setButtonValidation();
 
         if(BuildConfig.BUILD_TYPE == "debug") initDebugView();
         return true;
@@ -308,21 +300,26 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void showConfirmDialog() {
-        ConfirmDialog.builder(this,
-                null,
-                getString(R.string.confim_message_add_event),
-                getString(R.string.alert_dialog_continue_addevent),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(which == DialogInterface.BUTTON_POSITIVE) {
-                            IntentsUtils.getBackToParent(AddEventActivity.this);
+        if(!(eventCategorySelected == null && getEvent().name.equals(""))) {
+            ConfirmDialog.simpleMessage(this,
+                    null,
+                    getString(R.string.confim_message_add_event),
+                    getString(R.string.alert_dialog_continue_addevent),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(which == DialogInterface.BUTTON_POSITIVE) {
+                                IntentsUtils.getBackToParent(AddEventActivity.this);
+                            }
                         }
                     }
-                }
-        )
-                .create()
-                .show();;
+            )
+                    .create()
+                    .show();
+        }
+        else {
+            IntentsUtils.getBackToParent(AddEventActivity.this);
+        }
     }
 
     private void initEts() {
@@ -431,7 +428,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     public void setCategory(EventCategory eventCategory) {
         eventCategorySelected = eventCategory;
         categorySelector.selectCategoryUI(eventCategory.getName(),eventCategory.getIconDrawable(AddEventActivity.this));
-        //setButtonValidation();
     }
 
     public EventCategory getEventCategorySelected() {
@@ -488,38 +484,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             }
         };
 
-        View.OnLongClickListener onLongClickListener = new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                closeContextMenu();
-                return true;
-            }
-        };
-
         mBtnAddPic.setOnClickListener(onPicClickListener);
         simpleDraweeView.setOnClickListener(onPicClickListener);
         mBtnAddSpot.setOnClickListener(onSpotClickListener);
         mSpotContainer.setOnClickListener(onSpotClickListener);
-
-        mBtnAddPic.setOnLongClickListener(onLongClickListener);
-        mBtnAddSpot.setOnLongClickListener(onLongClickListener);
-
-        /*eventNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                setButtonValidation();
-            }
-        });*/
     }
 
     public Event getEvent(){
@@ -536,21 +504,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             mBinding.getEvent().setSpot(spot);
             mSpotContainer.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        // TODO [jack][clean] WTF !?
-        if(eventNameET.hasFocus()) {
-            eventNameET.clearFocus();
-            descriptionET.clearFocus();
-        }
-        else if(descriptionET.hasFocus()) {
-            descriptionET.clearFocus();
-            eventNameET.clearFocus();
-        }
-        imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
     }
 
     @Override
@@ -594,6 +547,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     @Override
     protected void onActivityResult(int requestCode, final int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        imm.hideSoftInputFromWindow(eventNameET.getWindowToken(), 0);   //Hide keyboard
         eventNameET.clearFocus();
         switch (requestCode){
             case IntentsUtils.REQUEST_PICK_SPOT:
@@ -606,7 +561,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
             default:
                 Log.e(TAG, "Unknown activity result: " + requestCode);
         }
-        super.onActivityResult(requestCode, resultCode, data);
 
         final Activity activity = this;
         EasyImage.handleActivityResult(requestCode, resultCode, data, activity, new DefaultCallback() {
@@ -683,8 +637,6 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         icPictureText.setTextColor(ContextCompat.getColor(this, R.color.selection_button_add_event));
         icPicture.setEnabled(false);
     }
-
-
 
     /**
      * Update event location.

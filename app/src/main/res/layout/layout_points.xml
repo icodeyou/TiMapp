@@ -27,8 +27,8 @@
             android:textStyle="italic"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"/>
-        <!--TODO : Use DataBinding to initialize points.
-        WARNING : Use custom attribute.
+
+        <!--WARNING : Use custom attribute.
         Indeed, android:text="@{event.displayPoints()}" will display a static TextView instead of a timer-->
 
     </LinearLayout>

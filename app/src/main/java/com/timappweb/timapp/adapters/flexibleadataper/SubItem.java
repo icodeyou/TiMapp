@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.timappweb.timapp.R;
@@ -94,14 +93,11 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 	 */
 	static final class ChildViewHolder extends FlexibleViewHolder {
 
-		public ImageView mHandleView;
 		public TextView mTitle;
 
 		public ChildViewHolder(View view, FlexibleAdapter adapter) {
 			super(view, adapter);
 			this.mTitle = (TextView) view.findViewById(R.id.title);
-			this.mHandleView = (ImageView) view.findViewById(R.id.row_handle);
-			setDragHandleView(mHandleView);
 		}
 
 		@Override

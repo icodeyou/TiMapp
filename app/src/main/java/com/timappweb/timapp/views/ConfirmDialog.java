@@ -15,7 +15,7 @@ public class ConfirmDialog {
     }
 
 
-    public static AlertDialog.Builder builder(
+    public static AlertDialog.Builder simpleMessage(
             Context context, String title, String mainMsg, String confirmMessage,
             DialogInterface.OnClickListener listener){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -28,5 +28,13 @@ public class ConfirmDialog {
         return builder;
     }
 
+    public static AlertDialog.Builder yesNoMessage(Context context, String message,
+                                                    DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setPositiveButton(context.getString(R.string.alert_dialog_yes), listener)
+                .setNegativeButton(context.getString(R.string.alert_dialog_no), listener);
+        return builder;
+    }
 
 }
