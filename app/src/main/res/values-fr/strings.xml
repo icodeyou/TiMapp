@@ -99,8 +99,13 @@
     <!-- item invitation -->
     <string name="former_username">Nom d\'utilisateur</string>
     <string name="former_time">Date d\'invitation</string>
-    <!-- item Event -->
+
+
+    <!-- SimpleTimerView -->
     <string name="counter_over">C\'est terminé !</string>
+    <string name="thousand">Mille !</string>
+    <string name="two_thousands">Deux milles !</string>
+    <string name="three_thousands">Trois milles !</string>
 
 
     <!-- .................. Activities ...................................-->
