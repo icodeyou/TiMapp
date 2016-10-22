@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.listeners.LoadingListener;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaDataLoaderFromAPI;
 import com.timappweb.timapp.utils.AreaDataCaching.AreaRequestHistory;
@@ -167,9 +166,8 @@ public class ExploreFragment extends Fragment{
                 containerEvents.startAnimation(slideIn);
                 containerEvents.setVisibility(View.VISIBLE);
                 blurBackground.setVisibility(View.VISIBLE);
-                menu.findItem(R.id.action_list).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.list_close));
+                menu.findItem(R.id.action_list).setIcon(ContextCompat.getDrawable(getContext(), R.drawable.list));
             } else {
-                //TODO : Cette action n'est jamais appelée
                 Toast.makeText(getContext(), R.string.text_no_event, Toast.LENGTH_SHORT).show();
             }
         } else {
