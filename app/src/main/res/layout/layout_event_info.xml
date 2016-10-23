@@ -152,7 +152,7 @@
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_coming"
                 style="@style/MiniFab"
-                app:fab_icon="@drawable/coming_guy_white"
+                app:fab_icon="@drawable/go"
                 android:visibility="@{!event.isUserAround() ? View.VISIBLE : View.GONE}"/>
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>

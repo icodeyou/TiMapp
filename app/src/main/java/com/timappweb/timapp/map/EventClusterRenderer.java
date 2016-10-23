@@ -63,6 +63,13 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         categoryImage.setImageDrawable(event.getCategoryWithDefault().getIconDrawable(this.context));
         //categoryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.category_unknown));
         categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
+
+        //TODO : Get Color from servor and apply call below
+        /*Drawable drawable = ContextCompat.getDrawable(context, R.drawable.b1);
+        drawable.setColorFilter(new PorterDuffColorFilter(**getcolorFromServor**,
+                PorterDuff.Mode.SRC_ATOP));
+        categoryImage.setBackground(drawable);*/
+
         categoryImage.setBackgroundResource(event.getLevelBackground());
         categoryImage.setDrawingCacheEnabled(true);
 

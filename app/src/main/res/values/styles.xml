@@ -201,6 +201,7 @@
     <style name="BigFabButton">
         <item name="android:layout_width">@dimen/size_big_fab</item>
         <item name="android:layout_height">@dimen/size_big_fab</item>
+        <item name="android:layout_margin">@dimen/margin_big_fab</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 

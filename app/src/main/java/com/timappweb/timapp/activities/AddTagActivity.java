@@ -143,9 +143,9 @@ public class AddTagActivity extends BaseActivity{
                     @Override
                     public void onLoadEnds() {
                        //TODO Steph : This method is not called after tags loading (because tags  > 30 ?)
-                        progressStartView.setVisibility(View.GONE);
+                        /*progressStartView.setVisibility(View.GONE);
                         suggestedTagsView.removeItem(searchAndSelectTagManager.getSelectedTags());
-                        /*Animation animationTagsIn = AnimationUtils.loadAnimation(context, R.anim.appear_grow);
+                        Animation animationTagsIn = AnimationUtils.loadAnimation(context, R.anim.scale_up);
                         suggestedTagsView.setAnimation(animationTagsIn);*/
                     }
 

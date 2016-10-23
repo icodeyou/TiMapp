@@ -539,7 +539,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         }
         switch (this.getLevel()) {
             case 0:
-                return R.drawable.b1;
+                return R.drawable.b1_bis;
             case 1:
                 return R.drawable.b2;
             case 2:

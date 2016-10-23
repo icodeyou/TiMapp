@@ -13,9 +13,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <include layout="@layout/progressview_fullscreen" />
-
-
         <com.timappweb.timapp.views.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
@@ -44,6 +41,8 @@
                 android:layout_alignParentBottom="true"
                 layout="@layout/share_layout" />
         </RelativeLayout>
+
+        <include layout="@layout/progressview_fullscreen" />
 
     </RelativeLayout>
 

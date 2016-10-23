@@ -130,11 +130,12 @@ public class EventStatusManager {
     private static UserEvent addStatus(UserEvent userEvent) throws CannotSaveModelException {
         userEvent.user = MyApplication.getCurrentUser();
         userEvent.setCreated(System.currentTimeMillis());
-        userEvent.deepSave();
+        userEvent = userEvent.deepSave();
         if (userEvent.status == UserEventStatusEnum.HERE){
             EventStatusManager.setCurrentEvent(userEvent.event);
 
             // Cancel other here status on client side
+            Log.d(TAG, "User ID" + userEvent.getId());
             new Delete()
                     .from(UserEvent.class)
                     .where("User = ? AND Status = ? AND Id != ?", userEvent.user.getId(), UserEventStatusEnum.HERE, userEvent.getId())

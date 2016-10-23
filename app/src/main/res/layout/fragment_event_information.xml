@@ -114,48 +114,42 @@
                             android:alpha="0.05"/>
                     </LinearLayout>
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/status_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-                        <RelativeLayout
-                            android:id="@+id/relative"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        android:layout_height="match_parent">
+                        <FrameLayout
+                            android:id="@+id/status_progress"
+                            style="@style/BigFabButton">
                             <com.crystal.crystalpreloaders.widgets.CrystalPreloader
-                                android:id="@+id/status_progress"
                                 style="@style/SmallProgressView"
                                 android:layout_centerInParent="true"/>
-                            <android.support.design.widget.FloatingActionButton
-                                android:id="@+id/status_button_disabled"
-                                style="@style/BigFabButton"
-                                android:layout_margin="@dimen/margin_big_fab"
-                                app:rippleColor="@color/colorPrimaryVeryDark"
-                                app:backgroundTint="@color/colorPrimary"
-                                android:src="@{event.isUserAround() ? @drawable/gps : @drawable/coming_guy_white}"
-                                android:visibility="invisible"/>
-                            <android.support.design.widget.FloatingActionButton
-                                android:id="@+id/status_button_activated"
-                                style="@style/BigFabButton"
-                                android:layout_margin="@dimen/margin_big_fab"
-                                app:rippleColor="@color/colorAccentLight"
-                                app:backgroundTint="@color/white"
-                                android:src="@drawable/ic_validate_primary"
-                                android:visibility="visible"/>
-                        </RelativeLayout>
+                        </FrameLayout>
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/status_button_disabled"
+                            style="@style/BigFabButton"
+                            app:rippleColor="@color/colorPrimaryVeryDark"
+                            app:backgroundTint="@color/colorPrimary"
+                            android:src="@{event.isUserAround() ? @drawable/gps : @drawable/go}"
+                            android:visibility="gone"/>
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/status_button_activated"
+                            style="@style/BigFabButton"
+                            app:rippleColor="@color/colorAccentLight"
+                            app:backgroundTint="@color/white"
+                            android:src="@drawable/ic_validate_primary"
+                            android:visibility="visible"/>
                         <TextView
                             android:id="@+id/status_text"
                             style="@style/TextBold"
+                            android:layout_below="@id/status_progress"
+                            android:layout_centerHorizontal="true"
                             android:text="@{event.isUserAround() ? @string/i_am_here : @string/i_am_coming}"
-                            android:textColor="@color/textStatusDisabled"
+                            android:textColor="@color/textStatusActivated"
                             tools:text="I'm coming"
                             android:textSize="@dimen/text_small" />
-
-
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_weight="1.5"

@@ -9,11 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.ConfirmDialog;
 import com.timappweb.timapp.views.SimpleTimerView;
@@ -59,7 +61,6 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     private SimpleTimerView             tvCountPoints;
 
     private TextView                    statusTv;
-    private View                        progressStatus;
     private View                        crossOverView;
     private View                        pointsLayout;
     private TextView                    overText;
@@ -104,7 +105,6 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         statusTv = (TextView) view.findViewById(R.id.status_text);
         activatedStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_activated);
         disabledStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_disabled);
-        progressStatus = view.findViewById(R.id.status_progress);
         tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
 
         crossOverView = view.findViewById(R.id.cross_overview);
@@ -172,13 +172,12 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     }
 
     public void turnComingOn() {
-        //TODO Steph: Find a better way than using a boolean
         isStatusLoading = true;
         changeStatus(true);
     }
 
     private void changeStatus(final boolean activated) {
-        int visibilityAsked = activated ? View.VISIBLE : View.INVISIBLE;
+        int visibilityAsked = activated ? View.VISIBLE : View.GONE;
         if(activatedStatusButton.getVisibility() == visibilityAsked) {
             return;
         }
@@ -190,43 +189,70 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                 ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
                 :  UserEventStatusEnum.GONE;
 
-        changeTextColor(activated);
-
         HttpCallManager manager = EventStatusManager.instance().add(context, event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
         if (manager != null){
+            final Animation scaleDown = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_down);
+            scaleDown.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if(activated) {
+                        disabledStatusButton.setVisibility(View.GONE);
+                    }
+                    else {
+                        activatedStatusButton.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             if(activated) {
-                disabledStatusButton.setVisibility(View.INVISIBLE);
+                disabledStatusButton.startAnimation(scaleDown);
             }
             else {
-                activatedStatusButton.setVisibility(View.INVISIBLE);
+                activatedStatusButton.startAnimation(scaleDown);
             }
             manager
                     .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser()))
                     .onResponse(new HttpCallback() {
                         @Override
                         public void successful(Object feedback) {
-                            showActivatedButton(activated);
+                            showActivatedButton(activated, true);
                             if(newStatus == UserEventStatusEnum.COMING) {
-                                ConfirmDialog.yesNoMessage(getActivity(),
-                                        getString(R.string.launch_navigation_message),
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                if(which == DialogInterface.BUTTON_POSITIVE) {
-                                                    launchNavigation();
+                                //Delay to see the animation before the dialog
+                                DelayedCallHelper.create(R.integer.duration_scale, new DelayedCallHelper.Callback() {
+                                    @Override
+                                    public void onTime() {
+                                        //Dialog
+                                        ConfirmDialog.yesNoMessage(getActivity(),
+                                                getString(R.string.launch_navigation_message),
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        if(which == DialogInterface.BUTTON_POSITIVE) {
+                                                            launchNavigation();
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        }
-                                )
-                                        .create()
-                                        .show();;
+                                        )
+                                                .create()
+                                                .show();
+                                    }
+                                });
                             }
                         }
 
                         @Override
                         public void notSuccessful() {
                             Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
-                            showActivatedButton(!activated);
+                            showActivatedButton(!activated, true);
                         }
 
                     })
@@ -234,7 +260,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                         @Override
                         public void onError(Throwable error) {
                             Toast.makeText(eventActivity, R.string.no_network_access, Toast.LENGTH_SHORT).show();
-                            showActivatedButton(!activated);
+                            showActivatedButton(!activated, true);
                         }
                     })
                     .onFinally(new HttpCallManager.FinallyCallback() {
@@ -246,43 +272,57 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         }
     }
 
-    /*private void setStatusProgress(boolean isProgressViewEnabled) {
-        if(isProgressViewEnabled) {
-            activatedStatusButton.setVisibility(View.INVISIBLE);
-            disabledStatusButton.setVisibility(View.INVISIBLE);
-            progressStatus.setVisibility(View.VISIBLE);
-        } else {
-            progressStatus.setVisibility(View.INVISIBLE);
-        }
-    }*/
+    private void showActivatedButton(final boolean activated, boolean animate) {
+        final Animation scaleUp = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_up);
+        scaleUp.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
-    private void changeTextColor(boolean activated) {
-        int colorStatusText = activated ? R.color.textStatusActivated : R.color.textStatusDisabled;
-        statusTv.setTextColor(ContextCompat.getColor(getActivity(),colorStatusText));
-    }
+            }
 
-    private void showActivatedButton(boolean activated) {
-        //TODO Jack : morphing animation!
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if(activated) {
+                    activatedStatusButton.setVisibility(View.VISIBLE);
+                    statusTv.setAlpha(1f);
+                }
+                else {
+                    disabledStatusButton.setVisibility(View.VISIBLE);
+                    statusTv.setAlpha(0.1f);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
         if(activated) {
+            disabledStatusButton.setVisibility(View.GONE);
             activatedStatusButton.setVisibility(View.VISIBLE);
-            disabledStatusButton.setVisibility(View.INVISIBLE);
+            if(animate) {
+                activatedStatusButton.startAnimation(scaleUp);
+            }
         }
         else {
-            activatedStatusButton.setVisibility(View.INVISIBLE);
+            activatedStatusButton.setVisibility(View.GONE);
             disabledStatusButton.setVisibility(View.VISIBLE);
+            if(animate) {
+                disabledStatusButton.startAnimation(scaleUp);
+            }
         }
-
-        changeTextColor(activated);
     }
 
     public void updateStatusButtonActivation(){
         //This method checks if the button should be enabled and updates it
         Event event = getEvent();
         if(event == null) {
-            return; //TODO : Event is null sometimes but shouldn't be
+            Log.d(TAG, "Event is null");
+            return;
         }
         UserEvent statusInfo = EventStatusManager.getStatus(event);
-        showActivatedButton(statusInfo != null &&  statusInfo.status != UserEventStatusEnum.GONE);
+        showActivatedButton(statusInfo != null &&  statusInfo.status != UserEventStatusEnum.GONE, false);
 
         mBinding.notifyChange();
     }
@@ -332,6 +372,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location newLocation, Location lastLocation) {
+        //TODO Steph : remove isStatusLoading variable and find another way
         if(!isStatusLoading) {
             updateStatusButtonActivation();
         }
