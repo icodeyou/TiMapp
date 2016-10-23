@@ -41,12 +41,15 @@ import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.ConfirmDialog;
 import com.timappweb.timapp.views.SimpleTimerView;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import retrofit2.Response;
 
 
 public class
-EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener, LocationManager.LocationListener {
+EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback,
+        OnTabSelectedListener, LocationManager.LocationListener,
+        android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 0;
     private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;
@@ -67,9 +70,10 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     private View                        statusLayout;
     private FloatingActionButton        activatedStatusButton;
     private FloatingActionButton        disabledStatusButton;
+    private View                        btnRequestNavigation;
+    private SwipeRefreshLayout          swipeRefreshLayout;
 
-    private boolean isStatusLoading = false;
-    private View btnRequestNavigation;
+    private boolean                     isStatusLoading = false;
 
 
     public EventInformationFragment() {
@@ -87,6 +91,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         setListeners();
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         mapView.onCreate(null);
         mapView.getMapAsync(this);
@@ -112,6 +117,8 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         overText = (TextView) view.findViewById(R.id.over_text);
         statusLayout = view.findViewById(R.id.status_layout);
         btnRequestNavigation = view.findViewById(R.id.button_nav);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void setListeners() {
@@ -376,5 +383,11 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         if(!isStatusLoading) {
             updateStatusButtonActivation();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        Toast.makeText(eventActivity, "Wouw ça raffraîchit! #cold", Toast.LENGTH_SHORT).show();
+        //TODO Steph : Refreeeeeeeeeeeeeeeesh MOTHERKICKA ! POINTS + CREATED + LAST ACTIVITY
     }
 }

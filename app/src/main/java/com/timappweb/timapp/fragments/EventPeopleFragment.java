@@ -50,14 +50,14 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     // ---------------------------------------------------------------------------------------------
 
     private MyFlexibleAdapter       mPlaceUsersAdapter;
-    private SwipeRefreshLayout mSwipeLayout;
+    private SwipeRefreshLayout      mSwipeLayout;
     private RecyclerView            mRecyclerView;
-    private PeopleHeaderItem    mExpandableHereHeader;
-    private PeopleHeaderItem    mExpandableComingHeader;
-    private PeopleHeaderItem    mExpandableInviteHeader;
+    private PeopleHeaderItem        mExpandableHereHeader;
+    private PeopleHeaderItem        mExpandableComingHeader;
+    private PeopleHeaderItem        mExpandableInviteHeader;
     private Loader<List<EventsInvitation>> mInviteLoader;
-    private UserStatusLoader userStatusLoader;
-    private InviteSentLoader inviteSentLoader;
+    private UserStatusLoader        userStatusLoader;
+    private InviteSentLoader        inviteSentLoader;
     private Loader<List<UserEvent>> mUserStatusLoader;
 
     //private RecyclerViewMaterialAdapter mAdapter;

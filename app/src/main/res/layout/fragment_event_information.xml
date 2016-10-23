@@ -8,272 +8,277 @@
         <import type="com.timappweb.timapp.utils.Util"/>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
-    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
-        android:id="@+id/scrollView"
-        android:scrollbars="none"
+    <com.timappweb.timapp.views.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
+        <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+            android:id="@+id/scrollView"
+            android:scrollbars="none"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include layout="@layout/material_view_pager_placeholder"/>
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/main_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="3dp"
-                android:background="@color/background"
-                android:layout_marginTop="3dp">
-                <TextView
-                    android:id="@+id/over_text"
-                    style="@style/TextBig"
-                    android:padding="@dimen/default_text_padding"
-                    android:textStyle="bold"
-                    android:text="@string/counter_over"/>
+                android:orientation="vertical">
+
+                <include layout="@layout/material_view_pager_placeholder"/>
 
                 <LinearLayout
-                    android:id="@+id/points_layout"
+                    android:id="@+id/main_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp">
-                    <include
-                        layout="@layout/layout_points"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        bind:event="@{event}" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:visibility="@{event.isInactive() ? View.VISIBLE : View.GONE}">
-                    <include layout="@layout/divider_grey" />
+                    android:padding="3dp"
+                    android:background="@color/background"
+                    android:layout_marginTop="3dp">
+                    <TextView
+                        android:id="@+id/over_text"
+                        style="@style/TextBig"
+                        android:padding="@dimen/default_text_padding"
+                        android:textStyle="bold"
+                        android:text="@string/counter_over"/>
+
+                    <LinearLayout
+                        android:id="@+id/points_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="10dp">
+                        <include
+                            layout="@layout/layout_points"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            bind:event="@{event}" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp">
+                        android:orientation="vertical"
+                        android:visibility="@{event.isInactive() ? View.VISIBLE : View.GONE}">
+                        <include layout="@layout/divider_grey" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp">
 
-                        <ImageView
+                            <ImageView
+                                android:layout_weight="1"
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/ic_warning"
+                                android:id="@+id/imageView3" />
+
+                            <LinearLayout
+                                android:layout_weight="1.5"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical">
+                                <TextView
+                                    style="@style/TextSmall"
+                                    android:textStyle="bold"
+                                    android:layout_gravity="left"
+                                    android:text="@string/last_activity"/>
+                                <TextView
+                                    style="@style/TextSmall"
+                                    android:layout_gravity="left"
+                                    android:text="@{event.getPrettyInactivityDuration()}"
+                                    tools:text="Il y a 3 semaines"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <include layout="@layout/divider_grey" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_event_activity"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/cross_overview"
                             android:layout_weight="1"
                             android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_warning"
-                            android:id="@+id/imageView3" />
+                            android:layout_height="match_parent"
+                            tools:visibility="gone"
+                            android:gravity="center">
+                            <ImageView
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/cross"
+                                android:alpha="0.05"/>
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/status_layout"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent">
+                            <FrameLayout
+                                android:id="@+id/status_progress"
+                                style="@style/BigFabButton">
+                                <com.crystal.crystalpreloaders.widgets.CrystalPreloader
+                                    style="@style/SmallProgressView"
+                                    android:layout_centerInParent="true"/>
+                            </FrameLayout>
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/status_button_disabled"
+                                style="@style/BigFabButton"
+                                app:rippleColor="@color/colorPrimaryVeryDark"
+                                app:backgroundTint="@color/colorPrimary"
+                                android:src="@{event.isUserAround() ? @drawable/gps : @drawable/go}"
+                                android:visibility="gone"/>
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/status_button_activated"
+                                style="@style/BigFabButton"
+                                app:rippleColor="@color/colorAccentLight"
+                                app:backgroundTint="@color/white"
+                                android:src="@drawable/ic_validate_primary"
+                                android:visibility="visible"/>
+                            <TextView
+                                android:id="@+id/status_text"
+                                style="@style/TextBold"
+                                android:layout_below="@id/status_progress"
+                                android:layout_centerHorizontal="true"
+                                android:text="@{event.isUserAround() ? @string/i_am_here : @string/i_am_coming}"
+                                android:textColor="@color/textStatusActivated"
+                                tools:text="I'm coming"
+                                android:textSize="@dimen/text_small" />
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_weight="1.5"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical">
-                            <TextView
-                                style="@style/TextSmall"
-                                android:textStyle="bold"
-                                android:layout_gravity="left"
-                                android:text="@string/last_activity"/>
-                            <TextView
-                                style="@style/TextSmall"
-                                android:layout_gravity="left"
-                                android:text="@{event.getPrettyInactivityDuration()}"
-                                tools:text="Il y a 3 semaines"/>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:id="@+id/image_category_place"
+                                    style="@style/imageIconSmall"
+                                    android:layout_margin="2dp"
+                                    android:background="@drawable/radius_simple_background_black"
+                                    tools:src="@drawable/category_unknown"
+                                    app:imageDrawable="@{event.getCategoryWithDefault().getIconDrawable()}"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/event_category_name"
+                                    style="@style/TextInfoEvent"
+                                    android:text="@{Util.capitalize(event.getCategoryWithDefault().name)}"
+                                    tools:text="Category name"/>
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp">
+
+                                <ImageView
+                                    style="@style/imageIcon"
+                                    android:src="@drawable/clock"
+                                    android:id="@+id/imageView2" />
+
+                                <TextView
+                                    android:id="@+id/time_place"
+                                    style="@style/TextInfoEvent"
+                                    android:text="@{event.getPrettyTimeBegin()}"
+                                    tools:text="5 min ago"
+                                    />
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:id="@+id/distance_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal"
+                                android:gravity="left"
+                                android:visibility="visible">
+
+                                <ImageView
+                                    style="@style/imageIcon"
+                                    android:src="@drawable/distance_black"
+                                    android:visibility="@{event.hasDistanceFromUser() ? View.VISIBLE : View.GONE}"
+                                    android:id="@+id/imageView" />
+
+                                <ProgressBar
+                                    android:id="@+id/progress_view"
+                                    style="@style/imageIcon"
+                                    tools:visibility="gone"
+                                    android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}" />
+
+                                <TextView
+                                    android:id="@+id/distance_text"
+                                    style="@style/TextInfoEvent"
+                                    android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
+                                    tools:text="121 m"/>
+                            </RelativeLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-
-                <include layout="@layout/divider_grey" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_event_activity"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/cross_overview"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        tools:visibility="gone"
-                        android:gravity="center">
-                        <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/cross"
-                            android:alpha="0.05"/>
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/status_layout"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent">
-                        <FrameLayout
-                            android:id="@+id/status_progress"
-                            style="@style/BigFabButton">
-                            <com.crystal.crystalpreloaders.widgets.CrystalPreloader
-                                style="@style/SmallProgressView"
-                                android:layout_centerInParent="true"/>
-                        </FrameLayout>
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/status_button_disabled"
-                            style="@style/BigFabButton"
-                            app:rippleColor="@color/colorPrimaryVeryDark"
-                            app:backgroundTint="@color/colorPrimary"
-                            android:src="@{event.isUserAround() ? @drawable/gps : @drawable/go}"
-                            android:visibility="gone"/>
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/status_button_activated"
-                            style="@style/BigFabButton"
-                            app:rippleColor="@color/colorAccentLight"
-                            app:backgroundTint="@color/white"
-                            android:src="@drawable/ic_validate_primary"
-                            android:visibility="visible"/>
-                        <TextView
-                            android:id="@+id/status_text"
-                            style="@style/TextBold"
-                            android:layout_below="@id/status_progress"
-                            android:layout_centerHorizontal="true"
-                            android:text="@{event.isUserAround() ? @string/i_am_here : @string/i_am_coming}"
-                            android:textColor="@color/textStatusActivated"
-                            tools:text="I'm coming"
-                            android:textSize="@dimen/text_small" />
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_weight="1.5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-                            <ImageView
-                                android:id="@+id/image_category_place"
-                                style="@style/imageIconSmall"
-                                android:layout_margin="2dp"
-                                android:background="@drawable/radius_simple_background_black"
-                                tools:src="@drawable/category_unknown"
-                                app:imageDrawable="@{event.getCategoryWithDefault().getIconDrawable()}"
-                                />
-
-                            <TextView
-                                android:id="@+id/event_category_name"
-                                style="@style/TextInfoEvent"
-                                android:text="@{Util.capitalize(event.getCategoryWithDefault().name)}"
-                                tools:text="Category name"/>
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="7dp">
-
-                            <ImageView
-                                style="@style/imageIcon"
-                                android:src="@drawable/clock"
-                                android:id="@+id/imageView2" />
-
-                            <TextView
-                                android:id="@+id/time_place"
-                                style="@style/TextInfoEvent"
-                                android:text="@{event.getPrettyTimeBegin()}"
-                                tools:text="5 min ago"
-                                />
-                        </RelativeLayout>
-                        <RelativeLayout
-                            android:id="@+id/distance_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal"
-                            android:gravity="left"
-                            android:visibility="visible">
-
-                            <ImageView
-                                style="@style/imageIcon"
-                                android:src="@drawable/distance_black"
-                                android:visibility="@{event.hasDistanceFromUser() ? View.VISIBLE : View.GONE}"
-                                android:id="@+id/imageView" />
-
-                            <ProgressBar
-                                android:id="@+id/progress_view"
-                                style="@style/imageIcon"
-                                tools:visibility="gone"
-                                android:visibility="@{event.hasDistanceFromUser() ? View.GONE : View.VISIBLE}" />
-
-                            <TextView
-                                android:id="@+id/distance_text"
-                                style="@style/TextInfoEvent"
-                                android:text="@{event.hasDistanceFromUser() ? DistanceHelper.prettyPrint(event.getDistanceFromUser()) : @string/waiting_for_location}"
-                                tools:text="121 m"/>
-                        </RelativeLayout>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="start">
-                    <include layout="@layout/divider_grey"
-                        android:visibility="@{event.getSpot() == null ? View.GONE : View.VISIBLE }"/>
-                    <include layout="@layout/layout_spot"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        bind:spot="@{event.getSpot()}"/>
+                        android:orientation="vertical"
+                        android:gravity="start">
+                        <include layout="@layout/divider_grey"
+                            android:visibility="@{event.getSpot() == null ? View.GONE : View.VISIBLE }"/>
+                        <include layout="@layout/layout_spot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            bind:spot="@{event.getSpot()}"/>
+                    </LinearLayout>
+
+                    <include layout="@layout/divider_grey" />
+
+                    <TextView
+                        android:id="@+id/description_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:gravity="left"
+                        android:textColor="@color/DarkGray"
+                        android:textSize="@dimen/text_small"
+                        android:text="@{event.description}"
+                        android:visibility="@{event.hasDescription() ? View.VISIBLE : View.GONE}"
+                        tools:text="This is the description of the event. The event is beautiful. The event is magical. The event is free. Come. Come here if you want to spend a wonderful time."/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/map_height">
+                        <include layout="@layout/map" />
+                        <android.support.design.widget.FloatingActionButton
+                            android:id="@+id/button_nav"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="@dimen/fab_map_margin"
+                            android:src="@drawable/nav_white"/>
+                        <!--android:layout_below="@+id/button_display_map"-->
+
+                        <!--<android.support.design.widget.FloatingActionButton
+                            android:id="@+id/button_display_map"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="@dimen/fab_map_margin"
+                            android:src="@drawable/map_light"/>-->
+
+                    </RelativeLayout>
                 </LinearLayout>
 
-                <include layout="@layout/divider_grey" />
 
-                <TextView
-                    android:id="@+id/description_textview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:gravity="left"
-                    android:textColor="@color/DarkGray"
-                    android:textSize="@dimen/text_small"
-                    android:text="@{event.description}"
-                    android:visibility="@{event.hasDescription() ? View.VISIBLE : View.GONE}"
-                    tools:text="This is the description of the event. The event is beautiful. The event is magical. The event is free. Come. Come here if you want to spend a wonderful time."/>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/map_height">
-                    <include layout="@layout/map" />
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/button_nav"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="@dimen/fab_map_margin"
-                        android:src="@drawable/nav_white"/>
-                    <!--android:layout_below="@+id/button_display_map"-->
-
-                    <!--<android.support.design.widget.FloatingActionButton
-                        android:id="@+id/button_display_map"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_margin="@dimen/fab_map_margin"
-                        android:src="@drawable/map_light"/>-->
-
-                </RelativeLayout>
             </LinearLayout>
 
-
-        </LinearLayout>
-
-    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+        </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+    </com.timappweb.timapp.views.SwipeRefreshLayout>
 </layout>
