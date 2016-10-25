@@ -576,6 +576,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     // =============================================================================================
 
 
+    public void savePicture() {
+        if (this.picture != null){
+            this.picture.mySaveSafeCall();
+        }
+        this.mySaveSafeCall();
+    }
+
 
     public List<Picture> getPictures() {
         return getPicturesQuery().execute();

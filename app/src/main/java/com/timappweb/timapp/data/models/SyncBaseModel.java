@@ -14,6 +14,7 @@ import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -370,5 +371,16 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
             };
         }
         return _paginatedDataFormatter;
+    }
+
+    public void deepSaveSafeCall() {
+        try {
+            this.deepSave();
+        } catch (CannotSaveModelException e) {
+            Log.e(TAG, e.getMessage());
+            if (BuildConfig.DEBUG){
+                e.printStackTrace();
+            }
+        }
     }
 }

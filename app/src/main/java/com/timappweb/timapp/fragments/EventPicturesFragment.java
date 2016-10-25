@@ -378,7 +378,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                     @Override
                     public void successful(Object feedback) {
                         getEvent().setBackgroundPicture(picture);
-                        getEvent().mySaveSafeCall();
+                        getEvent().savePicture();
                         Toast.makeText(getActivity(), R.string.event_picture_updated, Toast.LENGTH_LONG).show();
                     }
 
