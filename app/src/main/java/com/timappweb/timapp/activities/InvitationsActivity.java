@@ -7,36 +7,25 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.activeandroid.Model;
+import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.InvitationItem;
 import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
-import com.timappweb.timapp.data.loader.sections.SectionContainer;
-import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
-import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
-import com.timappweb.timapp.data.loader.sections.SectionRecyclerViewManager;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.SyncBaseModel;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.io.request.RestQueryParams;
-import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
-import com.timappweb.timapp.rest.managers.HttpCallManager;
-import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
-import java.util.List;
-
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
-public class InvitationsActivity extends BaseActivity implements
-        SectionDataLoader.Callback<EventsInvitation>{
+public class InvitationsActivity extends BaseActivity{
 
     private String              TAG                             = "ListFriendsActivity";
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
@@ -50,8 +39,8 @@ public class InvitationsActivity extends BaseActivity implements
     private InvitationsAdapter adapter;
     private View noInvitationsView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private SectionDataLoader mDataLoader;
-    private SectionRecyclerViewManager mRecyclerViewManager;
+    private CursorPaginateDataLoader<EventsInvitation, EventsInvitation> mDataLoader;
+    private CursorPaginateManager<EventsInvitation> mRecyclerViewManager;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -87,63 +76,38 @@ public class InvitationsActivity extends BaseActivity implements
         super.onStop();
     }
 
-    @Override
-    protected void onPause() {
-        //LocationManager.removeLocationListener(this);
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //LocationManager.addOnLocationChangedListener(this);
-    }
 
 
     private void initDataLoader() {
-        SectionDataProviderInterface<EventsInvitation> mDataProvider = new SectionDataProviderInterface() {
-            @Override
-            public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.PaginatedSection section) {
-                RestQueryParams options = RestClient.buildPaginatedOptions(section).setLimit(REMOTE_LOAD_LIMIT);
-                return RestClient.buildCall(RestClient.service().inviteReceived(options.toMap()));
-            }
-
-        };
-        mDataLoader = new SectionDataLoader<EventsInvitation>()
-                .setFormatter(SyncBaseModel.getPaginatedFormater())
-                .setOrder(SectionContainer.PaginateDirection.ASC)
-                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
-                .setCacheEngine(new DBCacheEngine<EventsInvitation>(EventsInvitation.class){
+        mDataLoader = CursorPaginateDataLoader.<EventsInvitation, EventsInvitation>create(
+                    "PlacesInvitations/received",
+                    EventsInvitation.class
+                )
+                .initCache("UserInvitation" + MyApplication.getCurrentUser().getId(), 0) // never expire
+                .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<EventsInvitation, EventsInvitation>() {
                     @Override
-                    protected String getHashKey() {
-                        return "EventInvitation" + MyApplication.getCurrentUser().getRemoteId();
-                    }
-
-                    @Override
-                    protected void persist(List<EventsInvitation> data) throws Exception {
-                        new MultipleEntriesSyncPerformer<EventsInvitation, ResponseSyncWrapper<EventsInvitation>>()
-                                .setLocalEntries(MyApplication.getCurrentUser().getInviteReceived())
-                                .setRemoteEntries(data)
-                                .setCallback(new InvitationSyncCallback())
-                                .perform();
+                    public EventsInvitation beforeSaveModel(EventsInvitation model) {
+                        model.user_source = MyApplication.getCurrentUser();
+                        return model;
                     }
                 })
-                .useCache(false)
-                .setDataProvider(mDataProvider);
+                .setLocalQuery(new Select().from(EventsInvitation.class).where("UserSource = ?", MyApplication.getCurrentUser().getId()))
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter())
+                .setLimit(LOCAL_LOAD_LIMIT);
 
-        this.mRecyclerViewManager = new SectionRecyclerViewManager(this, adapter, mDataLoader)
+        this.mRecyclerViewManager = new CursorPaginateManager<EventsInvitation>(this, adapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventsInvitation>() {
                     @Override
                     public AbstractFlexibleItem createItem(EventsInvitation data) {
                         return new InvitationItem(InvitationsActivity.this, data);
                     }
                 })
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setNoDataView(noInvitationsView)
-                .setCallback(this)
                 .setSwipeRefreshLayout(mSwipeRefreshLayout)
                 .enableEndlessScroll()
-                .firstLoad();
+                .load();
     }
 
 
@@ -167,13 +131,4 @@ public class InvitationsActivity extends BaseActivity implements
         recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onLoadEnd(SectionContainer.PaginatedSection section, List<EventsInvitation> data) {
-
-    }
-
-    @Override
-    public void onLoadError(Throwable error, SectionContainer.PaginatedSection section) {
-
-    }
 }

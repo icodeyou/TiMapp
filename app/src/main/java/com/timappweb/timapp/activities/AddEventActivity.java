@@ -114,7 +114,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private MenuItem                    postButton;
 
     //private AddressResultReceiver       mAddressResultReceiver;
-    private HttpCallManager clientCall;
+    private HttpCallManager<JsonObject> clientCall;
     private File        pictureSelected;
     private View.OnClickListener onSpotClickListener;
     private Location mFineLocation  = null;
@@ -300,7 +300,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     }
 
     private void showConfirmDialog() {
-        if(!(eventCategorySelected == null && getEvent().name.equals(""))) {
+        if(!(eventCategorySelected == null && !getEvent().hasName())) {
             ConfirmDialog.simpleMessage(this,
                     null,
                     getString(R.string.confim_message_add_event),

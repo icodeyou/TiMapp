@@ -53,10 +53,10 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
         this.idlingApiCall();
         this.systemAnimations(false);
 
+        super.beforeTest();
         Intent intent = IntentsUtils.buildIntentAddTags(MyApplication.getApplicationBaseContext(), dummyEvent);
         mActivityRule.launchActivity(intent);
 
-        super.beforeTest();
     }
 
     @After

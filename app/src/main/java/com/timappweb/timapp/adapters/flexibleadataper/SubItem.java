@@ -59,7 +59,7 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 
 	@Override
 	public void bindViewHolder(FlexibleAdapter adapter, ChildViewHolder holder, int position, List payloads) {
-		//In case of searchText matches with Title or with an SimpleItem's field
+		//In case of searchText matches with Title or with an SimpleItem's remoteField
 		// this will be highlighted
 		Context context = holder.itemView.getContext();
 		if (adapter.hasSearchText()) {

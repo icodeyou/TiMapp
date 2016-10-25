@@ -9,4 +9,6 @@ public class ServerHeader {
 
     public static final String XPLATFORM = "X-Platform";
     public static final String XQUOTA_DISABLED = "X-Quota-Disabled";
+    public static final String XVERSION_CODE = "X-Version-Code";
+    public static final String XAPP_LANGUAGE = "X-App-Language";
 }

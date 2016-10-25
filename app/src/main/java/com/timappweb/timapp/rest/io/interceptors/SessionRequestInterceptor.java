@@ -1,13 +1,17 @@
 package com.timappweb.timapp.rest.io.interceptors;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthManagerInterface;
 
 import com.timappweb.timapp.config.server.ServerHeader;
 import com.timappweb.timapp.rest.RestClient;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -15,18 +19,31 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.R.attr.versionCode;
+
 /**
  * Created by stephane on 9/12/2015.
  *
  */
 public class SessionRequestInterceptor implements Interceptor
 {
+    private final String appLanguage;
+    private int versionCode;
+
 
     private static final String TAG = "Interceptor";
     private final AuthManagerInterface auth;
 
     public SessionRequestInterceptor(AuthManagerInterface authManager) {
         this.auth = authManager;
+        try {
+            Context context = MyApplication.getApplicationBaseContext();
+            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            versionCode = 0;
+        }
+        appLanguage = Locale.getDefault().getDisplayLanguage();
     }
 
     @Override
@@ -37,6 +54,8 @@ public class SessionRequestInterceptor implements Interceptor
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
                 .header(ServerHeader.XPLATFORM, "Android")
+                .header(ServerHeader.XVERSION_CODE, String.valueOf(versionCode))
+                .header(ServerHeader.XAPP_LANGUAGE, appLanguage)
                 .method(original.method(), original.body());
 
         if (auth.isLoggedIn()) {

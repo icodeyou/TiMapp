@@ -38,7 +38,7 @@ public class AutoMapper {
                             associationAnnotation.remoteForeignKey();
                         }
                         else {
-                            //jsonObject.addProperty(field.getName(), field.get(obj));
+                            //jsonObject.addProperty(remoteField.getName(), remoteField.get(obj));
                         }
                     }
                 }

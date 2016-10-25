@@ -2,9 +2,7 @@ package com.timappweb.timapp.data.models;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
-import com.timappweb.timapp.data.loader.sections.SectionContainer;
 
 /**
  * Created by stephane on 5/8/2016.
@@ -37,24 +35,12 @@ public class SectionHistory extends MyModel {
     @Column(name = "End", notNull = true)
     public long end;
 
-    public static boolean contains(String key, SectionContainer.PaginatedSection section) {
-        From from = new Select().from(SectionHistory.class)
-                .where("GroupKey = ?", key);
-        if (section.getEnd() > section.getStart()){
-            from.where("Start <= ? AND end >= ?", section.getStart(), section.getEnd());
-        }
-        else{
-            from.where("Start >= ? AND end <= ?", section.getStart(), section.getEnd());
-        }
-        return from.exists();
+    public static boolean contains(String key) {
+        return false;
     }
 
-    public static void add(String groupKey, SectionContainer.PaginatedSection section) {
+    public static void add(String groupKey) {
         SectionHistory history = new SectionHistory();
-        history.end = section.end;
-        history.start = section.start;
-        history.group_key = groupKey;
-        history.last_update = section.lastUpdate;
         history.save();
     }
 

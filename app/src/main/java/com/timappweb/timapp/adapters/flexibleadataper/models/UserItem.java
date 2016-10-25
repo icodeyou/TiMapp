@@ -23,7 +23,7 @@ import eu.davidea.viewholders.FlexibleViewHolder;
  */
 public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
 
-    private static final String TAG = "SubUserItem";
+    private static final String TAG = "UserItem";
     private User user;
 
     public UserItem(User user) {

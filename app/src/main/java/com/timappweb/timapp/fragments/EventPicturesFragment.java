@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.google.gson.JsonObject;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -28,14 +30,11 @@ import com.timappweb.timapp.adapters.PicturesAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
-import com.timappweb.timapp.data.DBCacheEngine;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
-import com.timappweb.timapp.data.loader.sections.SectionContainer;
-import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
-import com.timappweb.timapp.data.loader.sections.SectionDataProviderInterface;
-import com.timappweb.timapp.data.loader.sections.SectionRecyclerViewManager;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
@@ -46,13 +45,9 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
-import com.timappweb.timapp.rest.io.request.RestQueryParams;
-import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
-import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
@@ -92,9 +87,10 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
     private TextView                    textInfoPic;
 
     private BottomSheetBehavior<View> bottomSheetBehaviour;
-    private SectionDataLoader mDataLoader;
+    private CursorPaginateDataLoader<Picture, Picture> mDataLoader;
     private ActionModeHelper mActionModeHelper;
     private int lastPositionSelected = -1;
+    private CursorPaginateManager<Picture> paginatorManager;
 
     public EventPicturesFragment() {
         setTitle(R.string.title_fragment_pictures);
@@ -145,20 +141,6 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
             }
             Event event = (Event) eventActivity.getEvent().requireLocalId();
             eventActivity.setEvent(event);
-
-            initDataLoader();
-
-            new SectionRecyclerViewManager(getContext(), picturesAdapter, mDataLoader)
-                    .setItemTransformer(new RecyclerViewManager.ItemTransformer<Picture>(){
-                        @Override
-                        public AbstractFlexibleItem createItem(Picture data) {
-                            return new PictureItem(data);
-                        }
-                    })
-                    .setNoDataView(noPicView)
-                    .setSwipeRefreshLayout(mSwipeRefreshLayout)
-                    .enableEndlessScroll();
-
         } catch (Exception e) {
             e.printStackTrace();
             eventActivity.exit();
@@ -266,40 +248,6 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                 .withDefaultMode(mode);
     }
 
-    private void initDataLoader() {
-        mDataLoader = new SectionDataLoader<Picture>()
-                .setFormatter(SyncBaseModel.getPaginatedFormater())
-                .setOrder(SectionContainer.PaginateDirection.ASC)
-                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
-                .setCacheEngine(new DBCacheEngine<Picture>(Picture.class){
-                    @Override
-                    protected String getHashKey() {
-                        return "EventPicture" + getEvent().getRemoteId();
-                    }
-
-                    @Override
-                    protected void persist(List<Picture> data) throws Exception {
-                        new MultipleEntriesSyncPerformer<Picture, ResponseSyncWrapper<Picture>>()
-                                .setRemoteEntries(data)
-                                .setLocalEntries(getEvent().getPictures())
-                                .setCallback(new PictureSyncCallback(getEvent()))
-                                .perform();
-                    }
-                })
-                .useCache(false)
-                .setDataProvider(new SectionDataProviderInterface() {
-
-                    @Override
-                    public HttpCallManager<ResponseSyncWrapper<EventsInvitation>> remoteLoad(SectionContainer.PaginatedSection section) {
-                        RestQueryParams options = RestClient.buildPaginatedOptions(section).setLimit(REMOTE_LOAD_LIMIT);
-                        return RestClient.buildCall(RestClient.service().viewPicturesForPlace(getEvent().getRemoteId(), options.toMap()));
-                    }
-
-                });
-
-    }
-
     public void setUploadVisibility(Boolean bool) {
         if(bool) {
             noPicView.setVisibility(View.GONE);
@@ -339,7 +287,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                         // Get the bitmap in according to the width of the device
                         mRecyclerView.smoothScrollToPosition(0);
                         picture.mySaveSafeCall();
-                        mDataLoader.loadNewest();
+                        mDataLoader.update();
                         Toast.makeText(EventPicturesFragment.this.getContext(),
                                 R.string.thanks_for_add_picture, Toast.LENGTH_LONG).show();
                     }
@@ -404,6 +352,39 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         if(mRecyclerView!=null) {
             mRecyclerView.smoothScrollToPosition(0);
         }
+
+        loadDataIfNeeded();
+    }
+
+    private void loadDataIfNeeded() {
+        if (this.mDataLoader != null || !isAdded()) return;
+        mDataLoader = CursorPaginateDataLoader.<Picture, Picture>create(
+                        getString(R.string.api_base_url) + "  pictures/event/" + getEvent().getRemoteId(),
+                        Picture.class)
+                .initCache("EventPicture" + eventActivity.getEvent().getRemoteId(), 3600 * 1000)
+                .setLocalQuery(new Select().from(Picture.class).where("Event = ?", getEvent().getId()))
+                //.setLimit(8)
+                .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<Picture, Picture>() {
+                    @Override
+                    public Picture beforeSaveModel(Picture model) {
+                        model.event = getEvent();
+                        return model;
+                    }
+                })
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter());
+        paginatorManager = new CursorPaginateManager<Picture>(getContext(), picturesAdapter, mDataLoader)
+                .setItemTransformer(new RecyclerViewManager.ItemTransformer<Picture>(){
+                    @Override
+                    public AbstractFlexibleItem createItem(Picture data) {
+                        return new PictureItem(data);
+                    }
+                })
+                .setSwipeRefreshLayout(mSwipeRefreshLayout)
+                .enableEndlessScroll()
+                .setNoDataView(noPicView)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .load();
     }
 
 

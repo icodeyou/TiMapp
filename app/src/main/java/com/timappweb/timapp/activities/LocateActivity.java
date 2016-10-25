@@ -61,9 +61,9 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
 
         mEventLoaderModel = new MapAreaLoaderCallback<Event>();
         mEventLoaderModel
-                .setDataProvider(new PaginateDataLoader.DataProvider() {
+                .setDataProvider(new PaginateDataLoader.DataProvider<Event>() {
                     @Override
-                    public HttpCallManager<PaginatedResponse> remoteLoad(PaginateDataLoader.PaginateRequestInfo info) {
+                    public HttpCallManager<PaginatedResponse<Event>> remoteLoad(PaginateDataLoader.PaginateRequestInfo info) {
                         LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(
                                 LocationManager.getLastLocation(),
                                 ConfigurationProvider.rules().place_max_reachable
@@ -102,16 +102,6 @@ public class LocateActivity extends BaseActivity implements LocationManager.Loca
             mEventLoaderModel.loadNextPage();
         }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override

@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.timappweb.timapp.BuildConfig;
@@ -33,6 +35,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.databinding.ActivityDrawerBinding;
@@ -385,6 +388,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 ConfigurationProvider.clearAll();
                 MyApplication.restart(this);
                 finish();
+                break;
+            case R.id.menu_item_dev_clear_cache:
+                new Delete().from(CursorPaginateDataLoader.CacheInfo.class).execute();
                 break;
             case R.id.menu_item_test_cam:
                 EasyImage.openCamera(this, 0);

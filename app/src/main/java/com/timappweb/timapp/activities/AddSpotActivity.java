@@ -28,17 +28,14 @@ import com.timappweb.timapp.adapters.flexibleadataper.models.SpotItem;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
 import com.timappweb.timapp.data.loader.paginate.PaginateDataLoader;
-import com.timappweb.timapp.data.loader.paginate.PaginateRecyclerViewManager;
-import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
-import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
-import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
-import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -52,7 +49,7 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 public class AddSpotActivity extends BaseActivity implements
         //LocationManager.LocationListener,
-        OnMapReadyCallback, PaginateDataLoader.Callback {
+        OnMapReadyCallback, CursorPaginateDataLoader.Callback<Spot> {
 
     private static final String         TAG                             = "AddSpotActivity";
     private static final float          ZOOM_LEVEL_CENTER_MAP           = 15.0f;
@@ -78,7 +75,7 @@ public class AddSpotActivity extends BaseActivity implements
     private SwipeRefreshLayout                      mSwipeAndRefreshLayout;
     private View                                    progressView;
     private View                                    noDataView;
-    private PaginateDataLoader mDataLoader;
+    private CursorPaginateDataLoader<Spot, Spot> mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -104,48 +101,40 @@ public class AddSpotActivity extends BaseActivity implements
         setListeners();
         initDataLoader();
 
-        new PaginateRecyclerViewManager(this, mAdapter, mDataLoader)
-                .setNoDataView(noDataView)
+        Util.appAssert(LocationManager.hasLastLocation(), TAG, "A last location must be set to add a spot");
+    }
+
+
+    private void initDataLoader() {
+        LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(
+                LocationManager.getLastLocation(),
+                ConfigurationProvider.rules().place_max_reachable
+        );
+        RestQueryParams options = new RestQueryParams().setBounds(bounds);
+
+        mDataLoader = CursorPaginateDataLoader.<Spot,Spot>create(
+                    "spots/index",
+                    Spot.class
+                )
+                .setQueryParams(options.toMap())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter());
+                //.setLimit(LOCAL_LOAD_LIMIT);
+
+        new CursorPaginateManager<>(this, mAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Spot>() {
                     @Override
                     public AbstractFlexibleItem createItem(Spot data) {
                         return new SpotItem(data);
                     }
                 })
-                .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
+                .setClearOnRefresh(true)
                 .setCallback(this)
-                ;
-
-        Util.appAssert(LocationManager.hasLastLocation(), TAG, "A last location must be set to add a spot");
-        //if (LocationManager.hasLastLocation()){
-            mDataLoader.loadNextPage();
-        //}
-    }
-
-
-    private void initDataLoader() {
-        //TODO Steph : progressView.setVisibility(View.VISIBLE);
-        PaginateDataLoader.DataProvider<EventsInvitation> mDataProvider = new PaginateDataLoader.DataProvider<EventsInvitation>() {
-            @Override
-            public HttpCallManager<PaginatedResponse<EventsInvitation>> remoteLoad(PaginateDataLoader.PaginateRequestInfo info) {
-                LatLngBounds bounds = LocationManager.generateBoundsAroundLocation(
-                        LocationManager.getLastLocation(),
-                        ConfigurationProvider.rules().place_max_reachable
-                );
-
-                RestQueryParams options = info.getQueryParams()
-                        .setBounds(bounds);
-
-                return RestClient.buildCall(RestClient.service().spots(options.toMap()));
-            }
-
-
-        };
-        mDataLoader = new PaginateDataLoader<EventsInvitation>()
                 .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
-                .setMinDelayAutoRefresh(MIN_DELAY_AUTO_REFRESH)
-                .setCallback(this)
-                .setDataProvider(mDataProvider);
+                .setNoDataView(noDataView)
+                .setSwipeRefreshLayout(mSwipeAndRefreshLayout)
+                .enableEndlessScroll()
+                .load();
     }
 
 
@@ -191,12 +180,6 @@ public class AddSpotActivity extends BaseActivity implements
                 }
                 finishActivityResult(currentSpot);
                 return false;
-            }
-        });
-        mAdapter.initializeListeners(new FlexibleAdapter.OnUpdateListener() {
-            @Override
-            public void onUpdateEmptyView(int size) {
-
             }
         });
         spotsRv.setAdapter(mAdapter);
@@ -317,72 +300,8 @@ public class AddSpotActivity extends BaseActivity implements
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "ExploreMapFragment.onResume()");
-    }
-
-
-    /*
-    private void requestReverseGeocoding(Location location){
-        if (mAddressResultReceiver == null){
-            mAddressResultReceiver = new AddressResultReceiver();
-        }
-        currentSpot.setLocation(location);
-        ReverseGeocodingHelper.request(AddSpotActivity.this, location, mAddressResultReceiver);
-    }
-    */
-    // =============================================================================================
-
-    /*
-    @Override
-    public void onLocationChanged(Location newLocation, Location lastLocation) {
-        //requestReverseGeocoding(newLocation);
-
-        if (lastLocation == null){
-            mDataLoader.loadNextPage();
-        }
-        else {
-            Toast.makeText(this, R.string.user_location_changed_reload_data, Toast.LENGTH_LONG).simpleMessage();
-            mSwipeAndRefreshLayout.setEnabled(true);
-            mDataLoader
-                    .clear()
-                    .loadNextPage();
-        }
-    }
-    */
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //LocationManager.addOnLocationChangedListener(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        //LocationManager.removeLocationListener(this);
-    }
-
-    @Override
-    public void onLoadEnd(PaginateDataLoader.PaginateRequestInfo info, List data) {
-        // If we need more logic
-        mAdapter.createItemsCopy();
-    }
-
-    @Override
-    public void onLoadError(Throwable error, PaginateDataLoader.PaginateRequestInfo info) {
-        // If we need more logic
     }
 
     public boolean spotAlreadyExist() {
@@ -393,6 +312,21 @@ public class AddSpotActivity extends BaseActivity implements
             }
         }
         return false;
+    }
+
+    @Override
+    public void onLoadEnd(List<Spot> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+        mAdapter.createItemsCopy();
+    }
+
+    @Override
+    public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {
+
+    }
+
+    @Override
+    public void onLoadStart(CursorPaginateDataLoader.LoadType type) {
+
     }
 
     // =============================================================================================

@@ -13,7 +13,7 @@ android {
     }
     dataBinding {
         enabled = true
-        // enabledForTests = true // TODO [critical] when updating gradle to 2.3.0 uncoment this line
+        // enabledForTests = true // TODO [critical][#174] when updating gradle to 2.3.0 uncoment this line
         // See https://code.google.com/p/android/issues/detail?id=182715
     }
     dexOptions {

@@ -201,7 +201,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         }
     }
 
-    public void onFinally(HttpCallManager.FinallyCallback callback) {
+    public void onFinally(HttpCallManager.FinallyCallback<ResponseBodyType> callback) {
         callback.onFinally(response, error);
     }
 

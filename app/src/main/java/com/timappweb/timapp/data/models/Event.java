@@ -236,6 +236,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return points > 0 ? points : 0;
     }
 
+    public boolean hasName(){
+        return this.name != null && this.name.length() > 0;
+    }
+
     public int getLevel(){
         return Event.computeLevel(this.getPoints());
     }

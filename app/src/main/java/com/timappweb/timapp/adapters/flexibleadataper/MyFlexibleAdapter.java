@@ -42,6 +42,10 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		return this.addItems(0, items);
 	}
 
+	public void addBeginning(AbstractFlexibleItem item) {
+		this.addItem(0, item);
+	}
+
 	public int removeItems(ExpandableHeaderItem headerItem) {
 		int headerPosition = getGlobalPositionOf(headerItem);
 		int size = headerItem.getSubItems() != null ? headerItem.getSubItems().size() : 0;

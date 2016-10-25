@@ -68,9 +68,10 @@ public class ExploreActivityTest extends AbstractActivityTest {
         LocationManager.setLastLocation(fakeLocation);
 
         Intent mapIntent = new Intent(MyApplication.getApplicationBaseContext(), DrawerActivity.class);
+        super.beforeTest();
+
         mActivityRule.launchActivity(mapIntent);
         exploreHelper = new ExploreHelper();
-        super.beforeTest();
     }
 
     @After

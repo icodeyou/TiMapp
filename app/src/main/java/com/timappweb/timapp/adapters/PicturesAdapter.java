@@ -77,4 +77,9 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         }
         return null;
     }
+
+    @Override
+    public void removeAll() {
+        this.removeRange(gridColumnNumber, getItemCount());
+    }
 }

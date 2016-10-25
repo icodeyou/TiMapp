@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.queries.AreaQueryHelper;
 import com.timappweb.timapp.sync.SyncAdapterOption;
@@ -235,10 +234,10 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
                 if (annotation.deserialize()){
                     try {
                         Object newValue =  model.getClass().getField(field.getName()).get(model);
-                        // TODO [Sync,Stef] check if field is set or not. Currently, in the case we want to set to null a field
+                        // TODO [Sync,Stef] check if remoteField is set or not. Currently, in the case we want to set to null a remoteField
                         // (thanks to a json response from the server), it does not work
                         if (newValue != null){
-                            Log.v(TAG, "Updating field " + field.getName() + " with value " + newValue);
+                            Log.v(TAG, "Updating remoteField " + field.getName() + " with value " + newValue);
                             field.set(this, newValue);
                         }
                     } catch (IllegalAccessException e) {
@@ -358,17 +357,4 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
         return String.valueOf(this.getRemoteId());
     }
 
-
-    private static SectionDataLoader.SectionBoundsFormatter<SyncBaseModel> _paginatedDataFormatter = null;
-    public static SectionDataLoader.SectionBoundsFormatter<SyncBaseModel> getPaginatedFormater() {
-        if (_paginatedDataFormatter == null){
-            _paginatedDataFormatter =  new SectionDataLoader.SectionBoundsFormatter<SyncBaseModel>() {
-                @Override
-                public long format(SyncBaseModel data) {
-                    return data.getRemoteId();
-                }
-            };
-        }
-        return _paginatedDataFormatter;
-    }
 }

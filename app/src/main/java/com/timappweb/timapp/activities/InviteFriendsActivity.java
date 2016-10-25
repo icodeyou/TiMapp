@@ -19,35 +19,32 @@ import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
-import com.timappweb.timapp.data.loader.FriendsLoader;
-import com.timappweb.timapp.data.loader.SyncDataLoader;
+import com.timappweb.timapp.data.loader.FriendsLoaderFactory;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
-import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.SelectableAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class InviteFriendsActivity extends BaseActivity
-        implements FlexibleAdapter.OnItemClickListener, SyncDataLoader.Callback<UserFriend> {
+        implements FlexibleAdapter.OnItemClickListener, CursorPaginateDataLoader.Callback<UserFriend> {
 
     private String              TAG                         = "InviteFriendsActivity";
-    private static final int    LOADER_ID_FRIENDS_LIST      = 0;
 
     // ---------------------------------------------------------------------------------------------
     private Menu menu;
@@ -55,10 +52,10 @@ public class InviteFriendsActivity extends BaseActivity
     private RecyclerView                recyclerView;
     private SelectFriendsAdapter        mAdapter;
     private Event                       event;
-    private FriendsLoader               mFriendsLoader;
     private SwipeRefreshLayout          mSwipeRefreshLayout;
     private View                        progressview;
     private View                        shareButton;
+    private View                        noFriendsView;
     private List<EventsInvitation>      _cachedInvitations;
     // ---------------------------------------------------------------------------------------------
 
@@ -77,6 +74,7 @@ public class InviteFriendsActivity extends BaseActivity
 
         setContentView(R.layout.activity_invite_friends);
         shareButton = findViewById(R.id.share_button);
+        noFriendsView = findViewById(R.id.no_data_view_layout);
 
         try {
             event = (Event) event.requireLocalId();
@@ -85,11 +83,13 @@ public class InviteFriendsActivity extends BaseActivity
             recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
             progressview = findViewById(R.id.progress_view);
             initAdapterListFriends();
-            mFriendsLoader = new FriendsLoader(this, mAdapter, mSwipeRefreshLayout)
-                .setCallback(this)
-                .refresh();
 
-            getSupportLoaderManager().initLoader(LOADER_ID_FRIENDS_LIST, null, mFriendsLoader);
+            FriendsLoaderFactory.manager(this, mAdapter)
+                    .setSwipeRefreshLayout(mSwipeRefreshLayout)
+                    .setCallback(this)
+                    .setNoDataView(noFriendsView)
+                    .load();
+
         } catch (CannotSaveModelException e) {
             IntentsUtils.getBackToParent(this);
             return;
@@ -260,32 +260,21 @@ public class InviteFriendsActivity extends BaseActivity
         finish();
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     @Override
-    public void onStart() {
-        super.onStart();
-        progressview.setVisibility(View.VISIBLE);
-        EventBus.getDefault().register(mFriendsLoader);
+    public void onLoadEnd(List<UserFriend> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+        initializeSelection();
     }
 
     @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(mFriendsLoader);
-        super.onStop();
+    public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {
+
     }
 
     @Override
-    public void onLoadEnd(List<UserFriend> data) {
-        mAdapter.setData(data);
-        progressview.setVisibility(View.GONE);
-        if (data != null && data.size() > 0){
-            initializeSelection();
-        }
-    }
+    public void onLoadStart(CursorPaginateDataLoader.LoadType type) {
 
-    @Override
-    public void onLoadError(Throwable error) {
-        progressview.setVisibility(View.GONE);
-        // TODO
     }
 
     // ---------------------------------------------------------------------------------------------

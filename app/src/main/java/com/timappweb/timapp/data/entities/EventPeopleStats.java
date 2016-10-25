@@ -12,4 +12,8 @@ public class EventPeopleStats {
 
     @Expose
     public int coming;
+
+    //@Expose
+    //public int invited;
+
 }
