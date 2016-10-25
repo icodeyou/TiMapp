@@ -34,6 +34,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -58,7 +59,7 @@ public interface WebServiceInterface {
     Call<Event> viewPlace(@Path("id") long id);
 
     @GET("events/points/{id}")
-    Call<EventPointResponse> updateEventInfo(@Path("id") long id, @Field("picture_id") long pictureId);
+    Call<EventPointResponse> updateEventInfo(@Path("id") long id, @Query("picture_id") long pictureId);
 
     @GET("events/populars")
     Call<List<Event>> bestEvents(@QueryMap Map<String, String> conditions);
