@@ -33,9 +33,11 @@ import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.map.MapFactory;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.callbacks.UpdateEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
@@ -387,7 +389,15 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
     @Override
     public void onRefresh() {
-        Toast.makeText(eventActivity, "Wouw ça raffraîchit! #cold", Toast.LENGTH_SHORT).show();
-        //TODO Steph : Refreeeeeeeeeeeeeeeesh MOTHERKICKA ! POINTS + CREATED + LAST ACTIVITY
+        RestClient.buildCall(RestClient.service()
+                .updateEventInfo(getEvent().getRemoteId(), (getEvent().hasPicture() ? getEvent().picture.getRemoteId() : 0)))
+                    .onResponse(new UpdateEventCallback(getEvent()))
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    })
+                    .perform();
     }
 }

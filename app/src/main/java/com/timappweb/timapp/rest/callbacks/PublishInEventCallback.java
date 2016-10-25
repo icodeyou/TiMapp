@@ -35,14 +35,8 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
     public void successful(T feedback) {
         if (actionType != -1) QuotaManager.instance().add(actionType);
         if (udateEvent){
-            RestClient.buildCall(RestClient.service().viewPointsPlace(event.getRemoteId()))
-                    .onResponse(new HttpCallback<EventPointResponse>() {
-                        @Override
-                        public void successful(EventPointResponse eventPoint) {
-                            event.setPoints(eventPoint.points);
-                            event.setInactivityThreshold(eventPoint.inactivity_threshold);
-                        }
-                    })
+            RestClient.buildCall(RestClient.service().updateEventInfo(event.getRemoteId()))
+                    .onResponse(new UpdateEventCallback(event))
                     .perform();
         }
         if (actionType == QuotaType.ADD_PICTURE || actionType == QuotaType.ADD_TAGS){
