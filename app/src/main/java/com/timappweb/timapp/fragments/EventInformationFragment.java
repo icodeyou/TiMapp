@@ -33,20 +33,25 @@ import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.databinding.FragmentEventInformationBinding;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.map.MapFactory;
+import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
 import com.timappweb.timapp.rest.callbacks.RequestFailureCallback;
+import com.timappweb.timapp.rest.callbacks.UpdateEventCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.DelayedCallHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.ConfirmDialog;
 import com.timappweb.timapp.views.SimpleTimerView;
+import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import retrofit2.Response;
 
 
 public class
-EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback, OnTabSelectedListener, LocationManager.LocationListener {
+EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback,
+        OnTabSelectedListener, LocationManager.LocationListener,
+        android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 0;
     private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;
@@ -67,9 +72,10 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     private View                        statusLayout;
     private FloatingActionButton        activatedStatusButton;
     private FloatingActionButton        disabledStatusButton;
+    private View                        btnRequestNavigation;
+    private SwipeRefreshLayout          swipeRefreshLayout;
 
-    private boolean isStatusLoading = false;
-    private View btnRequestNavigation;
+    private boolean                     isStatusLoading = false;
 
 
     public EventInformationFragment() {
@@ -87,6 +93,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         setListeners();
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         mapView.onCreate(null);
         mapView.getMapAsync(this);
@@ -112,6 +119,8 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         overText = (TextView) view.findViewById(R.id.over_text);
         statusLayout = view.findViewById(R.id.status_layout);
         btnRequestNavigation = view.findViewById(R.id.button_nav);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void setListeners() {
@@ -376,5 +385,19 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         if(!isStatusLoading) {
             updateStatusButtonActivation();
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        RestClient.buildCall(RestClient.service()
+                .updateEventInfo(getEvent().getRemoteId(), (getEvent().hasPicture() ? getEvent().picture.getRemoteId() : 0)))
+                    .onResponse(new UpdateEventCallback(getEvent()))
+                    .onFinally(new HttpCallManager.FinallyCallback() {
+                        @Override
+                        public void onFinally(Response response, Throwable error) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    })
+                    .perform();
     }
 }

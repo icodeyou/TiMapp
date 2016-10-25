@@ -60,7 +60,7 @@ public interface WebServiceInterface {
     Call<Event> viewPlace(@Path("id") long id);
 
     @GET("events/points/{id}")
-    Call<EventPointResponse> viewPointsPlace(@Path("id") long id);
+    Call<EventPointResponse> updateEventInfo(@Path("id") long id, @Field("picture_id") long pictureId);
 
     @GET("events/populars")
     Call<List<Event>> bestEvents(@QueryMap Map<String, String> conditions);

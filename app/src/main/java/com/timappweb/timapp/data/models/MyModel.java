@@ -205,7 +205,10 @@ public class MyModel extends Model implements Observable, Serializable{
         try {
             return this.mySave();
         } catch (CannotSaveModelException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Cannot save model: " + e.getMessage());
+            if (BuildConfig.DEBUG){
+                e.printStackTrace();
+            }
             return null;
         }
     }

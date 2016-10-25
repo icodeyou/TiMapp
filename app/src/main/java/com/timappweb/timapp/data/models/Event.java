@@ -536,14 +536,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return picture;
     }
 
-
     public int getLevelBackground() {
         if(getVisibilityStatus() == VisiblityStatus.INACTIVE) {
             return R.drawable.b0;
         }
         switch (this.getLevel()) {
             case 0:
-                return R.drawable.b1_bis;
+                return R.drawable.b1;
             case 1:
                 return R.drawable.b2;
             case 2:

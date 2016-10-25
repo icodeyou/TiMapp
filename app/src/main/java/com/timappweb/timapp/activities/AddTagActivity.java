@@ -157,7 +157,7 @@ public class AddTagActivity extends BaseActivity{
                         From query = Tag.querySuggestTagForEvent(currentEvent)
                                 .limit(tagLimit);
                         if (term != null && term.length() > 0){
-                            query.where("Tag.name LIKE ? OR Tag.name = ?", term, term); // TODO add %%
+                            query.where("Tag.name LIKE ? OR Tag.name = ?", term, term); // TODO add wildchars
                         }
                         List<Tag> tags = query.execute();
                         Log.d(TAG, "Tag in local db: " + tags.size() + "/" + tagLimit);
