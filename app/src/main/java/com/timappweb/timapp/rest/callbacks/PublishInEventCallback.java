@@ -35,7 +35,7 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
     public void successful(T feedback) {
         if (actionType != -1) QuotaManager.instance().add(actionType);
         if (udateEvent){
-            RestClient.buildCall(RestClient.service().updateEventInfo(event.getRemoteId()))
+            RestClient.buildCall(RestClient.service().updateEventInfo(event.getRemoteId(), event.hasPicture() ? event.getPicture().getRemoteId() : 0))
                     .onResponse(new UpdateEventCallback(event))
                     .perform();
         }
