@@ -15,6 +15,7 @@ import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
+import com.timappweb.timapp.rest.io.responses.ClientError;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.Util;
@@ -116,7 +117,7 @@ public class EventStatusManager {
                     }
 
                     @Override
-                    public void failure() {
+                    public void failure(ClientError clientError) {
                         if (this.response.code() != HttpsURLConnection.HTTP_UNAUTHORIZED) {
                             Log.e(TAG, "Fail register status=" + status + " for user on event: " + event);
                             Toast.makeText(context, context.getString(R.string.cannot_notify_status), Toast.LENGTH_SHORT).show();
@@ -188,7 +189,7 @@ public class EventStatusManager {
                     }
 
                     @Override
-                    public void failure() {
+                    public void failure(ClientError clientError) {
                         Log.e(TAG, "Fail canceling status=" + status + " for user on event: " + event);
                         Toast.makeText(context, context.getString(R.string.cannot_notify_status), Toast.LENGTH_SHORT).show();
                     }

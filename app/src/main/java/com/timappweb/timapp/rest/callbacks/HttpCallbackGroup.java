@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.io.responses.ClientError;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
 
@@ -36,6 +37,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
     private Response<ResponseBodyType> response = null;
     private Throwable error = null;
     private RestValidationError validationErrors;
+    private ClientError clientError;
 
     public HttpCallbackGroup(Call<ResponseBodyType> call) {
         this.call = call;
@@ -53,11 +55,14 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST){
             validationErrors = parseErrorBody(response, RestValidationError.class);//this.getValidationErrors();
         }
+        if (response.code() >= 400 && response.code() < 500){
+            clientError = parseErrorBody(response, ClientError.class);
+        }
 
         try{
             for (HttpCallback<ResponseBodyType> callback : responseCallbacks) {
                 callback.setResponse(response);
-                this.dispatchResponse(this.response, callback, this.validationErrors);
+                this.dispatchResponse(callback);
             }
         }
         catch (Throwable ex){
@@ -76,10 +81,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
         }
     }
 
-    public static <ResponseBodyType> void dispatchResponse(Response<ResponseBodyType> response,
-                                                           HttpCallback<ResponseBodyType> callback,
-                                                           RestValidationError validationErrors)
-        throws Throwable{
+    public void dispatchResponse(HttpCallback<ResponseBodyType> callback) throws Throwable{
 
             if (response.isSuccessful()) {
                 callback.successful(response.body());
@@ -99,14 +101,14 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
                 callback.notSuccessful();
                 // -----------------------------------------------------------------------------------------
                 if (response.code() >= 400 && response.code() < 500) {
-                    callback.failure();
+                    callback.failure(clientError);
 
                     switch (response.code()) {
                         case HttpURLConnection.HTTP_BAD_REQUEST:
                             callback.badRequest(validationErrors);
                             break;
                         case HttpURLConnection.HTTP_FORBIDDEN:
-                            callback.forbidden();
+                            callback.forbidden(clientError);
                             break;
                         case HttpURLConnection.HTTP_UNAUTHORIZED:
                             callback.unauthorized();
@@ -166,8 +168,7 @@ public class HttpCallbackGroup<ResponseBodyType> implements Callback<ResponseBod
 
 
     // ---------------------------------------------------------------------------------------------
-    private static <ErrorType> ErrorType parseErrorBody(Response response, Class<ErrorType> classOfT) {
-
+    public static <ErrorType> ErrorType parseErrorBody(Response response, Class<ErrorType> classOfT) {
         if (response.errorBody() != null) {
             Converter<ResponseBody, ErrorType> errorConverter =
                     RestClient.instance().getRetrofit().responseBodyConverter(classOfT, new Annotation[0]);

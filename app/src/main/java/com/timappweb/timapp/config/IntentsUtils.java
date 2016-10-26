@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -32,6 +33,7 @@ import com.timappweb.timapp.activities.PresentationActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
+import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.EventTag;
@@ -537,5 +539,10 @@ public class IntentsUtils {
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_message_text));
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context.getString(R.string.share_message_subject));
         context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
+
+    public static void updateAppPlayestore(Activity activity) {
+        String packageName = MyApplication.getApplicationBaseContext().getPackageName();
+        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
     }
 }

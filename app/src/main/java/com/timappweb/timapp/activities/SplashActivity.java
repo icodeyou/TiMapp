@@ -1,6 +1,10 @@
 package com.timappweb.timapp.activities;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -16,9 +20,12 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
+import com.timappweb.timapp.utils.KeyValueStorage;
+import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.deeplinks.DeepLinkParser;
 import com.timappweb.timapp.utils.deeplinks.UrlParser;
 import com.timappweb.timapp.views.RetryDialog;
+import com.timappweb.timapp.views.UpdateAppDialog;
 
 /**
  * Created by stephane on 3/26/2016.
@@ -27,6 +34,8 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
 
     private static final String TAG = "SplashActivity";
     private static final String CALL_ID_TOKEN = "check_token";
+    private static final long MIN_DELAY_DIALOG_UPDATE = 24 * 3600 * 1000;
+    public static final String KEY_SHOULD_UPDATE_DIALOG = "shouldUpdateDialogLastTime";
     private GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -41,6 +50,7 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
 
         this.loadConfig();
     }
+
 
     private void loadConfig() {
 
@@ -89,7 +99,6 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
                                     && callsManager.isSuccess(ConfigurationProvider.CALL_ID_EVENT_CATEGORIES)) {
                                 ConfigurationProvider.updateLastUpdateTime();
                             }
-
                             SplashActivity.this.onConfigLoaded();
 
                         }
@@ -103,8 +112,36 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
 
     }
 
+    private void checkShouldUpdate() {
+        if (ConfigurationProvider.rules().should_update
+                && Util.isOlderThan(KeyValueStorage.getSafeLong(KEY_SHOULD_UPDATE_DIALOG, 0), MIN_DELAY_DIALOG_UPDATE)){
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            KeyValueStorage.in().putLong(KEY_SHOULD_UPDATE_DIALOG, System.currentTimeMillis()).commit();
+            builder.setTitle(this.getString(R.string.app_update_available));
+            builder.setPositiveButton(this.getString(R.string.alert_dialog_update_app), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    IntentsUtils.updateAppPlayestore(SplashActivity.this);
+                }
+            });
+            builder.setNegativeButton(this.getString(R.string.skip), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    SplashActivity.this.checkDeepLink();
+                }
+            });
+            builder.setCancelable(false);
+            builder.create().show();
+        }
+        else{
+            SplashActivity.this.checkDeepLink();
+        }
+    }
+
     private void onConfigLoaded() {
-        this.checkDeepLink();
+        SplashActivity.this.checkShouldUpdate();
     }
 
     private void continueToActivity(){

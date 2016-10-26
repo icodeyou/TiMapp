@@ -1,23 +1,33 @@
 package com.timappweb.timapp.rest.io.interceptors;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
+import com.timappweb.timapp.activities.AppUpdateActivity;
 import com.timappweb.timapp.auth.AuthManagerInterface;
 
+import com.timappweb.timapp.config.server.ErrorCode;
 import com.timappweb.timapp.config.server.ServerHeader;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.io.responses.ClientError;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.net.HttpURLConnection;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
 
 import static android.R.attr.versionCode;
 
@@ -43,7 +53,7 @@ public class SessionRequestInterceptor implements Interceptor
             e.printStackTrace();
             versionCode = 0;
         }
-        appLanguage = Locale.getDefault().getDisplayLanguage();
+        appLanguage = Locale.getDefault().getLanguage();
     }
 
     @Override
@@ -53,7 +63,7 @@ public class SessionRequestInterceptor implements Interceptor
 
         // Customize the request
         Request.Builder requestBuilder = original.newBuilder()
-                .header(ServerHeader.XPLATFORM, "Android")
+                .header(ServerHeader.XPLATFORM, "Android") // TODO constant
                 .header(ServerHeader.XVERSION_CODE, String.valueOf(versionCode))
                 .header(ServerHeader.XAPP_LANGUAGE, appLanguage)
                 .method(original.method(), original.body());
@@ -93,6 +103,27 @@ public class SessionRequestInterceptor implements Interceptor
                     setAuthHeader(requestBuilder, auth.getToken()); //set auth token to updated
                     request = requestBuilder.build();
                     return chain.proceed(request); //repeat request with new token
+                }
+            }
+        }
+        else if (response.code() == HttpURLConnection.HTTP_FORBIDDEN){
+            try{
+                Converter<ResponseBody, ClientError> errorConverter =
+                        RestClient.instance().getRetrofit().responseBodyConverter(ClientError.class, new Annotation[0]);
+                ResponseBody body = response.body();
+                ClientError clientError = errorConverter.convert(body);
+                if (clientError.getAppCode() == ErrorCode.UNAUTHORIZED_VERSION){
+                    RestClient.instance().cancelCalls();
+                    Context context = MyApplication.getApplicationBaseContext();
+                    Intent intent = new Intent(context, AppUpdateActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            }
+            catch (Exception ex){
+                Log.e(TAG, "Exception while parsing response: " + ex.getMessage());
+                if (BuildConfig.DEBUG){
+                    ex.printStackTrace();
                 }
             }
         }

@@ -15,8 +15,10 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.activities.SplashActivity;
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.server.ServerNotifications;
+import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.NotificationFactory;
 
 import java.util.HashMap;
@@ -74,9 +76,25 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
     private Intent parseData(Map<String, String> data) {
         Log.d(TAG, "Message data payload: " + data);
-        if (data.containsKey(ServerNotifications.KEY_EVENT_ID)){
-            long eventId = Long.parseLong(data.get(ServerNotifications.KEY_EVENT_ID));
-            return IntentsUtils.buildIntentViewPlace(this, eventId);
+        if (data.containsKey(ServerNotifications.KEY_NOTIFICATION_TYPE)){
+            String type = data.get(ServerNotifications.KEY_NOTIFICATION_TYPE);
+            switch (type){
+                case ServerNotifications.TYPE_OPEN_EVENT:
+                case ServerNotifications.TYPE_EVENT_INVITE:
+                    if (data.containsKey(ServerNotifications.KEY_EVENT_ID)){
+                        long eventId = Long.parseLong(data.get(ServerNotifications.KEY_EVENT_ID));
+                        return IntentsUtils.buildIntentViewPlace(this, eventId);
+                    }
+                    break;
+                case ServerNotifications.TYPE_REQUIRE_UPDATE:
+                    ConfigurationProvider.rules().should_update = true;
+                    ConfigurationProvider.saveRules();
+                    KeyValueStorage.in().remove(SplashActivity.KEY_SHOULD_UPDATE_DIALOG).commit();
+                    return new Intent(this, SplashActivity.class);
+                default:
+                    Log.e(TAG, "Invalid message, no notification type: " + type);
+                    return null;
+            }
         }
         return null;
     }

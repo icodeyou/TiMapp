@@ -6,7 +6,7 @@ import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.io.responses.EventPointResponse;
+import com.timappweb.timapp.rest.io.responses.ClientError;
 
 /**
  * Created by stephane on 6/7/2016.
@@ -50,7 +50,7 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
 
 
     @Override
-    public void forbidden() {
+    public void forbidden(ClientError clientError) {
         // TODO set quota..
     }
 }

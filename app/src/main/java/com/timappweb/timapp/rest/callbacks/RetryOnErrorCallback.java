@@ -8,6 +8,8 @@ import android.util.Log;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.views.RetryDialog;
 
+import java.io.IOException;
+
 /**
  * Created by Stephane on 21/09/2016.
  */
@@ -37,10 +39,10 @@ public class RetryOnErrorCallback extends NetworkErrorCallback{
     }
 
     @Override
-    public void onError(Throwable error) {
+    public void network(IOException error) {
         if (context instanceof Activity){
             if (((Activity) context).isFinishing()){
-                Log.w(TAG, "Activity is finishing. Not retry required");
+                Log.w(TAG, "Activity is finishing. No retry required");
                 return ;
             }
         }
@@ -57,7 +59,6 @@ public class RetryOnErrorCallback extends NetworkErrorCallback{
         .setCancelable(cancelable)
         .create()
         .show();
-
     }
 
     public interface OnRetryCallback{

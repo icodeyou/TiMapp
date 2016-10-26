@@ -7,8 +7,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.auth.AuthManagerInterface;
+import com.timappweb.timapp.config.server.ErrorCode;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -16,11 +18,13 @@ import com.timappweb.timapp.rest.io.deserializers.EventDeserializer;
 import com.timappweb.timapp.rest.io.deserializers.SpotDeserializer;
 import com.timappweb.timapp.rest.io.interceptors.LogRequestInterceptor;
 import com.timappweb.timapp.rest.io.interceptors.SessionRequestInterceptor;
+import com.timappweb.timapp.rest.io.responses.ClientError;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
 import com.timappweb.timapp.rest.services.RestInterface;
 import com.timappweb.timapp.rest.services.WebServiceInterface;
+import com.timappweb.timapp.views.UpdateAppDialog;
 
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -201,7 +205,6 @@ public class RestClient {
                 .onFinally(new HttpCallManager.FinallyCallback<T>(){
                     @Override
                     public void onFinally(Response response, Throwable error) {
-
                         RestClient.instance().removeCall(callManager);
                     }
                 });

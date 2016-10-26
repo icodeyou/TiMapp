@@ -157,6 +157,16 @@
         </activity>
 
         <activity
+            android:name=".activities.AppUpdateActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".activities.ErrorActivity">
         </activity>
 
@@ -269,7 +279,7 @@
             android:theme="@style/WhiteMenuActionbar"
             android:parentActivityName=".activities.DrawerActivity" >
             <intent-filter>
-                <action android:name="OPEN_PLACE_FROM_NOTIFICATION" />
+                <action android:name="OPEN_EVENT_FROM_NOTIFICATION" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
