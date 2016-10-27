@@ -30,7 +30,7 @@
     <string name="menu_share">Partager</string>
     <string name="menu_edit_profile">Éditer le profil</string>
     <string name="create_button">Créer</string>
-    <string name="search_button">Valider</string>
+    <string name="search_button">Rechercher</string>
     <string name="search_button_empty">Effacer la recherche</string>
     <string name="invite_button">Inviter</string>
     <string name="action_post">Publier</string>
@@ -59,11 +59,14 @@
     <string name="fatal_error_unknown_reason_message">Désolé, une erreur est survenue. Si ce message apparaît de nouveau, essayez de mettre à jour votre application</string>
     <string name="toast_tiny_text_size">Seulement un caractère pour un tag ?</string>
     <string name="toast_huge_text_size">Ajoute encore 1000 caractères, peut-être que ton tag sera valide.</string>
+    <string name="toast_tag_not_valid">Votre tag n\'est pas valide. Un tag peut contenir uniquement des caractères alpha-numériques.</string>
     <string name="no_fine_location">Localisation imprécise.\nSi tu sors à l\'extérieur, ça marchera à coup sûr ;)</string>
     <string name="toast_no_space">Vous ne pouvez pas ajouter d\'espace à votre tag.</string>
     <string name="toast_no_tag">Un tag minimum est nécessaire.</string>
-    <string name="toast_too_many_tags_part_one">Il n\'est pas possible d\'ajouter plus de&#160;</string>
-    <string name="toast_too_many_tags_part_two">&#160;tags.</string>
+    <plurals name="toast_too_many_tags">
+        <item quantity="one">%d tag restant</item>
+        <item quantity="other">%d tags restants</item>
+    </plurals>
     <string name="toast_tag_already_chosen">Ce tag a déja été selectionné.</string>
     <string name="toast_thanks_for_sharing">Merci !</string>
     <string name="toast_profile_saved">Nouveau profil sauvegardé.</string>
@@ -172,12 +175,13 @@
     <string name="alert_dialog_continue_addevent">Abandonner</string>
 
     <!-- AddTagsActivity  -->
-    <!--TODO : Dupplicates strings here -->
-    <string name="search_hint">Écrire un tag ici</string>
     <string name="searchview_hint_no_tags">Écrire un tag ici</string>
-    <string name="searchview_hint_few_tags_part_one">Vous pouvez ajouter jusqu\'à&#160;</string>
-    <string name="searchview_hint_few_tags_part_two">&#160;tags</string>
+    <plurals name="searchview_hint_few_tags">
+        <item quantity="one">%d tag maximum</item>
+        <item quantity="other">%d tags maximum</item>
+    </plurals>
     <string name="menu_search_tags">Rechercher des tags</string>
+    <string name="done">Terminé</string>
 
     <!-- FilterActivity -->
     <string name="hint_searchview_filter">Rechercher</string>
@@ -220,9 +224,9 @@
     <string name="text_tags_left_3">3 tags restants</string>
     <string name="text_tags_left_2">2 tags restants</string>
     <string name="text_tags_left_1">1 tag restants</string>
-    <string name="edit_first_profile1">Bien joué !</string>
+    <string name="well_done">Bien joué !</string>
     <string name="edit_first_profile2">Vos tags seront maintenant affichés sur votre profil. Vous pouvez les changer à tout moment.</string>
-    <string name="define_yourself">Definis toi</string>
+    <string name="define_yourself">Definis-toi !</string>
     <string name="submit">Valider</string>
 
     <!-- InvitationsActivities -->

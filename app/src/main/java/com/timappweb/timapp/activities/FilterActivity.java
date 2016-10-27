@@ -2,22 +2,20 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.BubbleCategoryAdapter;
 import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.listeners.OnFilterQueryTagListener;
-import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
+import com.timappweb.timapp.listeners.OnSuggestQueryListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
@@ -27,17 +25,14 @@ import java.util.List;
 
 public class FilterActivity extends BaseActivity {
     String TAG = "FilterActivity";
-    private SearchAndSelectTagManager searchAndSelectTagManager;
-    private Activity activity=this;
-    private View progressBarView;
-    //private RecyclerView categoriesRv;
-    private View saveButton;
-    private BubbleCategoryAdapter categoriesAdapter;
-    //private List<EventCategory> categoriesSelected;
-    private TextView textSaveButton;
-    private HorizontalTagsRecyclerView selectedTagsRecyclerView;
-    private HashtagView hashtagView;
-    private View tagScrollView;
+    private View                        progressBarView;
+    //private BubbleCategoryAdapter     categoriesAdapter;
+    //private RecyclerView              categoriesRv;
+    //private List<EventCategory>       categoriesSelected;
+    private HorizontalTagsRecyclerView  selectedTagsRecyclerView;
+    private HashtagView                 hashtagView;
+    private View                        tagScrollView;
+    private SearchView                  searchView;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -50,16 +45,12 @@ public class FilterActivity extends BaseActivity {
 
         progressBarView = findViewById(R.id.progress_view);
         //categoriesRv = (RecyclerView) findViewById(R.remote_id.rv_categories);
-        saveButton = findViewById(R.id.save_button);
-        textSaveButton = (TextView) findViewById(R.id.text_save_button);
         selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
         hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
         tagScrollView = findViewById(R.id.tags_scrollview);
 
         initAdapterAndManager();
         //initCategoriesSelected();
-        setListeners();
-        setTopRvVisibility();
 
         this.initToolbar(false);
     }
@@ -69,7 +60,6 @@ public class FilterActivity extends BaseActivity {
         Log.d(TAG, "FilterActivity::onResume()");
         super.onResume();
         selectedTagsRecyclerView.getAdapter().setData(MyApplication.searchFilter.tags);
-        setTopRvVisibility();
     }
 
     private void initAdapterAndManager() {
@@ -78,48 +68,6 @@ public class FilterActivity extends BaseActivity {
         //TODO : Use the same GridLayout than AddEventActivity for categories selection, and delete class GridLayoutManager.
         //GridLayoutManager manager = new SpanningGridLayoutManager(this, 3, LinearLayoutManager.VERTICAL, false);
         //categoriesRv.setLayoutManager(manager);
-    }
-
-    private void setListeners() {
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-            }
-        });
-
-        hashtagView.addOnTagClickListener(new HashtagView.TagsClickListener() {
-            @Override
-            public void onItemClicked(Object item) {
-                Tag tag = (Tag) item;
-                searchView.setQuery(tag.name, true);
-                searchView.clearFocus();
-            }
-        });
-
-        selectedTagsRecyclerView.getAdapter().setItemAdapterClickListener(new OnItemAdapterClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.d(TAG, "Clicked on selected item");
-                selectedTagsRecyclerView.getAdapter().removeData(position);
-                //setTextButton();
-            }
-        });
-    }
-
-    public void submit() {
-        // MyApplication.searchFilter.eventCategories = categoriesAdapter.getAllCategories();
-        List<Tag> data = selectedTagsRecyclerView.getAdapter().getData();
-
-        /*MyApplication.searchFilter.tags = new ArrayList<>();
-        for(int i=0; i<data.size();i++) {
-            MyApplication.searchFilter.tags.add(new Tag(""));
-        }
-        Collections.copy(MyApplication.searchFilter.tags, data);*/
-
-        MyApplication.searchFilter.tags = new ArrayList<>(data);
-        Log.d(TAG, "Selected tags: " + Tag.tagsToString(MyApplication.searchFilter.tags));
-        finish();
     }
 
 
@@ -132,28 +80,30 @@ public class FilterActivity extends BaseActivity {
         Log.d(TAG, "FilterActivity::onCreateOptionsMenu()");
         final Activity thatActivity = this;
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_tags, menu);
+        getMenuInflater().inflate(R.menu.menu_filter, menu);
 
-        setSearchview(menu);
+        searchView = initSearchView(menu);
         searchView.clearFocus();
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_filter));
-        OnFilterQueryTagListener onFilterQueryTagListener = new OnFilterQueryTagListener(this);
         hashtagView.setTransformer(new DataTransformTag());
-        searchAndSelectTagManager = new SearchAndSelectTagManager(
+        SearchAndSelectTagManager searchAndSelectTagManager = new SearchAndSelectTagManager(
                 this,
                 searchView,
                 hashtagView,
                 selectedTagsRecyclerView,
-                onFilterQueryTagListener
+                new OnSuggestQueryListener(),
+                findViewById(R.id.action_validate_search),
+                findViewById(R.id.check_layout),
+                findViewById(R.id.bottom_line_hrv),
+                3 //TODO [important] Get config from server
         )
         .setDataProvider(new SearchTagDataProvider() {
                     @Override
                     public void onLoadEnds() {
-                        getProgressBarView().setVisibility(View.GONE);
                         tagScrollView.setVisibility(View.VISIBLE);
                     }
                 });
@@ -173,29 +123,14 @@ public class FilterActivity extends BaseActivity {
                 //IntentsUtils.home(this);
                 finish();
                 return true;
-            case R.id.action_search:
-                /////Handle search actions here
-                return true;
+            case R.id.action_validate_search:
+                // MyApplication.searchFilter.eventCategories = categoriesAdapter.getAllCategories();
+                List<Tag> data = selectedTagsRecyclerView.getAdapter().getData();
+                MyApplication.searchFilter.tags = new ArrayList<>(data);
+                Log.d(TAG, "Selected tags: " + Tag.tagsToString(MyApplication.searchFilter.tags));
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void setTopRvVisibility() {
-        if(selectedTagsRecyclerView.getAdapter().getData().size()==0) {
-            selectedTagsRecyclerView.setVisibility(View.GONE);
-            saveButton.setVisibility(View.GONE);
-        } else {
-            selectedTagsRecyclerView.setVisibility(View.VISIBLE);
-            saveButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void setTextButton() {
-        if(selectedTagsRecyclerView.getAdapter().getData().size()==0) {
-            textSaveButton.setText(R.string.search_button_empty);
-        } else {
-            textSaveButton.setText(R.string.search_button);
         }
     }
 
@@ -219,9 +154,5 @@ public class FilterActivity extends BaseActivity {
     public List<EventCategory> getCategoriesSelected() {
         return categoriesSelected;
     }*/
-
-    public View getProgressBarView() {
-        return progressBarView;
-    }
 
 }

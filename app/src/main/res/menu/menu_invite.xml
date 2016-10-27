@@ -12,7 +12,7 @@
 
     <item android:id="@+id/action_delete"
         android:title="@string/action_unselect_all"
-        android:icon="@drawable/trashcan_white"
+        android:icon="@drawable/trashcan"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_get_friends"

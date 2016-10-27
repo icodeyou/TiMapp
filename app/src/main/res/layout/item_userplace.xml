@@ -65,12 +65,10 @@
 
             <com.timappweb.timapp.views.HorizontalTagsRecyclerView
                 android:id="@+id/rv_horizontal_tags"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_small_rv_displayed_tags"
+                style="@style/HorizontalTags"
                 myattrs:horizontal_tags_text_color="@color/colorPrimary"
                 myattrs:horizontal_tags_background_color="@color/background_card"
-                myattrs:horizontal_tags_is_bold="false"
-                myattrs:horizontal_tags_text_size="@dimen/text_tags_small"/>
+                myattrs:horizontal_tags_is_bold="false" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -8,7 +8,7 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:title="@string/menu_search_tags" />
 
-    <item android:id="@+id/action_post"
+    <item android:id="@+id/action_validate_tags"
     android:title="@string/action_post"
     app:showAsAction="always" />
 </menu>

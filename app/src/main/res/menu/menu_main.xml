@@ -7,11 +7,10 @@
         android:orderInCategory="1"
         app:showAsAction="always" />
 
-    <item android:id="@+id/action_filter"
+    <item android:id="@+id/action_open_filter"
         android:title="@string/title_activity_filter"
         android:icon="@drawable/magnifier"
         android:orderInCategory="2"
-        android:visible="false"
         app:showAsAction="always" />
 
     <item android:id="@+id/action_clear_filter"

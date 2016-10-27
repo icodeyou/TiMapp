@@ -3,7 +3,6 @@ package com.timappweb.timapp.utils.viewinteraction;
 
 import android.support.test.espresso.ViewInteraction;
 
-import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.R;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -21,7 +20,7 @@ public class PickTagsForm {
 
     public PickTagsForm() {
         suggestedTagRV = new RecyclerViewHelper(R.id.rv_search_suggested_tags);
-        submitBtn = onView(withId(R.id.action_post));
+        submitBtn = onView(withId(R.id.action_validate_tags));
     }
 
     public PickTagsForm pick(int position) {

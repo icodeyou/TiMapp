@@ -136,7 +136,7 @@ public class ExploreFragment extends Fragment{
             case R.id.action_list:
                 actionList();
                 return true;
-            case R.id.action_filter :
+            case R.id.action_open_filter:
                 IntentsUtils.filter(getActivity());
                 return true;
             case R.id.action_clear_filter:

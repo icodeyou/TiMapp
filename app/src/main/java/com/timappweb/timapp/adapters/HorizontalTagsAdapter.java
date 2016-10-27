@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -28,10 +27,6 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     private int backgroundColor;
     private boolean isBold;
     private Float textSize;
-
-    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
-        this.itemAdapterClickListener = itemAdapterClickListener;
-    }
 
     private OnItemAdapterClickListener itemAdapterClickListener;
 
@@ -66,6 +61,10 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
     @Override
     public int getItemCount() {
         return this.mDataTags.size();
+    }
+
+    public void setItemAdapterClickListener(OnItemAdapterClickListener itemAdapterClickListener) {
+        this.itemAdapterClickListener = itemAdapterClickListener;
     }
 
     public void setDummyData() {
@@ -104,37 +103,6 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         return -1;
     }
 
-    public boolean tryAddData(String selectedTag) {
-        Tag newTag = new Tag(selectedTag, 0);
-        if (this.mDataTags.contains(newTag)) {
-            Toast.makeText(context, R.string.toast_tag_already_chosen, Toast.LENGTH_SHORT).show();
-            return false;
-        } else if(mDataTags.size()>=getMaxTags()) {
-            String string1 = context.getResources().getString(R.string.toast_too_many_tags_part_one);
-            String string2 = context.getResources().getString(R.string.toast_too_many_tags_part_two);
-            Toast.makeText(context,string1 + getMaxTags() + string2, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else if(newTag.getName().isEmpty()) {
-            Toast.makeText(context, R.string.toast_no_tag, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else if (!newTag.isShortEnough()){
-            Toast.makeText(context, R.string.toast_tiny_text_size, Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else if (!newTag.isLongEnough()) {
-            Toast.makeText(context, R.string.toast_huge_text_size, Toast.LENGTH_LONG).show();
-            return false;
-        }
-        else {
-            newTag.setName(newTag.getName());
-            mDataTags.add(newTag);
-            notifyDataSetChanged();
-            return true;
-        }
-    }
-
     public void removeData(int position) {
         this.mDataTags.remove(position);
         this.notifyDataSetChanged();
@@ -165,10 +133,6 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     public void settextSize(Float textSize) {
         this.textSize = textSize;
-    }
-
-    public int getMaxTags() {
-        return ConfigurationProvider.rules().posts_max_tags_number;
     }
 
     public int getMinTags() {

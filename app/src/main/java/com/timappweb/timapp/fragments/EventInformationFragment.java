@@ -282,45 +282,43 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     }
 
     private void showActivatedButton(final boolean activated, boolean animate) {
-        final Animation scaleUp = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_up);
-        scaleUp.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        if(animate) {
+            final Animation scaleUp = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_up);
+            scaleUp.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if(activated) {
-                    activatedStatusButton.setVisibility(View.VISIBLE);
-                    statusTv.setAlpha(1f);
                 }
-                else {
-                    disabledStatusButton.setVisibility(View.VISIBLE);
-                    statusTv.setAlpha(0.1f);
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if(activated) {
+                        activatedStatusButton.setVisibility(View.VISIBLE);
+                        statusTv.setAlpha(1f);
+                    }
+                    else {
+                        disabledStatusButton.setVisibility(View.VISIBLE);
+                        statusTv.setAlpha(0.1f);
+                    }
                 }
-            }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-            }
-        });
-
-        if(activated) {
-            disabledStatusButton.setVisibility(View.GONE);
-            activatedStatusButton.setVisibility(View.VISIBLE);
-            if(animate) {
+                }
+            });
+            if(activated) {
                 activatedStatusButton.startAnimation(scaleUp);
             }
-        }
-        else {
-            activatedStatusButton.setVisibility(View.GONE);
-            disabledStatusButton.setVisibility(View.VISIBLE);
-            if(animate) {
+            else {
                 disabledStatusButton.startAnimation(scaleUp);
             }
         }
+        else {
+            statusTv.setAlpha(activated ? 1f : 0.1f);
+        }
+        activatedStatusButton.setVisibility(activated ? View.VISIBLE : View.GONE);
+        disabledStatusButton.setVisibility(activated ? View.GONE : View.VISIBLE);
     }
 
     public void updateStatusButtonActivation(){

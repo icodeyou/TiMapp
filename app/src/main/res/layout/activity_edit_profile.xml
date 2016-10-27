@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:myattrs="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,62 +11,37 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/text_huge"
             android:text="@string/define_yourself"
             android:typeface="serif"
             android:textColor="@color/White"
+            android:layout_marginBottom="40dp"
             android:gravity="center"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center">
-            <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-                android:id="@+id/selected_tags_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/height_rv_displayed_tags"
-                myattrs:horizontal_tags_text_color="@color/White"
-                myattrs:horizontal_tags_background_color="@color/colorPrimary"
-                myattrs:horizontal_tags_is_bold="true"
-                myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
-        </LinearLayout>
-
-        <EditText
+        <android.support.v7.widget.SearchView
             android:id="@+id/edit_text"
+            style="@style/SearchViewEditProfile"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:maxLines="1"
-            android:textColor="@color/White"
-            android:textSize="@dimen/text_big"/>
+            android:layout_height="wrap_content"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/White"/>
 
-        <TextView
-            android:id="@+id/counter_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:textColor="@color/White"
-            android:textSize="@dimen/text_big"
-            android:text="@string/text_tags_left_3"/>
+        <com.timappweb.timapp.views.HorizontalTagsRecyclerView
+            android:id="@+id/selected_tags_profile"
+            style="@style/HorizontalTags"
+            myattrs:horizontal_tags_text_color="@color/White"/>
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/submit_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="invisible">
         <LinearLayout
@@ -91,7 +67,7 @@
                 android:padding="10dp"
                 android:textSize="@dimen/text_normal"
                 android:textColor="@color/White"
-                android:text="@string/edit_first_profile1"/>
+                android:text="@string/well_done"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

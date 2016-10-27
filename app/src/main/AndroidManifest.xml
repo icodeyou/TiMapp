@@ -225,16 +225,13 @@
             android:name=".activities.FilterActivity"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_filter"
+            android:theme="@style/AppTheme"
             android:parentActivityName=".activities.DrawerActivity">
 
             <!-- Make activity searchable -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
 
         <!-- LOCATE ACTIVITY //////////////////////////////////////////////-->
@@ -328,7 +325,7 @@
             android:label="@string/title_activity_edit_profile"
             android:windowSoftInputMode="adjustNothing|stateVisible"
             android:parentActivityName=".activities.ProfileActivity"
-            android:theme="@style/WhiteMenuActionbar">
+            android:theme="@style/SearchViewAccentWhiteTheme">
         </activity>
 
         <!-- SETTINGS ACTIVITY //////////////////////////////////////////////-->

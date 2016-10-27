@@ -16,7 +16,6 @@ import com.timappweb.timapp.R;
 public class BaseActivity extends AppCompatActivity {
 
     private static final String TAG     = "BaseActivity";
-    protected SearchView                searchView;
     public Toolbar mToolbar;
 
     protected void initToolbar(boolean showTitle){
@@ -39,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }
 
-    protected void setSearchview(Menu menu) {
+    protected SearchView initSearchView(Menu menu) {
         //Set search item
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchItem.expandActionView();
@@ -58,8 +57,7 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
 
-        //set searchView
-        searchView = (SearchView) searchItem.getActionView();
+        return (SearchView) searchItem.getActionView();
     }
 
 }

@@ -256,7 +256,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_event, menu);
-        postButton = menu.findItem(R.id.action_post);
+        postButton = menu.findItem(R.id.action_validate_tags);
 
         if(BuildConfig.BUILD_TYPE == "debug") initDebugView();
         return true;
@@ -265,7 +265,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_post:
+            case R.id.action_validate_tags:
                 if(!Event.isValidName(eventNameET.getText().toString().trim())) {
                     Log.d(TAG, "Name is not valid");
                     Toast.makeText(getBaseContext(), R.string.error_no_name, Toast.LENGTH_LONG).show();

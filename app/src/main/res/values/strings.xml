@@ -49,7 +49,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_edit_profile">Edit profile</string>
     <string name="create_button">Create</string>
-    <string name="search_button">Validate</string>
+    <string name="search_button">Search</string>
     <string name="search_button_empty">Clear Filter</string>
     <string name="invite_button">Invite</string>
     <string name="action_post">Post</string>
@@ -79,10 +79,13 @@
             <string name="no_fine_location">We don\'t have a fine location. Go outside and it will definitely work.</string>
             <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
             <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
+            <string name="toast_tag_not_valid">Your tag is not valid. Only letters and numbers are allowed in a tag.</string>
             <string name="toast_no_space">You cannot add any space to a tag. To submit one, please press the touch "Done" of your keyboard.</string>
             <string name="toast_no_tag">Please add a tag.</string>
-            <string name="toast_too_many_tags_part_one">You cannot add more than&#160;</string>
-            <string name="toast_too_many_tags_part_two">&#160;tags.</string>
+            <plurals name="toast_too_many_tags">
+                <item quantity="one">You can\'t add more than %d tag.</item>
+                <item quantity="other">You can\'t add more than %d tags.</item>
+            </plurals>
             <string name="toast_tag_already_chosen">Your tag has already been chosen.</string>
             <string name="toast_thanks_for_sharing">Thank you for sharing !</string>
             <string name="toast_profile_saved">Your profile has been saved</string>
@@ -195,11 +198,13 @@
     <string name="alert_dialog_continue_addevent">Discard</string>
 
     <!-- AddTagsActivity  -->
-    <string name="search_hint">Type a tag</string>
     <string name="searchview_hint_no_tags">Type a tag here</string>
-    <string name="searchview_hint_few_tags_part_one">You can add up to&#160;</string>
-    <string name="searchview_hint_few_tags_part_two">&#160;tags</string>
+    <plurals name="searchview_hint_few_tags">
+        <item quantity="one">%d tag left</item>
+        <item quantity="other">%d tags left</item>
+    </plurals>
     <string name="menu_search_tags">Search tags</string>
+    <string name="done">Done</string>
 
     <!-- FilterActivity -->
     <string name="hint_searchview_filter">Search</string>
@@ -239,7 +244,7 @@
     <string name="text_tags_left_3">3 tags left</string>
     <string name="text_tags_left_2">2 tags left</string>
     <string name="text_tags_left_1">1 tag left</string>
-    <string name="edit_first_profile1">Well done.</string>
+    <string name="well_done">Well done.</string>
     <string name="edit_first_profile2">Your tags will be displayed on your profile.\nAt any time you will be able to change them as you like.</string>
     <string name="define_yourself">Define yourself</string>
     <string name="submit">Submit</string>

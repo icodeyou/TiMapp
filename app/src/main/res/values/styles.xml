@@ -4,9 +4,6 @@
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
 
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <!--<item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@android:transition/explode</item>
-        <item name="android:windowExitTransition">@android:transition/explode</item>-->
 
         <!-- TOOLBAR -->
         <item name="android:windowActionBar">false</item>
@@ -15,11 +12,6 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item> <!-- the contextual action bar will now overlay the action bar -->
         <item name="android:actionModeBackground">@color/colorPrimary</item>
-
-        <!-- Toolbar Theme / Apply white arrow -->
-        <!--<item name="colorControlNormal">@color/textLight</item>-->
-        <!--<item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item>
-        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>-->
 
         <!-- -->
         <item name="android:textColor">@color/textBlack</item>
@@ -32,71 +24,30 @@
         <item name="colorAccent">@color/colorPrimary</item>
 
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
-        <!--<item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>-->
 
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
-        <!--<item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="21">true</item>-->
 
     </style>
 
-    <style name="WhiteMenuActionbar" parent="AppTheme">
-        <item name="actionMenuTextColor">@color/white</item> <!-- Action Menu items color -->
-        <item name="android:textColorSecondary">@color/White</item> <!-- Home Button Color -->
-    </style>
+    <!--- ************************************************************************************** -->
+    <!-- TOOLBAR -->
+    <!--- ************************************************************************************** -->
 
     <style name="SecondaryToolbarTheme" parent="AppTheme">
         <item name="android:actionModeBackground">@color/colorSecondary</item>
     </style>
 
-
-    <style name="DefaultSwitch" parent="AppTheme">
-        <!-- active thumb & track color  -->
-        <item name="colorControlActivated">@color/colorPrimary</item>
-
-        <!-- inactive thumb color -->
-        <item name="colorSwitchThumbNormal">@color/switch_button_thumb_off</item>
-
-        <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">@color/switch_button_thumb_off</item>
-    </style>
-
-    <style name="AppTheme.Button" parent="Base.Widget.AppCompat.Button">
-        <item name="colorButtonNormal">@color/background</item>
-        <item name="colorAccent">@color/red</item>
+    <style name="WhiteMenuActionbar" parent="AppTheme">
+        <item name="actionMenuTextColor">@color/white</item> <!-- Action Menu items color -->
     </style>
 
     <style name="BlueButton" parent="Base.Widget.AppCompat.Button">
         <item name="colorButtonNormal">@color/colorSecondary</item>
     </style>
 
-    <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <!-- White arrow -->
-        <item name="colorControlNormal">@android:color/white</item>
-        <!--Text Style -->
-        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.Text</item>
-    </style>
-
-    // TODO design action mode here
-    <style name="AppTheme.ActionMode" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <!-- White arrow -->
-        <item name="colorControlNormal">@android:color/white</item>
-        <!--Text Style -->
-        <item name="android:titleTextStyle">@style/AppTheme.ActionBar.Text</item>
-    </style>
-
-    <style name="AppTheme.ActionBar.Text" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/colorPrimary</item>
-    </style>
-
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/colorPrimary</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="AppTheme.ActionBarTheme">
-    </style>
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
     </style>
 
     <style name="AppTheme.TransparentPopupOverlay" parent="ThemeOverlay.AppCompat.Light">
@@ -112,12 +63,20 @@
         <item name="android:background">@color/colorSecondary</item>
     </style>
 
-
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/splashscreen</item>
     </style>
 
     <!--- ************************************************************************************** -->
+
+    <style name="SearchViewEditProfile" parent="Widget.AppCompat.Light.SearchView">
+        <item name="searchHintIcon">@null</item>  <!-- No Magnifier -->
+    </style>
+
+    <style name="SearchViewAccentWhiteTheme" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/white</item> <!-- Cross Color of SearchView in EditProfileActivity-->
+        <item name="android:textCursorDrawable">@drawable/cursor_white</item> <!-- Cursor -->
+    </style>
 
     <style name="FabLabels">
         <item name="android:background">@color/transparent</item>
@@ -279,7 +238,7 @@
     </style>
 
     <!--.................... Présentation .........................................-->
-    
+
     <style name="TextTitlePresentation" parent="TextHuge">
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">0dp</item>
@@ -500,12 +459,9 @@
         <item name="android:paddingBottom">5dp</item>
     </style>
 
-    <style name="BlackSmallProgressBar" parent="imageIcon">
-        <item name="android:indeterminateTint">@color/black</item>
-    </style>
 
-
-
+    <!--- ************************************************************************************** -->
+    <!-- PROGRESS VIEW -->
     <style name="LayoutProgressView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -553,7 +509,11 @@
     <style name="ProgressViewSmallMute" parent="TinyProgressView">
         <item name="crs_pl_fg_color">@color/textMute</item>
     </style>
-    
+
+    <!--- ************************************************************************************** -->
+    <!-- BUTTONS -->
+    <!--- ************************************************************************************** -->
+
     <style name="BigButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
@@ -568,7 +528,7 @@
         <item name="android:background">@drawable/button_white</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
-    
+
     <style name="BigButton.BorderWhite">
         <item name="android:background">@drawable/border_radius</item>
         <item name="android:textColor">@color/white</item>
@@ -596,6 +556,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!--- ************************************************************************************** -->
+
+
     <style name="WidthWeightOne">
         <item name="android:layout_weight">1</item>
         <item name="android:layout_width">0dp</item>
@@ -620,6 +583,9 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
+    <!--- ************************************************************************************** -->
+    <!-- DIVIDERS -->
+    <!--- ************************************************************************************** -->
     <style name="DividerHorizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/width_divider</item>
@@ -634,6 +600,22 @@
         <item name="android:layout_marginTop">@dimen/margin_separator</item>
         <item name="android:layout_marginBottom">@dimen/margin_separator</item>
         <item name="android:background">@color/LightGrey</item>
+    </style>
+
+    <style name="DividerAccent" parent="DividerHorizontal">
+        <item name="android:background">@color/colorAccentLight</item>
+    </style>
+    <!--- ************************************************************************************** -->
+    
+    
+    <style name="HorizontalTags">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/height_rv_displayed_tags</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="horizontal_tags_text_color">@color/colorAccent</item>
+        <item name="horizontal_tags_text_size">@dimen/text_tags</item>
+        <item name="horizontal_tags_is_bold">true</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
 </resources>

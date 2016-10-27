@@ -25,27 +25,12 @@
         <!-- SELECTED TAGS -->
         <!-- **********************************************************************-->
         <com.timappweb.timapp.views.HorizontalTagsRecyclerView
-            xmlns:myattrs="http://schemas.android.com/apk/res-auto"
             android:id="@+id/rv_selected_tags"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/height_rv_displayed_tags"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            myattrs:horizontal_tags_text_color="@color/colorAccent"
-            myattrs:horizontal_tags_background_color="@color/background"
-            myattrs:horizontal_tags_is_bold="true"
-            myattrs:horizontal_tags_text_size="@dimen/text_tags"/>
+            style="@style/HorizontalTags"/>
 
         <!-- Separator -->
         <!-- **********************************************************************-->
-        <View
-            android:id="@+id/bottom_line_hrv"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="@color/colorAccentLight"/>
+        <include layout="@layout/bottom_tags" />
 
         <!-- Progress View -->
         <!-- **********************************************************************-->

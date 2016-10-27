@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/bottom_line_hrv"
+        style="@style/DividerAccent"/>
+
+    <LinearLayout
+        android:id="@+id/check_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/check"/>
+        <TextView
+            style="@style/TextBig"
+            android:padding="20dp"
+            android:text="@string/well_done"/>
+    </LinearLayout>
+</RelativeLayout>

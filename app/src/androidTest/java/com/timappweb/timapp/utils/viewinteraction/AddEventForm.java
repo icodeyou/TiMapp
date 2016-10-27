@@ -28,7 +28,7 @@ public class AddEventForm  extends FormHelper {
     public AddEventForm() {
         inputEventName = onView(withId(R.id.event_name));
         inputEventDescription = onView(withId(R.id.description_edit_text));
-        submitButton = onView(withId(R.id.action_post));
+        submitButton = onView(withId(R.id.action_validate_tags));
         categorySelector = new CategorySelectorHelper();
         progressView = onView(withId(R.id.progress_view));
        //progressIdlingResource = null;
