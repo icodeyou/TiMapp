@@ -369,7 +369,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     private void openAddTagsActivity() {
-        IntentsUtils.addTags(EventActivity.this, event);
+        IntentsUtils.addTags(EventActivity.this, event, null);
     }
 
     private void openAddPictureActivity() {

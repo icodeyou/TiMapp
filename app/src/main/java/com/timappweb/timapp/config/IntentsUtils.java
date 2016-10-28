@@ -38,6 +38,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPost;
 import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.Spot;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SerializeHelper;
@@ -260,17 +261,14 @@ public class IntentsUtils {
         }
     }
 
-    public static void checkAndAddTags(Activity activity, Event event, EventTag eventTag) {
+    public static void checkAndAddTags(Activity activity, Event event, Tag tag) {
         if(checkingBeforePost(activity, event, ACTION_TAGS)) {
-            addTags(activity, event, eventTag);
-        };
+            addTags(activity, event, tag);
+        }
     }
 
-    public static void addTags(Activity activity, Event event) {
-        addTags(activity, event, null);
-    }
 
-    public static void addTags(Activity activity, Event event, EventTag eventTag) {
+    public static void addTags(Activity activity, Event event, Tag tag) {
         if (!QuotaManager.instance().checkQuota(QuotaType.ADD_TAGS, true)){
             //Toast.makeText(context, R.string.create_second_place_delay, Toast.LENGTH_LONG).simpleMessage();
             return;
@@ -278,7 +276,7 @@ public class IntentsUtils {
 
         Intent addtagsIntent = buildIntentAddTags(activity, event);
 
-        if(eventTag != null) addtagsIntent.putExtra(KEY_TAG, eventTag.getId());
+        if(tag != null) addtagsIntent.putExtra(KEY_TAG, tag.getId());
 
         activity.startActivityForResult(addtagsIntent , REQUEST_TAGS);
     }
@@ -518,13 +516,13 @@ public class IntentsUtils {
     }
 
 
-    public static EventTag extractEventTag(Intent intent) {
+    public static Tag extractEventTag(Intent intent) {
         Bundle extras = intent.getExtras();
-        if(extras == null) {
+        if(extras == null || !extras.containsKey(KEY_TAG)) {
             return null;
         }
         else {
-            return EventTag.load(EventTag.class, extras.getLong(KEY_TAG));
+            return Tag.load(Tag.class, extras.getLong(KEY_TAG));
         }
     }
 

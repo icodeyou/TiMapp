@@ -18,6 +18,6 @@ public class EventPointResponse {
     public Picture picture;
 
     @Expose
-    public int picture_id;
+    public int picture_id = -1;
 
 }

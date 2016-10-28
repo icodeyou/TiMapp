@@ -43,7 +43,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
 
     // ---------------------------------------------------------------------------------------------
 
-    private TagsAndCountersAdapter          tagsAndCountersAdapter;
+    //private TagsAndCountersAdapter          tagsAndCountersAdapter;
 
     //Views
     private View                            noTagsView;
@@ -71,7 +71,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
         noTagsView = view.findViewById(R.id.no_tags_view);
         placeHolder = view.findViewById(R.id.material_view_pager_placeholder);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_place_tags);
-        tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
+        //tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
 
         return view;
     }
@@ -89,7 +89,10 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
         mAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
-                IntentsUtils.checkAndAddTags(eventActivity, eventActivity.getEvent(), tagsAndCountersAdapter.getTag(position));
+                AbstractFlexibleItem item = mAdapter.getItem(position);
+                if (item instanceof TagItem){
+                    IntentsUtils.checkAndAddTags(eventActivity, eventActivity.getEvent(), ((TagItem)item).getTag());
+                }
                 return true;
             }
         });

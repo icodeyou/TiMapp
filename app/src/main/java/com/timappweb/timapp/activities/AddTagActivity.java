@@ -153,9 +153,9 @@ public class AddTagActivity extends BaseActivity{
         searchAndSelectTagManager.loadTags("");
 
         //set Initial Tags
-        EventTag eventTag = IntentsUtils.extractEventTag(getIntent());
-        if(eventTag != null) {
-            searchAndSelectTagManager.addTag(eventTag.tag.getName());
+        Tag tag = IntentsUtils.extractEventTag(getIntent());
+        if(tag != null) {
+            searchAndSelectTagManager.addTag(tag.getName());
         }
 
         return true;
