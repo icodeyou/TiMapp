@@ -121,7 +121,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
         initializeRecyclerView(savedInstanceState);
     }
 
-    private CursorPaginateManager<UserEvent> initUserStatusLoader(UserEventStatusEnum status, final ExpandableHeaderItem headerItem) {
+    private CursorPaginateManager<UserEvent> initUserStatusLoader(UserEventStatusEnum status, final PeopleHeaderItem headerItem) {
 
         CursorPaginateDataLoader<UserEvent,UserEvent> dataLoader = CursorPaginateDataLoader.<UserEvent,UserEvent>create(
                     "PlacesUsers/event/" + getEvent().getRemoteId(),
@@ -154,8 +154,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
                 .setCallback(new CursorPaginateDataLoader.Callback<UserEvent>() {
                     @Override
-                    public void onLoadEnd(List<UserEvent> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+                    public void onLoadEnd(CursorPaginateDataLoader.LoadInfo<UserEvent> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
                         mPlaceUsersAdapter.expand(headerItem);
+                        if (data != null && data.total != -1) headerItem.setCount(data.total, mPlaceUsersAdapter);
                         notifyLoadsEnd(type);
                     }
 
@@ -204,8 +205,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 .setCallback(new CursorPaginateDataLoader.Callback<EventsInvitation>() {
 
                     @Override
-                    public void onLoadEnd(List<EventsInvitation> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+                    public void onLoadEnd(CursorPaginateDataLoader.LoadInfo<EventsInvitation> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
                         mPlaceUsersAdapter.expand(mExpandableInviteHeader);
+                        if (data != null && data.total != -1) mExpandableInviteHeader.setCount(data.total, mPlaceUsersAdapter);
                         notifyLoadsEnd(type);
                     }
 

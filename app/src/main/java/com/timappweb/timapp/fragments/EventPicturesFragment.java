@@ -357,7 +357,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
     private void loadDataIfNeeded() {
         if (this.mDataLoader != null || !isAdded()) return;
         mDataLoader = CursorPaginateDataLoader.<Picture, Picture>create(
-                        getString(R.string.api_base_url) + "  pictures/event/" + getEvent().getRemoteId(),
+                        "pictures/event/" + getEvent().getRemoteId(),
                         Picture.class)
                 .initCache("EventPicture" + eventActivity.getEvent().getRemoteId(), CACHE_DURATION)
                 .setLocalQuery(new Select().from(Picture.class).where("Event = ?", getEvent().getId()))

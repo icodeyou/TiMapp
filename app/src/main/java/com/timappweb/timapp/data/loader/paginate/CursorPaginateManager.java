@@ -117,10 +117,10 @@ public class CursorPaginateManager<DataType extends MyModel>
     // ---------------------------------------------------------------------------------------------
 
     @Override
-    public void onLoadEnd(List<DataType> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+    public void onLoadEnd(CursorPaginateDataLoader.LoadInfo<DataType> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
         List<AbstractFlexibleItem> items = null;
         if (data != null){
-            items = mItemTransformer.transform(data);
+            items = mItemTransformer.transform(data.items);
         }
 
         if (overwrite){
@@ -170,6 +170,7 @@ public class CursorPaginateManager<DataType extends MyModel>
         if (!mAdapter.hasData() && this.noDataCallback != null){
             this.noDataCallback.run();
         }
+        //else if (mAdapter.hasData() && this.)
 
         if (this.callback != null) this.callback.onLoadEnd(data, type, overwrite);
 
@@ -183,17 +184,17 @@ public class CursorPaginateManager<DataType extends MyModel>
     @Override
     public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType loadType) {
         setRefreshing(false);
+        mAdapter.onLoadMoreComplete(null);
+            /*
         switch (loadType){
             case NEXT:
-                mAdapter.onLoadMoreComplete(null);
                 break;
-            /*
             case UPDATE:
                 setRefreshing(false);
                 break;
             case PREV:
-                break;*/
-        }
+                break;
+        }*/
         if (this.callback != null) this.callback.onLoadError(error, loadType);
     }
 

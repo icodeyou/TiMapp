@@ -37,20 +37,20 @@ public abstract class RecyclerViewManager<This> implements
     }
 
 
-    public void setRefreshing(boolean state){
+    public void setRefreshing(final boolean state){
         if (mSwipeRefreshLayout != null) {
-            if (state){
+            //if (state){
                 // hack otherwise the refresh view is not shown
                 mSwipeRefreshLayout.post(new Runnable() {
                     @Override
                     public void run() {
-                        mSwipeRefreshLayout.setRefreshing(true);
+                        mSwipeRefreshLayout.setRefreshing(state);
                     }
                 });
-            }
-            else{
-                mSwipeRefreshLayout.setRefreshing(state);
-            }
+            //}
+            //else{
+            //    mSwipeRefreshLayout.setRefreshing(state);
+            //}
         }
     }
 

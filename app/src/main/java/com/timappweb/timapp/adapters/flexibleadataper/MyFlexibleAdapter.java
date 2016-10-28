@@ -18,7 +18,7 @@ import eu.davidea.flexibleadapter.items.ISectionable;
 public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	private static final String TAG = "MyFlexibleAdapter";
-	public static int removeAllOffset = 0;
+	public int removeAllOffset = 0;
 
 	// ---------------------------------------------------------------------------------------------
 

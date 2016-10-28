@@ -35,7 +35,7 @@ import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 
-public class EventTagsFragment extends EventBaseFragment implements OnTabSelectedListener, CursorPaginateDataLoader.Callback<EventTag> {
+public class EventTagsFragment extends EventBaseFragment implements OnTabSelectedListener{
 
     private static final String TAG = "EventTagsFragment";
     private static final long MIN_DELAY_AUTO_REFRESH = 5 * 60 * 1000;
@@ -141,7 +141,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                 .setSwipeRefreshLayout(mSwipeRefreshLayout)
                 .enableEndlessScroll()
                 .setClearOnRefresh(true)
-                .setCallback(this)
+                //.setCallback(this)
                 .load();
     }
 
@@ -182,18 +182,4 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
 
     // ---------------------------------------------------------------------------------------------
 
-    @Override
-    public void onLoadEnd(List<EventTag> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
-
-    }
-
-    @Override
-    public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {
-
-    }
-
-    @Override
-    public void onLoadStart(CursorPaginateDataLoader.LoadType type) {
-
-    }
 }

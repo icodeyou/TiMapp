@@ -22,7 +22,7 @@ import java.util.List;
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
-public class ListFriendsActivity extends BaseActivity implements CursorPaginateDataLoader.Callback<UserFriend> {
+public class ListFriendsActivity extends BaseActivity{
 
     private String               TAG                    = "ListFriendsActivity";
 
@@ -81,7 +81,8 @@ public class ListFriendsActivity extends BaseActivity implements CursorPaginateD
 
         FriendsLoaderFactory.manager(this, mAdapter)
                 .setSwipeRefreshLayout(mSwipeRefreshLayout)
-                .setCallback(this)
+                //.setCallback(this)
+                .setClearOnRefresh(true)
                 .setNoDataView(noFriendsView)
                 .load();
     }
@@ -102,18 +103,4 @@ public class ListFriendsActivity extends BaseActivity implements CursorPaginateD
         return false;
     }
 
-    @Override
-    public void onLoadEnd(List<UserFriend> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
-
-    }
-
-    @Override
-    public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {
-
-    }
-
-    @Override
-    public void onLoadStart(CursorPaginateDataLoader.LoadType type) {
-
-    }
 }

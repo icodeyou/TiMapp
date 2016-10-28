@@ -29,7 +29,7 @@ public class InvitationsActivity extends BaseActivity{
     private String              TAG                             = "ListFriendsActivity";
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
     private static final int    MIN_DELAY_AUTO_REFRESH         = 2 * 3600 * 1000;
-    public static int    LOCAL_LOAD_LIMIT                = 5;
+    public static int           LOCAL_LOAD_LIMIT                = 5;
     private static final int    REMOTE_LOAD_LIMIT               = LOCAL_LOAD_LIMIT;
 
     // ---------------------------------------------------------------------------------------------
@@ -86,11 +86,11 @@ public class InvitationsActivity extends BaseActivity{
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<EventsInvitation, EventsInvitation>() {
                     @Override
                     public EventsInvitation beforeSaveModel(EventsInvitation model) {
-                        model.user_source = MyApplication.getCurrentUser();
+                        model.user_target = MyApplication.getCurrentUser();
                         return model;
                     }
                 })
-                .setLocalQuery(new Select().from(EventsInvitation.class).where("UserSource = ?", MyApplication.getCurrentUser().getId()))
+                .setLocalQuery(new Select().from(EventsInvitation.class).where("UserTarget = ?", MyApplication.getCurrentUser().getId()))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLimit(LOCAL_LOAD_LIMIT);

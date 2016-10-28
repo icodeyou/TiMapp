@@ -263,7 +263,7 @@ public class InviteFriendsActivity extends BaseActivity
     // ---------------------------------------------------------------------------------------------
 
     @Override
-    public void onLoadEnd(List<UserFriend> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+    public void onLoadEnd(CursorPaginateDataLoader.LoadInfo<UserFriend> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
         initializeSelection();
     }
 

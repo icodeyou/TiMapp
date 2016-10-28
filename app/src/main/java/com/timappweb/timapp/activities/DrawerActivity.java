@@ -158,9 +158,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         super.onRestart();
         // Si on est dans la map => update Map Data // Liste => Update List Data.
         // TODO TEST
-        if (exploreFragment != null && exploreFragment.mapFragment != null && exploreFragment.mapFragment.isVisible()){
-            exploreFragment.mapFragment.updateMapData();
-        }
+        //if (exploreFragment != null && exploreFragment.mapFragment != null && exploreFragment.mapFragment.isVisible()){
+        //    exploreFragment.mapFragment.updateMapData();
+        //}
     }
 
     @Override

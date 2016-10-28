@@ -314,7 +314,7 @@ public class AddSpotActivity extends BaseActivity implements
     }
 
     @Override
-    public void onLoadEnd(List<Spot> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
+    public void onLoadEnd(CursorPaginateDataLoader.LoadInfo<Spot> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
         mAdapter.createItemsCopy();
     }
 

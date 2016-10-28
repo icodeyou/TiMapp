@@ -28,18 +28,13 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         removeAllOffset = pictureGridColumnNb;
 
         for (int i = 0; i < removeAllOffset; i++){
-            addItem(i, new PlaceHolderItem("PLACEHOLDER" + i));
+            addItem(i, new PlaceHolderItem("PLACEHOLDER_PICTURE" + i));
         }
     }
 
     public boolean addItem(AbstractFlexibleItem item){
         super.addItem(getItemCount(), item);
         return false;
-    }
-
-    @Override
-    public boolean hasData() {
-        return this.getDataCount() > 0;
     }
 
     public String[] getPictureUris() {

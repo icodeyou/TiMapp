@@ -231,7 +231,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         for (PaginateFilter filter: this.filters){
             filter.updateValue(lastItem);
         }
-        this.callback.onLoadEnd(items, LoadType.NEXT, false);
+        LoadInfo<DataType> loadInfo = new LoadInfo<DataType>(items, this.cacheInfo.total, null);
+        this.callback.onLoadEnd(loadInfo, LoadType.NEXT, false);
     }
 
     private void remoteLoad(final LoadType loadType) {
@@ -240,7 +241,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
                 .onResponse(new HttpCallback<ResponseWrapper<JsonObject>>() {
                     @Override
                     public void successful(ResponseWrapper<JsonObject> feedback) throws Exception {
-                        CursorPaginateDataLoader.this.cacheInfo.updateInfo(feedback);
+                        CursorPaginateDataLoader.this.cacheInfo.updateInfo(feedback, loadType);
                         Log.d(TAG, "Finish loading " + loadType + ", next url is now: " + CursorPaginateDataLoader.this.cacheInfo.nextUrl);
                         List<DataType> items = CursorPaginateDataLoader.this._parseItems(feedback.items);
 
@@ -250,8 +251,9 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
                             CursorPaginateDataLoader.this.hasInCache = false;
                             overwrite = true;
                         }
-
-                        if (callback != null) callback.onLoadEnd(items, loadType, overwrite);
+                        if (callback != null){
+                            callback.onLoadEnd(new LoadInfo<DataType>(items, feedback.total, feedback.extra), loadType, overwrite);
+                        }
                         try{
                             CursorPaginateDataLoader.this.saveInCache();
                         }
@@ -335,11 +337,25 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
      */
     public interface Callback<T>{
 
-        void onLoadEnd(List<T> data, LoadType type, boolean overwrite);
+        void onLoadEnd(LoadInfo<T> data, LoadType type, boolean overwrite);
 
         void onLoadError(Throwable error, LoadType type);
 
         void onLoadStart(LoadType type);
+    }
+
+    public static class LoadInfo<T>{
+
+        public List<T> items;
+        public JsonObject extra;
+        public int total;
+
+        public LoadInfo(List<T> items, int total, JsonObject extra) {
+            this.items = items;
+            this.extra = extra;
+            this.total = total;
+        }
+
     }
 
     public static class ResponseWrapper<T>{
@@ -354,6 +370,12 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
         @Expose
         public int perPage;
+
+        @Expose
+        int total = -1;
+
+        @Expose
+        public JsonObject extra;
 
         public String getNextUrl(){
             try {
@@ -451,12 +473,16 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         @Column(name = "ExpireDate")
         protected   long      expireDate = 0;
 
-        public void updateInfo(ResponseWrapper<JsonObject> feedback) {
-            this.nextUrl = feedback.getNextUrl();
-            this.prevUrl = feedback.getPrevUrl();
+        @Column(name = "Total")
+        protected   int      total = -1;
+
+        public void updateInfo(ResponseWrapper<JsonObject> feedback, LoadType loadType) {
+            if (loadType == LoadType.NEXT) this.nextUrl = feedback.getNextUrl();
+            if (loadType == LoadType.PREV) this.prevUrl = feedback.getPrevUrl();
             this.updateUrl = feedback.getUpdateUrl();
-            this.lastUpdate = feedback.time;
+            if (loadType == LoadType.UPDATE || this.lastUpdate == -1) this.lastUpdate = feedback.time;
             this.updateUrl = feedback.getUpdateUrl();
+            this.total = feedback.total;
         }
 
         @Override
