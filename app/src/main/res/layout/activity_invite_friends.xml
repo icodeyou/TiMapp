@@ -13,19 +13,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.timappweb.timapp.views.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.timappweb.timapp.views.RefreshableRecyclerView
-                android:id="@+id/rv_friends"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible"/>
-
-        </com.timappweb.timapp.views.SwipeRefreshLayout>
-
         <RelativeLayout
             android:id="@+id/no_data_view_layout"
             android:layout_width="match_parent"
@@ -41,6 +28,19 @@
                 android:layout_alignParentBottom="true"
                 layout="@layout/share_layout" />
         </RelativeLayout>
+
+        <com.timappweb.timapp.views.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.timappweb.timapp.views.RefreshableRecyclerView
+                android:id="@+id/rv_friends"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+
+        </com.timappweb.timapp.views.SwipeRefreshLayout>
 
         <include layout="@layout/progressview_fullscreen" />
 

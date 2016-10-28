@@ -13,21 +13,21 @@
         <include
             layout="@layout/progressview_fullscreen" />
 
-        <com.timappweb.timapp.views.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-                <com.timappweb.timapp.views.RefreshableRecyclerView
-                    android:id="@+id/rv_friends"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible"/>
-        </com.timappweb.timapp.views.SwipeRefreshLayout>
-
         <TextView
             android:id="@+id/no_data_view_layout"
             style="@style/NoDataView"
             android:text="@string/no_friends"/>
+
+        <com.timappweb.timapp.views.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.timappweb.timapp.views.RefreshableRecyclerView
+                android:id="@+id/rv_friends"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+        </com.timappweb.timapp.views.SwipeRefreshLayout>
 
     </RelativeLayout>
 </LinearLayout>

@@ -3,23 +3,24 @@ package com.timappweb.timapp.managers;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
+import com.timappweb.timapp.adapters.SuggestedTagsAdapter;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.utils.SearchHistory;
 import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
+import com.xiaofeng.flowlayoutmanager.Alignment;
+import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,7 @@ public class SearchAndSelectTagManager {
     private Activity activity;
     private SearchView searchView;
     private HorizontalTagsRecyclerView selectedRV;
-    private HashtagView suggestedRV;
+    private RecyclerView suggestedRV;
     private SearchHistory searchHistory;
     private HorizontalTagsAdapter horizontalAdapter;
     private OnBasicQueryTagListener queryTagListener;
@@ -40,9 +41,11 @@ public class SearchAndSelectTagManager {
     private final View finishView;
     private int maxTags;
 
+    private SuggestedTagsAdapter suggestedAdapter;
+
     public SearchAndSelectTagManager(Activity activity,
                                      SearchView searchView,
-                                     HashtagView suggestedRV,
+                                     RecyclerView suggestedRV,
                                      HorizontalTagsRecyclerView selectedRecyclerView,
                                      OnBasicQueryTagListener queryTagListener,
                                      View validateButton,
@@ -77,6 +80,14 @@ public class SearchAndSelectTagManager {
                 ConfigurationProvider.rules().tags_min_search_length,
                 ConfigurationProvider.rules().tags_suggest_limit);
 
+        //SuggestedTagRecyclerView
+        suggestedAdapter = new SuggestedTagsAdapter(activity);
+        suggestedRV.setAdapter(suggestedAdapter);
+        FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
+        flowLayoutManager.setAlignment(Alignment.LEFT);
+        flowLayoutManager.setAutoMeasureEnabled(true);
+        suggestedRV.setLayoutManager(flowLayoutManager);
+
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         queryTagListener.setSearchAndSelectTagManager(this);
         searchView.setOnQueryTextListener(queryTagListener);
@@ -87,11 +98,11 @@ public class SearchAndSelectTagManager {
             @Override
             public void onClick(int position) {
                 Log.d(TAG, "Clicked on selected item");
-                Tag tag = selectedRV.getAdapter().getData(position);
-                selectedRV.getAdapter().removeData(position);
+                Tag tag = horizontalAdapter.get(position);
+                horizontalAdapter.remove(tag);
                 actionCounter();
                 if(suggestedRV != null) {
-                    suggestedRV.addItem(tag);
+                    suggestedAdapter.add(tag);
                 }
                 else {
                     searchView.setVisibility(View.VISIBLE);
@@ -101,17 +112,17 @@ public class SearchAndSelectTagManager {
         });
 
         if(suggestedRV != null) {
-            suggestedRV.addOnTagClickListener(new HashtagView.TagsClickListener() {
+            suggestedAdapter.setItemAdapterClickListener(new View.OnClickListener() {
                 @Override
-                public void onItemClicked(Object item) {
-                    Tag tag = (Tag) item;
+                public void onClick(View view) {
+                    int position = suggestedRV.getChildLayoutPosition(view);
+                    Tag tag = suggestedAdapter.get(position);
                     if (addTag(tag.getName())){
-                        suggestedRV.removeItem(item);
+                        suggestedAdapter.remove(tag);
                         actionCounter();
                     }
                 }
             });
-            suggestedRV.setData(new LinkedList<Tag>(), new DataTransformTag());
         }
     }
     /**
@@ -130,11 +141,12 @@ public class SearchAndSelectTagManager {
         searchHistory.search(term);
     }
 
-    public void setSuggestedData(List<Tag> tags) {
-        if(suggestedRV != null) {
-            suggestedRV.setData(tags);
-            horizontalAdapter.notifyDataSetChanged();
-        }
+    public void setSelectedTags(List<Tag> tags) {
+        horizontalAdapter.setData(tags);
+    }
+
+    public void setSuggestedTags(List<Tag> tags) {
+        if(suggestedRV != null) suggestedAdapter.setData(tags);
     }
 
     public boolean addTag(String tag) {
@@ -189,8 +201,8 @@ public class SearchAndSelectTagManager {
         return selectedRV != null && horizontalAdapter.getData().contains(tag);
     }
 
-    public boolean hasSuggestedTag(String tag) {
-        return true; //TODO Jack
+    public boolean hasSuggestedTag(String tagName) {
+        return suggestedAdapter.getTagStrings().contains(tagName);
     }
 
     public void actionCounter() {
