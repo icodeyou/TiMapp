@@ -47,7 +47,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
         return this;
     }
 
-    public HttpCallManager onFinally(FinallyCallback<T> callback) {
+    public HttpCallManager<T> onFinally(FinallyCallback<T> callback) {
         if (this.callbackGroup.isDone()){
             this.callbackGroup.onFinally(callback);
         }

@@ -328,8 +328,8 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
             Log.d(TAG, "Event is null");
             return;
         }
-        UserEvent statusInfo = EventStatusManager.getStatus(event);
-        showActivatedButton(statusInfo != null &&  statusInfo.status != UserEventStatusEnum.GONE, false);
+        showActivatedButton(EventStatusManager.hasUserStatus(event, UserEventStatusEnum.COMING)
+                || EventStatusManager.hasUserStatus(event, UserEventStatusEnum.HERE), false);
 
         mBinding.notifyChange();
     }

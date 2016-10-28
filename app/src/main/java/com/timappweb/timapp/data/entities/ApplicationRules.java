@@ -11,6 +11,9 @@ import java.util.List;
 public class ApplicationRules {
 
     @Expose
+    public boolean should_update = false;
+
+    @Expose
     public long token_duration = 86400;
 
     @Expose

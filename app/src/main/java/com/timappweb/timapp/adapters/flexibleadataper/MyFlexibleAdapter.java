@@ -18,6 +18,7 @@ import eu.davidea.flexibleadapter.items.ISectionable;
 public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	private static final String TAG = "MyFlexibleAdapter";
+	public int removeAllOffset = 0;
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -34,12 +35,16 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		setNotifyChangeOfUnfilteredItems(true);
 	}
 
-	public boolean addItem(AbstractFlexibleItem item){
+	public synchronized boolean addItem(AbstractFlexibleItem item){
 		return this.addItem(getItemCount(), item);
 	}
 
-	public boolean addBeginning(List<AbstractFlexibleItem> items){
-		return this.addItems(0, items);
+	public synchronized boolean addBeginning(List<AbstractFlexibleItem> items){
+		return this.addItems(removeAllOffset, items);
+	}
+
+	public void addBeginning(AbstractFlexibleItem item) {
+		this.addItem(0, item);
 	}
 
 	public int removeItems(ExpandableHeaderItem headerItem) {
@@ -54,7 +59,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		return size;
 	}
 
-	public void addSubItem(ExpandableHeaderItem headerItem, ISectionable item) {
+	public synchronized void addSubItem(ExpandableHeaderItem headerItem, ISectionable item) {
 		int size = headerItem.getSubItems() != null ? headerItem.getSubItems().size(): 0;
 		if (headerItem.isExpanded()){
 			addItemToSection(item, headerItem, size);
@@ -73,7 +78,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	}
 
 	public boolean hasData() {
-		return this.getItemCount() > 0;
+		return this.getDataCount() > 0;
 	}
 
 	public void removeProgressItem() {
@@ -96,9 +101,15 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 		return mItemsCopy;
 	}
 
-
-	public void removeAll() {
-		this.removeRange(0, getItemCount());
+	public synchronized void removeAll() {
+		this.removeRange(removeAllOffset, getItemCount());
 	}
 
+	public synchronized void onLoadMoreComplete(List<AbstractFlexibleItem> items) {
+		super.onLoadMoreComplete(items);
+	}
+
+	public int getDataCount() {
+		return this.getItemCount() - removeAllOffset;
+	}
 }

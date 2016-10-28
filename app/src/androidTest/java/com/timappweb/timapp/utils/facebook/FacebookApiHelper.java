@@ -86,7 +86,7 @@ public class FacebookApiHelper {
      *
      * Response:
      *  - string id The user ID of the test user.
-     *  - string access_token The access token for the test user and this app. This field is only visible if the test user has installed the app.
+     *  - string access_token The access token for the test user and this app. This remoteField is only visible if the test user has installed the app.
      *  - string login_url This URL will allow the test user account to be logged into. The URL will expire one hour after it is generated, or after the first time it is used.
      *
      * @return

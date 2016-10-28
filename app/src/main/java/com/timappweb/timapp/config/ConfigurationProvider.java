@@ -85,6 +85,11 @@ public class ConfigurationProvider{
         return applicationRules;
     }
 
+
+    public static void saveRules(){
+        KeyValueStorage.instance.set(KEY_APP_RULES, applicationRules);
+    }
+
     /**
      * load configuration:
      *      - if configuration is not up to date or not present it will start a SYNC immediately

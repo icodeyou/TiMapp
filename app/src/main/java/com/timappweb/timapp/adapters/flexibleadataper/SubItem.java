@@ -59,7 +59,7 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 
 	@Override
 	public void bindViewHolder(FlexibleAdapter adapter, ChildViewHolder holder, int position, List payloads) {
-		//In case of searchText matches with Title or with an SimpleItem's field
+		//In case of searchText matches with Title or with an SimpleItem's remoteField
 		// this will be highlighted
 		Context context = holder.itemView.getContext();
 		if (adapter.hasSearchText()) {
@@ -71,13 +71,6 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 
 		if (getHeader() != null) {
 			setSubtitle("Header " + getHeader().toString());
-		}
-
-		//This "if-else" is just an example of what you can do with item animation
-		if (adapter.isSelected(position)) {
-			adapter.animateView(holder.itemView, position, true);
-		} else {
-			adapter.animateView(holder.itemView, position, false);
 		}
 	}
 

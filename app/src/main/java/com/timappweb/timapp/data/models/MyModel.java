@@ -128,7 +128,7 @@ public class MyModel extends Model implements Observable, Serializable{
                                 if (fieldValue != null && !fieldValue.hasLocalId()){
                                     MyModel model = fieldValue.deepSave();
                                     field.set(this, model);
-                                    Log.d(TAG, "    - Saving deep association for field '" + field.getName());
+                                    Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName());
                                 }
                                 break;
                             case BELONGS_TO_MANY:
@@ -138,7 +138,7 @@ public class MyModel extends Model implements Observable, Serializable{
                                         this.deleteAssociation(annotation.joinModel());
                                     }
                                     this.saveBelongsToMany(fieldValues, annotation.joinModel());
-                                    Log.d(TAG, "    - Saving deep association for field '" + field.getName() + ": size=" + fieldValues.size());
+                                    Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName() + ": size=" + fieldValues.size());
                                 }
                                 break;
                         }
@@ -190,10 +190,10 @@ public class MyModel extends Model implements Observable, Serializable{
 
     /**
      * Notifies listeners that a specific property has changed. The getter for the property
-     * that changes should be marked with {@link Bindable} to generate a field in
+     * that changes should be marked with {@link Bindable} to generate a remoteField in
      * <code>BR</code> to be used as <code>fieldId</code>.
      *
-     * @param fieldId The generated BR id for the Bindable field.
+     * @param fieldId The generated BR id for the Bindable remoteField.
      */
     public void notifyPropertyChanged(int fieldId) {
         if (mCallbacks != null) {

@@ -62,11 +62,11 @@ public class AutoMergeCallback extends HttpCallback<JsonObject>{
 
         for (Map.Entry<String,JsonElement> entry: jsonObject.entrySet()){
             String fieldName = entry.getKey();
-            // First we need to find the corresponding field in our model
+            // First we need to find the corresponding remoteField in our model
             Field field = ReflectionHelper.getFieldRecursively(currentObject.getClass(), fieldName);
-            // We did not find any field corresponding
+            // We did not find any remoteField corresponding
             if (field == null){
-                Log.v(TAG, "Cannot find corresponding field: " + fieldName);
+                Log.v(TAG, "Cannot find corresponding remoteField: " + fieldName);
                 continue;
             }
             try {

@@ -45,12 +45,10 @@ public class InvitationActivityTest extends AbstractActivityTest{
     public void setUp(){
         this.idlingApiCall();
         this.systemAnimations(false);
+        super.beforeTest();
         mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), InvitationsActivity.class));
-
         // We need a gps location to hide the progress bar that simpleMessage distance to the user
         this.getMockLocationProvider().pushLocation(MockLocation.START_TEST);
-
-        super.beforeTest();
     }
 
     @After

@@ -15,9 +15,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
      */
     private View layoutFb;
     private View progressView;
-    private LoginButton loginButton;
+    private LoginButton facebookLoginButton;
     //private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mFacebookCallbackManager;
     //private FirebaseAuthProvider firebaseAuthProvider;
@@ -56,8 +56,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
 
         layoutFb = findViewById(R.id.layout_fb);
         progressView = findViewById(R.id.progress_view);
-        loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-
+        facebookLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
 
         initFacebookButton();
 
@@ -118,8 +117,8 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
     private void initFacebookButton() {
         // Initialize Facebook Login button
         mFacebookCallbackManager = CallbackManager.Factory.create();
-        loginButton.setReadPermissions(getResources().getStringArray(R.array.facebook_login_scope));
-        loginButton.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
+        facebookLoginButton.setReadPermissions(getResources().getStringArray(R.array.facebook_login_scope));
+        facebookLoginButton.registerCallback(mFacebookCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onFirebaseLoginSuccess:" + loginResult);
@@ -150,6 +149,7 @@ public class LoginActivity extends BaseActivity implements AuthManager.AuthState
                 Log.e(TAG, "Facebook connection failed : " + error);
             }
         });
+        LoginManager.getInstance().logOut();
     }
 
     @Override

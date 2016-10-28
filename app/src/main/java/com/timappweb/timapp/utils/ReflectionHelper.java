@@ -20,11 +20,11 @@ public class ReflectionHelper {
     public static Field getFieldRecursively(Class type, String fieldName) {
 
         try {
-            // Check if model has the corresponding field
+            // Check if model has the corresponding remoteField
             Field field = type.getDeclaredField(fieldName);
             Expose annotation = field.getAnnotation(Expose.class);
             if (!annotation.deserialize()){
-                Log.v(TAG, "The field '" + type.getSimpleName() + "." + fieldName + "' is not exposed to deserialization");
+                Log.v(TAG, "The remoteField '" + type.getSimpleName() + "." + fieldName + "' is not exposed to deserialization");
                 return null;
             }
             return field;

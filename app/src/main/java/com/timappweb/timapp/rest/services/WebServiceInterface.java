@@ -3,6 +3,7 @@ package com.timappweb.timapp.rest.services;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.entities.EventPeopleStats;
@@ -36,6 +37,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 /**
  * Created by stephane on 8/20/2015.
@@ -142,8 +144,8 @@ public interface WebServiceInterface {
     @GET("Posts/trending_tags")
     Call<List<Tag>> trendingTags(@QueryMap Map<String, String> conditions);
 
-    @GET("Tags/suggest/{term}")
-    Call<List<Tag>>  suggest(@Path("term") String term);
+    @GET("Tags/suggest")
+    Call<List<Tag>>  suggest(@Query("q") String term);
 
     @GET("SpotsTags/eventPost/{id}")
     Call<List<Tag>> loadTagsFromPost(@Path("id") int id);

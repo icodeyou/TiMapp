@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
-import com.timappweb.timapp.data.loader.sections.SectionDataLoader;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.LinkedList;
@@ -19,19 +18,17 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
  */
 public abstract class RecyclerViewManager<This> implements
         FlexibleAdapter.EndlessScrollListener,
-        SwipeRefreshLayout.OnRefreshListener,
-        FlexibleAdapter.OnUpdateListener{
+        SwipeRefreshLayout.OnRefreshListener{
 
     private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
 
     // ---------------------------------------------------------------------------------------------
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private View mNoDataView;
-
     protected RecyclerViewManager.ItemTransformer mItemTransformer;
     protected final MyFlexibleAdapter mAdapter;
     protected final Context mContext;
+    protected Runnable noDataCallback;
 
 
     public RecyclerViewManager(Context context, MyFlexibleAdapter adapter) {
@@ -40,24 +37,36 @@ public abstract class RecyclerViewManager<This> implements
     }
 
 
-    protected void onLoadEndUI() {
-        setRefreshing(false);
-        mAdapter.removeProgressItem();
-        this.onUpdateEmptyView(mAdapter.hasData() ? 1 : 0);
+    public void setRefreshing(final boolean state){
+        if (mSwipeRefreshLayout != null) {
+            //if (state){
+                // hack otherwise the refresh view is not shown
+                mSwipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(state);
+                    }
+                });
+            //}
+            //else{
+            //    mSwipeRefreshLayout.setRefreshing(state);
+            //}
+        }
     }
 
-    public void setRefreshing(boolean state){
-        if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(state);
-    }
-
-
-    protected void hideLoadMoreProgress() {
-        mAdapter.removeProgressItem();
-    }
 
     public This setNoDataView(final View noDataView) {
-        mAdapter.initializeListeners(this);
-        this.mNoDataView = noDataView;
+        this.noDataCallback = new Runnable() {
+            @Override
+            public void run() {
+                noDataView.setVisibility(View.VISIBLE);
+            }
+        };
+        return (This) this;
+    }
+
+    public This setOnNoDataCallback(Runnable callback) {
+        this.noDataCallback = callback;
         return (This) this;
     }
 
@@ -78,11 +87,6 @@ public abstract class RecyclerViewManager<This> implements
         return (This) this;
     }
 
-    @Override
-    public void onUpdateEmptyView(int size) {
-        //TODO Steph : is never called after the method setNoDataView ==> mNoDataView always null
-        if (mNoDataView != null) mNoDataView.setVisibility(size > 0 ? View.GONE : View.VISIBLE);
-    }
 
     // ---------------------------------------------------------------------------------------------
 

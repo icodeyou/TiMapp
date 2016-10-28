@@ -39,6 +39,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class ViewEventActivityTest extends AbstractActivityTest{
 
     private static final String TAG = "ViewEventActivityTest";
+
     @Rule
     public ActivityTestRule<EventActivity> mActivityRule = new ActivityTestRule<>(EventActivity.class, false, false);
 
@@ -48,6 +49,8 @@ public class ViewEventActivityTest extends AbstractActivityTest{
     public void startActivity(){
         //this.systemAnimations(false);
         this.idlingApiCall();
+
+        super.beforeTest();
 
         Intent intent = IntentsUtils.buildIntentViewPlace(MyApplication.getApplicationBaseContext(), EventsFixture.getPublicEvent());
         mActivityRule.launchActivity(intent);
@@ -59,8 +62,6 @@ public class ViewEventActivityTest extends AbstractActivityTest{
                 return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.latitude, MockLocation.START_TEST.longitude);
             }
         }, 2000);
-
-        super.beforeTest();
     }
 
     @After

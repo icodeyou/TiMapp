@@ -26,6 +26,7 @@ public class UpdateEventCallback extends HttpCallback<EventPointResponse> {
         }
         else if (event.picture != null){
             event.setBackgroundPicture(eventPoint.picture);
+            event.picture.event = event;
             event.picture.mySaveSafeCall();
         }
         event.mySaveSafeCall();

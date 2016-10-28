@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.timappweb.timapp.BuildConfig;
@@ -33,6 +35,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
 import com.timappweb.timapp.databinding.ActivityDrawerBinding;
@@ -42,6 +45,8 @@ import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -71,6 +76,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     // ---------------------------------------------------------------------------------------------
 
     private static IntentFilter         syncIntentFilter            = new IntentFilter(DataSyncAdapter.ACTION_SYNC_EVENT_FINISHED);
+    /*
     private BroadcastReceiver           syncBroadcastReceiver       = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -78,7 +84,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
             Log.d(TAG, "Sync finished, should refresh nao!!");
             EventStatusManager.updateCurrentEventStatus();
         }
-    };
+    };*/
     private View cameraButton;
     private View tagButton;
     private View inviteButton;
@@ -150,14 +156,19 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
     @Override
     protected void onRestart() {
         super.onRestart();
-        //TODO STEPH : Si on est dans la map => update Map Data // Liste => Update List Data.
+        // Si on est dans la map => update Map Data // Liste => Update List Data.
+        // TODO TEST
+        //if (exploreFragment != null && exploreFragment.mapFragment != null && exploreFragment.mapFragment.isVisible()){
+        //    exploreFragment.mapFragment.updateMapData();
+        //}
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //EventBus.getDefault().register(this);
         updateEventViewInHeader();
-        registerReceiver(syncBroadcastReceiver, syncIntentFilter);
+        //registerReceiver(syncBroadcastReceiver, syncIntentFilter);
         if (!LocationManager.hasLastLocation() && mWaitForLocationLayout == null){
             mWaitForLocationLayout = getLayoutInflater().inflate(R.layout.waiting_for_location_map, null);
             Button skipLocation = (Button) mWaitForLocationLayout.findViewById(R.id.action_skip);
@@ -177,7 +188,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
     @Override
     protected void onPause() {
-        unregisterReceiver(syncBroadcastReceiver);
+        //unregisterReceiver(syncBroadcastReceiver);
+        //EventBus.getDefault().unregister(this);
         super.onPause();
     }
 
@@ -259,8 +271,8 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
 
         MenuItem item = menu.findItem(R.id.action_clear_filter);
         if(exploreFragment != null) {
-            if(exploreFragment.getExploreMapFragment()!=null) {
-                if(exploreFragment.getExploreMapFragment().isFilterActive()){
+            if(exploreFragment.mapFragment!=null) {
+                if(exploreFragment.mapFragment.isFilterActive()){
                     item.setVisible(true);
                 } else {
                     item.setVisible(false);
@@ -385,6 +397,9 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 ConfigurationProvider.clearAll();
                 MyApplication.restart(this);
                 finish();
+                break;
+            case R.id.menu_item_dev_clear_cache:
+                new Delete().from(CursorPaginateDataLoader.CacheInfo.class).execute();
                 break;
             case R.id.menu_item_test_cam:
                 EasyImage.openCamera(this, 0);

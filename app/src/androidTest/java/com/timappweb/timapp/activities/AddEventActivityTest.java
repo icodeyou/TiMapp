@@ -52,6 +52,8 @@ public class AddEventActivityTest extends AbstractActivityTest {
         this.systemAnimations(false);
         this.idlingApiCall();
 
+        super.beforeTest();
+
         mActivityRule.launchActivity(new Intent(MyApplication.getApplicationBaseContext(), AddSpotActivity.class));
 
         this.getMockLocationProvider().route(new AbstractMockLocationProvider.MockLocationRoute() {
@@ -61,8 +63,6 @@ public class AddEventActivityTest extends AbstractActivityTest {
                 return AbstractMockLocationProvider.createMockLocation("MockedLocation", MockLocation.START_TEST.latitude, MockLocation.START_TEST.longitude);
             }
         }, 2000);
-
-        super.beforeTest();
 
     }
 

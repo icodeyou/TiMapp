@@ -13,19 +13,19 @@ android {
     }
     dataBinding {
         enabled = true
-        // enabledForTests = true // TODO [critical] when updating gradle to 2.3.0 uncoment this line
+        // enabledForTests = true // TODO [critical][#174] when updating gradle to 2.3.0 uncoment this line
         // See https://code.google.com/p/android/issues/detail?id=182715
     }
     dexOptions {
         preDexLibraries = false
         javaMaxHeapSize "4g"
     }
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.timappweb.timapp"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 9
         versionName "1.0.4"
         multiDexEnabled true
@@ -100,14 +100,15 @@ allprojects {
 }
 
 // Needed to resolve app vs test dependencies, specifically, transitive dependencies of
-// libraryq and libraryz. Forcing the use of the smaller version after regression testing.
+// test libraries and app libraries. Forcing the use of the smaller version after regression testing.
 configurations.all {
     // Indirect dependency between prod and test. We need this line to make sure there is'nt a conflict
-    // @link(https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK)
-    // @link(http://stackoverflow.com/questions/28641445/dependency-conflict-error-in-my-android-app-which-has-android-tests)
+    // @see https://sites.google.com/a/android.com/tools/tech-docs/new-build-system/user-guide#TOC-Resolving-conflicts-between-main-and-test-APK
+    // @see http://stackoverflow.com/questions/28641445/dependency-conflict-error-in-my-android-app-which-has-android-tests
     //androidTestCompile 'com.parse.bolts:bolts-android:1.2.0'
     //resolutionStrategy.force 'com.parse.bolts:bolts-android:1.2.0'
-    resolutionStrategy.force 'com.android.support:support-v4:23.4.0'
+    //resolutionStrategy.force 'com.android.support:support-v4:23.4.0'
+    //resolutionStrategy.force 'com.android.support:support-annotations:23.4.0' // To fix conflict with FlexibleAdapter
 }
 
 dependencies {
@@ -188,7 +189,7 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.github.cdflynn:crossview:v1.0.1'               // A toggling Add/Remove button
-    compile 'eu.davidea:flexible-adapter:5.0.0-b7'
+    compile 'eu.davidea:flexible-adapter:5.0.0-SNAPSHOT'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.twotoasters.jazzylistview:library-recyclerview:1.2.1'
     compile 'com.crystal:crystalpreloaders:1.0.0'

@@ -1,5 +1,6 @@
 package com.timappweb.timapp.rest.callbacks;
 
+import com.timappweb.timapp.rest.io.responses.ClientError;
 import com.timappweb.timapp.rest.io.responses.RestValidationError;
 
 import retrofit2.Response;
@@ -45,9 +46,9 @@ public abstract class HttpCallback<T> {
     // --------------------------------------------------------------------------------------------
     // 400
 
-    public void failure() {}
+    public void failure(ClientError clientError) {}
     public void badRequest(RestValidationError validationError){}
-    public void forbidden(){}
+    public void forbidden(ClientError clientError){}
     public void unauthorized(){}
     public void notFound(){}
 

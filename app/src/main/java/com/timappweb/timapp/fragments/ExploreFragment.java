@@ -32,7 +32,7 @@ public class ExploreFragment extends Fragment{
     private FrameLayout containerEvents;
     private View blurBackground;
     private ExploreEventsFragment eventsFragment;
-    private ExploreMapFragment mapFragment;
+    public ExploreMapFragment mapFragment;
     private View fab;
 
     private Menu menu;
@@ -47,7 +47,7 @@ public class ExploreFragment extends Fragment{
     }
 
     public AreaRequestHistory getAreaRequestHistory() {
-        return getExploreMapFragment().getHistory();
+        return mapFragment.getHistory();
     }
 
     /*
@@ -102,20 +102,20 @@ public class ExploreFragment extends Fragment{
         dataLoader.setLoadingListener(new LoadingListener() {
             @Override
             public void onLoadStart() {
-                if (getExploreMapFragment() != null) {
-                    getExploreMapFragment().setLoaderVisibility(true);
-                    if(getExploreMapFragment().getSelectingMarker() != null) {
-                        getExploreMapFragment().getSelectingMarker().setVisible(false);
+                if (mapFragment != null) {
+                    mapFragment.setLoaderVisibility(true);
+                    if(mapFragment.getSelectingMarker() != null) {
+                        mapFragment.getSelectingMarker().setVisible(false);
                     }
                 }
             }
 
             @Override
             public void onLoadEnd() {
-                if (getExploreMapFragment() != null) {
-                    getExploreMapFragment().setLoaderVisibility(false);
-                    if(getExploreMapFragment().getSelectingMarker() != null) {
-                        getExploreMapFragment().getSelectingMarker().setVisible(true);
+                if (mapFragment != null) {
+                    mapFragment.setLoaderVisibility(false);
+                    if(mapFragment.getSelectingMarker() != null) {
+                        mapFragment.getSelectingMarker().setVisible(true);
                     }
                 }
             }
@@ -141,8 +141,8 @@ public class ExploreFragment extends Fragment{
                 return true;
             case R.id.action_clear_filter:
                 MyApplication.searchFilter.tags.clear();
-                getExploreMapFragment().updateFilterView();
-                getExploreMapFragment().updateMapData();
+                mapFragment.updateFilterView();
+                mapFragment.updateMapData();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

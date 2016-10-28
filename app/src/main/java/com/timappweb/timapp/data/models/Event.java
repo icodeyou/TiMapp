@@ -48,6 +48,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     private static final String PROPERTY_LOCATION = "location";
     public static final String PROPERTY_INACTIVITY_THRESHOLD =  "inactivity_threshold";
 
+
     // =============================================================================================
     // DATABASE
 
@@ -234,6 +235,10 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public int getPoints() {
         int points = this.points - (Util.getCurrentTimeSec() - this.loaded_time);
         return points > 0 ? points : 0;
+    }
+
+    public boolean hasName(){
+        return this.name != null && this.name.length() > 0;
     }
 
     public int getLevel(){
