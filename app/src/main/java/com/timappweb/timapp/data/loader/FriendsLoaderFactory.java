@@ -28,7 +28,7 @@ public class FriendsLoaderFactory {
                 )
                 .initCache("UserFriends:"+MyApplication.getCurrentUser().getRemoteId(), 0)
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLocalQuery(new Select().from(UserFriend.class).where("UserSource = ?", MyApplication.getCurrentUser().getId()));
     }
 

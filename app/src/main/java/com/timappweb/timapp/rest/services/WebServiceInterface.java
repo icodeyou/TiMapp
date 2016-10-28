@@ -144,8 +144,8 @@ public interface WebServiceInterface {
     @GET("Posts/trending_tags")
     Call<List<Tag>> trendingTags(@QueryMap Map<String, String> conditions);
 
-    @GET("Tags/suggest/{term}")
-    Call<List<Tag>>  suggest(@Path("term") String term);
+    @GET("Tags/suggest")
+    Call<List<Tag>>  suggest(@Query("q") String term);
 
     @GET("SpotsTags/eventPost/{id}")
     Call<List<Tag>> loadTagsFromPost(@Path("id") int id);

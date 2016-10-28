@@ -33,8 +33,9 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolbar(boolean showTitle, int arrowColor) {
         initToolbar(showTitle);
-        //gradle v24 : abc_ic_ab_back_material
-        final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha, null);
+        //gradle v24 : abc_ic_ab_back_material /
+        // Before: abc_ic_ab_back_mtrl_am_alpha @see http://stackoverflow.com/questions/35632576/error-cannot-find-symbol-variable-abc-ic-ab-back-mtrl-am-alpha
+        final Drawable upArrow = ResourcesCompat.getDrawable(getResources(), android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material, null);
         upArrow.setColorFilter(arrowColor, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }

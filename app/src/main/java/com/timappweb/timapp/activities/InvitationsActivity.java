@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -93,7 +92,7 @@ public class InvitationsActivity extends BaseActivity{
                 })
                 .setLocalQuery(new Select().from(EventsInvitation.class).where("UserSource = ?", MyApplication.getCurrentUser().getId()))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLimit(LOCAL_LOAD_LIMIT);
 
         this.mRecyclerViewManager = new CursorPaginateManager<EventsInvitation>(this, adapter, mDataLoader)

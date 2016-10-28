@@ -30,7 +30,6 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
-import com.timappweb.timapp.data.loader.paginate.PaginateDataLoader;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -118,7 +117,7 @@ public class AddSpotActivity extends BaseActivity implements
                 )
                 .setQueryParams(options.toMap())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter());
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter());
                 //.setLimit(LOCAL_LOAD_LIMIT);
 
         new CursorPaginateManager<>(this, mAdapter, mDataLoader)

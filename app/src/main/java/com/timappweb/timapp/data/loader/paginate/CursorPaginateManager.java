@@ -8,8 +8,10 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.models.MyModel;
+import com.timappweb.timapp.utils.Util;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class CursorPaginateManager<DataType extends MyModel>
         extends RecyclerViewManager<CursorPaginateManager<DataType>>
         implements CursorPaginateDataLoader.Callback<DataType> {
 
+    private static final int            ENDLESS_SCROLL_THRESHOLD        = 1;
+
     private static final String TAG = "CursorPaginateManager";
     private final CursorPaginateDataLoader<DataType, ?> mDataLoader;
     private long minDelayForceRefresh   = -1;
@@ -30,6 +34,7 @@ public class CursorPaginateManager<DataType extends MyModel>
     private ExpandableHeaderItem expandableHeaderItem;
     private boolean clearOnRefresh = false;
     private CursorPaginateDataLoader.Callback<DataType> callback;
+    private boolean activeEndlessScroll = false;
 
     //private long minDelayAutoRefresh    = -1;
 
@@ -60,10 +65,10 @@ public class CursorPaginateManager<DataType extends MyModel>
 
     @Override
     public void onRefresh() {
-        if ( this.minDelayForceRefresh == -1 || this.lastRefresh == -1 ||
-                ((this.lastRefresh + this.minDelayForceRefresh) > System.currentTimeMillis())){
+        if ( this.minDelayForceRefresh == -1 || this.lastRefresh == -1 || Util.isOlderThan(this.lastRefresh, this.minDelayForceRefresh)){
             if (clearOnRefresh){
                 this.mDataLoader.deleteCache();
+                this.mDataLoader.cacheInfo.reset();
                 this.clearItems();
                 this.mDataLoader.loadNext();
             }
@@ -72,7 +77,8 @@ public class CursorPaginateManager<DataType extends MyModel>
             }
         }
         else{
-            Log.d(TAG, "Data up to date. Last update was: " + (this.lastRefresh !=  -1 ? ((System.currentTimeMillis() - this.lastRefresh)/1000) + " seconds ago" : " NEVER"));
+            Log.d(TAG, "Data up to date. Last update was: " + (this.lastRefresh !=  -1 ? ((System.currentTimeMillis() - this.lastRefresh)/1000) + " " +
+                    "seconds ago. Max delay: " + this.minDelayForceRefresh/1000 + " seconds" : " NEVER"));
             Toast.makeText(MyApplication.getApplicationBaseContext(), R.string.data_already_refresh, Toast.LENGTH_SHORT).show();
             setRefreshing(false);
         }
@@ -110,7 +116,6 @@ public class CursorPaginateManager<DataType extends MyModel>
 
     // ---------------------------------------------------------------------------------------------
 
-
     @Override
     public void onLoadEnd(List<DataType> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
         List<AbstractFlexibleItem> items = null;
@@ -126,11 +131,22 @@ public class CursorPaginateManager<DataType extends MyModel>
         setRefreshing(false);
         switch (type){
             case NEXT:
-                mAdapter.onLoadMoreComplete(items);
+                if (items != null) {
+                    if (expandableHeaderItem != null){
+                        for (AbstractFlexibleItem item: items){
+                            mAdapter.addSubItem(expandableHeaderItem, (ISectionable) item);
+                        }
+                    }
+                    else{
+                        mAdapter.onLoadMoreComplete(items);
+                        if (items.size() > 0 && !mDataLoader.hasMoreData()){
+                            mAdapter.onLoadMoreComplete(null);
+                        }
+                    }
+                }
                 break;
             case UPDATE:
                 if (items != null) {
-                    int i = 0;
                     for (AbstractFlexibleItem item : items) {
                         if (mAdapter.contains(item)) {
                             Log.d(TAG, "Updating existing item");
@@ -140,31 +156,28 @@ public class CursorPaginateManager<DataType extends MyModel>
                                 mAdapter.addSubItem(expandableHeaderItem, (ISectionable) item);
                             }
                             else{
-                                mAdapter.addItem(i++, item);
+                                mAdapter.addItem(item);
                             }
                         }
                     }
                 }
                 break;
             case PREV:
-                if (items != null) {
-                    if (expandableHeaderItem != null){
-                        for (AbstractFlexibleItem item: items){
-                            mAdapter.addSubItem(expandableHeaderItem, (ISectionable) item);
-                        }
-                    }
-                    else{
-                        mAdapter.addBeginning(items);
-                    }
-                }
+                mAdapter.addBeginning(items);
                 break;
         }
 
-        if (!mAdapter.hasData()){
-            if (this.noDataCallback != null) this.noDataCallback.run();
+        if (!mAdapter.hasData() && this.noDataCallback != null){
+            this.noDataCallback.run();
         }
 
         if (this.callback != null) this.callback.onLoadEnd(data, type, overwrite);
+
+        if (this.activeEndlessScroll && mDataLoader.hasMoreData()){
+            mAdapter.setEndlessScrollListener(this, new ProgressItem());
+            mAdapter.setEndlessScrollThreshold(ENDLESS_SCROLL_THRESHOLD);
+        }
+        this.activeEndlessScroll = false;
     }
 
     @Override
@@ -202,4 +215,15 @@ public class CursorPaginateManager<DataType extends MyModel>
         this.callback = callback;
         return this;
     }
+
+
+    /**
+     * We only set the endless scroll once the first load is done
+     * @return
+     */
+    public CursorPaginateManager<DataType> enableEndlessScroll() {
+        this.activeEndlessScroll = true;
+        return this;
+    }
+
 }

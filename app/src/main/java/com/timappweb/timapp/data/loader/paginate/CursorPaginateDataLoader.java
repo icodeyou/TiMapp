@@ -11,6 +11,7 @@ import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -19,6 +20,7 @@ import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,26 +37,20 @@ import retrofit2.http.Url;
 
 public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType extends MyModel> {
 
+
     public enum LoadType {NEXT, PREV, UPDATE}
 
     private static final String TAG = "CursorPaginateDataLoad";
-
     private boolean hasInCache = false;
-
-    private     CacheInfo   cacheInfo;
+    public CacheInfo   cacheInfo;
     private List<PaginateFilter> filters;
-
     private From localBaseQuery;
-
     protected Callback<DataType> callback;
     protected HttpCallManager<ResponseWrapper<JsonObject>> currentCallManager;
-
     private Map<String, String> queryParams;
-
     private final Class<RemoteType> remoteClazz;
     private final CursorPaginateBackend service;
     private final Gson gson;
-
     private CacheCallback<DataType, RemoteType> cacheCallback;
 
     private CursorPaginateDataLoader(Class<RemoteType> remoteClazz) {
@@ -94,9 +90,16 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         return this;
     }
 
+    public CursorPaginateDataLoader addQueryParam(String key, String value) {
+        if (this.queryParams == null) this.queryParams = new HashMap<>();
+        this.queryParams.put(key, value);
+        return this;
+    }
+
     public void deleteCache(){
         if (this.cacheInfo.cacheId != null)
             new Delete().from(CacheInfo.class).where("CacheId = ?", this.cacheInfo.cacheId).execute();
+
     }
 
     public void saveInCache() throws Exception {
@@ -177,6 +180,9 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             }
             return ;
         }
+        if (!this.hasMoreData()){
+            if (callback != null) callback.onLoadEnd(null, loadType, false);
+        }
 
         if (loadType == LoadType.NEXT && this.hasInCache){
             if (callback != null) callback.onLoadStart(loadType);
@@ -195,7 +201,6 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         }
     }
 
-
     private void localLoad(){
         Log.i(TAG, "Loading from local db");
         From from = this.localBaseQuery;
@@ -212,7 +217,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
         if (items.size() == 0){
             Log.d(TAG, "There is no data in cache, trigger server load");
-            this.cacheInfo.nextUrl = this.cacheInfo.initialUrl;
+            this.cacheInfo.reset();
+            this.hasInCache = false;
             this.remoteLoad(LoadType.NEXT);
             return;
         }
@@ -283,6 +289,11 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         else{
             this._load(LoadType.UPDATE);
         }
+    }
+
+
+    public boolean hasMoreData() {
+        return this.cacheInfo.nextUrl != null || this.hasInCache;
     }
 
     public void setCallback(Callback<DataType> callback) {
@@ -460,6 +471,11 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
                     ", prevUrl='" + prevUrl + '\'' +
                     '}';
         }
+
+        public void reset() {
+            nextUrl = this.initialUrl;
+            lastUpdate = -1;
+        }
     }
 
 
@@ -500,6 +516,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             return res;
         }
 
+        // TODO manage duplicate
         public void localQuery(From from){
             if (value != null){
                 if (this.order == DESC){
@@ -519,11 +536,11 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             this.value = this.transformer.transform(model);
         }
 
-        public static PaginateFilter createIdFilter() {
+        public static PaginateFilter createSyncIdFilter() {
             return new CursorPaginateDataLoader.PaginateFilter("SyncId", "id", CursorPaginateDataLoader.PaginateFilter.DESC, getSyncIdTransformer());
         }
 
-        private static CursorPaginateDataLoader.FilterValueTransformer<SyncBaseModel> getSyncIdTransformer(){
+        public static CursorPaginateDataLoader.FilterValueTransformer<SyncBaseModel> getSyncIdTransformer(){
             if (syncIdTransformer == null){
                 syncIdTransformer = new CursorPaginateDataLoader.FilterValueTransformer<SyncBaseModel>(){
                     @Override

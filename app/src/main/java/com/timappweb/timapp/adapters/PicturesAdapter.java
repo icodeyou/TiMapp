@@ -20,16 +20,14 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 public class PicturesAdapter extends MyFlexibleAdapter {
 
 
-    private int gridColumnNumber;
-
     //private String baseUrl = "";
 
     //Constructor
     public PicturesAdapter(Context context, int pictureGridColumnNb) {
         super(context);
-        gridColumnNumber = pictureGridColumnNb;
+        removeAllOffset = pictureGridColumnNb;
 
-        for (int i = 0; i < gridColumnNumber; i++){
+        for (int i = 0; i < removeAllOffset; i++){
             addItem(i, new PlaceHolderItem("PLACEHOLDER" + i));
         }
     }
@@ -37,15 +35,6 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     public boolean addItem(AbstractFlexibleItem item){
         super.addItem(getItemCount(), item);
         return false;
-    }
-
-    @Override
-    public boolean addBeginning(List<AbstractFlexibleItem> items) {
-        return this.addItems(gridColumnNumber, items);
-    }
-
-    public int getDataCount(){
-        return this.getItemCountOfTypes(R.layout.item_picture);
     }
 
     @Override
@@ -67,7 +56,7 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     }
 
     public int getGridColumnNumber() {
-        return gridColumnNumber;
+        return removeAllOffset;
     }
 
     public Picture getPicture(int position) {
@@ -78,8 +67,4 @@ public class PicturesAdapter extends MyFlexibleAdapter {
         return null;
     }
 
-    @Override
-    public void removeAll() {
-        this.removeRange(gridColumnNumber, getItemCount());
-    }
 }

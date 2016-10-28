@@ -15,7 +15,7 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
 
     private final int actionType;
     private final Event event;
-    private final boolean udateEvent;
+    private final boolean updateEvent;
 
     public PublishInEventCallback(Event event, User user, int actionType) {
         this(event, user, actionType, true);
@@ -28,23 +28,19 @@ public class PublishInEventCallback<T> extends HttpCallback<T> {
     public PublishInEventCallback(Event event, User user, int actionType, boolean b) {
         this.actionType = actionType;
         this.event = event;
-        this.udateEvent = b;
+        this.updateEvent = b;
     }
 
     @Override
     public void successful(T feedback) {
         if (actionType != -1) QuotaManager.instance().add(actionType);
-        if (udateEvent){
+        if (updateEvent){
             RestClient.buildCall(RestClient.service().updateEventInfo(event.getRemoteId(), event.hasPicture() ? event.getPicture().getRemoteId() : 0))
                     .onResponse(new UpdateEventCallback(event))
                     .perform();
         }
         if (actionType == QuotaType.ADD_PICTURE || actionType == QuotaType.ADD_TAGS){
-            if (EventStatusManager.hasCurrentEvent() && !EventStatusManager.getCurrentEvent().equals(event)){
-                // TODO add here status permanentely (we need the sync id from the server...)
-                EventStatusManager.setCurrentEvent(event);
-            }
-
+            EventStatusManager.setCurrentEvent(event);
         }
     }
 

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
+import com.google.common.eventbus.EventBus;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
@@ -18,6 +20,7 @@ import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.ClientError;
 import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
+import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 
@@ -30,10 +33,14 @@ import retrofit2.Call;
  */
 public class EventStatusManager {
 
+    private static final String KEY_CURRENT_EVENT = "current_event";
     private static final String TAG = "EventStatusManager";
+
+    // ---------------------------------------------------------------------------------------------
+
     private static EventStatusManager _instance = null;
     private static Event currentEvent;
-    private static LastCallInfo lastCallInfo;
+    //private static LastCallInfo lastCallInfo;
 
     public static boolean isCurrentEvent(long eventId) {
         return currentEvent != null && currentEvent.getRemoteId() == eventId;
@@ -44,11 +51,12 @@ public class EventStatusManager {
         currentEvent = null;
     }
 
+    /*
     private class LastCallInfo{
         public HttpCallManager httpCallManager;
         public UserEventStatusEnum status;
         public long eventId;
-    }
+    }*/
 
     public static EventStatusManager instance(){
         if (_instance == null){
@@ -70,10 +78,9 @@ public class EventStatusManager {
      * @param status
      */
     public HttpCallManager add(final Context context, final Event event, final UserEventStatusEnum status, long callDelay) {
-
-        if (this.isDuplicateRequest(event, status)){
-            return null;
-        }
+        //if (this.isDuplicateRequest(event, status)){
+        //    return null;
+        //}
         Log.d(TAG, "Initialize request to set status=" + status + " for event=" + event);
 
         Call<UserEvent> call;
@@ -92,13 +99,14 @@ public class EventStatusManager {
                 Util.appStateError(TAG, "Trying to add an invalid status: " + status);
                 return null;
         }
-
+    /*
         if (lastCallInfo == null){
             lastCallInfo = new LastCallInfo();
         }
         lastCallInfo.eventId = event.getRemoteId();
         lastCallInfo.status = status;
-        lastCallInfo.httpCallManager = RestClient.buildCall(call)
+        lastCallInfo.httpCallManager;*/
+        return RestClient.buildCall(call)
                 .setCallDelay(callDelay)
                 .onResponse(new HttpCallback<UserEvent>() {
                     @Override
@@ -110,7 +118,7 @@ public class EventStatusManager {
                         try {
                             Log.d(TAG, "Success register status=" + status + " for user on event: " + event);
                             userEvent.event = event;
-                            EventStatusManager.addStatus(userEvent);
+                            EventStatusManager.addLocally(userEvent);
                         } catch (CannotSaveModelException e) {
                             Log.e(TAG, "CannotSaveModelException: " + e.getMessage());
                         }
@@ -125,27 +133,21 @@ public class EventStatusManager {
                     }
                 })
                 .perform();
-        return lastCallInfo.httpCallManager;
     }
 
-    private static UserEvent addStatus(UserEvent userEvent) throws CannotSaveModelException {
+    private static UserEvent addLocally(UserEvent userEvent) throws CannotSaveModelException {
         userEvent.user = MyApplication.getCurrentUser();
         userEvent.setCreated(System.currentTimeMillis());
         userEvent = userEvent.deepSave();
         if (userEvent.status == UserEventStatusEnum.HERE){
             EventStatusManager.setCurrentEvent(userEvent.event);
-
-            // Cancel other here status on client side
-            Log.d(TAG, "User ID" + userEvent.getId());
             new Delete()
                     .from(UserEvent.class)
                     .where("User = ? AND Status = ? AND Id != ?", userEvent.user.getId(), UserEventStatusEnum.HERE, userEvent.getId())
                     .execute();
-            // Cancel on remote side
-            // TODO
         }
         // If we add the GONE status to our current event
-        if (userEvent.status == UserEventStatusEnum.GONE){
+        else if (userEvent.status == UserEventStatusEnum.GONE){
             if (currentEvent != null && currentEvent.equals(userEvent.event)){
                 setCurrentEvent(null);
             }
@@ -159,13 +161,29 @@ public class EventStatusManager {
         eventStatus.setRemoteId(syncId);
         eventStatus.status = status;
         eventStatus.event = event;
-        return addStatus(eventStatus);
+        return addLocally(eventStatus);
     }
-    /**
-     *  @param context
-     * @param event
-     * @param status
-     */
+
+    private RestQueryParams _buildQuery(Event event){
+        RestQueryParams conditions = new RestQueryParams();
+        //conditions.setAnonymous(false);
+        conditions.setUserLocation(LocationManager.getLastLocation());
+        return conditions;
+    }
+
+    private static UserEvent getStatus(Event event) {
+        User user = MyApplication.getCurrentUser();
+        if (user == null) return null;
+
+        return new Select()
+                .from(UserEvent.class)
+                .where("User = ? AND Event = ?", event.getId(), user.getId())
+                .orderBy("SyncId DESC")
+                .executeSingle();
+    }
+
+    /*
+
     public HttpCallManager cancel(final Context context, final Event event, final UserEventStatusEnum status) {
         Call<RestFeedback> call;
         // TODO call must be cancelable
@@ -196,14 +214,6 @@ public class EventStatusManager {
 
                 });
     }
-
-    private RestQueryParams _buildQuery(Event event){
-        RestQueryParams conditions = new RestQueryParams();
-        //conditions.setAnonymous(false);
-        conditions.setUserLocation(LocationManager.getLastLocation());
-        return conditions;
-    }
-
     public HttpCallManager cancel(Context context, Event event) {
         User user = MyApplication.getCurrentUser();
         if (user == null) return null;
@@ -211,12 +221,6 @@ public class EventStatusManager {
                 ? UserEventStatusEnum.COMING
                 : UserEventStatusEnum.HERE;
         return cancel(context, event, status);
-    }
-
-    public static UserEvent getStatus(Event event) {
-        User user = MyApplication.getCurrentUser();
-        if (user == null) return null;
-        return UserEvent.getStatus(event.getId(), user.getId());
     }
 
     public static boolean hasStatus(long placeId, UserEventStatusEnum status) {
@@ -258,7 +262,7 @@ public class EventStatusManager {
 
         return false;
     }
-
+*/
 
 
     // ---------------------------------------------------------------------------------------------
@@ -270,40 +274,44 @@ public class EventStatusManager {
         if (currentEvent != null){
             return currentEvent;
         }
-        UserEvent lastHereStatus = UserEvent.getCurrentEventStatus();
-        if (lastHereStatus == null){
-            return currentEvent;
+        long eventId = KeyValueStorage.out().getLong(KEY_CURRENT_EVENT, -1);
+        if (eventId == -1){
+            return null;
+        }
+        Event event = Event.loadByRemoteId(Event.class, eventId);
+
+        if (event.isOver()){
+            if (event.getLastSync() > event.last_activity){
+                KeyValueStorage.in().remove(KEY_CURRENT_EVENT).commit();
+                event = null;
+            }
+            else{
+                event.requestSync();
+                // TODO [critical] notify on sync end
+            }
         }
 
-        Event event = lastHereStatus.event;
-        if (event.isOver()){
-            // If event is hover but we didn't updated the data when it was done
-            // TODO [critical] it's not valid anymore i think...
-            if (event.getLastSync() < event.getTimestampPoints()){
-                Log.i(TAG, "Request update for this event. It may be hover. " + event);
-                event.requestSync();
-            }
-            // TODO [critical] Event is over and already sync so we must clear the status...
-            else {
-                Log.i(TAG, "Event is now over: " + event);
-                return null;
-            }
-        }
         currentEvent = event;
         return currentEvent;
     }
 
-    public static Event updateCurrentEventStatus(){
-        currentEvent = null;
-        return getCurrentEvent();
-    }
-
-    public static boolean hasCurrentEvent(){
-        return getCurrentEvent() != null;
-    }
-
     public static void setCurrentEvent(Event currentEvent) {
         EventStatusManager.currentEvent = currentEvent;
+        if (currentEvent != null){
+            KeyValueStorage.in().putLong(KEY_CURRENT_EVENT, currentEvent.getRemoteId()).commit();
+        }
+        else{
+            KeyValueStorage.in().remove(KEY_CURRENT_EVENT).commit();
+        }
     }
 
+    public static boolean hasUserStatus(Event event, UserEventStatusEnum status) {
+        if (status == UserEventStatusEnum.HERE){
+            return KeyValueStorage.out().getLong(KEY_CURRENT_EVENT, -1) == event.getRemoteId();
+        }
+        else {
+            UserEvent currentUserStatusInfo = getStatus(event);
+            return currentUserStatusInfo != null && currentUserStatusInfo.event.getRemoteId() == event.getRemoteId();
+        }
+    }
 }

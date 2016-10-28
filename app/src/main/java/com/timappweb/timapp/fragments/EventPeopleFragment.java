@@ -30,6 +30,7 @@ import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
+import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.List;
@@ -121,10 +122,12 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     }
 
     private CursorPaginateManager<UserEvent> initUserStatusLoader(UserEventStatusEnum status, final ExpandableHeaderItem headerItem) {
+
         CursorPaginateDataLoader<UserEvent,UserEvent> dataLoader = CursorPaginateDataLoader.<UserEvent,UserEvent>create(
-                    "PlacesUsers/index",
+                    "PlacesUsers/event/" + getEvent().getRemoteId(),
                         UserEvent.class
                 )
+                .addQueryParam("status", status.toString().toLowerCase())
                 .initCache("PlacesUsers:" + status.toString() + ":" + getEvent().getRemoteId(), 3600 * 1000) // never expire
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<UserEvent, UserEvent>() {
                     @Override
@@ -135,7 +138,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 })
                 .setLocalQuery(new Select().from(UserEvent.class).where("Event = ? AND Status = ?", getEvent().getId(), status))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLimit(LOCAL_LOAD_LIMIT);
 
 
@@ -158,7 +161,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
                     @Override
                     public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {
-
+                        notifyLoadsEnd(type);
                     }
 
                     @Override
@@ -171,7 +174,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
 
     private CursorPaginateManager<EventsInvitation> initInviteSentLoader() {
         CursorPaginateDataLoader<EventsInvitation, EventsInvitation> dataLoader = CursorPaginateDataLoader.<EventsInvitation, EventsInvitation>create(
-                    "PlacesUsers/event/" + getEvent().getRemoteId(),
+                    "PlacesInvitations/sent/" + getEvent().getRemoteId(),
                     EventsInvitation.class
                 )
                 .initCache("PlacesInvitations:" + getEvent().getRemoteId(), 3600 * 1000) // never expire
@@ -179,19 +182,20 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     @Override
                     public EventsInvitation beforeSaveModel(EventsInvitation model) {
                         model.event = getEvent();
+                        model.user_target = MyApplication.getCurrentUser();
                         return model;
                     }
                 })
-                .setLocalQuery(new Select().from(UserEvent.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
+                .setLocalQuery(new Select().from(EventsInvitation.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter())
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLimit(LOCAL_LOAD_LIMIT);
 
         return new CursorPaginateManager<EventsInvitation>(getContext(), mPlaceUsersAdapter, dataLoader)
                 .setSubSection(mExpandableInviteHeader)
-                .setItemTransformer(new RecyclerViewManager.ItemTransformer<UserEvent>() {
+                .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventsInvitation>() {
                     @Override
-                    public AbstractFlexibleItem createItem(UserEvent invitation) {
+                    public AbstractFlexibleItem createItem(EventsInvitation invitation) {
                         return new SubUserItem("INVITATION-" + String.valueOf(invitation.getRemoteId()), invitation.getUser(), mExpandableInviteHeader);
                     }
                 })
@@ -206,7 +210,9 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     }
 
                     @Override
-                    public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {}
+                    public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType type) {
+                        notifyLoadsEnd(type);
+                    }
 
                     @Override
                     public void onLoadStart(CursorPaginateDataLoader.LoadType type) {}
@@ -221,6 +227,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
     /**
      *
      */
+    /*
     private void loadPeopleStats(){
         if (mExpandableHereHeader != null || mExpandableComingHeader != null){
             mSwipeLayout.setRefreshing(true);
@@ -235,7 +242,8 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     .onError(new NetworkErrorCallback(getContext()))
                     .perform();
         }
-    }
+    }*/
+
     @SuppressWarnings({"ConstantConditions", "NullableProblems"})
     private void initializeRecyclerView(Bundle savedInstanceState) {
         //Experimenting NEW features (v5.0.0)
@@ -272,7 +280,17 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
             mRecyclerView.smoothScrollToPosition(0);
         }
         if (loadCounter != null) return;
+        this.onRefresh();
+    }
 
+
+    @Override
+    public void onTabUnselected() {
+
+    }
+
+    @Override
+    public void onRefresh() {
         loadCounter = new AtomicInteger(0);
         mSwipeLayout.setRefreshing(true);
         if (mExpandableHereHeader != null) {
@@ -287,17 +305,6 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
             loadCounter.incrementAndGet();
             inviteSentManager.load();
         }
-    }
-
-    @Override
-    public void onTabUnselected() {
-
-    }
-
-
-    @Override
-    public void onRefresh() {
-        this.loadPeopleStats();
     }
 
 }

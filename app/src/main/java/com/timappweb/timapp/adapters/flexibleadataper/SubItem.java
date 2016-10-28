@@ -72,13 +72,6 @@ public class SubItem extends AbstractModelItem<SubItem.ChildViewHolder>
 		if (getHeader() != null) {
 			setSubtitle("Header " + getHeader().toString());
 		}
-
-		//This "if-else" is just an example of what you can do with item animation
-		if (adapter.isSelected(position)) {
-			adapter.animateView(holder.itemView, position, true);
-		} else {
-			adapter.animateView(holder.itemView, position, false);
-		}
 	}
 
 	@Override

@@ -48,6 +48,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     private static final String PROPERTY_LOCATION = "location";
     public static final String PROPERTY_INACTIVITY_THRESHOLD =  "inactivity_threshold";
 
+
     // =============================================================================================
     // DATABASE
 

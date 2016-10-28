@@ -17,18 +17,16 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
+import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.TagItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
-import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
-import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.List;
@@ -76,7 +74,6 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
         tagsAndCountersAdapter = new TagsAndCountersAdapter(getActivity());
 
         return view;
-
     }
 
     @Override
@@ -84,6 +81,8 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
         super.onViewCreated(view, savedInstanceState);
 
         mAdapter = new MyFlexibleAdapter(getContext());
+        mAdapter.removeAllOffset = 1;
+        mAdapter.addItem(new PlaceHolderItem("PLACEHOLDER_EVENT_TAGS_FRAGMENT"));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setHasFixedSize(true);
 
@@ -123,7 +122,12 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                                 return model.count_ref;
                             }
                         }))
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter());
+                .addFilter(new CursorPaginateDataLoader.PaginateFilter("id", "id", CursorPaginateDataLoader.PaginateFilter.DESC, new CursorPaginateDataLoader.FilterValueTransformer<MyModel>() {
+                    @Override
+                    public Object transform(MyModel model) {
+                        return model.getId();
+                    }
+                }));
 
         this.mRecyclerViewManager = new CursorPaginateManager<EventTag>(getContext(), mAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventTag>() {
@@ -136,6 +140,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                 .setNoDataView(noTagsView)
                 .setSwipeRefreshLayout(mSwipeRefreshLayout)
                 .enableEndlessScroll()
+                .setClearOnRefresh(true)
                 .setCallback(this)
                 .load();
     }
@@ -143,7 +148,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
     private void loadDataIfNeeded() {
         if (mRecyclerViewManager != null || !isAdded()) return;
         initDataLoader();
-        this.mRecyclerViewManager.load();
+        //this.mRecyclerViewManager.load();
     }
 
     @Override

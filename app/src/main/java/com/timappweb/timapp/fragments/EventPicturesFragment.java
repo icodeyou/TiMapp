@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.google.gson.JsonObject;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -34,9 +33,7 @@ import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
@@ -71,6 +68,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
 
     private static final String         TAG                             = "EventPicturesFragment";
     private static final long           REMOTE_LOAD_LIMIT               = 10;
+    private static final long           CACHE_DURATION = 3600 * 1000;
     public static int                   PICTURE_GRID_COLUMN_NB          = 2;
     private static final long           MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
     private static final long           MIN_DELAY_AUTO_REFRESH          = 5 * 60 * 1000;
@@ -179,6 +177,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
 
     private void initAdapter() {
         picturesAdapter = new PicturesAdapter(getActivity(), PICTURE_GRID_COLUMN_NB);
+        mRecyclerView.setAdapter(picturesAdapter);
 
         picturesAdapter.setAutoScrollOnExpand(true);
         picturesAdapter.setHandleDragEnabled(true);
@@ -216,7 +215,6 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                 }
             }
         });
-        mRecyclerView.setAdapter(picturesAdapter);
         mRecyclerView.setHasFixedSize(true); //Size of RV will not change
         mRecyclerView.setItemAnimator(new DefaultItemAnimator() {
             @Override
@@ -361,7 +359,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         mDataLoader = CursorPaginateDataLoader.<Picture, Picture>create(
                         getString(R.string.api_base_url) + "  pictures/event/" + getEvent().getRemoteId(),
                         Picture.class)
-                .initCache("EventPicture" + eventActivity.getEvent().getRemoteId(), 3600 * 1000)
+                .initCache("EventPicture" + eventActivity.getEvent().getRemoteId(), CACHE_DURATION)
                 .setLocalQuery(new Select().from(Picture.class).where("Event = ?", getEvent().getId()))
                 //.setLimit(8)
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<Picture, Picture>() {
@@ -372,7 +370,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                     }
                 })
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createIdFilter());
+                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter());
         paginatorManager = new CursorPaginateManager<Picture>(getContext(), picturesAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Picture>(){
                     @Override
