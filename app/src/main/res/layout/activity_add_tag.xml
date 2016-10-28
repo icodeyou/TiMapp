@@ -38,31 +38,9 @@
 
         <!-- SUGGESTED TAGS -->
         <!-- **********************************************************************-->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:id="@+id/scroll_view_suggested_tags">
-            <com.greenfrvr.hashtagview.HashtagView
-                android:id="@+id/rv_search_suggested_tags"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_tags"
-                app:rowDistribution="none"
-                app:tagTextSize="@dimen/text_normal"
-                app:tagTextGravity="center"
-                app:tagBackground="@drawable/tag_background"
-                app:dynamicMode="true"
-                app:tagEllipsize="marquee"
-                app:tagPaddingBottom="@dimen/tag_padding"
-                app:tagPaddingLeft="@dimen/tag_padding"
-                app:tagPaddingRight="@dimen/tag_padding"
-                app:tagPaddingTop="@dimen/tag_padding"
-                app:rowMargin="@dimen/tag_margin"
-                app:tagMargin="@dimen/tag_margin"
-                app:tagTextColor="@color/White"
-                />
-        </ScrollView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_suggested_tags"
+            style="@style/SuggestedTags"/>
 
     </LinearLayout>
 

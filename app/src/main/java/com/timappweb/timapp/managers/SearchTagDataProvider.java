@@ -60,9 +60,10 @@ public abstract class SearchTagDataProvider implements SearchHistory.DataProvide
     public void onSearchComplete(String term, List<Tag> tags) {
         if ( manager.getSearchHistory().isLastSearch(term)) {
             if (!manager.hasSuggestedTag(term)){
+                //TODO : test this !
                 tags.add(new Tag(term));
             }
-            manager.setSuggestedData(tags);
+            manager.setSuggestedTags(tags);
         }
     }
 }

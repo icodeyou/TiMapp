@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.util.Log;
@@ -13,7 +14,6 @@ import android.widget.Toast;
 
 import com.activeandroid.query.From;
 import com.google.gson.JsonObject;
-import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -56,10 +56,7 @@ public class AddTagActivity extends BaseActivity{
     private Event                                   currentEvent = null;
 
     // @Bind(R.remote_id.hashtags1)
-    protected HashtagView                           suggestedTagsView;
-    private SearchView                              searchView;
 
-    private View                                    selectedTagsView;
     private EventPost                               eventEventPost;
 
     private Menu menu;
@@ -88,9 +85,8 @@ public class AddTagActivity extends BaseActivity{
 
         setContentView(R.layout.activity_add_tag);
         this.initToolbar(false);
-        selectedTagsView = findViewById(R.id.rv_selected_tags);
+        View selectedTagsView = findViewById(R.id.rv_selected_tags);
         selectedTagsRV = (HorizontalTagsRecyclerView) selectedTagsView;
-        suggestedTagsView = (HashtagView) findViewById(R.id.rv_search_suggested_tags);
         progressStartView = findViewById(R.id.progress_view);
         //progressStartView.setVisibility(View.VISIBLE);
     }
@@ -103,7 +99,7 @@ public class AddTagActivity extends BaseActivity{
         this.menu = menu;
         this.context = this;
 
-        searchView = initSearchView(menu);
+        SearchView searchView = initSearchView(menu);
         searchView.requestFocus();
         searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -111,7 +107,7 @@ public class AddTagActivity extends BaseActivity{
         //set hint for searchview;
         SearchAndSelectTagManager searchAndSelectTagManager = new SearchAndSelectTagManager(this,
                 searchView,
-                suggestedTagsView,
+                (RecyclerView) findViewById(R.id.rv_suggested_tags),
                 selectedTagsRV,
                 new OnSuggestQueryListener(),
                 findViewById(R.id.action_validate_tags),

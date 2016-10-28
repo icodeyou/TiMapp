@@ -71,8 +71,7 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
     @CreateAuthAction
     @Ignore
     public void pickTags() {
-        // This test is not working yet, we need to find a way to perform actions on
-        // com.greenfrvr.hashtagview.HashtagView
+        // TODO
         new PickTagsForm()
             .pick(0)
             .pick(3)

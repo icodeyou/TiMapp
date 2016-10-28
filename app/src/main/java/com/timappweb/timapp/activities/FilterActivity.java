@@ -2,6 +2,7 @@ package com.timappweb.timapp.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.util.Log;
@@ -10,10 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-import com.greenfrvr.hashtagview.HashtagView;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.DataTransformTag;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnSuggestQueryListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
@@ -29,10 +28,7 @@ public class FilterActivity extends BaseActivity {
     //private BubbleCategoryAdapter     categoriesAdapter;
     //private RecyclerView              categoriesRv;
     //private List<EventCategory>       categoriesSelected;
-    private HorizontalTagsRecyclerView  selectedTagsRecyclerView;
-    private HashtagView                 hashtagView;
-    private View                        tagScrollView;
-    private SearchView                  searchView;
+    private SearchAndSelectTagManager   searchAndSelectTagManager;
 
     ////////////////////////////////////////////////////////////////////////////////
     //// onCreate
@@ -45,11 +41,8 @@ public class FilterActivity extends BaseActivity {
 
         progressBarView = findViewById(R.id.progress_view);
         //categoriesRv = (RecyclerView) findViewById(R.remote_id.rv_categories);
-        selectedTagsRecyclerView = (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags);
-        hashtagView = (HashtagView) findViewById(R.id.rv_suggested_tags_filter);
-        tagScrollView = findViewById(R.id.tags_scrollview);
 
-        initAdapterAndManager();
+        //initCategories();
         //initCategoriesSelected();
 
         this.initToolbar(false);
@@ -59,10 +52,10 @@ public class FilterActivity extends BaseActivity {
     protected void onResume() {
         Log.d(TAG, "FilterActivity::onResume()");
         super.onResume();
-        selectedTagsRecyclerView.getAdapter().setData(MyApplication.searchFilter.tags);
+        if(searchAndSelectTagManager != null) searchAndSelectTagManager.setSelectedTags(MyApplication.searchFilter.tags);
     }
 
-    private void initAdapterAndManager() {
+    private void initCategories() {
         //categoriesAdapter = new BubbleCategoryAdapter(this);
         //categoriesRv.setAdapter(categoriesAdapter);
         //TODO : Use the same GridLayout than AddEventActivity for categories selection, and delete class GridLayoutManager.
@@ -82,19 +75,18 @@ public class FilterActivity extends BaseActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_filter, menu);
 
-        searchView = initSearchView(menu);
+        SearchView searchView = initSearchView(menu);
         searchView.clearFocus();
         searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
         //set hint for searchview
         searchView.setQueryHint(getString(R.string.hint_searchview_filter));
-        hashtagView.setTransformer(new DataTransformTag());
-        SearchAndSelectTagManager searchAndSelectTagManager = new SearchAndSelectTagManager(
+        searchAndSelectTagManager = new SearchAndSelectTagManager(
                 this,
                 searchView,
-                hashtagView,
-                selectedTagsRecyclerView,
+                (RecyclerView) findViewById(R.id.rv_suggested_tags_filter),
+                (HorizontalTagsRecyclerView) findViewById(R.id.rv_selected_tags),
                 new OnSuggestQueryListener(),
                 findViewById(R.id.action_validate_search),
                 findViewById(R.id.check_layout),
@@ -104,7 +96,7 @@ public class FilterActivity extends BaseActivity {
         .setDataProvider(new SearchTagDataProvider() {
                     @Override
                     public void onLoadEnds() {
-                        tagScrollView.setVisibility(View.VISIBLE);
+                        //Write here things to do when tags are loaded
                     }
                 });
         searchAndSelectTagManager.loadTags("");
@@ -125,7 +117,7 @@ public class FilterActivity extends BaseActivity {
                 return true;
             case R.id.action_validate_search:
                 // MyApplication.searchFilter.eventCategories = categoriesAdapter.getAllCategories();
-                List<Tag> data = selectedTagsRecyclerView.getAdapter().getData();
+                List<Tag> data = searchAndSelectTagManager.getSelectedTags();
                 MyApplication.searchFilter.tags = new ArrayList<>(data);
                 Log.d(TAG, "Selected tags: " + Tag.tagsToString(MyApplication.searchFilter.tags));
                 finish();

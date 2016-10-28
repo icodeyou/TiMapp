@@ -38,7 +38,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.item_horizontal_tags, parent, false);
+        View view = inflater.inflate(R.layout.item_tag_horizontal, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
         return holder;
     }
@@ -86,7 +86,7 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         }
     }
 
-    public Tag getData(int position) {
+    public Tag get(int position) {
         return this.mDataTags.get(position);
     }
 
@@ -103,23 +103,14 @@ public class HorizontalTagsAdapter extends RecyclerView.Adapter<HorizontalTagsAd
         return -1;
     }
 
-    public void removeData(int position) {
-        this.mDataTags.remove(position);
+    public void remove(Tag tag) {
+        this.mDataTags.remove(tag);
         this.notifyDataSetChanged();
     }
 
-    public void resetData() {
+    public void clearData() {
         this.mDataTags.clear();
         this.notifyDataSetChanged();
-    }
-
-    public boolean isOneSimilarValue(String string) {
-        for (Tag t : mDataTags) {
-            if(t.getName().equalsIgnoreCase(string)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void setColors(int textColor, int backgroundColor) {

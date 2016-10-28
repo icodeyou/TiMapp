@@ -198,6 +198,7 @@ dependencies {
     compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'
     compile 'com.github.tajchert:nammu:1.1.1'
     compile 'id.zelory:compressor:1.0.2'
+    compile 'com.xiaofeng.android:flowlayoutmanager:1.2.3.2'
 
 }
 

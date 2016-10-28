@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.HorizontalTagsAdapter;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnBasicQueryTagListener;
@@ -42,8 +41,6 @@ public class EditProfileActivity extends BaseActivity{
     public static final String EXTRA_KEY_TAG_LIST  = "tag_list";
     private static final String TAG                 = "EditProfileActivity";
 
-    private HorizontalTagsRecyclerView selectedTagsRv;
-    private HorizontalTagsAdapter horizontalTagsAdapter;
     private SearchView searchView;
     private View submitView;
     private Button buttonSubmit;
@@ -59,15 +56,12 @@ public class EditProfileActivity extends BaseActivity{
         int colorRes = ContextCompat.getColor(this, R.color.white);
         initToolbar(false, colorRes);
 
-        selectedTagsRv = (HorizontalTagsRecyclerView) findViewById(R.id.selected_tags_profile);
         searchView = (SearchView) findViewById(R.id.edit_text);
         buttonSubmit = (Button) findViewById(R.id.button_submit);
         submitView = findViewById(R.id.submit_view);
         progressView = findViewById(R.id.progress_view);
 
         initSearchView();
-
-        horizontalTagsAdapter = selectedTagsRv.getAdapter();
         setListener();
     }
 
@@ -84,9 +78,14 @@ public class EditProfileActivity extends BaseActivity{
         ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHintTextColor(ContextCompat.getColor(this, R.color.color_hint_secondary));
         searchView.requestFocus();
         searchAndSelectTagManager = new SearchAndSelectTagManager(this,
-                searchView, null, selectedTagsRv, new OnBasicQueryTagListener(), buttonSubmit,
-                submitView, null, 3);
-        //TODO [important] Get config from server instead of hard typing 3. (ConfigurationProvider.rules().max_tags)
+                searchView,
+                null,
+                (HorizontalTagsRecyclerView) findViewById(R.id.selected_tags_profile),
+                new OnBasicQueryTagListener(),
+                buttonSubmit,
+                submitView,
+                null,
+                3); //TODO [important] Get config from server instead of hard typing 3. (ConfigurationProvider.rules().max_tags)
     }
 
 
