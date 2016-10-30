@@ -19,7 +19,7 @@ public class PickTagsForm {
     private final ViewInteraction submitBtn;
 
     public PickTagsForm() {
-        suggestedTagRV = new RecyclerViewHelper(R.id.rv_search_suggested_tags);
+        suggestedTagRV = new RecyclerViewHelper(R.id.rv_suggested_tags);
         submitBtn = onView(withId(R.id.action_validate_tags));
     }
 
