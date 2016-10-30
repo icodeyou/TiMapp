@@ -291,7 +291,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                         // Get the bitmap in according to the width of the device
                         mRecyclerView.smoothScrollToPosition(0);
                         picture.mySaveSafeCall();
-                        mDataLoader.update();
+                        paginatorManager.refresh();
                         Toast.makeText(EventPicturesFragment.this.getContext(),
                                 R.string.thanks_for_add_picture, Toast.LENGTH_LONG).show();
                     }

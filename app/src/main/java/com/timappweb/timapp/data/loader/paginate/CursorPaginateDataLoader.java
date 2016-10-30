@@ -34,9 +34,7 @@ import retrofit2.http.Url;
 /**
  * Created by Stephane on 21/10/2016.
  */
-
 public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType extends MyModel> {
-
 
     public enum LoadType {NEXT, PREV, UPDATE}
 
@@ -282,11 +280,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
                 .perform();
     }
 
-    public void loadNext(){
-        if (!this.hasMoreData()){
-            if (callback != null) callback.onLoadEnd(null, LoadType.NEXT, false);
-            return;
-        }
+    public synchronized void loadNext(){
         this._load(LoadType.NEXT);
     }
 
@@ -296,7 +290,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
     public void update(){
         if (this.isFirstLoad()){
-            this._load(LoadType.NEXT);
+            this.loadNext();
         }
         else{
             this._load(LoadType.UPDATE);
@@ -449,14 +443,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     @Table(name = "CursorPaginateCacheInfo")
     public static class CacheInfo extends MyModel {
 
-
-        public CacheInfo() {}
-
-        public boolean isValid(){
-            return expireDate == 0 || (System.currentTimeMillis() < expireDate);
-        }
-
-        private     int         limit = 10;
+        public      int         limit = 10;
         public      int         updateLimit = 20;
 
         /**
@@ -485,6 +472,12 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
         @Column(name = "Total")
         protected   int      total = -1;
+
+        public CacheInfo() {}
+
+        public boolean isValid(){
+            return expireDate == 0 || (System.currentTimeMillis() < expireDate);
+        }
 
         public void updateInfo(ResponseWrapper<JsonObject> feedback, LoadType loadType) {
             if (loadType == LoadType.NEXT) this.nextUrl = feedback.getNextUrl();

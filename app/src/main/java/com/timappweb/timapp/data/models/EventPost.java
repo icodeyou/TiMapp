@@ -32,18 +32,15 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface {
     @Expose
     public double longitude;
 
-    @Column(name = "Comment")
-    @Expose
-    public String comment;
+    //@Column(name = "Comment")
+    //@Expose
+    //public String comment;
 
-    @Column(name = "Anonymous")
-    @Expose
-    public boolean anonymous;
+    //@Column(name = "Anonymous")
+    //@Expose
+    //public boolean anonymous;
     // =============================================================================================
     // FIELDS
-
-    @Expose
-    public int place_id;
 
     @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO_MANY,
             joinModel = PostTag.class,
@@ -54,7 +51,7 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface {
 
     // =============================================================================================
 
-    public String address = "";
+    //public String address = "";
 
     public Event event;
 
@@ -88,7 +85,6 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface {
     public String toString() {
         return "EventPost{" +
                 "id=" + remote_id +
-                ", place_id=" + place_id +
                 ", user=" + user +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
@@ -115,11 +111,12 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface {
         return true;
     }
 
+    /*
     public String getUsername() {
         return user != null
                 ? (anonymous ? "Anonymous" : user.username)
                 : "Former user";
-    }
+    }*/
 
 
     public User getUser() {
@@ -130,9 +127,9 @@ public class EventPost extends SyncBaseModel implements MarkerValueInterface {
         return tags != null && tags.size() > 0;
     }
 
-    public String getComment() {
-        return comment;
-    }
+    //public String getComment() {
+    //    return comment;
+    //}
 
     @Override
     public boolean isSync(SyncBaseModel model) {

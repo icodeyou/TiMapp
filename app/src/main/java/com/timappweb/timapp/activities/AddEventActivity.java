@@ -84,7 +84,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private String                  TAG                                 = "AddEventActivity";
     private static final float      ZOOM_LEVEL_CENTER_MAP               = 14.0f;
     private static final int        NUMBER_OF_MAIN_CATEGORIES           = 4;
-    private static final int        CATEGORIES_COLUMNS                  = 4;
+    //private static final int        CATEGORIES_COLUMNS                  = 4;
 
     //----------------------------------------------------------------------------------------------
 

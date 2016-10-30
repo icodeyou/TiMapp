@@ -65,18 +65,23 @@ public class CursorPaginateManager<DataType extends MyModel>
 
     // ---------------------------------------------------------------------------------------------
 
+    public void refresh() {
+        setRefreshing(true);
+        if (clearOnRefresh){
+            this.mDataLoader.deleteCache();
+            this.mDataLoader.cacheInfo.reset();
+            this.clearItems();
+            this.mDataLoader.loadNext();
+        }
+        else{
+            this.mDataLoader.update();
+        }
+    }
+
     @Override
     public void onRefresh() {
         if ( this.minDelayForceRefresh == -1 || this.lastRefresh == -1 || Util.isOlderThan(this.lastRefresh, this.minDelayForceRefresh)){
-            if (clearOnRefresh){
-                this.mDataLoader.deleteCache();
-                this.mDataLoader.cacheInfo.reset();
-                this.clearItems();
-                this.mDataLoader.loadNext();
-            }
-            else{
-                this.mDataLoader.update();
-            }
+            this.refresh();
         }
         else{
             Log.d(TAG, "Data up to date. Last update was: " + (this.lastRefresh !=  -1 ? ((System.currentTimeMillis() - this.lastRefresh)/1000) + " " +
@@ -97,6 +102,11 @@ public class CursorPaginateManager<DataType extends MyModel>
 
     @Override
     public void onLoadMore() {
+        if (!this.mDataLoader.hasMoreData()){
+            mAdapter.onLoadMoreComplete(null);
+            mAdapter.removeProgressItem();
+            return;
+        }
         this.mDataLoader.loadNext();
     }
 
@@ -130,7 +140,6 @@ public class CursorPaginateManager<DataType extends MyModel>
             this.clearItems();
         }
 
-        setRefreshing(false);
         switch (type){
             case NEXT:
                 if (items != null) {
@@ -139,7 +148,7 @@ public class CursorPaginateManager<DataType extends MyModel>
                             mAdapter.addSubItem(expandableHeaderItem, (ISectionable) item);
                         }
                     }
-                    else{
+                    else {
                         mAdapter.onLoadMoreComplete(items);
                         if (items.size() > 0 && !mDataLoader.hasMoreData()){
                             mAdapter.onLoadMoreComplete(null);
@@ -169,6 +178,7 @@ public class CursorPaginateManager<DataType extends MyModel>
                 mAdapter.addBeginning(items);
                 break;
         }
+        setRefreshing(false);
 
         if (!mAdapter.hasData() && this.noDataCallback != null){
             this.noDataCallback.run();
@@ -182,6 +192,9 @@ public class CursorPaginateManager<DataType extends MyModel>
         if (this.activeEndlessScroll && mDataLoader.hasMoreData()){
             mAdapter.setEndlessScrollListener(this, new ProgressItem());
             mAdapter.setEndlessScrollThreshold(ENDLESS_SCROLL_THRESHOLD);
+        }
+        else if (!mDataLoader.hasMoreData()){
+            mAdapter.removeProgressItem();
         }
         this.activeEndlessScroll = false;
     }
@@ -230,6 +243,12 @@ public class CursorPaginateManager<DataType extends MyModel>
         this.activeEndlessScroll = true;
         return this;
     }
+
+    /*
+    public void reloadFromLocal() {
+        mAdapter.removeAll();
+        mDataLoader.localLoad();
+    }*/
 
     /*
     public CursorPaginateManager<DataType> setBeforeLoadCallback(BeforeLoadCallback beforeLoadCallback) {

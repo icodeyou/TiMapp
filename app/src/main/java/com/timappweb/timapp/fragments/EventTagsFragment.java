@@ -51,8 +51,8 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
     private MyFlexibleAdapter mAdapter;
     private SwipeRefreshLayout              mSwipeRefreshLayout;
     private View                            placeHolder;
-    private CursorPaginateManager<EventTag> mRecyclerViewManager;
-    private CursorPaginateDataLoader<EventTag, Tag> mDataLoader;
+    public CursorPaginateManager<EventTag> mRecyclerViewManager;
+    public CursorPaginateDataLoader<EventTag, Tag> mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
 

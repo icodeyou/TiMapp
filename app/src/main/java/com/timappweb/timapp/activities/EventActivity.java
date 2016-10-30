@@ -160,6 +160,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                 if(resultCode==RESULT_OK) {
                     setCurrentPageSelected(PAGER_TAG);
                     Log.d(TAG, "Result OK from AddTagActivity");
+                    if (fragmentTags != null && fragmentTags.mRecyclerViewManager != null){
+                        fragmentTags.mRecyclerViewManager.refresh();
+                    }
                 }
                 break;
             case IntentsUtils.REQUEST_INVITE_FRIENDS:
