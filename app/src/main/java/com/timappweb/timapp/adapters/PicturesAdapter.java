@@ -1,19 +1,14 @@
 package com.timappweb.timapp.adapters;
 
 import android.content.Context;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
 
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PictureItem;
 import com.timappweb.timapp.data.models.Picture;
 
 import java.util.LinkedList;
-import java.util.List;
 
-import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 
@@ -25,9 +20,9 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     //Constructor
     public PicturesAdapter(Context context, int pictureGridColumnNb) {
         super(context);
-        removeAllOffset = pictureGridColumnNb;
+        beginningOffset = pictureGridColumnNb;
 
-        for (int i = 0; i < removeAllOffset; i++){
+        for (int i = 0; i < beginningOffset; i++){
             addItem(i, new PlaceHolderItem("PLACEHOLDER_PICTURE" + i));
         }
     }
@@ -51,7 +46,7 @@ public class PicturesAdapter extends MyFlexibleAdapter {
     }
 
     public int getGridColumnNumber() {
-        return removeAllOffset;
+        return beginningOffset;
     }
 
     public Picture getPicture(int position) {

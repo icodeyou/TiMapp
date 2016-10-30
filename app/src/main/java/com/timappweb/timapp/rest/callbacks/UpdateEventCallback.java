@@ -1,6 +1,7 @@
 package com.timappweb.timapp.rest.callbacks;
 
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.io.responses.EventPointResponse;
 
@@ -24,10 +25,10 @@ public class UpdateEventCallback extends HttpCallback<EventPointResponse> {
         if (eventPoint.picture_id == 0){
             event.setBackgroundPicture(null);
         }
-        else if (event.picture != null){
+        else if (eventPoint.picture != null){
             event.setBackgroundPicture(eventPoint.picture);
             event.picture.event = event;
-            event.picture.mySaveSafeCall();
+            event.picture = (Picture) event.picture.mySaveSafeCall();
         }
         event.mySaveSafeCall();
     }

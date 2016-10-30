@@ -12,12 +12,8 @@ import com.timappweb.timapp.adapters.FriendsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.FriendsLoaderFactory;
-import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
-import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
-
-import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -79,8 +75,7 @@ public class ListFriendsActivity extends BaseActivity{
         Util.appAssert(mAdapter != null, TAG, "Adapter must be initialized before calling this method");
         Util.appAssert(mSwipeRefreshLayout != null, TAG, "SwipeAnRefreshLayout must be initialized before calling this method");
 
-        FriendsLoaderFactory.manager(this, mAdapter)
-                .setSwipeRefreshLayout(mSwipeRefreshLayout)
+        FriendsLoaderFactory.manager(this, mAdapter, mSwipeRefreshLayout)
                 //.setCallback(this)
                 .setClearOnRefresh(true)
                 .setNoDataView(noFriendsView)

@@ -276,6 +276,12 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
             Call call = RestClient.instance().createService(PictureInterface.class).upload(event.getRemoteId(), body);
             HttpCallManager callManager = RestClient.buildCall(call);
             callManager
+                .beforeStart(new HttpCallManager.BeforeStartCallback(){
+                    @Override
+                    public void onBeforeStart() {
+                        setUploadVisibility(true);
+                    }
+                })
                 .onResponse(new AutoMergeCallback(picture))
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.ADD_PICTURE))
                 .onResponse(new FormErrorsCallback(getContext(), "Pictures"))

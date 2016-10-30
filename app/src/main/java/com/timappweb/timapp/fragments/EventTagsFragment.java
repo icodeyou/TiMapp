@@ -12,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.TagsAndCountersAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.TagItem;
@@ -28,8 +28,6 @@ import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
-
-import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -54,6 +52,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
     private SwipeRefreshLayout              mSwipeRefreshLayout;
     private View                            placeHolder;
     private CursorPaginateManager<EventTag> mRecyclerViewManager;
+    private CursorPaginateDataLoader<EventTag, Tag> mDataLoader;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -81,7 +80,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
         super.onViewCreated(view, savedInstanceState);
 
         mAdapter = new MyFlexibleAdapter(getContext());
-        mAdapter.removeAllOffset = 1;
+        mAdapter.beginningOffset = 1;
         mAdapter.addItem(new PlaceHolderItem("PLACEHOLDER_EVENT_TAGS_FRAGMENT"));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setHasFixedSize(true);
@@ -101,7 +100,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
     }
 
     private void initDataLoader(){
-        CursorPaginateDataLoader<EventTag, Tag> mDataLoader = CursorPaginateDataLoader.<EventTag, Tag>create(
+        this.mDataLoader = CursorPaginateDataLoader.<EventTag, Tag>create(
                     "tags/event/" + getEvent().getRemoteId(),
                     Tag.class
                 )
@@ -159,7 +158,8 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
         switch (requestCode){
             case IntentsUtils.REQUEST_TAGS:
                 if(resultCode == Activity.RESULT_OK) {
-
+                    mRecyclerViewManager.clearItems();
+                    mDataLoader.localLoad();
                 }
                 break;
             default:

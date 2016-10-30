@@ -9,6 +9,7 @@ import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.ProgressItem;
+import com.timappweb.timapp.data.loader.BeforeLoadCallback;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.utils.Util;
@@ -35,6 +36,7 @@ public class CursorPaginateManager<DataType extends MyModel>
     private boolean clearOnRefresh = false;
     private CursorPaginateDataLoader.Callback<DataType> callback;
     private boolean activeEndlessScroll = false;
+    //private BeforeLoadCallback beforeLoadCallback;
 
     //private long minDelayAutoRefresh    = -1;
 
@@ -84,7 +86,7 @@ public class CursorPaginateManager<DataType extends MyModel>
         }
     }
 
-    private void clearItems() {
+    public void clearItems() {
         if (expandableHeaderItem != null){
             this.mAdapter.removeItems(expandableHeaderItem);
         }
@@ -147,6 +149,7 @@ public class CursorPaginateManager<DataType extends MyModel>
                 break;
             case UPDATE:
                 if (items != null) {
+                    int offset = 0;
                     for (AbstractFlexibleItem item : items) {
                         if (mAdapter.contains(item)) {
                             Log.d(TAG, "Updating existing item");
@@ -156,7 +159,7 @@ public class CursorPaginateManager<DataType extends MyModel>
                                 mAdapter.addSubItem(expandableHeaderItem, (ISectionable) item);
                             }
                             else{
-                                mAdapter.addItem(item);
+                                mAdapter.addBeginning(item, offset++);
                             }
                         }
                     }
@@ -170,7 +173,9 @@ public class CursorPaginateManager<DataType extends MyModel>
         if (!mAdapter.hasData() && this.noDataCallback != null){
             this.noDataCallback.run();
         }
-        //else if (mAdapter.hasData() && this.)
+        else if (mAdapter.hasData() && this.onDataCallback != null){
+            this.onDataCallback.run();
+        }
 
         if (this.callback != null) this.callback.onLoadEnd(data, type, overwrite);
 
@@ -185,8 +190,7 @@ public class CursorPaginateManager<DataType extends MyModel>
     public void onLoadError(Throwable error, CursorPaginateDataLoader.LoadType loadType) {
         setRefreshing(false);
         mAdapter.onLoadMoreComplete(null);
-            /*
-        switch (loadType){
+         /*switch (loadType){
             case NEXT:
                 break;
             case UPDATE:
@@ -227,4 +231,9 @@ public class CursorPaginateManager<DataType extends MyModel>
         return this;
     }
 
+    /*
+    public CursorPaginateManager<DataType> setBeforeLoadCallback(BeforeLoadCallback beforeLoadCallback) {
+        this.beforeLoadCallback = beforeLoadCallback;
+        return this;
+    }*/
 }

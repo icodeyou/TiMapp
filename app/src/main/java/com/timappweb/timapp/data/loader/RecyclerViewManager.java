@@ -29,6 +29,7 @@ public abstract class RecyclerViewManager<This> implements
     protected final MyFlexibleAdapter mAdapter;
     protected final Context mContext;
     protected Runnable noDataCallback;
+    protected Runnable onDataCallback;
 
 
     public RecyclerViewManager(Context context, MyFlexibleAdapter adapter) {
@@ -60,6 +61,12 @@ public abstract class RecyclerViewManager<This> implements
             @Override
             public void run() {
                 noDataView.setVisibility(View.VISIBLE);
+            }
+        };
+        this.onDataCallback = new Runnable(){
+            @Override
+            public void run() {
+                noDataView.setVisibility(View.GONE);
             }
         };
         return (This) this;

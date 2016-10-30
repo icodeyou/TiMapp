@@ -21,6 +21,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
     private Call<T> call;
     private long callDelay;
     private Timer timer;
+    private BeforeStartCallback beforeStartCallback;
 
     public HttpCallManager(Call<T> call) {
         this.call = call;
@@ -66,6 +67,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                if (beforeStartCallback != null) beforeStartCallback.onBeforeStart();
                 HttpCallManager.this.call.enqueue(HttpCallManager.this.callbackGroup);
             }
         }, this.callDelay);
@@ -79,6 +81,7 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
      */
     public Response<T> execute() throws IOException {
         try{
+            if (beforeStartCallback != null) beforeStartCallback.onBeforeStart();
             Response response = this.call.execute();
             this.callbackGroup.onResponse(this.call, response);
             return response;
@@ -130,11 +133,20 @@ public class HttpCallManager<T> implements RestClient.Cancelable{
         this.perform();
     }
 
+    public HttpCallManager<T> beforeStart(BeforeStartCallback beforeStartCallback) {
+        this.beforeStartCallback = beforeStartCallback;
+        return this;
+    }
+
     public interface FinallyCallback<ResponseBodyType>{
         void onFinally(Response<ResponseBodyType> response, Throwable error);
     }
 
     public interface StartCallback<ResponseBodyType>{
         void onStart();
+    }
+
+    public interface BeforeStartCallback{
+        void onBeforeStart();
     }
 }

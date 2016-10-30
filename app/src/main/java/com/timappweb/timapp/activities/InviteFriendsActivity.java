@@ -84,8 +84,7 @@ public class InviteFriendsActivity extends BaseActivity
             progressview = findViewById(R.id.progress_view);
             initAdapterListFriends();
 
-            FriendsLoaderFactory.manager(this, mAdapter)
-                    .setSwipeRefreshLayout(mSwipeRefreshLayout)
+            FriendsLoaderFactory.manager(this, mAdapter, mSwipeRefreshLayout)
                     .setCallback(this)
                     .setNoDataView(noFriendsView)
                     .load();

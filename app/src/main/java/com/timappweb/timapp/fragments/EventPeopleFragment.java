@@ -9,16 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.adapters.flexibleadataper.ExpandableHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.PeopleHeaderItem;
 import com.timappweb.timapp.adapters.flexibleadataper.models.SubUserItem;
-import com.timappweb.timapp.data.entities.EventPeopleStats;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
@@ -27,13 +26,8 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
-import com.timappweb.timapp.rest.RestClient;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
-import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.davidea.flexibleadapter.common.SmoothScrollLinearLayoutManager;
@@ -43,8 +37,9 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener, android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private static final String     TAG                             = "EventTagsFragment";
-    private static final long       MIN_DELAY_FORCE_REFRESH         = 3600 * 1000;
+    private static final long       MIN_DELAY_FORCE_REFRESH_INVITE = 3600 * 1000;
     private static final int        LOCAL_LOAD_LIMIT                = 15;
+    private static final long       CACHE_VALIDITY_DELAY_INVITE = 3600 * 1000;
     // ---------------------------------------------------------------------------------------------
 
     private MyFlexibleAdapter       mPlaceUsersAdapter;
@@ -137,6 +132,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     }
                 })
                 .setLocalQuery(new Select().from(UserEvent.class).where("Event = ? AND Status = ?", getEvent().getId(), status))
+                .setClearQuery(new Delete().from(UserEvent.class).where("Event = ? AND Status = ?", getEvent().getId(), status))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLimit(LOCAL_LOAD_LIMIT);
@@ -151,7 +147,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     }
                 })
                 .setClearOnRefresh(true)
-                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH_INVITE)
                 .setCallback(new CursorPaginateDataLoader.Callback<UserEvent>() {
                     @Override
                     public void onLoadEnd(CursorPaginateDataLoader.LoadInfo<UserEvent> data, CursorPaginateDataLoader.LoadType type, boolean overwrite) {
@@ -178,15 +174,16 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     "PlacesInvitations/sent/" + getEvent().getRemoteId(),
                     EventsInvitation.class
                 )
-                .initCache("PlacesInvitations:" + getEvent().getRemoteId(), 3600 * 1000) // never expire
+                .initCache("PlacesInvitationsSent:" + getEvent().getRemoteId(), CACHE_VALIDITY_DELAY_INVITE) // never expire
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<EventsInvitation, EventsInvitation>() {
                     @Override
                     public EventsInvitation beforeSaveModel(EventsInvitation model) {
                         model.event = getEvent();
-                        model.user_target = MyApplication.getCurrentUser();
+                        model.user_source = MyApplication.getCurrentUser();
                         return model;
                     }
                 })
+                .setClearQuery(new Delete().from(EventsInvitation.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
                 .setLocalQuery(new Select().from(EventsInvitation.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
@@ -201,7 +198,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                     }
                 })
                 .setClearOnRefresh(true)
-                //.setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)
+                //.setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH_INVITE)
                 .setCallback(new CursorPaginateDataLoader.Callback<EventsInvitation>() {
 
                     @Override

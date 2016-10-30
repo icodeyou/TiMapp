@@ -98,7 +98,7 @@ public class Picture extends SyncBaseModel {
     }
 
     public String getTimeCreated() {
-        return Util.millisTimestampToPrettyTime(created);
+        return Util.secondsTimestampToPrettyTime(created);
     }
 
     public void setEvent(Event event) {

@@ -52,6 +52,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private final CursorPaginateBackend service;
     private final Gson gson;
     private CacheCallback<DataType, RemoteType> cacheCallback;
+    private From clearQuery;
 
     private CursorPaginateDataLoader(Class<RemoteType> remoteClazz) {
         this.service = RestClient.instance().createService(CursorPaginateBackend.class);
@@ -72,6 +73,11 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
     public CursorPaginateDataLoader<DataType, RemoteType> setLocalQuery(From from){
         this.localBaseQuery = from;
+        return this;
+    }
+
+    public CursorPaginateDataLoader<DataType, RemoteType> setClearQuery(From clearQuery) {
+        this.clearQuery = clearQuery;
         return this;
     }
 
@@ -99,7 +105,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     public void deleteCache(){
         if (this.cacheInfo.cacheId != null)
             new Delete().from(CacheInfo.class).where("CacheId = ?", this.cacheInfo.cacheId).execute();
-
+        this.hasInCache = false;
+        if (this.clearQuery != null) this.clearQuery.execute();
     }
 
     public void saveInCache() throws Exception {
@@ -180,9 +187,6 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             }
             return ;
         }
-        if (!this.hasMoreData()){
-            if (callback != null) callback.onLoadEnd(null, loadType, false);
-        }
 
         if (loadType == LoadType.NEXT && this.hasInCache){
             if (callback != null) callback.onLoadStart(loadType);
@@ -196,12 +200,14 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
                 }
                 return ;
             }
-            if (callback != null) callback.onLoadStart(loadType);
+            if (callback != null) {
+                callback.onLoadStart(loadType);
+            }
             this.remoteLoad(loadType);
         }
     }
 
-    private void localLoad(){
+    public void localLoad(){
         Log.i(TAG, "Loading from local db");
         From from = this.localBaseQuery;
         String orderBy = "";
@@ -277,6 +283,10 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     }
 
     public void loadNext(){
+        if (!this.hasMoreData()){
+            if (callback != null) callback.onLoadEnd(null, LoadType.NEXT, false);
+            return;
+        }
         this._load(LoadType.NEXT);
     }
 

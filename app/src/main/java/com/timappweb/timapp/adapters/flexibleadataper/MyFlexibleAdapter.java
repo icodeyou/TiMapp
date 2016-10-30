@@ -18,7 +18,7 @@ import eu.davidea.flexibleadapter.items.ISectionable;
 public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 
 	private static final String TAG = "MyFlexibleAdapter";
-	public int removeAllOffset = 0;
+	public int beginningOffset = 0;
 
 	// ---------------------------------------------------------------------------------------------
 
@@ -40,11 +40,15 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	}
 
 	public synchronized boolean addBeginning(List<AbstractFlexibleItem> items){
-		return this.addItems(removeAllOffset, items);
+		return this.addItems(beginningOffset, items);
 	}
 
 	public void addBeginning(AbstractFlexibleItem item) {
-		this.addItem(0, item);
+		this.addBeginning(item, 0);
+	}
+
+	public void addBeginning(AbstractFlexibleItem item, int offset) {
+		this.addItem(offset + beginningOffset, item);
 	}
 
 	public int removeItems(ExpandableHeaderItem headerItem) {
@@ -102,7 +106,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	}
 
 	public synchronized void removeAll() {
-		this.removeRange(removeAllOffset, getItemCount());
+		this.removeRange(beginningOffset, getItemCount()-beginningOffset);
 	}
 
 	public synchronized void onLoadMoreComplete(List<AbstractFlexibleItem> items) {
@@ -110,6 +114,7 @@ public class MyFlexibleAdapter extends FlexibleAdapter<AbstractFlexibleItem> {
 	}
 
 	public int getDataCount() {
-		return this.getItemCount() - removeAllOffset;
+		return this.getItemCount() - beginningOffset;
 	}
+
 }

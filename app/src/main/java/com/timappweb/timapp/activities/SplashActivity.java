@@ -2,9 +2,6 @@ package com.timappweb.timapp.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -25,7 +22,6 @@ import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.deeplinks.DeepLinkParser;
 import com.timappweb.timapp.utils.deeplinks.UrlParser;
 import com.timappweb.timapp.views.RetryDialog;
-import com.timappweb.timapp.views.UpdateAppDialog;
 
 /**
  * Created by stephane on 3/26/2016.
