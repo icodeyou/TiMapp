@@ -3,7 +3,10 @@ package com.timappweb.timapp.map;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -64,13 +67,10 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         //categoryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.category_unknown));
         categoryImage.setPadding(PADDING_ICON,PADDING_ICON,PADDING_ICON,PADDING_ICON);
 
-        //TODO : Get Color from servor and apply call below
-        /*Drawable drawable = ContextCompat.getDrawable(context, R.drawable.b1);
-        drawable.setColorFilter(new PorterDuffColorFilter(**getcolorFromServor**,
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.circle_background_primary);
+        drawable.setColorFilter(new PorterDuffColorFilter(Color.parseColor(event.getLevelColorHex(context)),
                 PorterDuff.Mode.SRC_ATOP));
-        categoryImage.setBackground(drawable);*/
-
-        categoryImage.setBackgroundColor(event.getLevelBackground());
+        categoryImage.setBackground(drawable);
         categoryImage.setDrawingCacheEnabled(true);
 
         // Without this code, the view will have a dimension of 0,0 and the bitmap will be null

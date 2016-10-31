@@ -457,6 +457,13 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         }
     }
 
+    public boolean hasFinishedDate() {
+        return end_date != 0;
+    }
+    public int getEndDate() {
+        return end_date;
+    }
+
     public boolean isInactive() {
         return getVisibilityStatus() == VisiblityStatus.INACTIVE;
     }
@@ -535,7 +542,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return picture;
     }
 
-    public int getLevelBackground() {
+    public String getLevelColorHex(Context context) {
         ApplicationRules.LevelPointInfo level = Event.computeLevel(
                 getVisibilityStatus() == VisiblityStatus.INACTIVE
                     ? 0
@@ -543,12 +550,11 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         );
 
         if (level != null){
-            return level.icon_color;
+            return "#" + level.icon_color;
         }
         else {
             Log.e(TAG, "The event has a wrong level !");
-            // TODO set default color (should not happen)
-            return 0;
+            return "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
         }
     }
 
