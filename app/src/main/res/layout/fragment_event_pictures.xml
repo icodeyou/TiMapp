@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
         <include android:id="@+id/material_view_pager_placeholder"
             layout="@layout/material_view_pager_placeholder" />
         <TextView
@@ -57,14 +57,15 @@
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:background="@color/black"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
         <TextView
             android:id="@+id/text_info_pic"
-            style="@style/TextDefault"
+            style="@style/TextItalic"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:textColor="@color/white"
             android:layout_width="match_parent"
             tools:text="Time Created"/>

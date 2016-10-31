@@ -104,6 +104,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         initVariables(root);
 
         bottomSheetBehaviour = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehaviour.setPeekHeight(0);
 
         initAdapter();
         initConfigEasyImage();
@@ -194,6 +195,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
             @Override
             public boolean onItemClick(int position) {
                 Log.d(TAG, "Clicking on picture adapter item n°" + position);
+                bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
                 if(mActionModeHelper.getActionMode() == null) {
                     AbstractFlexibleItem item = picturesAdapter.getItem(position);
                     if(item instanceof PictureItem) {
@@ -419,9 +421,9 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         boolean currentUserOwnEvent = getEvent().isOwner(MyApplication.getCurrentUser());
-        bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
         menu.getItem(INDEX_CONTEXTUAL_MENU_ITEM_SET_BACKGROUND)
                 .setVisible(currentUserOwnEvent);
+        bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
         picturesAdapter.setMode(SelectableAdapter.MODE_SINGLE);
         return true;
     }

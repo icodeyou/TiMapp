@@ -1,19 +1,14 @@
 package com.timappweb.timapp.services;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.messaging.RemoteMessage.Notification;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
-import com.timappweb.timapp.activities.EventActivity;
 import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
@@ -21,7 +16,6 @@ import com.timappweb.timapp.config.server.ServerNotifications;
 import com.timappweb.timapp.utils.KeyValueStorage;
 import com.timappweb.timapp.utils.NotificationFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -108,7 +102,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         Context context = MyApplication.getApplicationBaseContext();
         return NotificationFactory.build(context,
-                R.mipmap.ic_launcher, // TODO JACK set icon timapp notification
+                R.drawable.logo_transparent,
                 notification.getTitle() != null ? notification.getTitle() : context.getString(R.string.app_name),
                 notification.getBody(),
                 intent);
