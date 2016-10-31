@@ -13,7 +13,7 @@
                 android:title="@string/title_activity_invitations" />
             <item android:id="@+id/menu_item_my_friends" android:icon="@drawable/people"
                 android:title="@string/title_activity_list_friends" />
-            <item android:id="@+id/menu_item_share" android:icon="@drawable/social_share"
+            <item android:id="@+id/menu_item_share" android:icon="@drawable/action_share"
                 android:title="@string/nav_share" />
         </menu>
     </item>

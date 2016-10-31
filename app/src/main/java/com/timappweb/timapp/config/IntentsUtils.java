@@ -33,10 +33,8 @@ import com.timappweb.timapp.activities.PresentationActivity;
 import com.timappweb.timapp.activities.ProfileActivity;
 import com.timappweb.timapp.activities.SettingsActivity;
 import com.timappweb.timapp.activities.ShareActivity;
-import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPost;
-import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
@@ -514,7 +512,6 @@ public class IntentsUtils {
             return null;
         }
     }
-
 
     public static Tag extractEventTag(Intent intent) {
         Bundle extras = intent.getExtras();

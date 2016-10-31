@@ -302,8 +302,8 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void showConfirmDialog() {
         if(!(eventCategorySelected == null && !getEvent().hasName())) {
             ConfirmDialog.simpleMessage(this,
-                    null,
                     getString(R.string.confim_message_add_event),
+                    null,
                     getString(R.string.alert_dialog_continue_addevent),
                     new DialogInterface.OnClickListener() {
                         @Override

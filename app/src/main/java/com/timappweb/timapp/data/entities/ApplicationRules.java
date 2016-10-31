@@ -2,7 +2,6 @@ package com.timappweb.timapp.data.entities;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -117,6 +116,6 @@ public class ApplicationRules {
         @Expose
         public int to;
         @Expose
-        public int icon_color;
+        public String icon_color;
     }
 }

@@ -48,7 +48,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
     //private EventView                     eventView;
     private FloatingActionButton            postButton;
     private RecyclerView                    mRecyclerView;
-    private MyFlexibleAdapter mAdapter;
+    private MyFlexibleAdapter               mAdapter;
     private SwipeRefreshLayout              mSwipeRefreshLayout;
     private View                            placeHolder;
     public CursorPaginateManager<EventTag> mRecyclerViewManager;

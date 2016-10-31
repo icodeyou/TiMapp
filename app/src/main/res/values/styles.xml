@@ -138,6 +138,7 @@
         <item name="fab_size">mini</item>
         <item name="fab_colorNormal">@color/colorPrimary</item>
         <item name="fab_colorPressed">@color/colorPrimaryVeryDark</item>
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="LightFab" parent="Fab">

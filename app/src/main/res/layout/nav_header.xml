@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="event" type="com.timappweb.timapp.data.models.Event"/>
     </data>
@@ -50,24 +51,24 @@
                 android:orientation="horizontal">
                 <FrameLayout
                     style="@style/WidthWeightOne">
-                    <android.support.design.widget.FloatingActionButton
+                    <com.getbase.floatingactionbutton.FloatingActionButton
                         android:id="@+id/action_camera"
-                        style="@style/DrawerFab"
-                        android:src="@drawable/camera_white"/>
+                        fab:fab_icon="@drawable/camera_white"
+                        style="@style/MiniFab" />
                 </FrameLayout>
                 <FrameLayout
                     style="@style/WidthWeightOne">
-                    <android.support.design.widget.FloatingActionButton
+                    <com.getbase.floatingactionbutton.FloatingActionButton
                         android:id="@+id/action_tag"
-                        style="@style/DrawerFab"
-                        android:src="@drawable/hashtag_white"/>
+                        fab:fab_icon="@drawable/hashtag_white"
+                        style="@style/MiniFab"/>
                 </FrameLayout>
                 <FrameLayout
                     style="@style/WidthWeightOne">
-                    <android.support.design.widget.FloatingActionButton
+                    <com.getbase.floatingactionbutton.FloatingActionButton
                         android:id="@+id/action_invite"
-                        style="@style/DrawerFab"
-                        android:src="@drawable/people"/>
+                        style="@style/MiniFab"
+                        fab:fab_icon="@drawable/people" />
                 </FrameLayout>
             </LinearLayout>
         </RelativeLayout>

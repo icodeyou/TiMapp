@@ -13,7 +13,7 @@
     <color name="colorSecondaryDark">#2b3778</color>
     <color name="colorRefresh">@color/colorAccent</color>
     <!--<color name="colorAccentDark">#e97b06</color>-->
-    <color name="TEST">#f44437</color>
+    <color name="TEST">#000000</color>
     <color name="transparent">#00ffffff</color>
     <color name="background">#f6f6f2</color>
     <color name="background_dark">#deded7</color>
@@ -73,7 +73,7 @@
     <color name="switch_button_track_off">#6ecdd9</color>
     <color name="text_info_event">@color/white</color>
     <color name="presentation_page_background">#7a000000</color>
-    <color name="presentation_page_background_secondary">#d0e8dbd3</color>
+    <color name="presentation_page_background_secondary">#89fafafa</color>
 
     <!-- Texts -->
     <color name="textPrimary">@color/colorPrimary</color>

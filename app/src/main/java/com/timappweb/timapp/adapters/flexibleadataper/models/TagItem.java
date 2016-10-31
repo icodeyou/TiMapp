@@ -5,11 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.utils.Util;
-import com.timappweb.timapp.views.HorizontalTagsRecyclerView;
 
 import java.util.List;
 
@@ -75,7 +73,7 @@ public class TagItem extends AbstractFlexibleItem<TagItem.TagViewHolder> {
             super(itemView, adapter);
             tagName = (TextView) itemView.findViewById(R.id.tv_tag);
             tagCountRef = (AutofitTextView) itemView.findViewById(R.id.tv_tag_counter);
-            Util.setSelectionsBackgroundAdapter(itemView, R.color.white, R.color.colorAccentLight, R.color.LightGrey);
+            Util.setSelectionsBackgroundAdapter(itemView, R.color.background, R.color.colorAccentLight, R.color.LightGrey);
         }
 
     }
