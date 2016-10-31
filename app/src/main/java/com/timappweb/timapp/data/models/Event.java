@@ -19,6 +19,7 @@ import com.timappweb.timapp.BR;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -241,10 +242,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return this.name != null && this.name.length() > 0;
     }
 
-    public int getLevel(){
-        return Event.computeLevel(this.getPoints());
-    }
-
     public EventCategory getCategory() {
         return event_category;
     }
@@ -315,16 +312,16 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return name != null && name.trim().length() >= ConfigurationProvider.rules().places_min_name_length;
     }
 
-    private static int computeLevel(int points) {
-        List<Integer> levels = ConfigurationProvider.rules().places_points_levels;
-        int num = 0;
-        for (int level: levels){
-            if (level >= points){
-                return num;
+    private static ApplicationRules.LevelPointInfo computeLevel(int points) {
+        List<ApplicationRules.LevelPointInfo> levels = ConfigurationProvider.rules().places_points_levels;
+        if (levels != null) {
+            for (ApplicationRules.LevelPointInfo level : levels) {
+                if (points <= level.to) {
+                    return level;
+                }
             }
-            num++;
         }
-        return num;
+        return null;
     }
 
     // =============================================================================================
@@ -538,22 +535,19 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public int getLevelBackground() {
-        if(getVisibilityStatus() == VisiblityStatus.INACTIVE) {
-            return R.drawable.b0;
+        ApplicationRules.LevelPointInfo level = Event.computeLevel(
+                getVisibilityStatus() == VisiblityStatus.INACTIVE
+                    ? 0
+                    : this.getPoints()
+        );
+
+        if (level != null){
+            return level.icon_color;
         }
-        switch (this.getLevel()) {
-            case 0:
-                return R.drawable.b1;
-            case 1:
-                return R.drawable.b2;
-            case 2:
-                return R.drawable.b3;
-            case 3:
-                return R.drawable.b4;
-            case 4:
-            default:
-                Log.e(TAG, "The event has a wrong level !");
-                return R.drawable.b1;
+        else {
+            Log.e(TAG, "The event has a wrong level !");
+            // TODO set default color (should not happen)
+            return R.drawable.b1;
         }
     }
 

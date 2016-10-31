@@ -87,7 +87,7 @@ public class ApplicationRules {
     public int tags_min_search_length = 0;
 
     @Expose
-    public List<Integer> places_points_levels = new LinkedList<>();
+    public List<LevelPointInfo> places_points_levels;
 
     @Expose
     public int spot_min_name_length = 2;
@@ -111,5 +111,12 @@ public class ApplicationRules {
                 ", tags_min_search_length=" + tags_min_search_length +
                 ", spot_min_name_length=" + spot_min_name_length +
                 '}';
+    }
+
+    public class LevelPointInfo{
+        @Expose
+        public int to;
+        @Expose
+        public int icon_color;
     }
 }

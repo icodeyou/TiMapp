@@ -207,4 +207,19 @@ task wrapper(type: Wrapper) {
 }
 
 
+android.applicationVariants.all {
+    v -> if (v.buildType.name == "debugTest"){
+        v.assemble.doLast {
+            logger.lifecycle("Enabling mock location on device for build: $v.name")
+            if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+                // TODO to enable mock location in tests
+                //commandLine 'cmd', '/c', 'adb shell appops set com.timappweb.timapp.test android:mock_location allow'
+            } else {
+                //commandLine 'sh', '-c', 'adb shell appops set com.timappweb.timapp.test android:mock_location allow'
+            }
+        }
+    }
+
+}
+
 apply plugin: 'com.google.gms.google-services' // Google Clound Messaging
