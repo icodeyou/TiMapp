@@ -41,7 +41,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private static final String TAG = "CursorPaginateDataLoad";
     private boolean hasInCache = false;
     public CacheInfo   cacheInfo;
-    private List<PaginateFilter> filters;
+    private LinkedList<PaginateFilter> filters;
     private From localBaseQuery;
     protected Callback<DataType> callback;
     protected HttpCallManager<ResponseWrapper<JsonObject>> currentCallManager;
@@ -205,12 +205,28 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         }
     }
 
+    private static String _buildWhereClause(List<Object> values, LinkedList<PaginateFilter> filters){
+        PaginateFilter filter = filters.pollFirst();
+        // Last field is uniq
+        if (filters.size() == 0) {
+            values.add(filter.value);
+            return "("+filter.localField + filter.getSign() + " ?)";
+        }
+        else {
+            values.add(filter.value);
+            values.add(filter.value);
+            return "("+filter.localField + filter.getSign() +" ? OR ("+filter.localField +" = ? AND " + _buildWhereClause(values, filters) + ") )";
+        }
+    }
+
     public void localLoad(){
         Log.i(TAG, "Loading from local db");
         From from = this.localBaseQuery;
         String orderBy = "";
+        LinkedList<Object> args = new LinkedList<>();
+        String where = _buildWhereClause(args, (LinkedList<PaginateFilter>) this.filters.clone());
+        from.where(where, args);
         for (PaginateFilter filter: this.filters){
-            filter.localQuery(from);
             orderBy += (orderBy.length() == 0 ? "" : ", ") + filter.orderBy();
         }
         from.orderBy(orderBy);
@@ -512,6 +528,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
         public static final String GTE = ">=";
         public static final String LTE = "<=";
+        public static final String LT = "<";
+        public static final String GT = ">";
 
         public static final String ASC = "asc";
         public static final String DESC = "desc";
@@ -535,8 +553,6 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             this.transformer = transformer;
         }
 
-
-
         public String toServerParams(){
             String res = this.remoteField + ":" + this.order;
             if (value != null){
@@ -545,16 +561,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             return res;
         }
 
-        // TODO manage duplicate
-        public void localQuery(From from){
-            if (value != null){
-                if (this.order == DESC){
-                    from.where(this.localField + " " + LTE + " ? ", value);
-                }
-                else{
-                    from.where(this.localField + " " + GTE + " ? ", value);
-                }
-            }
+        public String getSign(){
+            return this.order == DESC ? LT : GT;
         }
 
         public String orderBy(){

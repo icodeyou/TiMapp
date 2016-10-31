@@ -111,10 +111,14 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                         EventTag eventTag = new EventTag();
                         eventTag.event = getEvent();
                         eventTag.tag = tag;
+                        eventTag.count_ref = tag.count_ref;
                         return eventTag;
                     }
                 })
                 .setLocalQuery(new Select()
+                        .from(EventTag.class)
+                        .where("EventTag.Event = ?", getEvent().getId()))
+                .setClearQuery(new Delete()
                         .from(EventTag.class)
                         .where("EventTag.Event = ?", getEvent().getId()))
                 .addFilter(new CursorPaginateDataLoader.PaginateFilter("CountRef", "count_ref", CursorPaginateDataLoader.PaginateFilter.DESC,
@@ -135,6 +139,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventTag>() {
                     @Override
                     public AbstractFlexibleItem createItem(EventTag data) {
+                        data.tag.count_ref = data.count_ref;
                         return new TagItem(data.tag);// new (InvitationsActivity.this, data);
                     }
                 })
