@@ -257,7 +257,7 @@
         <activity android:name=".activities.AddTagActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".activities.EventActivity"
-            android:windowSoftInputMode="adjustNothing|stateHidden" >
+            android:windowSoftInputMode="stateHidden" >
         </activity>
 
         <!-- ADD SPOT ACTIVITY //////////////////////////////////////////////-->

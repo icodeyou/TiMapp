@@ -81,12 +81,14 @@ public class SearchAndSelectTagManager {
                 ConfigurationProvider.rules().tags_suggest_limit);
 
         //SuggestedTagRecyclerView
-        suggestedAdapter = new SuggestedTagsAdapter(activity);
-        suggestedRV.setAdapter(suggestedAdapter);
-        FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
-        flowLayoutManager.setAlignment(Alignment.LEFT);
-        flowLayoutManager.setAutoMeasureEnabled(true);
-        suggestedRV.setLayoutManager(flowLayoutManager);
+        if(suggestedRV != null) {
+            suggestedAdapter = new SuggestedTagsAdapter(activity);
+            suggestedRV.setAdapter(suggestedAdapter);
+            FlowLayoutManager flowLayoutManager = new FlowLayoutManager();
+            flowLayoutManager.setAlignment(Alignment.LEFT);
+            flowLayoutManager.setAutoMeasureEnabled(true);
+            suggestedRV.setLayoutManager(flowLayoutManager);
+        }
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity.getComponentName()));
         queryTagListener.setSearchAndSelectTagManager(this);
@@ -203,6 +205,14 @@ public class SearchAndSelectTagManager {
 
     public boolean hasSuggestedTag(String tagName) {
         return suggestedAdapter.getTagStrings().contains(tagName);
+    }
+
+    public boolean removeSuggestedTag(Tag tag) {
+        if(hasSuggestedTag(tag.getName())) {
+            suggestedAdapter.remove(tag);
+            return true;
+        }
+        return false;
     }
 
     public void actionCounter() {

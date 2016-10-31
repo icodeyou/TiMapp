@@ -152,6 +152,8 @@ public class AddTagActivity extends BaseActivity{
         Tag tag = IntentsUtils.extractEventTag(getIntent());
         if(tag != null) {
             searchAndSelectTagManager.addTag(tag.getName());
+            searchAndSelectTagManager.actionCounter();
+            searchAndSelectTagManager.removeSuggestedTag(tag);
         }
 
         return true;

@@ -130,7 +130,8 @@
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/multiple_actions"
             style="@style/GetbaseFab"
-            android:layout_alignParentBottom="false">
+            android:layout_alignParentBottom="false"
+            android:visibility="@{event.isOver() ? View.GONE : View.VISIBLE}">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_camera"
