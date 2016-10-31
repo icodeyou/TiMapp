@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.google.gson.JsonSyntaxException;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Category;
@@ -76,11 +77,16 @@ public class ConfigurationProvider{
      * @return
      */
     public static ApplicationRules rules(){
-        if (applicationRules == null){
-            applicationRules = KeyValueStorage.instance.get(KEY_APP_RULES, ApplicationRules.class);
-            if (applicationRules == null){
-                throw new IncompleteConfigurationException("Missing application rules");
+        if (applicationRules == null && KeyValueStorage.out().contains(KEY_APP_RULES)){
+            try{
+                applicationRules = KeyValueStorage.instance.get(KEY_APP_RULES, ApplicationRules.class);
             }
+            catch (JsonSyntaxException ex){
+                KeyValueStorage.in().remove(KEY_APP_RULES);
+            }
+        }
+        if (applicationRules == null){
+            throw new IncompleteConfigurationException("Missing application rules");
         }
         return applicationRules;
     }
@@ -187,7 +193,7 @@ public class ConfigurationProvider{
 
     public static boolean hasRulesConfig() {
         try{
-            return rules().places_max_name_length > 0;
+            return rules() != null && rules().places_max_name_length > 0;
         }
         catch (IncompleteConfigurationException ex){
             return false;

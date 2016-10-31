@@ -49,9 +49,7 @@ public class SplashActivity extends BaseActivity implements GoogleApiClient.OnCo
 
 
     private void loadConfig() {
-
         final MultipleHttpCallManager callsManager = ConfigurationProvider.load(this);
-
 
         if (MyApplication.isLoggedIn() && ConfigurationProvider.hasRulesConfig()) {
             HttpCallManager tokenCallManager = MyApplication.auth.checkToken();

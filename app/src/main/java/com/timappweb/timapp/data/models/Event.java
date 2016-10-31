@@ -320,6 +320,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
                     return level;
                 }
             }
+            return levels.get(levels.size()-1);
         }
         return null;
     }
@@ -547,7 +548,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         else {
             Log.e(TAG, "The event has a wrong level !");
             // TODO set default color (should not happen)
-            return R.drawable.b1;
+            return 0;
         }
     }
 

@@ -70,7 +70,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
                 PorterDuff.Mode.SRC_ATOP));
         categoryImage.setBackground(drawable);*/
 
-        categoryImage.setBackgroundResource(event.getLevelBackground());
+        categoryImage.setBackgroundColor(event.getLevelBackground());
         categoryImage.setDrawingCacheEnabled(true);
 
         // Without this code, the view will have a dimension of 0,0 and the bitmap will be null
