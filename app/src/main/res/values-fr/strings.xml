@@ -263,7 +263,7 @@
     <string name="list">Liste</string>
 
     <!-- Update dialog -->
-    <string name="app_update_available">Une mise à jour est disponible, voulez-vous l'installer maintenant ?</string>
+    <string name="app_update_available">Une mise à jour est disponible, voulez-vous l\'installer maintenant ?</string>
     <string name="app_update_required">Vous devez mettre à jour TiMapp pour continuer</string>
     <string name="alert_dialog_update_app">Mettre à jour</string>
     <string name="quit_timapp">Quitter TiMapp</string>
