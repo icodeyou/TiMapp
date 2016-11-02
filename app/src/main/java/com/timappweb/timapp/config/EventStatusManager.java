@@ -85,13 +85,13 @@ public class EventStatusManager {
         // TODO call must be cancelable
         switch (status) {
             case COMING:
-                call = RestClient.service().notifyPlaceComing(event.getRemoteId(), _buildQuery(event).toMap());
+                call = RestClient.service().notifyEventComing(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             case HERE:
-                call = RestClient.service().notifyPlaceHere(event.getRemoteId(), _buildQuery(event).toMap());
+                call = RestClient.service().notifyEventHere(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             case GONE:
-                call = RestClient.service().notifyPlaceGone(event.getRemoteId(), _buildQuery(event).toMap());
+                call = RestClient.service().cancelEventStatus(event.getRemoteId(), _buildQuery(event).toMap());
                 break;
             default:
                 Util.appStateError(TAG, "Trying to add an invalid status: " + status);
@@ -111,6 +111,8 @@ public class EventStatusManager {
                     public void successful(UserEvent userEvent) {
                         if (userEvent == null){
                             Log.e(TAG, "Server returned a null response...");
+                            // TODO remove existing status
+                            EventStatusManager.removeLocally(event);
                             return;
                         }
                         try {
@@ -131,6 +133,13 @@ public class EventStatusManager {
                     }
                 })
                 .perform();
+    }
+
+    private static void removeLocally(Event event) {
+        new Delete()
+                .from(UserEvent.class)
+                .where("User = ? AND Event = ?", MyApplication.getCurrentUser().getId(), event.getId())
+                .execute();
     }
 
     private static UserEvent addLocally(UserEvent userEvent) throws CannotSaveModelException {

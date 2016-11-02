@@ -136,7 +136,8 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 .setClearQuery(new Delete().from(UserEvent.class).where("Event = ? AND Status = ?", getEvent().getId(), status))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
-                .setLimit(LOCAL_LOAD_LIMIT);
+                .setLimit(LOCAL_LOAD_LIMIT)
+                .enableCache(false);
 
 
         return new CursorPaginateManager<UserEvent>(getContext(), mPlaceUsersAdapter, dataLoader)
@@ -188,7 +189,8 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 .setLocalQuery(new Select().from(EventsInvitation.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
-                .setLimit(LOCAL_LOAD_LIMIT);
+                .setLimit(LOCAL_LOAD_LIMIT)
+                .enableCache(false);
 
         return new CursorPaginateManager<EventsInvitation>(getContext(), mPlaceUsersAdapter, dataLoader)
                 .setSubSection(mExpandableInviteHeader)

@@ -172,19 +172,13 @@ public interface WebServiceInterface {
     // EventsUsers
 
     @POST("PlacesUsers/coming/{eventId}")
-    Call<UserEvent> notifyPlaceComing(@Path("eventId") long remoteId, @Body Map<String, String> conditions);
+    Call<UserEvent> notifyEventComing(@Path("eventId") long remoteId, @Body Map<String, String> conditions);
 
-    @POST("PlacesUsers/gone/{eventId}")
-    Call<UserEvent> notifyPlaceGone(@Path("eventId") long id, @Body Map<String, String> conditions);
+    @POST("PlacesUsers/cancel/{eventId}")
+    Call<UserEvent> cancelEventStatus(@Path("eventId") long id, @Body Map<String, String> conditions);
 
     @POST("PlacesUsers/here/{eventId}")
-    Call<UserEvent> notifyPlaceHere(@Path("eventId") long id, @Body Map<String, String> conditions);
-
-    @POST("PlacesUsers/cancelComing/{eventId}")
-    Call<RestFeedback> cancelComing(@Path("eventId") long id);
-
-    @POST("PlacesUsers/cancelHere/{eventId}")
-    Call<RestFeedback> cancelHere(@Path("eventId") long id);
+    Call<UserEvent> notifyEventHere(@Path("eventId") long id, @Body Map<String, String> conditions);
 
     @POST("PlacesUsers/event/{id}")
     Call<PaginatedResponse<UserEvent>> viewUsersForPlace(@Path("id") int eventId, @QueryMap Map<String, String> conditions);

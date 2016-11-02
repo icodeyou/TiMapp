@@ -135,7 +135,8 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                     public Object transform(MyModel model) {
                         return model.getId();
                     }
-                }));
+                }))
+                .enableCache(false);
 
         this.mRecyclerViewManager = new CursorPaginateManager<EventTag>(getContext(), mAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventTag>() {

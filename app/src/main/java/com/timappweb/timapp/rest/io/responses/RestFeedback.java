@@ -4,20 +4,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
-
 /**
  * Created by stephane on 9/12/2015.
  */
 public class RestFeedback extends RestResponse {
-
-    @Expose
-    @SerializedName("success")
-    public boolean success;
-
-    @Expose
-    @SerializedName("returnCode")
-    public int code;
 
     @Expose
     @SerializedName("message")
@@ -34,7 +24,7 @@ public class RestFeedback extends RestResponse {
     // =============================================================================================
 
     public String toString(){
-        return "ServerObject[Success: " + success + " ("+code+"); message=" + message + ";]";
+        return "ServerObject[message=" + message + ";]";
     }
 
 }

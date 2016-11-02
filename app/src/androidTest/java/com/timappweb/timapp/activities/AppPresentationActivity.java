@@ -40,6 +40,7 @@ public class AppPresentationActivity extends AbstractActivityTest{
 
     @Test
     public void navigate() {
+        // TODO JACK dynamically take the number of page
         for (int i = 0; i < 6; i++){
             presentationPager.next();
         }

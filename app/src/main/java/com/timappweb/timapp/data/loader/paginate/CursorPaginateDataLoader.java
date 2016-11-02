@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.MyModel;
+import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
@@ -51,6 +52,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private final Gson gson;
     private CacheCallback<DataType, RemoteType> cacheCallback;
     private From clearQuery;
+    private boolean cacheEnabled = false;
+
 
     private CursorPaginateDataLoader(Class<RemoteType> remoteClazz) {
         this.service = RestClient.instance().createService(CursorPaginateBackend.class);
@@ -117,6 +120,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     }
 
     public CursorPaginateDataLoader<DataType, RemoteType> initCache(String cacheId, long expireDelay){
+        this.cacheEnabled = true;
         Log.d(TAG, "Init localBaseQuery cache with id="+ cacheId);
         CacheInfo existingCacheInfo = new Select()
                 .from(CacheInfo.class)
@@ -325,7 +329,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private List<DataType> _parseItems(List<JsonObject> items) {
         List<DataType> result = new ArrayList<>(items.size());
 
-        if (CursorPaginateDataLoader.this.cacheInfo.cacheId != null) {
+        if (this.cacheEnabled) {
             ActiveAndroid.beginTransaction();
         }
 
@@ -338,7 +342,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             else{
                 model = (DataType) remoteModel;
             }
-            if (CursorPaginateDataLoader.this.cacheInfo.cacheId != null){
+            if (this.cacheEnabled){
                 Log.d(TAG, "Saving in local db: " + model);
                 try {
                     model = model.deepSave();
@@ -350,11 +354,17 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             result.add(model);
         }
 
-        if (CursorPaginateDataLoader.this.cacheInfo.cacheId != null) {
+        if (this.cacheEnabled) {
             ActiveAndroid.setTransactionSuccessful();
             ActiveAndroid.endTransaction();
         }
         return result;
+    }
+
+
+    public CursorPaginateDataLoader<DataType, RemoteType> enableCache(boolean b) {
+        this.cacheEnabled = b;
+        return this;
     }
 
     /**

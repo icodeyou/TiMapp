@@ -235,7 +235,12 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                         public void successful(UserEvent userEvent) {
                             showActivatedButton(activated, true);
 
-                            if (userEvent != null && userEvent.status != newStatus){
+                            if (userEvent == null){
+                                // TODO update button to default
+                                return;
+                            }
+
+                            if (userEvent.status != newStatus){
                                 Log.w(TAG, "User status is not the on expected. Expected: " + newStatus + ". Actual: " + userEvent.status);
                                 // TODO Jack && Steph set the right button according to userEvent.status
                             }
