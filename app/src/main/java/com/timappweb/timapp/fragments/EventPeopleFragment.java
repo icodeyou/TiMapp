@@ -26,6 +26,7 @@ import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
+import com.timappweb.timapp.utils.DurationConstants;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,9 +38,9 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 public class EventPeopleFragment extends EventBaseFragment implements OnTabSelectedListener, android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private static final String     TAG                             = "EventTagsFragment";
-    private static final long       MIN_DELAY_FORCE_REFRESH_INVITE = 3600 * 1000;
+    private static final long       MIN_DELAY_FORCE_REFRESH_INVITE = DurationConstants.MINUTE_MILLIS;
     private static final int        LOCAL_LOAD_LIMIT                = 15;
-    private static final long       CACHE_VALIDITY_DELAY_INVITE = 3600 * 1000;
+    private static final long       CACHE_VALIDITY_DELAY_INVITE = DurationConstants.MINUTE_MILLIS * 15;
     // ---------------------------------------------------------------------------------------------
 
     private MyFlexibleAdapter       mPlaceUsersAdapter;

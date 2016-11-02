@@ -325,20 +325,23 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private List<DataType> _parseItems(List<JsonObject> items) {
         List<DataType> result = new ArrayList<>(items.size());
 
-        ActiveAndroid.beginTransaction();
+        if (CursorPaginateDataLoader.this.cacheInfo.cacheId != null) {
+            ActiveAndroid.beginTransaction();
+        }
+
         for (JsonObject item: items){
             RemoteType remoteModel = this.gson.fromJson(item, remoteClazz);
-            DataType model = null;
+            DataType model;
+            if (cacheCallback != null){
+                model = this.cacheCallback.beforeSaveModel(remoteModel);
+            }
+            else{
+                model = (DataType) remoteModel;
+            }
             if (CursorPaginateDataLoader.this.cacheInfo.cacheId != null){
-                Log.d(TAG, "Saving in local db: " + remoteModel);
+                Log.d(TAG, "Saving in local db: " + model);
                 try {
-                    if (cacheCallback != null) {
-                        model = this.cacheCallback.beforeSaveModel(remoteModel);
-                        model = model.deepSave();
-                    }
-                    else{
-                        model = (DataType) remoteModel.deepSave();
-                    }
+                    model = model.deepSave();
 
                 } catch (CannotSaveModelException e) {
                     Log.e(TAG, "Cannot save model: " + e.getMessage());
@@ -346,8 +349,11 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             }
             result.add(model);
         }
-        ActiveAndroid.setTransactionSuccessful();
-        ActiveAndroid.endTransaction();
+
+        if (CursorPaginateDataLoader.this.cacheInfo.cacheId != null) {
+            ActiveAndroid.setTransactionSuccessful();
+            ActiveAndroid.endTransaction();
+        }
         return result;
     }
 
@@ -609,8 +615,8 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     public interface FilterValueTransformer<T extends MyModel>{
         Object transform(T model);
     }
-    public interface CacheCallback<T extends MyModel, RemoteType extends MyModel>{
-        T beforeSaveModel(RemoteType model);
+    public interface CacheCallback<LocalType extends MyModel, RemoteType extends MyModel>{
+        LocalType beforeSaveModel(RemoteType model);
     }
 }
 

@@ -45,6 +45,7 @@ import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.io.serializers.AddPictureMapper;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.rest.services.PictureInterface;
+import com.timappweb.timapp.utils.DurationConstants;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
@@ -67,11 +68,9 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         ActionMode.Callback{
 
     private static final String         TAG                             = "EventPicturesFragment";
-    private static final long           REMOTE_LOAD_LIMIT               = 10;
-    private static final long           CACHE_DURATION = 3600 * 1000;
+    private static final long           CACHE_DURATION                  = DurationConstants.HOUR_MILLIS;
     public static int                   PICTURE_GRID_COLUMN_NB          = 2;
-    private static final long           MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
-    private static final long           MIN_DELAY_AUTO_REFRESH          = 5 * 60 * 1000;
+    private static final long           MIN_DELAY_FORCE_REFRESH         = DurationConstants.MINUTE_MILLIS / 2;
 
     private static final int            INDEX_CONTEXTUAL_MENU_ITEM_SET_BACKGROUND = 0;
     // ---------------------------------------------------------------------------------------------

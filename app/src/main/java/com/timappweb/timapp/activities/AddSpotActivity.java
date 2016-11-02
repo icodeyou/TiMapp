@@ -120,7 +120,7 @@ public class AddSpotActivity extends BaseActivity implements
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter());
                 //.setLimit(LOCAL_LOAD_LIMIT);
 
-        new CursorPaginateManager<>(this, mAdapter, mDataLoader)
+        new CursorPaginateManager<Spot>(this, mAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Spot>() {
                     @Override
                     public AbstractFlexibleItem createItem(Spot data) {

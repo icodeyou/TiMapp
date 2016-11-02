@@ -17,15 +17,19 @@ import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
 import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.utils.DurationConstants;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
+
+import org.joda.time.convert.DurationConverter;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 
 public class InvitationsActivity extends BaseActivity{
 
+    private static final long CACHE_INVITE_VALIDITY = DurationConstants.DAY_MILLIS * 15;
     private String              TAG                             = "ListFriendsActivity";
     private static final int    MIN_DELAY_FORCE_REFRESH         = 30 * 1000;
     private static final int    MIN_DELAY_AUTO_REFRESH         = 2 * 3600 * 1000;
@@ -82,7 +86,7 @@ public class InvitationsActivity extends BaseActivity{
                     "PlacesInvitations/received",
                     EventsInvitation.class
                 )
-                .initCache("UserInvitation" + MyApplication.getCurrentUser().getId(), 0) // never expire
+                .initCache("UserInvitation" + MyApplication.getCurrentUser().getId(), CACHE_INVITE_VALIDITY)
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<EventsInvitation, EventsInvitation>() {
                     @Override
                     public EventsInvitation beforeSaveModel(EventsInvitation model) {

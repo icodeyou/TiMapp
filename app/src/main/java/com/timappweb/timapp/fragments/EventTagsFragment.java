@@ -27,6 +27,7 @@ import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
+import com.timappweb.timapp.utils.DurationConstants;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
@@ -36,8 +37,9 @@ import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 public class EventTagsFragment extends EventBaseFragment implements OnTabSelectedListener{
 
     private static final String TAG = "EventTagsFragment";
-    private static final long MIN_DELAY_AUTO_REFRESH = 5 * 60 * 1000;
+    //private static final long MIN_DELAY_AUTO_REFRESH = 5 * 60 * 1000;
     private static final long MIN_DELAY_FORCE_REFRESH = 60 * 1000;
+    private static final long MAX_CACHE_VALIDITY = DurationConstants.HOUR_MILLIS;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -104,7 +106,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                     "tags/event/" + getEvent().getRemoteId(),
                     Tag.class
                 )
-                .initCache("EventTag:" + getEvent().getRemoteId(), 0) // never expire
+                .initCache("EventTag:" + getEvent().getRemoteId(), MAX_CACHE_VALIDITY)
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<EventTag, Tag>() {
                     @Override
                     public EventTag beforeSaveModel(Tag tag) {

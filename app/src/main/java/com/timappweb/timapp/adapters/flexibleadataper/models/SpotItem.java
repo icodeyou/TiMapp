@@ -13,20 +13,20 @@ import com.timappweb.timapp.databinding.LayoutSpotBinding;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import eu.davidea.flexibleadapter.items.IFilterable;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
 /**
  * Created by Stephane on 16/08/2016.
  */
-public class SpotItem extends AbstractModelItem<SpotItem.SpotViewHolder>
+public class SpotItem extends AbstractFlexibleItem<SpotItem.SpotViewHolder>
     implements IFilterable {
 
     private static final String TAG = "PictureItem";
     private Spot spot;
 
     public SpotItem(Spot spot) {
-        super(String.valueOf(spot.getRemoteId()));
         this.spot = spot;
     }
 
@@ -56,10 +56,8 @@ public class SpotItem extends AbstractModelItem<SpotItem.SpotViewHolder>
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         SpotItem spotItem = (SpotItem) o;
-
         return spot != null ? spot.equals(spotItem.spot) : spotItem.spot == null;
 
     }
@@ -81,7 +79,7 @@ public class SpotItem extends AbstractModelItem<SpotItem.SpotViewHolder>
 
     public class SpotViewHolder extends FlexibleViewHolder {
 
-        private final LayoutSpotBinding mBinding;
+        public final LayoutSpotBinding mBinding;
 
         SpotViewHolder(View itemView, LayoutSpotBinding binding, FlexibleAdapter adapter) {
             super(itemView, adapter);
