@@ -285,9 +285,9 @@
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
     <string name="dummy_string" translatable="false">Dummy String</string>
-    <string name="app_update_available">An update is available, do you want to update your app now ?</string>
-    <string name="app_update_required">You must update your app to continue</string>
-    <string name="alert_dialog_update_app">Update</string>
-    <string name="quit_timapp">Quit timapp</string>
+    <string name="app_update_available" translatable="false">An update is available, do you want to update your app now ?</string>
+    <string name="app_update_required" translatable="false">You must update your app to continue</string>
+    <string name="alert_dialog_update_app" translatable="false">Update</string>
+    <string name="quit_timapp" translatable="false">Quit timapp</string>
 
 </resources>
