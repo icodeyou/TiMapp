@@ -416,8 +416,6 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
     }
     // ---------------------------------------------------------------------------------------------
 
-
-
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         boolean currentUserOwnEvent = getEvent().isOwner(MyApplication.getCurrentUser());

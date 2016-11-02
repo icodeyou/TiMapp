@@ -10,16 +10,13 @@
         android:layout_height="@dimen/nav_header_height"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:layout_above="@+id/gradient_view"/>
-
         <ImageView
             android:id="@+id/no_events_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_above="@+id/gradient_view"
+            android:scaleType="fitCenter"
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
             android:src="@drawable/logotimapp"
@@ -36,7 +33,7 @@
             android:id="@+id/event_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="gone">
             <include
                 android:id="@+id/nav_background_event"
                 layout="@layout/header_event_activity"

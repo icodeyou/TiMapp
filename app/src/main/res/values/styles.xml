@@ -200,7 +200,7 @@
 
     <style name="TextMultiLines" parent="TextDefault" >
         <item name="android:singleLine">false</item>
-        <item name="android:padding">@dimen/small_text_padding</item>
+        <item name="android:padding">@dimen/default_text_padding</item>
     </style>
 
     <style name="TextTiny" parent="TextDefault">
@@ -260,7 +260,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/default_item_padding</item>
         <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/text_presentation_secondary</item>
     </style>
 
     <style name="ImagePresentationThree">

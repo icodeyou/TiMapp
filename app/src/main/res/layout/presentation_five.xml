@@ -6,7 +6,7 @@
     android:gravity="center" >
     <me.grantland.widget.AutofitTextView
         style="@style/TextTitlePresentation"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/text_presentation_secondary"
         android:text="@string/title_p_five"/>
     <LinearLayout
         android:layout_width="match_parent"

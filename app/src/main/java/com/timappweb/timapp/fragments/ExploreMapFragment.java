@@ -209,7 +209,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
             final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_alpha);
             eventView.startAnimation(slideIn);
             Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
-            Animation translateUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up);
+            Animation translateUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_strong);
             btnAddEvent.startAnimation(translateUp);
         }
         catch (CannotSaveModelException e) {

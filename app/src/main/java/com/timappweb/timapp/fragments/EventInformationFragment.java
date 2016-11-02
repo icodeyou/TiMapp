@@ -230,11 +230,17 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
             }
             manager
                     .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser()))
-                    .onResponse(new HttpCallback() {
+                    .onResponse(new HttpCallback<UserEvent>() {
                         @Override
-                        public void successful(Object feedback) {
+                        public void successful(UserEvent userEvent) {
                             showActivatedButton(activated, true);
-                            if(newStatus == UserEventStatusEnum.COMING) {
+
+                            if (userEvent != null && userEvent.status != newStatus){
+                                Log.w(TAG, "User status is not the on expected. Expected: " + newStatus + ". Actual: " + userEvent.status);
+                                // TODO Jack && Steph set the right button according to userEvent.status
+                            }
+
+                            if(userEvent.status == UserEventStatusEnum.COMING) {
                                 //Delay to see the animation before the dialog
                                 DelayedCallHelper.create(R.integer.duration_scale, new DelayedCallHelper.Callback() {
                                     @Override
