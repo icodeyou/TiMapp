@@ -74,6 +74,7 @@
     <color name="text_info_event">@color/white</color>
     <color name="presentation_page_background">#7a000000</color>
     <color name="presentation_page_background_secondary">#89fafafa</color>
+    <color name="text_presentation_secondary">#404040</color>
 
     <!-- Texts -->
     <color name="textPrimary">@color/colorPrimary</color>

@@ -282,12 +282,14 @@
     <string name="popularity_page_four">If an event is inactive for too long, it is removed from the map.</string>
     <string name="text_final_button_viewpager">Let\'s get it started.</string>
 
+    <!-- Update dialog -->
+    <string name="app_update_available">An update is available, do you want to update your app now ?</string>
+    <string name="app_update_required">You must update your app to continue</string>
+    <string name="alert_dialog_update_app">Update</string>
+    <string name="quit_timapp">Quit timapp</string>
+
     <!-- . . . . . . . . . . . . . . . . . . . . . . -->
     <!-- A traduire ! -->
     <string name="dummy_string" translatable="false">Dummy String</string>
-    <string name="app_update_available" translatable="false">An update is available, do you want to update your app now ?</string>
-    <string name="app_update_required" translatable="false">You must update your app to continue</string>
-    <string name="alert_dialog_update_app" translatable="false">Update</string>
-    <string name="quit_timapp" translatable="false">Quit timapp</string>
 
 </resources>

@@ -250,7 +250,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="start">
+                        android:gravity="start"
+                        android:visibility="gone">
                         <include layout="@layout/divider_grey"
                             android:visibility="@{event.getSpot() == null ? View.GONE : View.VISIBLE }"/>
                         <include layout="@layout/layout_spot"
