@@ -23,8 +23,8 @@ public class AddEventMapper {
         jsonObject.addProperty("description", event.getDescription());
         jsonObject.addProperty("latitude", event.latitude);
         jsonObject.addProperty("longitude", event.longitude);
-        if (event.hasCategory()){
-            jsonObject.addProperty("category_id",  event.getCategory().getRemoteId());
+        if (event.event_category != null){
+            jsonObject.addProperty("category_id",  event.event_category.getRemoteId());
         }
         return jsonObject;
     }

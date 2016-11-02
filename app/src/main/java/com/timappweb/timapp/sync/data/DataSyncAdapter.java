@@ -49,7 +49,6 @@ import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
 import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
 import com.timappweb.timapp.sync.callbacks.UserPlaceSyncCallback;
-import com.timappweb.timapp.sync.config.ConfigSyncService;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
@@ -73,11 +72,11 @@ import retrofit2.Response;
 /**
  * Define a merge adapter for the app.
  *
- * <p>This class is instantiated in {@link ConfigSyncService}, which also binds DataSyncAdapter to the system.
- * DataSyncAdapter should only be initialized in ConfigSyncService, never anywhere else.
+ * <p>This class is instantiated in {@link DataSyncService}, which also binds DataSyncAdapter to the system.
+ * DataSyncAdapter should only be initialized in DataSyncService, never anywhere else.
  *
  * <p>The system calls onPerformSync() via an RPC call through the IBinder object supplied by
- * ConfigSyncService.
+ * DataSyncService.
  */
 public class DataSyncAdapter extends AbstractSyncAdapter {
 

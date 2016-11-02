@@ -399,7 +399,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     @Override
     public void onRefresh() {
         RestClient.buildCall(RestClient.service()
-                .updateEventInfo(getEvent().getRemoteId(), (getEvent().hasPicture() ? getEvent().picture.getRemoteId() : 0)))
+                .updateEventInfo(getEvent().getRemoteId(), (getEvent().picture != null ? getEvent().picture.getRemoteId() : 0)))
                     .onResponse(new UpdateEventCallback(getEvent()))
                     .onFinally(new HttpCallManager.FinallyCallback() {
                         @Override

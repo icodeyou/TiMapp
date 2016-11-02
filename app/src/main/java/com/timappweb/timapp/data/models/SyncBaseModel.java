@@ -86,7 +86,7 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
     }
 
     @Override
-    public MyModel mySave() throws CannotSaveModelException {
+    public MyModel  mySave() throws CannotSaveModelException {
         if (!this.hasLocalId() && this.hasRemoteId()){
             SyncBaseModel model = this.queryByRemoteId().executeSingle();
             if (model != null){

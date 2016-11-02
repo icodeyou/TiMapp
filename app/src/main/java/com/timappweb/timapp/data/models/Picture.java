@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.Util;
 
 @Table(name = "Picture")
@@ -109,5 +110,10 @@ public class Picture extends SyncBaseModel {
         this.user = user;
     }
 
-
+    @Override
+    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
+        if (this.user != null) this.user = this.user.deepSave();
+        if (this.event != null) this.event = this.event.deepSave();
+        return (T) this.mySave();
+    }
 }

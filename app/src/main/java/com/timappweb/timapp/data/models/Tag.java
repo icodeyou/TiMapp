@@ -5,6 +5,7 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "Tag")
 public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
 
+    // TODO [Jack][critical][#181] DO NOT USE THIS USE CONFIGURATION
     public static final int MINLENGTH = 2;
     public static final int MAXLENGTH = 30;
 
@@ -117,5 +119,10 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
                 .from(Tag.class)
                 .leftJoin(EventTag.class).on("Tag.Id = EventTag.Tag AND EventTag.Event = ?", event.getId())
                 .orderBy("EventTag.CountRef DESC, Tag.CountRef DESC");
+    }
+
+    @Override
+    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
+        return (T) this.mySave();
     }
 }

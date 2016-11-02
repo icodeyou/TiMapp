@@ -21,7 +21,6 @@ import com.timappweb.timapp.data.entities.SearchFilter;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
-import com.timappweb.timapp.rest.io.responses.RestFeedback;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
 import com.timappweb.timapp.utils.ImagePipelineConfigFactory;
 import com.timappweb.timapp.utils.KeyValueStorage;
@@ -34,6 +33,7 @@ public class MyApplication extends Application {
 
     private static final String TAG = "MyApplication";
     private static final String KEY_LAST_START = "last_app_start";
+    private static final int LOW_MEMORY_THRESHOLD_PERCENT = 5; // 5%
 
 
     public static SearchFilter searchFilter = new SearchFilter();
@@ -148,5 +148,19 @@ public class MyApplication extends Application {
         Intent intent = new Intent(context, SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
+    }
+
+    public static float getAvailableMemoryPercent(){
+        long available = Runtime.getRuntime().maxMemory();
+        long used = Runtime.getRuntime().totalMemory();
+        return 100f * (1f - ((float) used / available ));
+    }
+
+    public static boolean isLowMemory(){
+        boolean isLowMemory = getAvailableMemoryPercent() <= LOW_MEMORY_THRESHOLD_PERCENT;
+        if (isLowMemory){
+            Log.w(TAG, "Device is in low memory mod!");
+        }
+        return isLowMemory;
     }
 }

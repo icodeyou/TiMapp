@@ -190,7 +190,7 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
                 .setLimit(LOCAL_LOAD_LIMIT)
-                .enableCache(false);
+                .enableCache(!MyApplication.isLowMemory());
 
         return new CursorPaginateManager<EventsInvitation>(getContext(), mPlaceUsersAdapter, dataLoader)
                 .setSubSection(mExpandableInviteHeader)

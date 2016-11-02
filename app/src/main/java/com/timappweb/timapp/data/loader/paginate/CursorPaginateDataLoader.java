@@ -345,7 +345,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
             if (this.cacheEnabled){
                 Log.d(TAG, "Saving in local db: " + model);
                 try {
-                    model = model.deepSave();
+                        model = model.deepSave();
 
                 } catch (CannotSaveModelException e) {
                     Log.e(TAG, "Cannot save model: " + e.getMessage());

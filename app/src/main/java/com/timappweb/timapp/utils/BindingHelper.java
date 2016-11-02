@@ -37,7 +37,7 @@ public class BindingHelper {
     public static void setBackgroundImage(ImageView imageView, Event event) {
         if (event!= null){
             //TODO Steph : picture is null when 1)Open list 2)open event 3)goback 4)close list 5)open list again
-            if (event.hasPicture()){
+            if (event.picture != null){
                 final String fullUrl = event.getBackgroundUrl();
                 // Temp solution
                 Log.d(TAG, "Loading event background picture: " + fullUrl);

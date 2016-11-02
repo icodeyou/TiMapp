@@ -11,6 +11,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 import com.timappweb.timapp.BR;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 
 import java.util.List;
 
@@ -191,6 +192,11 @@ public class Spot extends SyncBaseModel implements ClusterItem {
 
     public void setCategory(long id) {
         this.category = ConfigurationProvider.getSpotCategoryByRemoteId(id);
+    }
+
+    @Override
+    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
+        return (T) super.mySave();
     }
 }
 

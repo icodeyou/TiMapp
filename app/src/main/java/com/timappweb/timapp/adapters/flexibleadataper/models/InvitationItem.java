@@ -94,8 +94,8 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
             mBinding.setEvent(eventInvitation.event);
             mBinding.setUser(eventInvitation.getUserSource());
 
-            if (eventInvitation.event.hasCategory()) {
-                titleCategory.setText(Util.capitalize(eventInvitation.event.getCategory().name));
+            if (eventInvitation.event.event_category != null) {
+                titleCategory.setText(Util.capitalize(eventInvitation.event.event_category.name));
             }
 
             FabListenerFactory.setFabListener(context, itemView, eventInvitation.event);

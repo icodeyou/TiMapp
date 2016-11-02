@@ -4,6 +4,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 
 import java.util.List;
 
@@ -113,5 +114,10 @@ public class EventCategory extends Category{
     @Override
     public String getIconUrl() {
         return this.iconUrl;
+    }
+
+    @Override
+    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
+        return (T) this.mySave();
     }
 }

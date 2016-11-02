@@ -120,8 +120,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         public void setEventInHolder(Event event) {
             mBinding.setEvent(event);
 
-            if (event.hasCategory()) {
-                titleCategory.setText(Util.capitalize(event.getCategory().name));
+            if (event.event_category != null) {
+                titleCategory.setText(Util.capitalize(event.event_category.name));
             }
             // Following line is important, it will force to load the variable in a custom view
             mBinding.executePendingBindings();

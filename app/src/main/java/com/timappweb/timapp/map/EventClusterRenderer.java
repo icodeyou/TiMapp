@@ -113,7 +113,7 @@ public class EventClusterRenderer extends DefaultClusterRenderer<Event> {
         for (Event p : cluster.getItems()) {
             // Draw 4 at most.
             if (profilePhotos.size() == 4) break;
-            if (!p.hasCategory()){
+            if (p.event_category == null){
                 continue;
             }
             if (!profilePhotos.containsKey(p.getCategory().getRemoteId())){

@@ -378,7 +378,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                 })
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
                 .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
-                .enableCache(false);
+                .enableCache(!MyApplication.isLowMemory());
         paginatorManager = new CursorPaginateManager<Picture>(getContext(), picturesAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Picture>(){
                     @Override

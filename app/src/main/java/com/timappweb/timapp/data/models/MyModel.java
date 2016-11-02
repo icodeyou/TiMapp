@@ -39,7 +39,7 @@ public class MyModel extends Model implements Observable, Serializable{
      */
     public  <T extends MyModel> void saveBelongsToMany(Collection<T> data,
                                                        Class<? extends MyModel> associationModel) throws CannotSaveModelException {
-        MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
+        //MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
         for (MyModel model: data){
             this.saveBelongsToMany(model, associationModel);
         }
@@ -47,23 +47,28 @@ public class MyModel extends Model implements Observable, Serializable{
     public  <T extends MyModel> void saveBelongsToMany(T data,
                                                        Class<? extends MyModel> associationModel) throws CannotSaveModelException {
         MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
-        //Log.e(TAG, "Cannot save association because this model is not saved yet: " + this);
-        //return;
         try {
             Constructor<? extends MyModel> constructor = associationModel.getConstructor(savedModel.getClass(), data.getClass());
             MyModel instance = constructor.newInstance(savedModel, data);
             instance.deepSave();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            }
+            throw new CannotSaveModelException(savedModel);
+        }
+        /*
+        catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
             Util.appStateError(TAG, "No constructor for class: '" + associationModel.getCanonicalName() + "'");
+            throw new CannotSaveModelException(savedModel);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (CannotSaveModelException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void replaceAssociation(Collection<? extends MyModel> data,
@@ -114,40 +119,38 @@ public class MyModel extends Model implements Observable, Serializable{
         }
     }
 
-    private void _saveModelAssociations(){
+    private void _saveModelAssociations() throws CannotSaveModelException {
         Class<? extends MyModel> clazz = this.getClass();
         for (Field field: clazz.getFields()){
             try {
                 if (field.isAnnotationPresent(ModelAssociation.class)){
-
-                    try {
-                        ModelAssociation annotation = field.getAnnotation(ModelAssociation.class);
-                        switch (annotation.type()){
-                            case BELONGS_TO:
-                                MyModel fieldValue = (MyModel) field.get(this);
-                                if (fieldValue != null && !fieldValue.hasLocalId()){
-                                    MyModel model = fieldValue.deepSave();
-                                    field.set(this, model);
-                                    Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName());
+                    ModelAssociation annotation = field.getAnnotation(ModelAssociation.class);
+                    switch (annotation.type()){
+                        case BELONGS_TO:
+                            MyModel fieldValue = (MyModel) field.get(this);
+                            if (fieldValue != null && !fieldValue.hasLocalId()){
+                                MyModel model = fieldValue.deepSave();
+                                field.set(this, model);
+                                Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName());
+                            }
+                            break;
+                        case BELONGS_TO_MANY:
+                            Collection<? extends MyModel> fieldValues = (Collection<? extends MyModel>) field.get(this);
+                            if (fieldValues != null){
+                                if (annotation.saveStrategy() == ModelAssociation.SaveStrategy.REPLACE){
+                                    this.deleteAssociation(annotation.joinModel());
                                 }
-                                break;
-                            case BELONGS_TO_MANY:
-                                Collection<? extends MyModel> fieldValues = (Collection<? extends MyModel>) field.get(this);
-                                if (fieldValues != null){
-                                    if (annotation.saveStrategy() == ModelAssociation.SaveStrategy.REPLACE){
-                                        this.deleteAssociation(annotation.joinModel());
-                                    }
-                                    this.saveBelongsToMany(fieldValues, annotation.joinModel());
-                                    Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName() + ": size=" + fieldValues.size());
-                                }
-                                break;
-                        }
-                    } catch (CannotSaveModelException e) {
-                        e.printStackTrace();
+                                this.saveBelongsToMany(fieldValues, annotation.joinModel());
+                                Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName() + ": size=" + fieldValues.size());
+                            }
+                            break;
                     }
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                Log.e(TAG, "IllegalAccessException: " + e.getMessage());
+                if (BuildConfig.DEBUG){
+                    e.printStackTrace();
+                }
             }
         }
     }

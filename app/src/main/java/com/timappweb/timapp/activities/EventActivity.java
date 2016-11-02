@@ -262,9 +262,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
      * @warning Method must be called only ONCE.
      */
     private void onEventLoaded() {
-        Log.d(TAG, "The popularity points are : "+event.getPoints());
-        FabListenerFactory.setFabListener(this, getWindow().getDecorView(), getEvent());
-
         if (!isEventLoaded){
             isEventLoaded = true;
 
@@ -292,6 +289,8 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
             parseIntentParameters();
 
             updateOverView();
+
+            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), getEvent());
         }
 
         updateView();
@@ -419,7 +418,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
     }
 
     public void updateEventBackground() {
-        if (event.hasPicture()){
+        if (event.picture != null){
             mMaterialViewPager.setImageUrl(event.getBackgroundUrl(), 0);
         }
         else{

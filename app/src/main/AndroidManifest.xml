@@ -72,20 +72,17 @@
 
         <!-- CONFIGURATION -->
         <!-- This service implements our ConfigSyncAdapter. It needs to be exported, so that the system
-        merge framework can access it. -->
+        merge framework can access it.
         <service android:name=".sync.config.ConfigSyncService"
             android:exported="true"
             android:enabled="true" >
-            <!-- This intent filter is required. It allows the system to launch our merge service
-            as needed. -->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <!-- This points to a required XML file which describes our ConfigSyncAdapter. -->
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter_config" />
-        </service>
+        </service> -->
 
         <service android:name=".sync.data.DataSyncService"
             android:exported="false"

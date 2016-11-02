@@ -7,6 +7,7 @@ import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.From;
@@ -371,10 +372,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return result;
     }
 
-    public List<EventTag> getTags() {
-        return getTagsQuery().execute();
-    }
-
     public boolean hasDescription() {
         return description != null && description.length() > 0;
     }
@@ -491,16 +488,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return getAddress() != null;
     }
 
-    public boolean hasCategory() {
-        return event_category != null;
-    }
-
     public void setCategory(long categoryId) {
         this.event_category = ConfigurationProvider.getEventCategoryByRemoteId(categoryId);
-    }
-
-    public User getAuthor() {
-        return user;
     }
 
     public void setAuthor(User user){
@@ -511,32 +500,42 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         super.requestSync(MyApplication.getApplicationBaseContext(), DataSyncAdapter.SYNC_TYPE_EVENT);
     }
 
-    public boolean hasPicture() {
-        return picture != null;
-    }
-
     public String getBackgroundUrl() {
         return picture.getThumbnailUrl(Picture.ThumbnailType.CARD);
     }
 
     @Override
     public Event deepSave() throws CannotSaveModelException {
-        if (this.hasPicture()){
-            // We need to save first the event as the picture require this association
-            // If we don't do that there is an infinite loop as event save picture which save event ...
+        if (this.user != null && !this.hasLocalId()) this.user = this.user.deepSave();
+        if (this.spot != null) this.spot = this.spot.deepSave();
+        if (this.picture != null){
             Picture tmp = this.picture;
             this.picture = null;
-            Event newModel = super.deepSave();
-            newModel.picture = tmp;
-            newModel.picture.event = newModel;
-            newModel.picture.mySave();
-            newModel.mySave();
-            return newModel;
+            Event event = (Event) this.mySave();
+
+            // Save picture
+            tmp.event = event;
+            if (tmp.user != null) tmp.user = (User) tmp.user.mySave();
+            tmp = (Picture) tmp.mySave();
+
+            // Save event
+            event.picture = tmp;
+            return (Event) event.mySave();
         }
-        else {
-            return super.deepSave();
+        else{
+            return (Event) this.mySave();
         }
+
     }
+
+    /*
+    public Event deepSaveTransaction() throws CannotSaveModelException {
+        ActiveAndroid.beginTransaction();
+        Event event = this.deepSave();
+        ActiveAndroid.setTransactionSuccessful();
+        ActiveAndroid.endTransaction();
+        return event;
+    }*/
 
     public Picture getPicture() {
         return picture;
@@ -613,22 +612,9 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return invitations;
     }
 
-    public From getPeopleQuery() {
-        return new Select().from(UserEvent.class)
-                .where("Event = ?", this.getId())
-                .orderBy("UserEvent.Created DESC");
-    }
-
 
     public From getPicturesQuery() {
         return new Select().from(Picture.class).where("Event = ?", this.getId()).orderBy("created DESC");
     }
 
-    public From getTagsQuery() {
-        return new Select()
-                .from(EventTag.class)
-                .where("EventTag.Event = ?", this.getId())
-                //.join(EventTag.class).on("Tag.Id = EventTag.Tag")
-                .orderBy("EventTag.CountRef DESC");
-    }
 }

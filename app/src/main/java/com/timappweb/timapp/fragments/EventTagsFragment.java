@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.PlaceHolderItem;
@@ -136,7 +137,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                         return model.getId();
                     }
                 }))
-                .enableCache(false);
+                .enableCache(!MyApplication.isLowMemory());
 
         this.mRecyclerViewManager = new CursorPaginateManager<EventTag>(getContext(), mAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<EventTag>() {
