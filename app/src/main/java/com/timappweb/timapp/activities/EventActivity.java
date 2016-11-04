@@ -197,26 +197,27 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private void loadEvent() throws CannotSaveModelException {
         this.event = IntentsUtils.extractEvent(getIntent());
-        eventId = IntentsUtils.extractPlaceId(getIntent());
+        eventId = IntentsUtils.extractEventId(getIntent());
         if (event == null && eventId <= 0){
             Log.e(TAG, "Trying to view an invalid event --> redirect to home");
             this.exit();
             return;
         }
         else if (eventId <= 0){
-            eventId = event.remote_id;
+            eventId = event.id;
         }
 
         if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
             loader.setVisibility(View.VISIBLE);
-            Call<Event> call = RestClient.service().viewPlace(eventId);
+            Call<Event> call = RestClient.service().viewPlace(event == null ? eventId: event.id);
             Log.i(TAG, "Loading event with id: " + eventId + ". Existing event: " + event);
             RestClient.buildCall(call)
                     .onResponse(new HttpCallback<Event>() {
                         @Override
                         public void successful(Event event) {
                             try {
-                                EventActivity.this.event = event.deepSave();
+                                EventActivity.this.event = event;
+                                EventActivity.this.event.deepSave();
                                 SyncHistory.updateSync(DataSyncAdapter.SYNC_TYPE_EVENT, EventActivity.this.event);
                                 onEventLoaded();
                             } catch (CannotSaveModelException e) {
@@ -251,7 +252,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     .perform();
         }
         else{
-            event = (Event) event.requireLocalId();
+            event.requireLocalId();
             Log.i(TAG, "Using cached event: " + event);
             onEventLoaded();
         }

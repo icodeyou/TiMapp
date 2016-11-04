@@ -2,7 +2,6 @@ package com.timappweb.timapp.sync.performers;
 
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
@@ -84,7 +83,7 @@ public class MultipleEntriesSyncPerformer<EntityType extends SyncBaseModel, Remo
         Log.i(TAG, "Found " + localEntries.size() + " local entries. Computing merge solution...");
         try
         {
-            ActiveAndroid.beginTransaction();
+            //ActiveAndroid.beginTransaction();
 
             // Update and remove existing items. Loop over local entries
             for (SyncBaseModel localModel: localEntries){
@@ -105,11 +104,11 @@ public class MultipleEntriesSyncPerformer<EntityType extends SyncBaseModel, Remo
             }
 
             Log.i(TAG, "Merge solution ready. Applying updates");
-            ActiveAndroid.setTransactionSuccessful();
+            //ActiveAndroid.setTransactionSuccessful();
         }
         finally {
             Log.i(TAG, "Merge solution done");
-            ActiveAndroid.endTransaction();
+            //ActiveAndroid.endTransaction();
         }
 
         // mContentResolver.notifyChange(

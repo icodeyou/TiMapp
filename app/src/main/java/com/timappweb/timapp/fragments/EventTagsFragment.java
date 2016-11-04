@@ -12,9 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
@@ -24,8 +23,10 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
+import com.timappweb.timapp.data.loader.paginate.PaginateFilter;
+import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
-import com.timappweb.timapp.data.models.MyModel;
+import com.timappweb.timapp.data.models.EventTag_Table;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.utils.DurationConstants;
@@ -103,6 +104,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
     }
 
     private void initDataLoader(){
+        final Event event = getEvent();
         this.mDataLoader = CursorPaginateDataLoader.<EventTag, Tag>create(
                     "tags/event/" + getEvent().getRemoteId(),
                     Tag.class
@@ -118,23 +120,23 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
                         return eventTag;
                     }
                 })
-                .setLocalQuery(new Select()
+                .setLocalQuery(SQLite.select()
                         .from(EventTag.class)
-                        .where("EventTag.Event = ?", getEvent().getId()))
-                .setClearQuery(new Delete()
+                        .where(EventTag_Table.event_id.eq(event.id)))
+                .setClearQuery(SQLite.delete()
                         .from(EventTag.class)
-                        .where("EventTag.Event = ?", getEvent().getId()))
-                .addFilter(new CursorPaginateDataLoader.PaginateFilter("CountRef", "count_ref", CursorPaginateDataLoader.PaginateFilter.DESC,
+                        .where(EventTag_Table.event_id.eq(event.id)))
+                .addFilter(new PaginateFilter(EventTag_Table.count_ref, "count_ref", false,
                         new CursorPaginateDataLoader.FilterValueTransformer<EventTag>() {
                             @Override
                             public Object transform(EventTag model) {
                                 return model.count_ref;
                             }
                         }))
-                .addFilter(new CursorPaginateDataLoader.PaginateFilter("id", "id", CursorPaginateDataLoader.PaginateFilter.DESC, new CursorPaginateDataLoader.FilterValueTransformer<MyModel>() {
+                .addFilter(new PaginateFilter(EventTag_Table.id, "id", false, new CursorPaginateDataLoader.FilterValueTransformer<EventTag>() {
                     @Override
-                    public Object transform(MyModel model) {
-                        return model.getId();
+                    public Object transform(EventTag model) {
+                        return model.id;
                     }
                 }))
                 .enableCache(!MyApplication.isLowMemory());

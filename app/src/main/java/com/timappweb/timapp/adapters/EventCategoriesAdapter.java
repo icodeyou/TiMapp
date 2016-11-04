@@ -18,7 +18,7 @@ public class EventCategoriesAdapter extends CategoriesAdapter {
 
     protected LayoutInflater inflater;
     //protected List<EventCategory> eventCategories = Collections.emptyList();
-    protected HashMap<Integer, ImageView> icons = new HashMap<>();
+    protected HashMap<Long, ImageView> icons = new HashMap<>();
 
     private ImageView currentCategoryIcon;
 
@@ -42,7 +42,7 @@ public class EventCategoriesAdapter extends CategoriesAdapter {
         eventCategory = ConfigurationProvider.eventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
         final TextView categoryText = holder.categoryText;
-        icons.put(eventCategory.remote_id, categoryIcon);
+        icons.put(eventCategory.id, categoryIcon);
 
         categoryIcon.setImageDrawable(eventCategory.getIconDrawable(this.context));
         if(isLegend) {

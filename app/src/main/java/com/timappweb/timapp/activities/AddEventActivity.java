@@ -388,7 +388,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                         long syncId = feedback.get("places_users").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsLong();
                         QuotaManager.instance().add(QuotaType.ADD_EVENT);
                         EventStatusManager.addLocally(syncId, event, UserEventStatusEnum.HERE);
-                        IntentsUtils.viewEventFromId(AddEventActivity.this, event.remote_id);
+                        IntentsUtils.viewEventFromId(AddEventActivity.this, event.id);
                     }
 
                     @Override

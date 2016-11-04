@@ -1,12 +1,10 @@
 package com.timappweb.timapp.data.loader;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.google.gson.JsonObject;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -16,13 +14,13 @@ import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
+import com.timappweb.timapp.data.loader.paginate.PaginateFilterFactory;
 import com.timappweb.timapp.data.models.UserFriend;
+import com.timappweb.timapp.data.models.UserFriend_Table;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
-
-import java.io.IOException;
 
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
 import retrofit2.Response;
@@ -46,15 +44,14 @@ public class FriendsLoaderFactory {
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<UserFriend, UserFriend>() {
                     @Override
                     public UserFriend beforeSaveModel(UserFriend model) {
-                        model.userSource = MyApplication.getCurrentUser();
+                        model.user_source = MyApplication.getCurrentUser();
                         return model;
                     }
                 })
                 .initCache("UserFriends:"+MyApplication.getCurrentUser().getRemoteId(), 0)
-                //.addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
-                .setLocalQuery(new Select().from(UserFriend.class).where("UserSource = ?", MyApplication.getCurrentUser().getId()))
-                .setClearQuery(new Delete().from(UserFriend.class).where("UserSource = ?", MyApplication.getCurrentUser().getId()));
+                .addFilter(PaginateFilterFactory.createSyncIdFilter(UserFriend_Table.id))
+                .setLocalQuery(SQLite.select().from(UserFriend.class).where(UserFriend_Table.user_source_id.eq(MyApplication.getCurrentUser().id)))
+                .setClearQuery(SQLite.delete().from(UserFriend.class).where(UserFriend_Table.user_source_id.eq(MyApplication.getCurrentUser().id)));
     }
 
     public static CursorPaginateManager<UserFriend> manager(final Context context, MyFlexibleAdapter mAdapter, final SwipeRefreshLayout mSwipeRefreshLayout) {
@@ -63,7 +60,7 @@ public class FriendsLoaderFactory {
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<UserFriend>() {
                     @Override
                     public AbstractFlexibleItem createItem(UserFriend userFriend) {
-                        return new UserItem(userFriend.userTarget);
+                        return new UserItem(userFriend.user_target);
                     }
                 })
                 .setMinDelayForceRefresh(MIN_DELAY_FORCE_REFRESH)

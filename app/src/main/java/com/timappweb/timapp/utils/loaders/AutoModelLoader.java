@@ -8,10 +8,10 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.activeandroid.Model;
-import com.activeandroid.content.ContentProvider;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
+import com.raizlabs.android.dbflow.sql.language.From;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.timappweb.timapp.data.DataContentProvider;
+import com.timappweb.timapp.data.models.MyModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @param <T> the generic type
  */
-public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
+public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
 {
     /**
      * Used to handle communication between the context and the ContentProvider
@@ -94,7 +94,7 @@ public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
      * @param updateOnRelationshipChanges
      *            if true, loader will updated when tables related to the one detected are changed
      */
-    public AutoModelLoader(Context context, Class<T> clazz, From from,
+    public AutoModelLoader(Context context, Class<T> clazz, From<T> from,
                            boolean updateOnRelationshipChanges)
     {
         super(context);
@@ -149,12 +149,12 @@ public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
 
         if (mQuery == null)
         {
-            results = new Select().from(mClass)
-                    .execute();
+            results = SQLite.select().from(mClass)
+                    .queryList();
         }
         else
         {
-            results = mQuery.execute();
+            results = mQuery.queryList();
         }
 
         return results;
@@ -240,7 +240,7 @@ public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
             mHandle = ContentResolver.addStatusChangeListener(
                     ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE, statusObserver);
 
-            mContentResolver.registerContentObserver(ContentProvider.createUri(mClass, null), true,
+            mContentResolver.registerContentObserver(DataContentProvider.createUri(mClass, null), true,
                     mContentObserver);
 
             // Register for updates from related tables
@@ -250,10 +250,10 @@ public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
                 for (Field field : fields)
                 {
                     Class<?> clazz = field.getType();
-                    if (Model.class.isAssignableFrom(clazz))
+                    if (MyModel.class.isAssignableFrom(clazz))
                     {
                         mContentResolver.registerContentObserver(
-                                ContentProvider.createUri(clazz.asSubclass(Model.class), null),
+                                DataContentProvider.createUri(clazz.asSubclass(MyModel.class), null),
                                 true, mContentObserver);
                     }
                 }
@@ -262,10 +262,10 @@ public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
                 for (Method method : methods)
                 {
                     Class<?> returnClass = method.getReturnType();
-                    if (Model.class.isAssignableFrom(returnClass))
+                    if (MyModel.class.isAssignableFrom(returnClass))
                     {
                         mContentResolver.registerContentObserver(
-                                ContentProvider.createUri(returnClass.asSubclass(Model.class), null),
+                                DataContentProvider.createUri(returnClass.asSubclass(MyModel.class), null),
                                 true, mContentObserver);
                     }
                     else
@@ -277,11 +277,11 @@ public class AutoModelLoader<T extends Model> extends AsyncTaskLoader<List<T>>
                             for (Type actualType : parameterizedType.getActualTypeArguments())
                             {
                                 Class<T> genericClass = (Class<T>) actualType;
-                                if (Model.class.isAssignableFrom(genericClass))
+                                if (MyModel.class.isAssignableFrom(genericClass))
                                 {
                                     mContentResolver.registerContentObserver(
-                                            ContentProvider.createUri(
-                                                    genericClass.asSubclass(Model.class), null),
+                                            DataContentProvider.createUri(
+                                                    genericClass.asSubclass(MyModel.class), null),
                                             true, mContentObserver);
                                 }
                             }

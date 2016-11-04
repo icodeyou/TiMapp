@@ -26,6 +26,8 @@ import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.EventInvitationsTable;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
@@ -76,23 +78,16 @@ public class InviteFriendsActivity extends BaseActivity
         shareButton = findViewById(R.id.share_button);
         noFriendsView = findViewById(R.id.no_data_view_layout);
 
-        try {
-            event = (Event) event.requireLocalId();
-            this.initToolbar(true);
-            mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-            recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
-            progressview = findViewById(R.id.progress_view);
-            initAdapterListFriends();
+        this.initToolbar(true);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
+        progressview = findViewById(R.id.progress_view);
+        initAdapterListFriends();
 
-            FriendsLoaderFactory.manager(this, mAdapter, mSwipeRefreshLayout)
-                    .setCallback(this)
-                    .setNoDataView(noFriendsView)
-                    .load();
-
-        } catch (CannotSaveModelException e) {
-            IntentsUtils.getBackToParent(this);
-            return;
-        }
+        FriendsLoaderFactory.manager(this, mAdapter, mSwipeRefreshLayout)
+                .setCallback(this)
+                .setNoDataView(noFriendsView)
+                .load();
 
         initListener();
     }
@@ -159,7 +154,7 @@ public class InviteFriendsActivity extends BaseActivity
     private void initializeSelection(){
         // Preselect every user already invited.
         if (_cachedInvitations == null){
-            _cachedInvitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
+            _cachedInvitations = EventInvitationsTable.getSentInvitationsByUser(MyApplication.getCurrentUser(), event);
         }
         for (EventsInvitation invite: _cachedInvitations){
             int position = mAdapter.getGlobalPositionOf(new UserItem(invite.getUser()));
@@ -209,7 +204,7 @@ public class InviteFriendsActivity extends BaseActivity
             return;
         }
         progressview.setVisibility(View.VISIBLE);
-        Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.remote_id, ids);
+        Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.id, ids);
         RestClient.buildCall(call)
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
                 .onResponse(new HttpCallback<List<UserInvitationFeedback>>() {
@@ -222,7 +217,7 @@ public class InviteFriendsActivity extends BaseActivity
                                 if (feedback.invitation != null){
                                     feedback.invitation.event = event;
                                     feedback.invitation.user_source = MyApplication.getCurrentUser();
-                                    feedback.invitation.user_target = User.queryByRemoteId(User.class, feedback.user_id).executeSingle();
+                                    feedback.invitation.user_target = BaseTable.loadByRemoteId(User.class, feedback.user_id);
                                     feedback.invitation.mySaveSafeCall();
                                 }
                             }

@@ -17,7 +17,7 @@ public class BubbleCategoryAdapter extends RecyclerView.Adapter<BubbleCategoryAd
 
     protected LayoutInflater inflater;
     //protected List<EventCategory> eventCategories = Collections.emptyList();
-    protected HashMap<Integer, ImageView> icons = new HashMap<>();
+    protected HashMap<Long, ImageView> icons = new HashMap<>();
 
     private Context context;
 
@@ -40,7 +40,7 @@ public class BubbleCategoryAdapter extends RecyclerView.Adapter<BubbleCategoryAd
     public void onBindViewHolder(BubbleCategoryAdapter.CategoriesViewHolder holder, final int position) {
         final EventCategory eventCategory = ConfigurationProvider.eventCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
-        icons.put(eventCategory.remote_id, categoryIcon);
+        icons.put(eventCategory.id, categoryIcon);
     }
 
     public ImageView getIconFromId(int categoryId) {

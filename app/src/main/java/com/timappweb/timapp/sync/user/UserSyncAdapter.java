@@ -24,11 +24,12 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.query.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserQuota;
+import com.timappweb.timapp.data.models.UserQuota_Table;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
@@ -36,8 +37,6 @@ import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.sync.performers.StoreEntriesSyncPerformer;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -127,7 +126,7 @@ public class UserSyncAdapter extends AbstractSyncAdapter {
 
                     @Override
                     public void before() {
-                        new Delete().from(UserQuota.class).where("User = ?", user).execute();
+                        SQLite.delete(UserQuota.class).where(UserQuota_Table.user_id.eq(user.id)).execute();
                         Log.d(TAG, "Cleaning user quota... Fetching new quota");
                     }
 

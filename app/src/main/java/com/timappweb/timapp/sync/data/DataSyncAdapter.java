@@ -24,13 +24,14 @@ import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.query.Delete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventTag;
+import com.timappweb.timapp.data.models.EventTag_Table;
 import com.timappweb.timapp.data.models.EventsInvitation;
 import com.timappweb.timapp.data.models.Picture;
 import com.timappweb.timapp.data.models.Spot;
@@ -39,17 +40,18 @@ import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.rest.io.responses.PaginatedResponse;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
 import com.timappweb.timapp.sync.AbstractSyncAdapter;
+import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.callbacks.PictureSyncCallback;
 import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
 import com.timappweb.timapp.sync.callbacks.UserPlaceSyncCallback;
-import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.exceptions.CannotSyncException;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.sync.exceptions.MissingSyncParameterException;
@@ -104,6 +106,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     public static final int SYNC_TYPE_EVENT_PICTURE     = 10;
     public static final int SYNC_TYPE_EVENT_TAGS        = 11;
     public static final int SYNC_TYPE_MULTIPLE_SPOT     = 12;
+    public static final int SYNC_TYPE_SPOT = 13;
 
     // ---------------------------------------------------------------------------------------------
 
@@ -232,7 +235,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                         return RestClient.service().bestEvents(conditions.toMap());
                     }
                 })
-                .setLocalEntries(Event.findInArea(bounds, Event.class))
+                //.setLocalEntries(Event.findInArea(bounds, Event.class))
                 .setCallback(new InvitationSyncCallback())
                 .perform();
     }
@@ -251,7 +254,8 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                         return body.items;
                     }
                 })
-                .setLocalEntries(event.getPictures());
+                //.setLocalEntries(event.getPictures());
+                ;
         performer
                 .setCallback(new PictureSyncCallback(event))
                 .setSyncOptions(options)
@@ -273,7 +277,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                         return body.items;
                     }
                 })
-                .setLocalEntries(event.getUsers())
+                //.setLocalEntries(event.getUsers())
                 .setCallback(new UserPlaceSyncCallback(event))
                 .perform();
     }
@@ -297,7 +301,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
 
                     @Override
                     public void before() {
-                        new Delete().from(EventTag.class).where("Event = ?", event).execute();
+                        SQLite.delete(EventTag.class).where(EventTag_Table.event_id.eq(event.id)).execute();
                     }
 
                     @Override
@@ -327,7 +331,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                         return body.items;
                     }
                 })
-                .setLocalEntries(MyApplication.getCurrentUser().getInviteSent(event.getId()))
+                .setLocalEntries(MyApplication.getCurrentUser().getInviteSent(event.id))
                 .setCallback(new RemoteMasterSyncCallback())
                 .perform();
     }
@@ -366,7 +370,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
                         return body.items;
                     }
                 })
-                .setLocalEntries(Spot.findInArea(bounds, Spot.class))
+                //.setLocalEntries(Spot.findInArea(bounds, Spot.class))
                 .setCallback(new RemoteMasterSyncCallback())
                 .perform();
     }
@@ -391,7 +395,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             Log.e(TAG, "Invalid sync key for event. Please provide key to sync adapter: " + SYNC_PARAM_EVENT_ID);
             throw new MissingSyncParameterException(SYNC_PARAM_EVENT_ID);
         }
-        Event event = Event.loadByRemoteId(Event.class, eventId);
+        Event event = BaseTable.loadByRemoteId(Event.class, eventId);
         if (event == null){
             throw new CannotSyncException("Event id '" + eventId + "' does not exist", 0);
         }
@@ -399,7 +403,14 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
     }
 
     private long extractRemoteId(Bundle extras){
-        int id = extras.getInt(SYNC_ID_KEY, -1);
+        long id;
+        try{
+            id = extras.getLong(SYNC_ID_KEY, -1);
+        }
+        catch (Exception ex){
+            Log.e(TAG, ex.getMessage());
+            throw  new InvalidParameterException();
+        }
         if (id == -1) {
             Log.e(TAG, "Invalid sync key for id. Please provide key to sync adapter: " + SYNC_ID_KEY);
             throw new InvalidParameterException();

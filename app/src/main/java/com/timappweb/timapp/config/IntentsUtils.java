@@ -39,6 +39,7 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -140,17 +141,17 @@ public class IntentsUtils {
 
     public static void profile(Context context, User user) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(KEY_USER_ID, user.remote_id);
-        Log.d(TAG, "Intent to view profile: " + user.remote_id);
+        intent.putExtra(KEY_USER_ID, user.id);
+        Log.d(TAG, "Intent to view profile: " + user.id);
         context.startActivity(intent);
     }
 
     public static void profile(User user) {
         Context context = MyApplication.getApplicationBaseContext();
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(KEY_USER_ID, user.remote_id);
+        intent.putExtra(KEY_USER_ID, user.id);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Log.d(TAG, "Intent to view profile: " + user.remote_id);
+        Log.d(TAG, "Intent to view profile: " + user.id);
         context.startActivity(intent);
     }
 
@@ -274,7 +275,7 @@ public class IntentsUtils {
 
         Intent addtagsIntent = buildIntentAddTags(activity, event);
 
-        if(tag != null) addtagsIntent.putExtra(KEY_TAG, tag.getId());
+        if(tag != null) addtagsIntent.putExtra(KEY_TAG, tag.id);
 
         activity.startActivityForResult(addtagsIntent , REQUEST_TAGS);
     }
@@ -282,7 +283,7 @@ public class IntentsUtils {
     public static Intent buildIntentAddTags(Context context, Event event){
         Intent intent = new Intent(context, AddTagActivity.class);
         Bundle extras = new Bundle();
-        extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
+        extras.putString(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         return intent;
     }
@@ -296,7 +297,7 @@ public class IntentsUtils {
         //}
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
         Bundle extras = new Bundle();
-        extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
+        extras.putString(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
@@ -358,12 +359,7 @@ public class IntentsUtils {
     public static Intent buildIntentViewPlace(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
         Bundle extras = new Bundle();      // TODO use constant
-        try {
-            event = (Event) event.requireLocalId();
-            extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
-        } catch (CannotSaveModelException e) {
-            Log.e(TAG, e.getMessage());
-        }
+        extras.putString(IntentsUtils.KEY_EVENT, SerializeHelper.pack(event));
         intent.putExtras(extras);
         return intent;
     }
@@ -438,7 +434,7 @@ public class IntentsUtils {
             Log.e(TAG, "Trying to extract a null event");
             return null;
         }
-        return Event.load(Event.class, extras.getLong(IntentsUtils.KEY_EVENT));
+        return SerializeHelper.unpackModel(extras.getString(IntentsUtils.KEY_EVENT), Event.class);
     }
 
     public static String[] extractPicture(Intent intent) {
@@ -494,7 +490,7 @@ public class IntentsUtils {
     }
 
 
-    public static long extractPlaceId(Intent intent) {
+    public static long extractEventId(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return -1;
@@ -519,7 +515,7 @@ public class IntentsUtils {
             return null;
         }
         else {
-            return Tag.load(Tag.class, extras.getLong(KEY_TAG));
+            return BaseTable.loadByRemoteId(Tag.class, extras.getLong(KEY_TAG));
         }
     }
 

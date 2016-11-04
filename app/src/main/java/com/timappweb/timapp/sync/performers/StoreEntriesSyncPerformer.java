@@ -2,7 +2,6 @@ package com.timappweb.timapp.sync.performers;
 
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.sync.SyncAdapterOption;
@@ -54,7 +53,8 @@ public class StoreEntriesSyncPerformer<EntityType extends MyModel, RemoteCallTyp
 
         try
         {
-            ActiveAndroid.beginTransaction();
+            // TODO transaction
+            //ActiveAndroid.beginTransaction();
 
             callback.before();
 
@@ -66,12 +66,12 @@ public class StoreEntriesSyncPerformer<EntityType extends MyModel, RemoteCallTyp
             callback.after();
 
             Log.i(TAG, "Merge solution ready. Applying updates");
-            ActiveAndroid.setTransactionSuccessful();
+            //ActiveAndroid.setTransactionSuccessful();
         } catch (CannotSaveModelException e) {
             throw new CannotSyncException("Cannot save model: " + e.getMessage(), 0);
         } finally {
             Log.i(TAG, "Merge solution done");
-            ActiveAndroid.endTransaction();
+            //ActiveAndroid.endTransaction();
         }
     }
 

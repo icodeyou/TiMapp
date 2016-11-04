@@ -9,6 +9,7 @@ import android.util.Log;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.tables.BaseTable;
 import com.timappweb.timapp.utils.loaders.AutoModelLoader;
 
 import java.util.List;
@@ -24,11 +25,11 @@ public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbac
     private final int syncType;
     private SwipeRefreshLayout mSwipeRefreshLayout = null;
     private Activity context;
-    private int key;
+    private long key;
     private Class<? extends SyncBaseModel> clazz;
 
     public SyncOneEntryLoader(Activity context,
-                              int key,
+                              long key,
                               Class<? extends SyncBaseModel> clazz,
                               int syncType) {
         this.context = context;
@@ -40,7 +41,7 @@ public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbac
     @Override
     public Loader<List<DataType>> onCreateLoader(int id, Bundle args) {
         SyncBaseModel.getEntry(User.class, context, key, syncType);
-        return new AutoModelLoader(context, User.class, SyncBaseModel.queryByRemoteId(clazz, key), true);
+        return new AutoModelLoader(context, User.class, BaseTable.queryByRemoteId(clazz, key), true);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class SyncOneEntryLoader<DataType> implements LoaderManager.LoaderCallbac
     public void onRefresh(){
         Log.v(TAG, "Refreshing data");
         if (mSwipeRefreshLayout != null) mSwipeRefreshLayout.setRefreshing(true);
-        SyncBaseModel.getRemoteEntry(User.class, context, key, syncType);
+        BaseTable.syncEntry(User.class, context, key, syncType);
     }
 
     public void setSwipeAndRefreshLayout(SwipeRefreshLayout swipeAndRefreshLayout) {

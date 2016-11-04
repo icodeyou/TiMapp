@@ -1,7 +1,5 @@
 package com.timappweb.timapp.data.models.dummy;
 
-import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.User;
 
 import java.util.LinkedList;
@@ -12,12 +10,12 @@ import java.util.List;
  */
 public class DummyUserFactory {
 
-    private static int createCounter = 0;
+    private static long createCounter = 0;
 
     public static User create(){
         User user = new User();
         user.setUsername("Bob " + createCounter);
-        user.remote_id = createCounter+1;
+        user.id = createCounter+1;
         createCounter++;
         return user;
     }

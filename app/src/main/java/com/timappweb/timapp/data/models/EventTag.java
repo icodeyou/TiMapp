@@ -1,42 +1,43 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ConflictAction;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
+import com.raizlabs.android.dbflow.annotation.UniqueGroup;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.Property;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-
-import java.util.List;
 
 /**
  * Created by stephane on 5/8/2016.
  */
-@Table(name = "EventTag")
-public class EventTag extends MyModel {
+@Table(database = AppDatabase.class, uniqueColumnGroups = {@UniqueGroup(groupNumber = 1, uniqueConflict = ConflictAction.IGNORE)})
+public class EventTag extends LocalModel {
+    private static final String TAG = "EventTag";
 
     // =============================================================================================
     // DATABASE
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Event",
-            notNull = true,
-            uniqueGroups = {"unique_tag"},
-            onUniqueConflicts = {Column.ConflictAction.IGNORE},
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Event.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
+    @Unique(unique = false, uniqueGroups = 1)
+    @NotNull
     public Event event;
 
-    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Tag",
-            notNull = true,
-            uniqueGroups = {"unique_tag"},
-            onUniqueConflicts = {Column.ConflictAction.IGNORE},
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @ModelAssociation(joinModel = Tag.class, type = ModelAssociation.Type.BELONGS_TO)
+    @ForeignKey(tableClass = Tag.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
+    @Unique(unique = false, uniqueGroups = 1)
+    @NotNull
     public Tag tag;
 
-    @Column(name = "CountRef", notNull = true)
+    @Column
+    @NotNull
     public int count_ref;
 
 
@@ -63,42 +64,6 @@ public class EventTag extends MyModel {
     }
 
     public EventTag() {}
-
-    /**
-     * Increment the tag counter by one for each given tag in the list
-     * @param tags
-     */
-    public static void incrementCountRef(Event event, List<Tag> tags) {
-        if (!event.hasLocalId()){
-            throw new IllegalStateException();
-        }
-        ActiveAndroid.beginTransaction();
-        for (Tag tag: tags){
-            try{
-            if (!tag.hasLocalId()) tag = (Tag) tag.mySave();
-                EventTag existingEventTag = new Select().from(EventTag.class)
-                        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
-                        .executeSingle();
-                // Insert if does not exists
-                if (existingEventTag != null){
-                    existingEventTag.count_ref += 1;
-                    existingEventTag.mySave();
-                    //new Update(EventTag.class)
-                    //        .set("CountRef = CountRef + 1")
-                    //        .where("EventTag.Tag = ? AND EventTag.Event = ?", tag.getId(), event.getId())
-                    //        .execute();
-                }
-                // Update existing record
-                else{
-                    new EventTag(event, tag, 1).mySave();
-                }
-            } catch (CannotSaveModelException e) {
-                e.printStackTrace(); // TODO
-            }
-        }
-        ActiveAndroid.setTransactionSuccessful();
-        ActiveAndroid.endTransaction();
-    }
 
     public String getTagName() {
         return tag != null ? tag.name : "";

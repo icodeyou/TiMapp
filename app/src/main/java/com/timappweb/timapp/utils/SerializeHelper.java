@@ -1,9 +1,9 @@
 package com.timappweb.timapp.utils;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.timappweb.timapp.data.models.MyModel;
 
 /**
  * Created by stephane on 6/2/2016.
@@ -16,13 +16,8 @@ public class SerializeHelper {
             .excludeFieldsWithoutExposeAnnotation()
             .create();
 
-    public static <T extends Model> String packModel(T obj, Class<T> type){
-        if (obj.getId() == null){
-            return serializer.toJson(obj, type);
-        }
-        else{
-            return serializer.toJson(obj.getId(), Long.class);
-        }
+    public static <T extends MyModel> String packModel(T obj, Class<T> type){
+        return serializer.toJson(obj, type);
     }
 
     public static <T> String pack(T obj){
@@ -40,14 +35,8 @@ public class SerializeHelper {
      * @param <T>
      * @return
      */
-    public static <T extends Model> T unpackModel(String data, Class<T> classOfT) {
-        try{
-            return serializer.fromJson(data, classOfT);
-        }
-        catch (Exception ex){
-            Long id = serializer.fromJson(data, Long.class);
-            return new Select().from(classOfT).where("Id = ?", id).executeSingle();
-        }
+    public static <T extends MyModel> T unpackModel(String data, Class<T> classOfT) {
+        return serializer.fromJson(data, classOfT);
     }
 
 }

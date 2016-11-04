@@ -7,11 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
 import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.login.LoginManager;
 import com.google.gson.JsonObject;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.timappweb.timapp.activities.LoginActivity;
 import com.timappweb.timapp.activities.SplashActivity;
 import com.timappweb.timapp.auth.AuthManager;
@@ -57,7 +58,6 @@ public class MyApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        ActiveAndroid.dispose();
     }
 
     /**
@@ -67,11 +67,11 @@ public class MyApplication extends Application {
         return auth.isLoggedIn();
     }
 
-    public static boolean isCurrentUser(int userId){
-        return MyApplication.isLoggedIn() && MyApplication.getCurrentUser().remote_id == userId;
+    public static boolean isCurrentUser(long userId){
+        return MyApplication.isLoggedIn() && MyApplication.getCurrentUser().id == userId;
     }
     public static boolean isCurrentUser(User mUser) {
-        return MyApplication.isCurrentUser(mUser.remote_id);
+        return MyApplication.isCurrentUser(mUser.id);
     }
 
     public static User getCurrentUser(){
@@ -83,7 +83,9 @@ public class MyApplication extends Application {
         super.onCreate();
         //this.deleteDatabase(getString(R.string.db_name));
         _appContext = getApplicationContext();
-        ActiveAndroid.initialize(this);
+        // Create db immediatly
+        FlowManager.init(new FlowConfig.Builder(this).openDatabasesOnInit(true).build());
+
         Fresco.initialize(this, ImagePipelineConfigFactory.getImagePipelineConfig(this));
         MyApplication.auth = AuthManagerFactory.create();
         RestClient.init(this, getResources().getString(R.string.api_base_url), MyApplication.getAuthManager());

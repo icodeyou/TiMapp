@@ -19,8 +19,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
@@ -32,8 +32,10 @@ import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
+import com.timappweb.timapp.data.loader.paginate.PaginateFilterFactory;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Picture;
+import com.timappweb.timapp.data.models.Picture_Table;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.AutoMergeCallback;
@@ -131,20 +133,6 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                 .setCopyExistingPicturesToPublicLocation(true);
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        try {
-            if (eventActivity.getEvent() == null){
-                throw new Exception("Cannot add picture for null event");
-            }
-            Event event = (Event) eventActivity.getEvent().requireLocalId();
-            eventActivity.setEvent(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-            eventActivity.exit();
-        }
-        super.onViewCreated(view, savedInstanceState);
-    }
 
     @Override
     public void onActivityResult(int requestCode, final int resultCode, final Intent data) {
@@ -367,7 +355,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                         "pictures/event/" + getEvent().getRemoteId(),
                         Picture.class)
                 .initCache("EventPicture" + eventActivity.getEvent().getRemoteId(), CACHE_DURATION)
-                .setLocalQuery(new Select().from(Picture.class).where("Event = ?", getEvent().getId()))
+                .setLocalQuery(SQLite.select().from(Picture.class).where(Picture_Table.event_id.eq(getEvent().id)))
                 //.setLimit(8)
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<Picture, Picture>() {
                     @Override
@@ -376,8 +364,8 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                         return model;
                     }
                 })
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
+                .addFilter(PaginateFilterFactory.createCreatedFilter(Picture_Table.created))
+                .addFilter(PaginateFilterFactory.createSyncIdFilter(Picture_Table.id))
                 .enableCache(!MyApplication.isLowMemory());
         paginatorManager = new CursorPaginateManager<Picture>(getContext(), picturesAdapter, mDataLoader)
                 .setItemTransformer(new RecyclerViewManager.ItemTransformer<Picture>(){

@@ -135,7 +135,10 @@ public class Util {
     }
 
     public static String capitalize(String string) {
-        return string.substring(0,1).toUpperCase() + string.substring(1);
+        if (string == null) return string;
+        return string.length() > 0
+                ? string.substring(0,1).toUpperCase() + (string.length() > 1 ? string.substring(1): "")
+                : string;
     }
 
     public static void appStateError(final String TAG, String msg) {

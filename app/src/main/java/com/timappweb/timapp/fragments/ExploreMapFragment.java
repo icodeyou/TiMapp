@@ -199,23 +199,16 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
     }
 
     private void displayEvent(Event event) {
-        try {
-            event = (Event) event.requireLocalId();
-            eventView.setVisibility(View.VISIBLE);
-            mBinding.setEvent(event);
+        eventView.setVisibility(View.VISIBLE);
+        mBinding.setEvent(event);
 
-            FabListenerFactory.setFabListener(getContext(), root, event);
+        FabListenerFactory.setFabListener(getContext(), root, event);
 
-            final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_alpha);
-            eventView.startAnimation(slideIn);
-            Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
-            Animation translateUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_strong);
-            btnAddEvent.startAnimation(translateUp);
-        }
-        catch (CannotSaveModelException e) {
-            // should not happen
-            Log.e(TAG, e.getMessage());
-        }
+        final Animation slideIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_alpha);
+        eventView.startAnimation(slideIn);
+        Log.v(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
+        Animation translateUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_up_strong);
+        btnAddEvent.startAnimation(translateUp);
     }
 
     public void hideEvent() {

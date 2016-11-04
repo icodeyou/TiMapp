@@ -2,12 +2,19 @@ package com.timappweb.timapp.data.models;
 
 import android.util.Log;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ConflictAction;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
+import com.raizlabs.android.dbflow.annotation.UniqueGroup;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.config.QuotaManager;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.Util;
@@ -20,7 +27,9 @@ import java.util.Date;
 /**
  * Created by stephane on 4/5/2016.
  */
-@Table(name = "UserQuotas")
+@Table(database = AppDatabase.class, uniqueColumnGroups = {
+        @UniqueGroup(groupNumber = 1, uniqueConflict = ConflictAction.REPLACE)
+})
 public class UserQuota extends SyncBaseModel {
 
     public enum QuotaPeriod {MINUTE, HOUR, DAY, MONTH, YEAR, OVERALL}
@@ -31,13 +40,17 @@ public class UserQuota extends SyncBaseModel {
     // DATABASE
 
     @Expose
-    @Column(name = "QuotaTypeId", index = true, notNull = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
+    @NotNull
+    @Column
+    @Unique(unique = false, uniqueGroups = 1)
     @SerializedName("type_id")
     public int type_id;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
+    @NotNull
+    @ForeignKey(tableClass = User.class, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @Unique(unique = false, uniqueGroups = 1)
     @Expose
-    @Column(name = "User", index = true, notNull = true, uniqueGroups = {"uniqueUserQuota"}, onUniqueConflicts = {Column.ConflictAction.REPLACE})
     public User user;
 
     @Expose
@@ -102,18 +115,12 @@ public class UserQuota extends SyncBaseModel {
         super();
     }
 
-    @Override
-    public MyModel mySave() throws CannotSaveModelException {
-        this.remote_id = this.type_id; // hack because Remote id must not be null ...
-        return super.mySave();
-    }
-
     public static UserQuota get(long user_id, int type){
-        UserQuota userQuota = new Select()
+        UserQuota userQuota = SQLite.select()
                 .from(UserQuota.class)
-                .where("User = ?", user_id)
-                .where("QuotaTypeId = ?", type)
-                .executeSingle();
+                .where(UserQuota_Table.user_id.eq(user_id))
+                .and(UserQuota_Table.type_id.eq(type))
+                .querySingle();
         return userQuota;
     }
 
@@ -298,6 +305,11 @@ public class UserQuota extends SyncBaseModel {
         result = 31 * result + type_id;
         result = 31 * result + 2;
         return result;
+    }
+
+    @Override
+    public int getSyncType() {
+        throw new InternalError("Not syncable");
     }
 
 

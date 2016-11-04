@@ -3,14 +3,15 @@ package com.timappweb.timapp.config;
 import android.content.Context;
 import android.util.Log;
 
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.google.gson.JsonSyntaxException;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.models.Category;
 import com.timappweb.timapp.data.models.EventCategory;
+import com.timappweb.timapp.data.models.EventCategory_Table;
 import com.timappweb.timapp.data.models.SpotCategory;
+import com.timappweb.timapp.data.models.SpotCategory_Table;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
@@ -44,7 +45,7 @@ public class ConfigurationProvider{
 
     public static List<EventCategory> eventCategories(){
         if (eventCategories == null){
-            eventCategories = new Select().from(EventCategory.class).orderBy("Position ASC").execute();
+            eventCategories = SQLite.select().from(EventCategory.class).orderBy(EventCategory_Table.position, true).queryList();
             if (eventCategories != null){
                 initIcons(MyApplication.getApplicationBaseContext(), eventCategories);
             }
@@ -61,7 +62,7 @@ public class ConfigurationProvider{
      */
     public static List<SpotCategory> spotCategories(){
         if (spotCategories == null){
-            spotCategories = new Select().from(SpotCategory.class).orderBy("Position ASC").execute();
+            spotCategories = SQLite.select().from(SpotCategory.class).orderBy(SpotCategory_Table.position, true).queryList();
             if (spotCategories != null){
                 initIcons(MyApplication.getApplicationBaseContext(), spotCategories);
             }
@@ -115,7 +116,7 @@ public class ConfigurationProvider{
                         }
                     });
             callManager.addCall(CALL_ID_SPOT_CATEGORIES, RestClient.service().spotCategories())
-                    .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, new Select().from(SpotCategory.class)){
+                    .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, SQLite.select().from(SpotCategory.class)){
                         @Override
                         public void successful(List<SpotCategory> categories) {
                             super.successful(categories);
@@ -123,7 +124,7 @@ public class ConfigurationProvider{
                         }
                     });
             callManager.addCall(CALL_ID_EVENT_CATEGORIES, RestClient.service().eventCategories())
-                    .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, new Select().from(EventCategory.class)){
+                    .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, SQLite.select().from(EventCategory.class)){
                         @Override
                         public void successful(List<EventCategory> categories) {
                             super.successful(categories);
@@ -174,7 +175,7 @@ public class ConfigurationProvider{
 
     public static SpotCategory getSpotCategoryByRemoteId(long remoteId) {
         for (SpotCategory category: spotCategories()){
-            if (category.remote_id == remoteId){
+            if (category.id == remoteId){
                 return category;
             }
         }
@@ -183,7 +184,7 @@ public class ConfigurationProvider{
 
     public static EventCategory getEventCategoryByRemoteId(long id) {
         for (EventCategory category: eventCategories()){
-            if (category.remote_id == id){
+            if (category.id == id){
                 return category;
             }
         }
@@ -229,12 +230,12 @@ public class ConfigurationProvider{
     }
 
     private static void clearEventCategories() {
-        new Delete().from(EventCategory.class).execute();
+        SQLite.delete().from(EventCategory.class).execute();
         // TODO clear icons
     }
 
     private static void clearSpotCategories() {
-        new Delete().from(SpotCategory.class).execute();
+        SQLite.delete().from(SpotCategory.class).execute();
         // TODO clear icons
     }
 

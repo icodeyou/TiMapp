@@ -1,26 +1,26 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.google.gson.annotations.Expose;
+ import com.raizlabs.android.dbflow.annotation.Column;
+ import com.raizlabs.android.dbflow.annotation.Table; import com.timappweb.timapp.data.AppDatabase;
+ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by stephane on 4/5/2016.
  */
-@Table(name = "SpotCategory")
+@Table(database = AppDatabase.class)
 public class SpotCategory extends Category{
 
     // =============================================================================================
 
     @Expose
     @SerializedName("name")
-    @Column(name = "Name")
+    @Column
     public String name;
 
     @Expose
     @SerializedName("position")
-    @Column(name = "Position")
+    @Column
     public int position;
 
     @Expose
@@ -56,7 +56,7 @@ public class SpotCategory extends Category{
     @Override
     public String toString() {
         return "SpotCategory{" +
-                "remote_id=" + remote_id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", position=" + position +
                 '}';
@@ -72,7 +72,7 @@ public class SpotCategory extends Category{
 
         SpotCategory that = (SpotCategory) o;
 
-        return remote_id == that.remote_id;
+        return id == that.id;
     }
 
     @Override
@@ -80,6 +80,11 @@ public class SpotCategory extends Category{
         int result = super.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int getSyncType() {
+        throw new InternalError("Not syncable");
     }
 
 

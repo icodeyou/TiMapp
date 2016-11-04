@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'   // DATABASE
 //apply plugin: 'com.android.databinding'
+//apply plugin: "kotlin"
+
+//apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'com.neenbedankt.android-apt' // DBFlow for annotation processing.. BUT MAKES BUG THE DATABINDING SO DO NOT UNCOMMENT
+
+def dbflow_version = "4.0.0-beta1"
 
 android {
     signingConfigs {
@@ -111,17 +116,15 @@ configurations.all {
     //resolutionStrategy.force 'com.android.support:support-annotations:23.4.0' // To fix conflict with FlexibleAdapter
 }
 
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //
-
-    // compile 'org.parceler:parceler:0.2.13'
 
     //----------------------------------------------------------------------------------------------
 
     // Unit tests
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile   'junit:junit:4.12'
+    testCompile   'org.mockito:mockito-core:1.10.19'
     //----------------------------------------------------------------------------------------------
 
     // Instrumented tests
@@ -146,7 +149,22 @@ dependencies {
     //androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 
     //----------------------------------------------------------------------------------------------
+    // DBFlow
+    //apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    compile ("com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"){
+        exclude group: 'com.google.guava'
+    }
+    // use kapt for kotlin apt
+    compile ("com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}")
+    compile ("com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}")
+    // sql-cipher database encryption (optional)
+    //compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
+    //compile "net.zetetic:android-database-sqlcipher:${sqlcipher_version}@aar"
 
+    // kotlin extensions
+    //compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
+
+    //----------------------------------------------------------------------------------------------
     compile 'com.android.support:multidex:1.0.1'    // Used by Google Play Service and Mutltidex application
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
     //Android support
@@ -154,7 +172,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
     compile "com.android.support:design:$rootProject.ext.supportLibraryVersion"
-    //compile "com.android.support:cardview-v7:$rootProject.ext.supportLibraryVersion" // Required by FB SDK
 
     compile 'com.google.maps.android:android-maps-utils:0.4.3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
@@ -162,14 +179,14 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
 
     compile "com.google.firebase:firebase-core:$rootProject.ext.googlePlayLibraryVersion"
-    compile "com.google.android.gms:play-services-ads:$rootProject.ext.googlePlayLibraryVersion"
-    compile "com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion"
-    compile "com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion"
-    compile "com.google.android.gms:play-services-maps:$rootProject.ext.googlePlayLibraryVersion"
+    compile ("com.google.android.gms:play-services-ads:$rootProject.ext.googlePlayLibraryVersion")
+    compile ("com.google.android.gms:play-services-identity:$rootProject.ext.googlePlayLibraryVersion")
+    compile ("com.google.android.gms:play-services-location:$rootProject.ext.googlePlayLibraryVersion")
+    compile ("com.google.android.gms:play-services-maps:$rootProject.ext.googlePlayLibraryVersion")
     //compile "com.google.firebase:firebase-auth:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.firebase:firebase-invites:$rootProject.ext.googlePlayLibraryVersion"
     compile "com.google.firebase:firebase-messaging:$rootProject.ext.googlePlayLibraryVersion"
-        compile "com.google.firebase:firebase-crash:$rootProject.ext.googlePlayLibraryVersion"
+    compile "com.google.firebase:firebase-crash:$rootProject.ext.googlePlayLibraryVersion"
 
     compile 'org.ocpsoft.prettytime:prettytime:3.0.2.Final'
     compile 'com.github.Kenneth-KT:hashtag-view:v1.2.2'
@@ -181,9 +198,8 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile 'com.github.ongakuer:PhotoDraweeView:a14f105'
-    compile 'com.github.scallacs:ActiveAndroid:4d785cb'
     compile 'net.danlew:android.joda:2.9.3'
-    compile('com.github.florent37:materialviewpager:1.1.3@aar') {
+    compile('com.github.florent37:materialviewpager:1.1.3@aar') {   // 1.2.0 is available
         transitive = true
     }
     compile 'com.github.ksoichiro:android-observablescrollview'
@@ -201,6 +217,10 @@ dependencies {
     compile 'com.xiaofeng.android:flowlayoutmanager:1.2.3.2'
 
 }
+
+//kapt {
+//    generateStubs = true
+//}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'

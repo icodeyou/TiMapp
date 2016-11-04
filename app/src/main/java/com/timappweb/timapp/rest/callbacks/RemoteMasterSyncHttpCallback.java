@@ -2,13 +2,11 @@ package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
 
-import com.activeandroid.query.From;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
-import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,7 +25,7 @@ public class RemoteMasterSyncHttpCallback<T extends SyncBaseModel> extends HttpC
     @Override
     public void successful(List<T> remoteEntries) {
         try {
-            new MultipleEntriesSyncPerformer<>(remoteEntries, localData.<T>execute())
+            new MultipleEntriesSyncPerformer<>(remoteEntries, localData.<T>queryList())
                     .setCallback(new RemoteMasterSyncCallback())
                     .perform();
         } catch (Exception e) {

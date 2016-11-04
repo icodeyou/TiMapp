@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.activeandroid.query.Select;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.InvitationsAdapter;
@@ -16,13 +15,14 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
+import com.timappweb.timapp.data.loader.paginate.PaginateFilterFactory;
 import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.models.EventsInvitation_Table;
+import com.timappweb.timapp.data.tables.EventInvitationsTable;
 import com.timappweb.timapp.utils.DurationConstants;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.RefreshableRecyclerView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
-
-import org.joda.time.convert.DurationConverter;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -86,7 +86,7 @@ public class InvitationsActivity extends BaseActivity{
                     "PlacesInvitations/received",
                     EventsInvitation.class
                 )
-                .initCache("UserInvitation" + MyApplication.getCurrentUser().getId(), CACHE_INVITE_VALIDITY)
+                .initCache("UserInvitation" + MyApplication.getCurrentUser().id, CACHE_INVITE_VALIDITY)
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<EventsInvitation, EventsInvitation>() {
                     @Override
                     public EventsInvitation beforeSaveModel(EventsInvitation model) {
@@ -94,9 +94,9 @@ public class InvitationsActivity extends BaseActivity{
                         return model;
                     }
                 })
-                .setLocalQuery(new Select().from(EventsInvitation.class).where("UserTarget = ?", MyApplication.getCurrentUser().getId()))
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
+                .setLocalQuery(EventInvitationsTable.inviteReceived(MyApplication.getCurrentUser()))
+                .addFilter(PaginateFilterFactory.createCreatedFilter(EventsInvitation_Table.created))
+                .addFilter(PaginateFilterFactory.createSyncIdFilter(EventsInvitation_Table.id))
                 .setLimit(LOCAL_LOAD_LIMIT);
 
         this.mRecyclerViewManager = new CursorPaginateManager<EventsInvitation>(this, adapter, mDataLoader)

@@ -2,19 +2,17 @@ package com.timappweb.timapp.data.loader.paginate;
 
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.data.entities.UserEventStatusEnum;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Where;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.MyModel;
-import com.timappweb.timapp.data.models.Picture;
-import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
@@ -43,7 +41,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private boolean hasInCache = false;
     public CacheInfo   cacheInfo;
     private LinkedList<PaginateFilter> filters;
-    private From localBaseQuery;
+    private Where<DataType> localBaseQuery;
     protected Callback<DataType> callback;
     protected HttpCallManager<ResponseWrapper<JsonObject>> currentCallManager;
     private Map<String, String> queryParams;
@@ -51,7 +49,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     private final CursorPaginateBackend service;
     private final Gson gson;
     private CacheCallback<DataType, RemoteType> cacheCallback;
-    private From clearQuery;
+    private Where<DataType> clearQuery;
     private boolean cacheEnabled = false;
 
 
@@ -72,12 +70,12 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     }
 
 
-    public CursorPaginateDataLoader<DataType, RemoteType> setLocalQuery(From from){
-        this.localBaseQuery = from;
+    public CursorPaginateDataLoader<DataType, RemoteType> setLocalQuery(Where<DataType> where){
+        this.localBaseQuery = where;
         return this;
     }
 
-    public CursorPaginateDataLoader<DataType, RemoteType> setClearQuery(From clearQuery) {
+    public CursorPaginateDataLoader<DataType, RemoteType> setClearQuery(Where<DataType> clearQuery) {
         this.clearQuery = clearQuery;
         return this;
     }
@@ -104,8 +102,9 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     }
 
     public void deleteCache(){
+        Log.d(TAG, "Deleting cache with id: " + this.cacheInfo.cacheId);
         if (this.cacheInfo.cacheId != null)
-            new Delete().from(CacheInfo.class).where("CacheId = ?", this.cacheInfo.cacheId).execute();
+            SQLite.delete(CacheInfo.class).where(CacheInfo_Table.cacheId.eq(this.cacheInfo.cacheId)).execute();
         this.hasInCache = false;
         if (this.clearQuery != null) this.clearQuery.execute();
     }
@@ -122,10 +121,10 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     public CursorPaginateDataLoader<DataType, RemoteType> initCache(String cacheId, long expireDelay){
         this.cacheEnabled = true;
         Log.d(TAG, "Init localBaseQuery cache with id="+ cacheId);
-        CacheInfo existingCacheInfo = new Select()
+        CacheInfo existingCacheInfo = SQLite.select()
                 .from(CacheInfo.class)
-                .where("CacheId = ?", cacheId)
-                .executeSingle();
+                .where(CacheInfo_Table.cacheId.eq(cacheId))
+                .querySingle();
 
         if (existingCacheInfo != null){
             if (existingCacheInfo.isValid()){
@@ -209,34 +208,41 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         }
     }
 
-    private static String _buildWhereClause(List<Object> values, LinkedList<PaginateFilter> filters){
+    private static ConditionGroup _buildWhereClause(Where query, LinkedList<PaginateFilter> filters){
         PaginateFilter filter = filters.pollFirst();
+        filter.orderBy(query);
+
+        if (filter.value == null){
+            return filters.size() > 0 ? _buildWhereClause(query, filters) : null;
+        }
         // Last field is uniq
+        ConditionGroup conditionGroup = ConditionGroup.clause();
+
         if (filters.size() == 0) {
-            values.add(filter.value);
-            return "("+filter.localField + filter.getSign() + " ?)";
+            conditionGroup.and(filter.strictCondition()); // FIELD STRICT_SIGN VALUE
         }
         else {
-            values.add(filter.value);
-            values.add(filter.value);
-            return "("+filter.localField + filter.getSign() +" ? OR ("+filter.localField +" = ? AND " + _buildWhereClause(values, filters) + ") )";
+            ConditionGroup subClause = _buildWhereClause(query, filters);
+            conditionGroup
+                        .and(filter.strictCondition())                  // FIELD STRICT_SIGN VALUE
+                        .or(ConditionGroup.clause()
+                                .and(filter.equalsCondition())                  // FIELD EQUALS VALUE
+                                .and(subClause));        // AND SUBQUERY)
         }
+        return conditionGroup;
     }
 
     public void localLoad(){
         Log.i(TAG, "Loading from local db");
-        From from = this.localBaseQuery;
-        String orderBy = "";
-        LinkedList<Object> args = new LinkedList<>();
-        String where = _buildWhereClause(args, (LinkedList<PaginateFilter>) this.filters.clone());
-        from.where(where, args);
-        for (PaginateFilter filter: this.filters){
-            orderBy += (orderBy.length() == 0 ? "" : ", ") + filter.orderBy();
+        Where<DataType> query = this.localBaseQuery;
+        ConditionGroup condition = _buildWhereClause(query, (LinkedList<PaginateFilter>) this.filters.clone());
+        if (condition != null){
+            query.and(condition);
         }
-        from.orderBy(orderBy);
-        Log.d(TAG, "Generated query: " + from.toSql());
 
-        List<DataType> items = from.limit(this.cacheInfo.limit).execute();
+        Log.d(TAG, "Generated query: " + query.getQuery());
+
+        List<DataType> items = query.limit(this.cacheInfo.limit).queryList();
         Log.i(TAG, "Loading " + items.size() + " item(s) localBaseQuery local db");
 
         if (items.size() == 0){
@@ -326,38 +332,33 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
         this.callback = callback;
     }
 
-    private List<DataType> _parseItems(List<JsonObject> items) {
-        List<DataType> result = new ArrayList<>(items.size());
-
-        if (this.cacheEnabled) {
-            ActiveAndroid.beginTransaction();
-        }
-
-        for (JsonObject item: items){
-            RemoteType remoteModel = this.gson.fromJson(item, remoteClazz);
-            DataType model;
-            if (cacheCallback != null){
-                model = this.cacheCallback.beforeSaveModel(remoteModel);
-            }
-            else{
-                model = (DataType) remoteModel;
-            }
-            if (this.cacheEnabled){
-                Log.d(TAG, "Saving in local db: " + model);
-                try {
-                        model = model.deepSave();
-
-                } catch (CannotSaveModelException e) {
-                    Log.e(TAG, "Cannot save model: " + e.getMessage());
+    private List<DataType> _parseItems(final List<JsonObject> items) {
+        final List<DataType> result = new ArrayList<>(items.size());
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+            @Override
+            public void execute(DatabaseWrapper databaseWrapper) {
+                for (JsonObject item: items){
+                    RemoteType remoteModel = CursorPaginateDataLoader.this.gson.fromJson(item, remoteClazz);
+                    DataType model;
+                    if (cacheCallback != null){
+                        model = CursorPaginateDataLoader.this.cacheCallback.beforeSaveModel(remoteModel);
+                    }
+                    else{
+                        model = (DataType) remoteModel;
+                    }
+                    if (CursorPaginateDataLoader.this.cacheEnabled){
+                        Log.d(TAG, "Saving in local db: " + model);
+                        try {
+                            model.deepSave();
+                        } catch (CannotSaveModelException e) {
+                            Log.e(TAG, "Cannot save model: " + e.getMessage());
+                            // TODO [critical] remove cache otherwise there will have missing value
+                        }
+                    }
+                    result.add(model);
                 }
             }
-            result.add(model);
-        }
-
-        if (this.cacheEnabled) {
-            ActiveAndroid.setTransactionSuccessful();
-            ActiveAndroid.endTransaction();
-        }
+        });
         return result;
     }
 
@@ -470,156 +471,6 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
         List<T> load();
 
-    }
-
-    @Table(name = "CursorPaginateCacheInfo")
-    public static class CacheInfo extends MyModel {
-
-        public      int         limit = 10;
-        public      int         updateLimit = 20;
-
-        /**
-         * Sync group key
-         */
-        @Column(name = "CacheId", notNull = true, unique = true)
-        public String cacheId;
-
-        @Column(name = "LastUpdate")
-        protected   long        lastUpdate = -1;
-
-        @Column(name = "UpdateUrl")
-        protected   String      updateUrl;
-
-        @Column(name = "NextUrl")
-        protected   String      nextUrl;
-
-        @Column(name = "InitialUrl")
-        protected   String      initialUrl;
-
-        @Column(name = "PrevUrl")
-        protected   String      prevUrl;
-
-        @Column(name = "ExpireDate")
-        protected   long      expireDate = 0;
-
-        @Column(name = "Total")
-        protected   int      total = -1;
-
-        public CacheInfo() {}
-
-        public boolean isValid(){
-            return expireDate == 0 || (System.currentTimeMillis() < expireDate);
-        }
-
-        public void updateInfo(ResponseWrapper<JsonObject> feedback, LoadType loadType) {
-            if (loadType == LoadType.NEXT) this.nextUrl = feedback.getNextUrl();
-            if (loadType == LoadType.PREV) this.prevUrl = feedback.getPrevUrl();
-            this.updateUrl = feedback.getUpdateUrl();
-            if (loadType == LoadType.UPDATE || this.lastUpdate == -1) this.lastUpdate = feedback.time;
-            this.updateUrl = feedback.getUpdateUrl();
-            this.total = feedback.total;
-        }
-
-        @Override
-        public String toString() {
-            return "CacheInfo{" +
-                    "limit=" + limit +
-                    ", cacheId='" + cacheId + '\'' +
-                    ", lastUpdate=" + lastUpdate +
-                    ", updateUrl='" + updateUrl + '\'' +
-                    ", nextUrl='" + nextUrl + '\'' +
-                    ", initialUrl='" + initialUrl + '\'' +
-                    ", prevUrl='" + prevUrl + '\'' +
-                    '}';
-        }
-
-        public void reset() {
-            nextUrl = this.initialUrl;
-            lastUpdate = -1;
-        }
-    }
-
-
-    public static class PaginateFilter{
-
-        public static final String GTE = ">=";
-        public static final String LTE = "<=";
-        public static final String LT = "<";
-        public static final String GT = ">";
-
-        public static final String ASC = "asc";
-        public static final String DESC = "desc";
-        private static FilterValueTransformer<SyncBaseModel> syncIdTransformer;
-        private static FilterValueTransformer<SyncBaseModel> createdIdTransformer;
-
-        public final String order;
-        public final String localField;
-        public final String remoteField;
-        public final FilterValueTransformer transformer;
-        public Object value;
-
-        public PaginateFilter(String localField, String order, FilterValueTransformer transformer) {
-            this(localField, localField, order, transformer);
-        }
-
-        public PaginateFilter(String localField, String remoteField, String order, FilterValueTransformer<? extends MyModel> transformer) {
-            this.order = order;
-            this.localField = localField;
-            this.remoteField = remoteField;
-            this.transformer = transformer;
-        }
-
-        public String toServerParams(){
-            String res = this.remoteField + ":" + this.order;
-            if (value != null){
-                res += ":" + value;
-            }
-            return res;
-        }
-
-        public String getSign(){
-            return this.order == DESC ? LT : GT;
-        }
-
-        public String orderBy(){
-            return this.localField + " " + this.order;
-        }
-
-        public void updateValue(MyModel model) {
-            this.value = this.transformer.transform(model);
-        }
-
-        public static PaginateFilter createSyncIdFilter() {
-            return new CursorPaginateDataLoader.PaginateFilter("SyncId", "id", CursorPaginateDataLoader.PaginateFilter.DESC, getSyncIdTransformer());
-        }
-
-        public static CursorPaginateDataLoader.FilterValueTransformer<SyncBaseModel> getSyncIdTransformer(){
-            if (syncIdTransformer == null){
-                syncIdTransformer = new CursorPaginateDataLoader.FilterValueTransformer<SyncBaseModel>(){
-                    @Override
-                    public Object transform(SyncBaseModel model) {
-                        return model.getRemoteId();
-                    }
-                };
-            }
-            return syncIdTransformer;
-        }
-
-        public static PaginateFilter createCreatedFilter() {
-            return new CursorPaginateDataLoader.PaginateFilter("created", CursorPaginateDataLoader.PaginateFilter.DESC, getCreatedTransformer());
-        }
-
-        public static FilterValueTransformer<SyncBaseModel> getCreatedTransformer() {
-            if (createdIdTransformer == null){
-                createdIdTransformer = new CursorPaginateDataLoader.FilterValueTransformer<SyncBaseModel>() {
-                    @Override
-                    public Object transform(SyncBaseModel model) {
-                        return model.created;
-                    }
-                };
-            }
-            return createdIdTransformer;
-        }
     }
 
     public interface FilterValueTransformer<T extends MyModel>{
