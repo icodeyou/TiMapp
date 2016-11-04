@@ -70,7 +70,7 @@
     <string name="toast_tag_already_chosen">Ce tag a déja été selectionné.</string>
     <string name="toast_thanks_for_sharing">Merci !</string>
     <string name="toast_profile_saved">Nouveau profil sauvegardé.</string>
-    <string name="cannot_save_your_profile">Erreur dans l\édition du profil.</string>
+    <string name="cannot_save_your_profile">Erreur dans l\'édition du profil.</string>
     <string name="action_performed_not_successful">Désolé mais cette action n\'est pas disponible pour le moment. Merci de réessayer plus tard.</string>
     <string name="form_invalid_input">Ce champ est invalide.</string>
     <string name="data_already_refresh">Données à jour</string>

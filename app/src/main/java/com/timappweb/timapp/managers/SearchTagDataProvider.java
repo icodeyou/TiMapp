@@ -2,9 +2,10 @@ package com.timappweb.timapp.managers;
 
 import android.util.Log;
 
+import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.RestClient;
+import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SearchHistory;
 
@@ -59,10 +60,13 @@ public abstract class SearchTagDataProvider implements SearchHistory.DataProvide
     @Override
     public void onSearchComplete(String term, List<Tag> tags) {
         if ( manager.getSearchHistory().isLastSearch(term)) {
-            if (!manager.hasSuggestedTag(term)){
-                //TODO : test this !
-                tags.add(new Tag(term));
+            for (Tag tag : tags) {
+                if(term.equals(tag.name)) {
+                    manager.setSuggestedTags(tags);
+                    return;
+                }
             }
+            if(term.length() >= ConfigurationProvider.rules().tags_min_name_length) tags.add(0, new Tag(term)); //Add typed term to first position
             manager.setSuggestedTags(tags);
         }
     }
