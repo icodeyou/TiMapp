@@ -145,6 +145,7 @@ public class EventStatusManager {
                 .where(UserEvent_Table.event_id.eq(event.id))
                 .and(UserEvent_Table.user_id.eq(MyApplication.getCurrentUser().id))
                 .execute();
+        KeyValueStorage.in().remove(KEY_CURRENT_EVENT).commit();
     }
 
     private static UserEvent addLocally(UserEvent userEvent) throws CannotSaveModelException {

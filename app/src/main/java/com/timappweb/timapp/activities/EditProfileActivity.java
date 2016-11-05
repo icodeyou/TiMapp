@@ -52,9 +52,7 @@ public class EditProfileActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        //Toolbar
-        int colorRes = ContextCompat.getColor(this, R.color.white);
-        initToolbar(false, colorRes);
+        initToolbar(false, ContextCompat.getColor(this, R.color.white));
 
         searchView = (SearchView) findViewById(R.id.edit_text);
         buttonSubmit = (Button) findViewById(R.id.button_submit);

@@ -281,7 +281,8 @@
         <activity
             android:name=".activities.EventPicturesActivity"
             android:label="@string/title_activity_place"
-            android:parentActivityName=".activities.EventActivity" >
+            android:parentActivityName=".activities.EventActivity"
+            android:theme="@style/WhiteMenuActionbar">
         </activity>
 
         <!-- Add People ACTIVITY //////////////////////////////////////////////-->

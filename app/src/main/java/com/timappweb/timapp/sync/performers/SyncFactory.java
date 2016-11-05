@@ -7,7 +7,6 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.auth.SocialProvider;
 import com.timappweb.timapp.data.models.EventsInvitation;
-import com.timappweb.timapp.data.models.UserFriend;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.responses.ResponseSyncWrapper;
@@ -15,8 +14,6 @@ import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
-
-import org.antlr.v4.codegen.model.Sync;
 
 import java.io.IOException;
 import java.util.HashMap;

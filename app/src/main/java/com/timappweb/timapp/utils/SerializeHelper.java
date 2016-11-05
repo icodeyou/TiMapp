@@ -5,16 +5,11 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
-import com.timappweb.timapp.config.IntentsUtils;
-import com.timappweb.timapp.data.models.Category;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SyncBaseModel;
-
-import org.antlr.v4.codegen.model.Sync;
 
 /**
  * Created by stephane on 6/2/2016.

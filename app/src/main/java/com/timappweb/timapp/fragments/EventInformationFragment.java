@@ -55,7 +55,6 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
     private static final long           DELAY_REMOTE_UPDATE_STATUS_MILLS    = 0;
     private float                       ZOOM_LEVEL_CENTER_MAP   = 12.0f;
-
     // -
 
     private static final String         TAG                     = "EventInformationFrag";
@@ -194,9 +193,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
         updateEventBinding();
         LocationManager.addOnLocationChangedListener(this);
-        updateStatusButtonActivation();
 
-        updateOverView();
         updateStatusBtn(false);
     }
 
@@ -217,7 +214,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
         HttpCallManager manager = EventStatusManager.instance().add(context, event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
 
-        final boolean activate = newStatus == UserEventStatusEnum.GONE;
+        final boolean activate = newStatus != UserEventStatusEnum.GONE;
 
         if (manager != null){
             final Animation scaleDown = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_down);
@@ -257,14 +254,14 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                         @Override
                         public void successful(UserEvent userEvent) {
                             //if response is different than expected status, apply server's status.
-                            if (userEvent != null || userEvent.status != null || userEvent.status != newStatus){
+                            if (userEvent != null  && userEvent.status != newStatus){
                                 Log.w(TAG, "User status is not the on expected. Expected: " + newStatus + ". Actual: " + userEvent.status);
                                 updateStatusBtn(true);
                                 return;
                             }
                             showActivatedButton(activate, true);
 
-                            if(userEvent.status == UserEventStatusEnum.COMING) {
+                            if(userEvent != null && userEvent.status == UserEventStatusEnum.COMING) {
                                 //Delay to see the animation before the dialog
                                 DelayedCallHelper.create(R.integer.duration_scale, new DelayedCallHelper.Callback() {
                                     @Override
@@ -410,10 +407,12 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     if(activated) {
+                        disabledStatusButton.setVisibility(View.GONE);
                         activatedStatusButton.setVisibility(View.VISIBLE);
                         statusTv.setAlpha(1f);
                     }
                     else {
+                        activatedStatusButton.setVisibility(View.GONE);
                         disabledStatusButton.setVisibility(View.VISIBLE);
                         statusTv.setAlpha(0.1f);
                     }
@@ -433,9 +432,9 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         }
         else {
             statusTv.setAlpha(activated ? 1f : 0.1f);
+            activatedStatusButton.setVisibility(activated ? View.VISIBLE : View.GONE);
+            disabledStatusButton.setVisibility(activated ? View.GONE : View.VISIBLE);
         }
-        activatedStatusButton.setVisibility(activated ? View.VISIBLE : View.GONE);
-        disabledStatusButton.setVisibility(activated ? View.GONE : View.VISIBLE);
     }
 
 

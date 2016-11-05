@@ -1,16 +1,11 @@
 package com.timappweb.timapp.data.models;
 
 import android.content.Context;
-import android.databinding.Bindable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
@@ -34,7 +29,6 @@ import com.timappweb.timapp.utils.location.LocationManager;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

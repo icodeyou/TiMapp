@@ -12,4 +12,5 @@
         android:id="@+id/progress_view"
         style="@style/ProgressViewSmallWhite"
         android:layout_centerInParent="true"/>
+    <include layout="@layout/toolbar_transparent_layout"/>
 </RelativeLayout>
