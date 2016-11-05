@@ -16,6 +16,8 @@ import com.timappweb.timapp.sync.callbacks.InvitationSyncCallback;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 
+import org.antlr.v4.codegen.model.Sync;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +31,7 @@ public class SyncFactory {
 
     private static final String TAG = "SyncFactory";
 
-    public static FullTableSyncPerformer syncFriends(final SyncResultMessage syncResultMessage) {
+    public static SyncPerformer syncFriends(final SyncResultMessage syncResultMessage) {
         try {
             String accessToken = MyApplication.getAuthManager().getProviderToken();
             JsonObject options = new JsonObject();
@@ -45,30 +47,8 @@ public class SyncFactory {
             e.printStackTrace();
         }
 
-        return new FullTableSyncPerformer(UserFriend.class)
-                .setCallback(new FullTableSyncPerformer.Callback<UserFriend>() {
-                    @Override
-                    public boolean beforeSave(UserFriend entry) {
-                        entry.userSource = MyApplication.getCurrentUser();
-                        return true;
-                    }
-
-                    @Override
-                    public void afterSave(UserFriend entry) {
-                    }
-                })
-                .setRemoteLoader(new DataSyncAdapter.RemoteLoader<ResponseSyncWrapper, UserFriend>() {
-                    @Override
-                    protected Call getCall(HashMap options) {
-                        return RestClient.service().friends(options);
-                    }
-
-                    @Override
-                    protected List<UserFriend> getEntries(ResponseSyncWrapper body) {
-                        syncResultMessage.setCount(body != null ? body.getCount() : 0);
-                        return body.items;
-                    }
-                });
+        // TODO
+        return null;
     }
 
     public static SyncPerformer syncInvitationsReceived(SyncAdapterOption options, final SyncResultMessage syncResultMessage) throws IOException, HttpResponseSyncException {

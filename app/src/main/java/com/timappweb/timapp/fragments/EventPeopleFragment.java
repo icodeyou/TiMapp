@@ -9,9 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.flexibleadataper.MyFlexibleAdapter;
@@ -22,9 +21,12 @@ import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
+import com.timappweb.timapp.data.loader.paginate.PaginateFilterFactory;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.models.EventsInvitation_Table;
 import com.timappweb.timapp.data.models.UserEvent;
+import com.timappweb.timapp.data.models.UserEvent_Table;
 import com.timappweb.timapp.listeners.OnTabSelectedListener;
 import com.timappweb.timapp.utils.DurationConstants;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
@@ -132,10 +134,10 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         return model;
                     }
                 })
-                .setLocalQuery(new Select().from(UserEvent.class).where("Event = ? AND Status = ?", getEvent().getId(), status))
-                .setClearQuery(new Delete().from(UserEvent.class).where("Event = ? AND Status = ?", getEvent().getId(), status))
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
+                .setLocalQuery(SQLite.select().from(UserEvent.class).where(UserEvent_Table.event_id.eq(getEvent().id)).and(UserEvent_Table.status.eq(status)))
+                .setClearQuery(SQLite.delete().from(UserEvent.class).where(UserEvent_Table.event_id.eq(getEvent().id)).and(UserEvent_Table.status.eq(status)))
+                .addFilter(PaginateFilterFactory.createCreatedFilter(UserEvent_Table.created))
+                .addFilter(PaginateFilterFactory.createSyncIdFilter(UserEvent_Table.id))
                 .setLimit(LOCAL_LOAD_LIMIT)
                 .enableCache(false);
 
@@ -185,10 +187,12 @@ public class EventPeopleFragment extends EventBaseFragment implements OnTabSelec
                         return model;
                     }
                 })
-                .setClearQuery(new Delete().from(EventsInvitation.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
-                .setLocalQuery(new Select().from(EventsInvitation.class).where("Event = ? AND UserSource = ?", getEvent().getId(), MyApplication.getCurrentUser().getId()))
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter())
+                .setClearQuery(SQLite.delete().from(EventsInvitation.class)
+                        .where(EventsInvitation_Table.event_id.eq(getEvent().id)).and(EventsInvitation_Table.user_source_id.eq(MyApplication.getCurrentUser().id)))
+                .setLocalQuery(SQLite.select().from(EventsInvitation.class)
+                        .where(EventsInvitation_Table.event_id.eq(getEvent().id)).and(EventsInvitation_Table.user_source_id.eq(MyApplication.getCurrentUser().id)))
+                .addFilter(PaginateFilterFactory.createCreatedFilter(EventsInvitation_Table.created))
+                .addFilter(PaginateFilterFactory.createSyncIdFilter(EventsInvitation_Table.id))
                 .setLimit(LOCAL_LOAD_LIMIT)
                 .enableCache(!MyApplication.isLowMemory());
 

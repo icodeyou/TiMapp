@@ -1,7 +1,5 @@
 package com.timappweb.timapp.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
@@ -25,16 +23,16 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.EventStatusManager;
 import com.timappweb.timapp.config.IntentsUtils;
+import com.timappweb.timapp.data.loader.paginate.CacheInfo;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
@@ -45,8 +43,6 @@ import com.timappweb.timapp.listeners.FabListenerFactory;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
-
-import org.greenrobot.eventbus.EventBus;
 
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -255,7 +251,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
         boolean res = super.onPrepareOptionsMenu(menu);
         // If the nav drawer is open, hide action items related to the content view
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
-        //menu.findItem(R.remote_id.action_filter).setVisible(!drawerOpen);
+        //menu.findItem(R.id.action_filter).setVisible(!drawerOpen);
         //boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerLayout);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -399,7 +395,7 @@ public class DrawerActivity extends BaseActivity implements NavigationView.OnNav
                 finish();
                 break;
             case R.id.menu_item_dev_clear_cache:
-                new Delete().from(CursorPaginateDataLoader.CacheInfo.class).execute();
+                SQLite.delete().from(CacheInfo.class).execute();
                 break;
             case R.id.menu_item_test_cam:
                 EasyImage.openCamera(this, 0);

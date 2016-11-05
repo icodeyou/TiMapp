@@ -10,7 +10,11 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserTag_Table;
+import com.timappweb.timapp.data.models.User_Table;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.UsersTable;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
@@ -140,15 +144,15 @@ public class AuthManager implements AuthManagerInterface{
 
     public boolean localLogin(LoginMethod loginMethod, LoginFeedback feedback) throws CannotLoginException {
         try {
-            int userId = (int) feedback.getUserId();
-            User user = User.loadByRemoteId(User.class, userId);
+            long userId = feedback.getUserId();
+            User user = UsersTable.load(userId);
             if (user == null) user = new User();
 
             String token = feedback.getToken();
             user.username = feedback.getUsername();
             //user.provider_uid = feedback.get("social_id").getAsString();
             //user.provider = SocialProvider.FACEBOOK;
-            user.remote_id = userId;
+            user.id = userId;
             user.avatar_url = feedback.getAvatarUrl();
             // user.app_id = InstanceID.getInstance(context).getId();
             setCurrentUser(user);
@@ -192,11 +196,11 @@ public class AuthManager implements AuthManagerInterface{
     public User getCurrentUser() {
         if (!_isUserLoaded){
             _isUserLoaded = true;
-            int userId = KeyValueStorage.out().getInt(KEY_ID, -1);
+            long userId = KeyValueStorage.out().getLong(KEY_ID, -1);
             if (userId == -1){
                 return null;
             }
-            currentUser = User.loadByRemoteId(User.class, userId);
+            currentUser = UsersTable.load(userId);
             Log.d(TAG, "Loading user form pref: " + currentUser);
             this.restoreSession();
         }
@@ -224,11 +228,12 @@ public class AuthManager implements AuthManagerInterface{
     }
 
     private void setCurrentUser(User user) throws CannotSaveModelException {
-        currentUser = user.deepSave();
+        user.deepSave();
+        currentUser = user;
         _isUserLoaded = true;
         Log.i(TAG, "Writing user information: " + user);
         KeyValueStorage.in()
-                .putInt(KEY_ID, user.remote_id)
+                .putLong(KEY_ID, currentUser.id)
                 .putBoolean(KEY_IS_LOGIN, true)
                 .putLong(KEY_LOGIN_TIME, System.currentTimeMillis())
                 .commit();

@@ -3,19 +3,22 @@ package com.timappweb.timapp.data.models;
 import android.databinding.Bindable;
 import android.location.Location;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
-import com.timappweb.timapp.BR;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.Table;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
 
-@Table(name = "Spot")
+@Table(database = AppDatabase.class)
 public class Spot extends SyncBaseModel implements ClusterItem {
 
     // TODO
@@ -24,31 +27,35 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "Name")
+    @Column
     @Expose
     @SerializedName("name")
     public String name;
 
-    @Column(name = "Description")
+    @Column
     @Expose
     @SerializedName("description")
     public String description;
 
-    @Column(name = "Latitude")
+    @Column
     @Expose
     @SerializedName("latitude")
     public double latitude;
 
-    @Column(name = "Longitude")
+    @Column
     @Expose
     @SerializedName("longitude")
     public double longitude;
 
-    @Column(name = "CategoryId")
+    @ForeignKey(
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.CASCADE,
+            saveForeignKeyModel = false,
+            stubbedRelationship = false
+    )
+    @SerializedName("spot_category")
     @Expose
-    @SerializedName("spot_category_id")
-    public int category_id;
-
+    public SpotCategory category;
     /*
     @Column(name = "Status")
     @Expose
@@ -58,13 +65,11 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     // =============================================================================================
     // Fields
 
+    /*
     @SerializedName("tags")
-    @Expose(deserialize = true, serialize = false)
+    @Expose(deserialize = true, serialize = true)
     public List<Tag> tags;
-
-    @SerializedName("spot_category")
-    @Expose(deserialize = true, serialize = false)
-    public SpotCategory category;
+    */
 
 
     // =============================================================================================
@@ -79,17 +84,9 @@ public class Spot extends SyncBaseModel implements ClusterItem {
         this.name = name;
     }
 
-    public Spot(String name, List<Tag> tags) {
-        this.name = name;
-        this.tags = tags;
-    }
-
     public Spot(String name, SpotCategory category) {
         this.name = name;
         this.category = category;
-        if (category != null){
-            this.category_id = category.remote_id;
-        }
     }
 
     // =============================================================================================
@@ -97,10 +94,9 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     @Override
     public String toString() {
         return "Spot{" +
-                " db_id=" + this.getId() +
-                ", remote_id=" + remote_id +
+                ", id=" + id +
                 ", name='" + name + '\'' +
-                ", category_id=" + category_id +
+                ", category=" + category +
                 '}';
     }
 
@@ -108,6 +104,7 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     public boolean isSync(SyncBaseModel model) {
         return false;
     }
+
 
     // =============================================================================================
     // Setters/Getters
@@ -118,9 +115,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
      */
     public void setCategory(SpotCategory category) {
         this.category = category;
-        if (category != null && category.remote_id != null){
-            this.category_id = category.remote_id;
-        }
     }
 
     @Override
@@ -129,11 +123,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     }
 
     public SpotCategory getCategory() {
-        if (category == null){
-            if (category_id != 0){
-                category = ConfigurationProvider.getSpotCategoryByRemoteId(category_id);
-            }
-        }
         return category;
     }
 
@@ -159,11 +148,11 @@ public class Spot extends SyncBaseModel implements ClusterItem {
 
     // =============================================================================================
 
-
+/*
     public void setAddress(String address) {
         this.address = address;
         notifyPropertyChanged(BR.address);
-    }
+    }*/
 
     @Bindable
     public String getAddress() {
@@ -195,8 +184,13 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     }
 
     @Override
-    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
-        return (T) super.mySave();
+    public void deepSave() throws CannotSaveModelException {
+        this.mySave();
+    }
+
+    @Override
+    public int getSyncType() {
+        return DataSyncAdapter.SYNC_TYPE_SPOT;
     }
 }
 

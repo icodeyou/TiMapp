@@ -1,6 +1,7 @@
 package com.timappweb.timapp.services;
 
-import com.activeandroid.util.Log;
+import android.util.Log;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.timappweb.timapp.MyApplication;
@@ -10,7 +11,7 @@ import com.timappweb.timapp.MyApplication;
  */
 public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
 
-    private static final String TAG = "MyInstanceIDListenerService";
+    private static final String TAG = "MyInstanceIDListenerSer";
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of

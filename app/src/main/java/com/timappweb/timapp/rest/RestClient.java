@@ -61,7 +61,7 @@ public class RestClient {
 
 
     // KEY ID
-    //public static final String KEY_SESSION_ID = "remote_id";
+    //public static final String KEY_SESSION_ID = "id";
 
     public Retrofit getRetrofit() {
         return retrofit;

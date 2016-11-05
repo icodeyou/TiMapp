@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
-import com.activeandroid.query.From;
 import com.google.gson.JsonObject;
+import com.raizlabs.android.dbflow.sql.language.Where;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
@@ -21,8 +21,10 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventPost;
-import com.timappweb.timapp.data.models.EventTag;
 import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.Tag_Table;
+import com.timappweb.timapp.data.tables.EventTagsTable;
+import com.timappweb.timapp.data.tables.TagsTable;
 import com.timappweb.timapp.listeners.OnSuggestQueryListener;
 import com.timappweb.timapp.managers.SearchAndSelectTagManager;
 import com.timappweb.timapp.managers.SearchTagDataProvider;
@@ -55,7 +57,7 @@ public class AddTagActivity extends BaseActivity{
     private View                                    progressStartView;
     private Event                                   currentEvent = null;
 
-    // @Bind(R.remote_id.hashtags1)
+    // @Bind(R.id.hashtags1)
 
     private EventPost                               eventEventPost;
 
@@ -131,12 +133,12 @@ public class AddTagActivity extends BaseActivity{
                         //progressStartView.setVisibility(View.VISIBLE);
                         int tagLimit = ConfigurationProvider.rules().tags_suggest_limit;
                         // Get local tags (suggest in first tag already added to this event, then tag that are in db order by popularity)
-                        From query = Tag.querySuggestTagForEvent(currentEvent)
+                        Where<Tag> query = TagsTable.querySuggestTagForEvent(currentEvent)
                                 .limit(tagLimit);
                         if (term != null && term.length() > 0) {
-                            query.where("Tag.name LIKE ? OR Tag.name = ?", term, term); // TODO add wildchars
+                            query.and(Tag_Table.name.withTable().like(term+'%'));
                         }
-                        List<Tag> tags = query.execute();
+                        List<Tag> tags = query.queryList();
                         Log.d(TAG, "Tag in local db: " + tags.size() + "/" + tagLimit);
                         // If not enough tags locally, we get more on the server
                         if (tags.size() < tagLimit) {
@@ -202,9 +204,9 @@ public class AddTagActivity extends BaseActivity{
                 .onResponse(new HttpCallback<JsonObject>() {
                     @Override
                     public void successful(JsonObject feedback) {
-                        Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.remote_id);
+                        Log.i(TAG, "EventPost has been saved with id: " + eventEventPost.id);
                         eventEventPost.mySaveSafeCall();
-                        EventTag.incrementCountRef(currentEvent, eventEventPost.getTags());
+                        EventTagsTable.incrementCountRef(currentEvent, eventEventPost.getTags());
                         Toast.makeText(AddTagActivity.this, R.string.thanks_for_add_tag, Toast.LENGTH_SHORT).show();
                         setResult(RESULT_OK);
                         finish();

@@ -94,7 +94,7 @@ public class InvitationItem extends AbstractFlexibleItem<InvitationItem.Invitati
             mBinding.setEvent(eventInvitation.event);
             mBinding.setUser(eventInvitation.getUserSource());
 
-            if (eventInvitation.event.event_category != null) {
+            if (eventInvitation.event != null && eventInvitation.event.event_category != null) {
                 titleCategory.setText(Util.capitalize(eventInvitation.event.event_category.name));
             }
 

@@ -49,15 +49,6 @@
         android:largeHeap="true"
         tools:replace="android:theme">
 
-        <!-- DATABASE CONFIGURATION -->
-        <!-- pre populate db -->
-        <meta-data android:name="AA_DB_NAME" android:value="@string/db_name" />
-        <meta-data android:name="AA_DB_VERSION" android:value="22" />
-        <!--
-        // TODO for production set models to speed up launch
-        <meta-data  android:name=""AA_MODELS"
-            android:value="${applicationId}.data.models.UserActivity" />-->
-
 
         <!-- SYNC ADAPTERS ===================================================================== -->
         <!-- ConfigSyncAdapter's dummy authentication service -->

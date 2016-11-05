@@ -89,7 +89,7 @@ public class AreaDataLoaderFromAPI implements AreaDataLoaderInterface<Event> {
                         // TODO what happens if two row have the same timestamp for the same area ?
                         request.setDataTimestamp(
                                 events.size() > 1
-                                        ? events.get(events.size() - 1).getCreated()
+                                        ? events.get(events.size() - 1).created
                                         : 0);
 
                         request.setData(events);

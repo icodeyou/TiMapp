@@ -7,19 +7,17 @@ import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.BR;
-import com.timappweb.timapp.MyApplication;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.Table;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.entities.ApplicationRules;
 import com.timappweb.timapp.data.entities.MarkerValueInterface;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
@@ -39,7 +37,7 @@ import java.util.List;
  * @warning event cannot be serialize anymore as there is a recursive dependency:
  *  Event -> BELONGS TO -> Picture -> BELONGS TO -> Event
  */
-@Table(name = "Event")
+@Table(database = AppDatabase.class)
 public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHistory.HistoryItemInterface{
 
     public enum VisiblityStatus {OVER, INACTIVE, ACTIVE, PLANNED};
@@ -55,69 +53,82 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     // DATABASE
 
     @ModelAssociation(joinModel = Spot.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "spot_id")
-    @Column(name = "Spot", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Spot.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("spot")
     @Expose
     public Spot             spot;
 
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "user_id")
-    @Column(name = "User", onDelete = Column.ForeignKeyAction.CASCADE, onUpdate = Column.ForeignKeyAction.CASCADE)
     @SerializedName("user")
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public User             user;
 
-    @Column(name = "Name")
+    @Column
     @Expose
     public String           name;
 
-    @Column(name = "Description")
+    @Column
     @Expose
     public String           description;
 
-    @Column(name = "Latitude")
+    @Column
     @Expose
     public double           latitude;
 
-    @Column(name = "Longitude")
+    @Column
     @Expose
     public double           longitude;
 
-    @Column(name = "StartDate")
+    @Column
     @Expose
     public int              start_date;
 
-    @Column(name = "EndDate")
+    @Column
     @Expose
     public int              end_date;
 
-    @Column(name = "InactivityThreshold")
+    @Column
     @Expose
     public int              inactivity_threshold;
 
-    @Column(name = "LastActivity")
+    @Column
     @Expose
     public int              last_activity;
 
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
-    @Column(name = "Category", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.SET_NULL)
+    @ForeignKey(tableClass = EventCategory.class,
+            saveForeignKeyModel = false,
+            stubbedRelationship = false,
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.SET_NULL)
     @SerializedName("category")
     @Expose
     public EventCategory    event_category;
 
-    @Column(name = "Points")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public int              points;
 
-    @Column(name = "CountHere")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public Integer count_here;
 
-    @Column(name = "CountComing")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public Integer count_coming;
 
     @ModelAssociation(joinModel = Picture.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "picture_id")
-    @Column(name = "Picture", notNull = false, onDelete = Column.ForeignKeyAction.SET_NULL, onUpdate = Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Picture.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("picture")
     @Expose
     public Picture    picture;
@@ -126,19 +137,16 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     // =============================================================================================
     // Fields
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public int              count_posts;
 
-    @Expose(serialize = false, deserialize = false)
+    @Expose(serialize = true, deserialize = true)
     public int              loaded_time = -1;
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public List<Tag>        tags;
 
-    @Expose(serialize = false, deserialize = true)
-    public ArrayList<EventPost> eventPosts;
-
-    @Expose(serialize = false, deserialize = false)
+    @Expose(serialize = true, deserialize = true)
     public double           distance = -1;
 
     // =============================================================================================
@@ -159,37 +167,12 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         this.loaded_time = Util.getCurrentTimeSec();
     }
 
-    public Event(int id, double lat, double lng, String name) {
-        this.loaded_time = Util.getCurrentTimeSec();
-        this.remote_id = id;
-        this.latitude = lat;
-        this.longitude = lng;
-        this.name = name;
-        this.count_posts = 0;
-        this.eventPosts = new ArrayList<>();
-        this.tags = new ArrayList<>();
-    }
-
-    public Event(Location location, String name, EventCategory eventCategory, Spot spot, String description) {
-        this.loaded_time = Util.getCurrentTimeSec();
-        this.setLocation(location);
-        this.name = name;
-        this.event_category = eventCategory;
-        this.description = description;
-        this.spot = spot;
-    }
-
-    public void addPost(EventPost eventPost){
-        this.count_posts++;
-        this.eventPosts.add(eventPost);
-    }
-
     /**
      * Return true if this event is not saved on the server
      * @return
      */
     public boolean isNew(){
-        return this.remote_id == null;
+        return this.id == null;
     }
 
     public int countPosts(){
@@ -220,8 +203,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     @Override
     public String toString() {
         return "Event{" +
-                "db_id=" + this.getId() +
-                ", remote_id=" + remote_id +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", visibility='" + getVisibilityStatus() + '\'' +
                 ", date='from " + new Date(start_date *1000).toString() + " to "  + (end_date > 0 ? new Date(end_date*1000).toString() : '?') + '\'' +
@@ -249,8 +231,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     @Override
     public int getMarkerId() {
-        return this.remote_id;
-    }
+        return (int)(long)this.id;
+    } // TODO [critical]
 
     public boolean hasDistanceFromUser(){
         this.updateDistanceFromUser();
@@ -353,7 +335,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
         Event event = (Event) o;
 
-        if (remote_id != event.remote_id) return false;
+        if (id != event.id) return false;
         if (created != event.created) return false;
         if (Double.compare(event.latitude, latitude) != 0) return false;
         if (Double.compare(event.longitude, longitude) != 0) return false;
@@ -366,10 +348,8 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + remote_id;
-        return result;
+    public int getSyncType() {
+        return DataSyncAdapter.SYNC_TYPE_EVENT;
     }
 
     public boolean hasDescription() {
@@ -410,7 +390,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public Event setSpot(Spot spot) {
         this.spot = spot;
-        notifyPropertyChanged(BR.spot);
+        //notifyPropertyChanged(BR.spot);
         return this;
     }
 
@@ -496,36 +476,21 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         this.user = user;
     }
 
-    public void requestSync() {
-        super.requestSync(MyApplication.getApplicationBaseContext(), DataSyncAdapter.SYNC_TYPE_EVENT);
-    }
-
     public String getBackgroundUrl() {
         return picture.getThumbnailUrl(Picture.ThumbnailType.CARD);
     }
 
     @Override
-    public Event deepSave() throws CannotSaveModelException {
-        if (this.user != null && !this.hasLocalId()) this.user = this.user.deepSave();
-        if (this.spot != null) this.spot = this.spot.deepSave();
+    public void deepSave() throws CannotSaveModelException {
+        if (this.user != null) this.user.deepSave();
+        if (this.spot != null) this.spot.deepSave();
         if (this.picture != null){
-            Picture tmp = this.picture;
-            this.picture = null;
-            Event event = (Event) this.mySave();
-
-            // Save picture
-            tmp.event = event;
-            if (tmp.user != null) tmp.user = (User) tmp.user.mySave();
-            tmp = (Picture) tmp.mySave();
-
-            // Save event
-            event.picture = tmp;
-            return (Event) event.mySave();
+            this.picture.event = this;
+            this.picture.mySave();
         }
         else{
-            return (Event) this.mySave();
+            this.mySave();
         }
-
     }
 
     /*
@@ -574,7 +539,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public boolean isOwner(User currentUser) {
-        return this.user != null && this.user.equals(currentUser);
+        return this.user != null && this.user.id == currentUser.id;
     }
 
 
@@ -589,32 +554,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
             this.picture.mySaveSafeCall();
         }
         this.mySaveSafeCall();
-    }
-
-
-    public List<Picture> getPictures() {
-        return getPicturesQuery().execute();
-    }
-
-    public List<UserEvent> getUsers() {
-        return new Select().from(UserEvent.class).where("Event = ?", this.getId()).execute();
-    }
-
-    /**
-     * Get invitation sent user
-     * @param currentUser
-     */
-    public List<EventsInvitation> getSentInvitationsByUser(User currentUser) {
-        List<EventsInvitation> invitations = new Select()
-                .from(EventsInvitation.class)
-                .where("Event = ? AND UserSource = ?", this.getId(), currentUser.getId())
-                .execute();
-        return invitations;
-    }
-
-
-    public From getPicturesQuery() {
-        return new Select().from(Picture.class).where("Event = ?", this.getId()).orderBy("created DESC");
     }
 
 }

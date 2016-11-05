@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.timappweb.timapp.MyApplication;
@@ -21,14 +20,12 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.SyncOneEntryLoader;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
-import com.timappweb.timapp.data.models.UserTag;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.models.User_Table;
+import com.timappweb.timapp.data.tables.UsersTable;
 import com.timappweb.timapp.databinding.ActivityProfileBinding;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
-
-import com.timappweb.timapp.views.SwipeRefreshLayout;
 
 public class ProfileActivity extends BaseActivity  {
 
@@ -36,7 +33,7 @@ public class ProfileActivity extends BaseActivity  {
     public static final int ACTIVITY_RESULT_EDIT_PROFILE = 1;
 
     private User mUser = null;
-    private int userId;
+    private long userId;
     private ListView tagsListView;
     private View layoutTagsProfile;
     private SimpleDraweeView profilePicture;
@@ -53,7 +50,7 @@ public class ProfileActivity extends BaseActivity  {
         this.initToolbar(true);
 
         tagsListView = (ListView) findViewById(R.id.listview_usertags);
-        //loadingView = findViewById(R.remote_id.loading_view);
+        //loadingView = findViewById(R.id.loading_view);
         layoutTagsProfile = findViewById(R.id.layout_tags_profile);
         profilePicture = (SimpleDraweeView) findViewById(R.id.profile_picture);
 
@@ -62,7 +59,7 @@ public class ProfileActivity extends BaseActivity  {
         // Get data
         userId = IntentsUtils.extractUserId(getIntent());
         if (userId == -1 && MyApplication.isLoggedIn()){
-            userId = MyApplication.getCurrentUser().remote_id;
+            userId = MyApplication.getCurrentUser().id;
         }
 
         if (userId == -1){
@@ -113,7 +110,6 @@ public class ProfileActivity extends BaseActivity  {
 
         TagsProfileAdapter tagsAdapter = (TagsProfileAdapter) tagsListView.getAdapter();
         if(mUser.hasTags()){
-            Log.v(TAG, "User has a: " + mUser.getTags().size() + " tag(s)");
             tagsAdapter.clear();
             tagsAdapter.addAll(mUser.getTags());
         }
@@ -129,10 +125,8 @@ public class ProfileActivity extends BaseActivity  {
             invalidateOptionsMenu();
             setTagsListeners();
         }
-
         String photoUrl = mUser.getProfilePictureUrl();
-        Uri uri = Uri.parse(photoUrl);
-        profilePicture.setImageURI(uri);
+        profilePicture.setImageURI(Uri.parse(photoUrl));
     }
 
 
@@ -178,15 +172,16 @@ public class ProfileActivity extends BaseActivity  {
     class UserLoader extends SyncOneEntryLoader<User> {
 
         public UserLoader() {
-            super(ProfileActivity.this, userId, User.class, DataSyncAdapter.SYNC_TYPE_USER);
+            super(ProfileActivity.this, userId, User_Table.id, User.class, DataSyncAdapter.SYNC_TYPE_USER);
             this.setSwipeAndRefreshLayout();
         }
 
         @Override
-        public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
+        public void onLoadFinished(Loader<User> loader, User data) {
             super.onLoadFinished(loader, data);
-            if (data.size() > 0){
-                mUser = data.get(0);
+            if (data != null){
+                mUser = data;
+                mUser.tags = UsersTable.loadUserTags(mUser);
                 updateView();
             }
         }

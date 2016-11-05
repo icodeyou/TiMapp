@@ -39,6 +39,7 @@ import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
 import com.timappweb.timapp.utils.SerializeHelper;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.utils.location.MyLocationProvider;
@@ -140,17 +141,17 @@ public class IntentsUtils {
 
     public static void profile(Context context, User user) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(KEY_USER_ID, user.remote_id);
-        Log.d(TAG, "Intent to view profile: " + user.remote_id);
+        intent.putExtra(KEY_USER_ID, user.id);
+        Log.d(TAG, "Intent to view profile: " + user.id);
         context.startActivity(intent);
     }
 
     public static void profile(User user) {
         Context context = MyApplication.getApplicationBaseContext();
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(KEY_USER_ID, user.remote_id);
+        intent.putExtra(KEY_USER_ID, user.id);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Log.d(TAG, "Intent to view profile: " + user.remote_id);
+        Log.d(TAG, "Intent to view profile: " + user.id);
         context.startActivity(intent);
     }
 
@@ -273,17 +274,13 @@ public class IntentsUtils {
         }
 
         Intent addtagsIntent = buildIntentAddTags(activity, event);
-
-        if(tag != null) addtagsIntent.putExtra(KEY_TAG, tag.getId());
-
+        SerializeHelper.pack(addtagsIntent, KEY_TAG, tag);
         activity.startActivityForResult(addtagsIntent , REQUEST_TAGS);
     }
 
     public static Intent buildIntentAddTags(Context context, Event event){
         Intent intent = new Intent(context, AddTagActivity.class);
-        Bundle extras = new Bundle();
-        extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
-        intent.putExtras(extras);
+        SerializeHelper.pack(intent, KEY_EVENT, event);
         return intent;
     }
 
@@ -295,9 +292,7 @@ public class IntentsUtils {
         //    return;
         //}
         Intent intent = new Intent(activity, InviteFriendsActivity.class);
-        Bundle extras = new Bundle();
-        extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
-        intent.putExtras(extras);
+        SerializeHelper.pack(intent, KEY_EVENT, event);
         activity.startActivityForResult(intent, REQUEST_INVITE_FRIENDS);
     }
 
@@ -351,20 +346,13 @@ public class IntentsUtils {
 
     public static Intent buildIntentViewPlace(Context context, long eventId) {
         Intent intent = new Intent(context, EventActivity.class);
-        intent.putExtra(KEY_EVENT_ID, eventId); // TODO cst
+        intent.putExtra(KEY_EVENT_ID, eventId);
         return  intent;
     }
 
     public static Intent buildIntentViewPlace(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
-        Bundle extras = new Bundle();      // TODO use constant
-        try {
-            event = (Event) event.requireLocalId();
-            extras.putLong(IntentsUtils.KEY_EVENT, event.getId());
-        } catch (CannotSaveModelException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        intent.putExtras(extras);
+        SerializeHelper.pack(intent, KEY_EVENT, event);
         return intent;
     }
 
@@ -406,7 +394,7 @@ public class IntentsUtils {
         }
         Intent intent = new Intent(activity, AddSpotActivity.class);
         if (spot != null && !spot.hasRemoteId()){
-            intent.putExtra(IntentsUtils.KEY_SPOT, SerializeHelper.packModel(spot, Spot.class));
+            SerializeHelper.pack(intent, KEY_SPOT, spot);
         }
         activity.startActivityForResult(intent, REQUEST_PICK_SPOT);
     }
@@ -438,7 +426,7 @@ public class IntentsUtils {
             Log.e(TAG, "Trying to extract a null event");
             return null;
         }
-        return Event.load(Event.class, extras.getLong(IntentsUtils.KEY_EVENT));
+        return SerializeHelper.unpack(extras, KEY_EVENT, Event.class);
     }
 
     public static String[] extractPicture(Intent intent) {
@@ -465,13 +453,13 @@ public class IntentsUtils {
         return (User) extras.getSerializable(KEY_USER);
     }
 
-    public static int extractUserId(Intent intent) {
+    public static long extractUserId(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             Log.e(TAG, "There is no extra");
             return -1;
         }
-        return extras.getInt(KEY_USER_ID, -1);
+        return extras.getLong(KEY_USER_ID, -1);
     }
 
 
@@ -494,7 +482,7 @@ public class IntentsUtils {
     }
 
 
-    public static long extractPlaceId(Intent intent) {
+    public static long extractEventId(Intent intent) {
         Bundle extras = intent.getExtras();
         if (extras == null){
             return -1;
@@ -505,7 +493,7 @@ public class IntentsUtils {
     public static Spot extractSpot(Intent intent) {
         Bundle extras = intent.getExtras();
         try{
-            return extras != null ? SerializeHelper.unpackModel(extras.getString(IntentsUtils.KEY_SPOT), Spot.class) : null;
+            return extras != null ?  SerializeHelper.unpack(extras, KEY_SPOT, Spot.class) : null;
         }
         catch (Exception ex){
             Log.e(TAG, "Error extracting spot: " + ex.getMessage());
@@ -519,7 +507,7 @@ public class IntentsUtils {
             return null;
         }
         else {
-            return Tag.load(Tag.class, extras.getLong(KEY_TAG));
+            return  SerializeHelper.unpack(extras, KEY_TAG, Tag.class);
         }
     }
 

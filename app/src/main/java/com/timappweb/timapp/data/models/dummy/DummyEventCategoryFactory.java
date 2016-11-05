@@ -9,7 +9,7 @@ public class DummyEventCategoryFactory {
 
     public static EventCategory create() {
         EventCategory eventCategory = new EventCategory("party");
-        eventCategory.setRemoteId(1);
+        eventCategory.id = 1L;
         return eventCategory;
     }
 

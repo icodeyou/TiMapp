@@ -1,7 +1,6 @@
 package com.timappweb.timapp.data.models.dummy;
 
 import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.utils.Util;
 
 import java.util.UUID;
@@ -13,7 +12,7 @@ public class DummyEventFactory {
 
     public static Event create(){
         Event event = new Event();
-        event.remote_id = 1;
+        event.id = 1L;
         event.count_here = 12;
         event.count_coming = 3;
         event.points = Util.getCurrentTimeSec() + 3600;

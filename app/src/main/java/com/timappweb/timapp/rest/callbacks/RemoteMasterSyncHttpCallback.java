@@ -2,11 +2,19 @@ package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
 
-import com.activeandroid.query.From;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.SyncBaseModel;
+import com.timappweb.timapp.data.models.Tag;
+import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserTag;
+import com.timappweb.timapp.data.models.UserTag_Table;
 import com.timappweb.timapp.sync.callbacks.RemoteMasterSyncCallback;
 import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
-import com.timappweb.timapp.sync.performers.MultipleEntriesSyncPerformer;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,21 +25,24 @@ import java.util.List;
 public class RemoteMasterSyncHttpCallback<T extends SyncBaseModel> extends HttpCallback<List<T>>{
 
     private static final String TAG = "RemoteMasterSyncCB";
-    private final From localData;
+    private final From deleteQuery;
 
-    public RemoteMasterSyncHttpCallback(Class<T> clazz, From from) {
+    public RemoteMasterSyncHttpCallback(Class<T> clazz, From deleteQuery) {
         Log.i(TAG, "Performing model sync for " + clazz.getCanonicalName() + "...");
-        this.localData = from;
+        this.deleteQuery = deleteQuery;
     }
 
     @Override
-    public void successful(List<T> remoteEntries) {
-        try {
-            new MultipleEntriesSyncPerformer<>(remoteEntries, localData.<T>execute())
-                    .setCallback(new RemoteMasterSyncCallback())
-                    .perform();
-        } catch (Exception e) {
-            Log.e(TAG, "Error while sync: " + e.getMessage()); // TODO
-        }
+    public void successful(final List<T> remoteEntries) throws IOException, HttpResponseSyncException {
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+            @Override
+            public void execute(DatabaseWrapper databaseWrapper) {
+                RemoteMasterSyncHttpCallback.this.deleteQuery.execute();
+                for (T entry: remoteEntries){
+                    entry.mySaveSafeCall();
+                }
+                Log.i(TAG, "Replacing with " + remoteEntries.size() + " entrie(s)");
+            }
+        });
     }
 }

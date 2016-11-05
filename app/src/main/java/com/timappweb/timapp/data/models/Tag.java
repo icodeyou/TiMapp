@@ -1,16 +1,15 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
-import com.google.gson.annotations.Expose;
+ import com.raizlabs.android.dbflow.annotation.Column;
+ import com.raizlabs.android.dbflow.annotation.NotNull;
+ import com.raizlabs.android.dbflow.annotation.Table; import com.timappweb.timapp.data.AppDatabase;
+ import com.google.gson.annotations.Expose;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.utils.SearchHistory;
 
 import java.util.List;
 
-@Table(name = "Tag")
+@Table(database = AppDatabase.class)
 public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
 
     // TODO [Jack][critical][#181] DO NOT USE THIS USE CONFIGURATION
@@ -20,12 +19,13 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "Name", notNull = true)
+    @Column
+    @NotNull
     @Expose
     public String name;
 
-    @Column(name = "CountRef")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public int count_ref;
 
     // =============================================================================================
@@ -65,6 +65,11 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public int getSyncType() {
+        throw new InternalError("Not syncable");
     }
 
     public boolean isShortEnough() {
@@ -107,22 +112,14 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
     @Override
     public String toString() {
         return "Tag{" +
-                "id='" + this.getId() + '\'' +
-                "remoteId='" + this.remote_id + '\'' +
+                "remoteId='" + this.id + '\'' +
                 "name='" + name + '\'' +
                 ", count_ref=" + count_ref +
                 '}';
     }
 
-    public static From querySuggestTagForEvent(Event event) {
-        return new Select()
-                .from(Tag.class)
-                .leftJoin(EventTag.class).on("Tag.Id = EventTag.Tag AND EventTag.Event = ?", event.getId())
-                .orderBy("EventTag.CountRef DESC, Tag.CountRef DESC");
-    }
-
     @Override
-    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
-        return (T) this.mySave();
+    public void deepSave() throws CannotSaveModelException {
+        this.mySave();
     }
 }

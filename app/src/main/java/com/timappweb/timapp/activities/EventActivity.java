@@ -64,17 +64,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 4;
 
-    public static final int LOADER_ID_CORE          = 0;
-    public static final int LOADER_ID_PICTURE       = 1;
-    public static final int LOADER_ID_INVITATIONS   = 2;
-    public static final int LOADER_ID_USERS         = 3;
-    public static final int LOADER_ID_TAGS          = 4;
-
-    private static final int REQUEST_CAMERA         = 0;
-
     // ---------------------------------------------------------------------------------------------
 
-    private Event                       event;
+    public Event                       event;
     private long                        eventId;
 
     private EventPicturesFragment       fragmentPictures;
@@ -197,26 +189,27 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private void loadEvent() throws CannotSaveModelException {
         this.event = IntentsUtils.extractEvent(getIntent());
-        eventId = IntentsUtils.extractPlaceId(getIntent());
+        eventId = IntentsUtils.extractEventId(getIntent());
         if (event == null && eventId <= 0){
             Log.e(TAG, "Trying to view an invalid event --> redirect to home");
             this.exit();
             return;
         }
         else if (eventId <= 0){
-            eventId = event.remote_id;
+            eventId = event.id;
         }
 
         if (event == null || SyncHistory.requireUpdate(DataSyncAdapter.SYNC_TYPE_EVENT, event, MIN_DELAY_UPDATE_EVENT)){
             loader.setVisibility(View.VISIBLE);
-            Call<Event> call = RestClient.service().viewPlace(eventId);
+            Call<Event> call = RestClient.service().viewPlace(event == null ? eventId: event.id);
             Log.i(TAG, "Loading event with id: " + eventId + ". Existing event: " + event);
             RestClient.buildCall(call)
                     .onResponse(new HttpCallback<Event>() {
                         @Override
                         public void successful(Event event) {
                             try {
-                                EventActivity.this.event = event.deepSave();
+                                EventActivity.this.event = event;
+                                EventActivity.this.event.deepSave();
                                 SyncHistory.updateSync(DataSyncAdapter.SYNC_TYPE_EVENT, EventActivity.this.event);
                                 onEventLoaded();
                             } catch (CannotSaveModelException e) {
@@ -251,7 +244,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     .perform();
         }
         else{
-            event = (Event) event.requireLocalId();
+            event.mySave();
             Log.i(TAG, "Using cached event: " + event);
             onEventLoaded();
         }
@@ -290,7 +283,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
             updateOverView();
 
-            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), getEvent());
+            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), event);
         }
 
         updateView();
@@ -443,10 +436,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text, DeepLinkFactory.shareEvent(event).build()));
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using_title)));
-    }
-
-    public Event getEvent() {
-        return event;
     }
 
     @Override

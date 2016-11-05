@@ -19,8 +19,8 @@ public class UpdateEventCallback extends HttpCallback<EventPointResponse> {
 
     @Override
     public void successful(EventPointResponse eventPoint) {
-        event.setPoints(eventPoint.points);
         event.setInactivityThreshold(eventPoint.inactivity_threshold);
+        event.setPoints(eventPoint.points); // TODO do not update if event is over/planned ?
 
         if (eventPoint.picture_id == 0){
             event.setBackgroundPicture(null);
@@ -28,7 +28,7 @@ public class UpdateEventCallback extends HttpCallback<EventPointResponse> {
         else if (eventPoint.picture != null){
             event.setBackgroundPicture(eventPoint.picture);
             event.picture.event = event;
-            event.picture = (Picture) event.picture.mySaveSafeCall();
+            event.picture.mySaveSafeCall();
         }
         event.mySaveSafeCall();
     }

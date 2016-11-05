@@ -4,15 +4,17 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
+import com.timappweb.timapp.data.models.UserEvent_Table;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.EventsTable;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
@@ -45,7 +47,10 @@ public class EventStatusManager {
     }
 
     public static void clearCurrentEvent() {
-        new Delete().from(UserEvent.class).where("Event = ? AND User = ?", currentEvent.getId(), MyApplication.getCurrentUser().getId()).execute();
+        SQLite.delete(UserEvent.class)
+                .where(UserEvent_Table.event_id.eq(currentEvent.id))
+                .and(UserEvent_Table.user_id.eq(MyApplication.getCurrentUser().id))
+                .execute();
         currentEvent = null;
     }
 
@@ -136,21 +141,22 @@ public class EventStatusManager {
     }
 
     private static void removeLocally(Event event) {
-        new Delete()
-                .from(UserEvent.class)
-                .where("User = ? AND Event = ?", MyApplication.getCurrentUser().getId(), event.getId())
+        SQLite.delete(UserEvent.class)
+                .where(UserEvent_Table.event_id.eq(event.id))
+                .and(UserEvent_Table.user_id.eq(MyApplication.getCurrentUser().id))
                 .execute();
     }
 
     private static UserEvent addLocally(UserEvent userEvent) throws CannotSaveModelException {
         userEvent.user = MyApplication.getCurrentUser();
-        userEvent.setCreated(System.currentTimeMillis());
-        userEvent = userEvent.deepSave();
+        userEvent.created = Util.getCurrentTimeSec();
+        userEvent.deepSave();
         if (userEvent.status == UserEventStatusEnum.HERE){
             EventStatusManager.setCurrentEvent(userEvent.event);
-            new Delete()
-                    .from(UserEvent.class)
-                    .where("User = ? AND Status = ? AND Id != ?", userEvent.user.getId(), UserEventStatusEnum.HERE, userEvent.getId())
+            SQLite.delete(UserEvent.class)
+                    .where(UserEvent_Table.user_id.eq(userEvent.user.id))
+                    .and(UserEvent_Table.status.eq(UserEventStatusEnum.HERE))
+                    .and(UserEvent_Table.id.notEq(userEvent.id))
                     .execute();
         }
         // If we add the GONE status to our current event
@@ -165,7 +171,7 @@ public class EventStatusManager {
 
     public static UserEvent addLocally(long syncId, Event event, UserEventStatusEnum status) throws CannotSaveModelException {
         UserEvent eventStatus = new UserEvent();
-        eventStatus.setRemoteId(syncId);
+        eventStatus.id = syncId;
         eventStatus.status = status;
         eventStatus.event = event;
         return addLocally(eventStatus);
@@ -182,11 +188,12 @@ public class EventStatusManager {
         User user = MyApplication.getCurrentUser();
         if (user == null) return null;
 
-        return new Select()
+        return SQLite.select()
                 .from(UserEvent.class)
-                .where("User = ? AND Event = ?", event.getId(), user.getId())
-                .orderBy("SyncId DESC")
-                .executeSingle();
+                .where(UserEvent_Table.user_id.eq(user.id))
+                .and(UserEvent_Table.event_id.eq(event.id))
+                .orderBy(UserEvent_Table.id, false)
+                .querySingle();
     }
 
     /*
@@ -285,7 +292,7 @@ public class EventStatusManager {
         if (eventId == -1){
             return null;
         }
-        Event event = Event.loadByRemoteId(Event.class, eventId);
+        Event event = EventsTable.load(eventId);
 
         if (event.isOver()){
             if (event.getLastSync() > event.last_activity){
@@ -293,7 +300,7 @@ public class EventStatusManager {
                 event = null;
             }
             else{
-                event.requestSync();
+                BaseTable.requestSync(MyApplication.getApplicationBaseContext(), event);
                 // TODO [critical] notify on sync end
             }
         }

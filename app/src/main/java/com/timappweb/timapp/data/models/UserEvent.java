@@ -1,36 +1,40 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.timappweb.timapp.MyApplication;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.entities.UserEventStatusEnum;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 /**
  * Join table for
  */
-@Table(name = "UserEvent")
+@Table(database = AppDatabase.class)
 public class UserEvent extends SyncBaseModel  {
 
     // =============================================================================================
     // DATABASE
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Event", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+    @NotNull
+    @ForeignKey(tableClass = Event.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
     @Expose
     @SerializedName("place")
     public Event event;
 
-    @Column(name = "Status", notNull = true)
+    @NotNull
+    @Column
     @Expose
     public UserEventStatusEnum status;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "User", notNull = true, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
+    @NotNull
     @Expose
     @SerializedName("user")
     public User user;
@@ -63,6 +67,11 @@ public class UserEvent extends SyncBaseModel  {
         if (model == null || !(model instanceof UserEvent)) return false;
         UserEvent obj = (UserEvent) model;
         return this.status == obj.status;
+    }
+
+    @Override
+    public int getSyncType() {
+        throw new InternalError("Not syncable");
     }
 
 }

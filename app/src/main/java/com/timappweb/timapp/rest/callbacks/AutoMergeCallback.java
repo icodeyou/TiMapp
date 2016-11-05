@@ -2,10 +2,10 @@ package com.timappweb.timapp.rest.callbacks;
 
 import android.util.Log;
 
-import com.activeandroid.Model;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.ReflectionHelper;
 
@@ -30,9 +30,9 @@ import java.util.Map;
 public class AutoMergeCallback extends HttpCallback<JsonObject>{
 
     private static final String TAG = "AutoMergeCallback";
-    private final Model model;
+    private final MyModel model;
 
-    public AutoMergeCallback(Model model) {
+    public AutoMergeCallback(MyModel model) {
         this.model = model;
     }
 

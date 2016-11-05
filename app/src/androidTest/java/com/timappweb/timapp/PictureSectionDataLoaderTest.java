@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class PictureSectionDataLoaderTest extends ApplicationTestCase<Application> {
 
-    public static final int EVENT_ID = 562;
+    public static final long EVENT_ID = 562;
 
     public PictureSectionDataLoaderTest() {
         super(Application.class);
@@ -27,7 +27,7 @@ public class PictureSectionDataLoaderTest extends ApplicationTestCase<Applicatio
     @Test
     public void testPaginateEventPictures() throws IOException, InterruptedException {
         final Event event = DummyEventFactory.create();
-        event.setRemoteId(EVENT_ID);
+        event.id = EVENT_ID;
 
         long minDelayForceRefresh = 1000;
         final int remoteLoadLimit = 3;

@@ -1,31 +1,35 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 
 import java.util.List;
 
-@Table(name = "EventCategory")
+@Table(database = AppDatabase.class)
 public class EventCategory extends Category{
 
     private static final String TAG = "EventCategory";
 
     // =============================================================================================
 
-    @Expose(serialize = false, deserialize = true)
-    @Column(name = "Name")
+    @Expose(serialize = true, deserialize = true)
+    @Column
+    @NotNull
     public String name;
 
-    @Expose(serialize = false, deserialize = true)
-    @Column(name = "Icon")
+    @Expose(serialize = true, deserialize = true)
+    @Column
     @SerializedName("icon")
     public String iconUrl;
 
-    @Expose(serialize = false, deserialize = true)
-    @Column(name = "Position")
+    @Expose(serialize = true, deserialize = true)
+    @Column
+    @NotNull
     public int position;
 
 
@@ -59,10 +63,10 @@ public class EventCategory extends Category{
         if (categories == null || categories.size() == 0){
             return "";
         }
-        String res = String.valueOf(categories.get(0).remote_id);
+        String res = String.valueOf(categories.get(0).id);
 
         for (int i = 1; i < categories.size(); i++){
-            res += "," + String.valueOf(categories.get(i).remote_id);
+            res += "," + String.valueOf(categories.get(i).id);
         }
         return res;
     }
@@ -81,7 +85,8 @@ public class EventCategory extends Category{
         return "EventCategory{" +
                 "position=" + position +
                 ", name='" + name + '\'' +
-                ", id=" + remote_id +
+                ", iconUrl='" + iconUrl + '\'' +
+                ", id=" + id +
                 '}';
     }
 
@@ -93,17 +98,16 @@ public class EventCategory extends Category{
 
         EventCategory that = (EventCategory) o;
 
-        if (remote_id != that.remote_id) return false;
+        if (id != that.id) return false;
         if (position != that.position) return false;
         return name.equals(that.name);
 
     }
 
     @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + remote_id;
-        return result;
+    public int getSyncType() {
+        //return DataSyncAdapter.SYNC_TYPE_
+        throw new InternalError("Not syncable element");
     }
 
     @Override
@@ -117,7 +121,7 @@ public class EventCategory extends Category{
     }
 
     @Override
-    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
-        return (T) this.mySave();
+    public void deepSave() throws CannotSaveModelException {
+        this.mySave();
     }
 }

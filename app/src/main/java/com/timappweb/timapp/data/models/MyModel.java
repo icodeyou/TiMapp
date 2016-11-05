@@ -6,8 +6,9 @@ import android.databinding.Observable;
 import android.databinding.PropertyChangeRegistry;
 import android.util.Log;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.Property;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -16,14 +17,15 @@ import com.timappweb.timapp.utils.Util;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 /**
  * Created by stephane on 5/10/2016.
  */
-public class MyModel extends Model implements Observable, Serializable{
+public abstract class MyModel extends BaseModel implements Observable, Serializable{
+
     private static final String TAG = "MyModel";
+    private transient PropertyChangeRegistry mCallbacks;
 
     /**
      * Save belongs to many association.
@@ -46,17 +48,17 @@ public class MyModel extends Model implements Observable, Serializable{
     }
     public  <T extends MyModel> void saveBelongsToMany(T data,
                                                        Class<? extends MyModel> associationModel) throws CannotSaveModelException {
-        MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
+        //MyModel savedModel = !this.hasLocalId() ? this.mySave() : this;
         try {
-            Constructor<? extends MyModel> constructor = associationModel.getConstructor(savedModel.getClass(), data.getClass());
-            MyModel instance = constructor.newInstance(savedModel, data);
+            Constructor<? extends MyModel> constructor = associationModel.getConstructor(this.getClass(), data.getClass());
+            MyModel instance = constructor.newInstance(this, data);
             instance.deepSave();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             if (BuildConfig.DEBUG) {
                 e.printStackTrace();
             }
-            throw new CannotSaveModelException(savedModel);
+            throw new CannotSaveModelException(this);
         }
         /*
         catch (IllegalAccessException e) {
@@ -71,44 +73,35 @@ public class MyModel extends Model implements Observable, Serializable{
         }*/
     }
 
+    /*
     public void replaceAssociation(Collection<? extends MyModel> data,
                                 Class<? extends MyModel> associationModel) throws CannotSaveModelException {
         this.deleteAssociation(associationModel);
         this.saveBelongsToMany(data, associationModel);
-    }
+    }*/
 
     /**
      * Delete association data
      * @param associationModel
      */
-    public void deleteAssociation(Class<? extends MyModel> associationModel){
-        new Delete()
-                .from(associationModel)
-                .where(this.getClass().getSimpleName() + " = " + this.getId())
-                .execute();
-    }
-
+    public abstract void deleteAssociation(Class<? extends MyModel> associationModel, Property property);
     /**
      * Save model plus belongs to many associations
      * @return
      */
-    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
+    public void deepSave() throws CannotSaveModelException {
         Log.v(TAG, "==> Saving model " + this.getClass().getCanonicalName());
         this._saveModelAssociations();
-        return (T) this.mySave();
+        this.mySave();
     }
 
     /**
      * Save model plus belongs to many associations
      * @return
      */
-    public MyModel mySave() throws CannotSaveModelException {
+    public void mySave() throws CannotSaveModelException {
         try{
-            if (this.save() == -1){
-                Log.e(TAG, "Cannot save model: " + this);
-                throw new CannotSaveModelException(this);
-            }
-            return this;
+            this.save();
         }
         catch (SQLiteException ex){
             Log.e(TAG, "SQLiteException: " + ex);
@@ -128,9 +121,9 @@ public class MyModel extends Model implements Observable, Serializable{
                     switch (annotation.type()){
                         case BELONGS_TO:
                             MyModel fieldValue = (MyModel) field.get(this);
-                            if (fieldValue != null && !fieldValue.hasLocalId()){
-                                MyModel model = fieldValue.deepSave();
-                                field.set(this, model);
+                            if (fieldValue != null){
+                                fieldValue.deepSave();
+                                field.set(this, fieldValue);
                                 Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName());
                             }
                             break;
@@ -138,7 +131,7 @@ public class MyModel extends Model implements Observable, Serializable{
                             Collection<? extends MyModel> fieldValues = (Collection<? extends MyModel>) field.get(this);
                             if (fieldValues != null){
                                 if (annotation.saveStrategy() == ModelAssociation.SaveStrategy.REPLACE){
-                                    this.deleteAssociation(annotation.joinModel());
+                                    this.deleteAssociation(annotation.joinModel(), (Property) annotation.targetTable().getField(annotation.remoteForeignKey()).get(null));
                                 }
                                 this.saveBelongsToMany(fieldValues, annotation.joinModel());
                                 Log.d(TAG, "    - Saving deep association for remoteField '" + field.getName() + ": size=" + fieldValues.size());
@@ -151,17 +144,15 @@ public class MyModel extends Model implements Observable, Serializable{
                 if (BuildConfig.DEBUG){
                     e.printStackTrace();
                 }
+            } catch (NoSuchFieldException e) {
+                Log.e(TAG, "IllegalAccessException: " + e.getMessage());
+                if (BuildConfig.DEBUG){
+                    e.printStackTrace();
+                }
+                Util.appStateError(TAG, "Cancel because model are not properly parametrized");
             }
         }
     }
-
-    public boolean hasLocalId() {
-        return this.getId() != null;
-    }
-
-
-
-    private transient PropertyChangeRegistry mCallbacks;
 
 
     // =============================================================================================
@@ -204,23 +195,15 @@ public class MyModel extends Model implements Observable, Serializable{
         }
     }
 
-    public MyModel mySaveSafeCall() {
+    public void mySaveSafeCall() {
         try {
-            return this.mySave();
+            this.mySave();
         } catch (CannotSaveModelException e) {
             Log.e(TAG, "Cannot save model: " + e.getMessage());
             if (BuildConfig.DEBUG){
                 e.printStackTrace();
             }
-            return null;
         }
-    }
-
-    public MyModel requireLocalId() throws CannotSaveModelException {
-        if (!this.hasLocalId()){
-           return this.deepSave();
-        }
-        return this;
     }
 
 }

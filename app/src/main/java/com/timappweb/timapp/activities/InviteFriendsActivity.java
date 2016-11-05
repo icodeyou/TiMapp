@@ -12,24 +12,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.adapters.SelectFriendsAdapter;
 import com.timappweb.timapp.adapters.flexibleadataper.models.UserItem;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.config.QuotaType;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.entities.UserInvitationFeedback;
 import com.timappweb.timapp.data.loader.FriendsLoaderFactory;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.EventsInvitation;
+import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserFriend;
+import com.timappweb.timapp.data.models.UserTag;
+import com.timappweb.timapp.data.models.UserTag_Table;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.EventInvitationsTable;
+import com.timappweb.timapp.data.tables.UsersTable;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.NetworkErrorCallback;
 import com.timappweb.timapp.rest.callbacks.PublishInEventCallback;
+import com.timappweb.timapp.rest.callbacks.RetryOnErrorCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
 
@@ -76,23 +88,16 @@ public class InviteFriendsActivity extends BaseActivity
         shareButton = findViewById(R.id.share_button);
         noFriendsView = findViewById(R.id.no_data_view_layout);
 
-        try {
-            event = (Event) event.requireLocalId();
-            this.initToolbar(true);
-            mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-            recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
-            progressview = findViewById(R.id.progress_view);
-            initAdapterListFriends();
+        this.initToolbar(true);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_friends);
+        progressview = findViewById(R.id.progress_view);
+        initAdapterListFriends();
 
-            FriendsLoaderFactory.manager(this, mAdapter, mSwipeRefreshLayout)
-                    .setCallback(this)
-                    .setNoDataView(noFriendsView)
-                    .load();
-
-        } catch (CannotSaveModelException e) {
-            IntentsUtils.getBackToParent(this);
-            return;
-        }
+        FriendsLoaderFactory.manager(this, mAdapter, mSwipeRefreshLayout)
+                .setCallback(this)
+                .setNoDataView(noFriendsView)
+                .load();
 
         initListener();
     }
@@ -159,10 +164,11 @@ public class InviteFriendsActivity extends BaseActivity
     private void initializeSelection(){
         // Preselect every user already invited.
         if (_cachedInvitations == null){
-            _cachedInvitations = event.getSentInvitationsByUser(MyApplication.getCurrentUser());
+            _cachedInvitations = EventInvitationsTable.getSentInvitationsByUser(MyApplication.getCurrentUser(), event);
         }
         for (EventsInvitation invite: _cachedInvitations){
             int position = mAdapter.getGlobalPositionOf(new UserItem(invite.getUser()));
+            if (position == -1) continue;
             AbstractFlexibleItem item = mAdapter.getItem(position);
             if (item instanceof UserItem){
                 UserItem userItem = (UserItem) item;
@@ -209,38 +215,10 @@ public class InviteFriendsActivity extends BaseActivity
             return;
         }
         progressview.setVisibility(View.VISIBLE);
-        Call<List<UserInvitationFeedback>> call = RestClient.service().sendInvite(event.remote_id, ids);
-        RestClient.buildCall(call)
+        final HttpCallManager<List<UserInvitationFeedback>> manager =  RestClient.buildCall(RestClient.service().sendInvite(event.id, ids));
+        manager
                 .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser(), QuotaType.INVITE_FRIEND))
-                .onResponse(new HttpCallback<List<UserInvitationFeedback>>() {
-                    @Override
-                    public void successful(List<UserInvitationFeedback> feedbackList) {
-                        Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
-                        for (UserInvitationFeedback feedback: feedbackList){
-                            Log.v(TAG, feedback.toString());
-                            if (feedback.success){
-                                if (feedback.invitation != null){
-                                    feedback.invitation.event = event;
-                                    feedback.invitation.user_source = MyApplication.getCurrentUser();
-                                    feedback.invitation.user_target = User.queryByRemoteId(User.class, feedback.user_id).executeSingle();
-                                    feedback.invitation.mySaveSafeCall();
-                                }
-                            }
-                            else{
-                                Log.e(TAG, "Cannot invite user with id: " + feedback.user_id);
-                            }
-                        }
-                        finishActivityResult();
-                    }
-
-
-                    @Override
-                    public void notSuccessful() {
-                        progressview.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
-                    }
-
-                })
+                .onResponse(new OnInviteSuccessfullCallback())
                 .onError(new NetworkErrorCallback(this))
                 .onFinally(new HttpCallManager.FinallyCallback() {
                     @Override
@@ -273,6 +251,43 @@ public class InviteFriendsActivity extends BaseActivity
 
     @Override
     public void onLoadStart(CursorPaginateDataLoader.LoadType type) {
+
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private class OnInviteSuccessfullCallback extends HttpCallback<List<UserInvitationFeedback>> {
+
+        @Override
+        public void successful(final List<UserInvitationFeedback> feedbackList) throws Exception{
+            Toast.makeText(getApplicationContext(), R.string.toast_thanks_for_sharing, Toast.LENGTH_LONG).show();
+
+            FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+                @Override
+                public void execute(DatabaseWrapper databaseWrapper) {
+                    for (UserInvitationFeedback feedback: feedbackList){
+                        Log.v(TAG, feedback.toString());
+                        if (feedback.invitation != null){
+                            feedback.invitation.event = event;
+                            feedback.invitation.user_source = MyApplication.getCurrentUser();
+                            feedback.invitation.user_target = UsersTable.load(feedback.user_id);
+                            feedback.invitation.mySaveSafeCall();
+                        }
+                        if (!feedback.success){
+                            Log.e(TAG, "Cannot invite user with id: " + feedback.user_id);
+                        }
+                    }
+                }
+            });
+            finishActivityResult();
+        }
+
+
+        @Override
+        public void notSuccessful() {
+            progressview.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), R.string.action_performed_not_successful, Toast.LENGTH_LONG).show();
+        }
 
     }
 

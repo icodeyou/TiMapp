@@ -1,67 +1,76 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Where;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
+import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.UsersTable;
+import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
 
-@Table(name = "User")
+@Table(database = AppDatabase.class)
 public class User extends SyncBaseModel  {
     private static final String TAG = "UserEntity" ;
 
     // =============================================================================================
     // DATABASE
 
-    @Column(name = "Username", notNull = true)
+    @Column
+    @NotNull
     @Expose
     public String username;
 
-    @Column(name = "Email", notNull = false)
+    @Column
     @Expose
     public String email;
 
-    @Column(name = "CountPosts")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public Integer count_posts;
 
-    @Column(name = "CountPlaces")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public Integer count_places;
 
-    @Column(name = "AvatarUrl")
+    @Column
     @Expose
     public String avatar_url;
 
-    @Column(name = "Status")
-    @Expose(serialize = false, deserialize = true)
-    private boolean status = false;
+    //@Column
+    //@Expose(serialize = true, deserialize = true)
+    //private boolean status = false;
 
-    @Column(name = "AppId")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public String app_id;
 
-    @Column(name = "GoogleMessagingToken")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public String google_messaging_token;
 
     // =============================================================================================
 
-    @Expose(serialize = true, deserialize = false)
-    public String password;
-
     /**
      * Cached value. See @getTags
      */
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @ModelAssociation(
             type = ModelAssociation.Type.BELONGS_TO_MANY,
             saveStrategy = ModelAssociation.SaveStrategy.REPLACE,
             joinModel = UserTag.class,
-            targetModel = Tag.class)
+            targetModel = Tag.class,
+            targetTable = UserTag_Table.class,
+            remoteForeignKey = "user_id")
     public List<Tag> tags;
 
     /**
@@ -75,21 +84,6 @@ public class User extends SyncBaseModel  {
 
     }
 
-    public User(String email, String password){
-        this.email = email;
-        this.password = password;
-    }
-
-    public User(String email, String password, String username){
-        this.email = email;
-        this.password = password;
-        this.username = username;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -97,8 +91,7 @@ public class User extends SyncBaseModel  {
     @Override
     public String toString() {
         return "User{" +
-                " db_id=" + this.getId() +
-                ", remote_id=" + remote_id +
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", avatar_url=" + avatar_url +
@@ -116,23 +109,14 @@ public class User extends SyncBaseModel  {
     }
 
     public boolean hasTags() {
-        return getTags().size() > 0;
+        return tags != null && tags.size() > 0;
     }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
-
 
     // =============================================================================================
 
     public List<Tag> getTags() {
         if (tags != null) return tags;
-        tags = new Select().from(Tag.class).innerJoin(UserTag.class).on("Tag.Id = UserTag.Tag AND UserTag.User = ?", this.getId()).execute();
+        tags = UsersTable.loadUserTags(this);
         return tags;
     }
 
@@ -141,57 +125,74 @@ public class User extends SyncBaseModel  {
         return false;
     }
 
-
-    public static From getFriendsQuery(long userId) {
-        return new Select()
-                .from(UserFriend.class)
-                .innerJoin(User.class)
-                .on("User.Id = UserFriend.UserTarget")
-                .where("UserFriend.UserSource = ?", userId);
+    @Override
+    public int getSyncType() {
+        return DataSyncAdapter.SYNC_TYPE_USER;
     }
 
     public List<UserEvent> getPlaceStatus() {
         if (placeStatus != null) return placeStatus;
-        placeStatus = new Select()
+        placeStatus = SQLite.select()
                 .from(UserEvent.class)
-                .where("User = ? ", this.getId())
-                .execute();
+                .where(UserEvent_Table.user_id.eq(this.id))
+                .queryList();
         return placeStatus;
     }
 
 
-    public From getInviteSentQuery() {
-        return new Select()
+    public Where<EventsInvitation> getInviteSentQuery() {
+        return SQLite.select()
                 .from(EventsInvitation.class)
-                .where("UserSource = ?", this.getId());
+                .where(EventsInvitation_Table.user_source_id.eq(this.id));
     }
 
-    public From getInviteSentQuery(long placeId) {
-        return this.getInviteSentQuery().where("Event = ? AND UserSource = ?", placeId, this.getId());
-    }
     public List<EventsInvitation> getInviteSent(long placeId) {
-        return this.getInviteSentQuery().execute();
+        return this.getInviteSentQuery().queryList();
     }
 
-    public From getInviteReceivedQuery() {
-        return new Select()
+    public Where<EventsInvitation> getInviteReceivedQuery() {
+        return SQLite.select()
                 .from(EventsInvitation.class)
-                .where("UserTarget = ?", this.getId())
-                .orderBy("id DESC");
+                .where(EventsInvitation_Table.user_target_id.eq(this.id))
+                .orderBy(EventsInvitation_Table.id, false);
     }
 
     public List<EventsInvitation> getInviteReceived() {
-        return this.getInviteReceivedQuery().execute();
-    }
-
-    public From getFriendsQuery() {
-        return User.getFriendsQuery(this.getId());
+        return this.getInviteReceivedQuery().queryList();
     }
 
 
     public UserQuota getQuota(int quotaTypeId) {
-        return UserQuota.get(this.getId(), quotaTypeId);
+        return UserQuota.get(this.id, quotaTypeId);
     }
 
-
+/*
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "tags")
+    public List<Ant> getMyTags() {
+        if (tags == null || tags.isEmpty()) {
+            tags = SQLite.select()
+                    .from(Tag.class)
+                    .where(Tag_Table..eq(id))
+                    .queryList();
+        }
+        return ants;
+    }
+*/
+    @Override
+    public void deepSave() throws CannotSaveModelException {
+        if (this.tags != null && tags.size() > 0){
+            FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+                @Override
+                public void execute(DatabaseWrapper databaseWrapper) {
+                    SQLite.delete(UserTag.class)
+                            .where(UserTag_Table.user_id.eq(User.this.id))
+                            .execute();
+                    for (Tag tag: tags){
+                        new UserTag(User.this, tag).mySaveSafeCall();
+                    }
+                }
+            });
+        }
+        this.mySave();
+    }
 }

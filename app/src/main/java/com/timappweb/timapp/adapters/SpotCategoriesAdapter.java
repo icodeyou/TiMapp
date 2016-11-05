@@ -19,7 +19,7 @@ public class SpotCategoriesAdapter extends CategoriesAdapter {
 
     protected LayoutInflater inflater;
     //protected List<EventCategory> eventCategories = Collections.emptyList();
-    protected HashMap<Integer, ImageView> icons = new HashMap<>();
+    protected HashMap<Long, ImageView> icons = new HashMap<>();
 
     private ImageView currentCategoryIcon;
 
@@ -45,7 +45,7 @@ public class SpotCategoriesAdapter extends CategoriesAdapter {
         final SpotCategory spotCategory = ConfigurationProvider.spotCategories().get(position);
         final ImageView categoryIcon = holder.categoryIcon;
         final TextView categoryText = holder.categoryText;
-        icons.put(spotCategory.remote_id, categoryIcon);
+        icons.put(spotCategory.id, categoryIcon);
 
         categoryIcon.setImageDrawable(spotCategory.getIconDrawable(this.context));
         if(isLegend) {

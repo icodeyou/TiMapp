@@ -1,29 +1,21 @@
 package com.timappweb.timapp.data.models;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.activeandroid.Cache;
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.query.Delete;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.BaseProperty;
+import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.timappweb.timapp.BuildConfig;
-import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
-import com.timappweb.timapp.data.queries.AreaQueryHelper;
-import com.timappweb.timapp.sync.SyncAdapterOption;
-import com.timappweb.timapp.sync.data.DataSyncAdapter;
+import com.timappweb.timapp.data.tables.BaseTable;
 import com.timappweb.timapp.utils.Util;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * Created by stephane on 4/23/2016.
@@ -37,16 +29,17 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
 
     // =============================================================================================
 
-    @Column(name = "SyncId", index = true, unique = true, notNull = true) // onUniqueConflict = Column.ConflictAction.IGNORE
+    @PrimaryKey(autoincrement = false)
+    @Column(name = "id")
     @Expose(serialize = true, deserialize = true)
     @SerializedName("id")
-    public Integer remote_id = null;
+    public Long id = null;
 
-    @Column(name = "_lastSync", notNull = false)
+    @Column
     protected long _last_sync;
 
-    @Column(name = "Created", notNull = true)
-    @Expose(serialize = false, deserialize = true)
+    @Column//, notNull = true)
+    @Expose(serialize = true, deserialize = true)
     public long created;
 
     // =============================================================================================
@@ -59,43 +52,7 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
     public abstract boolean isSync(SyncBaseModel model);
 
     public long getRemoteId(){
-        return this.remote_id != null ? this.remote_id : 0L;
-    }
-
-    public void setRemoteId(long remoteId) {
-        this.remote_id = (int) remoteId;
-    }
-    /**
-     *
-     * Saving the model from the remote server key if there is no ActiveAndroid primary key.
-     * Il the record already exists, it is updated otherwise inserted
-     *
-     * @return
-     */
-    public <T extends MyModel> T deepSave() throws CannotSaveModelException {
-        /*
-        if (!this.hasLocalId()){
-            SyncBaseModel model = this.queryByRemoteId().executeSingle();
-            if (model != null){
-                model.merge(this);
-                Log.d(TAG, "Updating existing remote model: " + model);
-                return (T) model;
-            }
-        }*/
-        return super.deepSave();
-    }
-
-    @Override
-    public MyModel  mySave() throws CannotSaveModelException {
-        if (!this.hasLocalId() && this.hasRemoteId()){
-            SyncBaseModel model = this.queryByRemoteId().executeSingle();
-            if (model != null){
-                model.merge(this);
-                Log.d(TAG, "Updating existing remote model: " + model);
-                return model;
-            }
-        }
-        return super.mySave();
+        return this.id != null ? this.id : 0L;
     }
 
     /**
@@ -110,36 +67,17 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
         return this._last_sync;
     }
 
-    /**
-     *
-     * @param classType
-     * @param key
-     * @return
-     */
-    public static From queryByRemoteId(Class<? extends SyncBaseModel> classType, long key) {
-        return new Select().from(classType).where("SyncId = ?", key);
-    }
-
-    /**
-     *
-     * @param classType
-     * @param key
-     * @return
-     */
-    public static From deleteByRemoteId(Class<? extends SyncBaseModel> classType, long key) {
-        return new Delete().from(classType).where("SyncId = ?", key);
-    }
 
     /**
      * Get a entry in the db. If no entry, request an immediate merge with the server
      * @param classType The entry class type
      * @param context   The context
-     * @param key       The remote key remote_id
+     * @param key       The remote key id
      * @param syncType  The merge type to call
      * @return If there is a local version of the entry, retu
      */
-    public static SyncBaseModel getEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
-        SyncBaseModel model = queryByRemoteId(classType, key).executeSingle();
+    public static SyncBaseModel getEntry(Class<? extends SyncBaseModel> classType, BaseProperty property, Context context, long key, int syncType) {
+        SyncBaseModel model = BaseTable.loadByRemoteId(classType, property, key);
         if (model != null){
             if (model.isUpToDate()){
                 Log.i(TAG, "Entry exists in local db and is up to date: " + model);
@@ -149,67 +87,8 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
                 Log.i(TAG, "Entry exists in local db but it's outdated: " + model);
             }
         }
-        getRemoteEntry(classType, context, key, syncType);
+        BaseTable.syncEntry(classType, context, key, syncType);
         return null;
-    }
-
-
-    /**
-     * Request an immediate merge with the server to get data
-     * @param classType The entry class type
-     * @param context   The context
-     * @param key       The remote key remote_id
-     * @param syncType  The merge type to call
-     * @return If there is a local version of the entry, retu
-     */
-    public static void getRemoteEntry(Class<? extends SyncBaseModel> classType, Context context, int key, int syncType) {
-        Log.i(TAG, "Request sync for entry " + classType + " with id " + key);
-        Bundle bundle = new Bundle();
-        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
-        bundle.putInt(DataSyncAdapter.SYNC_ID_KEY, key);
-        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
-    }
-
-    public void requestSync(Context context, int syncType) {
-        Log.i(TAG, "Request sync update for: " + this);
-        Bundle bundle = new Bundle();
-        bundle.putInt(DataSyncAdapter.SYNC_TYPE_KEY, syncType);
-        bundle.putInt(DataSyncAdapter.SYNC_ID_KEY, (int) this.getRemoteId());
-        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), bundle);
-    }
-
-    public static void startSync(Context context, SyncAdapterOption params) {
-        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), params.toBundle());
-    }
-    /**
-     * Get entries for a specified model. If entries exists locally, take it otherwise request a sync update
-     * @param context
-     * @param query
-     * @return
-     */
-    public static <DataType extends SyncBaseModel> List<DataType>
-            getEntries(Context context, SyncAdapterOption options, From query, long syncDelay){
-        // If need merge
-        if (SyncHistory.requireUpdate(options.getSyncType(), syncDelay)){
-            Log.i(TAG, "Requesting remote entries for type: " + options);
-            getRemoteEntries(context, options);
-            return null;
-        }
-        else {
-            Log.i(TAG, "Entries are already in local db for type: " + options);
-            List<DataType> data = query.execute();
-            return data;
-        }
-    }
-    /**
-     * Get remote entries for a specified model.
-     * @param context
-     * @param syncOption
-     * @return
-     */
-    public static void getRemoteEntries(Context context, SyncAdapterOption syncOption){
-        syncOption.setLastSyncTime();
-        DataSyncAdapter.syncImmediately(context, context.getString(R.string.content_authority_data), syncOption.getBundle());
     }
 
     /**
@@ -268,85 +147,25 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
         this._last_sync = System.currentTimeMillis();
     }
 
-    /**
-     * Create a query for an entry thanks to the remote id
-     *
-     * @return
-     */
-    private From queryByRemoteId() {
-        return queryByRemoteId(this.getClass(), (int) this.getRemoteId());
-    }
-
-    /**
-     * Load an entry thanks to the remote id
-     *
-     * @param clazz
-     * @param id
-     * @return
-     */
-    public static <T extends SyncBaseModel> T loadByRemoteId(Class<T> clazz, long id) {
-        return queryByRemoteId(clazz, id).executeSingle();
-    }
-
-    public boolean hasRemoteId() { return this.remote_id != null;}
+    public boolean hasRemoteId() { return this.id != null;}
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         SyncBaseModel that = (SyncBaseModel) o;
-
-        return remote_id != null ? remote_id.equals(that.remote_id) : that.remote_id == null;
-
+        //Log.d(TAG, "UD="+id + " THAT.ID=" + that.id + " ==? " + id.equals(that.id));
+        return id != null ? id.equals(that.id) : that.id == null;
+        //return equals;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (remote_id != null ? remote_id.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
-    }
-
-
-    public static <T extends MyModel> List<T> findInArea(LatLngBounds bounds, Class<T> clazz) {
-        return queryByArea(bounds, clazz).execute();
-    }
-    public static From queryByArea(LatLngBounds bounds, Class<? extends Model> clazz) {
-        return new Select()
-                .from(clazz)
-                .where(AreaQueryHelper.rowInBounds(bounds));
-    }
-
-    public long getCreated() {
-        return created;
-    }
-
-    public void setCreated(long created) {
-        this.created = created;
-    }
-
-    public static <T extends SyncBaseModel> long getMaxCreated(Class<T> clazz, String where) {
-        return _getMaxMin("MAX", clazz, "Created", where);
-    }
-
-    public static long getMaxRemoteId(Class<? extends SyncBaseModel> clazz, String where) {
-        return _getMaxMin("MAX", clazz, "SyncId", where);
-    }
-
-    private static long _getMaxMin(String op, Class<? extends SyncBaseModel> clazz, String column, String where){
-        String query = "SELECT "+op+"("+column+") FROM " + Cache.getTableInfo(clazz).getTableName();
-        if (where != null && where != ""){
-            query += " WHERE " + where;
-        }
-        Cursor cursor =  Cache.openDatabase().rawQuery(query, null);
-        cursor.moveToFirst();
-        return cursor.getLong(0);
-    }
-
-    public static long getMinRemoteId(Class<? extends SyncBaseModel> clazz, String where) {
-        return _getMaxMin("MIN", clazz, "SyncId", where);
     }
 
     @Override
@@ -368,4 +187,18 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
             }
         }
     }
+
+    /**
+     * Delete association data
+     * @param associationModel
+     */
+    @Override
+    public void deleteAssociation(Class<? extends MyModel> associationModel, Property property){
+        SQLite.delete(associationModel)
+                .where(property.eq(this.id))
+                .execute();
+    }
+
+
+    public abstract int getSyncType();
 }

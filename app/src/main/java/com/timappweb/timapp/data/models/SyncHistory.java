@@ -2,16 +2,24 @@ package com.timappweb.timapp.data.models;
 
 import android.util.Log;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.activeandroid.query.From;
-import com.activeandroid.query.Select;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ConflictAction;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
+import com.raizlabs.android.dbflow.annotation.UniqueGroup;
+import com.raizlabs.android.dbflow.sql.language.From;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.timappweb.timapp.data.AppDatabase;
 
 /**
  * Created by stephane on 5/8/2016.
  */
-@Table(name = "SyncHistory")
-public class SyncHistory extends MyModel {
+@Table(database = AppDatabase.class, uniqueColumnGroups = {
+        @UniqueGroup(groupNumber = 1, uniqueConflict = ConflictAction.REPLACE)
+})
+public class SyncHistory extends LocalModel {
     private static final String TAG = "SyncHistory";
 
     //@Column(name = "User", uniqueGroups = "uniqueHistoryPerUser")
@@ -20,19 +28,24 @@ public class SyncHistory extends MyModel {
     /**
      * Sync type
      */
-    @Column(name = "Type", uniqueGroups = "typeAndID", notNull = true)
+    @Column
+    @Unique(unique = false, uniqueGroups = 1)
+    @NotNull
     int type;
 
     /**
      * last update (unix timestamp)
      */
-    @Column(name = "LastUpdate", notNull = true)
+    @Column
+    @NotNull
     long last_update;
 
     /**
      * Extra identifier for the sync
      */
-    @Column(name = "ExtraID", uniqueGroups = "typeAndID", notNull = false)
+    @Column
+    @Unique(unique = false, uniqueGroups = 1)
+    @NotNull
     String extraID;
 
     // =============================================================================================
@@ -89,15 +102,19 @@ public class SyncHistory extends MyModel {
      * @return
      */
     public static SyncHistory getByType(int type, String extraID){
-        From from = new Select()
+        From<SyncHistory> from = SQLite.select()
                 .from(SyncHistory.class);
         if (extraID != null){
-            from.where("Type = ? AND ExtraId = ?", type, extraID);
+            from
+                    .where(SyncHistory_Table.type.eq(type))
+                    .and(SyncHistory_Table.extraID.eq(extraID));
         }
         else{
-            from.where("Type = ? AND ExtraId IS NULL", type);
+            from
+                .where(SyncHistory_Table.type.eq(type))
+                .and(SyncHistory_Table.extraID.isNull());
         }
-        return from.executeSingle();
+        return from.querySingle();
     }
 
     /**

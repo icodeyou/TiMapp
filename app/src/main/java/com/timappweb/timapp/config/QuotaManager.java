@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.activeandroid.query.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.UserQuota;
@@ -40,7 +40,7 @@ public class QuotaManager {
     }
 
     public void add(int quotaTypeId){
-        UserQuota.increment(MyApplication.getCurrentUser().getId(), quotaTypeId);
+        UserQuota.increment(MyApplication.getCurrentUser().getRemoteId(), quotaTypeId);
     }
 
 
@@ -82,9 +82,7 @@ public class QuotaManager {
     }
 
     public static void clear() {
-        new Delete()
-                .from(UserQuota.class)
-                .execute();
+        SQLite.delete(UserQuota.class).execute();
     }
 
     // ---------------------------------------------------------------------------------------------

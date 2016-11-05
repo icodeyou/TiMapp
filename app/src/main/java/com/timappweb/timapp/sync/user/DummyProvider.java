@@ -1,9 +1,8 @@
 package com.timappweb.timapp.sync.user;
+import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-
-import com.activeandroid.content.ContentProvider;
 
 /**
  * Created by stephane on 5/7/2016.

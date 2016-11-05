@@ -74,7 +74,7 @@ public interface WebServiceInterface {
 
 
     @POST("events/background_picture/{id}")
-    Call<RestFeedback> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
+    Call<Void> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
 
 
     // ---------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ public interface WebServiceInterface {
 
     @FormUrlEncoded
     @POST("PlacesInvitations/invite/{eventId}")
-    Call<List<UserInvitationFeedback>> sendInvite(@Path("eventId") int eventId, @Field("ids[]") List<Long> ids);
+    Call<List<UserInvitationFeedback>> sendInvite(@Path("eventId") long eventId, @Field("ids[]") List<Long> ids);
 
     @GET("PlacesInvitations/accept/{inviteId}")
     Call<RestFeedback> acceptInvite(@Path("inviteId") int inviteId);

@@ -1,29 +1,41 @@
 package com.timappweb.timapp.data.models;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.ConflictAction;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.annotation.Unique;
+import com.raizlabs.android.dbflow.annotation.UniqueGroup;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 
 /**
  * Created by stephane on 5/8/2016.
  */
-@Table(name = "UserTag")
-public class UserTag extends MyModel {
+@Table(database = AppDatabase.class, uniqueColumnGroups = {
+        @UniqueGroup(groupNumber = 1, uniqueConflict = ConflictAction.REPLACE)
+})
+public class UserTag extends LocalModel {
 
     // =============================================================================================
     // DATABASE
     @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = User.class)
-    @Column(name = "User", uniqueGroups = "unique_tag",
-            notNull = true,
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @NotNull
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = false,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
+    @Unique(unique = false, uniqueGroups = 1)
     public User user;
 
-    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = User.class)
-    @Column(name = "Tag", uniqueGroups = "unique_tag",
-            notNull = true,
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = Tag.class)
+    @NotNull
+    @ForeignKey(tableClass = Tag.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
+    @Unique(unique = false, uniqueGroups = 1)
     public Tag tag;
 
     // =============================================================================================

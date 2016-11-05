@@ -30,9 +30,10 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.RecyclerViewManager;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateDataLoader;
 import com.timappweb.timapp.data.loader.paginate.CursorPaginateManager;
+import com.timappweb.timapp.data.loader.paginate.PaginateFilterFactory;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.models.Spot_Table;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.utils.SerializeHelper;
@@ -40,8 +41,6 @@ import com.timappweb.timapp.utils.Util;
 import com.timappweb.timapp.utils.location.LocationManager;
 import com.timappweb.timapp.views.CategorySelectorView;
 import com.timappweb.timapp.views.SwipeRefreshLayout;
-
-import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.AbstractFlexibleItem;
@@ -116,8 +115,8 @@ public class AddSpotActivity extends BaseActivity implements
                     Spot.class
                 )
                 .setQueryParams(options.toMap())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createCreatedFilter())
-                .addFilter(CursorPaginateDataLoader.PaginateFilter.createSyncIdFilter());
+                .addFilter(PaginateFilterFactory.createCreatedFilter(Spot_Table.created))
+                .addFilter(PaginateFilterFactory.createSyncIdFilter(Spot_Table.id));
                 //.setLimit(LOCAL_LOAD_LIMIT);
 
         new CursorPaginateManager<Spot>(this, mAdapter, mDataLoader)
@@ -173,10 +172,7 @@ public class AddSpotActivity extends BaseActivity implements
         mAdapter.initializeListeners(new FlexibleAdapter.OnItemClickListener() {
             @Override
             public boolean onItemClick(int position) {
-                try {
-                    currentSpot = (Spot) mAdapter.getSpot(position).requireLocalId();
-                } catch (CannotSaveModelException e) {
-                }
+                currentSpot = mAdapter.getSpot(position);
                 finishActivityResult(currentSpot);
                 return false;
             }
@@ -289,7 +285,7 @@ public class AddSpotActivity extends BaseActivity implements
     private void finishActivityResult(Spot spot){
         Log.d(TAG, "Spot chose: " + spot);
         Intent intent = new Intent(this, AddEventActivity.class);
-        intent.putExtra(IntentsUtils.KEY_SPOT, SerializeHelper.packModel(spot, Spot.class));
+        SerializeHelper.pack(intent, IntentsUtils.KEY_SPOT, spot);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

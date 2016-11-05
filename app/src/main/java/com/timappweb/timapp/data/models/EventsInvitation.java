@@ -2,51 +2,59 @@ package com.timappweb.timapp.data.models;
 
 import android.util.Log;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
+import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.entities.PlacesInvitationStatus;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.utils.Util;
 
-@Table(name = "EventsInvitation")
+@Table(database = AppDatabase.class)
 public class EventsInvitation extends SyncBaseModel {
 
     // =============================================================================================
     // Database
 
-    @Column(name = "Modified")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public int modified;
 
-    @Column(name = "Status", notNull = true)
+    @Column(name = "Status")
     @Expose
+    @NotNull
     public PlacesInvitationStatus status;
 
     @ModelAssociation(joinModel = Event.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "Event",
-            notNull = true,
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Event.class,
+            saveForeignKeyModel = true,
+            onUpdate = ForeignKeyAction.CASCADE,
+            onDelete = ForeignKeyAction.CASCADE)
+    @NotNull
     @Expose
     @SerializedName("place")
     public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "UserSource",
-            notNull = true,
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            onUpdate = ForeignKeyAction.CASCADE,
+            onDelete = ForeignKeyAction.CASCADE)
+    @NotNull
     @Expose
     @SerializedName("user_source")
     public User user_source;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @Column(name = "UserTarget",
-            notNull = true,
-            onUpdate = Column.ForeignKeyAction.CASCADE,
-            onDelete= Column.ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            onUpdate = ForeignKeyAction.CASCADE,
+            onDelete = ForeignKeyAction.CASCADE)
+    @NotNull
     @Expose
     @SerializedName("user_target")
     public User user_target;
@@ -76,8 +84,7 @@ public class EventsInvitation extends SyncBaseModel {
     @Override
     public String toString() {
         return "EventsInvitation{" +
-                "db_id=" + this.getId() +
-                ", remote_id=" + this.remote_id +
+                ", id=" + this.id +
                 ", created=" + created +
                 ", status=" + status +
                 ", event=" + event +
@@ -101,5 +108,10 @@ public class EventsInvitation extends SyncBaseModel {
                 && this.user_target == invite.user_target
                 && this.user_source == invite.user_source
                 && this.event == invite.event;
+    }
+
+    @Override
+    public int getSyncType() {
+        throw new InternalError("Not syncable: " + this);
     }
 }
