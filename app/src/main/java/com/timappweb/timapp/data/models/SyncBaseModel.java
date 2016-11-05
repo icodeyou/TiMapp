@@ -152,13 +152,13 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         SyncBaseModel that = (SyncBaseModel) o;
-
+        //Log.d(TAG, "UD="+id + " THAT.ID=" + that.id + " ==? " + id.equals(that.id));
         return id != null ? id.equals(that.id) : that.id == null;
-
+        //return equals;
     }
 
     @Override

@@ -40,6 +40,7 @@ public class UserItem extends AbstractFlexibleItem<UserItem.FriendViewHolder> {
         if (o == null || getClass() != o.getClass()) return false;
         UserItem that = (UserItem) o;
         return user != null ? user.equals(that.user) : that.user == null;
+        //return equals;
     }
 
     @Override

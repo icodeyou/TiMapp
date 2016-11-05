@@ -168,6 +168,7 @@ public class InviteFriendsActivity extends BaseActivity
         }
         for (EventsInvitation invite: _cachedInvitations){
             int position = mAdapter.getGlobalPositionOf(new UserItem(invite.getUser()));
+            if (position == -1) continue;
             AbstractFlexibleItem item = mAdapter.getItem(position);
             if (item instanceof UserItem){
                 UserItem userItem = (UserItem) item;
