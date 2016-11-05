@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.timappweb.timapp.data.models.Event;
+import com.timappweb.timapp.data.models.Spot;
 
 import java.lang.reflect.Type;
 
@@ -20,6 +21,7 @@ public class EventDeserializer implements JsonDeserializer<Event> {
         //Event event = new Event();
         Event event = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
+                .registerTypeAdapter(Spot.class, new SpotDeserializer())
                 .create()
                 .fromJson(json, Event.class);
 

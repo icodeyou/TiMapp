@@ -87,7 +87,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
-                            android:visibility="visible">
+                            android:visibility="@{event.spot == null ? View.GONE : View.VISIBLE}">
                             <include layout="@layout/layout_spot"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

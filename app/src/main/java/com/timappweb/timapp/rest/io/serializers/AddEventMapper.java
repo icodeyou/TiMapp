@@ -10,12 +10,12 @@ public class AddEventMapper {
 
     public static JsonObject toJson(Event event){
         JsonObject jsonObject = new JsonObject();
-        if (event.hasSpot()) {
-            if (!event.getSpot().hasRemoteId()){
-                jsonObject.add("spot", AddSpotMapper.toJson(event.getSpot()));
+        if (event.spot != null) {
+            if (!event.spot.hasRemoteId()){
+                jsonObject.add("spot", AddSpotMapper.toJson(event.spot));
             }
             else {
-                jsonObject.addProperty("spot_id", event.getSpot().getRemoteId());
+                jsonObject.addProperty("spot_id", event.spot.getRemoteId());
             }
         }
 

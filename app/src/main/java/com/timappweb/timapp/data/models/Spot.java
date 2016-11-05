@@ -13,6 +13,7 @@ import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.AppDatabase;
+import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
@@ -47,7 +48,9 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     @SerializedName("longitude")
     public double longitude;
 
+    @ModelAssociation(joinModel = SpotCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "spot_category_id")
     @ForeignKey(
+            tableClass = SpotCategory.class,
             onDelete = ForeignKeyAction.SET_NULL,
             onUpdate = ForeignKeyAction.CASCADE,
             saveForeignKeyModel = false,
@@ -80,15 +83,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
 
     public Spot() {}
 
-    public Spot(String name) {
-        this.name = name;
-    }
-
-    public Spot(String name, SpotCategory category) {
-        this.name = name;
-        this.category = category;
-    }
-
     // =============================================================================================
 
     @Override
@@ -110,7 +104,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     // Setters/Getters
 
     /**
-     * TODO use converter for GSON...
      * @param category
      */
     public void setCategory(SpotCategory category) {

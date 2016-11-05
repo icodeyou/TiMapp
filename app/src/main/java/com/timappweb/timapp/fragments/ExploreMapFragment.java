@@ -213,8 +213,7 @@ public class ExploreMapFragment extends Fragment implements LocationManager.Loca
 
     public void hideEvent() {
         if(eventView.getVisibility()==View.VISIBLE) {
-            Log.i(TAG, "Hide event");
-            Log.i(TAG, "Bottom Card Height: " + Integer.toString(eventView.getHeight()));
+            Log.d(TAG, "Hide event, Bottom Card Height: " + Integer.toString(eventView.getHeight()));
             removeCurrentMarker();
             TranslateAnimation translateDown = new TranslateAnimation(0,0,0,eventView.getHeight()+500);
             translateDown.setDuration(getResources().getInteger(R.integer.time_slide_out_map));

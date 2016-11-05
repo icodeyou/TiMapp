@@ -107,7 +107,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
             saveForeignKeyModel = false,
             stubbedRelationship = false,
             onDelete = ForeignKeyAction.SET_NULL,
-            onUpdate = ForeignKeyAction.SET_NULL)
+            onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("category")
     @Expose
     public EventCategory    event_category;
@@ -244,7 +244,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
         return distance;
     }
     public String getAddress(){
-        if (hasSpot()){
+        if (spot != null){
             return spot.getAddress();
         }
         else{
@@ -266,11 +266,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public String getDescription() {
         return description;
-    }
-
-    @Bindable
-    public Spot getSpot() {
-        return spot;
     }
 
     // =============================================================================================
@@ -354,10 +349,6 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public boolean hasDescription() {
         return description != null && description.length() > 0;
-    }
-
-    public boolean hasSpot() {
-        return spot != null;
     }
 
     public boolean hasTags() {

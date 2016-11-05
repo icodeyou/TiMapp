@@ -79,6 +79,9 @@ public class SerializeHelper {
             if (event.event_category != null){
                 event.event_category.loadIconFromLocalStorage(MyApplication.getApplicationBaseContext());
             }
+            if (event.spot != null && event.spot.category != null){
+                event.spot.category.loadIconFromLocalStorage(MyApplication.getApplicationBaseContext());
+            }
         }
         else if (model instanceof Spot){
             Spot spot = (Spot) model;

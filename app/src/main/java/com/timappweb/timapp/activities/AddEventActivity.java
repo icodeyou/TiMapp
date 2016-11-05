@@ -208,7 +208,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 icPictureText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
                 return true;
             case R.id.action_edit_spot:
-                IntentsUtils.attachSpot(AddEventActivity.this, mBinding.getEvent().getSpot());
+                IntentsUtils.attachSpot(AddEventActivity.this, mBinding.getEvent().spot);
                 return true;
             case R.id.action_remove_spot:
                 mBinding.setEvent(mBinding.getEvent().setSpot(null));
@@ -476,7 +476,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
         onSpotClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBinding.getEvent().getSpot() == null) {
+                if (mBinding.getEvent().spot == null) {
                     IntentsUtils.attachSpot(AddEventActivity.this);
                 } else {
                     openContextMenu(mBtnAddSpot);
