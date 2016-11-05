@@ -45,13 +45,11 @@ public class PaginateFilter {
         this.value = this.transformer.transform(model);
     }
 
-
     public SQLCondition strictCondition() {
-
         if (asc) {
-            return column(this.localField.getNameAlias()).lessThan(value);
-        } else {
             return column(this.localField.getNameAlias()).greaterThan(value);
+        } else {
+            return column(this.localField.getNameAlias()).lessThan(value);
         }
     }
 

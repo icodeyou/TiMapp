@@ -136,7 +136,7 @@ public class AddTagActivity extends BaseActivity{
                         Where<Tag> query = TagsTable.querySuggestTagForEvent(currentEvent)
                                 .limit(tagLimit);
                         if (term != null && term.length() > 0) {
-                            query.and(Tag_Table.name.like(term+'%'));
+                            query.and(Tag_Table.name.withTable().like(term+'%'));
                         }
                         List<Tag> tags = query.queryList();
                         Log.d(TAG, "Tag in local db: " + tags.size() + "/" + tagLimit);

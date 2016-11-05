@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Where;
 import com.timappweb.timapp.data.DataContentProvider;
@@ -32,7 +31,7 @@ import java.util.List;
  *
  * @param <T> the generic type
  */
-public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
+public class SingleModelLoader<T extends MyModel> extends AsyncTaskLoader<T>
 {
     /**
      * Used to handle communication between the context and the ContentProvider
@@ -46,7 +45,7 @@ public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
 
 
     private Where<T> mQuery;
-    private List<T> mResults;
+    private T mResults;
     private Class<T> mClass;
     private Object mHandle;
     private boolean mUpdateOnRelationshipChanges;
@@ -61,7 +60,7 @@ public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
      * @param clazz
      *            the clazz
      */
-    public AutoModelLoader(Context context, Class<T> clazz)
+    public SingleModelLoader(Context context, Class<T> clazz)
     {
         this(context, clazz, null, false);
     }
@@ -77,7 +76,7 @@ public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
      * @param updateOnRelationshipChanges
      *            if true, loader will updated when tables related to the one detected are changed
      */
-    public AutoModelLoader(Context context, Class<T> clazz, boolean updateOnRelationshipChanges)
+    public SingleModelLoader(Context context, Class<T> clazz, boolean updateOnRelationshipChanges)
     {
         this(context, clazz, null, updateOnRelationshipChanges);
     }
@@ -95,8 +94,8 @@ public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
      * @param updateOnRelationshipChanges
      *            if true, loader will updated when tables related to the one detected are changed
      */
-    public AutoModelLoader(Context context, Class<T> clazz, Where<T> from,
-                           boolean updateOnRelationshipChanges)
+    public SingleModelLoader(Context context, Class<T> clazz, Where<T> from,
+                             boolean updateOnRelationshipChanges)
     {
         super(context);
         mQuery = from;
@@ -115,7 +114,7 @@ public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
      *            the new models to be delivered
      */
     @Override
-    public void deliverResult(List<T> models)
+    public void deliverResult(T models)
     {
         if (isReset())
         {
@@ -144,21 +143,15 @@ public class AutoModelLoader<T extends MyModel> extends AsyncTaskLoader<List<T>>
      * @return the list
      */
     @Override
-    public List<T> loadInBackground()
+    public T loadInBackground()
     {
-        List<T> results;
-
-        if (mQuery == null)
-        {
-            results = SQLite.select().from(mClass)
-                    .queryList();
+        if (mQuery == null){
+            return SQLite.select().from(mClass).querySingle();
         }
-        else
-        {
-            results = mQuery.queryList();
+        else{
+            return mQuery.querySingle();
         }
 
-        return results;
     }
 
 

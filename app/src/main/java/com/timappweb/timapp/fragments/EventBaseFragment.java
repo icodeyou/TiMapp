@@ -37,7 +37,7 @@ public abstract class EventBaseFragment extends BaseFragment {
     }
 
     public Event getEvent() {
-        return eventActivity.getEvent();
+        return eventActivity.event;
     }
 
     public interface OnCreateViewCallback {

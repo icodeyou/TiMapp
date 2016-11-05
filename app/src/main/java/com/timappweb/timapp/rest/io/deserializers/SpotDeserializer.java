@@ -1,13 +1,11 @@
 package com.timappweb.timapp.rest.io.deserializers;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.Spot;
 
 import java.lang.reflect.Type;
@@ -24,8 +22,8 @@ public class SpotDeserializer implements JsonDeserializer<Spot> {
                 .fromJson(json, Spot.class);
 
         JsonObject jsonObject = json.getAsJsonObject();
-        if (jsonObject.has("category_id")){
-            spot.setCategory(jsonObject.get("category_id").getAsLong());
+        if (jsonObject.has("spot_category_id")){
+            spot.setCategory(jsonObject.get("spot_category_id").getAsLong());
         }
         return spot;
     }

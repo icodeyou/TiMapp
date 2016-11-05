@@ -154,9 +154,6 @@ public abstract class MyModel extends BaseModel implements Observable, Serializa
         }
     }
 
-    public boolean hasLocalId() {
-        return false;
-    }
 
     // =============================================================================================
     // OBSERVABLE: see android.databinding.BaseObservable
@@ -206,12 +203,6 @@ public abstract class MyModel extends BaseModel implements Observable, Serializa
             if (BuildConfig.DEBUG){
                 e.printStackTrace();
             }
-        }
-    }
-
-    public void requireLocalId() throws CannotSaveModelException {
-        if (!this.hasLocalId()){
-           this.deepSave();
         }
     }
 

@@ -46,7 +46,7 @@ public class ModelSerializationTest extends ApplicationTestCase<Application> {
     }
 
     protected <T extends SyncBaseModel> void serializeDeserializeModel(T input, Class<T> clazz) {
-        String data = SerializeHelper.packModel(input, clazz);
+        String data = SerializeHelper.packModel(input);
         T output = SerializeHelper.unpackModel(data, clazz);
         assertNotNull(output);
         assertEquals(input.getRemoteId(), output.getRemoteId());

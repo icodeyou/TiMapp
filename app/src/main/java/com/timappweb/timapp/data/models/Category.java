@@ -21,6 +21,7 @@ public abstract class Category extends SyncBaseModel{
     private static final String TAG = "Category";
 
     protected Drawable _iconDrawable;
+
     private AsyncTask<String, Void, Bitmap> _loadingTask;
 
     public void loadIconFromLocalStorage(final Context context) {

@@ -88,8 +88,19 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         super.onCreateView(inflater, container, savedInstanceState);
         mBinding  = DataBindingUtil.inflate(inflater, R.layout.fragment_event_information, container, false);
         View view = mBinding.getRoot();
+        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
+        mapView = (MapView) view.findViewById(R.id.map);
+        statusTv = (TextView) view.findViewById(R.id.status_text);
+        activatedStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_activated);
+        disabledStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_disabled);
+        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
+        crossOverView = view.findViewById(R.id.cross_overview);
+        pointsLayout = view.findViewById(R.id.points_layout);
+        overText = (TextView) view.findViewById(R.id.over_text);
+        statusLayout = view.findViewById(R.id.status_layout);
+        btnRequestNavigation = view.findViewById(R.id.button_nav);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
-        initVariables(view);
         setListeners();
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
@@ -98,29 +109,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         mapView.onCreate(null);
         mapView.getMapAsync(this);
 
-        updateEventBinding();
-        LocationManager.addOnLocationChangedListener(this);
-        updateStatusButtonActivation();
-
         return view;
-    }
-
-    private void initVariables(View view) {
-        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-        mapView = (MapView) view.findViewById(R.id.map);
-
-        statusTv = (TextView) view.findViewById(R.id.status_text);
-        activatedStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_activated);
-        disabledStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_disabled);
-        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
-
-        crossOverView = view.findViewById(R.id.cross_overview);
-        pointsLayout = view.findViewById(R.id.points_layout);
-        overText = (TextView) view.findViewById(R.id.over_text);
-        statusLayout = view.findViewById(R.id.status_layout);
-        btnRequestNavigation = view.findViewById(R.id.button_nav);
-
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void setListeners() {
@@ -156,6 +145,10 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         super.onViewCreated(view, savedInstanceState);
         tvCountPoints.initTimer(getEvent().getPoints());
 
+        updateEventBinding();
+        LocationManager.addOnLocationChangedListener(this);
+        updateStatusButtonActivation();
+
         updateOverView();
     }
 
@@ -166,7 +159,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     }
 
     private void updateOverView() {
-        if(eventActivity.getEvent() != null && eventActivity.getEvent().isOver()) {
+        if(getEvent() != null && getEvent().isOver()) {
             crossOverView.setVisibility(View.VISIBLE);
             pointsLayout.setVisibility(View.GONE);
             overText.setVisibility(View.VISIBLE);
@@ -354,7 +347,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is now ready!");
         MapFactory.initMap(googleMap, false);
-        Event event = eventActivity.getEvent();
+        Event event = getEvent();
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(event.getPosition(), ZOOM_LEVEL_CENTER_MAP));
         googleMap.addMarker(event.getMarkerOption());
     }

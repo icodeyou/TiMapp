@@ -22,13 +22,19 @@ public class UserTag extends LocalModel {
     // DATABASE
     @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = User.class)
     @NotNull
-    @ForeignKey(tableClass = User.class, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = false,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @Unique(unique = false, uniqueGroups = 1)
     public User user;
 
     @ModelAssociation(type = ModelAssociation.Type.BELONGS_TO, joinModel = Tag.class)
     @NotNull
-    @ForeignKey(tableClass = Tag.class, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Tag.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @Unique(unique = false, uniqueGroups = 1)
     public Tag tag;
 

@@ -14,6 +14,7 @@ import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.models.UserEvent_Table;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.EventsTable;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
@@ -291,7 +292,7 @@ public class EventStatusManager {
         if (eventId == -1){
             return null;
         }
-        Event event = BaseTable.loadByRemoteId(Event.class, eventId);
+        Event event = EventsTable.load(eventId);
 
         if (event.isOver()){
             if (event.getLastSync() > event.last_activity){

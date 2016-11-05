@@ -41,6 +41,7 @@ import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.UserEvent;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.EventsTable;
 import com.timappweb.timapp.events.SyncResultMessage;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
@@ -395,7 +396,7 @@ public class DataSyncAdapter extends AbstractSyncAdapter {
             Log.e(TAG, "Invalid sync key for event. Please provide key to sync adapter: " + SYNC_PARAM_EVENT_ID);
             throw new MissingSyncParameterException(SYNC_PARAM_EVENT_ID);
         }
-        Event event = BaseTable.loadByRemoteId(Event.class, eventId);
+        Event event = EventsTable.load(eventId);
         if (event == null){
             throw new CannotSyncException("Event id '" + eventId + "' does not exist", 0);
         }

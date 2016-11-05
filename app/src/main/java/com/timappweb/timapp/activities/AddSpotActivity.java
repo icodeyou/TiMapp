@@ -34,7 +34,6 @@ import com.timappweb.timapp.data.loader.paginate.PaginateFilterFactory;
 import com.timappweb.timapp.data.models.Spot;
 import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.Spot_Table;
-import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.listeners.OnItemAdapterClickListener;
 import com.timappweb.timapp.rest.io.request.RestQueryParams;
 import com.timappweb.timapp.utils.SerializeHelper;
@@ -286,7 +285,7 @@ public class AddSpotActivity extends BaseActivity implements
     private void finishActivityResult(Spot spot){
         Log.d(TAG, "Spot chose: " + spot);
         Intent intent = new Intent(this, AddEventActivity.class);
-        intent.putExtra(IntentsUtils.KEY_SPOT, SerializeHelper.packModel(spot, Spot.class));
+        SerializeHelper.pack(intent, IntentsUtils.KEY_SPOT, spot);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

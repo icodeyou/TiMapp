@@ -19,7 +19,7 @@ public class TagsTable {
         return SQLite.select()
                 .from(Tag.class)
                 .leftOuterJoin(EventTag.class)
-                .on(Tag_Table.id.eq(EventTag_Table.tag_id))
+                .on(Tag_Table.id.withTable().eq(EventTag_Table.tag_id))
                 .where(EventTag_Table.event_id.eq(event.id))
                 .orderBy(EventTag_Table.count_ref, false);
     }

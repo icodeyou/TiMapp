@@ -64,17 +64,9 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
     private static final int PAGER_OFFSCREEN_PAGE_LIMIT = 4;
 
-    public static final int LOADER_ID_CORE          = 0;
-    public static final int LOADER_ID_PICTURE       = 1;
-    public static final int LOADER_ID_INVITATIONS   = 2;
-    public static final int LOADER_ID_USERS         = 3;
-    public static final int LOADER_ID_TAGS          = 4;
-
-    private static final int REQUEST_CAMERA         = 0;
-
     // ---------------------------------------------------------------------------------------------
 
-    private Event                       event;
+    public Event                       event;
     private long                        eventId;
 
     private EventPicturesFragment       fragmentPictures;
@@ -252,7 +244,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
                     .perform();
         }
         else{
-            event.requireLocalId();
+            event.mySave();
             Log.i(TAG, "Using cached event: " + event);
             onEventLoaded();
         }
@@ -291,7 +283,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
 
             updateOverView();
 
-            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), getEvent());
+            FabListenerFactory.setFabListener(this, getWindow().getDecorView(), event);
         }
 
         updateView();
@@ -444,10 +436,6 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.share_place_text, DeepLinkFactory.shareEvent(event).build()));
         startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_using_title)));
-    }
-
-    public Event getEvent() {
-        return event;
     }
 
     @Override

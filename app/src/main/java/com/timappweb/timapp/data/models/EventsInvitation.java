@@ -20,8 +20,8 @@ public class EventsInvitation extends SyncBaseModel {
     // =============================================================================================
     // Database
 
-    @Column(name = "Modified")
-    @Expose(serialize = false, deserialize = true)
+    @Column
+    @Expose(serialize = true, deserialize = true)
     public int modified;
 
     @Column(name = "Status")
@@ -30,21 +30,30 @@ public class EventsInvitation extends SyncBaseModel {
     public PlacesInvitationStatus status;
 
     @ModelAssociation(joinModel = Event.class, type = ModelAssociation.Type.BELONGS_TO)
-    @ForeignKey(tableClass = Event.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Event.class,
+            saveForeignKeyModel = true,
+            onUpdate = ForeignKeyAction.CASCADE,
+            onDelete = ForeignKeyAction.CASCADE)
     @NotNull
     @Expose
     @SerializedName("place")
     public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @ForeignKey(tableClass = User.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            onUpdate = ForeignKeyAction.CASCADE,
+            onDelete = ForeignKeyAction.CASCADE)
     @NotNull
     @Expose
     @SerializedName("user_source")
     public User user_source;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @ForeignKey(tableClass = User.class, onUpdate = ForeignKeyAction.CASCADE, onDelete = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            onUpdate = ForeignKeyAction.CASCADE,
+            onDelete = ForeignKeyAction.CASCADE)
     @NotNull
     @Expose
     @SerializedName("user_target")

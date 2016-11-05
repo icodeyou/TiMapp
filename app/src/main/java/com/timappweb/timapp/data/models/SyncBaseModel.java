@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.BaseProperty;
 import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.timappweb.timapp.BuildConfig;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -38,7 +39,7 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
     protected long _last_sync;
 
     @Column//, notNull = true)
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public long created;
 
     // =============================================================================================
@@ -75,8 +76,8 @@ public abstract class SyncBaseModel extends MyModel implements SyncHistory.Histo
      * @param syncType  The merge type to call
      * @return If there is a local version of the entry, retu
      */
-    public static SyncBaseModel getEntry(Class<? extends SyncBaseModel> classType, Context context, long key, int syncType) {
-        SyncBaseModel model = BaseTable.loadByRemoteId(classType, key);
+    public static SyncBaseModel getEntry(Class<? extends SyncBaseModel> classType, BaseProperty property, Context context, long key, int syncType) {
+        SyncBaseModel model = BaseTable.loadByRemoteId(classType, property, key);
         if (model != null){
             if (model.isUpToDate()){
                 Log.i(TAG, "Entry exists in local db and is up to date: " + model);

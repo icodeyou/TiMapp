@@ -3,12 +3,17 @@ package com.timappweb.timapp.data.models;
 import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.NotNull;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Where;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.annotations.ModelAssociation;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
+import com.timappweb.timapp.data.tables.UsersTable;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
@@ -30,11 +35,11 @@ public class User extends SyncBaseModel  {
     public String email;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public Integer count_posts;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public Integer count_places;
 
     @Column
@@ -42,15 +47,15 @@ public class User extends SyncBaseModel  {
     public String avatar_url;
 
     //@Column
-    //@Expose(serialize = false, deserialize = true)
+    //@Expose(serialize = true, deserialize = true)
     //private boolean status = false;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public String app_id;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public String google_messaging_token;
 
     // =============================================================================================
@@ -58,7 +63,7 @@ public class User extends SyncBaseModel  {
     /**
      * Cached value. See @getTags
      */
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @ModelAssociation(
             type = ModelAssociation.Type.BELONGS_TO_MANY,
             saveStrategy = ModelAssociation.SaveStrategy.REPLACE,
@@ -77,10 +82,6 @@ public class User extends SyncBaseModel  {
 
     public User(){
 
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
     }
 
     public void setUsername(String username) {
@@ -108,19 +109,14 @@ public class User extends SyncBaseModel  {
     }
 
     public boolean hasTags() {
-        return getTags().size() > 0;
+        return tags != null && tags.size() > 0;
     }
 
     // =============================================================================================
 
     public List<Tag> getTags() {
         if (tags != null) return tags;
-        tags = SQLite.select()
-                .from(Tag.class)
-                .innerJoin(UserTag.class)
-                .on(UserTag_Table.tag_id.eq(Tag_Table.id))
-                .where(UserTag_Table.user_id.eq(this.id))
-                .queryList();
+        tags = UsersTable.loadUserTags(this);
         return tags;
     }
 
@@ -170,11 +166,32 @@ public class User extends SyncBaseModel  {
         return UserQuota.get(this.id, quotaTypeId);
     }
 
-
+/*
+    @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "tags")
+    public List<Ant> getMyTags() {
+        if (tags == null || tags.isEmpty()) {
+            tags = SQLite.select()
+                    .from(Tag.class)
+                    .where(Tag_Table..eq(id))
+                    .queryList();
+        }
+        return ants;
+    }
+*/
     @Override
     public void deepSave() throws CannotSaveModelException {
         if (this.tags != null && tags.size() > 0){
-            // TODO save tags
+            FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+                @Override
+                public void execute(DatabaseWrapper databaseWrapper) {
+                    SQLite.delete(UserTag.class)
+                            .where(UserTag_Table.user_id.eq(User.this.id))
+                            .execute();
+                    for (Tag tag: tags){
+                        new UserTag(User.this, tag).mySaveSafeCall();
+                    }
+                }
+            });
         }
         this.mySave();
     }

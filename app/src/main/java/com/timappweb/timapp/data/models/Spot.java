@@ -8,6 +8,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.AppDatabase;
@@ -45,12 +47,15 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     @SerializedName("longitude")
     public double longitude;
 
-    // TODO [critical] use foreign key
-    @Column(name = "CategoryId")
+    @ForeignKey(
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.CASCADE,
+            saveForeignKeyModel = false,
+            stubbedRelationship = false
+    )
+    @SerializedName("spot_category")
     @Expose
-    @SerializedName("spot_category_id")
-    public long category_id;
-
+    public SpotCategory category;
     /*
     @Column(name = "Status")
     @Expose
@@ -60,13 +65,11 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     // =============================================================================================
     // Fields
 
+    /*
     @SerializedName("tags")
-    @Expose(deserialize = true, serialize = false)
+    @Expose(deserialize = true, serialize = true)
     public List<Tag> tags;
-
-    @SerializedName("spot_category")
-    @Expose(deserialize = true, serialize = false)
-    public SpotCategory category;
+    */
 
 
     // =============================================================================================
@@ -81,17 +84,9 @@ public class Spot extends SyncBaseModel implements ClusterItem {
         this.name = name;
     }
 
-    public Spot(String name, List<Tag> tags) {
-        this.name = name;
-        this.tags = tags;
-    }
-
     public Spot(String name, SpotCategory category) {
         this.name = name;
         this.category = category;
-        if (category != null){
-            this.category_id = category.id;
-        }
     }
 
     // =============================================================================================
@@ -101,7 +96,7 @@ public class Spot extends SyncBaseModel implements ClusterItem {
         return "Spot{" +
                 ", id=" + id +
                 ", name='" + name + '\'' +
-                ", category_id=" + category_id +
+                ", category=" + category +
                 '}';
     }
 
@@ -120,9 +115,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
      */
     public void setCategory(SpotCategory category) {
         this.category = category;
-        if (category != null && category.id != null){
-            this.category_id = category.id;
-        }
     }
 
     @Override
@@ -131,11 +123,6 @@ public class Spot extends SyncBaseModel implements ClusterItem {
     }
 
     public SpotCategory getCategory() {
-        if (category == null){
-            if (category_id != 0){
-                category = ConfigurationProvider.getSpotCategoryByRemoteId(category_id);
-            }
-        }
         return category;
     }
 

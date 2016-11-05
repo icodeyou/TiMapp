@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Where;
+import com.raizlabs.android.dbflow.sql.language.property.BaseProperty;
+import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.data.models.SyncBaseModel;
@@ -15,6 +18,8 @@ import com.timappweb.timapp.sync.SyncAdapterOption;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
 import java.util.List;
+
+import static com.raizlabs.android.dbflow.sql.language.Condition.column;
 
 /**
  * Created by Stephane on 03/11/2016.
@@ -64,17 +69,17 @@ public class BaseTable {
      * @param id
      * @return
      */
-    public static <T extends SyncBaseModel> T loadByRemoteId(Class<T> clazz, long id) {
+    public static <T extends SyncBaseModel> T loadByRemoteId(Class<T> clazz, BaseProperty property, long id) {
         return SQLite.select()
                 .from(clazz)
-                //.where(clazz.id.is(id))
+                .where(column(property.getNameAlias()).eq(id))
                 .querySingle();
     }
 
-    public static From queryByRemoteId(Class<? extends SyncBaseModel> clazz, long key) {
+    public static Where<? extends SyncBaseModel> queryByRemoteId(Class<? extends SyncBaseModel> clazz, BaseProperty property, long id) {
         return SQLite.select()
                 .from(clazz)
-                //.where(clazz.id.is(id))
+                .where(column(property.getNameAlias()).eq(id))
                 ;
     }
 

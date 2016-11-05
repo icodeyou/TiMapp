@@ -20,6 +20,8 @@ import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.loader.SyncOneEntryLoader;
 import com.timappweb.timapp.data.models.Tag;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.User_Table;
+import com.timappweb.timapp.data.tables.UsersTable;
 import com.timappweb.timapp.databinding.ActivityProfileBinding;
 import com.timappweb.timapp.sync.data.DataSyncAdapter;
 
@@ -108,7 +110,6 @@ public class ProfileActivity extends BaseActivity  {
 
         TagsProfileAdapter tagsAdapter = (TagsProfileAdapter) tagsListView.getAdapter();
         if(mUser.hasTags()){
-            Log.v(TAG, "User has a: " + mUser.getTags().size() + " tag(s)");
             tagsAdapter.clear();
             tagsAdapter.addAll(mUser.getTags());
         }
@@ -124,10 +125,8 @@ public class ProfileActivity extends BaseActivity  {
             invalidateOptionsMenu();
             setTagsListeners();
         }
-
         String photoUrl = mUser.getProfilePictureUrl();
-        Uri uri = Uri.parse(photoUrl);
-        profilePicture.setImageURI(uri);
+        profilePicture.setImageURI(Uri.parse(photoUrl));
     }
 
 
@@ -173,15 +172,16 @@ public class ProfileActivity extends BaseActivity  {
     class UserLoader extends SyncOneEntryLoader<User> {
 
         public UserLoader() {
-            super(ProfileActivity.this, userId, User.class, DataSyncAdapter.SYNC_TYPE_USER);
+            super(ProfileActivity.this, userId, User_Table.id, User.class, DataSyncAdapter.SYNC_TYPE_USER);
             this.setSwipeAndRefreshLayout();
         }
 
         @Override
-        public void onLoadFinished(Loader<List<User>> loader, List<User> data) {
+        public void onLoadFinished(Loader<User> loader, User data) {
             super.onLoadFinished(loader, data);
-            if (data.size() > 0){
-                mUser = data.get(0);
+            if (data != null){
+                mUser = data;
+                mUser.tags = UsersTable.loadUserTags(mUser);
                 updateView();
             }
         }

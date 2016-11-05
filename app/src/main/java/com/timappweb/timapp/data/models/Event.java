@@ -53,15 +53,21 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     // DATABASE
 
     @ModelAssociation(joinModel = Spot.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "spot_id")
-    @ForeignKey(tableClass = Spot.class, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Spot.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("spot")
     @Expose
     public Spot             spot;
 
-    @ForeignKey(tableClass = User.class, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "user_id")
     @SerializedName("user")
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public User             user;
 
     @Column
@@ -97,25 +103,32 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     public int              last_activity;
 
     @ModelAssociation(joinModel = EventCategory.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "category_id")
-    @ForeignKey(tableClass = EventCategory.class, onDelete = ForeignKeyAction.SET_NULL, onUpdate = ForeignKeyAction.SET_NULL)
+    @ForeignKey(tableClass = EventCategory.class,
+            saveForeignKeyModel = false,
+            stubbedRelationship = false,
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.SET_NULL)
     @SerializedName("category")
     @Expose
     public EventCategory    event_category;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public int              points;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public Integer count_here;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public Integer count_coming;
 
     @ModelAssociation(joinModel = Picture.class, type = ModelAssociation.Type.BELONGS_TO, remoteForeignKey = "picture_id")
-    @ForeignKey(tableClass = Picture.class, onDelete = ForeignKeyAction.SET_NULL, onUpdate = ForeignKeyAction.CASCADE)
+    @ForeignKey(tableClass = Picture.class,
+            saveForeignKeyModel = true,
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.CASCADE)
     @SerializedName("picture")
     @Expose
     public Picture    picture;
@@ -124,19 +137,16 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     // =============================================================================================
     // Fields
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public int              count_posts;
 
-    @Expose(serialize = false, deserialize = false)
+    @Expose(serialize = true, deserialize = true)
     public int              loaded_time = -1;
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public List<Tag>        tags;
 
-    @Expose(serialize = false, deserialize = true)
-    public ArrayList<EventPost> eventPosts;
-
-    @Expose(serialize = false, deserialize = false)
+    @Expose(serialize = true, deserialize = true)
     public double           distance = -1;
 
     // =============================================================================================
@@ -529,7 +539,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     public boolean isOwner(User currentUser) {
-        return this.user != null && this.user.equals(currentUser);
+        return this.user != null && this.user.id == currentUser.id;
     }
 
 

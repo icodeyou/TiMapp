@@ -94,7 +94,7 @@ public class EventTagsFragment extends EventBaseFragment implements OnTabSelecte
             public boolean onItemClick(int position) {
                 AbstractFlexibleItem item = mAdapter.getItem(position);
                 if (item instanceof TagItem){
-                    IntentsUtils.checkAndAddTags(eventActivity, eventActivity.getEvent(), ((TagItem)item).getTag());
+                    IntentsUtils.checkAndAddTags(eventActivity, getEvent(), ((TagItem)item).getTag());
                 }
                 return true;
             }

@@ -500,9 +500,10 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
 
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {
-            Spot spot = SerializeHelper.unpackModel(bundle.getString(IntentsUtils.KEY_SPOT), Spot.class);
-            mBinding.getEvent().setSpot(spot);
+            Spot spot = SerializeHelper.unpack(bundle, IntentsUtils.KEY_SPOT, Spot.class);
+            getEvent().setSpot(spot);
             mSpotContainer.setVisibility(View.VISIBLE);
+            mBinding.notifyChange();
         }
     }
 

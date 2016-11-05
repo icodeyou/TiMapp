@@ -27,35 +27,42 @@ public class Picture extends SyncBaseModel {
     public String original;
 
     @Column(name = "Preview")
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @SerializedName("thumbnail_card")
     public String card;
 
     @Column(name = "Square")
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @SerializedName("thumbnail_square")
     public String square;
 
     /*
     @Column(name = "PhotoDir", notNull = true)
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public String photo_dir;*/
 
-    @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @ForeignKey(tableClass = Event.class, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
+    @ModelAssociation(joinModel = Event.class, type = ModelAssociation.Type.BELONGS_TO)
+    @ForeignKey(tableClass = Event.class,
+            stubbedRelationship = true,
+            onDelete = ForeignKeyAction.CASCADE,
+            onUpdate = ForeignKeyAction.CASCADE)
     @NotNull
     @SerializedName("place")
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public Event event;
 
     @ModelAssociation(joinModel = User.class, type = ModelAssociation.Type.BELONGS_TO)
-    @ForeignKey(tableClass = User.class, onDelete = ForeignKeyAction.SET_NULL, onUpdate = ForeignKeyAction.CASCADE)
-    @Expose(serialize = false, deserialize = true)
+    @ForeignKey(tableClass = User.class,
+            saveForeignKeyModel = true,
+            stubbedRelationship = true,
+            onDelete = ForeignKeyAction.SET_NULL,
+            onUpdate = ForeignKeyAction.CASCADE)
+    @Expose(serialize = true, deserialize = true)
     public User user;
 
     /*
     @Column(name = "BaseUrl")
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public String base_url;*/
 
     // =============================================================================================

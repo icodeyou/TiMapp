@@ -1,6 +1,7 @@
 package com.timappweb.timapp.data.models;
 
  import com.raizlabs.android.dbflow.annotation.Column;
+ import com.raizlabs.android.dbflow.annotation.NotNull;
  import com.raizlabs.android.dbflow.annotation.Table; import com.timappweb.timapp.data.AppDatabase;
  import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -16,6 +17,7 @@ public class SpotCategory extends Category{
     @Expose
     @SerializedName("name")
     @Column
+    @NotNull
     public String name;
 
     @Expose

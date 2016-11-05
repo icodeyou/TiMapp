@@ -10,8 +10,11 @@ import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.QuotaManager;
 import com.timappweb.timapp.data.models.User;
+import com.timappweb.timapp.data.models.UserTag_Table;
+import com.timappweb.timapp.data.models.User_Table;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
 import com.timappweb.timapp.data.tables.BaseTable;
+import com.timappweb.timapp.data.tables.UsersTable;
 import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
@@ -142,7 +145,7 @@ public class AuthManager implements AuthManagerInterface{
     public boolean localLogin(LoginMethod loginMethod, LoginFeedback feedback) throws CannotLoginException {
         try {
             long userId = feedback.getUserId();
-            User user = BaseTable.loadByRemoteId(User.class, userId);
+            User user = UsersTable.load(userId);
             if (user == null) user = new User();
 
             String token = feedback.getToken();
@@ -197,7 +200,7 @@ public class AuthManager implements AuthManagerInterface{
             if (userId == -1){
                 return null;
             }
-            currentUser = BaseTable.loadByRemoteId(User.class, userId);
+            currentUser = UsersTable.load(userId);
             Log.d(TAG, "Loading user form pref: " + currentUser);
             this.restoreSession();
         }

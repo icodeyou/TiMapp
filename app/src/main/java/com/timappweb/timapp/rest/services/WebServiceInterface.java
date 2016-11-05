@@ -74,7 +74,7 @@ public interface WebServiceInterface {
 
 
     @POST("events/background_picture/{id}")
-    Call<RestFeedback> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
+    Call<Void> setBackgroundPicture(@Path("id") long eventId, @Body Map<String,String> accessToken);
 
 
     // ---------------------------------------------------------------------------------------------

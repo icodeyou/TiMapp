@@ -3,6 +3,7 @@ package com.timappweb.timapp.data.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.NotNull;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.timappweb.timapp.data.AppDatabase;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -16,17 +17,19 @@ public class EventCategory extends Category{
 
     // =============================================================================================
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @Column
+    @NotNull
     public String name;
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @Column
     @SerializedName("icon")
     public String iconUrl;
 
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     @Column
+    @NotNull
     public int position;
 
 
@@ -82,6 +85,7 @@ public class EventCategory extends Category{
         return "EventCategory{" +
                 "position=" + position +
                 ", name='" + name + '\'' +
+                ", iconUrl='" + iconUrl + '\'' +
                 ", id=" + id +
                 '}';
     }

@@ -257,7 +257,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         try {
             RequestBody body = new AddPictureMapper(file).compress().build();
 
-            final Event event = eventActivity.getEvent();
+            final Event event = getEvent();
             final Picture picture = new Picture();
             picture.setEvent(event);
             picture.setUser(MyApplication.getCurrentUser());
@@ -315,9 +315,9 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         Map<String, String> params = new HashMap();
         params.put("picture_id", String.valueOf(picture.getRemoteId())); // TODO cst
         RestClient.buildCall(RestClient.service().setBackgroundPicture(getEvent().getRemoteId(), params))
-                .onResponse(new HttpCallback() {
+                .onResponse(new HttpCallback<Void>() {
                     @Override
-                    public void successful(Object feedback) {
+                    public void successful(Void feedback) {
                         getEvent().setBackgroundPicture(picture);
                         getEvent().savePicture();
                         Toast.makeText(getActivity(), R.string.event_picture_updated, Toast.LENGTH_LONG).show();
@@ -329,7 +329,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
                     }
                 })
                 .onError(new NetworkErrorCallback(getContext()))
-                .onFinally(new HttpCallManager.FinallyCallback() {
+                .onFinally(new HttpCallManager.FinallyCallback<Void>() {
                     @Override
                     public void onFinally(Response response, Throwable error) {
                         // TODO JACK hide loader here
@@ -354,7 +354,7 @@ public class EventPicturesFragment extends EventBaseFragment implements OnTabSel
         mDataLoader = CursorPaginateDataLoader.<Picture, Picture>create(
                         "pictures/event/" + getEvent().getRemoteId(),
                         Picture.class)
-                .initCache("EventPicture" + eventActivity.getEvent().getRemoteId(), CACHE_DURATION)
+                .initCache("EventPicture" + getEvent().getRemoteId(), CACHE_DURATION)
                 .setLocalQuery(SQLite.select().from(Picture.class).where(Picture_Table.event_id.eq(getEvent().id)))
                 //.setLimit(8)
                 .setCacheCallback(new CursorPaginateDataLoader.CacheCallback<Picture, Picture>() {

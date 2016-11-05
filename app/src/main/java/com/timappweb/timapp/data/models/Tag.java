@@ -25,7 +25,7 @@ public class Tag extends SyncBaseModel implements SearchHistory.SearchableItem{
     public String name;
 
     @Column
-    @Expose(serialize = false, deserialize = true)
+    @Expose(serialize = true, deserialize = true)
     public int count_ref;
 
     // =============================================================================================

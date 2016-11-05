@@ -182,7 +182,7 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
 
     public void _load(final LoadType loadType){
         if (this.currentCallManager != null && !this.currentCallManager.isDone()){
-            Log.i(TAG, "Already loading... Please wait...");
+            Log.e(TAG, "Already loading... Please wait...");
             if (loadType == LoadType.NEXT){
                 if (callback != null) callback.onLoadEnd(null, loadType, false);
             }
@@ -233,17 +233,15 @@ public class CursorPaginateDataLoader<DataType extends MyModel, RemoteType exten
     }
 
     public void localLoad(){
-        Log.i(TAG, "Loading from local db");
         Where<DataType> query = this.localBaseQuery;
         ConditionGroup condition = _buildWhereClause(query, (LinkedList<PaginateFilter>) this.filters.clone());
         if (condition != null){
             query.and(condition);
         }
 
-        Log.d(TAG, "Generated query: " + query.getQuery());
-
+        Log.d(TAG, "    - Local db generated query: " + query.getQuery());
         List<DataType> items = query.limit(this.cacheInfo.limit).queryList();
-        Log.i(TAG, "Loading " + items.size() + " item(s) localBaseQuery local db");
+        Log.i(TAG, "    - => Loading " + items.size() + " item(s) localBaseQuery local db");
 
         if (items.size() == 0){
             Log.d(TAG, "There is no data in cache, trigger server load");

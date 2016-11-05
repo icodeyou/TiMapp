@@ -16,8 +16,10 @@ import com.timappweb.timapp.rest.RestClient;
 import com.timappweb.timapp.rest.callbacks.HttpCallback;
 import com.timappweb.timapp.rest.callbacks.RemoteMasterSyncHttpCallback;
 import com.timappweb.timapp.rest.managers.MultipleHttpCallManager;
+import com.timappweb.timapp.sync.exceptions.HttpResponseSyncException;
 import com.timappweb.timapp.utils.KeyValueStorage;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -116,17 +118,17 @@ public class ConfigurationProvider{
                         }
                     });
             callManager.addCall(CALL_ID_SPOT_CATEGORIES, RestClient.service().spotCategories())
-                    .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, SQLite.select().from(SpotCategory.class)){
+                    .onResponse(new RemoteMasterSyncHttpCallback<SpotCategory>(SpotCategory.class, SQLite.delete().from(SpotCategory.class)){
                         @Override
-                        public void successful(List<SpotCategory> categories) {
+                        public void successful(List<SpotCategory> categories) throws IOException, HttpResponseSyncException {
                             super.successful(categories);
                             downloadIcons(context, categories);
                         }
                     });
             callManager.addCall(CALL_ID_EVENT_CATEGORIES, RestClient.service().eventCategories())
-                    .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, SQLite.select().from(EventCategory.class)){
+                    .onResponse(new RemoteMasterSyncHttpCallback<EventCategory>(EventCategory.class, SQLite.delete().from(EventCategory.class)){
                         @Override
-                        public void successful(List<EventCategory> categories) {
+                        public void successful(List<EventCategory> categories) throws IOException, HttpResponseSyncException {
                             super.successful(categories);
                             downloadIcons(context, categories);
                         }
