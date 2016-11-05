@@ -1,6 +1,6 @@
 package com.timappweb.timapp.utils.annotations;
 
-import com.activeandroid.Model;
+import com.timappweb.timapp.data.models.MyModel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
 @Target( value = { ElementType.METHOD})
 public @interface ClearDBTable {
 
-    Class<? extends Model>[] models();
+    Class<? extends MyModel>[] models();
 
 }

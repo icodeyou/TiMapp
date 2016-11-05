@@ -11,6 +11,8 @@
     <com.crystal.crystalpreloaders.widgets.CrystalPreloader
         android:id="@+id/progress_view"
         style="@style/ProgressViewSmallWhite"
+        android:visibility="gone"
+        android:background="@drawable/gradient_bottom_view_dark"
         android:layout_centerInParent="true"/>
     <include layout="@layout/toolbar_transparent_layout"/>
 </RelativeLayout>

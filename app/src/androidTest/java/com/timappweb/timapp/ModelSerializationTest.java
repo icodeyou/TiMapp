@@ -3,13 +3,8 @@ package com.timappweb.timapp;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Select;
 import com.google.gson.annotations.Expose;
-import com.timappweb.timapp.data.models.Event;
-import com.timappweb.timapp.data.models.EventCategory;
 import com.timappweb.timapp.data.models.Spot;
-import com.timappweb.timapp.data.models.SpotCategory;
 import com.timappweb.timapp.data.models.SyncBaseModel;
 import com.timappweb.timapp.data.models.dummy.DummySpotFactory;
 import com.timappweb.timapp.data.models.exceptions.CannotSaveModelException;
@@ -38,7 +33,7 @@ public class ModelSerializationTest extends ApplicationTestCase<Application> {
 
         // Test Spot saved:
         Spot spot = DummySpotFactory.create();
-        spot = (Spot) spot.mySave();
+        spot.mySave();
         serializeDeserializeModel(spot, Spot.class);
 
         // Clean:

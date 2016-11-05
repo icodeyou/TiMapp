@@ -6,12 +6,12 @@ import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.auth.AuthManager;
 import com.timappweb.timapp.config.ConfigurationProvider;
+import com.timappweb.timapp.data.models.MyModel;
 import com.timappweb.timapp.fixtures.UsersFixture;
 import com.timappweb.timapp.rest.managers.HttpCallManager;
 import com.timappweb.timapp.utils.SystemAnimations;
@@ -269,8 +269,8 @@ public class AbstractActivityTest {
             matcher.addMatcher(ClearDBTable.class, new Runnable<ClearDBTable>() {
                 @Override
                 public void run(ClearDBTable annotation) {
-                    for (Class<? extends Model> model: annotation.models()){
-                        new Delete().from(model).execute();
+                    for (Class<? extends MyModel> model: annotation.models()){
+                        SQLite.delete().from(model).execute();
                     }
                 }
             });

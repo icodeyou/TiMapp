@@ -450,6 +450,10 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         this.event = event;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
 
     // =============================================================================================
     private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {

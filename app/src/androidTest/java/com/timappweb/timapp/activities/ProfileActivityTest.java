@@ -3,12 +3,10 @@ package com.timappweb.timapp.activities;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
-import com.activeandroid.Model;
 import com.timappweb.timapp.MyApplication;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Tag;
-import com.timappweb.timapp.data.models.User;
 import com.timappweb.timapp.data.models.dummy.DummyTagFactory;
 import com.timappweb.timapp.fixtures.UsersFixture;
 import com.timappweb.timapp.utils.ActivityHelper;
@@ -25,9 +23,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Stephane on 07/09/2016.

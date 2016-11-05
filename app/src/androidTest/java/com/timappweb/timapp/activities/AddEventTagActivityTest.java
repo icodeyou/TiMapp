@@ -1,8 +1,6 @@
 package com.timappweb.timapp.activities;
 
 import android.content.Intent;
-import android.location.Location;
-import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -12,15 +10,10 @@ import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.config.IntentsUtils;
 import com.timappweb.timapp.data.models.Event;
 import com.timappweb.timapp.data.models.dummy.DummyEventFactory;
-import com.timappweb.timapp.fixtures.MockLocation;
 import com.timappweb.timapp.utils.ActivityHelper;
 import com.timappweb.timapp.utils.annotations.CreateAuthAction;
 import com.timappweb.timapp.utils.annotations.CreateConfigAction;
-import com.timappweb.timapp.utils.mocklocations.MockLocationProvider;
-import com.timappweb.timapp.utils.TestUtil;
-import com.timappweb.timapp.utils.idlingresource.ApiCallIdlingResource;
 import com.timappweb.timapp.utils.viewinteraction.PickTagsForm;
-import com.timappweb.timapp.utils.location.LocationManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -49,7 +42,7 @@ public class AddEventTagActivityTest  extends AbstractActivityTest{
     public void setUp() throws Exception {
         Event dummyEvent = DummyEventFactory.create();
         dummyEvent.setCategory(ConfigurationProvider.eventCategories().get(0));
-        dummyEvent = dummyEvent.deepSave();
+        dummyEvent.deepSave();
         this.idlingApiCall();
         this.systemAnimations(false);
 

@@ -1,7 +1,5 @@
 package com.timappweb.timapp.utils.annotations;
 
-import com.activeandroid.Model;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

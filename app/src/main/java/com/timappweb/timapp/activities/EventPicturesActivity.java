@@ -77,7 +77,7 @@ public class EventPicturesActivity extends BaseActivity {
         @Override
         public View instantiateItem(ViewGroup container, int position) {
             final PhotoDraweeView photoDraweeView = new PhotoDraweeView(container.getContext());
-            photoDraweeView.getHierarchy().setPlaceholderImage(ContextCompat.getDrawable(getBaseContext(), R.drawable.placeholder_picture), ScalingUtils.ScaleType.CENTER_CROP);
+            photoDraweeView.getHierarchy().setPlaceholderImage(ContextCompat.getDrawable(getBaseContext(), R.drawable.placeholder_picture), ScalingUtils.ScaleType.CENTER_INSIDE);
             PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder()
                     .setUri(Uri.parse(IMAGES[position]))
                     .setOldController(photoDraweeView.getController())
