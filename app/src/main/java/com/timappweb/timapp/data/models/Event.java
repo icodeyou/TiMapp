@@ -15,6 +15,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.ForeignKeyAction;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.timappweb.timapp.BR;
 import com.timappweb.timapp.R;
 import com.timappweb.timapp.config.ConfigurationProvider;
 import com.timappweb.timapp.data.AppDatabase;
@@ -381,7 +382,7 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
 
     public Event setSpot(Spot spot) {
         this.spot = spot;
-        //notifyPropertyChanged(BR.spot);
+        notifyPropertyChanged(BR.spot);
         return this;
     }
 

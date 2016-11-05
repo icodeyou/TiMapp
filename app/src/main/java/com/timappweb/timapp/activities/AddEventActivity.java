@@ -211,7 +211,7 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
                 IntentsUtils.attachSpot(AddEventActivity.this, mBinding.getEvent().spot);
                 return true;
             case R.id.action_remove_spot:
-                mBinding.setEvent(mBinding.getEvent().setSpot(null));
+                mBinding.getEvent().setSpot(null);
                 icSpot.setVisibility(View.VISIBLE);
                 icSpotValidate.setVisibility(View.GONE);
                 icSpotText.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -501,9 +501,9 @@ public class AddEventActivity extends BaseActivity implements LocationManager.Lo
     private void extractSpot(Bundle bundle){
         if(bundle!=null) {
             Spot spot = SerializeHelper.unpack(bundle, IntentsUtils.KEY_SPOT, Spot.class);
-            getEvent().setSpot(spot);
+            mBinding.getEvent().setSpot(spot);
             mSpotContainer.setVisibility(View.VISIBLE);
-            mBinding.notifyChange();
+            //mBinding.notifyChange();
         }
     }
 

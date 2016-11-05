@@ -145,6 +145,7 @@ public class EventActivity extends BaseActivity implements LocationManager.Locat
         super.onStop();
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){

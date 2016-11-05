@@ -43,6 +43,7 @@ public class Picture extends SyncBaseModel {
 
     @ModelAssociation(joinModel = Event.class, type = ModelAssociation.Type.BELONGS_TO)
     @ForeignKey(tableClass = Event.class,
+            saveForeignKeyModel = false,
             stubbedRelationship = true,
             onDelete = ForeignKeyAction.CASCADE,
             onUpdate = ForeignKeyAction.CASCADE)
