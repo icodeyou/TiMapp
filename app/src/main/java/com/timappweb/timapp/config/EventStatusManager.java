@@ -328,4 +328,9 @@ public class EventStatusManager {
             return currentUserStatusInfo != null && currentUserStatusInfo.event.getRemoteId() == event.getRemoteId();
         }
     }
+
+    public static boolean isStatusUpToDate() {
+        //TODO : Do. Please. Do. Stephane. Do it. Now. Move your ass and build me the awesomest method you've ever built.
+        return true;
+    }
 }

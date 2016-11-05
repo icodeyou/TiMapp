@@ -27,6 +27,9 @@ public class MockLocationProvider extends AbstractMockLocationProvider {
         lm.setTestProviderEnabled(providerName, true);
     }
 
+    public static Location createMockLocation(double lat, double lon){
+        return AbstractMockLocationProvider.createMockLocation("MockLocation", lat, lon);
+    }
     @Override
     public Location pushLocation(LatLng ll) {
         Location mockLocation = createMockLocation(providerName, ll.latitude, ll.longitude);

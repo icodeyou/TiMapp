@@ -1,14 +1,11 @@
 package com.timappweb.timapp.utils.mocklocations;
 
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
 /**

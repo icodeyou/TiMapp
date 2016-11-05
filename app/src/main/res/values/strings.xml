@@ -76,7 +76,7 @@
             <string name="error_server_unavailable">Sorry ours servers are currently unavailable. Please try again later</string>
             <string name="fatal_error_unknown_reason_title">Something bad happened !</string>
             <string name="fatal_error_unknown_reason_message">Sorry, but something went wrong. You need to restart your application. If this message appear again, try updating your application.</string>
-            <string name="no_fine_location">We don\'t have a fine location. Go outside and it will definitely work.</string>
+            <string name="no_fine_location">We don\'t have a fine location. Go outside and it will definitely work ;)</string>
             <string name="toast_tiny_text_size">Only one character for a tag ? What did you think ?</string>
             <string name="toast_huge_text_size">That tag was too small. Maybe you should try adding a thousand more letters</string>
             <string name="toast_tag_not_valid">Your tag is not valid. Only letters and numbers are allowed in a tag.</string>
@@ -140,8 +140,8 @@
     <string name="title_fragment_people">People</string>
     <string name="title_fragment_other">Other</string>
         <!-- Fragment Info -->
-            <string name="i_am_coming">I\'m coming</string>
-            <string name="i_am_here">I\'m here</string>
+            <string name="text_status_coming">I\'m coming</string>
+            <string name="text_status_here">I\'m here</string>
             <string name="next_to_you">Next to you</string>
             <string name="last_activity">Last activity :</string>
         <!-- Fragment Picture -->

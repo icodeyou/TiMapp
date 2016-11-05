@@ -104,6 +104,21 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/no_location_view"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            tools:visibility="visible"
+                            android:gravity="center">
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/no_location_button"
+                                style="@style/BigFabButton"
+                                android:src="@drawable/question_mark"
+                                app:rippleColor="@color/colorAccentLight"
+                                app:backgroundTint="@color/white"/>
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:id="@+id/cross_overview"
                             android:layout_weight="1"
                             android:layout_width="0dp"
@@ -128,15 +143,13 @@
                                 android:id="@+id/status_progress"
                                 style="@style/BigFabButton">
                                 <com.crystal.crystalpreloaders.widgets.CrystalPreloader
-                                    style="@style/SmallProgressView"
-                                    android:layout_centerInParent="true"/>
+                                    style="@style/SmallProgressView"/>
                             </FrameLayout>
                             <android.support.design.widget.FloatingActionButton
                                 android:id="@+id/status_button_disabled"
                                 style="@style/BigFabButton"
                                 app:rippleColor="@color/colorPrimaryVeryDark"
                                 app:backgroundTint="@color/colorPrimary"
-                                android:src="@{event.isUserAround() ? @drawable/gps : @drawable/go}"
                                 android:visibility="gone"/>
                             <android.support.design.widget.FloatingActionButton
                                 android:id="@+id/status_button_activated"
@@ -150,7 +163,6 @@
                                 style="@style/TextBold"
                                 android:layout_below="@id/status_progress"
                                 android:layout_centerHorizontal="true"
-                                android:text="@{event.isUserAround() ? @string/i_am_here : @string/i_am_coming}"
                                 android:textColor="@color/textStatusActivated"
                                 tools:text="I'm coming"
                                 android:textSize="@dimen/text_small" />

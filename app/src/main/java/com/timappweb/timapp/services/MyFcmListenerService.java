@@ -77,7 +77,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 case ServerNotifications.TYPE_EVENT_INVITE:
                     if (data.containsKey(ServerNotifications.KEY_EVENT_ID)){
                         long eventId = Long.parseLong(data.get(ServerNotifications.KEY_EVENT_ID));
-                        return IntentsUtils.buildIntentViewPlace(this, eventId);
+                        return IntentsUtils.buildIntentViewEvent(this, eventId);
                     }
                     break;
                 case ServerNotifications.TYPE_REQUIRE_UPDATE:

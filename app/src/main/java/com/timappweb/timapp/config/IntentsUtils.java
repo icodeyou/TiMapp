@@ -297,13 +297,13 @@ public class IntentsUtils {
     }
 
     public static void viewEventFromId(Activity activity, long id) {
-        Intent intent = buildIntentViewPlace(activity, id);
+        Intent intent = buildIntentViewEvent(activity, id);
         activity.startActivity(intent);
         activity.finish();
     }
 
     public static void viewSpecifiedEvent(Context context, Event event) {
-        context.startActivity(buildIntentViewPlace(context, event));
+        context.startActivity(buildIntentViewEvent(context, event));
     }
 
     public static boolean postInEvent(Context context, Event event, int action) {
@@ -312,7 +312,7 @@ public class IntentsUtils {
                 ((EventActivity)context).parseActionParameter(action);
                 return true;
             }
-            Intent intent = buildIntentViewPlace(context, event);
+            Intent intent = buildIntentViewEvent(context, event);
             intent.putExtra(KEY_ACTION, action);
             context.startActivity(intent);
             return true;
@@ -344,13 +344,13 @@ public class IntentsUtils {
         return true;
     }
 
-    public static Intent buildIntentViewPlace(Context context, long eventId) {
+    public static Intent buildIntentViewEvent(Context context, long eventId) {
         Intent intent = new Intent(context, EventActivity.class);
         intent.putExtra(KEY_EVENT_ID, eventId);
         return  intent;
     }
 
-    public static Intent buildIntentViewPlace(Context context, Event event) {
+    public static Intent buildIntentViewEvent(Context context, Event event) {
         Intent intent = new Intent(context, EventActivity.class);
         SerializeHelper.pack(intent, KEY_EVENT, event);
         return intent;

@@ -168,6 +168,9 @@ public class LocationManager {
         listeners.remove(object);
     }
 
+    public static void clearLastLocation() {
+        lastLocation = null;
+    }
 
 
     // =============================================================================================

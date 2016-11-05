@@ -7,6 +7,10 @@ import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.From;
+import com.activeandroid.query.Select;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.annotations.Expose;
@@ -270,15 +274,20 @@ public class Event extends SyncBaseModel implements MarkerValueInterface, SyncHi
     }
 
     // =============================================================================================
-
     /**
      * @param latitude
      * @param longitude
      * @return true if the user can eventPost in the event
      */
+
     public boolean isUserAround(double latitude, double longitude) {
         return DistanceHelper.distFrom(latitude, longitude, this.latitude, this.longitude)
                 < ConfigurationProvider.rules().place_max_reachable;
+    }
+
+    public boolean isFarAway(Location location) {
+        return DistanceHelper.distFrom(location.getLatitude(), location.getLongitude(), this.latitude, this.longitude)
+                - location.getAccuracy() > 0;
     }
 
     public boolean isUserAround() {

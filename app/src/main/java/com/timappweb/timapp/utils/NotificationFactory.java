@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -66,7 +65,7 @@ public class NotificationFactory {
                 String title = data.get("title");
                 String icon = data.get("icon");
                 long placeId = Long.valueOf(data.get("place_id")); // TODO cst
-                Intent resultIntent = IntentsUtils.buildIntentViewPlace(context, placeId);
+                Intent resultIntent = IntentsUtils.buildIntentViewEvent(context, placeId);
                 int categoryId = R.drawable.category_unknown; // TODO set proper category
                 return NotificationFactory.build(context, categoryId, title, body, resultIntent);
             }

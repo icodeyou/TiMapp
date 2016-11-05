@@ -1,11 +1,17 @@
 package com.timappweb.timapp.fixtures;
 
-/**
- * Created by Stephane on 24/09/2016.
- */
+
 public class EventsFixture {
 
-    public static long getPublicEvent(){
+    public static long getRegularEvent(){
         return 625;
+    }
+
+    public static long getOverEvent() {
+        return 12;
+    }
+
+    public static long getPlannedEvent() {
+        return 45;
     }
 }

@@ -74,13 +74,25 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     private FloatingActionButton        disabledStatusButton;
     private View                        btnRequestNavigation;
     private SwipeRefreshLayout          swipeRefreshLayout;
-
+    private View                        noLocationView;
+    private FloatingActionButton        noLocationButton;
+    private View                        distanceLayout;
     private boolean                     isStatusLoading = false;
+
+    private ButtonStatus                buttonStatus;
+
+    public enum ButtonStatus {
+        AROUND,
+        AWAY,
+        NOLOCATION,
+        OVER
+    }
 
 
     public EventInformationFragment() {
         setTitle(R.string.title_fragment_info);
     }
+
 
     @Nullable
     @Override
@@ -88,19 +100,8 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         super.onCreateView(inflater, container, savedInstanceState);
         mBinding  = DataBindingUtil.inflate(inflater, R.layout.fragment_event_information, container, false);
         View view = mBinding.getRoot();
-        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-        mapView = (MapView) view.findViewById(R.id.map);
-        statusTv = (TextView) view.findViewById(R.id.status_text);
-        activatedStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_activated);
-        disabledStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_disabled);
-        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
-        crossOverView = view.findViewById(R.id.cross_overview);
-        pointsLayout = view.findViewById(R.id.points_layout);
-        overText = (TextView) view.findViewById(R.id.over_text);
-        statusLayout = view.findViewById(R.id.status_layout);
-        btnRequestNavigation = view.findViewById(R.id.button_nav);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
 
+        initVariables(view);
         setListeners();
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
@@ -109,7 +110,33 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         mapView.onCreate(null);
         mapView.getMapAsync(this);
 
+        updateEventBinding();
+        LocationManager.addOnLocationChangedListener(this);
+
         return view;
+    }
+
+    private void initVariables(View view) {
+        mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
+        mapView = (MapView) view.findViewById(R.id.map);
+
+        statusTv = (TextView) view.findViewById(R.id.status_text);
+        activatedStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_activated);
+        disabledStatusButton = (FloatingActionButton) view.findViewById(R.id.status_button_disabled);
+        tvCountPoints = (SimpleTimerView) view.findViewById(R.id.points_text);
+
+        noLocationView = view.findViewById(R.id.no_location_view);
+        noLocationButton = (FloatingActionButton) view.findViewById(R.id.no_location_button);
+
+        distanceLayout = view.findViewById(R.id.distance_layout);
+
+        crossOverView = view.findViewById(R.id.cross_overview);
+        pointsLayout = view.findViewById(R.id.points_layout);
+        overText = (TextView) view.findViewById(R.id.over_text);
+        statusLayout = view.findViewById(R.id.status_layout);
+        btnRequestNavigation = view.findViewById(R.id.button_nav);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
     }
 
     private void setListeners() {
@@ -119,16 +146,36 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                 launchNavigation();
             }
         });
+        noLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!LocationManager.getLocationProvider().isGPSEnabled()) {
+                    LocationManager.getLocationProvider().askUserToEnableGPS();
+                }
+                else {
+                    Toast.makeText(eventActivity, R.string.no_fine_location, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         activatedStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeStatus(false);
+                changeStatus(UserEventStatusEnum.GONE);
             }
         });
         disabledStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeStatus(true);
+                switch (buttonStatus) {
+                    case AWAY:
+                        changeStatus(UserEventStatusEnum.COMING);
+                        break;
+                    case AROUND:
+                        changeStatus(UserEventStatusEnum.HERE);
+                        break;
+                    default:
+                        Log.e(TAG, "buttonStatus is not initialized");
+                }
             }
         });
     }
@@ -150,6 +197,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         updateStatusButtonActivation();
 
         updateOverView();
+        updateStatusBtn(false);
     }
 
     @Override
@@ -158,40 +206,19 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         super.onDestroyView();
     }
 
-    private void updateOverView() {
-        if(getEvent() != null && getEvent().isOver()) {
-            crossOverView.setVisibility(View.VISIBLE);
-            pointsLayout.setVisibility(View.GONE);
-            overText.setVisibility(View.VISIBLE);
-            statusLayout.setVisibility(View.GONE);
-        }
-        else {
-            crossOverView.setVisibility(View.GONE);
-            pointsLayout.setVisibility(View.VISIBLE);
-            overText.setVisibility(View.GONE);
-            statusLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
     public void turnComingOn() {
-        isStatusLoading = true;
-        changeStatus(true);
+        changeStatus(UserEventStatusEnum.COMING);
     }
 
-    private void changeStatus(final boolean activated) {
-        int visibilityAsked = activated ? View.VISIBLE : View.GONE;
-        if(activatedStatusButton.getVisibility() == visibilityAsked) {
-            return;
-        }
-
+    private void changeStatus(final UserEventStatusEnum newStatus) {
         final Event event = getEvent();
 
         final Context context = MyApplication.getApplicationBaseContext();
-        final UserEventStatusEnum newStatus = activated
-                ? (event.isUserAround() ? UserEventStatusEnum.HERE : UserEventStatusEnum.COMING)
-                :  UserEventStatusEnum.GONE;
 
         HttpCallManager manager = EventStatusManager.instance().add(context, event, newStatus, DELAY_REMOTE_UPDATE_STATUS_MILLS);
+
+        final boolean activate = newStatus == UserEventStatusEnum.GONE;
+
         if (manager != null){
             final Animation scaleDown = AnimationUtils.loadAnimation(getActivity(), R.anim.scale_down);
             scaleDown.setAnimationListener(new Animation.AnimationListener() {
@@ -202,7 +229,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    if(activated) {
+                    if(activate) {
                         disabledStatusButton.setVisibility(View.GONE);
                     }
                     else {
@@ -215,28 +242,27 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
 
                 }
             });
-            if(activated) {
+            if(activate) {
                 disabledStatusButton.startAnimation(scaleDown);
             }
             else {
                 activatedStatusButton.startAnimation(scaleDown);
             }
+
+            isStatusLoading = true;
+
             manager
                     .onResponse(new PublishInEventCallback(event, MyApplication.getCurrentUser()))
                     .onResponse(new HttpCallback<UserEvent>() {
                         @Override
                         public void successful(UserEvent userEvent) {
-                            showActivatedButton(activated, true);
-
-                            if (userEvent == null){
-                                // TODO update button to default
+                            //if response is different than expected status, apply server's status.
+                            if (userEvent != null || userEvent.status != null || userEvent.status != newStatus){
+                                Log.w(TAG, "User status is not the on expected. Expected: " + newStatus + ". Actual: " + userEvent.status);
+                                updateStatusBtn(true);
                                 return;
                             }
-
-                            if (userEvent.status != newStatus){
-                                Log.w(TAG, "User status is not the on expected. Expected: " + newStatus + ". Actual: " + userEvent.status);
-                                // TODO Jack && Steph set the right button according to userEvent.status
-                            }
+                            showActivatedButton(activate, true);
 
                             if(userEvent.status == UserEventStatusEnum.COMING) {
                                 //Delay to see the animation before the dialog
@@ -265,7 +291,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                         @Override
                         public void notSuccessful() {
                             Toast.makeText(eventActivity, R.string.action_performed_not_successful, Toast.LENGTH_SHORT).show();
-                            showActivatedButton(!activated, true);
+                            showActivatedButton(!activate, true);
                         }
 
                     })
@@ -273,7 +299,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                         @Override
                         public void onError(Throwable error) {
                             Toast.makeText(eventActivity, R.string.no_network_access, Toast.LENGTH_SHORT).show();
-                            showActivatedButton(!activated, true);
+                            showActivatedButton(!activate, true);
                         }
                     })
                     .onFinally(new HttpCallManager.FinallyCallback() {
@@ -283,6 +309,93 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
                         }
                     });
         }
+    }
+
+    private ButtonStatus getButtonStatus() {
+        if(getEvent().isOver()) {
+            return ButtonStatus.OVER;
+        }
+        else {
+            if(getEvent().getVisibilityStatus() == Event.VisiblityStatus.PLANNED) {
+                return ButtonStatus.AWAY;
+            }
+            else {
+                //No location
+                if(!LocationManager.hasLastLocation()) {
+                    return ButtonStatus.NOLOCATION;
+                }
+                //Location is precise
+                else if(LocationManager.hasFineLocation()) {
+                    if(getEvent().isUserAround()) {
+                        return ButtonStatus.AROUND;
+                    }
+                    else {
+                        return ButtonStatus.AWAY;
+                    }
+                }
+                //Location is not precise
+                else {
+                    if(getEvent().isFarAway(LocationManager.getLastLocation())) {
+                        return ButtonStatus.AWAY;
+                    }
+                    else {
+                        if(EventStatusManager.isStatusUpToDate()) {
+                            if(EventStatusManager.hasUserStatus(getEvent(), UserEventStatusEnum.HERE)) {
+                                return ButtonStatus.AROUND;
+                            }
+                            else if(EventStatusManager.hasUserStatus(getEvent(), UserEventStatusEnum.COMING)) {
+                                return ButtonStatus.AWAY;
+                            }
+                            else {
+                                return ButtonStatus.NOLOCATION;
+                            }
+
+                        }
+                        return ButtonStatus.NOLOCATION;
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateStatusBtn(boolean animate) {
+        this.buttonStatus = getButtonStatus();
+        displayOverView(buttonStatus == ButtonStatus.OVER);
+        displayNoLocationView(buttonStatus == ButtonStatus.NOLOCATION);
+
+        switch (buttonStatus) {
+            case AROUND:
+                disabledStatusButton.setImageResource(R.drawable.gps);
+                statusTv.setText(R.string.text_status_here);
+                showActivatedButton(EventStatusManager.hasUserStatus(getEvent(), UserEventStatusEnum.HERE), animate);
+                break;
+            case AWAY:
+                disabledStatusButton.setImageResource(R.drawable.go);
+                statusTv.setText(R.string.text_status_coming);
+                showActivatedButton(EventStatusManager.hasUserStatus(getEvent(), UserEventStatusEnum.COMING), animate);
+                break;
+        }
+    }
+
+    private void displayOverView(boolean showOverView) {
+        if(showOverView) {
+            crossOverView.setVisibility(View.VISIBLE);
+            pointsLayout.setVisibility(View.GONE);
+            overText.setVisibility(View.VISIBLE);
+            statusLayout.setVisibility(View.GONE);
+        }
+        else {
+            crossOverView.setVisibility(View.GONE);
+            pointsLayout.setVisibility(View.VISIBLE);
+            overText.setVisibility(View.GONE);
+            statusLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void displayNoLocationView(boolean showNoLocationView) {
+        noLocationView.setVisibility(showNoLocationView ? View.VISIBLE : View.GONE);
+        statusLayout.setVisibility(showNoLocationView ? View.GONE : View.VISIBLE);
+        distanceLayout.setVisibility(showNoLocationView ? View.GONE : View.VISIBLE);
     }
 
     private void showActivatedButton(final boolean activated, boolean animate) {
@@ -325,23 +438,10 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
         disabledStatusButton.setVisibility(activated ? View.GONE : View.VISIBLE);
     }
 
-    public void updateStatusButtonActivation(){
-        //This method checks if the button should be enabled and updates it
-        Event event = getEvent();
-        if(event == null) {
-            Log.d(TAG, "Event is null");
-            return;
-        }
-        showActivatedButton(EventStatusManager.hasUserStatus(event, UserEventStatusEnum.COMING)
-                || EventStatusManager.hasUserStatus(event, UserEventStatusEnum.HERE), false);
-
-        mBinding.notifyChange();
-    }
 
     public void updateEventBinding(){
         mBinding.setEvent(getEvent());
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -385,7 +485,7 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     public void onLocationChanged(Location newLocation, Location lastLocation) {
         //TODO Steph : remove isStatusLoading variable and find another way
         if(!isStatusLoading) {
-            updateStatusButtonActivation();
+            updateStatusBtn(false);
         }
     }
 
@@ -393,13 +493,13 @@ EventInformationFragment extends EventBaseFragment implements OnMapReadyCallback
     public void onRefresh() {
         RestClient.buildCall(RestClient.service()
                 .updateEventInfo(getEvent().getRemoteId(), (getEvent().picture != null ? getEvent().picture.getRemoteId() : 0)))
-                    .onResponse(new UpdateEventCallback(getEvent()))
-                    .onFinally(new HttpCallManager.FinallyCallback() {
-                        @Override
-                        public void onFinally(Response response, Throwable error) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    })
-                    .perform();
+                .onResponse(new UpdateEventCallback(getEvent()))
+                .onFinally(new HttpCallManager.FinallyCallback() {
+                    @Override
+                    public void onFinally(Response response, Throwable error) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                })
+                .perform();
     }
 }

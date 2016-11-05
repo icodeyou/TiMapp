@@ -125,8 +125,8 @@
     <string name="title_fragment_people">Monde</string>
     <string name="title_fragment_other">Other</string>
     <!-- Fragment Info -->
-    <string name="i_am_coming">J\'arrive</string>
-    <string name="i_am_here">Présent</string>
+    <string name="text_status_coming">J\'arrive</string>
+    <string name="text_status_here">Présent</string>
     <string name="next_to_you">A proximité</string>
     <string name="last_activity">Dernière activité :</string>
     <!-- Fragment Picture -->
